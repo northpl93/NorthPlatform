@@ -1,0 +1,6 @@
+name: NetworkController
+version: 0.1-PRE
+main: pl.north93.zgame.controller.launcher.BungeePlugin
+author: NorthPL93
+description: "Kontroler sieci. Uruchomiony jako plugin na proxy."
+depends: [API]

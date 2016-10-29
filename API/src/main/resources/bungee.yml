@@ -1,0 +1,4 @@
+name: API
+version: 0.1-PRE
+main: pl.north93.zgame.api.bungee.Main
+author: NorthPL93

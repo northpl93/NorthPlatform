@@ -1,0 +1,10 @@
+name: Lobby
+version: 0.1-PRE
+main: pl.north93.zgame.lobby.Main
+author: NorthPL93
+depend: [API]
+
+commands:
+  lobbydevmode:
+    description: "Włącza/Wyłącza dev mode na tym lobby."
+    permission: "lobby.admin"

@@ -1,0 +1,24 @@
+name: API
+version: 0.1-PRE
+main: pl.north93.zgame.api.bukkit.Main
+author: NorthPL93
+
+commands:
+  playerinfo:
+    description: "Informacje o graczu"
+    permission: "api.command.playerinfo"
+  msg:
+    description: "Prywatna wiadomość do gracza"
+    permission: "api.command.msg"
+  kick:
+    description: "Wyrzuca gracza z serwera"
+    permission: "api.command.kick"
+  network:
+    description: "Zarządzanie i informacje o sieci"
+    permission: "api.command.network"
+  wtfserver:
+    description: "Info o aktualnym serwerze"
+    permission: "api.command.wtfserver"
+  performance:
+    description: "Informacje o wydajności i użyciu zasobów"
+    permission: "api.command.performance"
