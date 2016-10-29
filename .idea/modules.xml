@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/API/API.iml" filepath="$PROJECT_DIR$/API/API.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Lobby/Lobby.iml" filepath="$PROJECT_DIR$/Lobby/Lobby.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Network Controller/Network Controller.iml" filepath="$PROJECT_DIR$/Network Controller/Network Controller.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Pets/Pets.iml" filepath="$PROJECT_DIR$/Pets/Pets.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/RobberMod.iml" filepath="$PROJECT_DIR$/.idea/modules/RobberMod.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/RobberMod_api.iml" filepath="$PROJECT_DIR$/.idea/modules/RobberMod_api.iml" group="RobberMod" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/RobberMod_main.iml" filepath="$PROJECT_DIR$/.idea/modules/RobberMod_main.iml" group="RobberMod" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/RobberMod_test.iml" filepath="$PROJECT_DIR$/.idea/modules/RobberMod_test.iml" group="RobberMod" />
+      <module fileurl="file://$PROJECT_DIR$/Server Deamon/Server Deamon.iml" filepath="$PROJECT_DIR$/Server Deamon/Server Deamon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/NorthPlatformParent/platform.iml" filepath="$PROJECT_DIR$/NorthPlatformParent/platform.iml" />
+    </modules>
+  </component>
+</project>
