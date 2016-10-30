@@ -4,7 +4,7 @@ import pl.north93.zgame.api.global.redis.rpc.impl.RpcObjectDescription;
 
 public interface RpcManager
 {
-    void init();
+    void addListeningContext(String id);
 
     void addRpcImplementation(Class<?> classInterface, Object implementation);
 

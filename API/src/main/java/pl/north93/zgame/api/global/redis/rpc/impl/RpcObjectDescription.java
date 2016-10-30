@@ -28,7 +28,7 @@ public class RpcObjectDescription
 
     private void populateMethodList()
     {
-        final Method[] methods = this.classInterface.getDeclaredMethods();
+        final Method[] methods = ReflectUtil.getDeclaredMethodsInOrder(this.classInterface);
         for (int methodId = 0; methodId < methods.length; methodId++)
         {
             final Method method = methods[methodId];

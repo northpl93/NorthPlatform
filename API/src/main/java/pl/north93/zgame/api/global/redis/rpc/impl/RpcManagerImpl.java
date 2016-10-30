@@ -23,10 +23,10 @@ public class RpcManagerImpl implements RpcManager
     private final Map<Class<?>, RpcObjectDescription> descriptionCache = new HashMap<>();
 
     @Override
-    public void init()
+    public void addListeningContext(final String id)
     {
-        this.api.getRedisSubscriber().subscribe("rpc:" + this.api.getId() + ":invoke", this::handleMethodInvocation);
-        this.api.getRedisSubscriber().subscribe("rpc:" + this.api.getId() + ":response", this::handleResponse);
+        this.api.getRedisSubscriber().subscribe("rpc:" + id + ":invoke", this::handleMethodInvocation);
+        this.api.getRedisSubscriber().subscribe("rpc:" + id + ":response", this::handleResponse);
     }
 
     @Override

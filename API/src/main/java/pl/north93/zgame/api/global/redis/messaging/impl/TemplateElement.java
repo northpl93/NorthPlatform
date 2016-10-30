@@ -1,7 +1,5 @@
 package pl.north93.zgame.api.global.redis.messaging.impl;
 
-import javax.annotation.Nullable;
-
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
@@ -12,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.redis.messaging.Template;
+import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackNullable;
 
 /**
  * Reprezentuje jedną zmienną w templatce.
@@ -38,7 +37,7 @@ public class TemplateElement
         {
             throw new RuntimeException("Failed to unreflect getter or setter.", e);
         }
-        this.isNullable = field.isAnnotationPresent(Nullable.class);
+        this.isNullable = field.isAnnotationPresent(MsgPackNullable.class);
         this.template = template;
     }
 

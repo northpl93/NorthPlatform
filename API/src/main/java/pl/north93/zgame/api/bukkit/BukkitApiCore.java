@@ -12,6 +12,7 @@ import org.spigotmc.SpigotConfig;
 import pl.north93.zgame.api.bukkit.cmd.KickCmd;
 import pl.north93.zgame.api.bukkit.cmd.MsgCmd;
 import pl.north93.zgame.api.bukkit.cmd.NetworkCmd;
+import pl.north93.zgame.api.bukkit.cmd.NetworkControllerPing;
 import pl.north93.zgame.api.bukkit.cmd.Performance;
 import pl.north93.zgame.api.bukkit.cmd.PlayerInfoCmd;
 import pl.north93.zgame.api.bukkit.cmd.WtfServer;
@@ -82,6 +83,7 @@ public class BukkitApiCore extends ApiCore
         this.pluginMain.getCommand("network").setExecutor(new NetworkCmd());
         this.pluginMain.getCommand("wtfserver").setExecutor(new WtfServer());
         this.pluginMain.getCommand("performance").setExecutor(new Performance());
+        this.pluginMain.getCommand("networkcontrollerping").setExecutor(new NetworkControllerPing());
     }
 
     @Override
@@ -112,10 +114,12 @@ public class BukkitApiCore extends ApiCore
         final Properties properties = System.getProperties();
         if (properties.containsKey("northplatform.serverid")) // Konfiguracja serwera pobierana jest z Redisa
         {
+            this.debug("Server is identified by northplatform.serverid");
             this.thisServer = (ServerImpl) this.getNetworkManager().getServer(UUID.fromString(properties.get("northplatform.serverid").toString()));
         }
         else if (properties.containsKey("northplatform.servertype")) // Konfiguracja ręczna - serwer sam zgłasza się do Redisa
         {
+            this.debug("Server identity is generated (northplatform.servertype)");
             this.thisServer = new ServerImpl(UUID.randomUUID(), false, ServerType.valueOf(properties.get("northplatform.servertype").toString()), ServerState.STARTING, JoiningPolicy.EVERYONE, "");
             this.thisServer.sendUpdate();
         }

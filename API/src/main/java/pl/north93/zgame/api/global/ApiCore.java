@@ -84,6 +84,10 @@ public abstract class ApiCore
     {
         this.getLogger().info("Starting North API Core.");
         this.connectionConfig = loadConfigFile(ConnectionConfig.class, this.getFile("connection.yml"));
+        if (System.getProperties().containsKey("northplatform.forcedebug"))
+        {
+            this.connectionConfig.setDebug(true);
+        }
         this.pool = new JedisPool(new JedisPoolConfig(), this.connectionConfig.getRedisHost(), this.connectionConfig.getRedisPort(), this.connectionConfig.getRedisTimeout(), this.connectionConfig.getRedisPassword());
         {
             this.mysqlDataSource = new BasicDataSource();
@@ -104,7 +108,7 @@ public abstract class ApiCore
             e.printStackTrace();
             this.getPlatformConnector().stop();
         }
-        this.rpcManager.init();
+        this.rpcManager.addListeningContext(this.getId());
         this.getLogger().info("Client id is " + this.getId());
     }
 
@@ -153,6 +157,7 @@ public abstract class ApiCore
 
     public JedisPool getJedis()
     {
+        this.debug("Jedis pool accessed.");
         return this.pool;
     }
 

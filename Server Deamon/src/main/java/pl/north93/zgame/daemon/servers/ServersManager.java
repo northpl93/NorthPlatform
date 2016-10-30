@@ -7,21 +7,26 @@ import java.util.UUID;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.deployment.ServerPattern;
+import pl.north93.zgame.api.global.network.NetworkControllerRpc;
+import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.utils.JavaArguments;
 
 public class ServersManager
 {
-    private final File                      workspace = API.getFile("workspace");
-    private final File                      engines   = API.getFile("engines");
-    private final File                      patterns  = API.getFile("patterns");
-    private final Map<UUID, ServerInstance> servers   = new HashMap<>();
+    private final NetworkControllerRpc      controller = API.getNetworkManager().getNetworkController();
+    private final File                      workspace  = API.getFile("workspace");
+    private final File                      engines    = API.getFile("engines");
+    private final File                      patterns   = API.getFile("patterns");
+    private final Map<UUID, ServerInstance> servers    = new HashMap<>();
 
     public void deployNewServer(final UUID serverId, final String serverTemplate)
     {
+        API.getLogger().info("Deploying new server with id " + serverId + " and template " + serverTemplate);
+        this.controller.updateServerState(serverId, ServerState.INSTALLING);
         final ServerPattern pattern = API.getNetworkManager().getServerPattern(serverTemplate);
 
         final File serverWorkspace = new File(this.workspace, serverId.toString());
-        serverWorkspace.mkdir();
+        this.setupWorkspace(serverWorkspace, pattern);
 
         final JavaArguments java = new JavaArguments();
         java.setJar(this.getEngineFile(pattern.getEngineName()));
@@ -40,13 +45,23 @@ public class ServersManager
 
         final ServerInstance serverInstance = new ServerInstance(serverId, serverWorkspace, java);
         this.servers.put(serverId, serverInstance);
+        ServerConsole.createServerProcess(serverInstance);
+        this.controller.updateServerState(serverId, ServerState.STARTING);
     }
 
     public String getEngineFile(final String engineName)
     {
-
-        return null;
+        return new File(this.engines, engineName).getAbsolutePath();
     }
 
-    //public vo
+    private void setupWorkspace(final File workspace, final ServerPattern pattern)
+    {
+        API.getLogger().info("Setting up workspace: " + workspace);
+        workspace.mkdir();
+    }
+
+    private void startServerProcess(final ServerInstance serverInstance)
+    {
+
+    }
 }

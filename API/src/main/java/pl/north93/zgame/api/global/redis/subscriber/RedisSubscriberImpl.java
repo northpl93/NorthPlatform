@@ -27,6 +27,7 @@ public class RedisSubscriberImpl implements RedisSubscriber
     public void subscribe(final String channel, final SubscriptionHandler handler)
     {
         this.subscriptionHandlerMap.put(channel, handler);
+        API.debug("Added subscription for " + channel);
         if (! this.subscriberScheduled)
         {
             API.debug("Subscriber task has been scheduled");

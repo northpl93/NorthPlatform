@@ -14,6 +14,7 @@ commands:
     description: "Wyrzuca gracza z serwera"
     permission: "api.command.kick"
   network:
+    aliases: ["net"]
     description: "Zarządzanie i informacje o sieci"
     permission: "api.command.network"
   wtfserver:
@@ -22,3 +23,7 @@ commands:
   performance:
     description: "Informacje o wydajności i użyciu zasobów"
     permission: "api.command.performance"
+  networkcontrollerping:
+    aliases: ["netconping"]
+    description: "Sprawdza czas odpowiedzi kontrolera sieci"
+    permission: "api.command.networkcontrollerping"

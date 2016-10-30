@@ -83,12 +83,14 @@ public class ServerImpl implements Server, RedisUpdatable
     {
         this.serverState = serverState;
         this.sendUpdate();
+        API.getLogger().info("Server with ID " + this.serverId + " is now in state " + serverState);
     }
 
     public void updateJoiningPolicy(final JoiningPolicy joiningPolicy)
     {
         this.joiningPolicy = joiningPolicy;
         this.sendUpdate();
+        API.getLogger().info("Server with ID " + this.serverId + " has now joining policy " + joiningPolicy);
     }
 
     @Override

@@ -10,6 +10,7 @@ public class NetworkControllerCore
     public void start()
     {
         API.getLogger().info("Starting NetworkController...");
+        API.getRpcManager().addListeningContext("controller");
         API.getRpcManager().addRpcImplementation(NetworkControllerRpc.class, new NetworkControllerRpcImpl());
         this.networkMetaBroadcaster.start();
     }

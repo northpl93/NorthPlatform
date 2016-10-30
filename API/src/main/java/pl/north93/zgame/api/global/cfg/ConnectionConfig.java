@@ -53,6 +53,11 @@ public class ConnectionConfig
         return this.debug;
     }
 
+    public void setDebug(final boolean debug)
+    {
+        this.debug = debug;
+    }
+
     public String getMysqlHost()
     {
         return this.mysqlHost;
