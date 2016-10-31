@@ -1,4 +1,4 @@
 name: API
-version: 0.1-PRE
+version: ${version.api}
 main: pl.north93.zgame.api.bungee.Main
 author: NorthPL93

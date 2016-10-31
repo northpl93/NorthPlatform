@@ -17,7 +17,18 @@ public class ServersManager
     private final File                      workspace  = API.getFile("workspace");
     private final File                      engines    = API.getFile("engines");
     private final File                      patterns   = API.getFile("patterns");
+    private final LoggerServer              logger     = new LoggerServer();
     private final Map<UUID, ServerInstance> servers    = new HashMap<>();
+
+    public void startServerManager()
+    {
+        this.logger.start(); // Start logger server
+    }
+
+    public void stopServerManager()
+    {
+        this.logger.safelyStop(); // Safely stop logger server
+    }
 
     public void deployNewServer(final UUID serverId, final String serverTemplate)
     {

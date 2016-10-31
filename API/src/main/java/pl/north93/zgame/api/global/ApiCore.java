@@ -4,6 +4,8 @@ import static pl.north93.zgame.api.global.cfg.ConfigUtils.loadConfigFile;
 
 
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
@@ -192,6 +194,23 @@ public abstract class ApiCore
             return;
         }
         runnable.run();
+    }
+
+    /**
+     * Returns machine's network name.
+     *
+     * @return host name
+     */
+    public String getHostName()
+    {
+        try
+        {
+            return InetAddress.getLocalHost().getHostName();
+        }
+        catch (final UnknownHostException e)
+        {
+            return "<unknown:UnknownHostException>";
+        }
     }
 
     public abstract Logger getLogger();

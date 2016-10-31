@@ -34,16 +34,17 @@ public class ServerConsole
         final ProcessBuilder procBuilder = new ProcessBuilder(javaStartLine);
         procBuilder.directory(serverInstance.getWorkspace());
 
-        final ServerConsole console;
+        final Process process;
         try
         {
             API.getLogger().info("Starting process: " + javaStartLine);
-            console = new ServerConsole(serverInstance, procBuilder.start());
+            process = procBuilder.start();
         }
         catch (final IOException e)
         {
             throw new RuntimeException("Failed to create server process.", e);
         }
+        final ServerConsole console = new ServerConsole(serverInstance, process);
         serverInstance.setServerConsole(console);
 
         return console;

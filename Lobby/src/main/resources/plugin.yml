@@ -1,5 +1,5 @@
 name: Lobby
-version: 0.1-PRE
+version: ${version.lobby}
 main: pl.north93.zgame.lobby.Main
 author: NorthPL93
 depend: [API]
