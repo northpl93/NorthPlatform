@@ -16,7 +16,7 @@ public class DaemonCore extends StandaloneApp
 {
     private DaemonConfig   config;
     private RemoteDaemon   daemonInfo;
-    private ServersManager serversManager = new ServersManager();
+    private ServersManager serversManager;
 
     @Override
     public String getId()
@@ -45,7 +45,8 @@ public class DaemonCore extends StandaloneApp
                                       .setServerCount(0)
                                       .build();
         this.daemonInfo.sendUpdate();
-        API.getRpcManager().addRpcImplementation(DaemonRpc.class, new DaemonRpcImpl());
+        apiCore.getRpcManager().addRpcImplementation(DaemonRpc.class, new DaemonRpcImpl(this));
+        this.serversManager = new ServersManager();
         this.serversManager.startServerManager();
     }
 

@@ -14,7 +14,7 @@ import pl.north93.zgame.api.global.deployment.ServersGroup;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.redis.messaging.RedisUpdatable;
 
-public class ServerImpl implements Server, RedisUpdatable
+public class ServerImpl implements Server, ServerProxyData, RedisUpdatable
 {
     private UUID          serverId;
     private Boolean       isLaunchedViaDaemon;
@@ -79,6 +79,24 @@ public class ServerImpl implements Server, RedisUpdatable
         return Optional.ofNullable(API.getNetworkManager().getServersGroup(this.serversGroup));
     }
 
+    @Override
+    public String getProxyName()
+    {
+        return "mc/" + this.serverId;
+    }
+
+    @Override
+    public String getConnectHost()
+    {
+        return null;
+    }
+
+    @Override
+    public int getConnectPort()
+    {
+        return 0;
+    }
+
     public void updateServerState(final ServerState serverState)
     {
         this.serverState = serverState;
@@ -97,5 +115,15 @@ public class ServerImpl implements Server, RedisUpdatable
     public String toString()
     {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("serverId", this.serverId).append("isLaunchedViaDaemon", this.isLaunchedViaDaemon).append("serverType", this.serverType).append("serverState", this.serverState).toString();
+    }
+
+    public static Builder builder()
+    {
+        return new Builder();
+    }
+
+    public static final class Builder // ServerImpl builder
+    {
+
     }
 }

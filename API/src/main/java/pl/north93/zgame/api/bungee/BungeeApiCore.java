@@ -13,6 +13,8 @@ import net.md_5.bungee.api.ProxyServer;
 import pl.north93.zgame.api.bungee.cfg.ProxyInstanceConfig;
 import pl.north93.zgame.api.bungee.listeners.PingListener;
 import pl.north93.zgame.api.bungee.listeners.PlayerListener;
+import pl.north93.zgame.api.bungee.mods.IBungeeServersManager;
+import pl.north93.zgame.api.bungee.mods.impl.BungeeServersManager;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.messages.ProxyInstanceInfo;
@@ -22,6 +24,7 @@ import redis.clients.jedis.Jedis;
 public class BungeeApiCore extends ApiCore
 {
     private final Main bungeePlugin;
+    private IBungeeServersManager serversManager;
     private ProxyInstanceConfig config;
 
     public BungeeApiCore(final Main bungeePlugin)
@@ -52,6 +55,7 @@ public class BungeeApiCore extends ApiCore
         }
         this.config = loadConfigFile(ProxyInstanceConfig.class, this.getFile("proxy_instance.yml"));
         this.getRpcManager().addRpcImplementation(ProxyRpc.class, new ProxyRpcImpl());
+        this.serversManager = new BungeeServersManager();
         this.sendProxyInfo();
         this.getPlatformConnector().runTaskAsynchronously(this::sendProxyInfo, 300);
         this.bungeePlugin.getProxy().getPluginManager().registerListener(this.bungeePlugin, new PingListener());
@@ -76,6 +80,11 @@ public class BungeeApiCore extends ApiCore
     public ProxyInstanceConfig getProxyConfig()
     {
         return this.config;
+    }
+
+    public IBungeeServersManager getServersManager()
+    {
+        return this.serversManager;
     }
 
     public Main getBungeePlugin()

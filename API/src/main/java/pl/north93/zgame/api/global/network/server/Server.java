@@ -6,7 +6,10 @@ import java.util.UUID;
 import pl.north93.zgame.api.global.deployment.ServersGroup;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 
-public interface Server
+/**
+ * Klasa reprezenyująca serwer w sieci.
+ */
+public interface Server extends ServerProxyData
 {
     UUID getUuid();
 
@@ -18,5 +21,10 @@ public interface Server
 
     JoiningPolicy getJoiningPolicy();
 
+    /**
+     * Opcjonalnie zwraca grupę serwerów do której należy ten serwer.
+     *
+     * @return grupa serwerów do której należy ten serwer.
+     */
     Optional<ServersGroup> getServersGroup();
 }

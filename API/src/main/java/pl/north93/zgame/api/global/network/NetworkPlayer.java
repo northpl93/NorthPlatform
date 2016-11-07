@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.permissions.Group;
 import pl.north93.zgame.api.global.redis.messaging.RedisUpdatable;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
@@ -100,8 +101,7 @@ public class NetworkPlayer implements RedisUpdatable
      */
     public void sendMessage(final String message)
     {
-        API.getRpcManager().createRpcProxy(ProxyRpc.class, Targets.proxy(this.proxyId)).sendMessage(this.nick, message);
-        //API.getPacketManager().sendPacket(Targets.proxy(this.proxyId), new PacketProxyBoundSendMessage(this.nick, message));
+        this.getProxyRpc().sendMessage(this.nick, message);
     }
 
     /**
@@ -110,7 +110,16 @@ public class NetworkPlayer implements RedisUpdatable
      */
     public void kick(final String message)
     {
-        API.getRpcManager().createRpcProxy(ProxyRpc.class, Targets.proxy(this.proxyId)).kick(this.nick, message);
-        //API.getPacketManager().sendPacket(Targets.proxy(this.proxyId), new PacketProxyBoundKick(this.nick, message));
+        this.getProxyRpc().kick(this.nick, message);
+    }
+
+    public void connectTo(final ServerProxyData data)
+    {
+        this.getProxyRpc().connectPlayer(this.nick, data.getProxyName());
+    }
+
+    private ProxyRpc getProxyRpc()
+    {
+        return API.getRpcManager().createRpcProxy(ProxyRpc.class, Targets.proxy(this.proxyId));
     }
 }

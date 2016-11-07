@@ -1,9 +1,14 @@
 package pl.north93.zgame.daemon.servers;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.apache.commons.io.FileUtils;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.deployment.ServerPattern;
@@ -17,17 +22,35 @@ public class ServersManager
     private final File                      workspace  = API.getFile("workspace");
     private final File                      engines    = API.getFile("engines");
     private final File                      patterns   = API.getFile("patterns");
-    private final LoggerServer              logger     = new LoggerServer();
+    private final ServersWatchdog           watchdog   = new ServersWatchdog();
+    private final Logger                    outputLog  = Logger.getLogger("Servers");
     private final Map<UUID, ServerInstance> servers    = new HashMap<>();
 
     public void startServerManager()
     {
-        this.logger.start(); // Start logger server
+        this.outputLog.setParent(API.getLogger());
+        this.watchdog.start();
     }
 
     public void stopServerManager()
     {
-        this.logger.safelyStop(); // Safely stop logger server
+        // TODO stop all servers?
+        this.watchdog.safeStop();
+    }
+
+    public Logger getServersLogger()
+    {
+        return this.outputLog;
+    }
+
+    public ServersWatchdog getWatchdog()
+    {
+        return this.watchdog;
+    }
+
+    public ServerInstance getServer(final UUID serverUuid)
+    {
+        return this.servers.get(serverUuid);
     }
 
     public void deployNewServer(final UUID serverId, final String serverTemplate)
@@ -52,11 +75,12 @@ public class ServersManager
         java.addJavaArg("XX:InlineSmallCode=2048"); // increase max code size to inline. Default=1000
         java.addJavaArg("XX:MaxInlineSize=70"); // Default=35
         java.addJavaArg("XX:MaxTrivialSize=12"); // Default=6
+        java.addEnvVar("jline.terminal", "jline.UnsupportedTerminal"); // Disable fancy terminal
         java.addEnvVar("northplatform.serverid", serverId.toString());
 
         final ServerInstance serverInstance = new ServerInstance(serverId, serverWorkspace, java);
         this.servers.put(serverId, serverInstance);
-        ServerConsole.createServerProcess(serverInstance);
+        ServerConsole.createServerProcess(this, serverInstance);
         this.controller.updateServerState(serverId, ServerState.STARTING);
     }
 
@@ -69,10 +93,16 @@ public class ServersManager
     {
         API.getLogger().info("Setting up workspace: " + workspace);
         workspace.mkdir();
-    }
-
-    private void startServerProcess(final ServerInstance serverInstance)
-    {
-
+        for (final String component : pattern.getComponents())
+        {
+            try
+            {
+                FileUtils.copyDirectory(new File(this.patterns, component), workspace);
+            }
+            catch (final IOException e)
+            {
+                API.getLogger().log(Level.SEVERE, "Exception while setting up workspace", e);
+            }
+        }
     }
 }

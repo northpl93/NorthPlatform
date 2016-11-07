@@ -29,6 +29,7 @@ public class WtfServer implements CommandExecutor
 
         final Server server = api.getServer();
         sender.sendMessage("ID serwera: " + api.getId());
+        sender.sendMessage("Nazwa w proxy: " + server.getProxyName());
         sender.sendMessage("Typ serwera: " + server.getType());
         sender.sendMessage("Czy uruchomiony przez demona: " + (server.isLaunchedViaDaemon() ? "tak" : "nie"));
         sender.sendMessage("Stan serwera: " + server.getServerState());

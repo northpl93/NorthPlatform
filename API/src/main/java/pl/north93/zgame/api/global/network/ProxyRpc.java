@@ -9,4 +9,7 @@ public interface ProxyRpc
 
     @DoNotWaitForResponse
     void kick(String nick, String kickMessage);
+
+    @DoNotWaitForResponse
+    void connectPlayer(String nick, String serverName);
 }

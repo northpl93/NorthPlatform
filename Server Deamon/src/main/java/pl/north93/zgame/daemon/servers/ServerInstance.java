@@ -74,6 +74,16 @@ public class ServerInstance
         this.serverConsole = newConsole;
     }
 
+    public void executeCommand(final String consoleCommand)
+    {
+        if (this.serverConsole == null)
+        {
+            API.getLogger().warning("Tried to execute command '" + consoleCommand + "' on server with ID " + this.serverId + " but serverConsole was null.");
+            return;
+        }
+        this.serverConsole.executeCommand(consoleCommand);
+    }
+
     @Override
     public String toString()
     {
