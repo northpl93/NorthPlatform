@@ -10,7 +10,12 @@ public interface NetworkControllerRpc
     /**
      * Nic nie robi.
      */
-    void ping();
+    void ping(); // default - 1 sec timeout
+
+    /**
+     * Wyłącza kontroler sieci.
+     */
+    void stopController();
 
     /**
      * Zmienia stan serwera o podanym UUID

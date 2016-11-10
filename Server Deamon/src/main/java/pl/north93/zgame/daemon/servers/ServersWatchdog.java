@@ -7,6 +7,8 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.API;
+
 public class ServersWatchdog extends Thread
 {
     private final List<ServerConsole> consoles;
@@ -21,11 +23,13 @@ public class ServersWatchdog extends Thread
 
     public void addConsole(final ServerConsole console)
     {
+        API.debug("[WatchDog] New console added to watchdog: " + console);
         this.consoles.add(console);
     }
 
     public void safeStop()
     {
+        API.debug("[WatchDog] safeStop");
         this.isRunning = false;
     }
 
@@ -44,6 +48,7 @@ public class ServersWatchdog extends Thread
                     final ServerConsole console = consoleIterator.next();
                     if (! console.getServerProcess().isAlive())
                     {
+                        API.debug("[WatchDog] Removing console: " + console + " because isAlive() returned false");
                         console.serverProcessStopped();
                         consoleIterator.remove();
                         continue;

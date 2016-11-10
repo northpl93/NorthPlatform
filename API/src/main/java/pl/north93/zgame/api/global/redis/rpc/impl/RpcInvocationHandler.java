@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.redis.rpc.exceptions.RpcRemoteException;
 import pl.north93.zgame.api.global.redis.rpc.RpcTarget;
+import pl.north93.zgame.api.global.redis.rpc.exceptions.RpcTimeoutException;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcExceptionInfo;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcInvokeMessage;
 import redis.clients.jedis.Jedis;
@@ -48,7 +49,18 @@ public class RpcInvocationHandler implements InvocationHandler
             return null; // Nie jest wymagana odpowiedz, idziemy sobie
         }
 
-        final Object response = this.rpcManager.createFor(requestId).getResponse(methodDescription.getTimeout());
+        final RpcResponseLock lock = this.rpcManager.createFor(requestId);
+        final Object response;
+        try
+        {
+            response = lock.getResponse(methodDescription.getTimeout());
+        }
+        catch (final RpcTimeoutException e)
+        {
+            this.rpcManager.removeLock(requestId); // timeout happened so we will remove that lock
+            throw e; // rethrow timeout exception
+        }
+
         if (response instanceof RpcExceptionInfo)
         {
             throw new RpcRemoteException((RpcExceptionInfo) response);

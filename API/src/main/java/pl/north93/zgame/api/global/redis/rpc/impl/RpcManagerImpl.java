@@ -85,9 +85,10 @@ public class RpcManagerImpl implements RpcManager
         final RpcResponseLock lock = this.locks.get(responseMessage.getRequestId());
         if (lock == null)
         {
-            return; // Raczej nigdy sie nie wydarzy, ale przezorny zawsze ubezpieczony!
+            API.getLogger().warning("Received RPC response but lock was null. Response:" + responseMessage);
+            return; // Moze się wydarzyć, gdy nastąpi timeout i lock zostanie usunięty. W takim wypadku ignorujemy odpowiedź.
         }
         lock.provideResponse(responseMessage.getResponse());
-        this.locks.remove(responseMessage.getRequestId());
+        this.removeLock(responseMessage.getRequestId());
     }
 }

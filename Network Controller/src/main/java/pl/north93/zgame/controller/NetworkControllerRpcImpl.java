@@ -15,6 +15,12 @@ public class NetworkControllerRpcImpl implements NetworkControllerRpc
     }
 
     @Override
+    public void stopController()
+    {
+        API.getPlatformConnector().stop();
+    }
+
+    @Override
     public void updateServerState(final UUID serverId, final ServerState serverState)
     {
         final ServerImpl server = (ServerImpl) API.getNetworkManager().getServer(serverId);

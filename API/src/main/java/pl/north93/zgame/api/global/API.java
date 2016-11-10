@@ -11,8 +11,8 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import pl.north93.zgame.api.global.exceptions.SingletonException;
 import pl.north93.zgame.api.global.network.NetworkManager;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
-import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 import pl.north93.zgame.api.global.redis.rpc.RpcManager;
+import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 import redis.clients.jedis.JedisPool;
 
 public final class API

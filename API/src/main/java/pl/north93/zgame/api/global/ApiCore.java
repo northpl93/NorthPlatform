@@ -21,10 +21,10 @@ import pl.north93.zgame.api.global.permissions.PermissionsManager;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.messaging.impl.TemplateFactoryImpl;
 import pl.north93.zgame.api.global.redis.messaging.impl.TemplateManagerImpl;
-import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
-import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriberImpl;
 import pl.north93.zgame.api.global.redis.rpc.RpcManager;
 import pl.north93.zgame.api.global.redis.rpc.impl.RpcManagerImpl;
+import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
+import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriberImpl;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 

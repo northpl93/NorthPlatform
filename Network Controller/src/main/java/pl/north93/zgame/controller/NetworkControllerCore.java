@@ -2,10 +2,12 @@ package pl.north93.zgame.controller;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
+import pl.north93.zgame.controller.servers.NetworkServersManager;
 
 public class NetworkControllerCore
 {
-    private final ConfigBroadcaster networkMetaBroadcaster = new ConfigBroadcaster();
+    private final ConfigBroadcaster     networkMetaBroadcaster = new ConfigBroadcaster();
+    private final NetworkServersManager serversManager         = new NetworkServersManager();
 
     public void start()
     {

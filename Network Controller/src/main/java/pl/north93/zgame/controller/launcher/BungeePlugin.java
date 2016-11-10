@@ -13,7 +13,7 @@ public class BungeePlugin extends Plugin
     @Override
     public void onEnable()
     {
-        this.getLogger().warning("Network controller is starting as Bungee plugin. This isn't recommended for production environments. ");
+        this.getLogger().warning("Network controller is starting as Bungee plugin. This isn't recommended for production environments.");
         this.networkControllerCore.start();
     }
 

@@ -16,6 +16,10 @@ import pl.north93.zgame.api.global.network.NetworkControllerRpc;
 import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.utils.JavaArguments;
 
+/**
+ * Klasa demona zarządzająca uruchomionymi serwerami
+ * i odpowiadająca za uruchamianie nowych.
+ */
 public class ServersManager
 {
     private final NetworkControllerRpc      controller = API.getNetworkManager().getNetworkController();
