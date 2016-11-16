@@ -1,27 +1,21 @@
 package pl.north93.zgame.api.global.redis.rpc.impl.messaging;
 
-import java.util.List;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
-import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
-
 public class RpcInvokeMessage
 {
-    private String       sender;
-    private Integer      classId;
-    private Integer      requestId;
-    private Integer      methodId;
-    @MsgPackCustomTemplate(ArrayListTemplate.class)
-    private List<Object> args;
+    private String   sender;
+    private Integer  classId;
+    private Integer  requestId;
+    private Integer  methodId;
+    private Object[] args;
 
     public RpcInvokeMessage()
     {
     }
 
-    public RpcInvokeMessage(final String sender, final Integer classId, final Integer requestId, final Integer methodId, final List<Object> args)
+    public RpcInvokeMessage(final String sender, final Integer classId, final Integer requestId, final Integer methodId, final Object[] args)
     {
         this.sender = sender;
         this.classId = classId;
@@ -70,12 +64,12 @@ public class RpcInvokeMessage
         this.methodId = methodId;
     }
 
-    public List<Object> getArgs()
+    public Object[] getArgs()
     {
         return this.args;
     }
 
-    public void setArgs(final List<Object> args)
+    public void setArgs(final Object[] args)
     {
         this.args = args;
     }

@@ -27,11 +27,11 @@ public class RpcResponseHandler
         final RpcMethodDescription methodDescription = this.objectDescription.getMethodDescription(rpcInvokeMessage.getMethodId());
         final MethodHandle methodHandle = methodDescription.getMethodHandle();
 
-        final Object[] invocationArgs = new Object[rpcInvokeMessage.getArgs().size() + 1];
+        final Object[] invocationArgs = new Object[rpcInvokeMessage.getArgs().length + 1];
         invocationArgs[0] = this.implementation;
         if (invocationArgs.length > 1)
         {
-            final Object[] argsArray = rpcInvokeMessage.getArgs().toArray();
+            final Object[] argsArray = rpcInvokeMessage.getArgs();
             System.arraycopy(argsArray, 0, invocationArgs, 1, argsArray.length);
         }
 

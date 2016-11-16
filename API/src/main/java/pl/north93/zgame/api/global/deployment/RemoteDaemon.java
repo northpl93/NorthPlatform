@@ -21,6 +21,7 @@ public class RemoteDaemon implements RedisUpdatable
     private Integer maxRam;
     private Integer ramUsed;
     private Integer serverCount;
+    private Boolean isAcceptingServers;
 
     @Override
     public String getRedisKey()
@@ -78,6 +79,16 @@ public class RemoteDaemon implements RedisUpdatable
         this.serverCount = serverCount;
     }
 
+    public Boolean isAcceptingServers()
+    {
+        return this.isAcceptingServers;
+    }
+
+    public void setAcceptingServers(final Boolean acceptingServers)
+    {
+        this.isAcceptingServers = acceptingServers;
+    }
+
     public DaemonRpc getRpc()
     {
         return API.getRpcManager().createRpcProxy(DaemonRpc.class, Targets.daemon(this.name));
@@ -119,6 +130,12 @@ public class RemoteDaemon implements RedisUpdatable
         public Builder setServerCount(final Integer serverCount)
         {
             this.daemon.setServerCount(serverCount);
+            return this;
+        }
+
+        public Builder setAcceptingServers(final Boolean acceptingServers)
+        {
+            this.daemon.setAcceptingServers(acceptingServers);
             return this;
         }
 

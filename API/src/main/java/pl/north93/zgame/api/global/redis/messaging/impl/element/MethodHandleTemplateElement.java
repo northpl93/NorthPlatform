@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.redis.messaging.impl;
+package pl.north93.zgame.api.global.redis.messaging.impl.element;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -12,21 +12,17 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.redis.messaging.Template;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackNullable;
 
-/**
- * Reprezentuje jedną zmienną w templatce.
- * Wszystkie wygenerowane templatki składają się z tych elementów.
- */
-public class TemplateElement
+class MethodHandleTemplateElement implements ITemplateElement
 {
     private static final Lookup     LOOKUP      = MethodHandles.lookup();
     private static final MethodType GETTER_TYPE = MethodType.methodType(Object.class, Object.class);
     private static final MethodType SETTER_TYPE = MethodType.methodType(void.class, Object.class, Object.class);
     private final MethodHandle getter;
     private final MethodHandle setter;
-    private final Template template;
-    private final boolean  isNullable;
+    private final Template     template;
+    private final boolean      isNullable;
 
-    public TemplateElement(final Field field, final Template template)
+    public MethodHandleTemplateElement(final Field field, final Template template)
     {
         try
         {
@@ -41,21 +37,39 @@ public class TemplateElement
         this.template = template;
     }
 
-    public MethodHandle getGetter()
+    @Override
+    public Object get(final Object instance)
     {
-        return this.getter;
+        try
+        {
+            return this.getter.invokeExact(instance);
+        }
+        catch (final Throwable throwable)
+        {
+            throw new RuntimeException("Something went wrong while getting field...", throwable);
+        }
     }
 
-    public MethodHandle getSetter()
+    @Override
+    public void set(final Object instance, final Object value)
     {
-        return this.setter;
+        try
+        {
+            this.setter.invokeExact(instance, value);
+        }
+        catch (final Throwable throwable)
+        {
+            throw new RuntimeException("Something went wrong while setting field...", throwable);
+        }
     }
 
+    @Override
     public Template getTemplate()
     {
         return this.template;
     }
 
+    @Override
     public boolean isNullable()
     {
         return this.isNullable;

@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import pl.north93.zgame.api.global.exceptions.SingletonException;
-import pl.north93.zgame.api.global.network.NetworkManager;
+import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.rpc.RpcManager;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
@@ -45,7 +45,7 @@ public final class API
         return apiCore.getMessagePackTemplates();
     }
 
-    public static NetworkManager getNetworkManager()
+    public static INetworkManager getNetworkManager()
     {
         return apiCore.getNetworkManager();
     }

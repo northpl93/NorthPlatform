@@ -7,6 +7,8 @@ import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import org.diorite.utils.reflections.DioriteReflectionUtils;
@@ -17,15 +19,19 @@ import pl.north93.zgame.api.global.redis.messaging.TemplateGeneric;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackIgnore;
+import pl.north93.zgame.api.global.redis.messaging.impl.element.ITemplateElement;
+import pl.north93.zgame.api.global.redis.messaging.impl.element.TemplateElementFactory;
 import pl.north93.zgame.api.global.redis.messaging.templates.ArrayTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.EnumTemplate;
 
 public class TemplateFactoryImpl implements TemplateFactory
 {
+    private final TemplateElementFactory templateElementFactory = new TemplateElementFactory(false); // TODO switch to true
+
     @Override
     public <T> Template<T> createTemplate(final TemplateManager templateManager, final Class<T> clazz)
     {
-        final List<TemplateElement> elements = new LinkedList<>();
+        final List<ITemplateElement> elements = new LinkedList<>();
         final Field[] fields = FieldUtils.getAllFields(clazz);
 
         for (final Field field : fields)
@@ -77,9 +83,15 @@ public class TemplateFactoryImpl implements TemplateFactory
                 template = templateManager.getTemplate(fieldType);
             }
 
-            elements.add(new TemplateElement(field, template));
+            elements.add(this.templateElementFactory.getTemplateElement(clazz, field, template));
         }
 
         return new TemplateImpl<>(clazz, elements);
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("templateElementFactory", this.templateElementFactory).toString();
     }
 }

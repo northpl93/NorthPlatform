@@ -16,6 +16,7 @@ import pl.north93.zgame.api.global.data.PlayersDao;
 import pl.north93.zgame.api.global.data.SqlTables;
 import pl.north93.zgame.api.global.data.UsernameCache;
 import pl.north93.zgame.api.global.exceptions.SingletonException;
+import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.NetworkManager;
 import pl.north93.zgame.api.global.permissions.PermissionsManager;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
@@ -36,7 +37,7 @@ public abstract class ApiCore
     private final RedisSubscriber    redisSubscriber;
     private final RpcManager         rpcManager;
     private final UsernameCache      usernameCache;
-    private final NetworkManager     networkManager;
+    private final INetworkManager    networkManager;
     private final PermissionsManager permissionsManager;
     private final PlayersDao         playersDao;
     private       ConnectionConfig   connectionConfig;
@@ -142,7 +143,7 @@ public abstract class ApiCore
         return this.playersDao;
     }
 
-    public NetworkManager getNetworkManager()
+    public INetworkManager getNetworkManager()
     {
         return this.networkManager;
     }
@@ -159,7 +160,6 @@ public abstract class ApiCore
 
     public JedisPool getJedis()
     {
-        this.debug("Jedis pool accessed.");
         return this.pool;
     }
 

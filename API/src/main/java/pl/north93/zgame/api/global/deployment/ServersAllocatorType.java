@@ -3,6 +3,10 @@ package pl.north93.zgame.api.global.deployment;
 public enum ServersAllocatorType
 {
     /**
+     * Ilośćserwerów zawsze jest stała.
+     */
+    STATIC,
+    /**
      * Serwer uznawany jest za niedostępny dopiero gdy jest pełny.
      */
     PLAYER_COUNT,

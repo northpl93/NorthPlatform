@@ -120,7 +120,7 @@ public class BukkitApiCore extends ApiCore
         else if (properties.containsKey("northplatform.servertype")) // Konfiguracja ręczna - serwer sam zgłasza się do Redisa
         {
             this.debug("Server identity is generated (northplatform.servertype)");
-            this.thisServer = new ServerImpl(UUID.randomUUID(), false, ServerType.valueOf(properties.get("northplatform.servertype").toString()), ServerState.STARTING, JoiningPolicy.EVERYONE, "");
+            this.thisServer = new ServerImpl(UUID.randomUUID(), false, ServerType.valueOf(properties.get("northplatform.servertype").toString()), ServerState.STARTING, JoiningPolicy.EVERYONE);
             this.thisServer.sendUpdate();
         }
         else

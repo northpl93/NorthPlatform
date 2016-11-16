@@ -29,27 +29,33 @@ import pl.north93.zgame.api.global.messages.NetworkMeta;
 import pl.north93.zgame.api.global.messages.ProxyInstanceInfo;
 import pl.north93.zgame.api.global.network.minigame.MiniGame;
 import pl.north93.zgame.api.global.network.server.Server;
+import pl.north93.zgame.api.global.network.server.ServerImpl;
+import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 import pl.north93.zgame.api.global.utils.ObservableValue;
 import redis.clients.jedis.Jedis;
 import redis.clients.util.SafeEncoder;
 
-public class NetworkManager
+public class NetworkManager implements INetworkManager
 {
     private final ApiCore api = API.getApiCore();
+    private final TemplateManager msgPack = this.api.getMessagePackTemplates();
     private final ObservableValue<NetworkMeta> networkMeta = new ObservableValue<>();
 
+    @Override
     public void start()
     {
         this.downloadNetworkMeta(); // Download network meta on start
         this.api.getRedisSubscriber().subscribe(NETWORK_ACTION, this::handleNetworkAction);
     }
 
+    @Override
     public ObservableValue<NetworkMeta> getNetworkMeta()
     {
         return this.networkMeta;
     }
 
+    @Override
     public JoiningPolicy getJoiningPolicy()
     {
         return this.networkMeta.get().joiningPolicy;
@@ -60,11 +66,12 @@ public class NetworkManager
      *
      * @return lista serwerów proxy.
      */
+    @Override
     public Set<ProxyInstanceInfo> getProxyServers()
     {
         try (final Jedis jedis = API.getJedis().getResource())
         {
-            return jedis.keys(PROXY_INSTANCE + "*").stream().map(id -> this.api.getMessagePackTemplates().deserialize(ProxyInstanceInfo.class, jedis.get(id.getBytes()))).collect(Collectors.toSet());
+            return jedis.keys(PROXY_INSTANCE + "*").stream().map(id -> this.msgPack.deserialize(ProxyInstanceInfo.class, jedis.get(id.getBytes()))).collect(Collectors.toSet());
         }
     }
 
@@ -73,11 +80,26 @@ public class NetworkManager
      *
      * @return lista demonów.
      */
+    @Override
     public Set<RemoteDaemon> getDaemons()
     {
         try (final Jedis jedis = API.getJedis().getResource())
         {
-            return jedis.keys(DAEMON + "*").stream().map(id -> this.api.getMessagePackTemplates().deserialize(RemoteDaemon.class, jedis.get(id.getBytes()))).collect(Collectors.toSet());
+            return jedis.keys(DAEMON + "*").stream().map(id -> this.msgPack.deserialize(RemoteDaemon.class, jedis.get(id.getBytes()))).collect(Collectors.toSet());
+        }
+    }
+
+    /**
+     * Zwraca aktualną listę serwerów w tej sieci.
+     *
+     * @return lista serwerów.
+     */
+    @Override
+    public Set<Server> getServers()
+    {
+        try (final Jedis jedis = API.getJedis().getResource())
+        {
+            return jedis.keys(SERVER + "*").stream().map(id -> this.msgPack.deserialize(ServerImpl.class, jedis.get(id.getBytes()))).collect(Collectors.toSet());
         }
     }
 
@@ -86,14 +108,16 @@ public class NetworkManager
      *
      * @return lista grup serwerów.
      */
+    @Override
     public List<ServersGroup> getServersGroups()
     {
         try (final Jedis jedis = API.getJedis().getResource())
         {
-            return API.getMessagePackTemplates().deserializeList(ServersGroup.class, jedis.get(NETWORK_SERVER_GROUPS.getBytes()));
+            return this.msgPack.deserializeList(ServersGroup.class, jedis.get(NETWORK_SERVER_GROUPS.getBytes()));
         }
     }
 
+    @Override
     public ServersGroup getServersGroup(final String name)
     {
         return this.getServersGroups().stream().filter(serversGroup -> serversGroup.getName().equals(name)).findAny().orElse(null);
@@ -104,11 +128,12 @@ public class NetworkManager
      *
      * @return lista mini gier.
      */
+    @Override
     public List<MiniGame> getMiniGames()
     {
         try (final Jedis jedis = API.getJedis().getResource())
         {
-            return API.getMessagePackTemplates().deserializeList(MiniGame.class, jedis.get(NETWORK_MINIGAMES.getBytes()));
+            return this.msgPack.deserializeList(MiniGame.class, jedis.get(NETWORK_MINIGAMES.getBytes()));
         }
     }
 
@@ -118,6 +143,7 @@ public class NetworkManager
      * @param name nazwa systemowa minigry
      * @return konfiguracja minigry
      */
+    @Override
     public MiniGame getMiniGame(final String name)
     {
         return this.getMiniGames().stream().filter(miniGame -> miniGame.getSystemName().equals(name)).findAny().orElse(null);
@@ -128,11 +154,12 @@ public class NetworkManager
      *
      * @return lista server patternów.
      */
+    @Override
     public List<ServerPattern> getServerPatterns()
     {
         try (final Jedis jedis = API.getJedis().getResource())
         {
-            return API.getMessagePackTemplates().deserializeList(ServerPattern.class, jedis.get(NETWORK_PATTERNS.getBytes()));
+            return this.msgPack.deserializeList(ServerPattern.class, jedis.get(NETWORK_PATTERNS.getBytes()));
         }
     }
 
@@ -142,6 +169,7 @@ public class NetworkManager
      * @param name nazwa wzoru.
      * @return konfiguracja wzoru.
      */
+    @Override
     public ServerPattern getServerPattern(final String name)
     {
         return this.getServerPatterns().stream().filter(serverPattern -> serverPattern.getPatternName().equals(name)).findAny().orElse(null);
@@ -153,6 +181,7 @@ public class NetworkManager
      * @param uuid unikalny identyfikator serwera.
      * @return informacje o serwerze.
      */
+    @Override
     public Server getServer(final UUID uuid)
     {
         try (final Jedis jedis = API.getJedis().getResource())
@@ -162,15 +191,17 @@ public class NetworkManager
             {
                 return null;
             }
-            return API.getMessagePackTemplates().deserialize(Server.class, serverData);
+            return this.msgPack.deserialize(Server.class, serverData);
         }
     }
 
+    @Override
     public int onlinePlayersCount()
     {
         return this.getProxyServers().stream().mapToInt(ProxyInstanceInfo::getOnlinePlayers).sum();
     }
 
+    @Override
     public NetworkPlayer getNetworkPlayer(final String nick)
     {
         try (final Jedis jedis = API.getJedis().getResource())
@@ -180,7 +211,7 @@ public class NetworkManager
             {
                 return null;
             }
-            return API.getMessagePackTemplates().deserialize(NetworkPlayer.class, networkPlayerData);
+            return this.msgPack.deserialize(NetworkPlayer.class, networkPlayerData);
         }
     }
 
@@ -191,6 +222,7 @@ public class NetworkManager
      * @param nick Nazwa gracza do sprawdzenia.
      * @return czy gracz jest online w sieci.
      */
+    @Override
     public boolean isOnline(final String nick)
     {
         try (final Jedis jedis = API.getJedis().getResource())
@@ -205,6 +237,7 @@ public class NetworkManager
      *
      * @param networkAction akcja do wykonania
      */
+    @Override
     public void broadcastNetworkAction(final NetworkAction networkAction)
     {
         try (final Jedis jedis = API.getJedis().getResource())
@@ -218,6 +251,7 @@ public class NetworkManager
      *
      * @return NetworkControllerRpc
      */
+    @Override
     public NetworkControllerRpc getNetworkController()
     {
         return this.api.getRpcManager().createRpcProxy(NetworkControllerRpc.class, Targets.networkController());
@@ -252,7 +286,7 @@ public class NetworkManager
                 return;
             }
 
-            this.networkMeta.set(this.api.getMessagePackTemplates().deserialize(NetworkMeta.class, jedis.get(NETWORK_META.getBytes())));
+            this.networkMeta.set(this.msgPack.deserialize(NetworkMeta.class, jedis.get(NETWORK_META.getBytes())));
         }
     }
 

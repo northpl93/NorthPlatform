@@ -2,13 +2,11 @@ package pl.north93.zgame.api.global.redis.rpc.impl;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.redis.rpc.exceptions.RpcRemoteException;
 import pl.north93.zgame.api.global.redis.rpc.RpcTarget;
+import pl.north93.zgame.api.global.redis.rpc.exceptions.RpcRemoteException;
 import pl.north93.zgame.api.global.redis.rpc.exceptions.RpcTimeoutException;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcExceptionInfo;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcInvokeMessage;
@@ -16,11 +14,10 @@ import redis.clients.jedis.Jedis;
 
 public class RpcInvocationHandler implements InvocationHandler
 {
-    private static final ArrayList<Object> emptyArrayList = new ArrayList<>(0); // used to sent empty arguments
-    private static final AtomicInteger     requestCounter = new AtomicInteger(0);
-    private final RpcManagerImpl           rpcManager;
-    private final RpcObjectDescription     objectDescription;
-    private final byte[]                   invokeChannel;
+    private static final AtomicInteger requestCounter = new AtomicInteger(0);
+    private final RpcManagerImpl       rpcManager;
+    private final RpcObjectDescription objectDescription;
+    private final byte[]               invokeChannel;
 
     public RpcInvocationHandler(final RpcManagerImpl rpcManager, final Class<?> classInterface, final RpcTarget target)
     {
@@ -37,8 +34,7 @@ public class RpcInvocationHandler implements InvocationHandler
         final int methodId = methodDescription.getId();
         final int requestId = requestCounter.getAndIncrement();
 
-        final ArrayList<Object> arguments = args == null ? emptyArrayList : new ArrayList<>(Arrays.asList(args));
-        final RpcInvokeMessage rpcInvokeMessage = new RpcInvokeMessage(API.getApiCore().getId(), this.objectDescription.getClassId(), requestId, methodId, arguments);
+        final RpcInvokeMessage rpcInvokeMessage = new RpcInvokeMessage(API.getApiCore().getId(), this.objectDescription.getClassId(), requestId, methodId, args);
         try (final Jedis jedis = API.getJedis().getResource())
         {
             jedis.publish(this.invokeChannel, API.getMessagePackTemplates().serialize(rpcInvokeMessage));

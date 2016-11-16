@@ -14,16 +14,17 @@ import org.msgpack.core.MessageUnpacker;
 
 import pl.north93.zgame.api.global.redis.messaging.Template;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
+import pl.north93.zgame.api.global.redis.messaging.impl.element.ITemplateElement;
 
 public class TemplateImpl<T> implements Template<T>
 {
-    private static final Lookup         LOOKUP      = MethodHandles.lookup();
-    private static final MethodType     VOID_TYPE   = MethodType.methodType(void.class);
-    private static final MethodType     OBJECT_TYPE = MethodType.methodType(Object.class);
-    private final MethodHandle          constructor;
-    private final List<TemplateElement> structure;
+    private static final Lookup          LOOKUP      = MethodHandles.lookup();
+    private static final MethodType      VOID_TYPE   = MethodType.methodType(void.class);
+    private static final MethodType      OBJECT_TYPE = MethodType.methodType(Object.class);
+    private final MethodHandle           constructor;
+    private final List<ITemplateElement> structure;
 
-    public TemplateImpl(final Class<T> templateClass, final List<TemplateElement> structure)
+    public TemplateImpl(final Class<T> templateClass, final List<ITemplateElement> structure)
     {
         try
         {
@@ -40,28 +41,21 @@ public class TemplateImpl<T> implements Template<T>
     @Override
     public void serializeObject(final TemplateManager templateManager, final MessageBufferPacker packer, final T object) throws Exception
     {
-        try
+        for (final ITemplateElement templateElement : this.structure)
         {
-            for (final TemplateElement templateElement : this.structure)
+            final Object value = templateElement.get(object);
+            if (value == null)
             {
-                final Object value = templateElement.getGetter().invokeExact(object);
-                if (value == null)
+                if (! templateElement.isNullable())
                 {
-                    if (! templateElement.isNullable())
-                    {
-                        throw new NullPointerException("Field is not annotated by @javax.annotation.Nullable");
-                    }
-                    packer.packNil();
+                    throw new NullPointerException("Field is not annotated by @MsgPackNullable");
                 }
-                else
-                {
-                    templateElement.getTemplate().serializeObject(templateManager, packer, value);
-                }
+                packer.packNil();
             }
-        }
-        catch (final Throwable e)
-        {
-            throw new RuntimeException("Object serialization failed.", e);
+            else
+            {
+                templateElement.getTemplate().serializeObject(templateManager, packer, value);
+            }
         }
     }
 
@@ -72,13 +66,13 @@ public class TemplateImpl<T> implements Template<T>
         {
             @SuppressWarnings("unchecked")
             final T instance = (T) this.constructor.invokeExact();
-            for (final TemplateElement templateElement : this.structure)
+            for (final ITemplateElement templateElement : this.structure)
             {
                 if (templateElement.isNullable() && unpacker.getNextFormat() == MessageFormat.NIL)
                 {
-                    continue; // is field is nullable and next value is nil so we not try to deserialize it
+                    continue; // field is nullable and next value is nil so we not try to deserialize it
                 }
-                templateElement.getSetter().invokeExact(instance, templateElement.getTemplate().deserializeObject(templateManager, unpacker));
+                templateElement.set(instance, templateElement.getTemplate().deserializeObject(templateManager, unpacker));
             }
 
             return instance;

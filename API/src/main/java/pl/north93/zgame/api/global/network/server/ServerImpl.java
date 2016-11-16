@@ -10,9 +10,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.deployment.ServerPattern;
 import pl.north93.zgame.api.global.deployment.ServersGroup;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.redis.messaging.RedisUpdatable;
+import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
+import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackNullable;
+import pl.north93.zgame.api.global.redis.messaging.templates.extra.ServerPatternInStringTemplate;
+import pl.north93.zgame.api.global.redis.messaging.templates.extra.ServersGroupInStringTemplate;
 
 public class ServerImpl implements Server, ServerProxyData, RedisUpdatable
 {
@@ -21,20 +26,31 @@ public class ServerImpl implements Server, ServerProxyData, RedisUpdatable
     private ServerType    serverType;
     private ServerState   serverState;
     private JoiningPolicy joiningPolicy;
-    private String        serversGroup;
+    @MsgPackNullable
+    @MsgPackCustomTemplate(ServersGroupInStringTemplate.class)
+    private ServersGroup  serversGroup;
+    @MsgPackNullable
+    @MsgPackCustomTemplate(ServerPatternInStringTemplate.class)
+    private ServerPattern serverPattern;
 
     public ServerImpl() // for serialization
     {
     }
 
-    public ServerImpl(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy, final String serversGroup)
+    public ServerImpl(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy)
     {
         this.serverId = serverId;
         this.isLaunchedViaDaemon = isLaunchedViaDaemon;
         this.serverType = serverType;
         this.serverState = serverState;
         this.joiningPolicy = joiningPolicy;
+    }
+
+    public ServerImpl(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy, final ServersGroup serversGroup, final ServerPattern serverPattern)
+    {
+        this(serverId, isLaunchedViaDaemon, serverType, serverState, joiningPolicy);
         this.serversGroup = serversGroup;
+        this.serverPattern = serverPattern;
     }
 
     @Override
@@ -74,9 +90,15 @@ public class ServerImpl implements Server, ServerProxyData, RedisUpdatable
     }
 
     @Override
+    public ServerPattern getServerPattern()
+    {
+        return this.serverPattern;
+    }
+
+    @Override
     public Optional<ServersGroup> getServersGroup()
     {
-        return Optional.ofNullable(API.getNetworkManager().getServersGroup(this.serversGroup));
+        return Optional.ofNullable(this.serversGroup);
     }
 
     @Override
