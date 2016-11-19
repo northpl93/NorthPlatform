@@ -7,6 +7,7 @@ import java.util.Set;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.deployment.RemoteDaemon;
 import pl.north93.zgame.api.global.deployment.ServersGroup;
+import pl.north93.zgame.api.global.network.server.ServerImpl;
 import pl.north93.zgame.controller.NetworkControllerCore;
 import pl.north93.zgame.controller.servers.allocators.AllocationProcessor;
 
@@ -31,6 +32,17 @@ public class NetworkServersManager extends Thread implements INetworkServersMana
             final Set<RemoteDaemon> daemons = API.getNetworkManager().getDaemons();
 
             this.allocationProcessor.processTasks(daemons, serversGroups);
+            try
+            {
+                synchronized (this)
+                {
+                    this.wait(1_000);
+                }
+            }
+            catch (final InterruptedException e)
+            {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -52,14 +64,21 @@ public class NetworkServersManager extends Thread implements INetworkServersMana
     }
 
     @Override
-    public void addServers(final ServersGroup serversGroup, final int servers)
+    public void addServers(final ServersGroup serversGroup, final long servers)
     {
-
+        API.getLogger().info("Adding " + servers + " servers to group " + serversGroup.getName());
+        for (int i = 0; i < servers; i++)
+        {
+            final ServerImpl server = ServerFactory.INSTANCE.createNewServer(serversGroup);
+            server.sendUpdate(); // send server data to redis.
+            this.allocationProcessor.queueServerDeployment(server); // queue server for deployment.
+        }
     }
 
     @Override
-    public void removeServers(final ServersGroup serversGroup, final int servers)
+    public void removeServers(final ServersGroup serversGroup, final long servers)
     {
-
+        API.getLogger().info("Removing " + servers + " servers from group " + serversGroup.getName());
+        // TODO
     }
 }

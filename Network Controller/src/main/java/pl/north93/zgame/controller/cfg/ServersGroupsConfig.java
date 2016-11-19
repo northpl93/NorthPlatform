@@ -12,9 +12,11 @@ import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
 import org.diorite.cfg.system.Template;
 import org.diorite.cfg.system.TemplateCreator;
 
+import pl.north93.zgame.api.global.deployment.AllocationConfiguration;
 import pl.north93.zgame.api.global.deployment.ServersAllocatorType;
 import pl.north93.zgame.api.global.deployment.ServersGroup;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
+import pl.north93.zgame.api.global.network.server.ServerType;
 
 @CfgComments({"Konfiguracja grup serwerów"})
 @CfgFooterComment("Koniec konfiguracji!")
@@ -29,11 +31,10 @@ public class ServersGroupsConfig
         {
             final ServersGroup exampleServersGroup = template.fillDefaults(new ServersGroup());
             exampleServersGroup.setName("minigame_example");
+            exampleServersGroup.setServersType(ServerType.MINIGAME);
             exampleServersGroup.setServerPattern("pattern_minigame_example");
-            exampleServersGroup.setAllocatorType(ServersAllocatorType.JOINING_POLICY);
             exampleServersGroup.setJoiningPolicy(JoiningPolicy.EVERYONE);
-            exampleServersGroup.setMinServers(2);
-            exampleServersGroup.setMaxServers(10);
+            exampleServersGroup.setAllocatorConfiguration(new AllocationConfiguration(ServersAllocatorType.STATIC, false, 1, 1));
 
             list.add(exampleServersGroup);
         }

@@ -5,10 +5,12 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.deployment.RemoteDaemon;
 import pl.north93.zgame.api.global.deployment.ServersAllocatorType;
 import pl.north93.zgame.api.global.deployment.ServersGroup;
 import pl.north93.zgame.api.global.network.server.Server;
+import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.controller.servers.INetworkServersManager;
 
 /**
@@ -29,11 +31,17 @@ public class AllocationProcessor
 
     public void processTasks(final Set<RemoteDaemon> daemons, final List<ServersGroup> serversGroup)
     {
-        for (final ServersGroup group : serversGroup)
-        {
-            this.processAllocation(group);
-        }
+        serversGroup.forEach(this::processAllocation);
         this.handleDeploymentQueue(daemons);
+    }
+
+    public void queueServerDeployment(final Server server)
+    {
+        if (! server.isLaunchedViaDaemon() || server.getServerState() != ServerState.ALLOCATING)
+        {
+            throw new IllegalArgumentException();
+        }
+        this.deploymentQueue.add(server);
     }
 
     private void processAllocation(final ServersGroup serversGroup)
@@ -62,6 +70,7 @@ public class AllocationProcessor
             // push server deployment to found daemon.
             // daemon will update server state
             daemon.getRpc().deployServer(nextServer.getUuid(), nextServer.getServerPattern().getPatternName());
+            API.getLogger().info("Deploying server " + nextServer.getUuid() + " on daemon " + daemon.getName());
         }
     }
 }

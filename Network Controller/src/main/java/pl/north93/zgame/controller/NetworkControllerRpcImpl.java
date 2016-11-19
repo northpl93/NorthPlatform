@@ -31,4 +31,17 @@ public class NetworkControllerRpcImpl implements NetworkControllerRpc
         }
         server.updateServerState(serverState);
     }
+
+    @Override
+    public void removeServer(final UUID serverId)
+    {
+        final ServerImpl server = (ServerImpl) API.getNetworkManager().getServer(serverId);
+        if (server == null)
+        {
+            API.getLogger().warning("Not found server with ID " + serverId + " while removing server ");
+            return;
+        }
+        server.delete();
+        API.getLogger().info("Removed server with UUID: " + serverId);
+    }
 }

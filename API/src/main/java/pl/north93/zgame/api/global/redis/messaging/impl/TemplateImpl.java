@@ -43,6 +43,7 @@ public class TemplateImpl<T> implements Template<T>
     {
         for (final ITemplateElement templateElement : this.structure)
         {
+            //API.debug("TemplateImpl :: TemplateElement :: " + templateElement);
             final Object value = templateElement.get(object);
             if (value == null)
             {

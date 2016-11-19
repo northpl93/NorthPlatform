@@ -17,17 +17,24 @@ import redis.clients.jedis.Jedis;
 
 public class ServerInstance
 {
-    private final UUID          serverId;
-    private final File          workspace;
-    private final JavaArguments java;
-    private       ServerConsole serverConsole;
-    private       boolean       saveLog; // czy log ma zostac zapisany po zatrzymaniu serwera
+    private final ServersManager serversManager;
+    private final UUID           serverId;
+    private final File           workspace;
+    private final JavaArguments  java;
+    private       ServerConsole  serverConsole;
+    private       boolean        saveLog; // czy log ma zostac zapisany po zatrzymaniu serwera
 
-    public ServerInstance(final UUID serverId, final File workspace, final JavaArguments javaArguments)
+    public ServerInstance(final ServersManager serversManager, final UUID serverId, final File workspace, final JavaArguments javaArguments)
     {
+        this.serversManager = serversManager;
         this.serverId = serverId;
         this.workspace = workspace;
         this.java = javaArguments;
+    }
+
+    public ServersManager getServersManager()
+    {
+        return this.serversManager;
     }
 
     public UUID getServerId()

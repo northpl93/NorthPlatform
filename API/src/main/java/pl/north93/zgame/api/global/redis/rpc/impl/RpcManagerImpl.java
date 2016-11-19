@@ -25,6 +25,7 @@ public class RpcManagerImpl implements RpcManager
     @Override
     public void addListeningContext(final String id)
     {
+        API.debug("addListeningContext(" + id + ")");
         this.api.getRedisSubscriber().subscribe("rpc:" + id + ":invoke", this::handleMethodInvocation);
         this.api.getRedisSubscriber().subscribe("rpc:" + id + ":response", this::handleResponse);
     }
@@ -32,6 +33,7 @@ public class RpcManagerImpl implements RpcManager
     @Override
     public void addRpcImplementation(final Class<?> classInterface, final Object implementation)
     {
+        API.debug("addRpcImplementation(" + classInterface + ", " + implementation.getClass().getName() + ")");
         this.responseHandlerMap.put(classInterface.getName().hashCode(), new RpcResponseHandler(classInterface, implementation));
     }
 

@@ -94,6 +94,12 @@ public class RemoteDaemon implements RedisUpdatable
         return API.getRpcManager().createRpcProxy(DaemonRpc.class, Targets.daemon(this.name));
     }
 
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("hostName", this.hostName).append("maxRam", this.maxRam).append("ramUsed", this.ramUsed).append("serverCount", this.serverCount).append("isAcceptingServers", this.isAcceptingServers).toString();
+    }
+
     public static Builder builder()
     {
         return new Builder();

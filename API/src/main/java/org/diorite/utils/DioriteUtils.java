@@ -112,6 +112,20 @@ public final class DioriteUtils
         file.createNewFile();
     }
 
+    /**
+     * Create directory, if not exists
+     *
+     * @param directory directory to create.
+     */
+    public static void createDirectory(final File directory)
+    {
+        if (directory.exists())
+        {
+            return;
+        }
+        directory.mkdir();
+    }
+
     public static UUID getCrackedUuid(final String nick)
     {
         return UUID.nameUUIDFromBytes(("OfflinePlayer:" + nick).getBytes(StandardCharsets.UTF_8));

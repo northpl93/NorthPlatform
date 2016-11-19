@@ -43,11 +43,12 @@ public class DaemonCore extends StandaloneApp
                                       .setMaxRam(this.config.maxMemory)
                                       .setRamUsed(0)
                                       .setServerCount(0)
+                                      .setAcceptingServers(true)
                                       .build();
-        this.daemonInfo.sendUpdate();
         apiCore.getRpcManager().addRpcImplementation(DaemonRpc.class, new DaemonRpcImpl(this));
         this.serversManager = new ServersManager();
         this.serversManager.startServerManager();
+        this.daemonInfo.sendUpdate(); // broadcast daemon when it's ready
     }
 
     @Override

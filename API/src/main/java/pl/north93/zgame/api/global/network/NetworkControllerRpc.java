@@ -25,4 +25,12 @@ public interface NetworkControllerRpc
      */
     @DoNotWaitForResponse
     void updateServerState(UUID serverId, ServerState serverState);
+
+    /**
+     * Usuwa serwer o podanym UUID
+     *
+     * @param serverId unikalny identyfikator serwera
+     */
+    @DoNotWaitForResponse
+    void removeServer(UUID serverId);
 }

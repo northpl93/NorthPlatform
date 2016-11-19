@@ -28,13 +28,28 @@ public class StandalonePlatformConnector implements PlatformConnector
     @Override
     public void runTaskAsynchronously(final Runnable runnable)
     {
-        this.executor.execute(runnable);
+        this.executor.submit(this.wrapRunnable(runnable));
     }
 
     @Override
     public void runTaskAsynchronously(final Runnable runnable, final int ticks)
     {
         final int seconds = ticks / 20;
-        this.executor.scheduleAtFixedRate(runnable, seconds, seconds, TimeUnit.SECONDS);
+        this.executor.scheduleAtFixedRate(this.wrapRunnable(runnable), seconds, seconds, TimeUnit.SECONDS);
+    }
+
+    private Runnable wrapRunnable(final Runnable runnable) // exposes the stacktrace
+    {
+        return () ->
+        {
+            try
+            {
+                runnable.run();
+            }
+            catch (final Exception e)
+            {
+                e.printStackTrace();
+            }
+        };
     }
 }

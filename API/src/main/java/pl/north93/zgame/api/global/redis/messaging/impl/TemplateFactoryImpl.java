@@ -31,6 +31,12 @@ public class TemplateFactoryImpl implements TemplateFactory
     @Override
     public <T> Template<T> createTemplate(final TemplateManager templateManager, final Class<T> clazz)
     {
+        if (clazz.isEnum()) // DynamicTemplate can invoke createTemplate with enum class
+        {
+            //noinspection unchecked
+            return (Template<T>) new EnumTemplate(clazz);
+        }
+
         final List<ITemplateElement> elements = new LinkedList<>();
         final Field[] fields = FieldUtils.getAllFields(clazz);
 

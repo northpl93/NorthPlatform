@@ -18,13 +18,15 @@ public class NetworkControllerCore
             API.getRpcManager().addListeningContext("controller");
         }
         API.getRpcManager().addRpcImplementation(NetworkControllerRpc.class, new NetworkControllerRpcImpl());
-        this.serversManager = new NetworkServersManager(this);
         this.networkMetaBroadcaster.start();
+        this.serversManager = new NetworkServersManager(this);
+        this.serversManager.start();
     }
 
     public void stop()
     {
         this.networkMetaBroadcaster.stop();
+        // TODO Servers Manager safe stop
     }
 
     public ConfigBroadcaster getConfigBroadcaster()

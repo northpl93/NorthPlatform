@@ -1,6 +1,7 @@
 package pl.north93.zgame.api.global.redis.rpc.impl;
 
 import java.lang.invoke.MethodHandle;
+import java.util.logging.Level;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -61,8 +62,9 @@ public class RpcResponseHandler
             {
                 methodHandle.invokeWithArguments(invocationArgs);
             }
-            catch (final Throwable ignored)
+            catch (final Throwable throwable)
             {
+                API.getLogger().log(Level.SEVERE, "Something went wrong while executing RPC method. (response isn't sending so I log this here)", throwable);
             }
         }
         final long end = System.currentTimeMillis() - start;

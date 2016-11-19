@@ -8,6 +8,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -70,7 +71,7 @@ public class ServerConsole
         final byte[] bytes = allocate.array();
         final byte[] result = new byte[read];
         System.arraycopy(bytes, 0, result, 0, read);
-        this.logger.info(new String(result)); // todo BufferedReader?
+        this.logger.info(new String(result).trim());
         return true;
     }
 
@@ -78,7 +79,7 @@ public class ServerConsole
     {
         API.getLogger().info("Server process with ID " + this.serverInstance.getServerId() + " stopped!");
         this.serverInstance.setServerConsole(null); // usuniecie konsoli serwera z instancji
-        // TODO remove server from redis?
+        this.serverInstance.getServersManager().removeServer(this.serverInstance.getServerId()); // usuniecie serwera z demona i sieci
     }
 
     @Override
@@ -90,13 +91,13 @@ public class ServerConsole
     public static ServerConsole createServerProcess(final ServersManager serversManager, final ServerInstance serverInstance)
     {
         final String javaStartLine = serverInstance.getJava().buildStartLine();
-        final ProcessBuilder procBuilder = new ProcessBuilder(javaStartLine);
+        final ProcessBuilder procBuilder = new ProcessBuilder(StringUtils.split(javaStartLine, ' '));
         procBuilder.directory(serverInstance.getWorkspace());
 
         final Process process;
         try
         {
-            API.getLogger().info("Starting process: " + javaStartLine);
+            API.getLogger().info("Starting process for server with UUID: " + serverInstance.getServerId());
             process = procBuilder.start();
         }
         catch (final IOException e)

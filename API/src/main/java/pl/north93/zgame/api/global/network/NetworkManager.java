@@ -191,7 +191,7 @@ public class NetworkManager implements INetworkManager
             {
                 return null;
             }
-            return this.msgPack.deserialize(Server.class, serverData);
+            return this.msgPack.deserialize(ServerImpl.class, serverData);
         }
     }
 

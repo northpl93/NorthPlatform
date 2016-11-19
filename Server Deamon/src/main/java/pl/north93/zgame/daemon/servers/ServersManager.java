@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 
+import org.diorite.utils.DioriteUtils;
+
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.deployment.ServerPattern;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
@@ -32,13 +34,16 @@ public class ServersManager
 
     public void startServerManager()
     {
+        DioriteUtils.createDirectory(this.workspace);
+        DioriteUtils.createDirectory(this.engines);
+        DioriteUtils.createDirectory(this.patterns);
         this.outputLog.setParent(API.getLogger());
         this.watchdog.start();
     }
 
     public void stopServerManager()
     {
-        // TODO stop all servers?
+        this.servers.values().forEach(serverInstance -> serverInstance.getServerConsole().executeCommand("stop"));
         this.watchdog.safeStop();
     }
 
@@ -55,6 +60,26 @@ public class ServersManager
     public ServerInstance getServer(final UUID serverUuid)
     {
         return this.servers.get(serverUuid);
+    }
+
+    public void removeServer(final UUID serverUuid)
+    {
+        final ServerInstance instance = this.getServer(serverUuid);
+        if (instance.getServerConsole() != null)
+        {
+            throw new IllegalStateException("Tried to remove server with connected console!");
+        }
+        try
+        {
+            FileUtils.deleteDirectory(instance.getWorkspace()); // remove server workspace
+        }
+        catch (final IOException e)
+        {
+            e.printStackTrace(); // TODO ?
+        }
+        this.servers.remove(serverUuid); // remove server from internal daemon list
+        this.controller.removeServer(serverUuid); // inform network controller about removing server
+        API.getLogger().info("Removed server with UUID: " + serverUuid);
     }
 
     public void deployNewServer(final UUID serverId, final String serverTemplate)
@@ -81,10 +106,22 @@ public class ServersManager
         java.addJavaArg("XX:MaxTrivialSize=12"); // Default=6
         java.addEnvVar("jline.terminal", "jline.UnsupportedTerminal"); // Disable fancy terminal
         java.addEnvVar("northplatform.serverid", serverId.toString());
+        java.setStartHeapSize(pattern.getStartMemory());
+        java.setMaxHeapSize(pattern.getMaxMemory());
 
-        final ServerInstance serverInstance = new ServerInstance(serverId, serverWorkspace, java);
+        final ServerInstance serverInstance = new ServerInstance(this, serverId, serverWorkspace, java);
         this.servers.put(serverId, serverInstance);
-        ServerConsole.createServerProcess(this, serverInstance);
+        try
+        {
+            ServerConsole.createServerProcess(this, serverInstance);
+        }
+        catch (final Exception e)
+        {
+            API.getLogger().log(Level.SEVERE, "Failed to createServerProcess", e);
+            this.servers.remove(serverId); // remove server from list
+            this.controller.updateServerState(serverId, ServerState.ERROR);
+            return;
+        }
         this.controller.updateServerState(serverId, ServerState.STARTING);
     }
 

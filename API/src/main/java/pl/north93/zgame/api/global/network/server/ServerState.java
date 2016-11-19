@@ -7,5 +7,6 @@ public enum ServerState
     STARTING,   // serwer się uruchamia
     WORKING,    // serwer uruchomiony
     STOPPING,   // serwer jest zatrzymywany
-    STOPPED     // serwer jest wyłączony
+    STOPPED,    // serwer jest wyłączony
+    ERROR       // serwer jest wyłączony/nie został włączony ponieważ wystąpił błąd
 }

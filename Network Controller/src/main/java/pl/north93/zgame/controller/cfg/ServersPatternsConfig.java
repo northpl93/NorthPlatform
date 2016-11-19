@@ -27,11 +27,11 @@ public class ServersPatternsConfig
 
         {
             final ServerPattern pattern = template.fillDefaults(new ServerPattern());
-            pattern.setPatternName("testInstance");
+            pattern.setPatternName("pattern_minigame_example");
             pattern.setEngineName("spigot-1.10.jar");
             pattern.setMaxMemory(1000);
             pattern.setStartMemory(1000);
-            pattern.setComponents(new ArrayList<>(Arrays.asList("core", "lobby-main")));
+            pattern.setComponents(new ArrayList<>(Arrays.asList("core", "minigame-example")));
 
             list.add(pattern);
         }

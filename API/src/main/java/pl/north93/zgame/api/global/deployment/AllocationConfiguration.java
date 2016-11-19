@@ -20,6 +20,18 @@ public class AllocationConfiguration
     @CfgComment("Maksymalna ilość serwerów utrzymywanych w sieci")
     private Integer maxServers;
 
+    public AllocationConfiguration()
+    {
+    }
+
+    public AllocationConfiguration(final ServersAllocatorType allocatorType, final Boolean allowDeallocate, final Integer minServers, final Integer maxServers)
+    {
+        this.allocatorType = allocatorType;
+        this.allowDeallocate = allowDeallocate;
+        this.minServers = minServers;
+        this.maxServers = maxServers;
+    }
+
     public ServersAllocatorType getAllocatorType()
     {
         return this.allocatorType;

@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.diorite.cfg.annotations.CfgComment;
 
 import pl.north93.zgame.api.global.network.JoiningPolicy;
+import pl.north93.zgame.api.global.network.server.ServerType;
 
 /**
  * Reprezentuje grupę serwerów mogących pracować na różnych demonach.
@@ -14,15 +15,26 @@ public class ServersGroup
 {
     @CfgComment("Nazwa tej grupy serwerów")
     private String                  name;
+    @CfgComment("Typ serwerów tworzonych w tej grupie")
+    private ServerType              serversType;
     @CfgComment("Nazwa wzoru według którego mają być tworzone instancje serwerów dla tej grupy")
     private String                  serverPattern;
     private AllocationConfiguration allocatorConfiguration;
     @CfgComment("Uprawnienia dostępu do tej grupy serwerów")
     private JoiningPolicy           joiningPolicy;
-    @CfgComment("Minimalna ilość serwerów")
-    private Integer                 minServers;
-    @CfgComment("Maksymalna ilość serwerów")
-    private Integer                 maxServers;
+
+    public ServersGroup()
+    {
+    }
+
+    public ServersGroup(final String name, final ServerType serversType, final String serverPattern, final AllocationConfiguration allocatorConfiguration, final JoiningPolicy joiningPolicy)
+    {
+        this.name = name;
+        this.serversType = serversType;
+        this.serverPattern = serverPattern;
+        this.allocatorConfiguration = allocatorConfiguration;
+        this.joiningPolicy = joiningPolicy;
+    }
 
     public String getName()
     {
@@ -32,6 +44,16 @@ public class ServersGroup
     public void setName(final String name)
     {
         this.name = name;
+    }
+
+    public ServerType getServersType()
+    {
+        return this.serversType;
+    }
+
+    public void setServersType(final ServerType serversType)
+    {
+        this.serversType = serversType;
     }
 
     public String getServerPattern()
@@ -49,6 +71,11 @@ public class ServersGroup
         return this.allocatorConfiguration;
     }
 
+    public void setAllocatorConfiguration(final AllocationConfiguration allocatorConfiguration)
+    {
+        this.allocatorConfiguration = allocatorConfiguration;
+    }
+
     public JoiningPolicy getJoiningPolicy()
     {
         return this.joiningPolicy;
@@ -57,26 +84,6 @@ public class ServersGroup
     public void setJoiningPolicy(final JoiningPolicy joiningPolicy)
     {
         this.joiningPolicy = joiningPolicy;
-    }
-
-    public Integer getMinServers()
-    {
-        return this.minServers;
-    }
-
-    public void setMinServers(final Integer minServers)
-    {
-        this.minServers = minServers;
-    }
-
-    public Integer getMaxServers()
-    {
-        return this.maxServers;
-    }
-
-    public void setMaxServers(final Integer maxServers)
-    {
-        this.maxServers = maxServers;
     }
 
     @Override
@@ -106,6 +113,6 @@ public class ServersGroup
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("serverPattern", this.serverPattern).append("allocatorConfiguration", this.allocatorConfiguration).append("joiningPolicy", this.joiningPolicy).append("minServers", this.minServers).append("maxServers", this.maxServers).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("serversType", this.serversType).append("serverPattern", this.serverPattern).append("allocatorConfiguration", this.allocatorConfiguration).append("joiningPolicy", this.joiningPolicy).toString();
     }
 }
