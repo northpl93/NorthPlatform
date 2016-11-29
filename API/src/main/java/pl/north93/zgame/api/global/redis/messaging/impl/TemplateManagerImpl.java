@@ -17,6 +17,7 @@ import pl.north93.zgame.api.global.redis.messaging.Template;
 import pl.north93.zgame.api.global.redis.messaging.TemplateFactory;
 import pl.north93.zgame.api.global.redis.messaging.TemplateGeneric;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
+import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackUseTemplateOf;
 import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.BooleanTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.IntegerTemplate;
@@ -62,6 +63,12 @@ public class TemplateManagerImpl implements TemplateManager
         if (fromCache != null)
         {
             return (Template<T>) fromCache;
+        }
+
+        final boolean isCustomTemplate = clazz.isAnnotationPresent(MsgPackUseTemplateOf.class);
+        if (isCustomTemplate)
+        {
+            return this.getTemplate((Class<T>) clazz.getAnnotation(MsgPackUseTemplateOf.class).value());
         }
 
         if (clazz.isInterface() || clazz == Object.class)

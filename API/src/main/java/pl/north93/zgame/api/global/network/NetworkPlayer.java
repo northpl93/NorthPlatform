@@ -14,6 +14,9 @@ import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemp
 import pl.north93.zgame.api.global.redis.messaging.templates.extra.GroupInStringTemplate;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 
+/**
+ * Reprezentuje gracza będącego online w sieci
+ */
 public class NetworkPlayer implements RedisUpdatable
 {
     private String  nick;

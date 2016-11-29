@@ -2,31 +2,35 @@ package pl.north93.zgame.api.global.data;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mongodb.client.MongoCollection;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.bson.Document;
 
 import org.diorite.utils.collections.maps.CaseInsensitiveMap;
 
-import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.ApiCore;
 
 public class UsernameCache
 {
-    private final Map<String, UsernameDetails> localCache = new CaseInsensitiveMap<>(512);
-    private final JsonParser json = new JsonParser();
+    private final Map<String, UsernameDetails>     localCache = new CaseInsensitiveMap<>(512);
+    private final JsonParser                       json = new JsonParser();
+    private final MongoCollection<UsernameDetails> mongoCache;
+
+    public UsernameCache(final ApiCore apiCore)
+    {
+        this.mongoCache = apiCore.getMainDatabase().getCollection("username_cache", UsernameDetails.class);
+    }
 
     public static class UsernameDetails
     {
@@ -65,26 +69,13 @@ public class UsernameCache
 
     public Optional<UsernameDetails> queryCache(final String username)
     {
-        try (final Connection mysql = API.getMysql().getConnection())
+        final Iterator<UsernameDetails> results = this.mongoCache.find(new Document("username", "/" + username + "/i")).limit(1).iterator();
+        if (results.hasNext())
         {
-            final PreparedStatement statement = mysql.prepareStatement("SELECT username,premium,fetchtime FROM username_cache WHERE LOWER(username) = LOWER(?)");
-            statement.setString(1, username);
+            return Optional.of(results.next());
+        }
 
-            final ResultSet results = statement.executeQuery();
-            if (results.next())
-            {
-                return Optional.of(new UsernameDetails(results.getString("username"), results.getBoolean("premium"), results.getTimestamp("fetchtime")));
-            }
-            else
-            {
-                return Optional.empty();
-            }
-        }
-        catch (final SQLException e)
-        {
-            e.printStackTrace();
-            return Optional.empty();
-        }
+        return Optional.empty();
     }
 
     public Optional<UsernameDetails> queryMojangApi(final String username)
@@ -129,28 +120,11 @@ public class UsernameCache
             final UsernameDetails detailsFromMojang = fromMojang.get();
 
             this.localCache.put(username, detailsFromMojang);
-            this.insertUserDetailsToCache(detailsFromMojang);
+            this.mongoCache.insertOne(detailsFromMojang);
 
             return fromMojang;
         }
         return Optional.empty();
-    }
-
-    private void insertUserDetailsToCache(final UsernameDetails details)
-    {
-        try (final Connection connection = API.getMysql().getConnection())
-        {
-            final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO username_cache (username,premium,fetchtime) VALUES (?, ?, ?)");
-            preparedStatement.setString(1, details.getValidSpelling());
-            preparedStatement.setBoolean(2, details.isPremium());
-            preparedStatement.setTimestamp(3, new Timestamp(details.getFetchTime().getTime()));
-
-            preparedStatement.execute();
-        }
-        catch (final SQLException e)
-        {
-            e.printStackTrace();
-        }
     }
 
     @Override

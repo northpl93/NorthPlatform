@@ -38,13 +38,15 @@ import redis.clients.util.SafeEncoder;
 
 public class NetworkManager implements INetworkManager
 {
-    private final ApiCore api = API.getApiCore();
-    private final TemplateManager msgPack = this.api.getMessagePackTemplates();
+    private ApiCore api;
+    private TemplateManager msgPack;
     private final ObservableValue<NetworkMeta> networkMeta = new ObservableValue<>();
 
     @Override
     public void start()
     {
+        this.api = API.getApiCore();
+        this.msgPack = this.api.getMessagePackTemplates();
         this.downloadNetworkMeta(); // Download network meta on start
         this.api.getRedisSubscriber().subscribe(NETWORK_ACTION, this::handleNetworkAction);
     }

@@ -18,20 +18,12 @@ public class ConnectionConfig
     private boolean debug;
 
     @CfgComment("Host bazy danych i port")
-    @CfgStringDefault("localhost:3306")
-    private String mysqlHost;
+    @CfgStringDefault("mongodb://user:password@127.0.0.1:2137/?authSource=server")
+    private String mongoDbConnect;
 
-    @CfgComment("Nazwa użytkownika bazy danych")
-    @CfgStringDefault("user")
-    private String mysqlUser;
-
-    @CfgComment("Hasło uzytkownika bazy danych")
-    @CfgStringDefault("password")
-    private String mysqlPassword;
-
-    @CfgComment("Nazwa bazy danych")
-    @CfgStringDefault("database")
-    private String mysqlDatabase;
+    @CfgComment("Baza danych z której korzystać na API")
+    @CfgStringDefault("server")
+    private String mongoMainDatabase;
 
     @CfgComment("Host redisa")
     @CfgStringDefault("localhost")
@@ -58,24 +50,14 @@ public class ConnectionConfig
         this.debug = debug;
     }
 
-    public String getMysqlHost()
+    public String getMongoDbConnect()
     {
-        return this.mysqlHost;
+        return this.mongoDbConnect;
     }
 
-    public String getMysqlUser()
+    public String getMongoMainDatabase()
     {
-        return this.mysqlUser;
-    }
-
-    public String getMysqlPassword()
-    {
-        return this.mysqlPassword;
-    }
-
-    public String getMysqlDatabase()
-    {
-        return this.mysqlDatabase;
+        return this.mongoMainDatabase;
     }
 
     public String getRedisHost()

@@ -6,7 +6,8 @@ import static pl.north93.zgame.api.global.exceptions.SingletonException.checkSin
 import java.io.File;
 import java.util.logging.Logger;
 
-import org.apache.commons.dbcp2.BasicDataSource;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 
 import pl.north93.zgame.api.global.exceptions.SingletonException;
 import pl.north93.zgame.api.global.network.INetworkManager;
@@ -65,9 +66,14 @@ public final class API
         return apiCore.getRpcManager();
     }
 
-    public static BasicDataSource getMysql()
+    public static MongoClient getMongoClient()
     {
-        return apiCore.getMysql();
+        return apiCore.getMongoClient();
+    }
+
+    public static MongoDatabase getMainDatabase()
+    {
+        return apiCore.getMainDatabase();
     }
 
     public static Platform getPlatform()

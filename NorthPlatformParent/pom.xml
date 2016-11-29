@@ -9,6 +9,8 @@
 
         <bungee-api.version>1.10-SNAPSHOT</bungee-api.version>
 
+        <mongodb.version>3.3.0</mongodb.version>
+
         <version.api>1.0-INDEV</version.api>
         <version.lobby>1.0-INDEV</version.lobby>
         <version.controller>1.0-INDEV</version.controller>

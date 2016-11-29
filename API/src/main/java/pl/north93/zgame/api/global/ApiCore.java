@@ -6,14 +6,14 @@ import static pl.north93.zgame.api.global.cfg.ConfigUtils.loadConfigFile;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.sql.SQLException;
 import java.util.logging.Logger;
 
-import org.apache.commons.dbcp2.BasicDataSource;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoDatabase;
 
 import pl.north93.zgame.api.global.cfg.ConnectionConfig;
 import pl.north93.zgame.api.global.data.PlayersDao;
-import pl.north93.zgame.api.global.data.SqlTables;
 import pl.north93.zgame.api.global.data.UsernameCache;
 import pl.north93.zgame.api.global.exceptions.SingletonException;
 import pl.north93.zgame.api.global.network.INetworkManager;
@@ -41,19 +41,9 @@ public abstract class ApiCore
     private final PermissionsManager permissionsManager;
     private final PlayersDao         playersDao;
     private       ConnectionConfig   connectionConfig;
-    private       BasicDataSource    mysqlDataSource;
+    private       MongoClient        mongoClient;
+    private       MongoDatabase      mainDatabase;
     private       JedisPool          pool;
-
-    {
-        try
-        {
-            API.setApiCore(this);
-        }
-        catch (final SingletonException e)
-        {
-            throw new RuntimeException("You can't create more than one ApiCore class instances.", e);
-        }
-    }
 
     public ApiCore(final Platform platform, final PlatformConnector platformConnector)
     {
@@ -64,8 +54,16 @@ public abstract class ApiCore
         this.rpcManager = new RpcManagerImpl();
         this.networkManager = new NetworkManager();
         this.permissionsManager = new PermissionsManager(this);
-        this.usernameCache = new UsernameCache();
+        this.usernameCache = new UsernameCache(this);
         this.playersDao = new PlayersDao();
+        try
+        {
+            API.setApiCore(this);
+        }
+        catch (final SingletonException e)
+        {
+            throw new RuntimeException("You can't create more than one ApiCore class instances.", e);
+        }
     }
 
     public final Platform getPlatform()
@@ -92,14 +90,8 @@ public abstract class ApiCore
             this.connectionConfig.setDebug(true);
         }
         this.pool = new JedisPool(new JedisPoolConfig(), this.connectionConfig.getRedisHost(), this.connectionConfig.getRedisPort(), this.connectionConfig.getRedisTimeout(), this.connectionConfig.getRedisPassword());
-        {
-            this.mysqlDataSource = new BasicDataSource();
-            this.mysqlDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            this.mysqlDataSource.setUrl("jdbc:mysql://" + this.connectionConfig.getMysqlHost() + "/" + this.connectionConfig.getMysqlDatabase());
-            this.mysqlDataSource.setUsername(this.connectionConfig.getMysqlUser());
-            this.mysqlDataSource.setPassword(this.connectionConfig.getMysqlPassword());
-            SqlTables.createTables();
-        }
+        this.mongoClient = new MongoClient(new MongoClientURI(this.connectionConfig.getMongoDbConnect()));
+        this.mainDatabase = this.mongoClient.getDatabase(this.connectionConfig.getMongoMainDatabase());
         this.networkManager.start();
         this.permissionsManager.synchronizeGroups();
         try
@@ -127,14 +119,7 @@ public abstract class ApiCore
         }
         this.redisSubscriber.unSubscribeAll();
         this.pool.destroy();
-        try
-        {
-            this.mysqlDataSource.close();
-        }
-        catch (final SQLException e)
-        {
-            throw new RuntimeException("Failed to close MySQL pool", e);
-        }
+        this.mongoClient.close();
         this.getLogger().info("North API Core stopped.");
     }
 
@@ -173,9 +158,14 @@ public abstract class ApiCore
         return this.rpcManager;
     }
 
-    public BasicDataSource getMysql()
+    public MongoClient getMongoClient()
     {
-        return this.mysqlDataSource;
+        return this.mongoClient;
+    }
+
+    public MongoDatabase getMainDatabase()
+    {
+        return this.mainDatabase;
     }
 
     public void debug(final Object object)

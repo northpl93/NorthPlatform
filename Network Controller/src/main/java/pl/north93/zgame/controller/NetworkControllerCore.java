@@ -3,11 +3,13 @@ package pl.north93.zgame.controller;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
+import pl.north93.zgame.controller.reposerver.RepoServer;
 import pl.north93.zgame.controller.servers.NetworkServersManager;
 
 public class NetworkControllerCore
 {
     private ConfigBroadcaster     networkMetaBroadcaster = new ConfigBroadcaster();
+    private RepoServer            repoServer             = new RepoServer(this);
     private NetworkServersManager serversManager;
 
     public void start()
@@ -21,12 +23,15 @@ public class NetworkControllerCore
         this.networkMetaBroadcaster.start();
         this.serversManager = new NetworkServersManager(this);
         this.serversManager.start();
+        this.repoServer.start();
     }
 
     public void stop()
     {
+        this.repoServer.stop();
         this.networkMetaBroadcaster.stop();
         // TODO Servers Manager safe stop
+        API.getLogger().info("Network Controller stopped!");
     }
 
     public ConfigBroadcaster getConfigBroadcaster()
