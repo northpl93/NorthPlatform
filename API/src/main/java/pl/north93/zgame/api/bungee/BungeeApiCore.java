@@ -15,8 +15,10 @@ import pl.north93.zgame.api.bungee.listeners.PingListener;
 import pl.north93.zgame.api.bungee.listeners.PlayerListener;
 import pl.north93.zgame.api.bungee.mods.IBungeeServersManager;
 import pl.north93.zgame.api.bungee.mods.impl.BungeeServersManager;
+import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
+import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.messages.ProxyInstanceInfo;
 import pl.north93.zgame.api.global.network.ProxyRpc;
 import redis.clients.jedis.Jedis;
@@ -65,14 +67,15 @@ public class BungeeApiCore extends ApiCore
     @Override
     protected void stop()
     {
-        try (final Jedis jedis = this.getJedis().getResource())
+        final StorageConnector storageConnector = API.getApiCore().getComponentManager().getComponent("API.Database.StorageConnector"); // TODO
+        try (final Jedis jedis = storageConnector.getJedisPool().getResource())
         {
             jedis.del(this.getId());
         }
     }
 
     @Override
-    protected File getFile(final String name)
+    public File getFile(final String name)
     {
         return new File(this.bungeePlugin.getDataFolder(), name);
     }
@@ -94,7 +97,8 @@ public class BungeeApiCore extends ApiCore
 
     private void sendProxyInfo()
     {
-        try (final Jedis jedis = this.getJedis().getResource())
+        final StorageConnector storageConnector = API.getApiCore().getComponentManager().getComponent("API.Database.StorageConnector"); // TODO
+        try (final Jedis jedis = storageConnector.getJedisPool().getResource())
         {
             final ProxyInstanceInfo proxyInstanceInfo = new ProxyInstanceInfo();
 

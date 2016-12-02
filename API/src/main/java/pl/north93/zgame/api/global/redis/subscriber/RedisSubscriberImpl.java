@@ -10,28 +10,41 @@ import java.util.logging.Level;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.ApiCore;
+import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.data.StorageConnector;
 import redis.clients.jedis.BinaryJedisPubSub;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 import redis.clients.util.SafeEncoder;
 
-public class RedisSubscriberImpl implements RedisSubscriber
+public class RedisSubscriberImpl extends Component implements RedisSubscriber
 {
-    private final ApiCore                          api                    = API.getApiCore();
     private final SubscriptionReceiver             subscriptionReceiver   = new SubscriptionReceiver();
     private final Map<String, SubscriptionHandler> subscriptionHandlerMap = new HashMap<>();
-    private boolean subscriberScheduled;
+    private boolean   subscriberScheduled;
+    private JedisPool jedisPool;
+
+    @Override
+    protected void enableComponent()
+    {
+        this.jedisPool = this.<StorageConnector>getComponent("API.Database.StorageConnector").getJedisPool();
+    }
+
+    @Override
+    protected void disableComponent()
+    {
+        this.unSubscribeAll();
+    }
 
     @Override
     public void subscribe(final String channel, final SubscriptionHandler handler)
     {
         this.subscriptionHandlerMap.put(channel, handler);
-        API.debug("Added subscription for " + channel);
+        this.getApiCore().debug("Added subscription for " + channel);
         if (! this.subscriberScheduled)
         {
-            API.debug("Subscriber task has been scheduled");
-            this.api.getPlatformConnector().runTaskAsynchronously(new SubscriberTask());
+            this.getApiCore().debug("Subscriber task has been scheduled");
+            this.getApiCore().getPlatformConnector().runTaskAsynchronously(new SubscriberTask());
             this.subscriberScheduled = true;
             return;
         }
@@ -54,8 +67,8 @@ public class RedisSubscriberImpl implements RedisSubscriber
         @Override
         public void run()
         {
-            RedisSubscriberImpl.this.api.getLogger().info("Subscriber task started");
-            try (final Jedis jedis = RedisSubscriberImpl.this.api.getJedis().getResource())
+            RedisSubscriberImpl.this.getApiCore().getLogger().info("Subscriber task started");
+            try (final Jedis jedis = RedisSubscriberImpl.this.jedisPool.getResource())
             {
                 final Set<String> stringChannels = RedisSubscriberImpl.this.subscriptionHandlerMap.keySet();
                 final Iterator<String> iterator = stringChannels.iterator();
@@ -81,7 +94,7 @@ public class RedisSubscriberImpl implements RedisSubscriber
 
             if (subscriptionHandler == null)
             {
-                RedisSubscriberImpl.this.api.getLogger().warning("Received an message from unhandled channel " + channel);
+                RedisSubscriberImpl.this.getApiCore().getLogger().warning("Received an message from unhandled channel " + channel);
                 return;
             }
 
@@ -91,7 +104,7 @@ public class RedisSubscriberImpl implements RedisSubscriber
             }
             catch (final Exception e)
             {
-                RedisSubscriberImpl.this.api.getLogger().log(Level.SEVERE, "An exception has been thrown while handling message from Redis. Channel:" + channel + ", Message:" + Arrays.toString(message), e);
+                RedisSubscriberImpl.this.getApiCore().getLogger().log(Level.SEVERE, "An exception has been thrown while handling message from Redis. Channel:" + channel + ", Message:" + Arrays.toString(message), e);
             }
         }
     }
@@ -99,6 +112,6 @@ public class RedisSubscriberImpl implements RedisSubscriber
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("api", this.api).append("subscriptionHandlerMap", this.subscriptionHandlerMap).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("subscriptionHandlerMap", this.subscriptionHandlerMap).toString();
     }
 }

@@ -17,11 +17,10 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.ApiCore;
+import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.deployment.RemoteDaemon;
 import pl.north93.zgame.api.global.deployment.ServerPattern;
 import pl.north93.zgame.api.global.deployment.ServersGroup;
@@ -34,21 +33,28 @@ import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 import pl.north93.zgame.api.global.utils.ObservableValue;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 import redis.clients.util.SafeEncoder;
 
-public class NetworkManager implements INetworkManager
+public class NetworkManager extends Component implements INetworkManager
 {
-    private ApiCore api;
+    @InjectComponent("API.Database.Redis.MessagePackSerializer")
     private TemplateManager msgPack;
+    private JedisPool       jedisPool;
     private final ObservableValue<NetworkMeta> networkMeta = new ObservableValue<>();
 
     @Override
-    public void start()
+    protected void enableComponent()
     {
-        this.api = API.getApiCore();
-        this.msgPack = this.api.getMessagePackTemplates();
+        this.jedisPool = this.<StorageConnector>getComponent("API.Database.StorageConnector").getJedisPool();
         this.downloadNetworkMeta(); // Download network meta on start
-        this.api.getRedisSubscriber().subscribe(NETWORK_ACTION, this::handleNetworkAction);
+        this.getApiCore().getRedisSubscriber().subscribe(NETWORK_ACTION, this::handleNetworkAction);
+    }
+
+    @Override
+    protected void disableComponent()
+    {
+
     }
 
     @Override
@@ -71,7 +77,7 @@ public class NetworkManager implements INetworkManager
     @Override
     public Set<ProxyInstanceInfo> getProxyServers()
     {
-        try (final Jedis jedis = API.getJedis().getResource())
+        try (final Jedis jedis = this.jedisPool.getResource())
         {
             return jedis.keys(PROXY_INSTANCE + "*").stream().map(id -> this.msgPack.deserialize(ProxyInstanceInfo.class, jedis.get(id.getBytes()))).collect(Collectors.toSet());
         }
@@ -85,7 +91,7 @@ public class NetworkManager implements INetworkManager
     @Override
     public Set<RemoteDaemon> getDaemons()
     {
-        try (final Jedis jedis = API.getJedis().getResource())
+        try (final Jedis jedis = this.jedisPool.getResource())
         {
             return jedis.keys(DAEMON + "*").stream().map(id -> this.msgPack.deserialize(RemoteDaemon.class, jedis.get(id.getBytes()))).collect(Collectors.toSet());
         }
@@ -99,7 +105,7 @@ public class NetworkManager implements INetworkManager
     @Override
     public Set<Server> getServers()
     {
-        try (final Jedis jedis = API.getJedis().getResource())
+        try (final Jedis jedis = this.jedisPool.getResource())
         {
             return jedis.keys(SERVER + "*").stream().map(id -> this.msgPack.deserialize(ServerImpl.class, jedis.get(id.getBytes()))).collect(Collectors.toSet());
         }
@@ -113,7 +119,7 @@ public class NetworkManager implements INetworkManager
     @Override
     public List<ServersGroup> getServersGroups()
     {
-        try (final Jedis jedis = API.getJedis().getResource())
+        try (final Jedis jedis = this.jedisPool.getResource())
         {
             return this.msgPack.deserializeList(ServersGroup.class, jedis.get(NETWORK_SERVER_GROUPS.getBytes()));
         }
@@ -133,7 +139,7 @@ public class NetworkManager implements INetworkManager
     @Override
     public List<MiniGame> getMiniGames()
     {
-        try (final Jedis jedis = API.getJedis().getResource())
+        try (final Jedis jedis = this.jedisPool.getResource())
         {
             return this.msgPack.deserializeList(MiniGame.class, jedis.get(NETWORK_MINIGAMES.getBytes()));
         }
@@ -159,7 +165,7 @@ public class NetworkManager implements INetworkManager
     @Override
     public List<ServerPattern> getServerPatterns()
     {
-        try (final Jedis jedis = API.getJedis().getResource())
+        try (final Jedis jedis = this.jedisPool.getResource())
         {
             return this.msgPack.deserializeList(ServerPattern.class, jedis.get(NETWORK_PATTERNS.getBytes()));
         }
@@ -186,7 +192,7 @@ public class NetworkManager implements INetworkManager
     @Override
     public Server getServer(final UUID uuid)
     {
-        try (final Jedis jedis = API.getJedis().getResource())
+        try (final Jedis jedis = this.jedisPool.getResource())
         {
             final byte[] serverData = jedis.get((SERVER + uuid).getBytes());
             if (serverData == null)
@@ -206,7 +212,7 @@ public class NetworkManager implements INetworkManager
     @Override
     public NetworkPlayer getNetworkPlayer(final String nick)
     {
-        try (final Jedis jedis = API.getJedis().getResource())
+        try (final Jedis jedis = this.jedisPool.getResource())
         {
             final byte[] networkPlayerData = jedis.get((PLAYERS + nick.toLowerCase(Locale.ROOT)).getBytes());
             if (networkPlayerData == null)
@@ -227,7 +233,7 @@ public class NetworkManager implements INetworkManager
     @Override
     public boolean isOnline(final String nick)
     {
-        try (final Jedis jedis = API.getJedis().getResource())
+        try (final Jedis jedis = this.jedisPool.getResource())
         {
             return jedis.exists(PLAYERS + nick.toLowerCase(Locale.ROOT));
         }
@@ -242,7 +248,7 @@ public class NetworkManager implements INetworkManager
     @Override
     public void broadcastNetworkAction(final NetworkAction networkAction)
     {
-        try (final Jedis jedis = API.getJedis().getResource())
+        try (final Jedis jedis = this.jedisPool.getResource())
         {
             jedis.publish(NETWORK_ACTION, networkAction.toString());
         }
@@ -256,7 +262,7 @@ public class NetworkManager implements INetworkManager
     @Override
     public NetworkControllerRpc getNetworkController()
     {
-        return this.api.getRpcManager().createRpcProxy(NetworkControllerRpc.class, Targets.networkController());
+        return this.getApiCore().getRpcManager().createRpcProxy(NetworkControllerRpc.class, Targets.networkController());
     }
 
     private void handleNetworkAction(final String channel, final byte[] message)
@@ -272,29 +278,23 @@ public class NetworkManager implements INetworkManager
                 break;
             case UPDATE_NETWORK_CONFIGS:
                 this.downloadNetworkMeta();
-                this.api.getPermissionsManager().synchronizeGroups();
+                this.getApiCore().getPermissionsManager().synchronizeGroups();
                 break;
         }
     }
 
     private void downloadNetworkMeta()
     {
-        this.api.getLogger().info("Downloading network info.");
-        try (final Jedis jedis = this.api.getJedis().getResource())
+        this.getApiCore().getLogger().info("Downloading network info.");
+        try (final Jedis jedis = this.jedisPool.getResource())
         {
             if (! jedis.exists(NETWORK_META))
             {
-                this.api.getLogger().warning("Can't download network info. Key doesn't exists.");
+                this.getApiCore().getLogger().warning("Can't download network info. Key doesn't exists.");
                 return;
             }
 
             this.networkMeta.set(this.msgPack.deserialize(NetworkMeta.class, jedis.get(NETWORK_META.getBytes())));
         }
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("api", this.api).toString();
     }
 }

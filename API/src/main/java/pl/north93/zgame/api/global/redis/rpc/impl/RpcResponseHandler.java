@@ -9,17 +9,17 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcExceptionInfo;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcInvokeMessage;
-import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcResponseMessage;
-import redis.clients.jedis.Jedis;
 
 public class RpcResponseHandler
 {
+    private final RpcManagerImpl       rpcManager;
     private final RpcObjectDescription objectDescription;
     private final Object               implementation;
 
-    public RpcResponseHandler(final Class<?> classInterface, final Object implementation)
+    public RpcResponseHandler(final RpcManagerImpl rpcManager, final Class<?> classInterface, final Object implementation)
     {
-        this.objectDescription = API.getRpcManager().getObjectDescription(classInterface);
+        this.rpcManager = rpcManager;
+        this.objectDescription = rpcManager.getObjectDescription(classInterface);
         this.implementation = implementation;
     }
 
@@ -44,16 +44,16 @@ public class RpcResponseHandler
                 if (methodDescription.getMethod().getReturnType() == void.class)
                 {
                     methodHandle.invokeWithArguments(invocationArgs);
-                    sendResponse(rpcInvokeMessage.getSender(), rpcInvokeMessage.getRequestId(), null);
+                    this.rpcManager.sendResponse(rpcInvokeMessage.getSender(), rpcInvokeMessage.getRequestId(), null);
                 }
                 else
                 {
-                    sendResponse(rpcInvokeMessage.getSender(), rpcInvokeMessage.getRequestId(), methodHandle.invokeWithArguments(invocationArgs));
+                    this.rpcManager.sendResponse(rpcInvokeMessage.getSender(), rpcInvokeMessage.getRequestId(), methodHandle.invokeWithArguments(invocationArgs));
                 }
             }
             catch (final Throwable throwable)
             {
-                sendResponse(rpcInvokeMessage.getSender(), rpcInvokeMessage.getRequestId(), new RpcExceptionInfo(throwable));
+                this.rpcManager.sendResponse(rpcInvokeMessage.getSender(), rpcInvokeMessage.getRequestId(), new RpcExceptionInfo(throwable));
             }
         }
         else
@@ -71,15 +71,6 @@ public class RpcResponseHandler
         if (end > methodDescription.getTimeout())
         {
             API.getLogger().warning("[RPC] Method " + methodDescription.getMethod().getName() + " took " + end + "ms to invoke. It means that timeout occurred.");
-        }
-    }
-
-    /*default*/ static void sendResponse(final String target, final Integer requestId, final Object response)
-    {
-        try (final Jedis jedis = API.getJedis().getResource())
-        {
-            final RpcResponseMessage responseMessage = new RpcResponseMessage(requestId, response);
-            jedis.publish(("rpc:" + target + ":response").getBytes(), API.getMessagePackTemplates().serialize(RpcResponseMessage.class, responseMessage));
         }
     }
 

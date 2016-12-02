@@ -13,6 +13,7 @@ import org.msgpack.core.MessageBufferPacker;
 import org.msgpack.core.MessagePack;
 import org.msgpack.core.MessageUnpacker;
 
+import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.redis.messaging.Template;
 import pl.north93.zgame.api.global.redis.messaging.TemplateFactory;
 import pl.north93.zgame.api.global.redis.messaging.TemplateGeneric;
@@ -26,7 +27,7 @@ import pl.north93.zgame.api.global.redis.messaging.templates.ShortTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.StringTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.UuidTemplate;
 
-public class TemplateManagerImpl implements TemplateManager
+public class TemplateManagerImpl extends Component implements TemplateManager
 {
     private final TemplateFactory        templateFactory;
     private final Map<Class, Template>   templateCache;
@@ -43,6 +44,16 @@ public class TemplateManagerImpl implements TemplateManager
         this.registerTemplate(Long.class, new LongTemplate());
         this.registerTemplate(String.class, new StringTemplate());
         this.registerTemplate(UUID.class, new UuidTemplate());
+    }
+
+    @Override
+    protected void enableComponent()
+    {
+    }
+
+    @Override
+    protected void disableComponent()
+    {
     }
 
     @Override

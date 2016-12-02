@@ -25,11 +25,11 @@ public class UsernameCache
 {
     private final Map<String, UsernameDetails>     localCache = new CaseInsensitiveMap<>(512);
     private final JsonParser                       json = new JsonParser();
-    private final MongoCollection<UsernameDetails> mongoCache;
+    private final MongoCollection<UsernameDetails> mongoCache = null; // TODO
 
     public UsernameCache(final ApiCore apiCore)
     {
-        this.mongoCache = apiCore.getMainDatabase().getCollection("username_cache", UsernameDetails.class);
+        //this.mongoCache = apiCore.getMainDatabase().getCollection("username_cache", UsernameDetails.class);
     }
 
     public static class UsernameDetails

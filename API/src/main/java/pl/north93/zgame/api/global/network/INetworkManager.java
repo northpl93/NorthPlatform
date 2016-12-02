@@ -15,8 +15,6 @@ import pl.north93.zgame.api.global.utils.ObservableValue;
 
 public interface INetworkManager
 {
-    void start();
-
     ObservableValue<NetworkMeta> getNetworkMeta();
 
     JoiningPolicy getJoiningPolicy();

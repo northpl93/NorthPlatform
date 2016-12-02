@@ -35,7 +35,7 @@ public class RpcInvocationHandler implements InvocationHandler
         final int requestId = requestCounter.getAndIncrement();
 
         final RpcInvokeMessage rpcInvokeMessage = new RpcInvokeMessage(API.getApiCore().getId(), this.objectDescription.getClassId(), requestId, methodId, args);
-        try (final Jedis jedis = API.getJedis().getResource())
+        try (final Jedis jedis = this.rpcManager.getJedisPool().getResource())
         {
             jedis.publish(this.invokeChannel, API.getMessagePackTemplates().serialize(rpcInvokeMessage));
         }

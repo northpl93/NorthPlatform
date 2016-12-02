@@ -60,6 +60,12 @@
             <version>2.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.ea.agentloader</groupId>
+            <artifactId>ea-agent-loader</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
         <!-- MONGO DB STUFF -->
         <dependency>
             <groupId>org.mongodb</groupId>

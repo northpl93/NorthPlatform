@@ -6,35 +6,50 @@ import java.util.Map;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.ApiCore;
+import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.redis.rpc.RpcManager;
 import pl.north93.zgame.api.global.redis.rpc.RpcTarget;
 import pl.north93.zgame.api.global.redis.rpc.exceptions.RpcUnimplementedException;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcExceptionInfo;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcInvokeMessage;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcResponseMessage;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
-public class RpcManagerImpl implements RpcManager
+public class RpcManagerImpl extends Component implements RpcManager
 {
-    private final ApiCore                           api                = API.getApiCore();
+    @InjectComponent("API.Database.StorageConnector")
+    private StorageConnector                        storageConnector;
     private final RpcProxyCache                     rpcProxyCache      = new RpcProxyCache(this);
     private final Int2ObjectMap<RpcResponseHandler> responseHandlerMap = new Int2ObjectArrayMap<>();
     private final Int2ObjectMap<RpcResponseLock>    locks              = new Int2ObjectArrayMap<>();
     private final Map<Class<?>, RpcObjectDescription> descriptionCache = new HashMap<>();
 
     @Override
+    protected void enableComponent()
+    {
+    }
+
+    @Override
+    protected void disableComponent()
+    {
+    }
+
+    @Override
     public void addListeningContext(final String id)
     {
-        API.debug("addListeningContext(" + id + ")");
-        this.api.getRedisSubscriber().subscribe("rpc:" + id + ":invoke", this::handleMethodInvocation);
-        this.api.getRedisSubscriber().subscribe("rpc:" + id + ":response", this::handleResponse);
+        this.getApiCore().debug("addListeningContext(" + id + ")");
+        this.getApiCore().getRedisSubscriber().subscribe("rpc:" + id + ":invoke", this::handleMethodInvocation);
+        this.getApiCore().getRedisSubscriber().subscribe("rpc:" + id + ":response", this::handleResponse);
     }
 
     @Override
     public void addRpcImplementation(final Class<?> classInterface, final Object implementation)
     {
-        API.debug("addRpcImplementation(" + classInterface + ", " + implementation.getClass().getName() + ")");
-        this.responseHandlerMap.put(classInterface.getName().hashCode(), new RpcResponseHandler(classInterface, implementation));
+        this.getApiCore().debug("addRpcImplementation(" + classInterface + ", " + implementation.getClass().getName() + ")");
+        this.responseHandlerMap.put(classInterface.getName().hashCode(), new RpcResponseHandler(this, classInterface, implementation));
     }
 
     @Override
@@ -69,25 +84,39 @@ public class RpcManagerImpl implements RpcManager
         this.locks.remove(requestId);
     }
 
+    /*default*/ JedisPool getJedisPool()
+    {
+        return this.storageConnector.getJedisPool();
+    }
+
+    /*default*/ void sendResponse(final String target, final Integer requestId, final Object response)
+    {
+        try (final Jedis jedis = this.storageConnector.getJedisPool().getResource())
+        {
+            final RpcResponseMessage responseMessage = new RpcResponseMessage(requestId, response);
+            jedis.publish(("rpc:" + target + ":response").getBytes(), API.getMessagePackTemplates().serialize(RpcResponseMessage.class, responseMessage));
+        }
+    }
+
     private void handleMethodInvocation(final String channel, final byte[] bytes)
     {
-        final RpcInvokeMessage invokeMessage = API.getMessagePackTemplates().deserialize(RpcInvokeMessage.class, bytes);
+        final RpcInvokeMessage invokeMessage = this.getApiCore().getMessagePackTemplates().deserialize(RpcInvokeMessage.class, bytes);
         final RpcResponseHandler handler = this.responseHandlerMap.get(invokeMessage.getClassId());
         if (handler != null)
         {
             handler.handleInvoke(invokeMessage);
             return;
         }
-        RpcResponseHandler.sendResponse(invokeMessage.getSender(), invokeMessage.getRequestId(), new RpcExceptionInfo(new RpcUnimplementedException()));
+        this.sendResponse(invokeMessage.getSender(), invokeMessage.getRequestId(), new RpcExceptionInfo(new RpcUnimplementedException()));
     }
 
     private void handleResponse(final String channel, final byte[] bytes)
     {
-        final RpcResponseMessage responseMessage = API.getMessagePackTemplates().deserialize(RpcResponseMessage.class, bytes);
+        final RpcResponseMessage responseMessage = this.getApiCore().getMessagePackTemplates().deserialize(RpcResponseMessage.class, bytes);
         final RpcResponseLock lock = this.locks.get(responseMessage.getRequestId());
         if (lock == null)
         {
-            API.getLogger().warning("Received RPC response but lock was null. Response:" + responseMessage);
+            this.getApiCore().getLogger().warning("Received RPC response but lock was null. Response:" + responseMessage);
             return; // Moze się wydarzyć, gdy nastąpi timeout i lock zostanie usunięty. W takim wypadku ignorujemy odpowiedź.
         }
         lock.provideResponse(responseMessage.getResponse());

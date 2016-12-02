@@ -1,18 +1,12 @@
 package pl.north93.zgame.api.global;
 
-import static pl.north93.zgame.api.global.cfg.ConfigUtils.loadConfigFile;
-
-
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.client.MongoDatabase;
-
-import pl.north93.zgame.api.global.cfg.ConnectionConfig;
+import pl.north93.zgame.api.global.component.IComponentManager;
+import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
 import pl.north93.zgame.api.global.data.PlayersDao;
 import pl.north93.zgame.api.global.data.UsernameCache;
 import pl.north93.zgame.api.global.exceptions.SingletonException;
@@ -26,11 +20,10 @@ import pl.north93.zgame.api.global.redis.rpc.RpcManager;
 import pl.north93.zgame.api.global.redis.rpc.impl.RpcManagerImpl;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriberImpl;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 
 public abstract class ApiCore
 {
+    private final IComponentManager  componentManager;
     private final TemplateManager    messagePackTemplates;
     private final Platform           platform;
     private final PlatformConnector  connector;
@@ -40,20 +33,18 @@ public abstract class ApiCore
     private final INetworkManager    networkManager;
     private final PermissionsManager permissionsManager;
     private final PlayersDao         playersDao;
-    private       ConnectionConfig   connectionConfig;
-    private       MongoClient        mongoClient;
-    private       MongoDatabase      mainDatabase;
-    private       JedisPool          pool;
 
     public ApiCore(final Platform platform, final PlatformConnector platformConnector)
     {
         this.platform = platform;
         this.connector = platformConnector;
+        this.componentManager = new ComponentManagerImpl(this);
+
         this.messagePackTemplates = new TemplateManagerImpl(new TemplateFactoryImpl());
         this.redisSubscriber = new RedisSubscriberImpl();
         this.rpcManager = new RpcManagerImpl();
         this.networkManager = new NetworkManager();
-        this.permissionsManager = new PermissionsManager(this);
+        this.permissionsManager = new PermissionsManager();
         this.usernameCache = new UsernameCache(this);
         this.playersDao = new PlayersDao();
         try
@@ -84,16 +75,14 @@ public abstract class ApiCore
     public final void startCore()
     {
         this.getLogger().info("Starting North API Core.");
-        this.connectionConfig = loadConfigFile(ConnectionConfig.class, this.getFile("connection.yml"));
-        if (System.getProperties().containsKey("northplatform.forcedebug"))
-        {
-            this.connectionConfig.setDebug(true);
-        }
-        this.pool = new JedisPool(new JedisPoolConfig(), this.connectionConfig.getRedisHost(), this.connectionConfig.getRedisPort(), this.connectionConfig.getRedisTimeout(), this.connectionConfig.getRedisPassword());
-        this.mongoClient = new MongoClient(new MongoClientURI(this.connectionConfig.getMongoDbConnect()));
-        this.mainDatabase = this.mongoClient.getDatabase(this.connectionConfig.getMongoMainDatabase());
-        this.networkManager.start();
-        this.permissionsManager.synchronizeGroups();
+        this.componentManager.doComponentScan(this.getClass().getClassLoader()); // scan for builtin API components
+
+        this.componentManager.injectComponents(this.messagePackTemplates, this.redisSubscriber, this.rpcManager);
+        this.componentManager.injectComponents(this.networkManager, this.permissionsManager);
+
+        this.componentManager.enableAllComponents(); // enable all components
+        this.componentManager.setAutoEnable(true); // auto enable all newly discovered components
+
         try
         {
             this.start();
@@ -117,9 +106,7 @@ public abstract class ApiCore
         {
             e.printStackTrace();
         }
-        this.redisSubscriber.unSubscribeAll();
-        this.pool.destroy();
-        this.mongoClient.close();
+        this.componentManager.disableAllComponents();
         this.getLogger().info("North API Core stopped.");
     }
 
@@ -143,46 +130,37 @@ public abstract class ApiCore
         return this.messagePackTemplates;
     }
 
-    public JedisPool getJedis()
-    {
-        return this.pool;
-    }
-
     public RedisSubscriber getRedisSubscriber()
     {
         return this.redisSubscriber;
     }
 
+    @Deprecated
     public RpcManager getRpcManager()
     {
         return this.rpcManager;
     }
 
-    public MongoClient getMongoClient()
+    public IComponentManager getComponentManager()
     {
-        return this.mongoClient;
-    }
-
-    public MongoDatabase getMainDatabase()
-    {
-        return this.mainDatabase;
+        return this.componentManager;
     }
 
     public void debug(final Object object)
     {
-        if (! this.connectionConfig.isDebug())
-        {
-            return;
-        }
+        //if (! this.connectionConfig.isDebug())
+        //{
+        //    return;
+        //}
         this.getLogger().info(object.toString());
     }
 
     public void runDebug(final Runnable runnable)
     {
-        if (! this.connectionConfig.isDebug())
-        {
-            return;
-        }
+        //if (! this.connectionConfig.isDebug())
+        //{
+        //    return;
+        //}
         runnable.run();
     }
 
@@ -207,12 +185,12 @@ public abstract class ApiCore
 
     public abstract String getId();
 
-    protected abstract void start() throws Exception;
-
-    protected abstract void stop() throws Exception;
-
     /**
      * @return file inside plugin's configuration directory
      */
-    protected abstract File getFile(final String name);
+    public abstract File getFile(final String name);
+
+    protected abstract void start() throws Exception;
+
+    protected abstract void stop() throws Exception;
 }

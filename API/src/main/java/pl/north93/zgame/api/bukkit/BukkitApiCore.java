@@ -96,7 +96,7 @@ public class BukkitApiCore extends ApiCore
     }
 
     @Override
-    protected File getFile(final String name)
+    public File getFile(final String name)
     {
         return new File(this.pluginMain.getDataFolder(), name);
     }

@@ -19,6 +19,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import pl.north93.zgame.api.bungee.BungeeApiCore;
 import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.data.UsernameCache.UsernameDetails;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.NetworkPlayer;
@@ -127,7 +128,8 @@ public class PlayerListener implements Listener
     @EventHandler
     public void onLeave(final PlayerDisconnectEvent event)
     {
-        try (final Jedis jedis = API.getJedis().getResource())
+        final StorageConnector storageConnector = API.getApiCore().getComponentManager().getComponent("API.Database.StorageConnector");
+        try (final Jedis jedis = storageConnector.getJedisPool().getResource())
         {
             jedis.del(PLAYERS + event.getPlayer().getName().toLowerCase(Locale.ROOT));
         }

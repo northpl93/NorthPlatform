@@ -9,20 +9,31 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.ApiCore;
+import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.messages.GroupsContainer;
+import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import redis.clients.jedis.Jedis;
 
-public class PermissionsManager
+public class PermissionsManager extends Component
 {
-    private final ApiCore apiCore;
-    private final List<Group> cachedGroups;
-    private Group defaultGroup;
+    private final List<Group> cachedGroups = new ArrayList<>();
+    @InjectComponent("API.Database.StorageConnector")
+    private StorageConnector  storageConnector;
+    @InjectComponent("API.Database.Redis.MessagePackSerializer")
+    private TemplateManager   msgPack;
+    private Group             defaultGroup;
 
-    public PermissionsManager(final ApiCore apiCore)
+    @Override
+    protected void enableComponent()
     {
-        this.apiCore = apiCore;
-        this.cachedGroups = new ArrayList<>();
+        this.synchronizeGroups();
+    }
+
+    @Override
+    protected void disableComponent()
+    {
     }
 
     public Group getGroupByName(final String name)
@@ -47,18 +58,18 @@ public class PermissionsManager
      */
     public void synchronizeGroups()
     {
-        this.apiCore.getLogger().info("Synchronizing groups...");
+        this.getApiCore().getLogger().info("Synchronizing groups...");
         final GroupsContainer groupsContainer;
-        try (final Jedis jedis = this.apiCore.getJedis().getResource())
+        try (final Jedis jedis = this.storageConnector.getJedisPool().getResource())
         {
             if (! jedis.exists(PERMISSIONS_GROUPS))
             {
-                this.apiCore.getLogger().warning("Key " + PERMISSIONS_GROUPS + " doesn't exist! Synchronization skipped...");
+                this.getApiCore().getLogger().warning("Key " + PERMISSIONS_GROUPS + " doesn't exist! Synchronization skipped...");
                 return;
             }
 
             final byte[] msgPackGroups = jedis.get(PERMISSIONS_GROUPS.getBytes());
-            groupsContainer = this.apiCore.getMessagePackTemplates().deserialize(GroupsContainer.class, msgPackGroups);
+            groupsContainer = this.msgPack.deserialize(GroupsContainer.class, msgPackGroups);
         }
         // Fetched from redis. Now load it into List
         this.cachedGroups.clear();
@@ -85,12 +96,12 @@ public class PermissionsManager
             }
         }
         this.defaultGroup = this.getGroupByName(groupsContainer.defaultGroup);
-        this.apiCore.getLogger().info("Loaded " + this.cachedGroups.size() + " groups!");
+        this.getApiCore().getLogger().info("Loaded " + this.cachedGroups.size() + " groups!");
     }
 
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("apiCore", this.apiCore).append("cachedGroups", this.cachedGroups).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("cachedGroups", this.cachedGroups).toString();
     }
 }

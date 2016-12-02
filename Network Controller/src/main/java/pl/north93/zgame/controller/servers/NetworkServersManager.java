@@ -5,30 +5,41 @@ import java.util.Optional;
 import java.util.Set;
 
 import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.deployment.RemoteDaemon;
 import pl.north93.zgame.api.global.deployment.ServersGroup;
 import pl.north93.zgame.api.global.network.server.ServerImpl;
-import pl.north93.zgame.controller.NetworkControllerCore;
+import pl.north93.zgame.controller.ConfigBroadcaster;
 import pl.north93.zgame.controller.servers.allocators.AllocationProcessor;
 
-public class NetworkServersManager extends Thread implements INetworkServersManager, IServerCountManager
+public class NetworkServersManager extends Component implements INetworkServersManager, IServerCountManager
 {
-    private final NetworkControllerCore networkController;
+    @InjectComponent("NetworkController.ConfigBroadcaster")
+    private ConfigBroadcaster           configBroadcaster;
     private final AllocationProcessor   allocationProcessor;
 
-    public NetworkServersManager(final NetworkControllerCore networkControllerCore)
+    public NetworkServersManager()
     {
-        super("Servers Manager");
-        this.networkController = networkControllerCore;
         this.allocationProcessor = new AllocationProcessor(this);
     }
 
     @Override
-    public void run()
+    protected void enableComponent()
+    {
+        new Thread(this::thread, "Servers Manager").start();
+    }
+
+    @Override
+    protected void disableComponent()
+    {
+    }
+
+    private void thread()
     {
         while (true) // TODO safe stop
         {
-            final List<ServersGroup> serversGroups = this.networkController.getConfigBroadcaster().getServersGroups().getGroups();
+            final List<ServersGroup> serversGroups = this.configBroadcaster.getServersGroups().getGroups();
             final Set<RemoteDaemon> daemons = API.getNetworkManager().getDaemons();
 
             this.allocationProcessor.processTasks(daemons, serversGroups);

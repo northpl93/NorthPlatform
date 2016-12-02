@@ -1,6 +1,7 @@
 package pl.north93.zgame.api.global.redis.messaging;
 
 import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.data.StorageConnector;
 import redis.clients.jedis.Jedis;
 
 public interface RedisUpdatable
@@ -17,7 +18,9 @@ public interface RedisUpdatable
      */
     default void sendUpdate()
     {
-        try (final Jedis jedis = API.getJedis().getResource())
+        // TODO do it better
+        final StorageConnector storageConnector = API.getApiCore().getComponentManager().getComponent("API.Database.StorageConnector");
+        try (final Jedis jedis = storageConnector.getJedisPool().getResource())
         {
             jedis.set(this.getRedisKey().getBytes(), API.getMessagePackTemplates().serialize(this));
         }
@@ -28,7 +31,9 @@ public interface RedisUpdatable
      */
     default void delete()
     {
-        try (final Jedis jedis = API.getJedis().getResource())
+        // TODO do it better
+        final StorageConnector storageConnector = API.getApiCore().getComponentManager().getComponent("API.Database.StorageConnector");
+        try (final Jedis jedis = storageConnector.getJedisPool().getResource())
         {
             jedis.del(this.getRedisKey());
         }

@@ -6,15 +6,11 @@ import static pl.north93.zgame.api.global.exceptions.SingletonException.checkSin
 import java.io.File;
 import java.util.logging.Logger;
 
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoDatabase;
-
 import pl.north93.zgame.api.global.exceptions.SingletonException;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.rpc.RpcManager;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
-import redis.clients.jedis.JedisPool;
 
 public final class API
 {
@@ -51,30 +47,17 @@ public final class API
         return apiCore.getNetworkManager();
     }
 
-    public static JedisPool getJedis()
-    {
-        return apiCore.getJedis();
-    }
-
     public static RedisSubscriber getRedisSubscriber()
     {
         return apiCore.getRedisSubscriber();
     }
 
+    @Deprecated
     public static RpcManager getRpcManager()
     {
         return apiCore.getRpcManager();
     }
 
-    public static MongoClient getMongoClient()
-    {
-        return apiCore.getMongoClient();
-    }
-
-    public static MongoDatabase getMainDatabase()
-    {
-        return apiCore.getMainDatabase();
-    }
 
     public static Platform getPlatform()
     {
