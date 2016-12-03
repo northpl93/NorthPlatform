@@ -5,9 +5,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-import org.diorite.cfg.system.Template;
 import org.diorite.cfg.system.TemplateCreator;
 
 import pl.north93.zgame.api.global.API;
@@ -19,7 +21,6 @@ import pl.north93.zgame.api.global.component.IComponentManager;
 public class ComponentManagerImpl implements IComponentManager
 {
     private final ApiCore                    apiCore;
-    private final Template<ComponentsConfig> configTemplate = TemplateCreator.getTemplate(ComponentsConfig.class);
     private final List<ComponentBundle>      components     = new ArrayList<>();
     private boolean autoEnable;
 
@@ -39,7 +40,6 @@ public class ComponentManagerImpl implements IComponentManager
 
     private void loadComponent(final ClassLoader classLoader, final ComponentDescription componentDescription)
     {
-        //System.out.println("loadComponent(" + classLoader + ", " + componentDescription + ")");
         if (! componentDescription.isEnabled())
         {
             return; // skip loading of disabled component
@@ -131,14 +131,13 @@ public class ComponentManagerImpl implements IComponentManager
     @Override
     public void doComponentScan(final String componentsYml, final ClassLoader classLoader)
     {
-        System.out.println("doComponentScan(" + componentsYml + ", " + classLoader + ")");
         final InputStream stream = classLoader.getResourceAsStream(componentsYml);
         if (stream == null)
         {
             return;
         }
         final Reader reader = new InputStreamReader(stream);
-        final ComponentsConfig componentsConfig = this.configTemplate.load(reader, classLoader);
+        final ComponentsConfig componentsConfig = TemplateCreator.getTemplate(ComponentsConfig.class).load(reader, classLoader);
         for (final ComponentDescription componentDescription : componentsConfig.getComponents())
         {
             this.loadComponent(classLoader, componentDescription);
@@ -192,7 +191,7 @@ public class ComponentManagerImpl implements IComponentManager
             }
             else
             {
-                System.out.println("Can't resolve dependencies for " + component.getName());
+                this.apiCore.getLogger().warning("Can't resolve dependencies for " + component.getName());
             }
         }
     }
@@ -200,13 +199,49 @@ public class ComponentManagerImpl implements IComponentManager
     @Override
     public void disableAllComponents()
     {
+        final Map<ComponentBundle, Boolean> queue = new IdentityHashMap<>(this.components.size());
         for (final ComponentBundle component : this.components)
         {
-            if (! component.isEnabled())
+            if (component.isEnabled())
             {
-                continue;
+                queue.put(component, Boolean.TRUE); // fill queue enabled components
             }
-            component.getComponent().disable();
+        }
+
+        while (true)
+        {
+            if (queue.isEmpty())
+            {
+                return; // all components are disabled
+            }
+
+            queue.forEach((component, canDisable) ->
+            {
+                for (final String depName : component.getDescription().getDependencies())
+                {
+                    final ComponentBundle dependency = this.getComponentBundle(depName);
+                    if (dependency == null || !dependency.isEnabled())
+                    {
+                        continue;
+                    }
+                    queue.put(dependency, Boolean.FALSE);
+                }
+            });
+
+            final Iterator<Map.Entry<ComponentBundle, Boolean>> iterator = queue.entrySet().iterator();
+            while (iterator.hasNext())
+            {
+                final Map.Entry<ComponentBundle, Boolean> entry = iterator.next();
+                if (entry.getValue()) // canDisable
+                {
+                    entry.getKey().getComponent().disable();
+                    iterator.remove();
+                }
+                else
+                {
+                    entry.setValue(Boolean.TRUE);
+                }
+            }
         }
     }
 
