@@ -32,10 +32,18 @@ components:
       - API.Database.Redis.MessagePackSerializer
       - API.Database.Redis.Subscriber
 
+  - name: API.MinecraftNetwork.UsernameCache
+    enabled: true
+    mainClass: "pl.north93.zgame.api.global.data.UsernameCache"
+    autoInstantiate: true
+    description: "Caches Mojang's API data."
+    dependencies:
+      - API.Database.StorageConnector
+
   - name: API.MinecraftNetwork.NetworkManager
     enabled: true
     mainClass: "pl.north93.zgame.api.global.network.NetworkManager"
-    autoInstantiate: false
+    autoInstantiate: true
     description: "Provides core functions to manage Minecraft's network."
     dependencies:
       - API.Database.StorageConnector
@@ -46,10 +54,8 @@ components:
   - name: API.MinecraftNetwork.PermissionsManager
     enabled: true
     mainClass: "pl.north93.zgame.api.global.permissions.PermissionsManager"
-    autoInstantiate: false
+    autoInstantiate: true
     description: "Manages player's permissions."
     dependencies:
       - API.Database.StorageConnector
       - API.Database.Redis.MessagePackSerializer
-      - API.Database.Redis.Subscriber
-      - API.Database.Redis.RPC

@@ -3,7 +3,6 @@ package pl.north93.zgame.api.global.cfg;
 import org.diorite.cfg.annotations.CfgComment;
 import org.diorite.cfg.annotations.CfgComments;
 import org.diorite.cfg.annotations.CfgFooterComment;
-import org.diorite.cfg.annotations.defaults.CfgBooleanDefault;
 import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
 import org.diorite.cfg.annotations.defaults.CfgIntDefault;
 import org.diorite.cfg.annotations.defaults.CfgStringDefault;
@@ -13,10 +12,6 @@ import org.diorite.cfg.annotations.defaults.CfgStringDefault;
 @CfgDelegateDefault("{new}")
 public class ConnectionConfig
 {
-    @CfgComment("Czy włączyć tryb debugowania")
-    @CfgBooleanDefault(false)
-    private boolean debug;
-
     @CfgComment("Host bazy danych i port")
     @CfgStringDefault("mongodb://user:password@127.0.0.1:2137/?authSource=server")
     private String mongoDbConnect;
@@ -39,16 +34,6 @@ public class ConnectionConfig
     @CfgComment("Hasło do redisa")
     @CfgStringDefault("password")
     private String redisPassword;
-
-    public boolean isDebug()
-    {
-        return this.debug;
-    }
-
-    public void setDebug(final boolean debug)
-    {
-        this.debug = debug;
-    }
 
     public String getMongoDbConnect()
     {

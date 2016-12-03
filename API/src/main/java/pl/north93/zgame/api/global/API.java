@@ -6,6 +6,7 @@ import static pl.north93.zgame.api.global.exceptions.SingletonException.checkSin
 import java.io.File;
 import java.util.logging.Logger;
 
+import pl.north93.zgame.api.global.component.annotations.ProvidesComponent;
 import pl.north93.zgame.api.global.exceptions.SingletonException;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
@@ -32,32 +33,29 @@ public final class API
         apiCore.debug(object);
     }
 
-    public static void runDebug(final Runnable runnable)
-    {
-        apiCore.runDebug(runnable);
-    }
-
+    @ProvidesComponent
     public static TemplateManager getMessagePackTemplates()
     {
         return apiCore.getMessagePackTemplates();
     }
 
+    @ProvidesComponent
     public static INetworkManager getNetworkManager()
     {
         return apiCore.getNetworkManager();
     }
 
+    @ProvidesComponent
     public static RedisSubscriber getRedisSubscriber()
     {
         return apiCore.getRedisSubscriber();
     }
 
-    @Deprecated
+    @ProvidesComponent
     public static RpcManager getRpcManager()
     {
         return apiCore.getRpcManager();
     }
-
 
     public static Platform getPlatform()
     {

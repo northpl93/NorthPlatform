@@ -3,6 +3,8 @@ package pl.north93.zgame.api.global.data;
 import static pl.north93.zgame.api.global.cfg.ConfigUtils.loadConfigFile;
 
 
+import java.util.logging.Logger;
+
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
@@ -10,6 +12,7 @@ import com.mongodb.client.MongoDatabase;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.cfg.ConnectionConfig;
 import pl.north93.zgame.api.global.component.Component;
 import redis.clients.jedis.JedisPool;
@@ -26,16 +29,24 @@ public class StorageConnector extends Component
     protected void enableComponent()
     {
         this.connectionConfig = loadConfigFile(ConnectionConfig.class, this.getApiCore().getFile("connection.yml"));
-        if (System.getProperties().containsKey("northplatform.forcedebug"))
-        {
-            this.connectionConfig.setDebug(true);
-        }
 
         this.pool = new JedisPool(new JedisPoolConfig(), this.connectionConfig.getRedisHost(), this.connectionConfig.getRedisPort(), this.connectionConfig.getRedisTimeout(), this.connectionConfig.getRedisPassword());
         this.pool.getResource().ping(); // check connection
 
+        this.fixMongoLogger(Logger.getLogger("org.mongodb.driver.connection"));
+        this.fixMongoLogger(Logger.getLogger("org.mongodb.driver.management"));
+        this.fixMongoLogger(Logger.getLogger("org.mongodb.driver.cluster"));
+        this.fixMongoLogger(Logger.getLogger("org.mongodb.driver.protocol.insert"));
+        this.fixMongoLogger(Logger.getLogger("org.mongodb.driver.protocol.query"));
+        this.fixMongoLogger(Logger.getLogger("org.mongodb.driver.protocol.update"));
+
         this.mongoClient = new MongoClient(new MongoClientURI(this.connectionConfig.getMongoDbConnect()));
         this.mainDatabase = this.mongoClient.getDatabase(this.connectionConfig.getMongoMainDatabase());
+    }
+
+    private void fixMongoLogger(final Logger logger)
+    {
+        logger.setParent(API.getLogger());
     }
 
     @Override

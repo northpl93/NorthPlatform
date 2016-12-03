@@ -32,6 +32,11 @@ public class TemplateManagerImpl extends Component implements TemplateManager
     private final TemplateFactory        templateFactory;
     private final Map<Class, Template>   templateCache;
 
+    public TemplateManagerImpl()
+    {
+        this(new TemplateFactoryImpl()); // default implementation of TemplateFactory
+    }
+
     public TemplateManagerImpl(final TemplateFactory templateFactory)
     {
         this.templateFactory = templateFactory;

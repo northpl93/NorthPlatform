@@ -3,18 +3,19 @@ package pl.north93.zgame.api.global;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import pl.north93.zgame.api.global.component.IComponentManager;
+import pl.north93.zgame.api.global.component.annotations.ProvidesComponent;
 import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
 import pl.north93.zgame.api.global.data.PlayersDao;
+import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.data.UsernameCache;
 import pl.north93.zgame.api.global.exceptions.SingletonException;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.NetworkManager;
 import pl.north93.zgame.api.global.permissions.PermissionsManager;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
-import pl.north93.zgame.api.global.redis.messaging.impl.TemplateFactoryImpl;
 import pl.north93.zgame.api.global.redis.messaging.impl.TemplateManagerImpl;
 import pl.north93.zgame.api.global.redis.rpc.RpcManager;
 import pl.north93.zgame.api.global.redis.rpc.impl.RpcManagerImpl;
@@ -24,28 +25,26 @@ import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriberImpl;
 public abstract class ApiCore
 {
     private final IComponentManager  componentManager;
-    private final TemplateManager    messagePackTemplates;
     private final Platform           platform;
     private final PlatformConnector  connector;
+    private final TemplateManager    messagePackTemplates;
     private final RedisSubscriber    redisSubscriber;
     private final RpcManager         rpcManager;
-    private final UsernameCache      usernameCache;
-    private final INetworkManager    networkManager;
-    private final PermissionsManager permissionsManager;
-    private final PlayersDao         playersDao;
+    // - - - //
+    private       StorageConnector   storageConnector;
+    private       UsernameCache      usernameCache;
+    private       INetworkManager    networkManager;
+    private       PermissionsManager permissionsManager;
+    private final PlayersDao         playersDao; // todo extract component
 
     public ApiCore(final Platform platform, final PlatformConnector platformConnector)
     {
         this.platform = platform;
         this.connector = platformConnector;
         this.componentManager = new ComponentManagerImpl(this);
-
-        this.messagePackTemplates = new TemplateManagerImpl(new TemplateFactoryImpl());
+        this.messagePackTemplates = new TemplateManagerImpl();
         this.redisSubscriber = new RedisSubscriberImpl();
         this.rpcManager = new RpcManagerImpl();
-        this.networkManager = new NetworkManager();
-        this.permissionsManager = new PermissionsManager();
-        this.usernameCache = new UsernameCache(this);
         this.playersDao = new PlayersDao();
         try
         {
@@ -67,21 +66,19 @@ public abstract class ApiCore
         return this.connector;
     }
 
-    public PermissionsManager getPermissionsManager()
-    {
-        return this.permissionsManager;
-    }
-
     public final void startCore()
     {
         this.getLogger().info("Starting North API Core.");
+
         this.componentManager.doComponentScan(this.getClass().getClassLoader()); // scan for builtin API components
-
-        this.componentManager.injectComponents(this.messagePackTemplates, this.redisSubscriber, this.rpcManager);
-        this.componentManager.injectComponents(this.networkManager, this.permissionsManager);
-
+        this.componentManager.injectComponents(this.messagePackTemplates, this.redisSubscriber, this.rpcManager); // inject base API components
         this.componentManager.enableAllComponents(); // enable all components
         this.componentManager.setAutoEnable(true); // auto enable all newly discovered components
+
+        this.storageConnector = this.componentManager.getComponent("API.Database.StorageConnector");
+        this.usernameCache = this.componentManager.getComponent("API.MinecraftNetwork.UsernameCache");
+        this.networkManager = this.componentManager.getComponent("API.MinecraftNetwork.NetworkManager");
+        this.permissionsManager = this.componentManager.getComponent("API.MinecraftNetwork.PermissionsManager");
 
         try
         {
@@ -115,27 +112,37 @@ public abstract class ApiCore
         return this.playersDao;
     }
 
+    @ProvidesComponent
     public INetworkManager getNetworkManager()
     {
         return this.networkManager;
     }
 
+    @ProvidesComponent
+    public PermissionsManager getPermissionsManager()
+    {
+        return this.permissionsManager;
+    }
+
+    @ProvidesComponent
     public UsernameCache getUsernameCache()
     {
         return this.usernameCache;
     }
 
+    @ProvidesComponent
     public TemplateManager getMessagePackTemplates()
     {
         return this.messagePackTemplates;
     }
 
+    @ProvidesComponent
     public RedisSubscriber getRedisSubscriber()
     {
         return this.redisSubscriber;
     }
 
-    @Deprecated
+    @ProvidesComponent
     public RpcManager getRpcManager()
     {
         return this.rpcManager;
@@ -148,20 +155,7 @@ public abstract class ApiCore
 
     public void debug(final Object object)
     {
-        //if (! this.connectionConfig.isDebug())
-        //{
-        //    return;
-        //}
-        this.getLogger().info(object.toString());
-    }
-
-    public void runDebug(final Runnable runnable)
-    {
-        //if (! this.connectionConfig.isDebug())
-        //{
-        //    return;
-        //}
-        runnable.run();
+        this.getLogger().log(Level.FINE, object.toString());
     }
 
     /**

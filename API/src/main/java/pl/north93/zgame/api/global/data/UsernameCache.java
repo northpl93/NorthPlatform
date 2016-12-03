@@ -19,17 +19,24 @@ import org.bson.Document;
 
 import org.diorite.utils.collections.maps.CaseInsensitiveMap;
 
-import pl.north93.zgame.api.global.ApiCore;
+import pl.north93.zgame.api.global.component.Component;
 
-public class UsernameCache
+public class UsernameCache extends Component
 {
-    private final Map<String, UsernameDetails>     localCache = new CaseInsensitiveMap<>(512);
-    private final JsonParser                       json = new JsonParser();
-    private final MongoCollection<UsernameDetails> mongoCache = null; // TODO
+    private final Map<String, UsernameDetails> localCache = new CaseInsensitiveMap<>(512);
+    private final JsonParser                   json = new JsonParser();
+    private       MongoCollection<Document>    mongoCache;
 
-    public UsernameCache(final ApiCore apiCore)
+    @Override
+    protected void enableComponent()
     {
-        //this.mongoCache = apiCore.getMainDatabase().getCollection("username_cache", UsernameDetails.class);
+        final StorageConnector storage = this.getApiCore().getComponentManager().getComponent("API.Database.StorageConnector");
+        this.mongoCache = storage.getMainDatabase().getCollection("username_cache");
+    }
+
+    @Override
+    protected void disableComponent()
+    {
     }
 
     public static class UsernameDetails
@@ -69,10 +76,11 @@ public class UsernameCache
 
     public Optional<UsernameDetails> queryCache(final String username)
     {
-        final Iterator<UsernameDetails> results = this.mongoCache.find(new Document("username", "/" + username + "/i")).limit(1).iterator();
+        final Iterator<Document> results = this.mongoCache.find(new Document("username", "/" + username + "/i")).limit(1).iterator();
         if (results.hasNext())
         {
-            return Optional.of(results.next());
+            final Document document = results.next();
+            return Optional.of(new UsernameDetails(document.getString("validSpelling"), document.getBoolean("isPremium"), document.getDate("fetchTime")));
         }
 
         return Optional.empty();
@@ -120,7 +128,12 @@ public class UsernameCache
             final UsernameDetails detailsFromMojang = fromMojang.get();
 
             this.localCache.put(username, detailsFromMojang);
-            this.mongoCache.insertOne(detailsFromMojang);
+
+            final Document document = new Document();
+            document.put("validSpelling", detailsFromMojang.validSpelling);
+            document.put("isPremium", detailsFromMojang.isPremium);
+            document.put("fetchTime", detailsFromMojang.fetchTime);
+            this.mongoCache.insertOne(document);
 
             return fromMojang;
         }

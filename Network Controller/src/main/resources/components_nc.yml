@@ -10,6 +10,13 @@ components:
       - API.Database.Redis.Subscriber
       - API.Database.Redis.RPC
 
+  - name: NetworkController.RepoServer
+    enabled: true
+    mainClass: "pl.north93.zgame.controller.reposerver.RepoServer"
+    autoInstantiate: true
+    description: "Repository server"
+    dependencies: []
+
   - name: NetworkController.ConfigBroadcaster
     enabled: true
     mainClass: "pl.north93.zgame.controller.ConfigBroadcaster"

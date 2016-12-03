@@ -6,18 +6,16 @@ import java.net.InetSocketAddress;
 import com.sun.net.httpserver.HttpServer;
 
 import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.repo.RepoServerRpc;
-import pl.north93.zgame.controller.NetworkControllerCore;
 
-public class RepoServer
+public class RepoServer extends Component
 {
-    private final NetworkControllerCore controllerCore;
-    private final HttpServer            server;
-    private       RepoManager           repoManager;
+    private final HttpServer  server;
+    private       RepoManager repoManager;
 
-    public RepoServer(final NetworkControllerCore controllerCore)
+    public RepoServer()
     {
-        this.controllerCore = controllerCore;
         try
         {
             this.server = HttpServer.create(new InetSocketAddress("0.0.0.0", 8000), 0);
@@ -30,7 +28,8 @@ public class RepoServer
         }
     }
 
-    public void start()
+    @Override
+    protected void enableComponent()
     {
         API.getLogger().info("Starting repo server");
         this.repoManager = new RepoManager(API.getFile("repo"));
@@ -38,7 +37,8 @@ public class RepoServer
         this.server.start();
     }
 
-    public void stop()
+    @Override
+    protected void disableComponent()
     {
         API.getLogger().info("Stopping repo server");
         this.server.stop(0);

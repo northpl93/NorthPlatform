@@ -1,32 +1,30 @@
 package pl.north93.zgame.controller;
 
-import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
-import pl.north93.zgame.controller.reposerver.RepoServer;
+import pl.north93.zgame.api.global.redis.rpc.RpcManager;
 
 public class NetworkControllerCore extends Component
 {
-    private RepoServer            repoServer             = new RepoServer(this);
+    @InjectComponent("API.Database.Redis.RPC")
+    private RpcManager rpcManager;
 
     @Override
     protected void enableComponent()
     {
-        API.getLogger().info("Starting NetworkController...");
-        if (API.getPlatform() == Platform.BUNGEE) // on standalone platform context will be added automatically from getId()
+        this.getApiCore().getLogger().info("Starting NetworkController...");
+        if (this.getApiCore().getPlatform() == Platform.BUNGEE) // on standalone platform context will be added automatically from getId()
         {
-            API.getRpcManager().addListeningContext("controller");
+            this.rpcManager.addListeningContext("controller");
         }
-        API.getRpcManager().addRpcImplementation(NetworkControllerRpc.class, new NetworkControllerRpcImpl());
-        this.repoServer.start();
+        this.rpcManager.addRpcImplementation(NetworkControllerRpc.class, new NetworkControllerRpcImpl());
     }
 
     @Override
     protected void disableComponent()
     {
-        this.repoServer.stop();
-        // TODO Servers Manager safe stop
-        API.getLogger().info("Network Controller stopped!");
+        this.getApiCore().getLogger().info("Network Controller stopped!");
     }
 }
