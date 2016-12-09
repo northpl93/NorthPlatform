@@ -11,11 +11,11 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="spigot-1.10.2" level="project" />
+    <orderEntry type="module" module-name="API" />
     <orderEntry type="module-library">
       <library name="Maven: org.spigotmc:spigot-server:1.10-R1">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/spigot-1.10.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../lib/spigot-1.10.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -1,0 +1,8 @@
+components:
+  - name: DefaultCommands
+    enabled: true
+    mainClass: "pl.north93.zgame.api.defaultcommands.DefaultCommands"
+    autoInstantiate: true
+    description: "Provides base commands."
+    dependencies:
+      - API.Commands

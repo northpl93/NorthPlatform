@@ -1,5 +1,6 @@
 package pl.north93.zgame.api.global.component;
 
+import java.util.Collection;
 import java.util.logging.Level;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -12,6 +13,7 @@ public abstract class Component
 {
     private ApiCore           apiCore;
     private IComponentManager manager;
+    private IComponentBundle  componentBundle;
     private String            name;
     private ComponentStatus   status;
     private boolean           isInitialised;
@@ -34,14 +36,14 @@ public abstract class Component
         return this.name;
     }
 
+    public final IComponentManager getComponentManager()
+    {
+        return this.manager;
+    }
+
     protected final ApiCore getApiCore()
     {
         return this.apiCore;
-    }
-
-    protected final IComponentManager getComponentManager()
-    {
-        return this.manager;
     }
 
     protected final <T extends Component> T getComponent(final String name)
@@ -49,14 +51,25 @@ public abstract class Component
         return this.manager.getComponent(name);
     }
 
-    public final void init(final String name, final IComponentManager componentManager, final ApiCore apiCore)
+    protected final Collection<? extends IExtensionPoint<?>> getExtensionPoints()
+    {
+        return this.componentBundle.getExtensionPoints();
+    }
+
+    protected final <T> IExtensionPoint<T> getExtensionPoint(final Class<T> clazz)
+    {
+        return this.componentBundle.getExtensionPoint(clazz);
+    }
+
+    public final void init(final IComponentBundle componentBundle, final IComponentManager componentManager, final ApiCore apiCore)
     {
         if (this.isInitialised)
         {
             throw new IllegalStateException("Component already initialised!");
         }
         this.isInitialised = true;
-        this.name = name;
+        this.componentBundle = componentBundle;
+        this.name = componentBundle.getName();
         this.manager = componentManager;
         this.apiCore = apiCore;
         this.status = ComponentStatus.DISABLED;
@@ -69,6 +82,7 @@ public abstract class Component
         {
             Injector.inject(this.manager, this); // inject annotations
             this.enableComponent();
+            this.componentBundle.doExtensionsScan();
         }
         catch (final Exception e)
         {

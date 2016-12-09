@@ -1,6 +1,7 @@
 package pl.north93.zgame.api.global.component;
 
 import java.io.File;
+import java.util.Collection;
 
 public interface IComponentManager
 {
@@ -35,4 +36,6 @@ public interface IComponentManager
     void disableAllComponents();
 
     <T extends Component> T getComponent(String name);
+
+    Collection<? extends IComponentBundle> getComponents();
 }

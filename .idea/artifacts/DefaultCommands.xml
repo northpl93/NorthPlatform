@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="DefaultCommands">
+    <output-path>$PROJECT_DIR$/test/plugins/API/components</output-path>
+    <root id="archive" name="DefaultCommands.jar">
+      <element id="module-output" name="DefaultCommands" />
+    </root>
+  </artifact>
+</component>

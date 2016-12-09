@@ -4,7 +4,7 @@ import java.lang.instrument.Instrumentation;
 
 import sun.management.Agent;
 
-public class ClassTweaker
+class ClassTweaker
 {
     static class NorthPlatformTweakerAgent extends Agent
     {

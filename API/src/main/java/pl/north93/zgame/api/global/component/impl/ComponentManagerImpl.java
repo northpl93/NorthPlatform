@@ -4,7 +4,11 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +20,7 @@ import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.ComponentDescription;
+import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.component.IComponentManager;
 
 public class ComponentManagerImpl implements IComponentManager
@@ -31,7 +36,7 @@ public class ComponentManagerImpl implements IComponentManager
 
     private void initComponent(final ComponentBundle component)
     {
-        component.getComponent().init(component.getDescription().getName(), this, API.getApiCore()); // TODO
+        component.getComponent().init(component, this, API.getApiCore()); // TODO
         if (this.autoEnable && this.checkAndEnableDependencies(component))
         {
             component.getComponent().enable();
@@ -46,7 +51,31 @@ public class ComponentManagerImpl implements IComponentManager
         }
         this.apiCore.getLogger().info("Loading component " + componentDescription.getName());
 
-        final ComponentBundle componentBundle = new ComponentBundle(componentDescription, classLoader);
+        final List<ExtensionPointImpl<?>> extensionPoints = new ArrayList<>();
+        for (final String extensionClassName : componentDescription.getExtensionPoints())
+        {
+            final Class<?> extensionClass;
+            try
+            {
+                extensionClass = Class.forName(extensionClassName, true, classLoader);
+            }
+            catch (final ClassNotFoundException e)
+            {
+                e.printStackTrace();
+                continue;
+            }
+
+            if (!extensionClass.isInterface() && !Modifier.isAbstract(extensionClass.getModifiers()))
+            {
+                this.apiCore.getLogger().warning("Class " + extensionClassName + " must be interface or abstract!");
+                continue;
+            }
+
+            this.apiCore.getLogger().info("Component " + componentDescription.getName() + " exposes extension point: " + extensionClassName);
+            extensionPoints.add(new ExtensionPointImpl<>(extensionClass));
+        }
+
+        final ComponentBundle componentBundle = new ComponentBundle(componentDescription, classLoader, extensionPoints);
         if (componentDescription.isAutoInstantiate())
         {
             try
@@ -142,12 +171,48 @@ public class ComponentManagerImpl implements IComponentManager
         {
             this.loadComponent(classLoader, componentDescription);
         }
+
+        for (final String includeConfig : componentsConfig.getInclude())
+        {
+            this.doComponentScan(includeConfig, classLoader);
+        }
     }
 
     @Override
     public void doComponentScan(final File file)
     {
+        if (file.isFile())
+        {
+            this.loadComponentsFromFile(file);
+        }
+        else
+        {
+            final File[] files = file.listFiles();
+            if (files == null)
+            {
+                return;
+            }
+            for (final File fileToCheck : files)
+            {
+                this.doComponentScan(fileToCheck);
+            }
+        }
+    }
 
+    private void loadComponentsFromFile(final File file)
+    {
+        final JarComponentLoader loader;
+        try
+        {
+            loader = new JarComponentLoader(file.toURI().toURL(), this.getClass().getClassLoader());
+        }
+        catch (final MalformedURLException e)
+        {
+            e.printStackTrace();
+            return;
+        }
+
+        this.doComponentScan(loader);
     }
 
     @Override
@@ -208,13 +273,8 @@ public class ComponentManagerImpl implements IComponentManager
             }
         }
 
-        while (true)
+        while (! queue.isEmpty())
         {
-            if (queue.isEmpty())
-            {
-                return; // all components are disabled
-            }
-
             queue.forEach((component, canDisable) ->
             {
                 for (final String depName : component.getDescription().getDependencies())
@@ -257,5 +317,11 @@ public class ComponentManagerImpl implements IComponentManager
             }
         }
         return null;
+    }
+
+    @Override
+    public Collection<? extends IComponentBundle> getComponents()
+    {
+        return Collections.unmodifiableList(this.components);
     }
 }

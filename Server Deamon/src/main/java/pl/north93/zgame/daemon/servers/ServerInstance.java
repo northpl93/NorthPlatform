@@ -1,8 +1,5 @@
 package pl.north93.zgame.daemon.servers;
 
-import static pl.north93.zgame.api.global.redis.RedisKeys.SERVER;
-
-
 import java.io.File;
 import java.util.UUID;
 
@@ -10,10 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.network.server.Server;
-import pl.north93.zgame.api.global.network.server.ServerImpl;
 import pl.north93.zgame.api.global.utils.JavaArguments;
-import redis.clients.jedis.Jedis;
 
 public class ServerInstance
 {
@@ -60,14 +54,6 @@ public class ServerInstance
     public void setSaveLog(final boolean saveLog)
     {
         this.saveLog = saveLog;
-    }
-
-    public ServerImpl getServerInfo()
-    {
-        try (final Jedis jedis = API.getJedis().getResource())
-        {
-            return (ServerImpl) API.getMessagePackTemplates().deserialize(Server.class, jedis.get(SERVER.getBytes()));
-        }
     }
 
     public ServerConsole getServerConsole()

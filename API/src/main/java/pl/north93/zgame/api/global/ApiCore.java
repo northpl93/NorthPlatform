@@ -6,6 +6,8 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.diorite.utils.DioriteUtils;
+
 import pl.north93.zgame.api.global.component.IComponentManager;
 import pl.north93.zgame.api.global.component.annotations.ProvidesComponent;
 import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
@@ -74,6 +76,9 @@ public abstract class ApiCore
         this.componentManager.injectComponents(this.messagePackTemplates, this.redisSubscriber, this.rpcManager); // inject base API components
         this.componentManager.enableAllComponents(); // enable all components
         this.componentManager.setAutoEnable(true); // auto enable all newly discovered components
+        final File components = this.getFile("components");
+        DioriteUtils.createDirectory(components);
+        this.componentManager.doComponentScan(components); // Scan componets directory and enable components
 
         this.storageConnector = this.componentManager.getComponent("API.Database.StorageConnector");
         this.usernameCache = this.componentManager.getComponent("API.MinecraftNetwork.UsernameCache");

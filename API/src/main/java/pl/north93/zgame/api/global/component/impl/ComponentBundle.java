@@ -1,39 +1,84 @@
 package pl.north93.zgame.api.global.component.impl;
 
+import java.util.List;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.ComponentStatus;
+import pl.north93.zgame.api.global.component.IComponentBundle;
+import pl.north93.zgame.api.global.component.IExtensionPoint;
 
-public class ComponentBundle
+class ComponentBundle implements IComponentBundle
 {
     private final String               name;
     private final ComponentDescription description;
     private final ClassLoader          classLoader;
+    private final List<ExtensionPointImpl<?>> extensionPoints;
     private Component component;
 
-    public ComponentBundle(final ComponentDescription description, final ClassLoader classLoader)
+    public ComponentBundle(final ComponentDescription description, final ClassLoader classLoader, final List<ExtensionPointImpl<?>> extensionPoints)
     {
         this.name = description.getName();
         this.description = description;
         this.classLoader = classLoader;
+        this.extensionPoints = extensionPoints;
     }
 
+    @Override
     public String getName()
     {
         return this.name;
     }
 
+    @Override
+    public boolean isBuiltinComponent()
+    {
+        return ! (this.classLoader instanceof JarComponentLoader);
+    }
+
+    @Override
     public ComponentDescription getDescription()
     {
         return this.description;
     }
 
+    @Override
     public ClassLoader getClassLoader()
     {
         return this.classLoader;
+    }
+
+    @Override
+    public List<ExtensionPointImpl<?>> getExtensionPoints()
+    {
+        return this.extensionPoints;
+    }
+
+    @Override
+    public <T> IExtensionPoint<T> getExtensionPoint(final Class<T> clazz)
+    {
+        for (final ExtensionPointImpl<?> extensionPoint : this.extensionPoints)
+        {
+            if (clazz == extensionPoint.getExtensionPointClass())
+            {
+                //noinspection unchecked
+                return (IExtensionPoint<T>) extensionPoint;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void doExtensionsScan()
+    {
+        if (this.isBuiltinComponent())
+        {
+            return;
+        }
+        ExtensionScanner.scan(this.component.getComponentManager(), (JarComponentLoader) this.classLoader);
     }
 
     public Component getComponent()

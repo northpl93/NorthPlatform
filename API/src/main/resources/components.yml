@@ -1,10 +1,17 @@
 components:
+  - name: API.Commands
+    enabled: true
+    mainClass: "pl.north93.zgame.api.global.commands.impl.CommandsManagerDecorator"
+    autoInstantiate: true
+    description: "Provides unified commands API."
+    extensionPoints:
+      - "pl.north93.zgame.api.global.commands.NorthCommand"
+
   - name: API.Database.StorageConnector
     enabled: true
     mainClass: "pl.north93.zgame.api.global.data.StorageConnector"
     autoInstantiate: true
     description: "Provides connection with Redis and MongoDB databases."
-    dependencies: []
 
   - name: API.Database.Redis.MessagePackSerializer
     enabled: true
