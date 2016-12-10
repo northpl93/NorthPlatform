@@ -1,13 +1,21 @@
 package pl.north93.zgame.api.global;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.ea.agentloader.AgentLoader;
+
+import org.apache.commons.io.FileUtils;
+
 import org.diorite.utils.DioriteUtils;
 
+import pl.north93.zgame.api.global.agent.client.IAgentClient;
+import pl.north93.zgame.api.global.agent.client.LocalAgentClient;
 import pl.north93.zgame.api.global.component.IComponentManager;
 import pl.north93.zgame.api.global.component.annotations.ProvidesComponent;
 import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
@@ -26,6 +34,7 @@ import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriberImpl;
 
 public abstract class ApiCore
 {
+    private final IAgentClient       instrumentationClient;
     private final IComponentManager  componentManager;
     private final Platform           platform;
     private final PlatformConnector  connector;
@@ -43,6 +52,7 @@ public abstract class ApiCore
     {
         this.platform = platform;
         this.connector = platformConnector;
+        this.instrumentationClient = new LocalAgentClient();
         this.componentManager = new ComponentManagerImpl(this);
         this.messagePackTemplates = new TemplateManagerImpl();
         this.redisSubscriber = new RedisSubscriberImpl();
@@ -71,6 +81,7 @@ public abstract class ApiCore
     public final void startCore()
     {
         this.getLogger().info("Starting North API Core.");
+        this.setupInstrumentation();
 
         this.componentManager.doComponentScan(this.getClass().getClassLoader()); // scan for builtin API components
         this.componentManager.injectComponents(this.messagePackTemplates, this.redisSubscriber, this.rpcManager); // inject base API components
@@ -96,6 +107,26 @@ public abstract class ApiCore
         }
         this.rpcManager.addListeningContext(this.getId());
         this.getLogger().info("Client id is " + this.getId());
+    }
+
+    private void setupInstrumentation()
+    {
+        final File extractedAgent = this.getFile("NorthPlatformInstrumentation.jar");
+        if (!extractedAgent.exists())
+        {
+            URL inputUrl = this.getClass().getResource("/InstrumentationAgent.jar");
+            try
+            {
+                FileUtils.copyURLToFile(inputUrl, extractedAgent);
+            }
+            catch (final IOException e)
+            {
+                e.printStackTrace();
+                return;
+            }
+        }
+        AgentLoader.loadAgent(extractedAgent.toString(), "");
+        this.instrumentationClient.connect();
     }
 
     public final void stopCore()
@@ -151,6 +182,11 @@ public abstract class ApiCore
     public RpcManager getRpcManager()
     {
         return this.rpcManager;
+    }
+
+    public IAgentClient getInstrumentationClient()
+    {
+        return this.instrumentationClient;
     }
 
     public IComponentManager getComponentManager()

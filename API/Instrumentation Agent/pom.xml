@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>api</artifactId>
+        <groupId>pl.north93.zgame</groupId>
+        <!-- Pamietac zeby to zmienic -->
+        <version>1.0-INDEV</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>pl.north93.zgame.api</groupId>
+    <artifactId>instrumentationagent</artifactId>
+    <version>${version.api}</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>pl.north93.zgame</groupId>
+            <artifactId>api</artifactId>
+            <version>${version.api}</version>
+        </dependency>
+    </dependencies>
+</project>

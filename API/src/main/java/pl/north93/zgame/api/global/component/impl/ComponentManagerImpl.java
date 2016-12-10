@@ -14,9 +14,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import org.diorite.cfg.system.TemplateCreator;
 
-import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.ComponentDescription;
@@ -25,8 +26,8 @@ import pl.north93.zgame.api.global.component.IComponentManager;
 
 public class ComponentManagerImpl implements IComponentManager
 {
-    private final ApiCore                    apiCore;
-    private final List<ComponentBundle>      components     = new ArrayList<>();
+    private final ApiCore               apiCore;
+    private final List<ComponentBundle> components = new ArrayList<>();
     private boolean autoEnable;
 
     public ComponentManagerImpl(final ApiCore apiCore)
@@ -36,7 +37,7 @@ public class ComponentManagerImpl implements IComponentManager
 
     private void initComponent(final ComponentBundle component)
     {
-        component.getComponent().init(component, this, API.getApiCore()); // TODO
+        component.getComponent().init(component, this, this.apiCore);
         if (this.autoEnable && this.checkAndEnableDependencies(component))
         {
             component.getComponent().enable();
@@ -45,9 +46,9 @@ public class ComponentManagerImpl implements IComponentManager
 
     private void loadComponent(final ClassLoader classLoader, final ComponentDescription componentDescription)
     {
-        if (! componentDescription.isEnabled())
+        if (! componentDescription.isEnabled() || ! ArrayUtils.contains(componentDescription.getPlatforms(), this.apiCore.getPlatform()))
         {
-            return; // skip loading of disabled component
+            return; // skip loading of component
         }
         this.apiCore.getLogger().info("Loading component " + componentDescription.getName());
 

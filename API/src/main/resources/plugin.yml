@@ -10,9 +10,6 @@ commands:
   msg:
     description: "Prywatna wiadomość do gracza"
     permission: "api.command.msg"
-  kick:
-    description: "Wyrzuca gracza z serwera"
-    permission: "api.command.kick"
   network:
     aliases: ["net"]
     description: "Zarządzanie i informacje o sieci"

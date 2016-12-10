@@ -78,7 +78,7 @@ class ComponentBundle implements IComponentBundle
         {
             return;
         }
-        ExtensionScanner.scan(this.component.getComponentManager(), (JarComponentLoader) this.classLoader);
+        ((JarComponentLoader) this.classLoader).scan(this.component.getComponentManager());
     }
 
     public Component getComponent()

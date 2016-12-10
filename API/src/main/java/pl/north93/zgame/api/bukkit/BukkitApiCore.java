@@ -9,7 +9,6 @@ import org.bukkit.event.Listener;
 
 import org.spigotmc.SpigotConfig;
 
-import pl.north93.zgame.api.bukkit.cmd.KickCmd;
 import pl.north93.zgame.api.bukkit.cmd.MsgCmd;
 import pl.north93.zgame.api.bukkit.cmd.NetworkCmd;
 import pl.north93.zgame.api.bukkit.cmd.NetworkControllerPing;
@@ -79,7 +78,6 @@ public class BukkitApiCore extends ApiCore
 
         this.pluginMain.getCommand("playerinfo").setExecutor(new PlayerInfoCmd());
         this.pluginMain.getCommand("msg").setExecutor(new MsgCmd());
-        this.pluginMain.getCommand("kick").setExecutor(new KickCmd());
         this.pluginMain.getCommand("network").setExecutor(new NetworkCmd());
         this.pluginMain.getCommand("wtfserver").setExecutor(new WtfServer());
         this.pluginMain.getCommand("performance").setExecutor(new Performance());
