@@ -5,16 +5,17 @@ import java.util.Map;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.data.StorageConnector;
+import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.rpc.RpcManager;
 import pl.north93.zgame.api.global.redis.rpc.RpcTarget;
 import pl.north93.zgame.api.global.redis.rpc.exceptions.RpcUnimplementedException;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcExceptionInfo;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcInvokeMessage;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcResponseMessage;
+import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -22,6 +23,10 @@ public class RpcManagerImpl extends Component implements RpcManager
 {
     @InjectComponent("API.Database.StorageConnector")
     private StorageConnector                        storageConnector;
+    @InjectComponent("API.Database.Redis.Subscriber")
+    private RedisSubscriber                         redisSubscriber;
+    @InjectComponent("API.Database.Redis.MessagePackSerializer")
+    private TemplateManager                         msgPack;
     private final RpcProxyCache                     rpcProxyCache      = new RpcProxyCache(this);
     private final Int2ObjectMap<RpcResponseHandler> responseHandlerMap = new Int2ObjectArrayMap<>();
     private final Int2ObjectMap<RpcResponseLock>    locks              = new Int2ObjectArrayMap<>();
@@ -41,8 +46,13 @@ public class RpcManagerImpl extends Component implements RpcManager
     public void addListeningContext(final String id)
     {
         this.getApiCore().debug("addListeningContext(" + id + ")");
-        this.getApiCore().getRedisSubscriber().subscribe("rpc:" + id + ":invoke", this::handleMethodInvocation);
-        this.getApiCore().getRedisSubscriber().subscribe("rpc:" + id + ":response", this::handleResponse);
+        if (this.getStatus().isDisabled())
+        {
+            this.getApiCore().getLogger().warning("Tried to register listeningContext while RpcManager is disabled");
+            return;
+        }
+        this.redisSubscriber.subscribe("rpc:" + id + ":invoke", this::handleMethodInvocation);
+        this.redisSubscriber.subscribe("rpc:" + id + ":response", this::handleResponse);
     }
 
     @Override
@@ -94,7 +104,7 @@ public class RpcManagerImpl extends Component implements RpcManager
         try (final Jedis jedis = this.storageConnector.getJedisPool().getResource())
         {
             final RpcResponseMessage responseMessage = new RpcResponseMessage(requestId, response);
-            jedis.publish(("rpc:" + target + ":response").getBytes(), API.getMessagePackTemplates().serialize(RpcResponseMessage.class, responseMessage));
+            jedis.publish(("rpc:" + target + ":response").getBytes(), this.msgPack.serialize(RpcResponseMessage.class, responseMessage));
         }
     }
 

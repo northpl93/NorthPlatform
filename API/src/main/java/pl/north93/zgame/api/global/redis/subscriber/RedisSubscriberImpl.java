@@ -11,23 +11,23 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import redis.clients.jedis.BinaryJedisPubSub;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 import redis.clients.util.SafeEncoder;
 
 public class RedisSubscriberImpl extends Component implements RedisSubscriber
 {
     private final SubscriptionReceiver             subscriptionReceiver   = new SubscriptionReceiver();
     private final Map<String, SubscriptionHandler> subscriptionHandlerMap = new HashMap<>();
+    @InjectComponent("API.Database.StorageConnector")
+    private StorageConnector storageConnector;
     private boolean   subscriberScheduled;
-    private JedisPool jedisPool;
 
     @Override
     protected void enableComponent()
     {
-        this.jedisPool = this.<StorageConnector>getComponent("API.Database.StorageConnector").getJedisPool();
     }
 
     @Override
@@ -68,7 +68,7 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
         public void run()
         {
             RedisSubscriberImpl.this.getApiCore().getLogger().info("Subscriber task started");
-            try (final Jedis jedis = RedisSubscriberImpl.this.jedisPool.getResource())
+            try (final Jedis jedis = RedisSubscriberImpl.this.storageConnector.getJedisPool().getResource())
             {
                 final Set<String> stringChannels = RedisSubscriberImpl.this.subscriptionHandlerMap.keySet();
                 final Iterator<String> iterator = stringChannels.iterator();

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +21,6 @@ import pl.north93.zgame.api.global.component.IComponentManager;
 import pl.north93.zgame.api.global.component.annotations.ProvidesComponent;
 import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
 import pl.north93.zgame.api.global.data.PlayersDao;
-import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.data.UsernameCache;
 import pl.north93.zgame.api.global.exceptions.SingletonException;
 import pl.north93.zgame.api.global.network.INetworkManager;
@@ -42,7 +42,6 @@ public abstract class ApiCore
     private final RedisSubscriber    redisSubscriber;
     private final RpcManager         rpcManager;
     // - - - //
-    private       StorageConnector   storageConnector;
     private       UsernameCache      usernameCache;
     private       INetworkManager    networkManager;
     private       PermissionsManager permissionsManager;
@@ -80,6 +79,7 @@ public abstract class ApiCore
 
     public final void startCore()
     {
+        Locale.setDefault(new Locale("pl", "PL"));
         this.getLogger().info("Starting North API Core.");
         this.setupInstrumentation();
 
@@ -91,7 +91,6 @@ public abstract class ApiCore
         DioriteUtils.createDirectory(components);
         this.componentManager.doComponentScan(components); // Scan componets directory and enable components
 
-        this.storageConnector = this.componentManager.getComponent("API.Database.StorageConnector");
         this.usernameCache = this.componentManager.getComponent("API.MinecraftNetwork.UsernameCache");
         this.networkManager = this.componentManager.getComponent("API.MinecraftNetwork.NetworkManager");
         this.permissionsManager = this.componentManager.getComponent("API.MinecraftNetwork.PermissionsManager");
@@ -173,12 +172,6 @@ public abstract class ApiCore
     }
 
     @ProvidesComponent
-    public RedisSubscriber getRedisSubscriber()
-    {
-        return this.redisSubscriber;
-    }
-
-    @ProvidesComponent
     public RpcManager getRpcManager()
     {
         return this.rpcManager;
@@ -196,7 +189,7 @@ public abstract class ApiCore
 
     public void debug(final Object object)
     {
-        this.getLogger().log(Level.FINE, object.toString());
+        this.getLogger().log(Level.INFO, object.toString());
     }
 
     /**

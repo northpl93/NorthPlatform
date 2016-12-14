@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -11,6 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -25,13 +28,14 @@ import pl.north93.zgame.api.global.component.IExtensionPoint;
 
 class JarComponentLoader extends URLClassLoader
 {
-    private final URL fileUrl;
-    private boolean   isComponentsScanned;
+    private final URL          fileUrl;
+    private final List<String> scannedPackages;
 
     public JarComponentLoader(final URL url, final ClassLoader parent)
     {
         super(new URL[] { url }, parent);
         this.fileUrl = url;
+        this.scannedPackages = new ArrayList<>(4);
     }
 
     @Override
@@ -45,9 +49,9 @@ class JarComponentLoader extends URLClassLoader
         return this.fileUrl;
     }
 
-    public void scan(final IComponentManager componentManager)
+    public void scan(final IComponentManager componentManager, final String packageToScan)
     {
-        if (this.isComponentsScanned)
+        if (this.scannedPackages.contains(packageToScan))
         {
             return;
         }
@@ -60,6 +64,7 @@ class JarComponentLoader extends URLClassLoader
         configuration.setClassLoaders(new ClassLoader[]{this});
         configuration.setScanners(new SubTypesScanner(false)); // defaultly will exclude Object.class
         configuration.setUrls(this.fileUrl);
+        configuration.setInputsFilter(new FilterBuilder().includePackage(packageToScan));
         final Reflections reflections = new Reflections(configuration);
 
         for (final Class<?> aClass : reflections.getSubTypesOf(Object.class))
@@ -102,7 +107,7 @@ class JarComponentLoader extends URLClassLoader
                 }
             }
         }
-        this.isComponentsScanned = true;
+        this.scannedPackages.add(packageToScan);
     }
 
     @Override

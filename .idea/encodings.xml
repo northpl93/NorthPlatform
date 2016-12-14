@@ -3,6 +3,7 @@
   <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="UTF-8">
     <file url="file://$PROJECT_DIR$/API" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/API/DefaultCommands" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/API/Instrumentation Agent" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Lobby" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Network Controller" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/NorthPlatformParent" charset="UTF-8" />

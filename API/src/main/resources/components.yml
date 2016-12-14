@@ -2,7 +2,6 @@ components:
   - name: API.Commands
     enabled: true
     mainClass: "pl.north93.zgame.api.global.commands.impl.CommandsManagerDecorator"
-    autoInstantiate: true
     description: "Provides unified commands API."
     extensionPoints:
       - "pl.north93.zgame.api.global.commands.NorthCommand"
@@ -10,7 +9,6 @@ components:
   - name: API.Database.StorageConnector
     enabled: true
     mainClass: "pl.north93.zgame.api.global.data.StorageConnector"
-    autoInstantiate: true
     description: "Provides connection with Redis and MongoDB databases."
 
   - name: API.Database.Redis.MessagePackSerializer
@@ -42,7 +40,6 @@ components:
   - name: API.MinecraftNetwork.UsernameCache
     enabled: true
     mainClass: "pl.north93.zgame.api.global.data.UsernameCache"
-    autoInstantiate: true
     description: "Caches Mojang's API data."
     dependencies:
       - API.Database.StorageConnector
@@ -50,7 +47,6 @@ components:
   - name: API.MinecraftNetwork.NetworkManager
     enabled: true
     mainClass: "pl.north93.zgame.api.global.network.NetworkManager"
-    autoInstantiate: true
     description: "Provides core functions to manage Minecraft's network."
     dependencies:
       - API.Database.StorageConnector
@@ -61,7 +57,6 @@ components:
   - name: API.MinecraftNetwork.PermissionsManager
     enabled: true
     mainClass: "pl.north93.zgame.api.global.permissions.PermissionsManager"
-    autoInstantiate: true
     description: "Manages player's permissions."
     dependencies:
       - API.Database.StorageConnector

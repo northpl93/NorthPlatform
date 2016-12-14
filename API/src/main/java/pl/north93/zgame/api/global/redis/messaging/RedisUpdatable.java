@@ -20,9 +20,12 @@ public interface RedisUpdatable
     {
         // TODO do it better
         final StorageConnector storageConnector = API.getApiCore().getComponentManager().getComponent("API.Database.StorageConnector");
-        try (final Jedis jedis = storageConnector.getJedisPool().getResource())
+        if (storageConnector.getStatus().isEnabled())
         {
-            jedis.set(this.getRedisKey().getBytes(), API.getMessagePackTemplates().serialize(this));
+            try (final Jedis jedis = storageConnector.getJedisPool().getResource())
+            {
+                jedis.set(this.getRedisKey().getBytes(), API.getMessagePackTemplates().serialize(this));
+            }
         }
     }
 
@@ -33,9 +36,12 @@ public interface RedisUpdatable
     {
         // TODO do it better
         final StorageConnector storageConnector = API.getApiCore().getComponentManager().getComponent("API.Database.StorageConnector");
-        try (final Jedis jedis = storageConnector.getJedisPool().getResource())
+        if (storageConnector.getStatus().isEnabled())
         {
-            jedis.del(this.getRedisKey());
+            try (final Jedis jedis = storageConnector.getJedisPool().getResource())
+            {
+                jedis.del(this.getRedisKey());
+            }
         }
     }
 }

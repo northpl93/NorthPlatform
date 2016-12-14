@@ -2,16 +2,17 @@ components:
   - name: DefaultCommands
     enabled: true
     mainClass: "pl.north93.zgame.api.defaultcommands.DefaultCommands"
-    autoInstantiate: true
     description: "Provides base commands."
     dependencies:
       - API.Commands
+      - API.MinecraftNetwork.NetworkManager
+
   - name: BukkitCommands
     enabled: true
     mainClass: "pl.north93.zgame.api.bukkitcommands.BukkitCommands"
-    autoInstantiate: true
     description: "Provides base commands for Bukkit server."
     dependencies:
       - API.Commands
+      - API.MinecraftNetwork.NetworkManager
     platforms:
       - BUKKIT

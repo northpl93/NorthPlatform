@@ -31,6 +31,7 @@ import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerImpl;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
+import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 import pl.north93.zgame.api.global.utils.ObservableValue;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -40,6 +41,8 @@ public class NetworkManager extends Component implements INetworkManager
 {
     @InjectComponent("API.Database.Redis.MessagePackSerializer")
     private TemplateManager msgPack;
+    @InjectComponent("API.Database.Redis.Subscriber")
+    private RedisSubscriber redisSubscriber;
     private JedisPool       jedisPool;
     private final ObservableValue<NetworkMeta> networkMeta = new ObservableValue<>();
 
@@ -48,13 +51,12 @@ public class NetworkManager extends Component implements INetworkManager
     {
         this.jedisPool = this.<StorageConnector>getComponent("API.Database.StorageConnector").getJedisPool();
         this.downloadNetworkMeta(); // Download network meta on start
-        this.getApiCore().getRedisSubscriber().subscribe(NETWORK_ACTION, this::handleNetworkAction);
+        this.redisSubscriber.subscribe(NETWORK_ACTION, this::handleNetworkAction);
     }
 
     @Override
     protected void disableComponent()
     {
-
     }
 
     @Override

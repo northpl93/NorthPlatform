@@ -13,6 +13,7 @@ import pl.north93.zgame.api.global.Platform;
 public class ComponentDescription
 {
     private String       mainClass;
+    private String       packageToScan;
     @CfgBooleanDefault(true)
     private boolean      autoInstantiate;
     private String       name;
@@ -29,6 +30,11 @@ public class ComponentDescription
     public String getMainClass()
     {
         return this.mainClass;
+    }
+
+    public String getPackageToScan()
+    {
+        return this.packageToScan;
     }
 
     public boolean isAutoInstantiate()
@@ -69,7 +75,7 @@ public class ComponentDescription
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("mainClass", this.mainClass).append("autoInstantiate", this.autoInstantiate).append("name", this.name).append("enabled", this.enabled).append("description", this.description).append("dependencies", this.dependencies).append("extensionPoints", this.extensionPoints).append("platforms", this.platforms).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("mainClass", this.mainClass).append("packageToScan", this.packageToScan).append("autoInstantiate", this.autoInstantiate).append("name", this.name).append("enabled", this.enabled).append("description", this.description).append("dependencies", this.dependencies).append("extensionPoints", this.extensionPoints).append("platforms", this.platforms).toString();
     }
 
     private static Platform[] defaultPlatforms()

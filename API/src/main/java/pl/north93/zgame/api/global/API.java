@@ -4,6 +4,8 @@ import static pl.north93.zgame.api.global.exceptions.SingletonException.checkSin
 
 
 import java.io.File;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import pl.north93.zgame.api.global.component.annotations.ProvidesComponent;
@@ -11,7 +13,6 @@ import pl.north93.zgame.api.global.exceptions.SingletonException;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.rpc.RpcManager;
-import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 
 public final class API
 {
@@ -46,12 +47,6 @@ public final class API
     }
 
     @ProvidesComponent
-    public static RedisSubscriber getRedisSubscriber()
-    {
-        return apiCore.getRedisSubscriber();
-    }
-
-    @ProvidesComponent
     public static RpcManager getRpcManager()
     {
         return apiCore.getRpcManager();
@@ -75,5 +70,10 @@ public final class API
     public static Logger getLogger()
     {
         return apiCore.getLogger();
+    }
+
+    public static String message(final ResourceBundle resourceBundle, final String key, final Object... params)
+    {
+        return MessageFormat.format(resourceBundle.getString(key), params);
     }
 }

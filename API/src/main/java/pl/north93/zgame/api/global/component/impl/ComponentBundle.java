@@ -2,6 +2,7 @@ package pl.north93.zgame.api.global.component.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -17,6 +18,7 @@ class ComponentBundle implements IComponentBundle
     private final ComponentDescription description;
     private final ClassLoader          classLoader;
     private final List<ExtensionPointImpl<?>> extensionPoints;
+    private String    basePackage;
     private Component component;
 
     public ComponentBundle(final ComponentDescription description, final ClassLoader classLoader, final List<ExtensionPointImpl<?>> extensionPoints)
@@ -25,6 +27,25 @@ class ComponentBundle implements IComponentBundle
         this.description = description;
         this.classLoader = classLoader;
         this.extensionPoints = extensionPoints;
+    }
+
+    @Override
+    public String getBasePackage()
+    {
+        if (StringUtils.isEmpty(this.basePackage))
+        {
+            if (StringUtils.isEmpty(this.description.getPackageToScan()))
+            {
+                final String mainClass = this.description.getMainClass();
+                final int lastIndexOfDot = mainClass.lastIndexOf(".");
+                this.basePackage = mainClass.substring(0, lastIndexOfDot);
+            }
+            else
+            {
+                this.basePackage = this.description.getPackageToScan();
+            }
+        }
+        return this.basePackage;
     }
 
     @Override
@@ -78,7 +99,7 @@ class ComponentBundle implements IComponentBundle
         {
             return;
         }
-        ((JarComponentLoader) this.classLoader).scan(this.component.getComponentManager());
+        ((JarComponentLoader) this.classLoader).scan(this.component.getComponentManager(), this.getBasePackage());
     }
 
     public Component getComponent()

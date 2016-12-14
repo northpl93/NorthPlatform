@@ -1,7 +1,4 @@
-package pl.north93.zgame.api.bukkit.cmd;
-
-import static pl.north93.zgame.api.global.I18n.getBukkitMessage;
-
+package pl.north93.zgame.api.bukkitcommands;
 
 import java.lang.management.ManagementFactory;
 import java.util.List;
@@ -10,25 +7,25 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_10_R1.CraftServer;
 
+import pl.north93.zgame.api.global.commands.Arguments;
+import pl.north93.zgame.api.global.commands.NorthCommand;
+import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.utils.DateUtil;
 
 @SuppressWarnings("MagicNumber")
-public class Performance implements CommandExecutor
+public class Performance extends NorthCommand
 {
-    @Override
-    public boolean onCommand(final CommandSender sender, final Command cmd, final String s, final String[] args)
+    public Performance()
     {
-        if (!sender.hasPermission("api.command.performance") && !sender.isOp())
-        {
-            sender.sendMessage(getBukkitMessage("command.no_permissions"));
-            return true;
-        }
+        super("performance", "gc");
+        this.setPermission("api.command.performance");
+    }
 
+    @Override
+    public void execute(final NorthCommandSender sender, final Arguments args, final String label)
+    {
         final double[] recentTps = ((CraftServer) Bukkit.getServer()).getServer().recentTps;
 
         sender.sendMessage(ChatColor.YELLOW + "Uptime: " + DateUtil.formatDateDiff(ManagementFactory.getRuntimeMXBean().getStartTime()));
@@ -68,8 +65,6 @@ public class Performance implements CommandExecutor
 
             sender.sendMessage(ChatColor.YELLOW + " T:" + worldType + " N:" + w.getName() + " LoadedChunks:" + w.getLoadedChunks().length + " Entities:" + w.getEntities().size() + " TileEntities:" + tileEntities);
         }
-
-        return true;
     }
 
     private String formatTps(final double tps)

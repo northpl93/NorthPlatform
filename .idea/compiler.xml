@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="DefaultCommands" />
+        <module name="Instrumentation Agent" />
         <module name="Lobby" />
         <module name="Network Controller" />
         <module name="Pets" />
@@ -16,6 +17,7 @@
     <bytecodeTargetLevel>
       <module name="API" target="8" />
       <module name="DefaultCommands" target="8" />
+      <module name="Instrumentation Agent" target="8" />
       <module name="Lobby" target="8" />
       <module name="Network Controller" target="8" />
       <module name="Pets" target="8" />

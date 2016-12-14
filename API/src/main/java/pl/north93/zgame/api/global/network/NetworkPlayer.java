@@ -13,11 +13,12 @@ import pl.north93.zgame.api.global.redis.messaging.RedisUpdatable;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.extra.GroupInStringTemplate;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
+import pl.north93.zgame.api.global.utils.Messageable;
 
 /**
  * Reprezentuje gracza będącego online w sieci
  */
-public class NetworkPlayer implements RedisUpdatable
+public class NetworkPlayer implements Messageable, RedisUpdatable
 {
     private String  nick;
     private UUID    uuid;
@@ -102,6 +103,7 @@ public class NetworkPlayer implements RedisUpdatable
      * Wysyła wiadomość do gracza.
      * @param message treść wiadomości.
      */
+    @Override
     public void sendMessage(final String message)
     {
         this.getProxyRpc().sendMessage(this.nick, message);

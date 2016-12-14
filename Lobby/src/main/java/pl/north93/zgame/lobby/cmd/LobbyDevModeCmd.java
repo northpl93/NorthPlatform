@@ -1,8 +1,5 @@
 package pl.north93.zgame.lobby.cmd;
 
-import static pl.north93.zgame.api.global.I18n.getBukkitMessage;
-
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -19,7 +16,9 @@ public class LobbyDevModeCmd implements CommandExecutor
     {
         if (!sender.hasPermission("lobby.admin") && !sender.isOp())
         {
-            sender.sendMessage(getBukkitMessage("command.no_permissions"));
+            //sender.sendMessage(getBukkitMessage("command.no_permissions"));
+            // TODO
+            sender.sendMessage("Brak uprawnień, todo");
             return true;
         }
 

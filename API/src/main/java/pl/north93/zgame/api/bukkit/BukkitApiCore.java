@@ -9,16 +9,9 @@ import org.bukkit.event.Listener;
 
 import org.spigotmc.SpigotConfig;
 
-import pl.north93.zgame.api.bukkit.cmd.MsgCmd;
-import pl.north93.zgame.api.bukkit.cmd.NetworkCmd;
-import pl.north93.zgame.api.bukkit.cmd.NetworkControllerPing;
-import pl.north93.zgame.api.bukkit.cmd.Performance;
-import pl.north93.zgame.api.bukkit.cmd.PlayerInfoCmd;
-import pl.north93.zgame.api.bukkit.cmd.WtfServer;
 import pl.north93.zgame.api.bukkit.listeners.ChatListener;
 import pl.north93.zgame.api.bukkit.listeners.JoinLeftListener;
 import pl.north93.zgame.api.bukkit.windows.WindowManager;
-import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.exceptions.ConfigurationException;
@@ -72,16 +65,9 @@ public class BukkitApiCore extends ApiCore
     protected void start() throws Exception
     {
         SpigotConfig.bungee = true; // force enable IP forwarding
-        API.getPlatformConnector().runTaskAsynchronously(() -> this.thisServer.updateServerState(ServerState.WORKING)); // on bukkit it will be invoked after server start
+        this.getPlatformConnector().runTaskAsynchronously(() -> this.thisServer.updateServerState(ServerState.WORKING)); // on bukkit it will be invoked after server start
         this.identifyServer();
         this.registerEvents(new JoinLeftListener(), new ChatListener(), this.windowManager);
-
-        this.pluginMain.getCommand("playerinfo").setExecutor(new PlayerInfoCmd());
-        this.pluginMain.getCommand("msg").setExecutor(new MsgCmd());
-        this.pluginMain.getCommand("network").setExecutor(new NetworkCmd());
-        this.pluginMain.getCommand("wtfserver").setExecutor(new WtfServer());
-        this.pluginMain.getCommand("performance").setExecutor(new Performance());
-        this.pluginMain.getCommand("networkcontrollerping").setExecutor(new NetworkControllerPing());
     }
 
     @Override

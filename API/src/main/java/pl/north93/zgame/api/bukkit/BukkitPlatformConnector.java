@@ -1,11 +1,11 @@
 package pl.north93.zgame.api.bukkit;
 
-import static pl.north93.zgame.api.global.I18n.getBukkitMessage;
-
+import java.util.ResourceBundle;
 
 import org.bukkit.Bukkit;
 
 import pl.north93.zgame.api.global.PlatformConnector;
+import pl.north93.zgame.api.global.utils.UTF8Control;
 
 public class BukkitPlatformConnector implements PlatformConnector
 {
@@ -25,7 +25,8 @@ public class BukkitPlatformConnector implements PlatformConnector
     @Override
     public void kickAll()
     {
-        Bukkit.getScheduler().runTask(this.bukkitPlugin, () -> Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(getBukkitMessage("kick.by_command.without_reason"))));
+        final ResourceBundle messages = ResourceBundle.getBundle("Messages", new UTF8Control());
+        Bukkit.getScheduler().runTask(this.bukkitPlugin, () -> Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(messages.getString("kick.all"))));
     }
 
     @Override

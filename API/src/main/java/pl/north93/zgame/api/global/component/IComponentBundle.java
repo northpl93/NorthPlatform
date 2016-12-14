@@ -4,6 +4,8 @@ import java.util.Collection;
 
 public interface IComponentBundle
 {
+    String getBasePackage();
+
     String getName();
 
     /**

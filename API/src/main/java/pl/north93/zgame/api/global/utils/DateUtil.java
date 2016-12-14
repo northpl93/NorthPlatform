@@ -1,10 +1,8 @@
 package pl.north93.zgame.api.global.utils;
 
-import static pl.north93.zgame.api.global.I18n.getBukkitMessage;
-
-
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,10 +13,12 @@ public class DateUtil
                           {
                                   Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND
                           };
-    private static final String[] names = new String[]
+    private static final ResourceBundle apiMessages = ResourceBundle.getBundle("Messages", new UTF8Control());
+    /*private static final String[] names = new String[]
                              {
                                      getBukkitMessage("date.year"), getBukkitMessage("date.years"), getBukkitMessage("date.month"), getBukkitMessage("date.months"), getBukkitMessage("date.day"), getBukkitMessage("date.days"), getBukkitMessage("date.hour"), getBukkitMessage("date.hours"), getBukkitMessage("date.minute"), getBukkitMessage("date.minutes"), getBukkitMessage("date.second"), getBukkitMessage("date.seconds")
-                             };
+                             };*/
+    private static final String[] names = apiMessages.getStringArray("date");
 
     public static String removeTimePattern(final String input)
     {
@@ -153,7 +153,7 @@ public class DateUtil
         boolean future = false;
         if (toDate.equals(fromDate))
         {
-            return getBukkitMessage("date.now");
+            return apiMessages.getString("date.now");
         }
         if (toDate.after(fromDate))
         {
@@ -176,7 +176,7 @@ public class DateUtil
         }
         if (sb.length() == 0)
         {
-            return getBukkitMessage("date.now");
+            return apiMessages.getString("date.now");
         }
         return sb.toString().trim();
     }

@@ -77,7 +77,7 @@ public abstract class Component
 
     public final void enable()
     {
-        this.apiCore.getLogger().info("Enabling component " + this.getName());
+        this.apiCore.getLogger().info("Enabling component " + this.getName() + " (package used to scan: " + this.componentBundle.getBasePackage() + ")");
         try
         {
             Injector.inject(this.manager, this); // inject annotations

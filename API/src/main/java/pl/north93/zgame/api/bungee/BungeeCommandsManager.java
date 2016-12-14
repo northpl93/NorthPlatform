@@ -46,6 +46,12 @@ public class BungeeCommandsManager implements ICommandsManager
         }
 
         @Override
+        public String getName()
+        {
+            return this.sender.getName();
+        }
+
+        @Override
         public void sendMessage(final String message)
         {
             this.sender.sendMessage(TextComponent.fromLegacyText(message));
@@ -61,6 +67,12 @@ public class BungeeCommandsManager implements ICommandsManager
         public boolean isConsole()
         {
             return ! this.isPlayer();
+        }
+
+        @Override
+        public Object unwrapped()
+        {
+            return this.sender;
         }
     }
 }

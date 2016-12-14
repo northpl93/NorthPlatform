@@ -1,8 +1,10 @@
 package pl.north93.zgame.api.bukkit;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ResourceBundle;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
@@ -13,14 +15,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.I18n;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.ICommandsManager;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
+import pl.north93.zgame.api.global.utils.UTF8Control;
 
 public class BukkitCommandsManager implements ICommandsManager
 {
+    private final ResourceBundle apiMessages = ResourceBundle.getBundle("Messages", new UTF8Control());
     private CommandMap commandMap;
 
     public BukkitCommandsManager()
@@ -52,9 +55,15 @@ public class BukkitCommandsManager implements ICommandsManager
         }
 
         @Override
+        public String getName()
+        {
+            return this.wrappedSender.getName();
+        }
+
+        @Override
         public void sendMessage(final String message)
         {
-            this.wrappedSender.sendMessage(message);
+            this.wrappedSender.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
         }
 
         @Override
@@ -67,6 +76,12 @@ public class BukkitCommandsManager implements ICommandsManager
         public boolean isConsole()
         {
             return this.wrappedSender instanceof ConsoleCommandSender;
+        }
+
+        @Override
+        public Object unwrapped()
+        {
+            return this.wrappedSender;
         }
 
         @Override
@@ -93,7 +108,7 @@ public class BukkitCommandsManager implements ICommandsManager
             final String permission = this.wrapped.getPermission();
             if (!StringUtils.isEmpty(permission) && !commandSender.hasPermission(permission))
             {
-                commandSender.sendMessage(I18n.getBukkitMessage("command.no_permissions"));
+                commandSender.sendMessage(BukkitCommandsManager.this.apiMessages.getString("command.no_permissions"));
                 return true;
             }
             this.wrapped.execute(new WrappedSender(commandSender), new Arguments(strings), s);
