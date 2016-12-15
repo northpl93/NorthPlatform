@@ -2,7 +2,7 @@
   <artifact type="jar" name="DefaultCommands">
     <output-path>$PROJECT_DIR$/test/plugins/API/components</output-path>
     <root id="archive" name="DefaultCommands.jar">
-      <element id="module-output" name="DefaultCommands" />
+      <element id="module-output" name="API.DefaultCommands" />
     </root>
   </artifact>
 </component>

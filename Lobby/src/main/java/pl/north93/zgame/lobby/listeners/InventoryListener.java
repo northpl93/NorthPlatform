@@ -14,21 +14,21 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.windows.WindowManager;
-import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.lobby.Main;
-import pl.north93.zgame.lobby.config.LobbyConfig;
+import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.lobby.LobbyFeatures;
 import pl.north93.zgame.lobby.windows.MinigamePicker;
 import pl.north93.zgame.lobby.windows.PetPicker;
 
 public class InventoryListener implements Listener
 {
-    private final BukkitApiCore apiCore = (BukkitApiCore) API.getApiCore();
-    private final LobbyConfig   lobbyConfig = Main.getInstance().getLobbyConfig();
+    private BukkitApiCore apiCore;
+    @InjectComponent("Lobby.Features")
+    private LobbyFeatures component;
 
     @EventHandler
     public void giveOnJoin(final PlayerJoinEvent event)
     {
-        if (this.lobbyConfig.devMode)
+        if (this.component.getLobbyConfig().devMode)
         {
             event.getPlayer().sendMessage(ChatColor.RED + "Lobby uruchomione jest w DEV MODE! Menu na hotbarze wylaczone.");
             return;
@@ -51,7 +51,7 @@ public class InventoryListener implements Listener
     @EventHandler
     public void onClick(final InventoryClickEvent event)
     {
-        if (this.lobbyConfig.devMode)
+        if (this.component.getLobbyConfig().devMode)
         {
             return;
         }
@@ -61,7 +61,7 @@ public class InventoryListener implements Listener
     @EventHandler
     public void onDrop(final PlayerDropItemEvent event)
     {
-        if (this.lobbyConfig.devMode)
+        if (this.component.getLobbyConfig().devMode)
         {
             return;
         }
@@ -71,7 +71,7 @@ public class InventoryListener implements Listener
     @EventHandler
     public void onInteract(final PlayerInteractEvent event)
     {
-        if (this.lobbyConfig.devMode)
+        if (this.component.getLobbyConfig().devMode)
         {
             return;
         }

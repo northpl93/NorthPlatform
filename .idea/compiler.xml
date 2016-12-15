@@ -6,16 +6,22 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="API" />
+        <module name="API.DefaultCommands" />
+        <module name="API.InstrumentationAgent" />
         <module name="DefaultCommands" />
         <module name="Instrumentation Agent" />
         <module name="Lobby" />
         <module name="Network Controller" />
         <module name="Pets" />
         <module name="Server Deamon" />
+        <module name="SkyBlock" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="API" target="8" />
+      <module name="API.DefaultCommands" target="8" />
+      <module name="API.InstrumentationAgent" target="8" />
       <module name="DefaultCommands" target="8" />
       <module name="Instrumentation Agent" target="8" />
       <module name="Lobby" target="8" />
@@ -27,6 +33,7 @@
       <module name="RobberMod_main" target="1.8" />
       <module name="RobberMod_test" target="1.6" />
       <module name="Server Deamon" target="8" />
+      <module name="SkyBlock" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>

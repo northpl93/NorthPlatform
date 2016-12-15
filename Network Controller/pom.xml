@@ -12,13 +12,13 @@
     </parent>
 
     <artifactId>controller</artifactId>
-    <version>${version.controller}</version>
+    <version>1.0-INDEV</version>
 
     <dependencies>
         <dependency>
             <groupId>pl.north93.zgame</groupId>
             <artifactId>api</artifactId>
-            <version>${version.api}</version>
+            <version>1.0-INDEV</version>
         </dependency>
     </dependencies>
 

@@ -12,22 +12,29 @@ import pl.north93.pets.IPet;
 import pl.north93.pets.exceptions.PetNotFoundException;
 import pl.north93.pets.system.support.HeadCreator;
 import pl.north93.zgame.api.bukkit.windows.Window;
-import pl.north93.zgame.lobby.Main;
+import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.impl.Injector;
+import pl.north93.zgame.lobby.LobbyFeatures;
 import pl.north93.zgame.lobby.PlayerPetsManager;
 import pl.north93.zgame.lobby.config.LobbyConfig;
 import pl.north93.zgame.lobby.config.LobbyConfig.PetConfig;
 
 public class PetPicker extends Window
 {
+    @InjectComponent("Lobby.Features")
+    private LobbyFeatures component;
+
     public PetPicker()
     {
         super("&aWybierz zwierzaka", 54);
+        Injector.inject(API.getApiCore().getComponentManager(), this);
     }
 
     @Override
     protected void onShow()
     {
-        final LobbyConfig lobbyConfig = Main.getInstance().getLobbyConfig();
+        final LobbyConfig lobbyConfig = this.component.getLobbyConfig();
         final Iterator<PetConfig> pets = lobbyConfig.pets.iterator();
 
         for (int y = 1; y < 5; y++)
@@ -57,7 +64,7 @@ public class PetPicker extends Window
     private void switchPet(final Window window, final PetConfig petConfig)
     {
         final Player player = window.getPlayer();
-        final PlayerPetsManager playersPets = Main.getInstance().getPlayerPetsManager();
+        final PlayerPetsManager playersPets = this.component.getPlayerPetsManager();
 
         if (playersPets.hasPet(player))
         {

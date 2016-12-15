@@ -1,0 +1,7 @@
+components:
+  - name: Lobby.Features
+    enabled: true
+    mainClass: "pl.north93.zgame.lobby.LobbyFeatures"
+    description: "Base features of lobby."
+    platforms:
+      - BUKKIT

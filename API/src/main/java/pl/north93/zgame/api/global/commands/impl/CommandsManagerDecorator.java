@@ -8,6 +8,7 @@ import pl.north93.zgame.api.bungee.BungeeCommandsManager;
 import pl.north93.zgame.api.global.commands.ICommandsManager;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.standalone.commands.StandaloneCommandsManager;
 
 public class CommandsManagerDecorator extends Component implements ICommandsManager
 {
@@ -24,7 +25,8 @@ public class CommandsManagerDecorator extends Component implements ICommandsMana
             case BUNGEE:
                 this.commandsManager = new BungeeCommandsManager();
                 break;
-            // TODO standalone
+            case STANDALONE:
+                this.commandsManager = new StandaloneCommandsManager();
         }
         this.getExtensionPoint(NorthCommand.class).setHandler(this::registerCommand);
     }

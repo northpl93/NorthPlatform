@@ -34,7 +34,7 @@ public class BukkitApiCore extends ApiCore
         this.windowManager = new WindowManager();
     }
 
-    public Main getPluginMain()
+    public final Main getPluginMain()
     {
         return this.pluginMain;
     }
@@ -44,9 +44,14 @@ public class BukkitApiCore extends ApiCore
         return this.windowManager;
     }
 
-    public Server getServer()
+    public final Server getServer()
     {
         return this.thisServer;
+    }
+
+    public final org.bukkit.Server getBukkit()
+    {
+        return this.pluginMain.getServer();
     }
 
     @Override

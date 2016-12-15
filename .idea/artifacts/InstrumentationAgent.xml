@@ -1,8 +1,8 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="InstrumentationAgent">
-    <output-path>$PROJECT_DIR$/out/artifacts/InstrumentationAgent</output-path>
+    <output-path>$PROJECT_DIR$/API/Instrumentation Agent</output-path>
     <root id="archive" name="InstrumentationAgent.jar">
-      <element id="module-output" name="Instrumentation Agent" />
+      <element id="module-output" name="API.InstrumentationAgent" />
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/API/Instrumentation Agent/META-INF/MANIFEST.MF" />
       </element>

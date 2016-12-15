@@ -3,13 +3,14 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/API/API.iml" filepath="$PROJECT_DIR$/API/API.iml" />
-      <module fileurl="file://$PROJECT_DIR$/API/DefaultCommands/DefaultCommands.iml" filepath="$PROJECT_DIR$/API/DefaultCommands/DefaultCommands.iml" />
-      <module fileurl="file://$PROJECT_DIR$/API/Instrumentation Agent/Instrumentation Agent.iml" filepath="$PROJECT_DIR$/API/Instrumentation Agent/Instrumentation Agent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/API/DefaultCommands/API.DefaultCommands.iml" filepath="$PROJECT_DIR$/API/DefaultCommands/API.DefaultCommands.iml" />
+      <module fileurl="file://$PROJECT_DIR$/API/Instrumentation Agent/API.InstrumentationAgent.iml" filepath="$PROJECT_DIR$/API/Instrumentation Agent/API.InstrumentationAgent.iml" />
       <module fileurl="file://$PROJECT_DIR$/Lobby/Lobby.iml" filepath="$PROJECT_DIR$/Lobby/Lobby.iml" />
       <module fileurl="file://$PROJECT_DIR$/Network Controller/Network Controller.iml" filepath="$PROJECT_DIR$/Network Controller/Network Controller.iml" />
       <module fileurl="file://$PROJECT_DIR$/Pets/Pets.iml" filepath="$PROJECT_DIR$/Pets/Pets.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/RobberMod.iml" filepath="$PROJECT_DIR$/.idea/modules/RobberMod.iml" />
       <module fileurl="file://$PROJECT_DIR$/Server Deamon/Server Deamon.iml" filepath="$PROJECT_DIR$/Server Deamon/Server Deamon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SkyBlock/SkyBlock.iml" filepath="$PROJECT_DIR$/SkyBlock/SkyBlock.iml" />
       <module fileurl="file://$PROJECT_DIR$/NorthPlatformParent/platform.iml" filepath="$PROJECT_DIR$/NorthPlatformParent/platform.iml" />
     </modules>
   </component>

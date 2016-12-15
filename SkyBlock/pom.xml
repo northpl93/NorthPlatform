@@ -6,13 +6,12 @@
         <groupId>pl.north93.zgame</groupId>
         <artifactId>platform</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../../NorthPlatformParent</relativePath>
+        <relativePath>../NorthPlatformParent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>pl.north93.zgame.api</groupId>
-    <artifactId>instrumentationagent</artifactId>
-    <version>${version.api}</version>
+    <artifactId>skyblock</artifactId>
+    <version>${version.skyblock}</version>
 
     <dependencies>
         <dependency>

@@ -3,7 +3,6 @@ package pl.north93.zgame.lobby;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,11 +17,6 @@ import pl.north93.pets.IPet;
 public class PlayerPetsManager implements Listener
 {
     private final Map<Player, IPet> playersPets = new WeakHashMap<>();
-
-    public PlayerPetsManager()
-    {
-        Bukkit.getPluginManager().registerEvents(this, Main.getInstance());
-    }
 
     public IPet getPlayersPet(final Player player)
     {

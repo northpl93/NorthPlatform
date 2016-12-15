@@ -77,7 +77,8 @@ public class ComponentManagerImpl implements IComponentManager
         }
 
         final ComponentBundle componentBundle = new ComponentBundle(componentDescription, classLoader, extensionPoints);
-        if (componentDescription.isAutoInstantiate())
+        this.components.add(componentBundle);
+        if (componentDescription.isAutoInstantiate()) // instantiate component class auto-instantiation is enabled
         {
             try
             {
@@ -87,12 +88,11 @@ public class ComponentManagerImpl implements IComponentManager
             }
             catch (final ClassNotFoundException | IllegalAccessException | InstantiationException e)
             {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Failed to instantiate main class of " + componentDescription.getName(), e);
             }
 
             this.initComponent(componentBundle);
         }
-        this.components.add(componentBundle);
     }
 
     private boolean canEnableComponent(final ComponentBundle componentBundle)

@@ -1,5 +1,5 @@
 components:
-  - name: DefaultCommands
+  - name: API.DefaultCommands
     enabled: true
     mainClass: "pl.north93.zgame.api.defaultcommands.DefaultCommands"
     description: "Provides base commands."
@@ -7,7 +7,7 @@ components:
       - API.Commands
       - API.MinecraftNetwork.NetworkManager
 
-  - name: BukkitCommands
+  - name: API.BukkitCommands
     enabled: true
     mainClass: "pl.north93.zgame.api.bukkitcommands.BukkitCommands"
     description: "Provides base commands for Bukkit server."

@@ -3,10 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>api</artifactId>
         <groupId>pl.north93.zgame</groupId>
-        <!-- Pamietac zeby to zmienic -->
-        <version>1.0-INDEV</version>
+        <artifactId>platform</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../../NorthPlatformParent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -18,7 +18,7 @@
         <dependency>
             <groupId>pl.north93.zgame</groupId>
             <artifactId>api</artifactId>
-            <version>${version.api}</version>
+            <version>1.0-INDEV</version>
         </dependency>
     </dependencies>
 </project>
