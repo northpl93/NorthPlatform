@@ -1,7 +1,5 @@
 package pl.north93.zgame.api.defaultcommands;
 
-import org.bukkit.ChatColor;
-
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
@@ -41,7 +39,7 @@ public class Network extends NorthCommand
         {
             if ("proxies".equals(args.asString(0)))
             {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cPołączone serwery proxy"));
+                sender.sendMessage("&cPołączone serwery proxy");
                 for (final ProxyInstanceInfo proxyInstanceInfo : this.networkManager.getProxyServers())
                 {
                     sender.sendMessage("|- " + proxyInstanceInfo.getId());
@@ -51,7 +49,7 @@ public class Network extends NorthCommand
             }
             else if ("daemons".equals(args.asString(0)))
             {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cPołączone demony"));
+                sender.sendMessage("&cPołączone demony");
                 for (final RemoteDaemon daemon : this.networkManager.getDaemons())
                 {
                     sender.sendMessage("|- " + daemon.getName());
@@ -63,7 +61,7 @@ public class Network extends NorthCommand
             }
             else if ("minigames".equals(args.asString(0)))
             {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cSkonfigurowane minigry"));
+                sender.sendMessage("&cSkonfigurowane minigry");
                 for (final MiniGame miniGame : this.networkManager.getMiniGames())
                 {
                     sender.sendMessage(" * " + miniGame.getDisplayName() + " (" + miniGame.getSystemName() + ")");
@@ -71,20 +69,19 @@ public class Network extends NorthCommand
             }
             else if ("stopall".equals(args.asString(0)))
             {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cZa chwile wszystkie komponenty sieci zostaną wyłączone..."));
+                sender.sendMessage("&cZa chwile wszystkie komponenty sieci zostaną wyłączone...");
                 this.networkManager.broadcastNetworkAction(NetworkAction.STOP_ALL);
             }
             else if ("kickall".equals(args.asString(0)))
             {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cZa chwile wszyscy gracze zostaną rozłączeni..."));
+                sender.sendMessage("&cZa chwile wszyscy gracze zostaną rozłączeni...");
                 this.networkManager.broadcastNetworkAction(NetworkAction.KICK_ALL);
             }
             else
             {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cZly argument!"));
+                sender.sendMessage("&cZly argument!");
             }
 
-            return;
         }
 
         // TODO

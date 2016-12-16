@@ -1,0 +1,14 @@
+components:
+  - name: SkyBlock.Manager
+    enabled: true
+    mainClass: "pl.north93.zgame.skyblock.manager.SkyBlockManager"
+    description: "Manages SkyBlock network. Should be installed on network manager."
+    platforms:
+      - STANDALONE
+
+  - name: SkyBlock.Server
+    enabled: true
+    mainClass: "pl.north93.zgame.skyblock.server.SkyBlockServer"
+    description: "Manages SkyBlock server. Provides skyblock commands."
+    platforms:
+      - BUKKIT

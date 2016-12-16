@@ -41,7 +41,7 @@ public class PlayerInfoCmd extends NorthCommand
         }
         else
         {
-            sender.sendMessage(this.messages, "command.usage", label, "<nick gracza>");
+            sender.sendMessage(this.messages, "command.usage", label, "<nick>");
         }
     }
 }

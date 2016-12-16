@@ -10,6 +10,7 @@ import java.util.Optional;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.UpdateOptions;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -76,7 +77,7 @@ public class UsernameCache extends Component
 
     public Optional<UsernameDetails> queryCache(final String username)
     {
-        final Iterator<Document> results = this.mongoCache.find(new Document("username", "/" + username + "/i")).limit(1).iterator();
+        final Iterator<Document> results = this.mongoCache.find(new Document("validSpelling", "/^" + username + "$/i")).limit(1).iterator();
         if (results.hasNext())
         {
             final Document document = results.next();
@@ -133,7 +134,7 @@ public class UsernameCache extends Component
             document.put("validSpelling", detailsFromMojang.validSpelling);
             document.put("isPremium", detailsFromMojang.isPremium);
             document.put("fetchTime", detailsFromMojang.fetchTime);
-            this.mongoCache.insertOne(document);
+            this.mongoCache.updateOne(new Document("validSpelling", "/^" + username + "$/i"), document, new UpdateOptions().upsert(true));
 
             return fromMojang;
         }

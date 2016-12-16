@@ -8,6 +8,8 @@ public interface IComponentBundle
 
     String getName();
 
+    ComponentStatus getStatus();
+
     /**
      * Builtin components are integrated in main API jar.
      *

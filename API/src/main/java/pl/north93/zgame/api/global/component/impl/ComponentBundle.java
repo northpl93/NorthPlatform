@@ -55,6 +55,12 @@ class ComponentBundle implements IComponentBundle
     }
 
     @Override
+    public ComponentStatus getStatus()
+    {
+        return this.component.getStatus();
+    }
+
+    @Override
     public boolean isBuiltinComponent()
     {
         return ! (this.classLoader instanceof JarComponentLoader);

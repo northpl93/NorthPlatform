@@ -2,6 +2,7 @@ package pl.north93.zgame.api.global.agent.client;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanException;
+import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
@@ -31,7 +32,8 @@ public class LocalAgentClient implements IAgentClient
     {
         try
         {
-            ManagementFactory.getPlatformMBeanServer().invoke(this.agentServiceName, "transformClass", new Object[] { className, newBytes }, METHOD_DEF);
+            final MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+            mBeanServer.invoke(this.agentServiceName, "transformClass", new Object[] { className, newBytes }, METHOD_DEF);
         }
         catch (final InstanceNotFoundException | MBeanException | ReflectionException e)
         {

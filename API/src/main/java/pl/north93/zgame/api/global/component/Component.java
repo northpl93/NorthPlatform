@@ -81,8 +81,8 @@ public abstract class Component
         try
         {
             Injector.inject(this.manager, this); // inject annotations
-            this.enableComponent();
             this.componentBundle.doExtensionsScan();
+            this.enableComponent();
         }
         catch (final Exception e)
         {

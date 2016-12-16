@@ -23,7 +23,7 @@ public class NorthTransformer implements ClassFileTransformer
     @Override
     public byte[] transform(final ClassLoader loader, final String className, final Class<?> classBeingRedefined, final ProtectionDomain protectionDomain, final byte[] classfileBuffer) throws IllegalClassFormatException
     {
-        if (this.classLoader.equals(loader) && this.name.equals(className))
+        if (this.classLoader.equals(loader) && this.name.equals(className.replace('/', '.')))
         {
             return this.bytes;
         }

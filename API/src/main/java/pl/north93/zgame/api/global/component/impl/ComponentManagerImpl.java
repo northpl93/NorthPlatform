@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import org.diorite.cfg.system.TemplateCreator;
 
@@ -324,5 +326,11 @@ public class ComponentManagerImpl implements IComponentManager
     public Collection<? extends IComponentBundle> getComponents()
     {
         return Collections.unmodifiableList(this.components);
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("components", this.components).append("autoEnable", this.autoEnable).toString();
     }
 }
