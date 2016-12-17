@@ -35,7 +35,7 @@ public class PlayerInfoCmd extends NorthCommand
                 }
                 sender.sendMessage("Nick: " + networkPlayer.getNick());
                 sender.sendMessage("UUID: " + networkPlayer.getUuid());
-                sender.sendMessage("Połączenie: " + networkPlayer.getProxyId() + " <-> " + networkPlayer.getServer());
+                sender.sendMessage("Połączenie: " + networkPlayer.getProxyId() + " <-> " + networkPlayer.getServerId());
                 sender.sendMessage("Ranga: " + networkPlayer.getGroup().getName());
             });
         }

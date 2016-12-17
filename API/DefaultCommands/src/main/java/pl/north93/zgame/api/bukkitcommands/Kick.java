@@ -5,17 +5,22 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.StringUtils;
 
-import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
+import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectResource;
+import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.NetworkPlayer;
 
 public class Kick extends NorthCommand
 {
+    private ApiCore         apiCore;
+    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    private INetworkManager networkManager;
     @InjectResource(bundleName = "Commands")
-    private ResourceBundle messages;
+    private ResourceBundle  messages;
 
     public Kick()
     {
@@ -32,9 +37,9 @@ public class Kick extends NorthCommand
             return;
         }
 
-        API.getPlatformConnector().runTaskAsynchronously(() ->
+        this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
         {
-            final NetworkPlayer networkPlayer = API.getApiCore().getNetworkManager().getNetworkPlayer(args.asString(0));
+            final NetworkPlayer networkPlayer = this.networkManager.getNetworkPlayer(args.asString(0));
             if (networkPlayer == null)
             {
                 sender.sendMessage(this.messages, "command.no_player");

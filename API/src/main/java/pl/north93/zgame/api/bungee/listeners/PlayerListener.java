@@ -7,6 +7,8 @@ import static pl.north93.zgame.api.global.redis.RedisKeys.PLAYERS;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.UUID;
+import java.util.logging.Level;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -124,7 +126,7 @@ public class PlayerListener implements Listener
 
         player.setPremium(details.get().isPremium());
         player.setProxyId(this.bungeeApiCore.getProxyConfig().getUniqueName());
-        player.setServer("?"); // It will be filled in onServerChange
+        player.setServerId(UUID.randomUUID()); // It will be filled in onServerChange
         player.sendUpdate(); // send data to Redis
     }
 
@@ -147,7 +149,15 @@ public class PlayerListener implements Listener
             event.getPlayer().disconnect(TextComponent.fromLegacyText(message(this.apiMessages, "kick.generic_error", "player==null in onServerChange")));
             return;
         }
-        player.setServer(event.getPlayer().getServer().getInfo().getName());
+
+        try
+        {
+            player.setServerId(UUID.fromString(event.getPlayer().getServer().getInfo().getName()));
+        }
+        catch (final IllegalArgumentException ex)
+        {
+            this.bungeeApiCore.getLogger().log(Level.SEVERE, "Can't set player's serverId in onServerChange", ex);
+        }
         player.sendUpdate(); // send new data to redis
     }
 }

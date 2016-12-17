@@ -38,7 +38,6 @@ class ExtensionPointImpl<T> implements IExtensionPoint<T>
     @Override
     public void addImplementation(final Object impl)
     {
-        System.out.println("Adding implementation: " + impl);
         this.implementations.add((T) impl);
         if (this.handler != null)
         {

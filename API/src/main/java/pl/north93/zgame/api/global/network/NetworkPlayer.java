@@ -22,8 +22,8 @@ public class NetworkPlayer implements Messageable, RedisUpdatable
 {
     private String  nick;
     private UUID    uuid;
+    private UUID    serverId;
     private String  proxyId;
-    private String  server;
     private Boolean premium;
     @MsgPackCustomTemplate(GroupInStringTemplate.class)
     private Group   group;
@@ -64,14 +64,14 @@ public class NetworkPlayer implements Messageable, RedisUpdatable
         this.proxyId = proxyId;
     }
 
-    public String getServer()
+    public UUID getServerId()
     {
-        return this.server;
+        return this.serverId;
     }
 
-    public void setServer(final String server)
+    public void setServerId(final UUID serverId)
     {
-        this.server = server;
+        this.serverId = serverId;
     }
 
     public boolean isPremium()

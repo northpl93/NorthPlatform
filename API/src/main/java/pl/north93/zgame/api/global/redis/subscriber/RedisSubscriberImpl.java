@@ -56,6 +56,15 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
     }
 
     @Override
+    public void unSubscribe(final String channel)
+    {
+        if (this.subscriptionHandlerMap.remove(channel) != null)
+        {
+            this.subscriptionReceiver.unsubscribe(channel.getBytes());
+        }
+    }
+
+    @Override
     public void unSubscribeAll()
     {
         this.subscriptionHandlerMap.keySet().stream().map(String::getBytes).forEach(this.subscriptionReceiver::unsubscribe);

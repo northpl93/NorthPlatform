@@ -9,5 +9,7 @@ public interface RedisSubscriber
         this.subscribe(channel, null);
     }
 
+    void unSubscribe(String channel);
+
     void unSubscribeAll();
 }

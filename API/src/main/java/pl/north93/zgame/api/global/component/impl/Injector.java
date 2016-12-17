@@ -62,11 +62,10 @@ public class Injector
                 }
             }
 
-            if (field.getType().isAssignableFrom(ApiCore.class))
+            if (ApiCore.class.isAssignableFrom(field.getType()))
             {
                 try
                 {
-                    System.out.println("ApiCore set on " + instance);
                     field.set(instance, API.getApiCore());
                 }
                 catch (final IllegalAccessException e)

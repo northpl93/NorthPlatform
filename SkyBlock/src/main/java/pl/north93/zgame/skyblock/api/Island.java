@@ -1,5 +1,9 @@
 package pl.north93.zgame.skyblock.api;
 
-public class Island
+import java.util.UUID;
+
+public final class Island
 {
+    private UUID ownerId;
+    private UUID serverId;
 }

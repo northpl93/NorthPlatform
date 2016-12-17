@@ -22,7 +22,7 @@ public class RpcInvocationHandler implements InvocationHandler
     public RpcInvocationHandler(final RpcManagerImpl rpcManager, final Class<?> classInterface, final RpcTarget target)
     {
         this.rpcManager = rpcManager;
-        this.objectDescription = API.getRpcManager().getObjectDescription(classInterface);
+        this.objectDescription = rpcManager.getObjectDescription(classInterface);
         this.invokeChannel = (target.getRpcChannelName() + ":invoke").getBytes();
     }
 
@@ -37,7 +37,7 @@ public class RpcInvocationHandler implements InvocationHandler
         final RpcInvokeMessage rpcInvokeMessage = new RpcInvokeMessage(API.getApiCore().getId(), this.objectDescription.getClassId(), requestId, methodId, args);
         try (final Jedis jedis = this.rpcManager.getJedisPool().getResource())
         {
-            jedis.publish(this.invokeChannel, API.getMessagePackTemplates().serialize(rpcInvokeMessage));
+            jedis.publish(this.invokeChannel, this.rpcManager.getMsgPack().serialize(rpcInvokeMessage));
         }
 
         if (! methodDescription.isNeedsWaitForResponse())

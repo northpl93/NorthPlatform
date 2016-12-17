@@ -11,11 +11,11 @@ import pl.north93.zgame.api.global.messages.NetworkMeta;
 import pl.north93.zgame.api.global.messages.ProxyInstanceInfo;
 import pl.north93.zgame.api.global.network.minigame.MiniGame;
 import pl.north93.zgame.api.global.network.server.Server;
-import pl.north93.zgame.api.global.utils.ObservableValue;
+import pl.north93.zgame.api.global.redis.observable.Value;
 
 public interface INetworkManager
 {
-    ObservableValue<NetworkMeta> getNetworkMeta();
+    Value<NetworkMeta> getNetworkMeta();
 
     JoiningPolicy getJoiningPolicy();
 
@@ -25,7 +25,7 @@ public interface INetworkManager
 
     Set<Server> getServers();
 
-    List<ServersGroup> getServersGroups();
+    Set<ServersGroup> getServersGroups();
 
     ServersGroup getServersGroup(String name);
 

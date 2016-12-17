@@ -104,7 +104,7 @@ public class ServerImpl implements Server, ServerProxyData, RedisUpdatable
     @Override
     public String getProxyName()
     {
-        return "mc/" + this.serverId;
+        return String.valueOf(this.serverId);
     }
 
     @Override
@@ -146,6 +146,6 @@ public class ServerImpl implements Server, ServerProxyData, RedisUpdatable
 
     public static final class Builder // ServerImpl builder
     {
-
+        // TODO
     }
 }

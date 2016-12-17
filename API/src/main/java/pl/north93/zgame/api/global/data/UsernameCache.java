@@ -1,5 +1,9 @@
 package pl.north93.zgame.api.global.data;
 
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static java.util.regex.Pattern.compile;
+
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
@@ -77,7 +81,7 @@ public class UsernameCache extends Component
 
     public Optional<UsernameDetails> queryCache(final String username)
     {
-        final Iterator<Document> results = this.mongoCache.find(new Document("validSpelling", "/^" + username + "$/i")).limit(1).iterator();
+        final Iterator<Document> results = this.mongoCache.find(new Document("validSpelling", compile(username, CASE_INSENSITIVE))).limit(1).iterator();
         if (results.hasNext())
         {
             final Document document = results.next();
@@ -134,7 +138,7 @@ public class UsernameCache extends Component
             document.put("validSpelling", detailsFromMojang.validSpelling);
             document.put("isPremium", detailsFromMojang.isPremium);
             document.put("fetchTime", detailsFromMojang.fetchTime);
-            this.mongoCache.updateOne(new Document("validSpelling", "/^" + username + "$/i"), document, new UpdateOptions().upsert(true));
+            this.mongoCache.updateOne(new Document("validSpelling", compile(username, CASE_INSENSITIVE)), new Document("$set", document), new UpdateOptions().upsert(true));
 
             return fromMojang;
         }

@@ -2,7 +2,6 @@ package pl.north93.zgame.api.global.network;
 
 import static pl.north93.zgame.api.global.redis.RedisKeys.DAEMON;
 import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_ACTION;
-import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_META;
 import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_MINIGAMES;
 import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_PATTERNS;
 import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_SERVER_GROUPS;
@@ -17,6 +16,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.Sets;
+
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
@@ -30,9 +31,10 @@ import pl.north93.zgame.api.global.network.minigame.MiniGame;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerImpl;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
+import pl.north93.zgame.api.global.redis.observable.IObservationManager;
+import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
-import pl.north93.zgame.api.global.utils.ObservableValue;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.util.SafeEncoder;
@@ -40,17 +42,19 @@ import redis.clients.util.SafeEncoder;
 public class NetworkManager extends Component implements INetworkManager
 {
     @InjectComponent("API.Database.Redis.MessagePackSerializer")
-    private TemplateManager msgPack;
+    private TemplateManager     msgPack;
     @InjectComponent("API.Database.Redis.Subscriber")
-    private RedisSubscriber redisSubscriber;
-    private JedisPool       jedisPool;
-    private final ObservableValue<NetworkMeta> networkMeta = new ObservableValue<>();
+    private RedisSubscriber     redisSubscriber;
+    @InjectComponent("API.Database.Redis.Observer")
+    private IObservationManager observationManager;
+    private JedisPool           jedisPool;
+    private Value<NetworkMeta>  networkMeta;
 
     @Override
     protected void enableComponent()
     {
         this.jedisPool = this.<StorageConnector>getComponent("API.Database.StorageConnector").getJedisPool();
-        this.downloadNetworkMeta(); // Download network meta on start
+        this.networkMeta = this.observationManager.get(NetworkMeta.class, "network:meta");
         this.redisSubscriber.subscribe(NETWORK_ACTION, this::handleNetworkAction);
     }
 
@@ -60,7 +64,7 @@ public class NetworkManager extends Component implements INetworkManager
     }
 
     @Override
-    public ObservableValue<NetworkMeta> getNetworkMeta()
+    public Value<NetworkMeta> getNetworkMeta()
     {
         return this.networkMeta;
     }
@@ -119,11 +123,11 @@ public class NetworkManager extends Component implements INetworkManager
      * @return lista grup serwerów.
      */
     @Override
-    public List<ServersGroup> getServersGroups()
+    public Set<ServersGroup> getServersGroups()
     {
         try (final Jedis jedis = this.jedisPool.getResource())
         {
-            return this.msgPack.deserializeList(ServersGroup.class, jedis.get(NETWORK_SERVER_GROUPS.getBytes()));
+            return Sets.newCopyOnWriteArraySet(this.msgPack.deserializeList(ServersGroup.class, jedis.get(NETWORK_SERVER_GROUPS.getBytes())));
         }
     }
 
@@ -279,24 +283,8 @@ public class NetworkManager extends Component implements INetworkManager
                 API.getPlatformConnector().kickAll();
                 break;
             case UPDATE_NETWORK_CONFIGS:
-                this.downloadNetworkMeta();
                 this.getApiCore().getPermissionsManager().synchronizeGroups();
                 break;
-        }
-    }
-
-    private void downloadNetworkMeta()
-    {
-        this.getApiCore().getLogger().info("Downloading network info.");
-        try (final Jedis jedis = this.jedisPool.getResource())
-        {
-            if (! jedis.exists(NETWORK_META))
-            {
-                this.getApiCore().getLogger().warning("Can't download network info. Key doesn't exists.");
-                return;
-            }
-
-            this.networkMeta.set(this.msgPack.deserialize(NetworkMeta.class, jedis.get(NETWORK_META.getBytes())));
         }
     }
 }

@@ -3,6 +3,10 @@ components:
     enabled: true
     mainClass: "pl.north93.zgame.skyblock.manager.SkyBlockManager"
     description: "Manages SkyBlock network. Should be installed on network manager."
+    dependencies:
+      - API.Database.StorageConnector
+      - API.Database.Redis.MessagePackSerializer
+      - API.Database.Redis.RPC
     platforms:
       - STANDALONE
 
@@ -10,5 +14,9 @@ components:
     enabled: true
     mainClass: "pl.north93.zgame.skyblock.server.SkyBlockServer"
     description: "Manages SkyBlock server. Provides skyblock commands."
+    dependencies:
+      - API.Database.StorageConnector
+      - API.Database.Redis.MessagePackSerializer
+      - API.Database.Redis.RPC
     platforms:
       - BUKKIT

@@ -25,11 +25,6 @@ public class InventoryListener implements Listener
     @InjectComponent("Lobby.Features")
     private LobbyFeatures component;
 
-    public InventoryListener()
-    {
-        System.out.println("InventoryListener()");
-    }
-
     @EventHandler
     public void giveOnJoin(final PlayerJoinEvent event)
     {

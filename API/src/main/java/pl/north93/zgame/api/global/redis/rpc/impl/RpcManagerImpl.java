@@ -99,6 +99,11 @@ public class RpcManagerImpl extends Component implements RpcManager
         return this.storageConnector.getJedisPool();
     }
 
+    /*default*/ TemplateManager getMsgPack()
+    {
+        return this.msgPack;
+    };
+
     /*default*/ void sendResponse(final String target, final Integer requestId, final Object response)
     {
         try (final Jedis jedis = this.storageConnector.getJedisPool().getResource())
