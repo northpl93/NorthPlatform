@@ -12,7 +12,7 @@ import pl.north93.zgame.api.global.component.annotations.ProvidesComponent;
 import pl.north93.zgame.api.global.exceptions.SingletonException;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
-import pl.north93.zgame.api.global.redis.rpc.RpcManager;
+import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 
 public final class API
 {
@@ -47,7 +47,7 @@ public final class API
     }
 
     @ProvidesComponent
-    public static RpcManager getRpcManager()
+    public static IRpcManager getRpcManager()
     {
         return apiCore.getRpcManager();
     }

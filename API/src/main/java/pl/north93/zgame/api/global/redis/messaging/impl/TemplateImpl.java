@@ -16,7 +16,7 @@ import pl.north93.zgame.api.global.redis.messaging.Template;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.messaging.impl.element.ITemplateElement;
 
-public class TemplateImpl<T> implements Template<T>
+class TemplateImpl<T> implements Template<T>
 {
     private static final Lookup          LOOKUP      = MethodHandles.lookup();
     private static final MethodType      VOID_TYPE   = MethodType.methodType(void.class);

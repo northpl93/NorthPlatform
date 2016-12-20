@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class ReflectUtil
+class ReflectUtil
 {
     private static class MethodOffset implements Comparable<MethodOffset>
     {

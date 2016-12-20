@@ -3,14 +3,17 @@ package pl.north93.zgame.api.global.redis.rpc.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
-import pl.north93.zgame.api.global.redis.rpc.RpcManager;
-import pl.north93.zgame.api.global.redis.rpc.RpcTarget;
+import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
+import pl.north93.zgame.api.global.redis.rpc.IRpcTarget;
 import pl.north93.zgame.api.global.redis.rpc.exceptions.RpcUnimplementedException;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcExceptionInfo;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcInvokeMessage;
@@ -19,7 +22,7 @@ import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-public class RpcManagerImpl extends Component implements RpcManager
+public class RpcManagerImpl extends Component implements IRpcManager
 {
     @InjectComponent("API.Database.StorageConnector")
     private StorageConnector                        storageConnector;
@@ -63,7 +66,7 @@ public class RpcManagerImpl extends Component implements RpcManager
     }
 
     @Override
-    public <T> T createRpcProxy(final Class<T> classInterface, final RpcTarget target)
+    public <T> T createRpcProxy(final Class<T> classInterface, final IRpcTarget target)
     {
         //noinspection unchecked
         return (T) this.rpcProxyCache.get(classInterface, target);
@@ -136,5 +139,11 @@ public class RpcManagerImpl extends Component implements RpcManager
         }
         lock.provideResponse(responseMessage.getResponse());
         this.removeLock(responseMessage.getRequestId());
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

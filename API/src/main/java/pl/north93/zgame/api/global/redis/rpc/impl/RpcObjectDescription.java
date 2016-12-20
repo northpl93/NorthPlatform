@@ -9,8 +9,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import pl.north93.zgame.api.global.redis.rpc.IRpcObjectDescription;
 
-public class RpcObjectDescription
+class RpcObjectDescription implements IRpcObjectDescription
 {
     private final Class<?>                            classInterface;
     private final Integer                             classId;
@@ -39,11 +40,13 @@ public class RpcObjectDescription
         }
     }
 
+    @Override
     public Integer getClassId()
     {
         return this.classId;
     }
 
+    @Override
     public Integer getMethodId(final Method method)
     {
         return this.methodToDescription.get(method).getId();

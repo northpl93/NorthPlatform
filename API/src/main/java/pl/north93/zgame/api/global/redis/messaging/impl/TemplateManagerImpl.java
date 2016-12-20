@@ -2,6 +2,7 @@ package pl.north93.zgame.api.global.redis.messaging.impl;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,9 +19,11 @@ import pl.north93.zgame.api.global.redis.messaging.Template;
 import pl.north93.zgame.api.global.redis.messaging.TemplateFactory;
 import pl.north93.zgame.api.global.redis.messaging.TemplateGeneric;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
+import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackUseTemplateOf;
 import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.BooleanTemplate;
+import pl.north93.zgame.api.global.redis.messaging.templates.HashMapTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.IntegerTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.LongTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.ShortTemplate;
@@ -29,8 +32,8 @@ import pl.north93.zgame.api.global.redis.messaging.templates.UuidTemplate;
 
 public class TemplateManagerImpl extends Component implements TemplateManager
 {
-    private final TemplateFactory        templateFactory;
-    private final Map<Class, Template>   templateCache;
+    private final TemplateFactory      templateFactory;
+    private final Map<Class, Template> templateCache;
 
     public TemplateManagerImpl()
     {
@@ -42,7 +45,8 @@ public class TemplateManagerImpl extends Component implements TemplateManager
         this.templateFactory = templateFactory;
         this.templateCache = new IdentityHashMap<>();
 
-        this.registerTemplate(ArrayList.class, new ArrayListTemplate(null));
+        this.registerTemplate(ArrayList.class, new ArrayListTemplate());
+        this.registerTemplate(HashMap.class, new HashMapTemplate());
         this.registerTemplate(Boolean.class, new BooleanTemplate());
         this.registerTemplate(Integer.class, new IntegerTemplate());
         this.registerTemplate(Short.class, new ShortTemplate());
@@ -79,6 +83,22 @@ public class TemplateManagerImpl extends Component implements TemplateManager
         if (fromCache != null)
         {
             return (Template<T>) fromCache;
+        }
+
+        final boolean isUsingCustomTemplate = clazz.isAnnotationPresent(MsgPackCustomTemplate.class);
+        if (isUsingCustomTemplate)
+        {
+            final Template<T> template;
+            try
+            {
+                template = clazz.getAnnotation(MsgPackCustomTemplate.class).value().newInstance();
+            }
+            catch (final InstantiationException | IllegalAccessException e)
+            {
+                throw new RuntimeException("Can't instantiate custom template for " + clazz.getSimpleName(), e);
+            }
+            this.templateCache.put(clazz, template);
+            return template;
         }
 
         final boolean isCustomTemplate = clazz.isAnnotationPresent(MsgPackUseTemplateOf.class);

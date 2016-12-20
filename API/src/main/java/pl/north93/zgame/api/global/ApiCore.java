@@ -27,7 +27,7 @@ import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.permissions.PermissionsManager;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.messaging.impl.TemplateManagerImpl;
-import pl.north93.zgame.api.global.redis.rpc.RpcManager;
+import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.impl.RpcManagerImpl;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriberImpl;
@@ -40,7 +40,7 @@ public abstract class ApiCore
     private final PlatformConnector  connector;
     private final TemplateManager    messagePackTemplates;
     private final RedisSubscriber    redisSubscriber;
-    private final RpcManager         rpcManager;
+    private final IRpcManager        rpcManager;
     // - - - //
     private       UsernameCache      usernameCache;
     private       INetworkManager    networkManager;
@@ -172,7 +172,7 @@ public abstract class ApiCore
     }
 
     @ProvidesComponent
-    public RpcManager getRpcManager()
+    public IRpcManager getRpcManager()
     {
         return this.rpcManager;
     }

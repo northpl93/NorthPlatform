@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 import pl.north93.zgame.api.global.redis.messaging.Template;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.TYPE})
 public @interface MsgPackCustomTemplate
 {
     Class<? extends Template> value();

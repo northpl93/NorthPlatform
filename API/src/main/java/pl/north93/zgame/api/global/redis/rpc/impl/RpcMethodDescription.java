@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.redis.rpc.annotation.DoNotWaitForResponse;
 import pl.north93.zgame.api.global.redis.rpc.annotation.Timeout;
 
-public class RpcMethodDescription
+class RpcMethodDescription
 {
     private final Integer      id;
     private final Method       method;

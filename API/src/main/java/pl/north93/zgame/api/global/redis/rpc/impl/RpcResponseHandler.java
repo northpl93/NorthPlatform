@@ -10,7 +10,7 @@ import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcExceptionInfo;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcInvokeMessage;
 
-public class RpcResponseHandler
+class RpcResponseHandler
 {
     private final RpcManagerImpl       rpcManager;
     private final RpcObjectDescription objectDescription;

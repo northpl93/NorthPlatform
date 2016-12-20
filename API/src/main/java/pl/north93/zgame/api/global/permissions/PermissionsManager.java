@@ -3,12 +3,12 @@ package pl.north93.zgame.api.global.permissions;
 import static pl.north93.zgame.api.global.redis.RedisKeys.PERMISSIONS_GROUPS;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.data.StorageConnector;
@@ -18,7 +18,7 @@ import redis.clients.jedis.Jedis;
 
 public class PermissionsManager extends Component
 {
-    private final List<Group> cachedGroups = new ArrayList<>();
+    private final Set<Group> cachedGroups = new ObjectArraySet<>();
     @InjectComponent("API.Database.StorageConnector")
     private StorageConnector  storageConnector;
     @InjectComponent("API.Database.Redis.MessagePackSerializer")

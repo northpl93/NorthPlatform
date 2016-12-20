@@ -8,9 +8,13 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
+import pl.north93.zgame.api.global.redis.messaging.templates.extra.GroupInStringTemplate;
+
 /**
  * Represents a permissions group.
  */
+@MsgPackCustomTemplate(GroupInStringTemplate.class)
 public class Group
 {
     private String name;

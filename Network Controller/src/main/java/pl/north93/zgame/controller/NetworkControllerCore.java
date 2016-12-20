@@ -4,12 +4,12 @@ import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
-import pl.north93.zgame.api.global.redis.rpc.RpcManager;
+import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 
 public class NetworkControllerCore extends Component
 {
     @InjectComponent("API.Database.Redis.RPC")
-    private RpcManager rpcManager;
+    private IRpcManager rpcManager;
 
     @Override
     protected void enableComponent()

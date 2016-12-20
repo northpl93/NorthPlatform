@@ -15,7 +15,7 @@ import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 
 // Umożliwia odczytanie konkretnego typu gdy field jest interfejsem
 @SuppressWarnings("unchecked")
-public class DynamicTemplate<T> implements TemplateGeneric<T>
+class DynamicTemplate<T> implements TemplateGeneric<T>
 {
     private static final Map<String, Class<?>> classCache = new HashMap<>();
     private Class<?>[] genericTypes;

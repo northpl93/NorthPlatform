@@ -14,7 +14,7 @@ import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 
 public class ArrayListTemplate implements TemplateGeneric<ArrayList<Object>>
 {
-    private Class<?> genericType;
+    private final Class<?> genericType;
 
     public ArrayListTemplate()
     {

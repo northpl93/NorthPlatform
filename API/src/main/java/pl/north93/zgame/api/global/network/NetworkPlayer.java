@@ -10,8 +10,6 @@ import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.permissions.Group;
 import pl.north93.zgame.api.global.redis.messaging.RedisUpdatable;
-import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
-import pl.north93.zgame.api.global.redis.messaging.templates.extra.GroupInStringTemplate;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 import pl.north93.zgame.api.global.utils.Messageable;
 
@@ -25,7 +23,6 @@ public class NetworkPlayer implements Messageable, RedisUpdatable
     private UUID    serverId;
     private String  proxyId;
     private Boolean premium;
-    @MsgPackCustomTemplate(GroupInStringTemplate.class)
     private Group   group;
 
     @Override

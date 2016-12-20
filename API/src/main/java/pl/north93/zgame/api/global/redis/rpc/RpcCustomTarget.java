@@ -3,7 +3,7 @@ package pl.north93.zgame.api.global.redis.rpc;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class RpcCustomTarget implements RpcTarget
+public class RpcCustomTarget implements IRpcTarget
 {
     private final String targetId;
 

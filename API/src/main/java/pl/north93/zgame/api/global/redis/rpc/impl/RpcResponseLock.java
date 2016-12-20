@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.redis.rpc.exceptions.RpcTimeoutException;
 
-public class RpcResponseLock
+class RpcResponseLock
 {
     private final CountDownLatch lock = new CountDownLatch(1);
     private       boolean        isProvided;

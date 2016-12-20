@@ -7,9 +7,9 @@ import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.redis.rpc.RpcTarget;
+import pl.north93.zgame.api.global.redis.rpc.IRpcTarget;
 
-public class RpcProxyCache
+class RpcProxyCache
 {
     private final RpcManagerImpl          rpcManager;
     private final Map<CacheEntry, Object> cache = new HashMap<>();
@@ -19,7 +19,7 @@ public class RpcProxyCache
         this.rpcManager = rpcManager;
     }
 
-    public Object get(final Class<?> classInterface, final RpcTarget target)
+    public Object get(final Class<?> classInterface, final IRpcTarget target)
     {
         final CacheEntry cacheEntry = new CacheEntry(classInterface, target);
         final Object cacheProxy = this.cache.get(cacheEntry);
@@ -34,10 +34,10 @@ public class RpcProxyCache
 
     private static final class CacheEntry
     {
-        private final Class<?>  interfaceClass;
-        private final RpcTarget target;
+        private final Class<?>   interfaceClass;
+        private final IRpcTarget target;
 
-        public CacheEntry(final Class<?> interfaceClass, final RpcTarget target)
+        public CacheEntry(final Class<?> interfaceClass, final IRpcTarget target)
         {
             this.interfaceClass = interfaceClass;
             this.target = target;

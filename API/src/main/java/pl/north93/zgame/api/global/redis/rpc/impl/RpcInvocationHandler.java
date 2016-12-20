@@ -5,21 +5,21 @@ import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.redis.rpc.RpcTarget;
+import pl.north93.zgame.api.global.redis.rpc.IRpcTarget;
 import pl.north93.zgame.api.global.redis.rpc.exceptions.RpcRemoteException;
 import pl.north93.zgame.api.global.redis.rpc.exceptions.RpcTimeoutException;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcExceptionInfo;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcInvokeMessage;
 import redis.clients.jedis.Jedis;
 
-public class RpcInvocationHandler implements InvocationHandler
+class RpcInvocationHandler implements InvocationHandler
 {
     private static final AtomicInteger requestCounter = new AtomicInteger(0);
     private final RpcManagerImpl       rpcManager;
     private final RpcObjectDescription objectDescription;
     private final byte[]               invokeChannel;
 
-    public RpcInvocationHandler(final RpcManagerImpl rpcManager, final Class<?> classInterface, final RpcTarget target)
+    public RpcInvocationHandler(final RpcManagerImpl rpcManager, final Class<?> classInterface, final IRpcTarget target)
     {
         this.rpcManager = rpcManager;
         this.objectDescription = rpcManager.getObjectDescription(classInterface);
