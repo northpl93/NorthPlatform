@@ -75,10 +75,16 @@ class ValueImpl<T> implements Value<T>
     public synchronized void set(final T newValue)
     {
         this.cache = newValue;
+        this.upload();
+    }
+
+    @Override
+    public void upload()
+    {
+        final byte[] serialized = this.observationManager.getMsgPack().serialize(this.clazz, this.cache);
+
         try (final Jedis jedis = this.observationManager.getJedis().getResource())
         {
-            final byte[] serialized = this.observationManager.getMsgPack().serialize(this.clazz, newValue);
-
             jedis.set(this.objectKey.getKey().getBytes(), serialized);
             jedis.publish(this.getChannelKey().getBytes(), serialized);
         }

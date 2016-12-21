@@ -20,7 +20,7 @@ import pl.north93.zgame.api.global.agent.client.LocalAgentClient;
 import pl.north93.zgame.api.global.component.IComponentManager;
 import pl.north93.zgame.api.global.component.annotations.ProvidesComponent;
 import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
-import pl.north93.zgame.api.global.data.PlayersDao;
+import pl.north93.zgame.api.global.data.players.PlayersDao;
 import pl.north93.zgame.api.global.data.UsernameCache;
 import pl.north93.zgame.api.global.exceptions.SingletonException;
 import pl.north93.zgame.api.global.network.INetworkManager;

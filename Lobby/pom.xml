@@ -25,6 +25,11 @@
             <artifactId>pets</artifactId>
             <version>${version.pets}</version>
         </dependency>
+        <dependency>
+            <groupId>pl.north93.zgame</groupId>
+            <artifactId>pets</artifactId>
+            <version>1.0-INDEV</version>
+        </dependency>
     </dependencies>
 
     <build>

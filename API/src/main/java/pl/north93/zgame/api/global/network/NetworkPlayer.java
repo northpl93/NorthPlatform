@@ -7,6 +7,8 @@ import java.util.Locale;
 import java.util.UUID;
 
 import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.metadata.MetaStore;
+import pl.north93.zgame.api.global.metadata.Metadatable;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.permissions.Group;
 import pl.north93.zgame.api.global.redis.messaging.RedisUpdatable;
@@ -16,14 +18,21 @@ import pl.north93.zgame.api.global.utils.Messageable;
 /**
  * Reprezentuje gracza będącego online w sieci
  */
-public class NetworkPlayer implements Messageable, RedisUpdatable
+public class NetworkPlayer implements Messageable, Metadatable, RedisUpdatable
 {
-    private String  nick;
-    private UUID    uuid;
-    private UUID    serverId;
-    private String  proxyId;
-    private Boolean premium;
-    private Group   group;
+    public static final MetaStore PLAYER_PARENT_META = MetaStore.getWithoutCache(null);
+    private String    nick;
+    private UUID      uuid;
+    private UUID      serverId;
+    private String    proxyId;
+    private Boolean   premium;
+    private Group     group;
+    private MetaStore meta;
+
+    public NetworkPlayer()
+    {
+        this.meta = MetaStore.getFor(this, PLAYER_PARENT_META);
+    }
 
     @Override
     public String getRedisKey()
@@ -94,6 +103,12 @@ public class NetworkPlayer implements Messageable, RedisUpdatable
     public boolean hasPermission(final String permission)
     {
         return this.group != null && this.group.getPermissions().contains(permission);
+    }
+
+    @Override
+    public MetaStore getMetaStore()
+    {
+        return this.meta;
     }
 
     /**

@@ -16,8 +16,20 @@ public interface Value<T>
      */
     void get(Consumer<T> callback);
 
+    /**
+     * Sets new value and upload it to Redis.
+     * @param newValue new value which will be uploaded to redis.
+     */
     void set(T newValue);
 
+    /**
+     * Uploads current cached value to redis.
+     */
+    void upload();
+
+    /**
+     * Deletes this value from redis and local cache.
+     */
     void delete();
 
     /**

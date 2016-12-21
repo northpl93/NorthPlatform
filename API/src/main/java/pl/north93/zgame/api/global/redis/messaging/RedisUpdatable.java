@@ -4,6 +4,7 @@ import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import redis.clients.jedis.Jedis;
 
+@Deprecated
 public interface RedisUpdatable
 {
     /**

@@ -14,11 +14,15 @@ public class DateUtil
                                   Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND
                           };
     private static final ResourceBundle apiMessages = ResourceBundle.getBundle("Messages", new UTF8Control());
-    /*private static final String[] names = new String[]
+    private static final String[] names = new String[]
                              {
-                                     getBukkitMessage("date.year"), getBukkitMessage("date.years"), getBukkitMessage("date.month"), getBukkitMessage("date.months"), getBukkitMessage("date.day"), getBukkitMessage("date.days"), getBukkitMessage("date.hour"), getBukkitMessage("date.hours"), getBukkitMessage("date.minute"), getBukkitMessage("date.minutes"), getBukkitMessage("date.second"), getBukkitMessage("date.seconds")
-                             };*/
-    private static final String[] names = apiMessages.getStringArray("date");
+                                     apiMessages.getString("date.year"), apiMessages.getString("date.years"),
+                                     apiMessages.getString("date.month"), apiMessages.getString("date.months"), 
+                                     apiMessages.getString("date.day"), apiMessages.getString("date.days"), 
+                                     apiMessages.getString("date.hour"), apiMessages.getString("date.hours"), 
+                                     apiMessages.getString("date.minute"), apiMessages.getString("date.minutes"), 
+                                     apiMessages.getString("date.second"), apiMessages.getString("date.seconds")
+                             };
 
     public static String removeTimePattern(final String input)
     {

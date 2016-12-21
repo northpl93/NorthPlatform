@@ -14,6 +14,7 @@ import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
+import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 import redis.clients.jedis.JedisPool;
@@ -48,6 +49,12 @@ public class ObservationManagerImpl extends Component implements IObservationMan
 
         //noinspection unchecked
         return (Value<T>) value.get();
+    }
+
+    @Override
+    public <T> Value<T> get(final Class<T> clazz, final ProvidingRedisKey keyProvider)
+    {
+        return this.get(clazz, keyProvider.getKey());
     }
 
     @Override

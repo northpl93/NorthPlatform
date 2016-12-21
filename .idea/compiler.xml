@@ -20,20 +20,20 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="API" target="8" />
-      <module name="API.DefaultCommands" target="1.5" />
-      <module name="API.InstrumentationAgent" target="1.5" />
+      <module name="API.DefaultCommands" target="8" />
+      <module name="API.InstrumentationAgent" target="8" />
       <module name="DefaultCommands" target="8" />
       <module name="Instrumentation Agent" target="8" />
-      <module name="Lobby" target="1.5" />
-      <module name="Network Controller" target="1.5" />
-      <module name="Pets" target="1.5" />
+      <module name="Lobby" target="8" />
+      <module name="Network Controller" target="1.8" />
+      <module name="Pets" target="8" />
       <module name="platform" target="8" />
       <module name="RobberMod" target="1.5" />
       <module name="RobberMod_api" target="1.6" />
       <module name="RobberMod_main" target="1.8" />
       <module name="RobberMod_test" target="1.6" />
-      <module name="Server Deamon" target="1.5" />
-      <module name="SkyBlock" target="1.5" />
+      <module name="Server Deamon" target="8" />
+      <module name="SkyBlock" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>
