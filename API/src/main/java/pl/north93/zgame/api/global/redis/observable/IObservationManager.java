@@ -7,4 +7,6 @@ public interface IObservationManager
     <T> Value<T> get(Class<T> clazz, ObjectKey objectKey);
 
     <T> Value<T> get(Class<T> clazz, ProvidingRedisKey keyProvider);
+
+    <T extends ProvidingRedisKey> Value<T> of(T preCachedObject);
 }

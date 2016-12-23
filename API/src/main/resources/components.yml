@@ -69,3 +69,13 @@ components:
     dependencies:
       - API.Database.StorageConnector
       - API.Database.Redis.MessagePackSerializer
+
+  - name: API.MinecraftNetwork.PlayersStorage
+    enabled: true
+    mainClass: "pl.north93.zgame.api.global.data.players.PlayersDao"
+    description: "Manages player's data and provides api for loading it."
+    dependencies:
+      - API.Database.StorageConnector
+      - API.Database.Redis.MessagePackSerializer
+      - API.Database.Redis.Observer
+      - API.MinecraftNetwork.PermissionsManager

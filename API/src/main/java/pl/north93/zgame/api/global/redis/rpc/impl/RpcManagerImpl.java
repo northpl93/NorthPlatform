@@ -118,7 +118,7 @@ public class RpcManagerImpl extends Component implements IRpcManager
 
     private void handleMethodInvocation(final String channel, final byte[] bytes)
     {
-        final RpcInvokeMessage invokeMessage = this.getApiCore().getMessagePackTemplates().deserialize(RpcInvokeMessage.class, bytes);
+        final RpcInvokeMessage invokeMessage = this.msgPack.deserialize(RpcInvokeMessage.class, bytes);
         final RpcResponseHandler handler = this.responseHandlerMap.get(invokeMessage.getClassId());
         if (handler != null)
         {
@@ -130,7 +130,7 @@ public class RpcManagerImpl extends Component implements IRpcManager
 
     private void handleResponse(final String channel, final byte[] bytes)
     {
-        final RpcResponseMessage responseMessage = this.getApiCore().getMessagePackTemplates().deserialize(RpcResponseMessage.class, bytes);
+        final RpcResponseMessage responseMessage = this.msgPack.deserialize(RpcResponseMessage.class, bytes);
         final RpcResponseLock lock = this.locks.get(responseMessage.getRequestId());
         if (lock == null)
         {

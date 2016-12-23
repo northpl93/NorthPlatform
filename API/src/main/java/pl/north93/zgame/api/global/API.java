@@ -35,6 +35,7 @@ public final class API
     }
 
     @ProvidesComponent
+    @Deprecated
     public static TemplateManager getMessagePackTemplates()
     {
         return apiCore.getMessagePackTemplates();

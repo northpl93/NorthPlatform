@@ -8,6 +8,7 @@ import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.InjectResource;
 import pl.north93.zgame.api.global.network.NetworkPlayer;
+import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class Msg extends NorthCommand
 {
@@ -31,16 +32,16 @@ public class Msg extends NorthCommand
 
         API.getPlatformConnector().runTaskAsynchronously(() ->
         {
-            final NetworkPlayer networkPlayer = API.getApiCore().getNetworkManager().getNetworkPlayer(args.asString(0));
-            if (networkPlayer == null)
+            final Value<NetworkPlayer> networkPlayer = API.getApiCore().getNetworkManager().getNetworkPlayer(args.asString(0));
+            if (!networkPlayer.isCached() && !networkPlayer.isAvailable())
             {
                 sender.sendMessage(this.messages, "command.no_player");
                 return;
             }
 
             final String message = args.asText(1);
-            sender.sendMessage(this.messages, "command.msg.message", this.messages.getString("command.msg.you"), networkPlayer.getNick(), message);
-            networkPlayer.sendMessage(this.messages, "command.msg.message", sender.getName(), "ty", message);
+            sender.sendMessage(this.messages, "command.msg.message", this.messages.getString("command.msg.you"), networkPlayer.get().getNick(), message);
+            networkPlayer.get().sendMessage(this.messages, "command.msg.message", sender.getName(), "ty", message);
         });
     }
 }

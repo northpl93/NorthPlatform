@@ -6,13 +6,14 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.network.NetworkPlayer;
+import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class ChatListener implements Listener
 {
     @EventHandler
     public void onChat(final AsyncPlayerChatEvent event)
     {
-        final NetworkPlayer networkPlayer = API.getNetworkManager().getNetworkPlayer(event.getPlayer().getName());
-        event.setFormat(networkPlayer.getGroup().getChatFormat());
+        final Value<NetworkPlayer> networkPlayer = API.getNetworkManager().getNetworkPlayer(event.getPlayer().getName());
+        event.setFormat(networkPlayer.get().getGroup().getChatFormat());
     }
 }

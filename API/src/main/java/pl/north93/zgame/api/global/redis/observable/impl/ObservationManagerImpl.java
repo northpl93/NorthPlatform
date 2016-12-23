@@ -58,6 +58,15 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     }
 
     @Override
+    public <T extends ProvidingRedisKey> Value<T> of(final T preCachedObject)
+    {
+        //noinspection unchecked
+        final Value<T> value = this.get((Class<T>) preCachedObject.getClass(), preCachedObject);
+        value.set(preCachedObject);
+        return value;
+    }
+
+    @Override
     protected void enableComponent()
     {
     }

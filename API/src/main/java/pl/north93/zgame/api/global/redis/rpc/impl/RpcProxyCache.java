@@ -25,7 +25,7 @@ class RpcProxyCache
         final Object cacheProxy = this.cache.get(cacheEntry);
         if (cacheProxy == null)
         {
-            final Object proxy = Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class<?>[] {classInterface}, new RpcInvocationHandler(this.rpcManager, classInterface, target));
+            final Object proxy = Proxy.newProxyInstance(classInterface.getClassLoader(), new Class<?>[] {classInterface}, new RpcInvocationHandler(this.rpcManager, classInterface, target));
             this.cache.put(cacheEntry, proxy);
             return proxy;
         }

@@ -1,6 +1,7 @@
 package pl.north93.zgame.api.global.component.impl;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -22,6 +23,12 @@ public class Injector
         for (final Field field : clazz.getDeclaredFields())
         {
             field.setAccessible(true);
+
+            if (Modifier.isFinal(field.getModifiers()))
+            {
+                continue; // field is final, we can't do anything
+            }
+
             if (field.isAnnotationPresent(InjectComponent.class))
             {
                 final InjectComponent annotation = field.getAnnotation(InjectComponent.class);

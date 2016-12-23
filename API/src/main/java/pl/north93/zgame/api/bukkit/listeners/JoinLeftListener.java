@@ -16,6 +16,7 @@ import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.network.NetworkPlayer;
 import pl.north93.zgame.api.global.permissions.Group;
+import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class JoinLeftListener implements Listener
 {
@@ -23,8 +24,8 @@ public class JoinLeftListener implements Listener
     public void onJoin(final PlayerJoinEvent event)
     {
         event.setJoinMessage(null);
-        final NetworkPlayer networkPlayer = API.getApiCore().getNetworkManager().getNetworkPlayer(event.getPlayer().getName());
-        final Group group = networkPlayer.getGroup();
+        final Value<NetworkPlayer> networkPlayer = API.getApiCore().getNetworkManager().getNetworkPlayer(event.getPlayer().getName());
+        final Group group = networkPlayer.get().getGroup();
 
         final PermissionAttachment attachment = event.getPlayer().addAttachment(((BukkitApiCore) API.getApiCore()).getPluginMain());
         this.addPermissions(attachment, group);

@@ -41,7 +41,7 @@ public interface INetworkManager
 
     int onlinePlayersCount();
 
-    NetworkPlayer getNetworkPlayer(String nick);
+    Value<NetworkPlayer> getNetworkPlayer(String nick);
 
     boolean isOnline(String nick);
 

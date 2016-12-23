@@ -216,17 +216,9 @@ public class NetworkManager extends Component implements INetworkManager
     }
 
     @Override
-    public NetworkPlayer getNetworkPlayer(final String nick)
+    public Value<NetworkPlayer> getNetworkPlayer(final String nick)
     {
-        try (final Jedis jedis = this.jedisPool.getResource())
-        {
-            final byte[] networkPlayerData = jedis.get((PLAYERS + nick.toLowerCase(Locale.ROOT)).getBytes());
-            if (networkPlayerData == null)
-            {
-                return null;
-            }
-            return this.msgPack.deserialize(NetworkPlayer.class, networkPlayerData);
-        }
+        return this.observationManager.get(NetworkPlayer.class, PLAYERS + nick.toLowerCase(Locale.ROOT));
     }
 
     /**

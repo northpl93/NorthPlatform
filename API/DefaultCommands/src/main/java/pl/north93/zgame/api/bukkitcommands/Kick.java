@@ -13,6 +13,7 @@ import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectResource;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.NetworkPlayer;
+import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class Kick extends NorthCommand
 {
@@ -39,8 +40,8 @@ public class Kick extends NorthCommand
 
         this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
         {
-            final NetworkPlayer networkPlayer = this.networkManager.getNetworkPlayer(args.asString(0));
-            if (networkPlayer == null)
+            final Value<NetworkPlayer> networkPlayer = this.networkManager.getNetworkPlayer(args.asString(0));
+            if (!networkPlayer.isCached() && !networkPlayer.isAvailable())
             {
                 sender.sendMessage(this.messages, "command.no_player");
                 return;
@@ -57,7 +58,7 @@ public class Kick extends NorthCommand
                 kickMessage = MessageFormat.format(this.messages.getString("kick.by_command.with_reason"), reason);
             }
 
-            networkPlayer.kick(kickMessage);
+            networkPlayer.get().kick(kickMessage);
         });
     }
 }

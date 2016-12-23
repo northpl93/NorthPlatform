@@ -8,6 +8,7 @@ import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.InjectResource;
 import pl.north93.zgame.api.global.network.NetworkPlayer;
+import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class PlayerInfoCmd extends NorthCommand
 {
@@ -27,16 +28,16 @@ public class PlayerInfoCmd extends NorthCommand
         {
             API.getPlatformConnector().runTaskAsynchronously(() ->
             {
-                final NetworkPlayer networkPlayer = API.getApiCore().getNetworkManager().getNetworkPlayer(args.asString(0));
-                if (networkPlayer == null)
+                final Value<NetworkPlayer> networkPlayer = API.getApiCore().getNetworkManager().getNetworkPlayer(args.asString(0));
+                if (!networkPlayer.isCached() && !networkPlayer.isAvailable())
                 {
                     sender.sendMessage(this.messages.getString("command.no_player"));
                     return;
                 }
-                sender.sendMessage("Nick: " + networkPlayer.getNick());
-                sender.sendMessage("UUID: " + networkPlayer.getUuid());
-                sender.sendMessage("Połączenie: " + networkPlayer.getProxyId() + " <-> " + networkPlayer.getServerId());
-                sender.sendMessage("Ranga: " + networkPlayer.getGroup().getName());
+                sender.sendMessage("Nick: " + networkPlayer.get().getNick());
+                sender.sendMessage("UUID: " + networkPlayer.get().getUuid());
+                sender.sendMessage("Połączenie: " + networkPlayer.get().getProxyId() + " <-> " + networkPlayer.get().getServerId());
+                sender.sendMessage("Ranga: " + networkPlayer.get().getGroup().getName());
             });
         }
         else

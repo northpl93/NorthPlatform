@@ -20,7 +20,6 @@ import pl.north93.zgame.api.global.agent.client.LocalAgentClient;
 import pl.north93.zgame.api.global.component.IComponentManager;
 import pl.north93.zgame.api.global.component.annotations.ProvidesComponent;
 import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
-import pl.north93.zgame.api.global.data.players.PlayersDao;
 import pl.north93.zgame.api.global.data.UsernameCache;
 import pl.north93.zgame.api.global.exceptions.SingletonException;
 import pl.north93.zgame.api.global.network.INetworkManager;
@@ -45,7 +44,7 @@ public abstract class ApiCore
     private       UsernameCache      usernameCache;
     private       INetworkManager    networkManager;
     private       PermissionsManager permissionsManager;
-    private final PlayersDao         playersDao; // todo extract component
+    //private       PlayersDao         playersDao;
 
     public ApiCore(final Platform platform, final PlatformConnector platformConnector)
     {
@@ -56,7 +55,7 @@ public abstract class ApiCore
         this.messagePackTemplates = new TemplateManagerImpl();
         this.redisSubscriber = new RedisSubscriberImpl();
         this.rpcManager = new RpcManagerImpl();
-        this.playersDao = new PlayersDao();
+        //this.playersDao = new PlayersDao();
         try
         {
             API.setApiCore(this);
@@ -142,10 +141,10 @@ public abstract class ApiCore
         this.getLogger().info("North API Core stopped.");
     }
 
-    public PlayersDao getPlayersDao()
-    {
-        return this.playersDao;
-    }
+    //public PlayersDao getPlayersDao()
+    //{
+    //    return this.playersDao;
+    //}
 
     @ProvidesComponent
     public INetworkManager getNetworkManager()

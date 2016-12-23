@@ -12,32 +12,35 @@ import pl.north93.zgame.api.global.metadata.Metadatable;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.permissions.Group;
 import pl.north93.zgame.api.global.redis.messaging.RedisUpdatable;
+import pl.north93.zgame.api.global.redis.observable.ObjectKey;
+import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 import pl.north93.zgame.api.global.utils.Messageable;
 
 /**
  * Reprezentuje gracza będącego online w sieci
  */
-public class NetworkPlayer implements Messageable, Metadatable, RedisUpdatable
+public class NetworkPlayer implements Messageable, Metadatable, ProvidingRedisKey, RedisUpdatable
 {
-    public static final MetaStore PLAYER_PARENT_META = MetaStore.getWithoutCache(null);
-    private String    nick;
     private UUID      uuid;
+    private String    nick;
+    private String    latestNick;
     private UUID      serverId;
     private String    proxyId;
     private Boolean   premium;
     private Group     group;
-    private MetaStore meta;
-
-    public NetworkPlayer()
-    {
-        this.meta = MetaStore.getFor(this, PLAYER_PARENT_META);
-    }
+    private MetaStore meta = new MetaStore();
 
     @Override
     public String getRedisKey()
     {
-        return PLAYERS + this.getNick().toLowerCase(Locale.ROOT);
+        return this.getKey().getKey();
+    }
+
+    @Override
+    public ObjectKey getKey()
+    {
+        return new ObjectKey(PLAYERS + this.getNick().toLowerCase(Locale.ROOT));
     }
 
     public String getNick()
@@ -48,6 +51,16 @@ public class NetworkPlayer implements Messageable, Metadatable, RedisUpdatable
     public void setNick(final String nick)
     {
         this.nick = nick;
+    }
+
+    public String getLatestNick()
+    {
+        return this.latestNick;
+    }
+
+    public void setLatestNick(final String latestNick)
+    {
+        this.latestNick = latestNick;
     }
 
     public UUID getUuid()
