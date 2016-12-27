@@ -6,11 +6,12 @@ import java.util.UUID;
 import pl.north93.zgame.api.global.deployment.ServerPattern;
 import pl.north93.zgame.api.global.deployment.ServersGroup;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
+import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
 
 /**
  * Klasa reprezenyująca serwer w sieci.
  */
-public interface Server extends ServerProxyData
+public interface Server extends ServerProxyData, ProvidingRedisKey
 {
     /**
      * Zwraca unikalny identyfikator tego serwera.

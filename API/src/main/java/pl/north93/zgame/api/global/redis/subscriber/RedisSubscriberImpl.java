@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.data.StorageConnector;
@@ -44,7 +45,16 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
         if (! this.subscriberScheduled)
         {
             this.getApiCore().debug("Subscriber task has been scheduled");
-            this.getApiCore().getPlatformConnector().runTaskAsynchronously(new SubscriberTask());
+            if (this.getApiCore().getPlatform() == Platform.BUKKIT)
+            {
+                final Thread thread = new Thread(new SubscriberTask(), "Redis Subsciber");
+                thread.setDaemon(true);
+                thread.start();
+            }
+            else
+            {
+                this.getApiCore().getPlatformConnector().runTaskAsynchronously(new SubscriberTask());
+            }
             this.subscriberScheduled = true;
             return;
         }

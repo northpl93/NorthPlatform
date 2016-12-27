@@ -9,17 +9,16 @@ import java.util.UUID;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.deployment.ServerPattern;
 import pl.north93.zgame.api.global.deployment.ServersGroup;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
-import pl.north93.zgame.api.global.redis.messaging.RedisUpdatable;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackNullable;
 import pl.north93.zgame.api.global.redis.messaging.templates.extra.ServerPatternInStringTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.extra.ServersGroupInStringTemplate;
+import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 
-public class ServerImpl implements Server, ServerProxyData, RedisUpdatable
+public class ServerImpl implements Server, ServerProxyData
 {
     private UUID          serverId;
     private Boolean       isLaunchedViaDaemon;
@@ -54,9 +53,9 @@ public class ServerImpl implements Server, ServerProxyData, RedisUpdatable
     }
 
     @Override
-    public String getRedisKey()
+    public ObjectKey getKey()
     {
-        return SERVER + this.serverId;
+        return new ObjectKey(SERVER + this.serverId);
     }
 
     @Override
@@ -119,18 +118,14 @@ public class ServerImpl implements Server, ServerProxyData, RedisUpdatable
         return 0;
     }
 
-    public void updateServerState(final ServerState serverState)
+    public void setServerState(final ServerState serverState)
     {
         this.serverState = serverState;
-        this.sendUpdate();
-        API.getLogger().info("Server with ID " + this.serverId + " is now in state " + serverState);
     }
 
-    public void updateJoiningPolicy(final JoiningPolicy joiningPolicy)
+    public void setJoiningPolicy(final JoiningPolicy joiningPolicy)
     {
         this.joiningPolicy = joiningPolicy;
-        this.sendUpdate();
-        API.getLogger().info("Server with ID " + this.serverId + " has now joining policy " + joiningPolicy);
     }
 
     @Override

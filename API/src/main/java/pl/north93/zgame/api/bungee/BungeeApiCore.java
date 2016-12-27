@@ -5,8 +5,6 @@ import static pl.north93.zgame.api.global.redis.RedisKeys.PROXY_INSTANCE;
 
 
 import java.io.File;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
 import net.md_5.bungee.api.ProxyServer;
@@ -25,9 +23,9 @@ import redis.clients.jedis.Jedis;
 
 public class BungeeApiCore extends ApiCore
 {
-    private final Main bungeePlugin;
+    private final Main            bungeePlugin;
     private IBungeeServersManager serversManager;
-    private ProxyInstanceConfig config;
+    private ProxyInstanceConfig   config;
 
     public BungeeApiCore(final Main bungeePlugin)
     {
@@ -48,6 +46,12 @@ public class BungeeApiCore extends ApiCore
     }
 
     @Override
+    protected void init() throws Exception
+    {
+        this.config = loadConfigFile(ProxyInstanceConfig.class, this.getFile("proxy_instance.yml"));
+    }
+
+    @Override
     protected void start()
     {
         if (! ProxyServer.getInstance().getConfig().isIpForward())
@@ -55,7 +59,6 @@ public class BungeeApiCore extends ApiCore
             this.getLogger().severe("Set ip_forward to true in config.yml");
             ProxyServer.getInstance().stop();
         }
-        this.config = loadConfigFile(ProxyInstanceConfig.class, this.getFile("proxy_instance.yml"));
         this.getRpcManager().addRpcImplementation(ProxyRpc.class, new ProxyRpcImpl());
         this.serversManager = new BungeeServersManager();
         this.sendProxyInfo();
@@ -67,7 +70,7 @@ public class BungeeApiCore extends ApiCore
     @Override
     protected void stop()
     {
-        final StorageConnector storageConnector = API.getApiCore().getComponentManager().getComponent("API.Database.StorageConnector"); // TODO
+        final StorageConnector storageConnector = this.getComponentManager().getComponent("API.Database.StorageConnector"); // TODO
         try (final Jedis jedis = storageConnector.getJedisPool().getResource())
         {
             jedis.del(this.getId());
@@ -103,14 +106,7 @@ public class BungeeApiCore extends ApiCore
             final ProxyInstanceInfo proxyInstanceInfo = new ProxyInstanceInfo();
 
             proxyInstanceInfo.setId(this.config.getUniqueName());
-            try
-            {
-                proxyInstanceInfo.setHostname(InetAddress.getLocalHost().getHostName());
-            }
-            catch (final UnknownHostException e)
-            {
-                proxyInstanceInfo.setHostname("<unknown:UnknownHostException>");
-            }
+            proxyInstanceInfo.setHostname(this.getHostName());
             proxyInstanceInfo.setOnlinePlayers(this.bungeePlugin.getProxy().getOnlineCount());
 
             jedis.set(this.getId().getBytes(), this.getMessagePackTemplates().serialize(proxyInstanceInfo));

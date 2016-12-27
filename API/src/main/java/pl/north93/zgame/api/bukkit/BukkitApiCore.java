@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.bukkit;
 
+import static pl.north93.zgame.api.global.redis.RedisKeys.SERVER;
+
+
 import java.io.File;
 import java.util.Properties;
 import java.util.UUID;
@@ -20,12 +23,13 @@ import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerImpl;
 import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.network.server.ServerType;
+import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class BukkitApiCore extends ApiCore
 {
     private final Main          pluginMain;
     private final WindowManager windowManager;
-    private       ServerImpl    thisServer;
+    private       UUID          serverId;
 
     public BukkitApiCore(final Main plugin)
     {
@@ -44,9 +48,9 @@ public class BukkitApiCore extends ApiCore
         return this.windowManager;
     }
 
-    public final Server getServer()
+    public final Value<Server> getServer()
     {
-        return this.thisServer;
+        return this.getNetworkManager().getServer(this.serverId).setIfUnavailable(this::generateServer);
     }
 
     public final org.bukkit.Server getBukkit()
@@ -63,24 +67,43 @@ public class BukkitApiCore extends ApiCore
     @Override
     public String getId()
     {
-        return this.thisServer.getRedisKey();
+        return SERVER + this.serverId;
+    }
+
+    @Override
+    protected void init() throws Exception
+    {
+        try
+        {
+            this.serverId = this.getServerId();
+        }
+        catch (final ConfigurationException e)
+        {
+            throw new RuntimeException("Something went wrong ;/", e);
+        }
     }
 
     @Override
     protected void start() throws Exception
     {
         SpigotConfig.bungee = true; // force enable IP forwarding
-        this.getPlatformConnector().runTaskAsynchronously(() -> this.thisServer.updateServerState(ServerState.WORKING)); // on bukkit it will be invoked after server start
-        this.identifyServer();
+
+        this.getPlatformConnector().runTaskAsynchronously(() ->
+        {
+            final ServerImpl impl = (ServerImpl) this.getServer().get();
+            impl.setServerState(ServerState.WORKING);
+            this.getServer().upload();
+        }); // on bukkit it will be invoked after server start
+
         this.registerEvents(new JoinLeftListener(), new ChatListener(), this.windowManager);
     }
 
     @Override
     protected void stop()
     {
-        if (! this.thisServer.isLaunchedViaDaemon())
+        if (! this.getServer().get().isLaunchedViaDaemon())
         {
-            this.thisServer.delete(); // remove key from redis is that server is not managed by daemon
+            this.getServer().delete(); // remove key from redis is that server is not managed by daemon
         }
     }
 
@@ -98,23 +121,28 @@ public class BukkitApiCore extends ApiCore
         }
     }
 
-    private void identifyServer() throws Exception
+    private UUID getServerId() throws ConfigurationException
     {
         final Properties properties = System.getProperties();
         if (properties.containsKey("northplatform.serverid")) // Konfiguracja serwera pobierana jest z Redisa
         {
             this.debug("Server is identified by northplatform.serverid");
-            this.thisServer = (ServerImpl) this.getNetworkManager().getServer(UUID.fromString(properties.get("northplatform.serverid").toString()));
+            return UUID.fromString(properties.getProperty("northplatform.serverid"));
         }
         else if (properties.containsKey("northplatform.servertype")) // Konfiguracja ręczna - serwer sam zgłasza się do Redisa
         {
             this.debug("Server identity is generated (northplatform.servertype)");
-            this.thisServer = new ServerImpl(UUID.randomUUID(), false, ServerType.valueOf(properties.get("northplatform.servertype").toString()), ServerState.STARTING, JoiningPolicy.EVERYONE);
-            this.thisServer.sendUpdate();
+            return UUID.randomUUID();
         }
         else
         {
             throw new ConfigurationException("Invalid startup parameters. Please specify northplatform.serverid or northplatform.servertype");
         }
+    }
+
+    private Server generateServer()
+    {
+        final Properties properties = System.getProperties();
+        return new ServerImpl(UUID.randomUUID(), false, ServerType.valueOf(properties.getProperty("northplatform.servertype")), ServerState.STARTING, JoiningPolicy.EVERYONE);
     }
 }

@@ -38,6 +38,7 @@ public class RpcManagerImpl extends Component implements IRpcManager
     @Override
     protected void enableComponent()
     {
+        this.addListeningContext0(this.getApiCore().getId());
     }
 
     @Override
@@ -48,12 +49,17 @@ public class RpcManagerImpl extends Component implements IRpcManager
     @Override
     public void addListeningContext(final String id)
     {
-        this.getApiCore().debug("addListeningContext(" + id + ")");
         if (this.getStatus().isDisabled())
         {
             this.getApiCore().getLogger().warning("Tried to register listeningContext while RpcManager is disabled");
             return;
         }
+        this.addListeningContext0(id);
+    }
+
+    private void addListeningContext0(final String id)
+    {
+        this.getApiCore().debug("addListeningContext0(" + id + ")");
         this.redisSubscriber.subscribe("rpc:" + id + ":invoke", this::handleMethodInvocation);
         this.redisSubscriber.subscribe("rpc:" + id + ":response", this::handleResponse);
     }

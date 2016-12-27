@@ -196,17 +196,12 @@ public class NetworkManager extends Component implements INetworkManager
      * @return informacje o serwerze.
      */
     @Override
-    public Server getServer(final UUID uuid)
+    public Value<Server> getServer(final UUID uuid)
     {
-        try (final Jedis jedis = this.jedisPool.getResource())
-        {
-            final byte[] serverData = jedis.get((SERVER + uuid).getBytes());
-            if (serverData == null)
-            {
-                return null;
-            }
-            return this.msgPack.deserialize(ServerImpl.class, serverData);
-        }
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        final Value serverValue = this.observationManager.get(ServerImpl.class, SERVER + uuid);
+        //noinspection unchecked
+        return serverValue;
     }
 
     @Override

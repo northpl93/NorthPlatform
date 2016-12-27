@@ -4,8 +4,10 @@ import java.util.UUID;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
+import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerImpl;
 import pl.north93.zgame.api.global.network.server.ServerState;
+import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class NetworkControllerRpcImpl implements NetworkControllerRpc
 {
@@ -23,20 +25,21 @@ public class NetworkControllerRpcImpl implements NetworkControllerRpc
     @Override
     public void updateServerState(final UUID serverId, final ServerState serverState)
     {
-        final ServerImpl server = (ServerImpl) API.getNetworkManager().getServer(serverId);
-        if (server == null)
+        final Value<Server> server = API.getNetworkManager().getServer(serverId);
+        if (!server.isAvailable())
         {
             API.getLogger().warning("Not found server with ID " + serverId + " while updating server state to " + serverState);
             return;
         }
-        server.updateServerState(serverState);
+        ((ServerImpl) server.get()).setServerState(serverState);
+        server.upload();
     }
 
     @Override
     public void removeServer(final UUID serverId)
     {
-        final ServerImpl server = (ServerImpl) API.getNetworkManager().getServer(serverId);
-        if (server == null)
+        final Value<Server> server = API.getNetworkManager().getServer(serverId);
+        if (!server.isAvailable())
         {
             API.getLogger().warning("Not found server with ID " + serverId + " while removing server ");
             return;

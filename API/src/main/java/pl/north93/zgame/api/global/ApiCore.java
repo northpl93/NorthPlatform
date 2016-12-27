@@ -40,11 +40,6 @@ public abstract class ApiCore
     private final TemplateManager    messagePackTemplates;
     private final RedisSubscriber    redisSubscriber;
     private final IRpcManager        rpcManager;
-    // - - - //
-    private       UsernameCache      usernameCache;
-    private       INetworkManager    networkManager;
-    private       PermissionsManager permissionsManager;
-    //private       PlayersDao         playersDao;
 
     public ApiCore(final Platform platform, final PlatformConnector platformConnector)
     {
@@ -55,7 +50,6 @@ public abstract class ApiCore
         this.messagePackTemplates = new TemplateManagerImpl();
         this.redisSubscriber = new RedisSubscriberImpl();
         this.rpcManager = new RpcManagerImpl();
-        //this.playersDao = new PlayersDao();
         try
         {
             API.setApiCore(this);
@@ -82,6 +76,16 @@ public abstract class ApiCore
         this.getLogger().info("Starting North API Core.");
         this.setupInstrumentation();
 
+        try
+        {
+            this.init();
+        }
+        catch (final Exception e)
+        {
+            e.printStackTrace();
+            return;
+        }
+
         this.componentManager.doComponentScan(this.getClass().getClassLoader()); // scan for builtin API components
         this.componentManager.injectComponents(this.messagePackTemplates, this.redisSubscriber, this.rpcManager); // inject base API components
         this.componentManager.enableAllComponents(); // enable all components
@@ -89,10 +93,6 @@ public abstract class ApiCore
         final File components = this.getFile("components");
         DioriteUtils.createDirectory(components);
         this.componentManager.doComponentScan(components); // Scan componets directory and enable components
-
-        this.usernameCache = this.componentManager.getComponent("API.MinecraftNetwork.UsernameCache");
-        this.networkManager = this.componentManager.getComponent("API.MinecraftNetwork.NetworkManager");
-        this.permissionsManager = this.componentManager.getComponent("API.MinecraftNetwork.PermissionsManager");
 
         try
         {
@@ -103,7 +103,6 @@ public abstract class ApiCore
             e.printStackTrace();
             this.getPlatformConnector().stop();
         }
-        this.rpcManager.addListeningContext(this.getId());
         this.getLogger().info("Client id is " + this.getId());
     }
 
@@ -141,27 +140,22 @@ public abstract class ApiCore
         this.getLogger().info("North API Core stopped.");
     }
 
-    //public PlayersDao getPlayersDao()
-    //{
-    //    return this.playersDao;
-    //}
-
     @ProvidesComponent
     public INetworkManager getNetworkManager()
     {
-        return this.networkManager;
+        return this.componentManager.getComponent("API.MinecraftNetwork.NetworkManager");
     }
 
     @ProvidesComponent
     public PermissionsManager getPermissionsManager()
     {
-        return this.permissionsManager;
+        return this.componentManager.getComponent("API.MinecraftNetwork.PermissionsManager");
     }
 
     @ProvidesComponent
     public UsernameCache getUsernameCache()
     {
-        return this.usernameCache;
+        return this.componentManager.getComponent("API.MinecraftNetwork.UsernameCache");
     }
 
     @ProvidesComponent
@@ -217,7 +211,9 @@ public abstract class ApiCore
      */
     public abstract File getFile(final String name);
 
-    protected abstract void start() throws Exception;
+    protected abstract void init() throws Exception; // before components. Good place to provide client ID.
+
+    protected abstract void start() throws Exception; // after components
 
     protected abstract void stop() throws Exception;
 }

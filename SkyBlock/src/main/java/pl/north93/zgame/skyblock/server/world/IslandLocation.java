@@ -1,4 +1,4 @@
-package pl.north93.zgame.skyblock.server;
+package pl.north93.zgame.skyblock.server.world;
 
 import java.util.ArrayList;
 import java.util.HashSet;

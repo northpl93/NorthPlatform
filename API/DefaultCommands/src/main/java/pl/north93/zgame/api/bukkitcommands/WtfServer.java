@@ -21,7 +21,7 @@ public class WtfServer extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        final Server server = this.api.getServer();
+        final Server server = this.api.getServer().get();
         sender.sendMessage("ID serwera: " + this.api.getId());
         sender.sendMessage("Nazwa w proxy: " + server.getProxyName());
         sender.sendMessage("Typ serwera: " + server.getType());

@@ -21,6 +21,7 @@ import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.component.IComponentManager;
 import pl.north93.zgame.api.global.component.IExtensionPoint;
+import pl.north93.zgame.api.global.component.annotations.SkipInjections;
 
 class ClassScanner
 {
@@ -39,6 +40,11 @@ class ClassScanner
 
         for (final Class<?> aClass : reflections.getSubTypesOf(Object.class))
         {
+            if (aClass.isAnnotationPresent(SkipInjections.class))
+            {
+                continue;
+            }
+
             try
             {
                 final CtClass ctClass = classPool.get(aClass.getName());

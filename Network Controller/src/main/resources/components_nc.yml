@@ -35,5 +35,6 @@ components:
     dependencies:
       - NetworkController.Core
       - NetworkController.ConfigBroadcaster
+      - API.Database.Redis.Observer
       - API.Database.StorageConnector
       - API.Database.Redis.MessagePackSerializer

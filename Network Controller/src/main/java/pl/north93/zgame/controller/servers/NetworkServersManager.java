@@ -10,6 +10,7 @@ import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.deployment.RemoteDaemon;
 import pl.north93.zgame.api.global.deployment.ServersGroup;
 import pl.north93.zgame.api.global.network.server.ServerImpl;
+import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.controller.ConfigBroadcaster;
 import pl.north93.zgame.controller.servers.allocators.AllocationProcessor;
 
@@ -17,6 +18,8 @@ public class NetworkServersManager extends Component implements INetworkServersM
 {
     @InjectComponent("NetworkController.ConfigBroadcaster")
     private ConfigBroadcaster           configBroadcaster;
+    @InjectComponent("API.Database.Redis.Observer")
+    private IObservationManager         observationManager;
     private final AllocationProcessor   allocationProcessor;
 
     public NetworkServersManager()
@@ -81,7 +84,7 @@ public class NetworkServersManager extends Component implements INetworkServersM
         for (int i = 0; i < servers; i++)
         {
             final ServerImpl server = ServerFactory.INSTANCE.createNewServer(serversGroup);
-            server.sendUpdate(); // send server data to redis.
+            this.observationManager.of(server).upload();
             this.allocationProcessor.queueServerDeployment(server); // queue server for deployment.
         }
     }

@@ -9,6 +9,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.msgpack.core.MessageBufferPacker;
 import org.msgpack.core.MessageUnpacker;
 
+import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.redis.messaging.Template;
 import pl.north93.zgame.api.global.redis.messaging.TemplateGeneric;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
@@ -21,22 +23,34 @@ class DynamicTemplate<T> implements TemplateGeneric<T>
     private Class<?>[] genericTypes;
     private ParameterizedType parameterizedType;
 
-    private Class<?> findClass(final String className)
+    private static Class<?> findClass(final String className)
     {
-        final Class<?> clazz = classCache.get(className);
+        Class<?> clazz = classCache.get(className);
         if (clazz == null)
         {
-            final Class<?> fromClassLoader;
             try
             {
-                fromClassLoader = Class.forName(className);
+                clazz = Class.forName(className);
             }
             catch (final ClassNotFoundException e)
             {
-                throw new RuntimeException(e);
+                for (final IComponentBundle iComponentBundle : API.getApiCore().getComponentManager().getComponents())
+                {
+                    try
+                    {
+                        clazz = Class.forName(className, true, iComponentBundle.getClassLoader());
+                    }
+                    catch (final ClassNotFoundException ignored)
+                    {
+                    }
+                }
+
+                if (clazz == null)
+                {
+                    throw new RuntimeException("I can't find class " + className);
+                }
             }
-            classCache.put(className, fromClassLoader);
-            return fromClassLoader;
+            classCache.put(className, clazz);
         }
         return clazz;
     }
@@ -66,7 +80,7 @@ class DynamicTemplate<T> implements TemplateGeneric<T>
     @Override
     public T deserializeObject(final TemplateManager templateManager, final MessageUnpacker unpacker) throws Exception
     {
-        final Template<T> template = (Template<T>) templateManager.getTemplate(this.findClass(unpacker.unpackString()));
+        final Template<T> template = (Template<T>) templateManager.getTemplate(findClass(unpacker.unpackString()));
         if (template instanceof TemplateGeneric)
         {
             TemplateGeneric templateGeneric = (TemplateGeneric) template;

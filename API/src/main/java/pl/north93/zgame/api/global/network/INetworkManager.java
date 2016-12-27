@@ -37,7 +37,7 @@ public interface INetworkManager
 
     ServerPattern getServerPattern(String name);
 
-    Server getServer(UUID uuid);
+    Value<Server> getServer(UUID uuid);
 
     int onlinePlayersCount();
 

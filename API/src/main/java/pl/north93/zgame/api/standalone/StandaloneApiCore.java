@@ -40,6 +40,11 @@ public class StandaloneApiCore extends ApiCore
     }
 
     @Override
+    protected void init() throws Exception
+    {
+    }
+
+    @Override
     protected void start()
     {
         this.logger.info("Initialising standalone application");

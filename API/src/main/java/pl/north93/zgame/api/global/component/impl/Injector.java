@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -74,6 +75,18 @@ public class Injector
                 try
                 {
                     field.set(instance, API.getApiCore());
+                }
+                catch (final IllegalAccessException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+            if (field.getType().equals(Logger.class))
+            {
+                try
+                {
+                    field.set(instance, API.getApiCore().getLogger());
                 }
                 catch (final IllegalAccessException e)
                 {

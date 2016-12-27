@@ -1,6 +1,7 @@
 package pl.north93.zgame.api.global.redis.observable.impl;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -45,6 +46,24 @@ class ValueImpl<T> implements Value<T>
     }
 
     @Override
+    public T getOr(final Supplier<T> defaultValue)
+    {
+        if (this.isCached())
+        {
+            return this.cache;
+        }
+        else if (this.isAvailable())
+        {
+            return this.getFromRedis();
+        }
+        else
+        {
+            this.set(defaultValue.get());
+            return this.cache;
+        }
+    }
+
+    @Override
     public void get(final Consumer<T> callback)
     {
         if (this.isCached())
@@ -76,6 +95,16 @@ class ValueImpl<T> implements Value<T>
     {
         this.cache = newValue;
         this.upload();
+    }
+
+    @Override
+    public Value<T> setIfUnavailable(final Supplier<T> defaultValue)
+    {
+        if (! this.isAvailable())
+        {
+            this.set(defaultValue.get());
+        }
+        return this;
     }
 
     @Override

@@ -4,11 +4,11 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 
-public class IslandCmd extends NorthCommand
+public class CreateCmd extends NorthCommand
 {
-    public IslandCmd()
+    public CreateCmd()
     {
-        super("island", "is", "wyspa");
+        super("create", "stworz");
     }
 
     @Override

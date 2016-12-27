@@ -14,6 +14,7 @@ import redis.clients.jedis.Jedis;
 
 class RpcInvocationHandler implements InvocationHandler
 {
+    private static final Object[]      EMPTY_ARRAY    = new Object[0];
     private static final AtomicInteger requestCounter = new AtomicInteger(0);
     private final RpcManagerImpl       rpcManager;
     private final RpcObjectDescription objectDescription;
@@ -34,7 +35,7 @@ class RpcInvocationHandler implements InvocationHandler
         final int methodId = methodDescription.getId();
         final int requestId = requestCounter.getAndIncrement();
 
-        final RpcInvokeMessage rpcInvokeMessage = new RpcInvokeMessage(API.getApiCore().getId(), this.objectDescription.getClassId(), requestId, methodId, args);
+        final RpcInvokeMessage rpcInvokeMessage = new RpcInvokeMessage(API.getApiCore().getId(), this.objectDescription.getClassId(), requestId, methodId, args == null ? EMPTY_ARRAY : args);
         try (final Jedis jedis = this.rpcManager.getJedisPool().getResource())
         {
             jedis.publish(this.invokeChannel, this.rpcManager.getMsgPack().serialize(rpcInvokeMessage));
