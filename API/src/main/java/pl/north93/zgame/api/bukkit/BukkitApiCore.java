@@ -8,6 +8,7 @@ import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 
 import org.spigotmc.SpigotConfig;
@@ -143,6 +144,6 @@ public class BukkitApiCore extends ApiCore
     private Server generateServer()
     {
         final Properties properties = System.getProperties();
-        return new ServerImpl(UUID.randomUUID(), false, ServerType.valueOf(properties.getProperty("northplatform.servertype")), ServerState.STARTING, JoiningPolicy.EVERYONE);
+        return new ServerImpl(this.serverId, false, ServerType.valueOf(properties.getProperty("northplatform.servertype")), ServerState.STARTING, JoiningPolicy.EVERYONE, Bukkit.getIp(), Bukkit.getPort());
     }
 }

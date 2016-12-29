@@ -28,8 +28,6 @@ import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.messaging.impl.TemplateManagerImpl;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.impl.RpcManagerImpl;
-import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
-import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriberImpl;
 
 public abstract class ApiCore
 {
@@ -38,7 +36,6 @@ public abstract class ApiCore
     private final Platform           platform;
     private final PlatformConnector  connector;
     private final TemplateManager    messagePackTemplates;
-    private final RedisSubscriber    redisSubscriber;
     private final IRpcManager        rpcManager;
 
     public ApiCore(final Platform platform, final PlatformConnector platformConnector)
@@ -48,7 +45,6 @@ public abstract class ApiCore
         this.instrumentationClient = new LocalAgentClient();
         this.componentManager = new ComponentManagerImpl(this);
         this.messagePackTemplates = new TemplateManagerImpl();
-        this.redisSubscriber = new RedisSubscriberImpl();
         this.rpcManager = new RpcManagerImpl();
         try
         {
@@ -87,7 +83,7 @@ public abstract class ApiCore
         }
 
         this.componentManager.doComponentScan(this.getClass().getClassLoader()); // scan for builtin API components
-        this.componentManager.injectComponents(this.messagePackTemplates, this.redisSubscriber, this.rpcManager); // inject base API components
+        this.componentManager.injectComponents(this.messagePackTemplates, this.rpcManager); // inject base API components
         this.componentManager.enableAllComponents(); // enable all components
         this.componentManager.setAutoEnable(true); // auto enable all newly discovered components
         final File components = this.getFile("components");
@@ -159,6 +155,7 @@ public abstract class ApiCore
     }
 
     @ProvidesComponent
+    @Deprecated
     public TemplateManager getMessagePackTemplates()
     {
         return this.messagePackTemplates;

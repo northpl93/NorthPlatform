@@ -35,6 +35,7 @@ public class IsTestCmd extends NorthCommand
         sender.sendMessage("&cIsland upper left corner: x:" + corners.getLeft().getX() + " / z:" + corners.getLeft().getZ());
         sender.sendMessage("&cIsland lower right corner: x:" + corners.getRight().getX() + " / z:" + corners.getRight().getZ());
         sender.sendMessage("&cIsland chunks:" + islandLocation.getIslandChunks());
+        sender.sendMessage("&cCalculated island chunks count: " + islandLocation.chunksCount());
 
         final Location first = corners.getLeft();
         first.setY(5);

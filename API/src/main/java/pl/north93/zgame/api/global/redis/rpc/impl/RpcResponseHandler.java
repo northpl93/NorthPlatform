@@ -54,6 +54,7 @@ class RpcResponseHandler
             catch (final Throwable throwable)
             {
                 this.rpcManager.sendResponse(rpcInvokeMessage.getSender(), rpcInvokeMessage.getRequestId(), new RpcExceptionInfo(throwable));
+                API.getLogger().log(Level.SEVERE, "Something went wrong while executing RPC method. (this exception is also send to remote)", throwable);
             }
         }
         else

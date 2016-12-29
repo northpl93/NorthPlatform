@@ -4,6 +4,8 @@ import pl.north93.zgame.api.global.network.server.ServerProxyData;
 
 public interface IBungeeServersManager
 {
+    void synchronizeServers();
+
     void addServer(ServerProxyData proxyData);
 
     void removeServer(String serverName);

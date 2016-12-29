@@ -25,6 +25,8 @@ public interface INetworkManager
 
     Set<Server> getServers();
 
+    Set<Server> getServers(String serversGroup);
+
     Set<ServersGroup> getServersGroups();
 
     ServersGroup getServersGroup(String name);

@@ -2,15 +2,15 @@ package pl.north93.zgame.api.global.redis.subscriber;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.data.StorageConnector;
@@ -22,9 +22,11 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
 {
     private final SubscriptionReceiver             subscriptionReceiver   = new SubscriptionReceiver();
     private final Map<String, SubscriptionHandler> subscriptionHandlerMap = new HashMap<>();
+    private final ExecutorService                  executor               = Executors.newCachedThreadPool();
+    private final CountDownLatch                   subscriptionLock       = new CountDownLatch(1);
+    private       boolean                          isSubscribed;
     @InjectComponent("API.Database.StorageConnector")
     private StorageConnector storageConnector;
-    private boolean   subscriberScheduled;
 
     @Override
     protected void enableComponent()
@@ -35,6 +37,7 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
     protected void disableComponent()
     {
         this.unSubscribeAll();
+        this.executor.shutdown();
     }
 
     @Override
@@ -42,25 +45,26 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
     {
         this.subscriptionHandlerMap.put(channel, handler);
         this.getApiCore().debug("Added subscription for " + channel);
-        if (! this.subscriberScheduled)
+        if (! this.subscriptionReceiver.isSubscribed() && ! this.isSubscribed)
         {
-            this.getApiCore().debug("Subscriber task has been scheduled");
-            if (this.getApiCore().getPlatform() == Platform.BUKKIT)
+            this.isSubscribed = true;
+            this.executor.execute(() ->
             {
-                final Thread thread = new Thread(new SubscriberTask(), "Redis Subsciber");
-                thread.setDaemon(true);
-                thread.start();
-            }
-            else
-            {
-                this.getApiCore().getPlatformConnector().runTaskAsynchronously(new SubscriberTask());
-            }
-            this.subscriberScheduled = true;
+                this.getLogger().info("jedis.subscribe invoked");
+                try (final Jedis jedis = this.storageConnector.getJedisPool().getResource())
+                {
+                    jedis.subscribe(this.subscriptionReceiver, channel.getBytes());
+                }
+            });
             return;
         }
-        if (! this.subscriptionReceiver.isSubscribed())
+        try
         {
-            return;
+            this.subscriptionLock.await();
+        }
+        catch (final InterruptedException e)
+        {
+            e.printStackTrace();
         }
         this.subscriptionReceiver.subscribe(channel.getBytes());
     }
@@ -81,30 +85,14 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
         this.subscriptionHandlerMap.clear();
     }
 
-    private class SubscriberTask implements Runnable
-    {
-        @Override
-        public void run()
-        {
-            RedisSubscriberImpl.this.getApiCore().getLogger().info("Subscriber task started");
-            try (final Jedis jedis = RedisSubscriberImpl.this.storageConnector.getJedisPool().getResource())
-            {
-                final Set<String> stringChannels = RedisSubscriberImpl.this.subscriptionHandlerMap.keySet();
-                final Iterator<String> iterator = stringChannels.iterator();
-                final byte[][] channels = new byte[stringChannels.size()][];
-                int id = 0;
-                while (iterator.hasNext())
-                {
-                    channels[id++] = iterator.next().getBytes();
-                }
-
-                jedis.subscribe(RedisSubscriberImpl.this.subscriptionReceiver, channels);
-            }
-        }
-    }
-
     private class SubscriptionReceiver extends BinaryJedisPubSub
     {
+        @Override
+        public void onSubscribe(final byte[] channel, final int subscribedChannels)
+        {
+            RedisSubscriberImpl.this.subscriptionLock.countDown();
+        }
+
         @Override
         public void onMessage(final byte[] byteChannel, final byte[] message)
         {
@@ -117,14 +105,17 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
                 return;
             }
 
-            try
+            RedisSubscriberImpl.this.executor.execute(() ->
             {
-                subscriptionHandler.handle(channel, message);
-            }
-            catch (final Exception e)
-            {
-                RedisSubscriberImpl.this.getApiCore().getLogger().log(Level.SEVERE, "An exception has been thrown while handling message from Redis. Channel:" + channel + ", Message:" + Arrays.toString(message), e);
-            }
+                try
+                {
+                    subscriptionHandler.handle(channel, message);
+                }
+                catch (final Exception e)
+                {
+                    RedisSubscriberImpl.this.getApiCore().getLogger().log(Level.SEVERE, "An exception has been thrown while handling message from Redis. Channel:" + channel + ", Message:" + Arrays.toString(message), e);
+                }
+            });
         }
     }
 

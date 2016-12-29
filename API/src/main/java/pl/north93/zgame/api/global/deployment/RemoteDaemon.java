@@ -7,14 +7,15 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.redis.messaging.RedisUpdatable;
+import pl.north93.zgame.api.global.redis.observable.ObjectKey;
+import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 
 /**
  * Obiekt przechowujący dane o demonie.
  * Właściwie tylko do celów informacyjnych.
  */
-public class RemoteDaemon implements RedisUpdatable
+public class RemoteDaemon implements ProvidingRedisKey
 {
     private String  name;
     private String  hostName;
@@ -24,9 +25,9 @@ public class RemoteDaemon implements RedisUpdatable
     private Boolean isAcceptingServers;
 
     @Override
-    public String getRedisKey()
+    public ObjectKey getKey()
     {
-        return DAEMON + this.name;
+        return new ObjectKey(DAEMON + this.name);
     }
 
     public String getName()

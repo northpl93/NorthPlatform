@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import pl.north93.zgame.api.global.component.annotations.ProvidesComponent;
 import pl.north93.zgame.api.global.exceptions.SingletonException;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 
 public final class API
@@ -32,13 +31,6 @@ public final class API
     public static void debug(final Object object)
     {
         apiCore.debug(object);
-    }
-
-    @ProvidesComponent
-    @Deprecated
-    public static TemplateManager getMessagePackTemplates()
-    {
-        return apiCore.getMessagePackTemplates();
     }
 
     @ProvidesComponent

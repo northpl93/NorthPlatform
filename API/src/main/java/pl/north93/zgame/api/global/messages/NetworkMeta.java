@@ -46,6 +46,10 @@ public class NetworkMeta
     @CfgStringDefault("Network Platform by NorthPL")
     public String serverListMotd; // Wiadomosc dnia na liscie serwerow
 
+    @CfgComment("Domyślna grupa serwerów z którą zostanie połączony gracz")
+    @CfgStringDefault("default")
+    public String defaultServersGroup;
+
     @Override
     public String toString()
     {

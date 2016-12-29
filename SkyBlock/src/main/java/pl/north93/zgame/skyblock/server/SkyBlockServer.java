@@ -62,6 +62,4 @@ public class SkyBlockServer extends Component
     {
         return this.skyBlockConfig;
     }
-
-    
 }

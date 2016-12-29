@@ -2,6 +2,7 @@ package pl.north93.zgame.api.global.component;
 
 import java.util.Collection;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -44,6 +45,11 @@ public abstract class Component
     protected final ApiCore getApiCore()
     {
         return this.apiCore;
+    }
+
+    protected final Logger getLogger()
+    {
+        return this.apiCore.getLogger();
     }
 
     protected final <T extends Component> T getComponent(final String name)

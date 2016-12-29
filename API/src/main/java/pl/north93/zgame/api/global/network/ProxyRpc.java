@@ -1,5 +1,6 @@
 package pl.north93.zgame.api.global.network;
 
+import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.redis.rpc.annotation.DoNotWaitForResponse;
 
 public interface ProxyRpc
@@ -12,4 +13,16 @@ public interface ProxyRpc
 
     @DoNotWaitForResponse
     void connectPlayer(String nick, String serverName);
+
+    @DoNotWaitForResponse
+    void connectPlayerToServersGroup(String nick, String serversGroup);
+
+    @DoNotWaitForResponse
+    void addServer(ServerProxyData proxyData);
+
+    @DoNotWaitForResponse
+    void removeServer(String serverName);
+
+    @DoNotWaitForResponse
+    void removeAllServers();
 }

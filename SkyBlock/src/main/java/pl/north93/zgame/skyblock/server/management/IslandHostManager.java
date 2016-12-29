@@ -13,7 +13,9 @@ import org.bukkit.WorldType;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.skyblock.api.IIslandHostManager;
+import pl.north93.zgame.skyblock.api.IslandData;
 import pl.north93.zgame.skyblock.api.cfg.IslandConfig;
+import pl.north93.zgame.skyblock.api.utils.Coords2D;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.world.WorldManager;
 
@@ -24,7 +26,7 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
 {
     @InjectComponent("SkyBlock.Server")
     private SkyBlockServer     skyBlockServer;
-    @InjectComponent("")
+    @InjectComponent("API.Database.Redis.RPC")
     private IRpcManager        rpcManager;
     private Logger             logger;
     private List<WorldManager> worldManagers;
@@ -62,13 +64,43 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
     @Override
     public void stop()
     {
+    }
 
+    /**
+     * Zwraca menadżera światów dla danego typu wyspy.
+     *
+     * @param islandType nazwa typu wyspy.
+     * @return menadżer światów.
+     */
+    private WorldManager getWorldManager(final String islandType)
+    {
+        for (final WorldManager worldManager : this.worldManagers)
+        {
+            if (islandType.equals(worldManager.getIslandConfig().getName()))
+            {
+                return worldManager;
+            }
+        }
+       throw new IllegalArgumentException("Can't find WorldManager for " + islandType);
     }
 
     @Override
-    public void islandAdded(final UUID islandId)
+    public Integer getIslands()
     {
-        this.logger.info("[SkyBlock] Received info about new island: " + islandId);
+        return this.worldManagers.stream().mapToInt(WorldManager::getIslandsCount).sum();
+    }
+
+    @Override
+    public Coords2D getFirstFreeLocation(final String islandType)
+    {
+        return this.getWorldManager(islandType).getFirstFreeLocation();
+    }
+
+    @Override
+    public void islandAdded(final IslandData islandData)
+    {
+        this.logger.info("[SkyBlock] Received info about new island: " + islandData);
+        this.getWorldManager(islandData.getIslandType()).islandAdded(islandData);
     }
 
     @Override

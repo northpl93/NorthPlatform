@@ -7,6 +7,8 @@ public abstract class StandaloneApp
      */
     public abstract String getId();
 
+    public abstract void init(StandaloneApiCore apiCore);
+
     public abstract void start(StandaloneApiCore apiCore);
 
     public abstract void stop();

@@ -8,6 +8,7 @@ import org.bukkit.World;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.skyblock.api.IslandData;
 import pl.north93.zgame.skyblock.api.cfg.IslandConfig;
 import pl.north93.zgame.skyblock.api.utils.Coords2D;
 import pl.north93.zgame.skyblock.api.utils.SpiralOut;
@@ -23,6 +24,7 @@ public class WorldManager
     @InjectComponent("SkyBlock.Server")
     private SkyBlockServer        skyBlockServer;
     private Logger                logger;
+    private final IslandLocation  locationHelper;
     private final IslandConfig    islandConfig;
     private final World           world;
     private final IslandList      islands;
@@ -33,13 +35,14 @@ public class WorldManager
         this.islandConfig = islandConfig;
         this.world = world;
         this.islands = new IslandList();
+        this.locationHelper = new IslandLocation(world, 0, 0, islandConfig.getRadius()); // helper location object
         this.availableCoords = new ArrayBlockingQueue<>(100);
     }
 
     public void init()
     {
         this.logger.info("[SkyBlock] Downloading all islands in this world...");
-        this.skyBlockServer.getIslandDao().getAllIsland(this.apiCore.getServer().get().getUuid(), this.islandConfig.getName()).forEach(this.islands::addIsland);
+        this.skyBlockServer.getIslandDao().getAllIslands(this.apiCore.getServer().get().getUuid(), this.islandConfig.getName()).stream().map(this::constructIsland).forEach(this.islands::addIsland);
         this.buildAvailableLocations();
         this.logger.info("[SkyBlock] World manager is ready.");
     }
@@ -59,17 +62,48 @@ public class WorldManager
         while (this.availableCoords.size() < 100);
     }
 
+    // buduje obiekt wyspy na podstawie informacji o niej
+    private Island constructIsland(final IslandData islandData)
+    {
+        final int radius = this.islandConfig.getRadius();
+        final Coords2D islandLoc = islandData.getIslandLocation();
+        final int diameter = radius * 2;
+        final int side = (int) Math.ceil((double) diameter / 16D);
+
+        final int centerChunkX = side * 2 * islandLoc.getX();
+        final int centerChunkZ = side * 2 * islandLoc.getZ();
+
+        return new Island(islandData, new IslandLocation(this.world, centerChunkX, centerChunkZ, radius));
+    }
+
     public World getWorld()
     {
         return this.world;
     }
 
-    public Coords2D getFirstFreeLocation()
+    public IslandConfig getIslandConfig()
+    {
+        return this.islandConfig;
+    }
+
+    public int getIslandsCount() // zwraca ilość wysp na tym świecie.
+    {
+        return this.islands.countIslands();
+    }
+
+    public Coords2D getFirstFreeLocation() // zwraca pierwszą wolną wyspę od środka
     {
         if (this.availableCoords.isEmpty())
         {
             this.buildAvailableLocations(); // we need more available locations!
         }
         return this.availableCoords.poll();
+    }
+
+    public void islandAdded(final IslandData islandData)
+    {
+        final Island island = this.constructIsland(islandData);
+        this.islands.addIsland(island);
+        island.loadSchematic();
     }
 }

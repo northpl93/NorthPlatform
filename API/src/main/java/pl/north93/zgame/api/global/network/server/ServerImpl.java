@@ -21,6 +21,8 @@ import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 public class ServerImpl implements Server, ServerProxyData
 {
     private UUID          serverId;
+    private String        connectIp;
+    private Integer       connectPort;
     private Boolean       isLaunchedViaDaemon;
     private ServerType    serverType;
     private ServerState   serverState;
@@ -36,18 +38,20 @@ public class ServerImpl implements Server, ServerProxyData
     {
     }
 
-    public ServerImpl(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy)
+    public ServerImpl(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy, final String connectIp, final Integer connectPort)
     {
         this.serverId = serverId;
+        this.connectIp = connectIp;
+        this.connectPort = connectPort;
         this.isLaunchedViaDaemon = isLaunchedViaDaemon;
         this.serverType = serverType;
         this.serverState = serverState;
         this.joiningPolicy = joiningPolicy;
     }
 
-    public ServerImpl(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy, final ServersGroup serversGroup, final ServerPattern serverPattern)
+    public ServerImpl(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy, final String connectIp, final Integer connectPort, final ServersGroup serversGroup, final ServerPattern serverPattern)
     {
-        this(serverId, isLaunchedViaDaemon, serverType, serverState, joiningPolicy);
+        this(serverId, isLaunchedViaDaemon, serverType, serverState, joiningPolicy, connectIp, connectPort);
         this.serversGroup = serversGroup;
         this.serverPattern = serverPattern;
     }
@@ -109,13 +113,13 @@ public class ServerImpl implements Server, ServerProxyData
     @Override
     public String getConnectHost()
     {
-        return null;
+        return this.connectIp;
     }
 
     @Override
     public int getConnectPort()
     {
-        return 0;
+        return this.connectPort;
     }
 
     public void setServerState(final ServerState serverState)

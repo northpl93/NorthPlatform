@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 
 import net.md_5.bungee.api.ProxyServer;
 import pl.north93.zgame.api.bungee.cfg.ProxyInstanceConfig;
+import pl.north93.zgame.api.bungee.connection.ConnectionManager;
+import pl.north93.zgame.api.bungee.connection.NorthReconnectHandler;
 import pl.north93.zgame.api.bungee.listeners.PingListener;
 import pl.north93.zgame.api.bungee.listeners.PlayerListener;
 import pl.north93.zgame.api.bungee.mods.IBungeeServersManager;
@@ -25,6 +27,7 @@ public class BungeeApiCore extends ApiCore
 {
     private final Main            bungeePlugin;
     private IBungeeServersManager serversManager;
+    private ConnectionManager     connectionManager;
     private ProxyInstanceConfig   config;
 
     public BungeeApiCore(final Main bungeePlugin)
@@ -59,10 +62,18 @@ public class BungeeApiCore extends ApiCore
             this.getLogger().severe("Set ip_forward to true in config.yml");
             ProxyServer.getInstance().stop();
         }
-        this.getRpcManager().addRpcImplementation(ProxyRpc.class, new ProxyRpcImpl());
+        this.connectionManager = new ConnectionManager();
+        ProxyServer.getInstance().setReconnectHandler(new NorthReconnectHandler(this));
+
+        this.getRpcManager().addRpcImplementation(ProxyRpc.class, new ProxyRpcImpl(this));
+
         this.serversManager = new BungeeServersManager();
+        this.serversManager.synchronizeServers();
+
         this.sendProxyInfo();
+
         this.getPlatformConnector().runTaskAsynchronously(this::sendProxyInfo, 300);
+
         this.bungeePlugin.getProxy().getPluginManager().registerListener(this.bungeePlugin, new PingListener());
         this.bungeePlugin.getProxy().getPluginManager().registerListener(this.bungeePlugin, new PlayerListener(this));
     }
@@ -81,6 +92,11 @@ public class BungeeApiCore extends ApiCore
     public File getFile(final String name)
     {
         return new File(this.bungeePlugin.getDataFolder(), name);
+    }
+
+    public ConnectionManager getConnectionManager()
+    {
+        return this.connectionManager;
     }
 
     public ProxyInstanceConfig getProxyConfig()

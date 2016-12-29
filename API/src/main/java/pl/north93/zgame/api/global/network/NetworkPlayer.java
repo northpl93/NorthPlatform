@@ -11,7 +11,6 @@ import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.metadata.Metadatable;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.permissions.Group;
-import pl.north93.zgame.api.global.redis.messaging.RedisUpdatable;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
@@ -20,7 +19,7 @@ import pl.north93.zgame.api.global.utils.Messageable;
 /**
  * Reprezentuje gracza będącego online w sieci
  */
-public class NetworkPlayer implements Messageable, Metadatable, ProvidingRedisKey, RedisUpdatable
+public class NetworkPlayer implements Messageable, Metadatable, ProvidingRedisKey
 {
     private UUID      uuid;
     private String    nick;
@@ -30,12 +29,6 @@ public class NetworkPlayer implements Messageable, Metadatable, ProvidingRedisKe
     private Boolean   premium;
     private Group     group;
     private MetaStore meta = new MetaStore();
-
-    @Override
-    public String getRedisKey()
-    {
-        return this.getKey().getKey();
-    }
 
     @Override
     public ObjectKey getKey()
@@ -146,6 +139,11 @@ public class NetworkPlayer implements Messageable, Metadatable, ProvidingRedisKe
     public void connectTo(final ServerProxyData data)
     {
         this.getProxyRpc().connectPlayer(this.nick, data.getProxyName());
+    }
+
+    public void connectTo(final String serversGroupName)
+    {
+
     }
 
     private ProxyRpc getProxyRpc()

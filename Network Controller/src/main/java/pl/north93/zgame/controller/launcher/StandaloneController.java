@@ -18,6 +18,11 @@ public class StandaloneController extends StandaloneApp
     }
 
     @Override
+    public void init(final StandaloneApiCore apiCore)
+    {
+    }
+
+    @Override
     public void start(final StandaloneApiCore apiCore)
     {
         apiCore.getComponentManager().doComponentScan("components_nc.yml", this.getClass().getClassLoader());

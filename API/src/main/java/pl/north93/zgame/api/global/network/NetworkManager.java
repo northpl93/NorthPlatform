@@ -117,6 +117,15 @@ public class NetworkManager extends Component implements INetworkManager
         }
     }
 
+    @Override
+    public Set<Server> getServers(final String serversGroup)
+    {
+        return this.getServers().stream()
+                   .filter(server -> server.getServersGroup().isPresent())
+                   .filter(server -> server.getServersGroup().get().getName().equals(serversGroup))
+                   .collect(Collectors.toSet());
+    }
+
     /**
      * Zwraca aktualną listę grup serwerów skonfigurowanych w tej sieci.
      *

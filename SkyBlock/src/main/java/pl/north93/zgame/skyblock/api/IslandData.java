@@ -7,24 +7,26 @@ import java.util.UUID;
 import com.google.common.collect.Lists;
 
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
-import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackNullable;
 import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
 import pl.north93.zgame.skyblock.api.utils.Coords2D;
 import pl.north93.zgame.skyblock.api.utils.Coords3D;
 
-public final class Island
+/**
+ * Klasa przechowująca informacje o wyspie.
+ */
+public final class IslandData
 {
     private UUID       islandId;
     private UUID       ownerId;
     private UUID       serverId;
-    @MsgPackNullable // name is optional
+    private String     islandType;
     private String     name;
     private Coords2D   islandLocation;
     private Coords3D   homeLocation;
     @MsgPackCustomTemplate(ArrayListTemplate.class)
     private List<UUID> membersUuid;
 
-    public Island()
+    public IslandData()
     {
         this.membersUuid = new ArrayList<>(0);
     }
@@ -57,6 +59,16 @@ public final class Island
     public void setServerId(final UUID serverId)
     {
         this.serverId = serverId;
+    }
+
+    public String getIslandType()
+    {
+        return this.islandType;
+    }
+
+    public void setIslandType(final String islandType)
+    {
+        this.islandType = islandType;
     }
 
     public String getName()

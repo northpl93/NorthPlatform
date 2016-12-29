@@ -20,7 +20,6 @@ components:
   - name: API.Database.Redis.Subscriber
     enabled: true
     mainClass: "pl.north93.zgame.api.global.redis.subscriber.RedisSubscriberImpl"
-    autoInstantiate: false
     description: "Provides subscription API for redis database."
     dependencies:
       - API.Database.StorageConnector

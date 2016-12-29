@@ -26,6 +26,7 @@ public class ServerFactory
     public ServerImpl createNewServer(final ServersGroup serversGroup)
     {
         final ServerPattern serverPattern = API.getNetworkManager().getServerPattern(serversGroup.getServerPattern());
-        return new ServerImpl(UUID.randomUUID(), true, serversGroup.getServersType(), ALLOCATING, serversGroup.getJoiningPolicy(), serversGroup, serverPattern);
+        // TODO we need connection IP and port!
+        return new ServerImpl(UUID.randomUUID(), true, serversGroup.getServersType(), ALLOCATING, serversGroup.getJoiningPolicy(), "", 0, serversGroup, serverPattern);
     }
 }

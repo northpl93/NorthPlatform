@@ -28,6 +28,12 @@ public class IslandLocation
         this.centerChunkX = centerChunkX;
         this.centerChunkZ = centerChunkZ;
         this.radius = radius;
+        System.out.println("New island location: " + this); // TODO debug remove
+    }
+
+    public World getWorld()
+    {
+        return this.world;
     }
 
     public int getCenterChunkX()
@@ -45,11 +51,22 @@ public class IslandLocation
         return this.radius;
     }
 
+    /**
+     * Zwraca dwa przeciwne narożniki tej wyspy.
+     * Wysokość NIE jest ustalana.
+     *
+     * @return narożniki wyspy.
+     */
     public Pair<Location, Location> getIslandCorners()
     {
         return this.cuboidCorners(this.centerChunkX, this.centerChunkZ, this.radius);
     }
 
+    /**
+     * Zwraca ilość chunków składających się na tę wyspę.
+     *
+     * @return Zbiór chunków.
+     */
     public Set<Chunk> getIslandChunks()
     {
         final Set<Chunk> chunks = new HashSet<>();
@@ -58,7 +75,7 @@ public class IslandLocation
         final Chunk upperLeft = this.world.getChunkAt(corners.getLeft());
         final Chunk lowerRight = this.world.getChunkAt(corners.getRight());
 
-        for (int x = upperLeft.getX(); x <= lowerRight.getX(); x++)
+        for (int x = lowerRight.getX(); x <= upperLeft.getX(); x++)
         {
             for (int z = lowerRight.getZ(); z <= upperLeft.getZ(); z++)
             {
@@ -67,6 +84,16 @@ public class IslandLocation
         }
 
         return chunks;
+    }
+
+    /**
+     * Zwraca ilość chunków zajmowaną przez tą wyspę.
+     *
+     * @return zajmowana ilość chunków
+     */
+    public int chunksCount()
+    {
+        return this.getIslandChunks().size(); // todo better implementation
     }
 
     public static List<Block> blocksFromTwoPoints(Location loc1, Location loc2)
@@ -82,11 +109,11 @@ public class IslandLocation
         final int topBlockZ = (loc1.getBlockZ() < loc2.getBlockZ() ? loc2.getBlockZ() : loc1.getBlockZ());
         final int bottomBlockZ = (loc1.getBlockZ() > loc2.getBlockZ() ? loc2.getBlockZ() : loc1.getBlockZ());
 
-        for(int x = bottomBlockX; x <= topBlockX; x++)
+        for (int x = bottomBlockX; x <= topBlockX; x++)
         {
-            for(int z = bottomBlockZ; z <= topBlockZ; z++)
+            for (int z = bottomBlockZ; z <= topBlockZ; z++)
             {
-                for(int y = bottomBlockY; y <= topBlockY; y++)
+                for (int y = bottomBlockY; y <= topBlockY; y++)
                 {
                     final Block block = loc1.getWorld().getBlockAt(x, y, z);
 
