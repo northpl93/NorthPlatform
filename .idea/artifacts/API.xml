@@ -6,7 +6,6 @@
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/redis/clients/jedis/2.9.0/jedis-2.9.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-pool2/2.4.2/commons-pool2-2.4.2.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/javax/vecmath/vecmath/1.5.2/vecmath-1.5.2.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.2/commons-logging-1.2.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/msgpack/msgpack-core/0.8.9/msgpack-core-0.8.9.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/commons-io/commons-io/2.5/commons-io-2.5.jar" path-in-jar="/" />
@@ -17,6 +16,9 @@
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/ea/agentloader/ea-agent-loader/1.0.2/ea-agent-loader-1.0.2.jar" path-in-jar="/" />
       <element id="artifact" artifact-name="InstrumentationAgent" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/it/unimi/dsi/fastutil/7.0.12/fastutil-7.0.12.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/cetsoft/imcache-core/0.2.0/imcache-core-0.2.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/cetsoft/imcache-offheap/0.2.0/imcache-offheap-0.2.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/cetsoft/imcache/0.2.0/imcache-0.2.0.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

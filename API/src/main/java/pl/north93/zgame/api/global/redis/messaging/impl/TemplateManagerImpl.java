@@ -2,6 +2,7 @@ package pl.north93.zgame.api.global.redis.messaging.impl;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemp
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackUseTemplateOf;
 import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.BooleanTemplate;
+import pl.north93.zgame.api.global.redis.messaging.templates.DateTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.HashMapTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.IntegerTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.LongTemplate;
@@ -53,6 +55,7 @@ public class TemplateManagerImpl extends Component implements TemplateManager
         this.registerTemplate(Long.class, new LongTemplate());
         this.registerTemplate(String.class, new StringTemplate());
         this.registerTemplate(UUID.class, new UuidTemplate());
+        this.registerTemplate(Date.class, new DateTemplate());
     }
 
     @Override

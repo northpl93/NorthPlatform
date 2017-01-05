@@ -73,7 +73,7 @@ public class TemplateFactoryImpl implements TemplateFactory
             }
             else if (fieldType.isPrimitive()) // we doesn't support primitives
             {
-                throw new RuntimeException("Primitive values are unsupported.");
+                throw new RuntimeException("Primitive values are unsupported. (" + fieldType + ")");
             }
             else if (fieldType.isArray()) // support arrays
             {

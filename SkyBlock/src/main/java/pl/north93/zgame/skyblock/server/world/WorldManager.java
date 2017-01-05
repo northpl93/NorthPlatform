@@ -6,6 +6,9 @@ import java.util.logging.Logger;
 
 import org.bukkit.World;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.skyblock.api.IslandData;
@@ -86,6 +89,11 @@ public class WorldManager
         return this.islandConfig;
     }
 
+    public IslandList getIslands()
+    {
+        return this.islands;
+    }
+
     public int getIslandsCount() // zwraca ilość wysp na tym świecie.
     {
         return this.islands.countIslands();
@@ -100,10 +108,30 @@ public class WorldManager
         return this.availableCoords.poll();
     }
 
-    public void islandAdded(final IslandData islandData)
+    public void islandAdded(final IslandData islandData) // wywoływane gdy wyspa zotanie dodana
     {
         final Island island = this.constructIsland(islandData);
         this.islands.addIsland(island);
         island.loadSchematic();
+    }
+
+    public void islandRemoved(final IslandData islandData) // wywoływane gdy wyspa zostanie usunięta
+    {
+        final Island island = this.islands.getByCoords(islandData.getIslandLocation());
+        this.islands.removeIsland(island);
+        island.clear();
+        // add island location to queue of free locations???
+    }
+
+    public void islandUpdated(final IslandData islandData)
+    {
+        final Island island = this.islands.getByCoords(islandData.getIslandLocation());
+        island.updateIslandData(islandData);
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("islandConfig", this.islandConfig).append("world", this.world).append("islands", this.islands).append("availableCoords", this.availableCoords).toString();
     }
 }

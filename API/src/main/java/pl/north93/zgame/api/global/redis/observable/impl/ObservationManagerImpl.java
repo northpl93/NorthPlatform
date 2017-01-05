@@ -12,6 +12,7 @@ import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
+import pl.north93.zgame.api.global.redis.observable.ICacheBuilder;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
@@ -40,11 +41,15 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     {
         final String key = objectKey.getKey();
 
-        WeakReference<Value<?>> value = this.cache.get(key);
-        if (value == null || value.get() == null)
+        WeakReference<Value<?>> value;
+        synchronized (this.cache)
         {
-            value = new WeakReference<>(new ValueImpl<>(this, clazz, objectKey));
-            this.cache.put(key, value);
+            value = this.cache.get(key);
+            if (value == null || value.get() == null)
+            {
+                value = new WeakReference<>(new ValueImpl<>(this, clazz, objectKey));
+                this.cache.put(key, value);
+            }
         }
 
         //noinspection unchecked
@@ -64,6 +69,12 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         final Value<T> value = this.get((Class<T>) preCachedObject.getClass(), preCachedObject);
         value.set(preCachedObject);
         return value;
+    }
+
+    @Override
+    public <K, V> ICacheBuilder<K, V> cacheBuilder(final Class<K> keyClass, final Class<V> valueClass)
+    {
+        return new CacheBuilderImpl<>(this, keyClass, valueClass);
     }
 
     @Override

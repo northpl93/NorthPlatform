@@ -1,17 +1,18 @@
-package pl.north93.zgame.api.global.deployment;
+package pl.north93.zgame.api.global.deployment.serversgroup;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import org.diorite.cfg.annotations.CfgComment;
 
+import pl.north93.zgame.api.global.deployment.AllocationConfiguration;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.server.ServerType;
 
 /**
  * Reprezentuje grupę serwerów mogących pracować na różnych demonach.
  */
-public class ServersGroup
+public class ManagedServersGroup implements IServersGroup
 {
     @CfgComment("Nazwa tej grupy serwerów")
     private String                  name;
@@ -23,11 +24,11 @@ public class ServersGroup
     @CfgComment("Uprawnienia dostępu do tej grupy serwerów")
     private JoiningPolicy           joiningPolicy;
 
-    public ServersGroup()
+    public ManagedServersGroup()
     {
     }
 
-    public ServersGroup(final String name, final ServerType serversType, final String serverPattern, final AllocationConfiguration allocatorConfiguration, final JoiningPolicy joiningPolicy)
+    public ManagedServersGroup(final String name, final ServerType serversType, final String serverPattern, final AllocationConfiguration allocatorConfiguration, final JoiningPolicy joiningPolicy)
     {
         this.name = name;
         this.serversType = serversType;
@@ -36,6 +37,13 @@ public class ServersGroup
         this.joiningPolicy = joiningPolicy;
     }
 
+    @Override
+    public ServersGroupType getType()
+    {
+        return ServersGroupType.MANAGED;
+    }
+
+    @Override
     public String getName()
     {
         return this.name;
@@ -46,6 +54,7 @@ public class ServersGroup
         this.name = name;
     }
 
+    @Override
     public ServerType getServersType()
     {
         return this.serversType;
@@ -76,6 +85,7 @@ public class ServersGroup
         this.allocatorConfiguration = allocatorConfiguration;
     }
 
+    @Override
     public JoiningPolicy getJoiningPolicy()
     {
         return this.joiningPolicy;
@@ -98,7 +108,7 @@ public class ServersGroup
             return false;
         }
 
-        final ServersGroup that = (ServersGroup) o;
+        final ManagedServersGroup that = (ManagedServersGroup) o;
 
         return this.name.equals(that.name);
 

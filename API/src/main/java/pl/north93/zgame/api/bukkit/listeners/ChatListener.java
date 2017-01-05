@@ -5,7 +5,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.network.NetworkPlayer;
+import pl.north93.zgame.api.global.network.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class ChatListener implements Listener
@@ -13,7 +13,7 @@ public class ChatListener implements Listener
     @EventHandler
     public void onChat(final AsyncPlayerChatEvent event)
     {
-        final Value<NetworkPlayer> networkPlayer = API.getNetworkManager().getNetworkPlayer(event.getPlayer().getName());
+        final Value<IOnlinePlayer> networkPlayer = API.getNetworkManager().getOnlinePlayer(event.getPlayer().getName());
         event.setFormat(networkPlayer.get().getGroup().getChatFormat());
     }
 }

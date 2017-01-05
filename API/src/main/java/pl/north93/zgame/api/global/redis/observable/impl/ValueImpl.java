@@ -22,7 +22,7 @@ class ValueImpl<T> implements Value<T>
         this.observationManager = observationManager;
         this.clazz = clazz;
         this.objectKey = objectKey;
-        observationManager.getRedisSubscriber().subscribe(this.getChannelKey(), this::handleNewValue);
+        observationManager.getRedisSubscriber().subscribe(this.getChannelKey(), new ValueSubscriptionHandler(this));
     }
 
     private String getChannelKey()
@@ -30,9 +30,16 @@ class ValueImpl<T> implements Value<T>
         return "newvalue:" + this.objectKey.getKey();
     }
 
-    private void handleNewValue(final String channel, final byte[] newValue)
+    /*default*/ void handleNewValue(final byte[] newValue)
     {
-        this.cache = this.observationManager.getMsgPack().deserialize(this.clazz, newValue);
+        if (newValue.length == 0)
+        {
+            this.cache = null;
+        }
+        else
+        {
+            this.cache = this.observationManager.getMsgPack().deserialize(this.clazz, newValue);
+        }
     }
 
     @Override
@@ -76,7 +83,7 @@ class ValueImpl<T> implements Value<T>
         }
     }
 
-    private T getFromRedis()
+    private synchronized T getFromRedis()
     {
         try (final Jedis jedis = this.observationManager.getJedis().getResource())
         {
@@ -93,8 +100,15 @@ class ValueImpl<T> implements Value<T>
     @Override
     public synchronized void set(final T newValue)
     {
-        this.cache = newValue;
-        this.upload();
+        if (newValue == null)
+        {
+            this.delete();
+        }
+        else
+        {
+            this.cache = newValue;
+            this.upload();
+        }
     }
 
     @Override
@@ -126,6 +140,7 @@ class ValueImpl<T> implements Value<T>
         try (final Jedis jedis = this.observationManager.getJedis().getResource())
         {
             jedis.del(this.objectKey.getKey());
+            jedis.publish(this.getChannelKey().getBytes(), new byte[0]);
         }
     }
 

@@ -6,7 +6,7 @@ import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.deployment.ServersGroup;
+import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.network.server.Server;
 
 public class WtfServer extends NorthCommand
@@ -27,7 +27,7 @@ public class WtfServer extends NorthCommand
         sender.sendMessage("Typ serwera: " + server.getType());
         sender.sendMessage("Czy uruchomiony przez demona: " + (server.isLaunchedViaDaemon() ? "tak" : "nie"));
         sender.sendMessage("Stan serwera: " + server.getServerState());
-        final Optional<ServersGroup> serversGroup = server.getServersGroup();
+        final Optional<IServersGroup> serversGroup = server.getServersGroup();
         sender.sendMessage("Grupa serwerów: " + (serversGroup.isPresent() ? serversGroup.get().getName() : "brak"));
     }
 }

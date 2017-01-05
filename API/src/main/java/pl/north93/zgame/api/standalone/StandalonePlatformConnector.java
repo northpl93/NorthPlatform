@@ -14,7 +14,15 @@ public class StandalonePlatformConnector implements PlatformConnector
     @Override
     public void stop()
     {
-        API.getLogger().info("Received stop request from network.");
+        API.getLogger().info("Standalone platform application will shutdown in 5 seconds...");
+        try
+        {
+            this.wait(TimeUnit.SECONDS.toMillis(5));
+        }
+        catch (final InterruptedException e)
+        {
+            e.printStackTrace();
+        }
         this.executor.shutdown();
         API.getApiCore().stopCore();
     }

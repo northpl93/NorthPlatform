@@ -5,6 +5,8 @@ import pl.north93.zgame.api.global.redis.rpc.annotation.DoNotWaitForResponse;
 
 public interface ProxyRpc
 {
+    boolean isOnline(String nick); // sprawdza czy gracz jest online na tym proxy
+
     @DoNotWaitForResponse
     void sendMessage(String nick, String message);
 

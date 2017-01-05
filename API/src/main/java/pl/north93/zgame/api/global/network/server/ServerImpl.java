@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.deployment.ServerPattern;
-import pl.north93.zgame.api.global.deployment.ServersGroup;
+import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackNullable;
@@ -29,7 +29,7 @@ public class ServerImpl implements Server, ServerProxyData
     private JoiningPolicy joiningPolicy;
     @MsgPackNullable
     @MsgPackCustomTemplate(ServersGroupInStringTemplate.class)
-    private ServersGroup  serversGroup;
+    private IServersGroup serversGroup;
     @MsgPackNullable
     @MsgPackCustomTemplate(ServerPatternInStringTemplate.class)
     private ServerPattern serverPattern;
@@ -49,7 +49,7 @@ public class ServerImpl implements Server, ServerProxyData
         this.joiningPolicy = joiningPolicy;
     }
 
-    public ServerImpl(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy, final String connectIp, final Integer connectPort, final ServersGroup serversGroup, final ServerPattern serverPattern)
+    public ServerImpl(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy, final String connectIp, final Integer connectPort, final IServersGroup serversGroup, final ServerPattern serverPattern)
     {
         this(serverId, isLaunchedViaDaemon, serverType, serverState, joiningPolicy, connectIp, connectPort);
         this.serversGroup = serversGroup;
@@ -99,7 +99,7 @@ public class ServerImpl implements Server, ServerProxyData
     }
 
     @Override
-    public Optional<ServersGroup> getServersGroup()
+    public Optional<IServersGroup> getServersGroup()
     {
         return Optional.ofNullable(this.serversGroup);
     }

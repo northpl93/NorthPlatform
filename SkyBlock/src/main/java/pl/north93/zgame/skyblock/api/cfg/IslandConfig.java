@@ -12,6 +12,18 @@ public class IslandConfig
     private Integer  generateAtHeight;
     private Integer  radius;
 
+    public IslandConfig()
+    {
+    }
+
+    public IslandConfig(final String name, final Coords3D homeLocation, final Integer generateAtHeight, final Integer radius)
+    {
+        this.name = name;
+        this.homeLocation = homeLocation;
+        this.generateAtHeight = generateAtHeight;
+        this.radius = radius;
+    }
+
     public String getName()
     {
         return this.name;

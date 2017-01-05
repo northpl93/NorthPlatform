@@ -14,9 +14,16 @@ public interface ISkyBlockManager
 
     SkyBlockConfig getConfig();
 
+    @DoNotWaitForResponse
+    void teleportToIsland(String playerName, UUID islandId);
+
+    @DoNotWaitForResponse
+    void updateIslandData(IslandData islandData);
+
     // Ta metoda powinna sama znaleźć odpowiedni serwer
     // i przekazać mu info że trzeba zrobić wyspę
-    Boolean createIsland(String islandType, String ownerNick);
+    @DoNotWaitForResponse
+    void createIsland(String islandType, String ownerNick);
 
     // metoda przekazuje odpowiedniemu serwerowi info, ze trzeba
     // usunac wyspe, usuwa ja z bazy danych i z metadanych gracza

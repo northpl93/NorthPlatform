@@ -15,6 +15,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import pl.north93.zgame.skyblock.api.utils.Coords3D;
+
 public class IslandLocation
 {
     private static final int CHUNK_SIZE = 16;
@@ -123,6 +125,26 @@ public class IslandLocation
         }
 
         return blocks;
+    }
+
+    public Coords3D toRelative(final Location location)
+    {
+        final Location drc = this.chunkDRCorner(this.centerChunkX, this.centerChunkZ);
+        final int x = (int) (drc.getX() - location.getX());
+        final int y = (int) location.getY();
+        final int z = (int) (drc.getZ() - location.getZ());
+
+        return new Coords3D(x, y, z);
+    }
+
+    public Location fromRelative(final Coords3D coords3D)
+    {
+        final Location drc = this.chunkDRCorner(this.centerChunkX, this.centerChunkZ);
+        final double x = drc.getX() + coords3D.getX();
+        final double y = coords3D.getY();
+        final double z = drc.getZ() + coords3D.getZ();
+
+        return new Location(this.world, x, y, z);
     }
 
     // down right. In chunk x0/y0 its x0/y0

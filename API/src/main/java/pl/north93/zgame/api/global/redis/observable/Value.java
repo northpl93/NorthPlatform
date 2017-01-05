@@ -55,4 +55,9 @@ public interface Value<T>
      * @return true if is local cached value.
      */
     boolean isCached();
+
+    /**
+     * Adds listener which invokes when this Value is updated.
+     */
+    //void addListener(Consumer<T> listener);
 }

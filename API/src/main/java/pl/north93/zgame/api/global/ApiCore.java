@@ -179,7 +179,7 @@ public abstract class ApiCore
 
     public void debug(final Object object)
     {
-        this.getLogger().log(Level.INFO, object.toString());
+        this.getLogger().log(Level.INFO, "[DEBUG] " + object.toString());
     }
 
     /**

@@ -7,23 +7,18 @@
     <parent>
         <groupId>pl.north93.zgame</groupId>
         <artifactId>platform</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0-INDEV</version>
         <relativePath>../NorthPlatformParent</relativePath>
     </parent>
 
     <artifactId>lobby</artifactId>
-    <version>${version.lobby}</version>
+    <version>1.0-INDEV</version>
 
     <dependencies>
         <dependency>
             <groupId>pl.north93.zgame</groupId>
             <artifactId>api</artifactId>
-            <version>${version.api}</version>
-        </dependency>
-        <dependency>
-            <groupId>pl.north93.zgame</groupId>
-            <artifactId>pets</artifactId>
-            <version>${version.pets}</version>
+            <version>1.0-INDEV</version>
         </dependency>
         <dependency>
             <groupId>pl.north93.zgame</groupId>

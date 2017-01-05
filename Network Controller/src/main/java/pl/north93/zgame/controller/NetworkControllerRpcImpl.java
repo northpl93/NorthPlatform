@@ -19,6 +19,7 @@ public class NetworkControllerRpcImpl implements NetworkControllerRpc
     @Override
     public void stopController()
     {
+        API.getLogger().info("Received stop request from network.");
         API.getPlatformConnector().stop();
     }
 

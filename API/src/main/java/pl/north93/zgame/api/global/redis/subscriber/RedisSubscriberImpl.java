@@ -75,6 +75,7 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
         if (this.subscriptionHandlerMap.remove(channel) != null)
         {
             this.subscriptionReceiver.unsubscribe(channel.getBytes());
+            this.getApiCore().debug("Removed subscription for " + channel);
         }
     }
 

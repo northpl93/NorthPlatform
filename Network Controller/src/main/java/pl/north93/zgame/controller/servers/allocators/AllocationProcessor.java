@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.deployment.RemoteDaemon;
 import pl.north93.zgame.api.global.deployment.ServersAllocatorType;
-import pl.north93.zgame.api.global.deployment.ServersGroup;
+import pl.north93.zgame.api.global.deployment.serversgroup.ManagedServersGroup;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.controller.servers.INetworkServersManager;
@@ -29,7 +29,7 @@ public class AllocationProcessor
         this.deploymentQueue = new ConcurrentLinkedQueue<>();
     }
 
-    public void processTasks(final Set<RemoteDaemon> daemons, final List<ServersGroup> serversGroup)
+    public void processTasks(final Set<RemoteDaemon> daemons, final List<ManagedServersGroup> serversGroup)
     {
         serversGroup.forEach(this::processAllocation);
         this.handleDeploymentQueue(daemons);
@@ -44,7 +44,7 @@ public class AllocationProcessor
         this.deploymentQueue.add(server);
     }
 
-    private void processAllocation(final ServersGroup serversGroup)
+    private void processAllocation(final ManagedServersGroup serversGroup)
     {
         final ServersAllocatorType allocatorType = serversGroup.getAllocatorConfiguration().getAllocatorType();
         final IAllocator allocator = AllocatorFactory.INSTANCE.getAllocator(allocatorType);

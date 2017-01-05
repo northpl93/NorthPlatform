@@ -9,6 +9,8 @@ import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_SERVER_GROUPS;
 import static pl.north93.zgame.api.global.redis.RedisKeys.PERMISSIONS_GROUPS;
 
 
+import java.util.ArrayList;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -16,7 +18,7 @@ import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.deployment.ServerPattern;
-import pl.north93.zgame.api.global.deployment.ServersGroup;
+import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.messages.GroupsContainer;
 import pl.north93.zgame.api.global.messages.NetworkMeta;
 import pl.north93.zgame.api.global.network.NetworkAction;
@@ -90,7 +92,12 @@ public class ConfigBroadcaster extends Component
             jedis.set(NETWORK_META.getBytes(), this.msgPack.serialize(this.networkMeta));
             jedis.set(PERMISSIONS_GROUPS.getBytes(), this.msgPack.serialize(this.groups));
             jedis.set(NETWORK_MINIGAMES.getBytes(), this.msgPack.serializeList(MiniGame.class, this.miniGames.getMiniGames()));
-            jedis.set(NETWORK_SERVER_GROUPS.getBytes(), this.msgPack.serializeList(ServersGroup.class, this.serversGroups.getGroups()));
+
+            final ArrayList<IServersGroup> serversGroups = new ArrayList<>();
+            serversGroups.addAll(this.serversGroups.getManagedGroups());
+            serversGroups.addAll(this.serversGroups.getUnManagedGroups());
+            jedis.set(NETWORK_SERVER_GROUPS.getBytes(), this.msgPack.serializeList(IServersGroup.class, serversGroups));
+
             jedis.set(NETWORK_PATTERNS.getBytes(), this.msgPack.serializeList(ServerPattern.class, this.patternsConfig.getPatterns()));
 
             jedis.publish(NETWORK_ACTION, NetworkAction.UPDATE_NETWORK_CONFIGS.toString());

@@ -79,6 +79,18 @@ public class IslandHostManagers
         return leastLoaded.getLeft();
     }
 
+    public IslandHostServer getServer(final UUID serverId)
+    {
+        for (final IslandHostServer server : this.servers)
+        {
+            if (server.getUuid().equals(serverId))
+            {
+                return server;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString()
     {

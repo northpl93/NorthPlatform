@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import pl.north93.zgame.api.global.deployment.ServerPattern;
-import pl.north93.zgame.api.global.deployment.ServersGroup;
+import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
 
@@ -67,5 +67,5 @@ public interface Server extends ServerProxyData, ProvidingRedisKey
      *
      * @return grupa serwerów do której należy ten serwer.
      */
-    Optional<ServersGroup> getServersGroup();
+    Optional<IServersGroup> getServersGroup();
 }

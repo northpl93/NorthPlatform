@@ -12,6 +12,11 @@ public final class ObjectKey
         this.key = key;
     }
 
+    public ObjectKey(final String prefix, final ObjectKey key)
+    {
+        this(prefix + key.getKey());
+    }
+
     public String getKey()
     {
         return this.key;

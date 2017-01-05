@@ -1,5 +1,6 @@
 package pl.north93.zgame.api.bungee;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import pl.north93.zgame.api.global.network.ProxyRpc;
@@ -16,15 +17,21 @@ public class ProxyRpcImpl implements ProxyRpc
     }
 
     @Override
+    public boolean isOnline(final String nick)
+    {
+        return this.proxy.getPlayer(nick) != null;
+    }
+
+    @Override
     public void sendMessage(final String nick, final String message)
     {
-        this.proxy.getPlayer(nick).sendMessage(TextComponent.fromLegacyText(message));
+        this.proxy.getPlayer(nick).sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message)));
     }
 
     @Override
     public void kick(final String nick, final String kickMessage)
     {
-        this.proxy.getPlayer(nick).disconnect(TextComponent.fromLegacyText(kickMessage));
+        this.proxy.getPlayer(nick).disconnect(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', kickMessage)));
     }
 
     @Override

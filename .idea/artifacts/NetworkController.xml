@@ -23,6 +23,9 @@
       <element id="artifact" artifact-name="InstrumentationAgent" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.3.1/gson-2.3.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/guava/guava/18.0/guava-18.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/cetsoft/imcache-core/0.2.0/imcache-core-0.2.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/cetsoft/imcache-offheap/0.2.0/imcache-offheap-0.2.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/cetsoft/imcache/0.2.0/imcache-0.2.0.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

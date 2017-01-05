@@ -59,6 +59,16 @@ public class BukkitApiCore extends ApiCore
         return this.pluginMain.getServer();
     }
 
+    /**
+     * Synchronizuje podany runnable do wątku seerwera przy użyciu Schedulera.
+     *
+     * @param runnable do zsynchronizowania.
+     */
+    public final void sync(final Runnable runnable)
+    {
+        this.pluginMain.getServer().getScheduler().runTask(this.pluginMain, runnable);
+    }
+
     @Override
     public Logger getLogger()
     {

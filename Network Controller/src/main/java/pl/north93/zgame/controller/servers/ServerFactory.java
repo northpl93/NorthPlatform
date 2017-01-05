@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.deployment.ServerPattern;
-import pl.north93.zgame.api.global.deployment.ServersGroup;
+import pl.north93.zgame.api.global.deployment.serversgroup.ManagedServersGroup;
 import pl.north93.zgame.api.global.network.server.ServerImpl;
 
 public class ServerFactory
@@ -23,7 +23,7 @@ public class ServerFactory
      * @param serversGroup grupa serwerów do której należeć ma serwer.
      * @return instancja serwera w stanie ALLOCATING. Nie jest zapisana w Redisie!
      */
-    public ServerImpl createNewServer(final ServersGroup serversGroup)
+    public ServerImpl createNewServer(final ManagedServersGroup serversGroup)
     {
         final ServerPattern serverPattern = API.getNetworkManager().getServerPattern(serversGroup.getServerPattern());
         // TODO we need connection IP and port!

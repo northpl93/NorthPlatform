@@ -9,4 +9,6 @@ public interface IObservationManager
     <T> Value<T> get(Class<T> clazz, ProvidingRedisKey keyProvider);
 
     <T extends ProvidingRedisKey> Value<T> of(T preCachedObject);
+
+    <K, V> ICacheBuilder<K, V> cacheBuilder(Class<K> keyClass, Class<V> valueClass);
 }

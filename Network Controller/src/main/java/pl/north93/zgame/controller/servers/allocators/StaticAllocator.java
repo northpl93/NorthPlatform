@@ -1,13 +1,13 @@
 package pl.north93.zgame.controller.servers.allocators;
 
 import pl.north93.zgame.api.global.deployment.AllocationConfiguration;
-import pl.north93.zgame.api.global.deployment.ServersGroup;
+import pl.north93.zgame.api.global.deployment.serversgroup.ManagedServersGroup;
 import pl.north93.zgame.controller.servers.IServerCountManager;
 
 public class StaticAllocator implements IAllocator
 {
     @Override
-    public void doAllocation(final IServerCountManager serverCountManager, final ServersGroup serversGroup)
+    public void doAllocation(final IServerCountManager serverCountManager, final ManagedServersGroup serversGroup)
     {
         final AllocationConfiguration config = serversGroup.getAllocatorConfiguration();
         final long targetServerCount = Math.max(config.getMinServers(), config.getMaxServers());

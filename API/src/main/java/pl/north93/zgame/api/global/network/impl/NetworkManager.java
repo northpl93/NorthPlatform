@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.network;
+package pl.north93.zgame.api.global.network.impl;
 
 import static pl.north93.zgame.api.global.redis.RedisKeys.DAEMON;
 import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_ACTION;
@@ -18,15 +18,26 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.data.StorageConnector;
+import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.deployment.RemoteDaemon;
 import pl.north93.zgame.api.global.deployment.ServerPattern;
-import pl.north93.zgame.api.global.deployment.ServersGroup;
+import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.messages.NetworkMeta;
 import pl.north93.zgame.api.global.messages.ProxyInstanceInfo;
+import pl.north93.zgame.api.global.network.INetworkManager;
+import pl.north93.zgame.api.global.network.IOfflinePlayer;
+import pl.north93.zgame.api.global.network.IOnlinePlayer;
+import pl.north93.zgame.api.global.network.IPlayer;
+import pl.north93.zgame.api.global.network.JoiningPolicy;
+import pl.north93.zgame.api.global.network.NetworkAction;
+import pl.north93.zgame.api.global.network.NetworkControllerRpc;
 import pl.north93.zgame.api.global.network.minigame.MiniGame;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerImpl;
@@ -39,7 +50,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.util.SafeEncoder;
 
-public class NetworkManager extends Component implements INetworkManager
+class NetworkManager extends Component implements INetworkManager
 {
     @InjectComponent("API.Database.Redis.MessagePackSerializer")
     private TemplateManager     msgPack;
@@ -47,6 +58,8 @@ public class NetworkManager extends Component implements INetworkManager
     private RedisSubscriber     redisSubscriber;
     @InjectComponent("API.Database.Redis.Observer")
     private IObservationManager observationManager;
+    @InjectComponent("API.MinecraftNetwork.PlayersStorage")
+    private IPlayersData        playersData;
     private JedisPool           jedisPool;
     private Value<NetworkMeta>  networkMeta;
 
@@ -75,11 +88,6 @@ public class NetworkManager extends Component implements INetworkManager
         return this.networkMeta.get().joiningPolicy;
     }
 
-    /**
-     * Zwraca aktualną listę serwerów proxy podłączonych do sieci.
-     *
-     * @return lista serwerów proxy.
-     */
     @Override
     public Set<ProxyInstanceInfo> getProxyServers()
     {
@@ -89,11 +97,6 @@ public class NetworkManager extends Component implements INetworkManager
         }
     }
 
-    /**
-     * Zwraca aktualną listę demonów podłączonych do sieci.
-     *
-     * @return lista demonów.
-     */
     @Override
     public Set<RemoteDaemon> getDaemons()
     {
@@ -132,16 +135,16 @@ public class NetworkManager extends Component implements INetworkManager
      * @return lista grup serwerów.
      */
     @Override
-    public Set<ServersGroup> getServersGroups()
+    public Set<IServersGroup> getServersGroups()
     {
         try (final Jedis jedis = this.jedisPool.getResource())
         {
-            return Sets.newCopyOnWriteArraySet(this.msgPack.deserializeList(ServersGroup.class, jedis.get(NETWORK_SERVER_GROUPS.getBytes())));
+            return Sets.newCopyOnWriteArraySet(this.msgPack.deserializeList(IServersGroup.class, jedis.get(NETWORK_SERVER_GROUPS.getBytes())));
         }
     }
 
     @Override
-    public ServersGroup getServersGroup(final String name)
+    public IServersGroup getServersGroup(final String name)
     {
         return this.getServersGroups().stream().filter(serversGroup -> serversGroup.getName().equals(name)).findAny().orElse(null);
     }
@@ -207,10 +210,8 @@ public class NetworkManager extends Component implements INetworkManager
     @Override
     public Value<Server> getServer(final UUID uuid)
     {
-        @SuppressWarnings("UnnecessaryLocalVariable")
-        final Value serverValue = this.observationManager.get(ServerImpl.class, SERVER + uuid);
         //noinspection unchecked
-        return serverValue;
+        return (Value) this.observationManager.get(ServerImpl.class, SERVER + uuid);
     }
 
     @Override
@@ -220,9 +221,28 @@ public class NetworkManager extends Component implements INetworkManager
     }
 
     @Override
-    public Value<NetworkPlayer> getNetworkPlayer(final String nick)
+    public Value<IOnlinePlayer> getOnlinePlayer(final String nick)
     {
-        return this.observationManager.get(NetworkPlayer.class, PLAYERS + nick.toLowerCase(Locale.ROOT));
+        //noinspection unchecked
+        return (Value) this.observationManager.get(OnlinePlayerImpl.class, PLAYERS + nick.toLowerCase(Locale.ROOT));
+    }
+
+    @Override
+    public Value<IOnlinePlayer> getOnlinePlayer(final UUID playerUuid)
+    {
+        return this.getOnlinePlayer(this.playersData.uuidToUsername(playerUuid));
+    }
+
+    @Override
+    public IOfflinePlayer getOfflinePlayer(final UUID playerUuid)
+    {
+        return this.playersData.getOfflinePlayer(playerUuid);
+    }
+
+    @Override
+    public void savePlayer(final IPlayer player)
+    {
+        this.playersData.savePlayer(player);
     }
 
     /**
@@ -264,6 +284,7 @@ public class NetworkManager extends Component implements INetworkManager
     @Override
     public NetworkControllerRpc getNetworkController()
     {
+        // todo add local RpcManager module
         return this.getApiCore().getRpcManager().createRpcProxy(NetworkControllerRpc.class, Targets.networkController());
     }
 
@@ -282,5 +303,11 @@ public class NetworkManager extends Component implements INetworkManager
                 this.getApiCore().getPermissionsManager().synchronizeGroups();
                 break;
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

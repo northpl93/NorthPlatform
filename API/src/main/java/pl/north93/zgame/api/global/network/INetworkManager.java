@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import pl.north93.zgame.api.global.deployment.RemoteDaemon;
 import pl.north93.zgame.api.global.deployment.ServerPattern;
-import pl.north93.zgame.api.global.deployment.ServersGroup;
+import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.messages.NetworkMeta;
 import pl.north93.zgame.api.global.messages.ProxyInstanceInfo;
 import pl.north93.zgame.api.global.network.minigame.MiniGame;
@@ -19,17 +19,27 @@ public interface INetworkManager
 
     JoiningPolicy getJoiningPolicy();
 
+    /**
+     * Zwraca aktualną listę serwerów proxy podłączonych do sieci.
+     *
+     * @return lista serwerów proxy.
+     */
     Set<ProxyInstanceInfo> getProxyServers();
 
+    /**
+     * Zwraca aktualną listę demonów podłączonych do sieci.
+     *
+     * @return lista demonów.
+     */
     Set<RemoteDaemon> getDaemons();
 
     Set<Server> getServers();
 
     Set<Server> getServers(String serversGroup);
 
-    Set<ServersGroup> getServersGroups();
+    Set<IServersGroup> getServersGroups();
 
-    ServersGroup getServersGroup(String name);
+    IServersGroup getServersGroup(String name);
 
     List<MiniGame> getMiniGames();
 
@@ -43,7 +53,13 @@ public interface INetworkManager
 
     int onlinePlayersCount();
 
-    Value<NetworkPlayer> getNetworkPlayer(String nick);
+    Value<IOnlinePlayer> getOnlinePlayer(String nick);
+
+    Value<IOnlinePlayer> getOnlinePlayer(UUID playerUuid);
+
+    IOfflinePlayer getOfflinePlayer(UUID playerUuid);
+
+    void savePlayer(IPlayer player);
 
     boolean isOnline(String nick);
 

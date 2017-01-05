@@ -15,15 +15,20 @@ public interface IIslandHostManager
 
     Coords2D getFirstFreeLocation(String islandType);
 
+    // Wysyłane gdy gracz znajduje się na tym serwerze i trzeba
+    // go przenieść na konkretną wyspę.
+    @DoNotWaitForResponse
+    void tpToIsland(UUID player, IslandData islandData);
+
     // Metoda wywoływana gdy wyspa ma zostać utworzona na tym serwerze.
     @DoNotWaitForResponse
     void islandAdded(IslandData islandData);
 
     // Metoda wywoływana gdy wyspa ma zostać usunięta.
     @DoNotWaitForResponse
-    void islandRemoved(UUID islandId);
+    void islandRemoved(IslandData islandData);
 
     // Metoda wywoływana gdy trzeba zaktualizować informacje o wyspie.
     @DoNotWaitForResponse
-    void islandDataChanged(UUID islandId);
+    void islandDataChanged(IslandData islandData);
 }

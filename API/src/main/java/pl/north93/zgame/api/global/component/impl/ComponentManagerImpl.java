@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -85,10 +87,13 @@ public class ComponentManagerImpl implements IComponentManager
             try
             {
                 final Class<?> clazz = Class.forName(componentDescription.getMainClass(), true, classLoader);
-                final Component newComponent = (Component) clazz.newInstance();
+                final Constructor<?> constructor = clazz.getDeclaredConstructor();
+                constructor.setAccessible(true);
+
+                final Component newComponent = (Component) constructor.newInstance();
                 componentBundle.setComponent(newComponent);
             }
-            catch (final ClassNotFoundException | IllegalAccessException | InstantiationException e)
+            catch (final ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e)
             {
                 throw new RuntimeException("Failed to instantiate main class of " + componentDescription.getName(), e);
             }

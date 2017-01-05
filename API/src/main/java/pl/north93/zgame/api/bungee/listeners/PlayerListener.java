@@ -22,18 +22,22 @@ import pl.north93.zgame.api.bungee.BungeeApiCore;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.impl.Injector;
 import pl.north93.zgame.api.global.data.UsernameCache.UsernameDetails;
-import pl.north93.zgame.api.global.data.players.PlayersDao;
+import pl.north93.zgame.api.global.data.players.IPlayersData;
+import pl.north93.zgame.api.global.network.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
-import pl.north93.zgame.api.global.network.NetworkPlayer;
+import pl.north93.zgame.api.global.network.impl.OnlinePlayerImpl;
+import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.utils.UTF8Control;
 
 public class PlayerListener implements Listener
 {
     private final ResourceBundle apiMessages = ResourceBundle.getBundle("Messages", new UTF8Control());
-    private final BungeeApiCore bungeeApiCore;
+    private final BungeeApiCore       bungeeApiCore;
+    @InjectComponent("API.Database.Redis.Observer")
+    private       IObservationManager observationManager;
     @InjectComponent("API.MinecraftNetwork.PlayersStorage")
-    private PlayersDao playersDao;
+    private       IPlayersData        playersDao;
 
     public PlayerListener(final BungeeApiCore bungeeApiCore)
     {
@@ -103,7 +107,7 @@ public class PlayerListener implements Listener
             return;
         }
 
-        final Value<NetworkPlayer> player = this.playersDao.loadPlayer(proxyPlayer.getUniqueId(), proxyPlayer.getName(), details.get().isPremium(), this.bungeeApiCore.getProxyConfig().getUniqueName());
+        final Value<OnlinePlayerImpl> player = this.playersDao.loadPlayer(proxyPlayer.getUniqueId(), proxyPlayer.getName(), details.get().isPremium(), this.bungeeApiCore.getProxyConfig().getUniqueName());
         /*if (! player.getNick().equals(proxyPlayer.getName()))
         {
             proxyPlayer.disconnect(TextComponent.fromLegacyText(message(this.apiMessages, "join.name_size_mistake", player.getNick(), proxyPlayer.getName())));
@@ -119,7 +123,7 @@ public class PlayerListener implements Listener
     @EventHandler
     public void onLeave(final PlayerDisconnectEvent event)
     {
-        final Value<NetworkPlayer> player = this.bungeeApiCore.getNetworkManager().getNetworkPlayer(event.getPlayer().getName());
+        final Value<IOnlinePlayer> player = this.bungeeApiCore.getNetworkManager().getOnlinePlayer(event.getPlayer().getName());
         this.playersDao.savePlayer(player.get());
         player.delete();
     }
@@ -127,7 +131,7 @@ public class PlayerListener implements Listener
     @EventHandler
     public void onServerChange(final ServerSwitchEvent event)
     {
-        final Value<NetworkPlayer> player = this.bungeeApiCore.getNetworkManager().getNetworkPlayer(event.getPlayer().getName());
+        final Value<IOnlinePlayer> player = this.bungeeApiCore.getNetworkManager().getOnlinePlayer(event.getPlayer().getName());
 
         try
         {
