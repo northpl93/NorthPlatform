@@ -17,7 +17,10 @@ public class StandalonePlatformConnector implements PlatformConnector
         API.getLogger().info("Standalone platform application will shutdown in 5 seconds...");
         try
         {
-            this.wait(TimeUnit.SECONDS.toMillis(5));
+            synchronized (this)
+            {
+                this.wait(TimeUnit.SECONDS.toMillis(5));
+            }
         }
         catch (final InterruptedException e)
         {

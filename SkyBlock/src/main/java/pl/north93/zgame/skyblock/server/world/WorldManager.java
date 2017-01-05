@@ -27,7 +27,6 @@ public class WorldManager
     @InjectComponent("SkyBlock.Server")
     private SkyBlockServer        skyBlockServer;
     private Logger                logger;
-    private final IslandLocation  locationHelper;
     private final IslandConfig    islandConfig;
     private final World           world;
     private final IslandList      islands;
@@ -38,7 +37,6 @@ public class WorldManager
         this.islandConfig = islandConfig;
         this.world = world;
         this.islands = new IslandList();
-        this.locationHelper = new IslandLocation(world, 0, 0, islandConfig.getRadius()); // helper location object
         this.availableCoords = new ArrayBlockingQueue<>(100);
     }
 
@@ -91,7 +89,10 @@ public class WorldManager
 
     public IslandList getIslands()
     {
-        return this.islands;
+        synchronized (this.islands)
+        {
+            return this.islands;
+        }
     }
 
     public int getIslandsCount() // zwraca ilość wysp na tym świecie.
@@ -111,22 +112,31 @@ public class WorldManager
     public void islandAdded(final IslandData islandData) // wywoływane gdy wyspa zotanie dodana
     {
         final Island island = this.constructIsland(islandData);
-        this.islands.addIsland(island);
-        island.loadSchematic();
+        synchronized (this.islands)
+        {
+            this.islands.addIsland(island);
+        }
+        this.apiCore.sync(island::loadSchematic); // synchronize schematic loading to main server thread
     }
 
     public void islandRemoved(final IslandData islandData) // wywoływane gdy wyspa zostanie usunięta
     {
-        final Island island = this.islands.getByCoords(islandData.getIslandLocation());
-        this.islands.removeIsland(island);
-        island.clear();
-        // add island location to queue of free locations???
+        final Island island;
+        synchronized (this.islands)
+        {
+            island = this.islands.getByCoords(islandData.getIslandLocation());
+            this.islands.removeIsland(island); // remove island from lists
+        }
+        this.apiCore.sync(island::clear); // synchronize island clear to main server thread
     }
 
     public void islandUpdated(final IslandData islandData)
     {
-        final Island island = this.islands.getByCoords(islandData.getIslandLocation());
-        island.updateIslandData(islandData);
+        synchronized (this.islands)
+        {
+            final Island island = this.islands.getByCoords(islandData.getIslandLocation());
+            island.updateIslandData(islandData);
+        }
     }
 
     @Override

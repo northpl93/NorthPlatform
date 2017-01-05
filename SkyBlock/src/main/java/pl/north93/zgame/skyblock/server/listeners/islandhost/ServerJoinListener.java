@@ -57,7 +57,7 @@ public class ServerJoinListener implements Listener
             return;
         }
 
-        event.getPlayer().teleport(island.getHomeLocation());
+        event.getPlayer().teleport(island.getHomeLocation().add(0.5, 0.5, 0.5));
     }
 
     @Override

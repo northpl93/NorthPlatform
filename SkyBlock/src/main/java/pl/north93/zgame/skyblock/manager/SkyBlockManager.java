@@ -87,8 +87,17 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
         {
             return;
         }
+        final SkyPlayer skyPlayer = SkyPlayer.get(onlinePlayer);
 
         final IslandData islandData = this.islandDao.getIsland(islandId);
+        if (islandData == null)
+        {
+            this.getLogger().severe("IslandData is null in teleportToIsland(" + playerName + ", " + islandId + ")");
+            skyPlayer.setIslandToTp(null);
+            skyPlayer.setIsland(null);
+            return;
+        }
+
         final UUID islandServer = islandData.getServerId();
         if (onlinePlayer.get().getServerId().equals(islandServer))
         {
@@ -96,7 +105,6 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
         }
         else
         {
-            final SkyPlayer skyPlayer = SkyPlayer.get(onlinePlayer);
             skyPlayer.setIslandToTp(islandId);
             onlinePlayer.get().connectTo(this.networkManager.getServer(islandServer).get());
         }
@@ -105,7 +113,16 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
     @Override
     public void updateIslandData(final IslandData islandData)
     {
+        this.getLogger().info("Data of island " + islandData.getIslandId() + " will be updated!");
+        final IslandData data = this.islandDao.getIsland(islandData.getIslandId());
+        if (data == null)
+        {
+            this.getLogger().warning("islandData is null in SkyBlockManager#updateIslandData(" + islandData + ")");
+            return;
+        }
 
+        final IslandHostServer server = this.islandHostManager.getServer(data.getServerId());
+        server.getIslandHostManager().islandDataChanged(islandData);
     }
 
     @Override

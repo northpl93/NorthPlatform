@@ -34,7 +34,7 @@ public class HomeCmd extends NorthCommand
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
         final Value<IOnlinePlayer> networkPlayer = this.networkManager.getOnlinePlayer(sender.getName());
-        final SkyPlayer skyPlayer = new SkyPlayer(networkPlayer);
+        final SkyPlayer skyPlayer = SkyPlayer.get(networkPlayer);
         if (! skyPlayer.hasIsland())
         {
             sender.sendMessage(this.messages, "error.you_must_have_island");

@@ -75,7 +75,7 @@ class CacheImpl<K, V> implements Cache<K, V>
     {
         try (final Jedis resource = this.observationManager.getJedis().getResource())
         {
-            resource.eval("return redis.call('del', unpack(redis.call('keys', ARGV[1])))", 0, this.prefix);
+            resource.eval("local k=redis.call('keys',ARGV[1])for i=1,#k,5000 do redis.call('del',unpack(k,i,math.min(i+4999,#k)))end", 0, this.prefix);
         }
     }
 

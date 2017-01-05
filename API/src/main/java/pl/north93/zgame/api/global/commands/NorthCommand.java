@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 public abstract class NorthCommand
 {
     private final String       name;
@@ -37,4 +40,10 @@ public abstract class NorthCommand
     }
 
     public abstract void execute(final NorthCommandSender sender, final Arguments args, final String label);
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("aliases", this.aliases).append("permission", this.permission).toString();
+    }
 }

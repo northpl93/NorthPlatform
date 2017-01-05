@@ -30,7 +30,6 @@ public class IslandLocation
         this.centerChunkX = centerChunkX;
         this.centerChunkZ = centerChunkZ;
         this.radius = radius;
-        System.out.println("New island location: " + this); // TODO debug remove
     }
 
     public World getWorld()
@@ -98,7 +97,7 @@ public class IslandLocation
         return this.getIslandChunks().size(); // todo better implementation
     }
 
-    public static List<Block> blocksFromTwoPoints(Location loc1, Location loc2)
+    public static List<Block> blocksFromTwoPoints(final Location loc1, final Location loc2)
     {
         final List<Block> blocks = new ArrayList<>();
 
@@ -127,12 +126,22 @@ public class IslandLocation
         return blocks;
     }
 
+    public boolean isInside(final Location location)
+    {
+        final int locX = location.getBlockX();
+        final int locZ = location.getBlockZ();
+
+        final Pair<Location, Location> corners = this.getIslandCorners();
+        return (locX >= corners.getRight().getBlockX() && locX <= corners.getLeft().getBlockX()) &&
+                       (locZ >= corners.getRight().getBlockZ() && locZ <= corners.getLeft().getBlockZ());
+    }
+
     public Coords3D toRelative(final Location location)
     {
         final Location drc = this.chunkDRCorner(this.centerChunkX, this.centerChunkZ);
-        final int x = (int) (drc.getX() - location.getX());
+        final int x = (int) (location.getX() - drc.getX());
         final int y = (int) location.getY();
-        final int z = (int) (drc.getZ() - location.getZ());
+        final int z = (int) (location.getZ() - drc.getZ());
 
         return new Coords3D(x, y, z);
     }

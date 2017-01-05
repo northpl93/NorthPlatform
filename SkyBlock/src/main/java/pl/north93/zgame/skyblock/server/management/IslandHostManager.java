@@ -1,7 +1,5 @@
 package pl.north93.zgame.skyblock.server.management;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -22,12 +20,13 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.skyblock.api.IIslandHostManager;
 import pl.north93.zgame.skyblock.api.IslandData;
-import pl.north93.zgame.skyblock.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.api.cfg.IslandConfig;
+import pl.north93.zgame.skyblock.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.api.utils.Coords2D;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.world.Island;
 import pl.north93.zgame.skyblock.server.world.WorldManager;
+import pl.north93.zgame.skyblock.server.world.WorldManagerList;
 
 /**
  * Klasa zarządzająca serwerem pracującym w trybie hosta wysp.
@@ -42,12 +41,12 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
     @InjectComponent("API.Database.Redis.RPC")
     private IRpcManager        rpcManager;
     private Logger             logger;
-    private List<WorldManager> worldManagers;
+    private WorldManagerList   worldManagers;
 
     @Override
     public void start()
     {
-        this.worldManagers = new ArrayList<>(4);
+        this.worldManagers = new WorldManagerList();
         this.logger.info("[SkyBlock] Setting up world managers...");
         this.skyBlockServer.getSkyBlockConfig().getIslandTypes().forEach(this::setupWorldFor);
         this.rpcManager.addRpcImplementation(IIslandHostManager.class, this);
@@ -100,18 +99,39 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
      * Zwraca menadżera światów dla danego typu wyspy.
      *
      * @param islandType nazwa typu wyspy.
-     * @return menadżer światów.
+     * @return menadżer świata.
      */
     public WorldManager getWorldManager(final String islandType)
     {
-        for (final WorldManager worldManager : this.worldManagers)
+        return this.worldManagers.get(islandType);
+    }
+
+    /**
+     * Zwraca menadżera światów dla danego świata.
+     *
+     * @param world świat.
+     * @return menadżer świata.
+     */
+    public WorldManager getWorldManager(final World world)
+    {
+        return this.worldManagers.get(world);
+    }
+
+    /**
+     * Zwraca obiekt wyspy znajdującej się NA TYM SERWERZE.
+     * Jeśli wyspa jest na innym serwerze, ta metoda zwróci null.
+     *
+     * @param islandId identyfikator wyspy.
+     * @return obiekt wyspy na tym serwerze.
+     */
+    public Island getIsland(final UUID islandId)
+    {
+        final IslandData islandData = this.skyBlockServer.getIslandDao().getIsland(islandId);
+        if (islandData == null)
         {
-            if (islandType.equals(worldManager.getIslandConfig().getName()))
-            {
-                return worldManager;
-            }
+            return null;
         }
-       throw new IllegalArgumentException("Can't find WorldManager for " + islandType);
+        return this.getWorldManager(islandData.getIslandType()).getIslands().getById(islandId);
     }
 
     /**
@@ -120,7 +140,7 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
     @Override
     public Integer getIslands()
     {
-        return this.worldManagers.stream().mapToInt(WorldManager::getIslandsCount).sum();
+        return this.worldManagers.list().stream().mapToInt(WorldManager::getIslandsCount).sum();
     }
 
     @Override

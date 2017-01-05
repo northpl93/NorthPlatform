@@ -212,5 +212,5 @@ public abstract class ApiCore
 
     protected abstract void start() throws Exception; // after components
 
-    protected abstract void stop() throws Exception;
+    protected abstract void stop() throws Exception; // before components
 }

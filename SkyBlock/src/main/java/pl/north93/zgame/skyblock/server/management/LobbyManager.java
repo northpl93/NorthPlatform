@@ -39,7 +39,7 @@ public class LobbyManager implements ISkyBlockServerManager
     {
         final IslandData islandData = this.server.getIslandDao().getIsland(islandId);
         final Value<IOnlinePlayer> networkPlayer = this.networkManager.getOnlinePlayer(player.getName());
-        final SkyPlayer skyPlayer = new SkyPlayer(networkPlayer);
+        final SkyPlayer skyPlayer = SkyPlayer.get(networkPlayer);
 
         skyPlayer.setIslandToTp(islandId);
         networkPlayer.get().connectTo(this.networkManager.getServer(islandData.getServerId()).get());
