@@ -14,6 +14,7 @@
         <module name="Lobby" />
         <module name="Network Controller" />
         <module name="Pets" />
+        <module name="PlayerDataShare" />
         <module name="Server Deamon" />
         <module name="SkyBlock" />
       </profile>
@@ -26,6 +27,7 @@
       <module name="Network Controller" target="1.8" />
       <module name="Pets" target="8" />
       <module name="platform" target="8" />
+      <module name="PlayerDataShare" target="8" />
       <module name="Server Deamon" target="8" />
       <module name="SkyBlock" target="8" />
     </bytecodeTargetLevel>

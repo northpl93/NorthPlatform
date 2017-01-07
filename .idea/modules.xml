@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/Lobby/Lobby.iml" filepath="$PROJECT_DIR$/Lobby/Lobby.iml" />
       <module fileurl="file://$PROJECT_DIR$/Network Controller/Network Controller.iml" filepath="$PROJECT_DIR$/Network Controller/Network Controller.iml" />
       <module fileurl="file://$PROJECT_DIR$/Pets/Pets.iml" filepath="$PROJECT_DIR$/Pets/Pets.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PlayerDataShare/PlayerDataShare.iml" filepath="$PROJECT_DIR$/PlayerDataShare/PlayerDataShare.iml" />
       <module fileurl="file://$PROJECT_DIR$/Server Deamon/Server Deamon.iml" filepath="$PROJECT_DIR$/Server Deamon/Server Deamon.iml" />
       <module fileurl="file://$PROJECT_DIR$/SkyBlock/SkyBlock.iml" filepath="$PROJECT_DIR$/SkyBlock/SkyBlock.iml" />
       <module fileurl="file://$PROJECT_DIR$/NorthPlatformParent/platform.iml" filepath="$PROJECT_DIR$/NorthPlatformParent/platform.iml" />

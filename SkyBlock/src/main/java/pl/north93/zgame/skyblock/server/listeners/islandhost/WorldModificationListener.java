@@ -35,6 +35,10 @@ public class WorldModificationListener implements Listener
     private boolean canAccess(final Player player, final Location location)
     {
         final WorldManager manager = this.server.<IslandHostManager>getServerManager().getWorldManager(location.getWorld());
+        if (manager == null)
+        {
+            return false;
+        }
 
         final Island island = manager.getIslands().getByChunk(location.getChunk());
         if (island == null || !island.getLocation().isInside(location))
@@ -46,7 +50,6 @@ public class WorldModificationListener implements Listener
         final UUID       playerId   = player.getUniqueId();
 
         return islandData.getOwnerId().equals(playerId) || islandData.getMembersUuid().contains(playerId);
-
     }
 
     @EventHandler
@@ -79,7 +82,7 @@ public class WorldModificationListener implements Listener
     @EventHandler
     public void onPlayerInteract(final PlayerInteractEvent event)
     {
-        if (! this.canAccess(event.getPlayer(), event.getClickedBlock().getLocation()))
+        if (event.getClickedBlock() != null && ! this.canAccess(event.getPlayer(), event.getClickedBlock().getLocation()))
         {
             event.setCancelled(true);
         }

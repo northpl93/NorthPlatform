@@ -41,6 +41,15 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
     }
 
     @Override
+    public void publish(final String channel, final byte[] message)
+    {
+        try (final Jedis jedis = this.storageConnector.getJedisPool().getResource())
+        {
+            jedis.publish(channel.getBytes(), message);
+        }
+    }
+
+    @Override
     public void subscribe(final String channel, final SubscriptionHandler handler)
     {
         this.subscriptionHandlerMap.put(channel, handler);

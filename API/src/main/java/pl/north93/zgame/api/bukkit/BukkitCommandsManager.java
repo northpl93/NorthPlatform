@@ -108,7 +108,7 @@ public class BukkitCommandsManager implements ICommandsManager
             final String permission = this.wrapped.getPermission();
             if (!StringUtils.isEmpty(permission) && !commandSender.hasPermission(permission))
             {
-                commandSender.sendMessage(BukkitCommandsManager.this.apiMessages.getString("command.no_permissions"));
+                commandSender.sendMessage(ChatColor.translateAlternateColorCodes('&', BukkitCommandsManager.this.apiMessages.getString("command.no_permissions")));
                 return true;
             }
             this.wrapped.execute(new WrappedSender(commandSender), new Arguments(strings), s);

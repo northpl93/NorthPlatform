@@ -10,5 +10,7 @@ public interface ICacheBuilder<K, V>
 
     ICacheBuilder<K, V> provider(Function<K, V> provider);
 
+    ICacheBuilder<K, V> expire(int seconds);
+
     Cache<K, V> build();
 }

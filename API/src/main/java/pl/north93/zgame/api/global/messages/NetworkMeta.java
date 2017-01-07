@@ -43,7 +43,7 @@ public class NetworkMeta
     public Integer displayMaxPlayers; // wyswietlana maksymalna liczba graczy
 
     @CfgComment("Wiadomość na liście serwerów")
-    @CfgStringDefault("Network Platform by NorthPL")
+    @CfgStringDefault("Network Platform by NorthPL93")
     public String serverListMotd; // Wiadomosc dnia na liscie serwerow
 
     @CfgComment("Domyślna grupa serwerów z którą zostanie połączony gracz")

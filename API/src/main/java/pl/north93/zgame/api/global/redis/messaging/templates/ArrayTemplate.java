@@ -24,11 +24,9 @@ public class ArrayTemplate implements Template<Object[]>
     @Override
     public void serializeObject(final TemplateManager templateManager, final MessageBufferPacker packer, final Object[] object) throws Exception
     {
-        //API.debug("ArrayTemplate :: serializeObject");
         packer.packArrayHeader(object.length);
         for (final Object element : object)
         {
-            //API.debug("element: " + element);
             //noinspection unchecked
             this.inArrayTemplate.serializeObject(templateManager, packer, element);
         }

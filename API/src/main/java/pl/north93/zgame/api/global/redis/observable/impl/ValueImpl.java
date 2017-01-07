@@ -160,6 +160,24 @@ class ValueImpl<T> implements Value<T>
     }
 
     @Override
+    public void expire(final int seconds)
+    {
+        try (final Jedis jedis = this.observationManager.getJedis().getResource())
+        {
+            jedis.expire(this.objectKey.getKey(), seconds);
+        }
+    }
+
+    @Override
+    public long getTimeToLive()
+    {
+        try (final Jedis jedis = this.observationManager.getJedis().getResource())
+        {
+            return jedis.ttl(this.objectKey.getKey());
+        }
+    }
+
+    @Override
     protected void finalize() throws Throwable
     {
         this.observationManager.getRedisSubscriber().unSubscribe(this.getChannelKey());

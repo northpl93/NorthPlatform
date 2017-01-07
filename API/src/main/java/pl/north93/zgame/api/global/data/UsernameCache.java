@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -46,6 +47,7 @@ public class UsernameCache extends Component
                                                  .name("mojangapicache:")
                                                  .keyMapper(ObjectKey::new)
                                                  .provider(this::fillCache)
+                                                 .expire((int) TimeUnit.DAYS.toSeconds(1))
                                                  .build();
     }
 

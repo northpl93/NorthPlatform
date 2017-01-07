@@ -25,6 +25,7 @@
         <module>../Pets</module>
         <module>../Server Deamon</module>
         <module>../SkyBlock</module>
+        <module>../PlayerDataShare</module>
     </modules>
 
     <repositories>

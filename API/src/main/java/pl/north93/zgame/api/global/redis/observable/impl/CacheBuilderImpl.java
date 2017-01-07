@@ -17,6 +17,7 @@ class CacheBuilderImpl<K, V> implements ICacheBuilder<K, V>
     private final Class<K>               keyClass;
     private final Class<V>               valueClass;
     private String                 name;
+    private int                    expire;
     private Function<K, ObjectKey> keyMapper;
     private Function<K, V>         provider;
 
@@ -49,13 +50,20 @@ class CacheBuilderImpl<K, V> implements ICacheBuilder<K, V>
     }
 
     @Override
-    public Cache build()
+    public ICacheBuilder<K, V> expire(final int seconds)
+    {
+        this.expire = seconds;
+        return this;
+    }
+
+    @Override
+    public Cache<K, V> build()
     {
         if (StringUtils.isEmpty(this.name))
         {
             this.name = RandomStringUtils.random(6);
         }
-        return new CacheImpl<>(this.observationManager, this.keyClass, this.valueClass, this.keyMapper, this.provider, this.name);
+        return new CacheImpl<>(this.observationManager, this.keyClass, this.valueClass, this.keyMapper, this.provider, this.name, this.expire);
     }
 
     @Override

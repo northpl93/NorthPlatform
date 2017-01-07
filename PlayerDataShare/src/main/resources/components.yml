@@ -1,0 +1,38 @@
+components:
+  - name: PlayerDataShare.SharedImpl
+    enabled: true
+    mainClass: "pl.north93.zgame.datashare.sharedimpl.PlayerDataShareComponent"
+    description: "Shared things between STANDALONE/BUKKIT/BUNGEE"
+    dependencies:
+      - API.Database.StorageConnector
+      - API.Database.Redis.MessagePackSerializer
+      - API.Database.Redis.RPC
+      - API.Database.Redis.Subscriber
+
+  - name: PlayerDataShare.Bungee
+    enabled: true
+    mainClass: "pl.north93.zgame.datashare.bungee.PlayerDataShareBungee"
+    description: "Loads players data from database and broadcast it."
+    dependencies:
+      - PlayerDataShare.SharedImpl
+    platforms:
+      - BUNGEE
+
+  - name: PlayerDataShare.Bukkit
+    enabled: true
+    mainClass: "pl.north93.zgame.datashare.server.PlayerDataShareServer"
+    description: "Bukkit server implementation of PlayerDataShare"
+    dependencies:
+      - PlayerDataShare.SharedImpl
+    platforms:
+      - BUKKIT
+
+  - name: PlayerDataShare.Controller
+    enabled: true
+    mainClass: "pl.north93.zgame.datashare.netcontroller.PlayerDataShareController"
+    description: "Network controller implementation of PlayerDataShare"
+    dependencies:
+      - PlayerDataShare.SharedImpl
+      - API.MinecraftNetwork.NetworkManager
+    platforms:
+      - STANDALONE

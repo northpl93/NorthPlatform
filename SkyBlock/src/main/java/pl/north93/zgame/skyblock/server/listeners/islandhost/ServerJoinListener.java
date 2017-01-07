@@ -10,11 +10,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.skyblock.api.IslandData;
 import pl.north93.zgame.skyblock.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.management.IslandHostManager;
@@ -23,6 +23,7 @@ import pl.north93.zgame.skyblock.server.world.Island;
 public class ServerJoinListener implements Listener
 {
     private Logger          logger;
+    private BukkitApiCore   apiCore;
     @InjectComponent("API.MinecraftNetwork.NetworkManager")
     private INetworkManager networkManager;
     @InjectComponent("SkyBlock.Server")
@@ -31,33 +32,29 @@ public class ServerJoinListener implements Listener
     @EventHandler
     public void onJoin(final PlayerJoinEvent event)
     {
-        final Value<IOnlinePlayer> networkPlayer = this.networkManager.getOnlinePlayer(event.getPlayer().getName());
-        final SkyPlayer skyPlayer = SkyPlayer.get(networkPlayer);
-
-        final UUID islandId = skyPlayer.getIslandTpTo();
-        if (islandId == null)
+        this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
         {
-            return;
-        }
+            final Value<IOnlinePlayer> networkPlayer = this.networkManager.getOnlinePlayer(event.getPlayer().getName());
+            final SkyPlayer skyPlayer = SkyPlayer.get(networkPlayer);
 
-        skyPlayer.setIslandToTp(null);
+            final UUID islandId = skyPlayer.getIslandTpTo();
+            if (islandId == null)
+            {
+                return;
+            }
 
-        final IslandData islandData = this.server.getIslandDao().getIsland(islandId);
-        if (islandData == null)
-        {
-            this.logger.severe("[SkyBlock] islandData is null in onJoin");
-            return;
-        }
+            skyPlayer.setIslandToTp(null);
 
-        final IslandHostManager islandHostManager = this.server.getServerManager();
-        final Island island = islandHostManager.getWorldManager(islandData.getIslandType()).getIslands().getById(islandId);
-        if (island == null)
-        {
-            this.logger.severe("[SkyBlock] island is null in onJoin");
-            return;
-        }
+            final IslandHostManager islandHostManager = this.server.getServerManager();
+            final Island island = islandHostManager.getIsland(skyPlayer.getIslandId());
+            if (island == null)
+            {
+                this.logger.severe("[SkyBlock] island is null in onJoin");
+                return;
+            }
 
-        event.getPlayer().teleport(island.getHomeLocation().add(0.5, 0.5, 0.5));
+            this.apiCore.sync(() -> event.getPlayer().teleport(island.getHomeLocation().add(0.5, 0.5, 0.5)));
+        });
     }
 
     @Override

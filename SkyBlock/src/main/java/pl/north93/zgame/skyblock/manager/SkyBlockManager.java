@@ -106,7 +106,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
         else
         {
             skyPlayer.setIslandToTp(islandId);
-            onlinePlayer.get().connectTo(this.networkManager.getServer(islandServer).get());
+            onlinePlayer.get().connectTo(this.networkManager.getServer(islandServer).get()); // todo server may be null?
         }
     }
 

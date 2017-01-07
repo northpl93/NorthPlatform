@@ -57,7 +57,15 @@ public interface Value<T>
     boolean isCached();
 
     /**
-     * Adds listener which invokes when this Value is updated.
+     * Set a timeout on key.
+     * @param seconds time of key liveness
      */
-    //void addListener(Consumer<T> listener);
+    void expire(int seconds);
+
+    /**
+     * Returns TTL of this key.
+     * Returns -1 if it's infinity.
+     * @return TTL of this key.
+     */
+    long getTimeToLive();
 }

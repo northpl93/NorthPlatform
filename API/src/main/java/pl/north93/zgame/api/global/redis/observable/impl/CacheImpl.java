@@ -18,8 +18,9 @@ class CacheImpl<K, V> implements Cache<K, V>
     private final Function<K, ObjectKey> keyMapper;
     private final Function<K, V>         provider;
     private final String                 prefix;
+    private final int                    expire;
 
-    public CacheImpl(final ObservationManagerImpl observationManager, final Class<K> keyClass, final Class<V> valueClass, final Function<K, ObjectKey> keyMapper, final Function<K, V> provider, final String prefix)
+    public CacheImpl(final ObservationManagerImpl observationManager, final Class<K> keyClass, final Class<V> valueClass, final Function<K, ObjectKey> keyMapper, final Function<K, V> provider, final String prefix, final int expire)
     {
         this.observationManager = observationManager;
         this.keyClass = keyClass;
@@ -27,6 +28,7 @@ class CacheImpl<K, V> implements Cache<K, V>
         this.keyMapper = keyMapper;
         this.provider = provider;
         this.prefix = prefix;
+        this.expire = expire;
     }
 
     @Override
@@ -47,7 +49,12 @@ class CacheImpl<K, V> implements Cache<K, V>
     @Override
     public void put(final K key, final V value)
     {
-        this.getValue(key).set(value);
+        final Value<V> remoteValue = this.getValue(key);
+        remoteValue.set(value);
+        if (this.expire > 0)
+        {
+            remoteValue.expire(this.expire);
+        }
     }
 
     @Override

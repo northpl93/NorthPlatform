@@ -2,6 +2,8 @@ package pl.north93.zgame.api.global.redis.subscriber;
 
 public interface RedisSubscriber
 {
+    void publish(String channel, byte[] message);
+
     void subscribe(String channel, SubscriptionHandler handler);
 
     default void subscribe(String channel)
