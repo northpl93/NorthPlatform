@@ -80,3 +80,4 @@ components:
       - API.Database.Redis.MessagePackSerializer
       - API.Database.Redis.Observer
       - API.MinecraftNetwork.PermissionsManager
+      - API.MinecraftNetwork.UsernameCache

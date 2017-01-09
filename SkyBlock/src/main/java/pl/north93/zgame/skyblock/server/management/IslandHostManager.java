@@ -20,8 +20,8 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.skyblock.api.IIslandHostManager;
 import pl.north93.zgame.skyblock.api.IslandData;
+import pl.north93.zgame.skyblock.server.actions.TeleportPlayerToIsland;
 import pl.north93.zgame.skyblock.api.cfg.IslandConfig;
-import pl.north93.zgame.skyblock.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.api.utils.Coords2D;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.world.Island;
@@ -89,10 +89,16 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
         else
         {
             final Value<IOnlinePlayer> networkPlayer = this.networkManager.getOnlinePlayer(player.getName());
-            final SkyPlayer skyPlayer = SkyPlayer.get(networkPlayer);
-            skyPlayer.setIslandToTp(islandId);
-            networkPlayer.get().connectTo(this.networkManager.getServer(islandData.getServerId()).get());
+            //final SkyPlayer skyPlayer = SkyPlayer.get(networkPlayer);
+            //skyPlayer.setIslandToTp(islandId);
+            networkPlayer.get().connectTo(this.networkManager.getServer(islandData.getServerId()).get(), new TeleportPlayerToIsland(islandId));
         }
+    }
+
+    @Override
+    public void tpPlayerToSpawn(final Player player)
+    {
+        this.networkManager.getOnlinePlayer(player.getName()).get().connectTo(this.skyBlockServer.getSkyBlockConfig().getLobbyServersGroup());
     }
 
     /**

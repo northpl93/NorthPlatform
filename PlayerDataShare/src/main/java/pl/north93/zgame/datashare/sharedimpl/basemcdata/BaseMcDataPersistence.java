@@ -1,6 +1,7 @@
 package pl.north93.zgame.datashare.sharedimpl.basemcdata;
 
 import org.bson.Document;
+import org.bson.types.Binary;
 
 import pl.north93.zgame.datashare.api.data.IDataUnitPersistence;
 
@@ -21,6 +22,8 @@ public class BaseMcDataPersistence implements IDataUnitPersistence<BaseMcDataCon
         doc.put("exhaustion", dataUnit.getExhaustion());
         doc.put("saturation", dataUnit.getSaturation());
 
+        doc.put("potions", dataUnit.getPotions());
+        doc.put("totalexperience", dataUnit.getTotalExperience());
         doc.put("statistics", dataUnit.getStatistics());
         doc.put("gamemode", dataUnit.getGameMode());
 
@@ -32,8 +35,8 @@ public class BaseMcDataPersistence implements IDataUnitPersistence<BaseMcDataCon
     {
         final BaseMcDataContainer data = new BaseMcDataContainer();
 
-        data.setInventory(doc.getString("inventory"));
-        data.setEnderchest(doc.getString("enderchest"));
+        data.setInventory(doc.get("inventory", Binary.class).getData());
+        data.setEnderchest(doc.get("enderchest", Binary.class).getData());
         data.setHeldItemSlot(doc.getInteger("helditemslot"));
 
         data.setHealth(doc.getDouble("health"));
@@ -42,6 +45,8 @@ public class BaseMcDataPersistence implements IDataUnitPersistence<BaseMcDataCon
         data.setExhaustion(doc.getDouble("exhaustion").floatValue());
         data.setSaturation(doc.getDouble("saturation").floatValue());
 
+        data.setPotions(doc.get("potions", Binary.class).getData());
+        data.setTotalExperience(doc.getInteger("totalexperience"));
         data.setStatistics(doc.getString("statistics"));
         data.setGameMode(doc.getInteger("gamemode", 1)); // 1 is survival
 

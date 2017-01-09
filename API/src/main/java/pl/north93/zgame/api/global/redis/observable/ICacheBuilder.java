@@ -12,5 +12,11 @@ public interface ICacheBuilder<K, V>
 
     ICacheBuilder<K, V> expire(int seconds);
 
+    default ICacheBuilder<K, V> expire(long seconds)
+    {
+        this.expire((int) seconds);
+        return this;
+    }
+
     Cache<K, V> build();
 }

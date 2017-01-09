@@ -1,11 +1,12 @@
 package pl.north93.zgame.api.global.redis.subscriber;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -21,9 +22,10 @@ import redis.clients.util.SafeEncoder;
 public class RedisSubscriberImpl extends Component implements RedisSubscriber
 {
     private final SubscriptionReceiver             subscriptionReceiver   = new SubscriptionReceiver();
-    private final Map<String, SubscriptionHandler> subscriptionHandlerMap = new HashMap<>();
+    private final Map<String, SubscriptionHandler> subscriptionHandlerMap = new ConcurrentHashMap<>();
     private final ExecutorService                  executor               = Executors.newCachedThreadPool();
     private final CountDownLatch                   subscriptionLock       = new CountDownLatch(1);
+    private final ReentrantLock                    lock                   = new ReentrantLock();
     private       boolean                          isSubscribed;
     @InjectComponent("API.Database.StorageConnector")
     private StorageConnector storageConnector;
@@ -52,47 +54,68 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
     @Override
     public void subscribe(final String channel, final SubscriptionHandler handler)
     {
-        this.subscriptionHandlerMap.put(channel, handler);
-        this.getApiCore().debug("Added subscription for " + channel);
-        if (! this.subscriptionReceiver.isSubscribed() && ! this.isSubscribed)
-        {
-            this.isSubscribed = true;
-            this.executor.execute(() ->
-            {
-                this.getLogger().info("jedis.subscribe invoked");
-                try (final Jedis jedis = this.storageConnector.getJedisPool().getResource())
-                {
-                    jedis.subscribe(this.subscriptionReceiver, channel.getBytes());
-                }
-            });
-            return;
-        }
         try
         {
+            this.lock.lock();
+            this.subscriptionHandlerMap.put(channel, handler);
+            this.getApiCore().debug("Added subscription for " + channel);
+            if (! this.subscriptionReceiver.isSubscribed() && ! this.isSubscribed)
+            {
+                this.isSubscribed = true;
+                this.executor.execute(() ->
+                {
+                    this.getApiCore().debug("Subscriber thread started (jedis.subscribe will be invoked shortly...)");
+                    try (final Jedis jedis = this.storageConnector.getJedisPool().getResource())
+                    {
+                        jedis.subscribe(this.subscriptionReceiver, channel.getBytes());
+                    }
+                });
+                return;
+            }
             this.subscriptionLock.await();
+            this.subscriptionReceiver.subscribe(channel.getBytes());
         }
         catch (final InterruptedException e)
         {
             e.printStackTrace();
         }
-        this.subscriptionReceiver.subscribe(channel.getBytes());
+        finally
+        {
+            this.lock.unlock();
+        }
     }
 
     @Override
     public void unSubscribe(final String channel)
     {
-        if (this.subscriptionHandlerMap.remove(channel) != null)
+        try
         {
-            this.subscriptionReceiver.unsubscribe(channel.getBytes());
-            this.getApiCore().debug("Removed subscription for " + channel);
+            this.lock.lock();
+            if (this.subscriptionHandlerMap.remove(channel) != null)
+            {
+                this.subscriptionReceiver.unsubscribe(channel.getBytes());
+                this.getApiCore().debug("Removed subscription for " + channel);
+            }
+        }
+        finally
+        {
+            this.lock.unlock();
         }
     }
 
     @Override
     public void unSubscribeAll()
     {
-        this.subscriptionHandlerMap.keySet().stream().map(String::getBytes).forEach(this.subscriptionReceiver::unsubscribe);
-        this.subscriptionHandlerMap.clear();
+        try
+        {
+            this.lock.lock();
+            this.subscriptionHandlerMap.keySet().stream().map(String::getBytes).forEach(this.subscriptionReceiver::unsubscribe);
+            this.subscriptionHandlerMap.clear();
+        }
+        finally
+        {
+            this.lock.unlock();
+        }
     }
 
     private class SubscriptionReceiver extends BinaryJedisPubSub

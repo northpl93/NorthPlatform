@@ -124,23 +124,24 @@ public class PlayerListener implements Listener
     public void onLeave(final PlayerDisconnectEvent event)
     {
         final Value<IOnlinePlayer> player = this.bungeeApiCore.getNetworkManager().getOnlinePlayer(event.getPlayer().getName());
-        this.playersDao.savePlayer(player.get());
+        this.playersDao.savePlayer(player.getWithoutCache());
         player.delete();
     }
-
+    
     @EventHandler
     public void onServerChange(final ServerSwitchEvent event)
     {
         final Value<IOnlinePlayer> player = this.bungeeApiCore.getNetworkManager().getOnlinePlayer(event.getPlayer().getName());
+        final IOnlinePlayer iOnlinePlayer = player.get();
 
         try
         {
-            player.get().setServerId(UUID.fromString(event.getPlayer().getServer().getInfo().getName()));
+            iOnlinePlayer.setServerId(UUID.fromString(event.getPlayer().getServer().getInfo().getName()));
         }
         catch (final IllegalArgumentException ex)
         {
             this.bungeeApiCore.getLogger().log(Level.SEVERE, "Can't set player's serverId in onServerChange", ex);
         }
-        player.upload(); // send new data to redis
+        player.set(iOnlinePlayer); // send new data to redis
     }
 }

@@ -1,7 +1,7 @@
 package pl.north93.zgame.api.global.redis.rpc.impl;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -33,7 +33,7 @@ public class RpcManagerImpl extends Component implements IRpcManager
     private final RpcProxyCache                     rpcProxyCache      = new RpcProxyCache(this);
     private final Int2ObjectMap<RpcResponseHandler> responseHandlerMap = new Int2ObjectArrayMap<>();
     private final Int2ObjectMap<RpcResponseLock>    locks              = new Int2ObjectArrayMap<>();
-    private final Map<Class<?>, RpcObjectDescription> descriptionCache = new HashMap<>();
+    private final Map<Class<?>, RpcObjectDescription> descriptionCache = new ConcurrentHashMap<>();
 
     @Override
     protected void enableComponent()
@@ -57,7 +57,7 @@ public class RpcManagerImpl extends Component implements IRpcManager
         this.addListeningContext0(id);
     }
 
-    private void addListeningContext0(final String id)
+    private synchronized void addListeningContext0(final String id)
     {
         this.getApiCore().debug("addListeningContext0(" + id + ")");
         this.redisSubscriber.subscribe("rpc:" + id + ":invoke", this::handleMethodInvocation);
@@ -65,7 +65,7 @@ public class RpcManagerImpl extends Component implements IRpcManager
     }
 
     @Override
-    public void addRpcImplementation(final Class<?> classInterface, final Object implementation)
+    public synchronized void addRpcImplementation(final Class<?> classInterface, final Object implementation)
     {
         this.getApiCore().debug("addRpcImplementation(" + classInterface + ", " + implementation.getClass().getName() + ")");
         this.responseHandlerMap.put(classInterface.getName().hashCode(), new RpcResponseHandler(this, classInterface, implementation));
@@ -94,13 +94,19 @@ public class RpcManagerImpl extends Component implements IRpcManager
     /*default*/ RpcResponseLock createFor(final int requestId)
     {
         final RpcResponseLock lock = new RpcResponseLock();
-        this.locks.put(requestId, lock);
+        synchronized (this.locks)
+        {
+            this.locks.put(requestId, lock);
+        }
         return lock;
     }
 
     /*default*/ void removeLock(final int requestId)
     {
-        this.locks.remove(requestId);
+        synchronized (this.locks)
+        {
+            this.locks.remove(requestId);
+        }
     }
 
     /*default*/ JedisPool getJedisPool()
@@ -137,7 +143,11 @@ public class RpcManagerImpl extends Component implements IRpcManager
     private void handleResponse(final String channel, final byte[] bytes)
     {
         final RpcResponseMessage responseMessage = this.msgPack.deserialize(RpcResponseMessage.class, bytes);
-        final RpcResponseLock lock = this.locks.get(responseMessage.getRequestId());
+        final RpcResponseLock lock;
+        synchronized (this.locks)
+        {
+            lock = this.locks.get(responseMessage.getRequestId());
+        }
         if (lock == null)
         {
             this.getApiCore().getLogger().warning("Received RPC response but lock was null. Response:" + responseMessage);

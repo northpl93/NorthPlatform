@@ -39,7 +39,8 @@ class OnlineSkyPlayer extends SkyPlayer
     @Override
     public void setIsland(final UUID islandId)
     {
-        final MetaStore metaStore = this.networkPlayer.get().getMetaStore();
+        final IOnlinePlayer iOnlinePlayer = this.networkPlayer.get();
+        final MetaStore metaStore = iOnlinePlayer.getMetaStore();
         if (islandId == null)
         {
             metaStore.setBoolean(PLAYER_HAS_ISLAND, false);
@@ -50,33 +51,7 @@ class OnlineSkyPlayer extends SkyPlayer
             metaStore.setBoolean(PLAYER_HAS_ISLAND, true);
             metaStore.setUuid(PLAYER_ISLAND_ID, islandId);
         }
-        this.networkPlayer.upload();
-    }
-
-    @Override
-    public void setIslandToTp(final UUID islandId)
-    {
-        final MetaStore metaStore = this.networkPlayer.get().getMetaStore();
-        if (islandId == null)
-        {
-            metaStore.remove(PLAYER_TP_TO);
-        }
-        else
-        {
-            metaStore.setUuid(PLAYER_TP_TO, islandId);
-        }
-        this.networkPlayer.upload();
-    }
-
-    @Override
-    public UUID getIslandTpTo()
-    {
-        final MetaStore metaStore = this.networkPlayer.get().getMetaStore();
-        if (metaStore.contains(PLAYER_TP_TO))
-        {
-            return metaStore.getUuid(PLAYER_TP_TO);
-        }
-        return null;
+        this.networkPlayer.set(iOnlinePlayer);
     }
 
     @Override

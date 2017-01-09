@@ -1,8 +1,8 @@
 package pl.north93.zgame.api.global.redis.rpc.impl;
 
 import java.lang.reflect.Proxy;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -12,7 +12,7 @@ import pl.north93.zgame.api.global.redis.rpc.IRpcTarget;
 class RpcProxyCache
 {
     private final RpcManagerImpl          rpcManager;
-    private final Map<CacheEntry, Object> cache = new HashMap<>();
+    private final Map<CacheEntry, Object> cache = new ConcurrentHashMap<>();
 
     public RpcProxyCache(final RpcManagerImpl rpcManager)
     {

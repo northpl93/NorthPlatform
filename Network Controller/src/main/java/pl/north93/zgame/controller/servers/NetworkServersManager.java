@@ -97,7 +97,7 @@ public class NetworkServersManager extends Component implements INetworkServersM
         for (int i = 0; i < servers; i++)
         {
             final ServerImpl server = ServerFactory.INSTANCE.createNewServer(serversGroup);
-            this.observationManager.of(server).upload();
+            this.observationManager.of(server); // it will be uploaded automatically
             this.allocationProcessor.queueServerDeployment(server); // queue server for deployment.
         }
     }

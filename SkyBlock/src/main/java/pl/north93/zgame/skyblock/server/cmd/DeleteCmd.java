@@ -37,6 +37,7 @@ public class DeleteCmd extends NorthCommand
 
         if (args.length() == 1 && args.asText(0).equals("potwierdz"))
         {
+
             this.server.getSkyBlockManager().deleteIsland(skyPlayer.getIslandId());
             sender.sendMessage(this.messages, "info.deleted_island");
         }

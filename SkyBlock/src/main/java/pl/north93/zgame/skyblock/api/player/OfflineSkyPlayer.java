@@ -51,7 +51,7 @@ class OfflineSkyPlayer extends SkyPlayer
         }
     }
 
-    @Override
+    /*@Override
     public void setIslandToTp(final UUID islandId)
     {
         final MetaStore metaStore = this.offlinePlayer.getMetaStore();
@@ -66,6 +66,24 @@ class OfflineSkyPlayer extends SkyPlayer
     }
 
     @Override
+    public void setIslandAndIslandToTp(final UUID islandId)
+    {
+        final MetaStore metaStore = this.offlinePlayer.getMetaStore();
+        if (islandId == null)
+        {
+            metaStore.remove(PLAYER_TP_TO);
+            metaStore.remove(PLAYER_ISLAND_ID);
+            metaStore.setBoolean(PLAYER_HAS_ISLAND, false);
+        }
+        else
+        {
+            metaStore.setBoolean(PLAYER_HAS_ISLAND, true);
+            metaStore.setUuid(PLAYER_ISLAND_ID, islandId);
+            metaStore.setUuid(PLAYER_TP_TO, islandId);
+        }
+    }
+
+    @Override
     public UUID getIslandTpTo()
     {
         final MetaStore metaStore = this.offlinePlayer.getMetaStore();
@@ -74,7 +92,7 @@ class OfflineSkyPlayer extends SkyPlayer
             return metaStore.getUuid(PLAYER_TP_TO);
         }
         return null;
-    }
+    }*/
 
     @Override
     public String toString()

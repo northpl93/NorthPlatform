@@ -18,6 +18,7 @@ import pl.north93.zgame.skyblock.api.ISkyBlockManager;
 import pl.north93.zgame.skyblock.api.IslandDao;
 import pl.north93.zgame.skyblock.api.IslandData;
 import pl.north93.zgame.skyblock.api.ServerMode;
+import pl.north93.zgame.skyblock.server.actions.TeleportPlayerToIsland;
 import pl.north93.zgame.skyblock.api.cfg.IslandConfig;
 import pl.north93.zgame.skyblock.api.cfg.SkyBlockConfig;
 import pl.north93.zgame.skyblock.api.player.SkyPlayer;
@@ -93,7 +94,6 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
         if (islandData == null)
         {
             this.getLogger().severe("IslandData is null in teleportToIsland(" + playerName + ", " + islandId + ")");
-            skyPlayer.setIslandToTp(null);
             skyPlayer.setIsland(null);
             return;
         }
@@ -105,8 +105,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
         }
         else
         {
-            skyPlayer.setIslandToTp(islandId);
-            onlinePlayer.get().connectTo(this.networkManager.getServer(islandServer).get()); // todo server may be null?
+            onlinePlayer.get().connectTo(this.networkManager.getServer(islandServer).get(), new TeleportPlayerToIsland(islandId)); // todo server may be null?
         }
     }
 
@@ -160,14 +159,13 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
         island.setName("Wyspa gracza " + ownerNick);
         island.setHomeLocation(config.getHomeLocation());
 
-        this.islandDao.saveIsland(island);
         skyPlayer.setIsland(islandId);
-        skyPlayer.setIslandToTp(islandId);
 
+        this.islandDao.saveIsland(island);
         server.getIslandHostManager().islandAdded(island);
 
         networkPlayer.get().sendMessage(this.messages, "info.created_island");
-        networkPlayer.get().connectTo(server.getServerValue().get());
+        networkPlayer.get().connectTo(server.getServerValue().get(), new TeleportPlayerToIsland(islandId));
     }
 
     @Override

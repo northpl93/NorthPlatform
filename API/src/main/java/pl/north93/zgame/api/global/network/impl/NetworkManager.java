@@ -240,6 +240,12 @@ class NetworkManager extends Component implements INetworkManager
     }
 
     @Override
+    public IOfflinePlayer getOfflinePlayer(final String nick)
+    {
+        return this.playersData.getOfflinePlayer(nick);
+    }
+
+    @Override
     public void savePlayer(final IPlayer player)
     {
         this.playersData.savePlayer(player);

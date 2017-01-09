@@ -28,29 +28,32 @@ class DynamicTemplate<T> implements TemplateGeneric<T>
         Class<?> clazz = classCache.get(className);
         if (clazz == null)
         {
-            try
+            synchronized (classCache)
             {
-                clazz = Class.forName(className);
-            }
-            catch (final ClassNotFoundException e)
-            {
-                for (final IComponentBundle iComponentBundle : API.getApiCore().getComponentManager().getComponents())
+                try
                 {
-                    try
-                    {
-                        clazz = Class.forName(className, true, iComponentBundle.getClassLoader());
-                    }
-                    catch (final ClassNotFoundException ignored)
-                    {
-                    }
+                    clazz = Class.forName(className);
                 }
+                catch (final ClassNotFoundException e)
+                {
+                    for (final IComponentBundle iComponentBundle : API.getApiCore().getComponentManager().getComponents())
+                    {
+                        try
+                        {
+                            clazz = Class.forName(className, true, iComponentBundle.getClassLoader());
+                        }
+                        catch (final ClassNotFoundException ignored)
+                        {
+                        }
+                    }
 
-                if (clazz == null)
-                {
-                    throw new RuntimeException("I can't find class " + className);
+                    if (clazz == null)
+                    {
+                        throw new RuntimeException("I can't find class " + className);
+                    }
                 }
+                classCache.put(className, clazz);
             }
-            classCache.put(className, clazz);
         }
         return clazz;
     }

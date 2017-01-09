@@ -21,3 +21,11 @@ components:
       - API.Database.Redis.RPC
     platforms:
       - BUKKIT
+
+  - name: SkyBlock.Proxy
+    enabled: true
+    mainClass: "pl.north93.zgame.skyblock.bungee.SkyBlockBungee"
+    description: "Provides some classes needed to work."
+    dependencies: []
+    platforms:
+      - BUNGEE

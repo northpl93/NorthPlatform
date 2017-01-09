@@ -9,9 +9,9 @@ import pl.north93.zgame.api.global.redis.subscriber.SubscriptionHandler;
 
 class ValueSubscriptionHandler implements SubscriptionHandler
 {
-    private final WeakReference<ValueImpl<?>> wrappedValue;
+    private final WeakReference<CachedValueImpl<?>> wrappedValue;
 
-    public ValueSubscriptionHandler(final ValueImpl<?> value)
+    public ValueSubscriptionHandler(final CachedValueImpl<?> value)
     {
         this.wrappedValue = new WeakReference<>(value);
     }
@@ -19,7 +19,7 @@ class ValueSubscriptionHandler implements SubscriptionHandler
     @Override
     public void handle(final String channel, final byte[] message)
     {
-        final ValueImpl<?> value;
+        final CachedValueImpl<?> value;
         if ((value = this.wrappedValue.get()) != null)
         {
             value.handleNewValue(message);

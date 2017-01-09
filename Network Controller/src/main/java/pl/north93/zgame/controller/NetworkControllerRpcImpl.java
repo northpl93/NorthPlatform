@@ -32,8 +32,9 @@ public class NetworkControllerRpcImpl implements NetworkControllerRpc
             API.getLogger().warning("Not found server with ID " + serverId + " while updating server state to " + serverState);
             return;
         }
-        ((ServerImpl) server.get()).setServerState(serverState);
-        server.upload();
+        final ServerImpl serverImpl = (ServerImpl) server.get();
+        serverImpl.setServerState(serverState);
+        server.set(serverImpl);
     }
 
     @Override

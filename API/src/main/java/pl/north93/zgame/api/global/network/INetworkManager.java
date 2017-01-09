@@ -59,6 +59,8 @@ public interface INetworkManager
 
     IOfflinePlayer getOfflinePlayer(UUID playerUuid);
 
+    IOfflinePlayer getOfflinePlayer(String nick);
+
     void savePlayer(IPlayer player);
 
     boolean isOnline(String nick);

@@ -35,7 +35,7 @@ public class PlayerDataListener implements SubscriptionHandler
             return;
         }
 
-        this.playerDataShare.getDataShareManager().applyDataTo(this.shareServer.getMyGroup(), player, dataContainer);
+        this.apiCore.sync(() -> this.playerDataShare.getDataShareManager().applyDataTo(this.shareServer.getMyGroup(), player, dataContainer));
     }
 
     @Override

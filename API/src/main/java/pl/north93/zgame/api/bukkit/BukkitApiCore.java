@@ -6,6 +6,8 @@ import static pl.north93.zgame.api.global.redis.RedisKeys.SERVER;
 import java.io.File;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -60,13 +62,34 @@ public class BukkitApiCore extends ApiCore
     }
 
     /**
-     * Synchronizuje podany runnable do wątku seerwera przy użyciu Schedulera.
+     * Synchronizuje podany runnable do wątku serwera przy użyciu Schedulera.
      *
      * @param runnable do zsynchronizowania.
      */
     public final void sync(final Runnable runnable)
     {
         this.pluginMain.getServer().getScheduler().runTask(this.pluginMain, runnable);
+    }
+
+    /**
+     * Wykonuje kod w pierwszym argumencie asynchronicznie,
+     * wynik przekazuje do drugiego i wykonuje go synchronicznie.
+     * Jeś zostanie zwrócony null częsc synchroniczna sie nie wykona.
+     *
+     * @param async kod asynchroniczny.
+     * @param synced kod zsynchronizowany do serwerra.
+     * @param <T> wartość przekazywana z kodu asynchronicznego do synchronicznego.
+     */
+    public final <T> void sync(final Supplier<T> async, final Consumer<T> synced)
+    {
+        this.getPlatformConnector().runTaskAsynchronously(() ->
+        {
+            final T t = async.get();
+            if (t != null)
+            {
+                this.sync(() -> synced.accept(t));
+            }
+        });
     }
 
     @Override
@@ -103,7 +126,7 @@ public class BukkitApiCore extends ApiCore
         {
             final ServerImpl impl = (ServerImpl) this.getServer().get();
             impl.setServerState(ServerState.WORKING);
-            this.getServer().upload();
+            this.getServer().set(impl);
         }); // on bukkit it will be invoked after server start
 
         this.registerEvents(new JoinLeftListener(), new ChatListener(), this.windowManager);

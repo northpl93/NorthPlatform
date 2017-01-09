@@ -1,6 +1,5 @@
 package pl.north93.zgame.skyblock.server.world;
 
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -12,6 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.skyblock.api.IslandData;
+import pl.north93.zgame.skyblock.api.utils.Coords2D;
 
 /**
  * Reprezentuje wyspę znajdującą się na konkretnym serwerze i świecie.
@@ -61,9 +61,9 @@ public class Island
     public void clear()
     {
         final World world = this.location.getWorld();
-        for (final Chunk chunk : this.location.getIslandChunks())
+        for (final Coords2D coords : this.location.getIslandChunks())
         {
-            world.regenerateChunk(chunk.getX(), chunk.getZ());
+            world.regenerateChunk(coords.getX(), coords.getZ());
         }
     }
 

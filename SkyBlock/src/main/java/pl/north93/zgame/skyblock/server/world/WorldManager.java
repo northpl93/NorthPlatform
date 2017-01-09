@@ -112,31 +112,22 @@ public class WorldManager
     public void islandAdded(final IslandData islandData) // wywoływane gdy wyspa zotanie dodana
     {
         final Island island = this.constructIsland(islandData);
-        synchronized (this.islands)
-        {
-            this.islands.addIsland(island);
-        }
+        this.islands.addIsland(island);
         this.apiCore.sync(island::loadSchematic); // synchronize schematic loading to main server thread
     }
 
     public void islandRemoved(final IslandData islandData) // wywoływane gdy wyspa zostanie usunięta
     {
         final Island island;
-        synchronized (this.islands)
-        {
-            island = this.islands.getByCoords(islandData.getIslandLocation());
-            this.islands.removeIsland(island); // remove island from lists
-        }
+        island = this.islands.getByCoords(islandData.getIslandLocation());
+        this.islands.removeIsland(island); // remove island from lists
         this.apiCore.sync(island::clear); // synchronize island clear to main server thread
     }
 
     public void islandUpdated(final IslandData islandData)
     {
-        synchronized (this.islands)
-        {
-            final Island island = this.islands.getByCoords(islandData.getIslandLocation());
-            island.updateIslandData(islandData);
-        }
+        final Island island = this.islands.getByCoords(islandData.getIslandLocation());
+        island.updateIslandData(islandData);
     }
 
     @Override

@@ -3,6 +3,7 @@ package pl.north93.zgame.api.global.network;
 import java.util.UUID;
 
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
+import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
 import pl.north93.zgame.api.global.utils.Messageable;
 
@@ -26,7 +27,7 @@ public interface IOnlinePlayer extends IPlayer, ProvidingRedisKey, Messageable
 
     void kick(String message);
 
-    void connectTo(ServerProxyData server);
+    void connectTo(ServerProxyData server, IServerJoinAction... actions);
 
-    void connectTo(String serversGroupName);
+    void connectTo(String serversGroupName, IServerJoinAction... actions);
 }

@@ -22,7 +22,7 @@ import redis.clients.jedis.JedisPool;
 
 public class ObservationManagerImpl extends Component implements IObservationManager
 {
-    private final Map<String, WeakReference<Value<?>>> cache = new HashMap<>();
+    private final Map<String, WeakReference<Value<?>>> cachedValues = new HashMap<>();
     @InjectComponent("API.Database.StorageConnector")
     private StorageConnector storageConnector;
     @InjectComponent("API.Database.Redis.MessagePackSerializer")
@@ -42,13 +42,13 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         final String key = objectKey.getKey();
 
         WeakReference<Value<?>> value;
-        synchronized (this.cache)
+        synchronized (this.cachedValues)
         {
-            value = this.cache.get(key);
+            value = this.cachedValues.get(key);
             if (value == null || value.get() == null)
             {
-                value = new WeakReference<>(new ValueImpl<>(this, clazz, objectKey));
-                this.cache.put(key, value);
+                value = new WeakReference<>(new CachedValueImpl<>(this, clazz, objectKey));
+                this.cachedValues.put(key, value);
             }
         }
 
@@ -85,7 +85,10 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     @Override
     protected void disableComponent()
     {
-        this.cache.clear();
+        synchronized (this.cachedValues)
+        {
+            this.cachedValues.clear();
+        }
     }
 
     /*default*/ PlatformConnector getPlatformConnector()
@@ -111,6 +114,6 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("cache", this.cache).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("cachedValues", this.cachedValues).toString();
     }
 }

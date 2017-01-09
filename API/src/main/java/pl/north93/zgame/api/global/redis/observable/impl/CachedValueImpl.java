@@ -10,14 +10,14 @@ import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import redis.clients.jedis.Jedis;
 
-class ValueImpl<T> implements Value<T>
+class CachedValueImpl<T> implements Value<T>
 {
     private final ObservationManagerImpl observationManager;
     private final Class<T>               clazz;
     private final ObjectKey              objectKey;
-    private T cache;
+    private       T                      cache;
 
-    public ValueImpl(final ObservationManagerImpl observationManager, final Class<T> clazz, final ObjectKey objectKey)
+    public CachedValueImpl(final ObservationManagerImpl observationManager, final Class<T> clazz, final ObjectKey objectKey)
     {
         this.observationManager = observationManager;
         this.clazz = clazz;
@@ -49,6 +49,12 @@ class ValueImpl<T> implements Value<T>
         {
             return this.cache;
         }
+        return this.getFromRedis();
+    }
+
+    @Override
+    public T getWithoutCache()
+    {
         return this.getFromRedis();
     }
 
@@ -87,7 +93,13 @@ class ValueImpl<T> implements Value<T>
     {
         try (final Jedis jedis = this.observationManager.getJedis().getResource())
         {
-            final T fromRedis = this.observationManager.getMsgPack().deserialize(this.clazz, jedis.get(this.objectKey.getKey().getBytes()));
+            final byte[] bytes = jedis.get(this.objectKey.getKey().getBytes());
+            if (bytes == null)
+            {
+                this.cache = null;
+                return null;
+            }
+            final T fromRedis = this.observationManager.getMsgPack().deserialize(this.clazz, bytes);
             this.cache = fromRedis;
             return fromRedis;
         }
@@ -98,7 +110,7 @@ class ValueImpl<T> implements Value<T>
     }
 
     @Override
-    public synchronized void set(final T newValue)
+    public void set(final T newValue)
     {
         if (newValue == null)
         {
@@ -111,18 +123,7 @@ class ValueImpl<T> implements Value<T>
         }
     }
 
-    @Override
-    public Value<T> setIfUnavailable(final Supplier<T> defaultValue)
-    {
-        if (! this.isAvailable())
-        {
-            this.set(defaultValue.get());
-        }
-        return this;
-    }
-
-    @Override
-    public void upload()
+    private void upload()
     {
         final byte[] serialized = this.observationManager.getMsgPack().serialize(this.clazz, this.cache);
 
@@ -131,6 +132,16 @@ class ValueImpl<T> implements Value<T>
             jedis.set(this.objectKey.getKey().getBytes(), serialized);
             jedis.publish(this.getChannelKey().getBytes(), serialized);
         }
+    }
+
+    @Override
+    public Value<T> setIfUnavailable(final Supplier<T> defaultValue)
+    {
+        if (! this.isAvailable())
+        {
+            this.set(defaultValue.get());
+        }
+        return this;
     }
 
     @Override

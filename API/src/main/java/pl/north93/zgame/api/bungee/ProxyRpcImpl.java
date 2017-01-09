@@ -5,6 +5,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import pl.north93.zgame.api.global.network.ProxyRpc;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
+import pl.north93.zgame.api.global.network.server.joinaction.JoinActionsContainer;
 
 public class ProxyRpcImpl implements ProxyRpc
 {
@@ -35,15 +36,15 @@ public class ProxyRpcImpl implements ProxyRpc
     }
 
     @Override
-    public void connectPlayer(final String nick, final String serverName)
+    public void connectPlayer(final String nick, final String serverName, final JoinActionsContainer actions)
     {
-        this.proxy.getPlayer(nick).connect(this.proxy.getServerInfo(serverName));
+        this.apiCore.getConnectionManager().connectPlayerToServer(this.proxy.getPlayer(nick), serverName, actions);
     }
 
     @Override
-    public void connectPlayerToServersGroup(final String nick, final String serversGroup)
+    public void connectPlayerToServersGroup(final String nick, final String serversGroup, final JoinActionsContainer actions)
     {
-        this.apiCore.getConnectionManager().connectPlayerToServersGroup(this.proxy.getPlayer(nick), serversGroup);
+        this.apiCore.getConnectionManager().connectPlayerToServersGroup(this.proxy.getPlayer(nick), serversGroup, actions);
     }
 
     @Override

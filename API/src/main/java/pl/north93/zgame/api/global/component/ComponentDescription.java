@@ -80,6 +80,6 @@ public class ComponentDescription
 
     private static Platform[] defaultPlatforms()
     {
-        return new Platform[] { Platform.BUKKIT, Platform.BUNGEE, Platform.STANDALONE};
+        return new Platform[] { Platform.BUKKIT, Platform.BUNGEE, Platform.STANDALONE };
     }
 }

@@ -11,4 +11,6 @@ public interface ISkyBlockServerManager
     void stop();
 
     void tpPlayerToIsland(Player player, UUID islandId);
+
+    void tpPlayerToSpawn(Player player);
 }

@@ -78,6 +78,11 @@ public class IslandDao
 
     public IslandData getIsland(final UUID islandId)
     {
+        if (islandId == null)
+        {
+            API.getLogger().warning("Somebody invoked IslandDao#getIsland(null)");
+            return null;
+        }
         return this.islandDataCache.get(islandId);
     }
 

@@ -1,11 +1,8 @@
 package pl.north93.zgame.skyblock.server.listeners.islandhost;
 
-import java.util.UUID;
 import java.util.logging.Logger;
 
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -13,12 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.IOnlinePlayer;
-import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.skyblock.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
-import pl.north93.zgame.skyblock.server.management.IslandHostManager;
-import pl.north93.zgame.skyblock.server.world.Island;
 
 public class ServerJoinListener implements Listener
 {
@@ -29,7 +21,7 @@ public class ServerJoinListener implements Listener
     @InjectComponent("SkyBlock.Server")
     private SkyBlockServer  server;
 
-    @EventHandler
+    /*@EventHandler
     public void onJoin(final PlayerJoinEvent event)
     {
         this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
@@ -55,7 +47,7 @@ public class ServerJoinListener implements Listener
 
             this.apiCore.sync(() -> event.getPlayer().teleport(island.getHomeLocation().add(0.5, 0.5, 0.5)));
         });
-    }
+    }*/
 
     @Override
     public String toString()

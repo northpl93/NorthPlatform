@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -104,7 +105,8 @@ public class UsernameCache extends Component
 
     private UsernameDetails fillCache(final String username)
     {
-        final Document results = this.mongoCache.find(new Document("validSpelling", compile(username, CASE_INSENSITIVE))).first();
+        final Pattern usernamePattern = compile('^' + Pattern.quote(username) + '$', CASE_INSENSITIVE);
+        final Document results = this.mongoCache.find(new Document("validSpelling", usernamePattern)).first();
         if (results != null)
         {
             return new UsernameDetails(results.getString("validSpelling"), results.get("uuid", UUID.class), results.getBoolean("isPremium"), results.getDate("fetchTime"));
@@ -119,7 +121,7 @@ public class UsernameCache extends Component
             document.put("uuid", fromMojang.uuid);
             document.put("isPremium", fromMojang.isPremium);
             document.put("fetchTime", fromMojang.fetchTime);
-            this.mongoCache.updateOne(new Document("validSpelling", compile(username, CASE_INSENSITIVE)), new Document("$set", document), new UpdateOptions().upsert(true));
+            this.mongoCache.updateOne(new Document("validSpelling", usernamePattern), new Document("$set", document), new UpdateOptions().upsert(true));
             return fromMojang;
         }
 

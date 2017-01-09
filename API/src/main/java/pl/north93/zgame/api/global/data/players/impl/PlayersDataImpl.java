@@ -1,7 +1,9 @@
 package pl.north93.zgame.api.global.data.players.impl;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.UpdateOptions;
@@ -11,6 +13,7 @@ import org.bson.Document;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.data.StorageConnector;
+import pl.north93.zgame.api.global.data.UsernameCache;
 import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.metadata.MetaStore;
@@ -28,6 +31,8 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class PlayersDataImpl extends Component implements IPlayersData
 {
+    @InjectComponent("API.MinecraftNetwork.UsernameCache")
+    private UsernameCache       usernameCache;
     @InjectComponent("API.Database.StorageConnector")
     private StorageConnector    storageConnector;
     @InjectComponent("API.MinecraftNetwork.PermissionsManager")
@@ -49,6 +54,8 @@ public class PlayersDataImpl extends Component implements IPlayersData
         this.nick2uuid = this.observationManager.cacheBuilder(String.class, UUID.class)
                                                 .name("nick2uuid:")
                                                 .keyMapper(ObjectKey::new)
+                                                .provider(this::findUuidFromNick)
+                                                .expire(TimeUnit.DAYS.toSeconds(1))
                                                 .build();
         this.offlinePlayersData = this.observationManager.cacheBuilder(UUID.class, IOfflinePlayer.class)
                                                          .name("offlineplayers:")
@@ -125,6 +132,17 @@ public class PlayersDataImpl extends Component implements IPlayersData
     }
 
     @Override
+    public IOfflinePlayer getOfflinePlayer(final String nick)
+    {
+        final UUID uuid = this.nick2uuid.get(nick);
+        if (uuid == null)
+        {
+            return null;
+        }
+        return this.getOfflinePlayer(uuid);
+    }
+
+    @Override
     public void savePlayer(final IPlayer player)
     {
         final Document playerData = new Document();
@@ -162,6 +180,16 @@ public class PlayersDataImpl extends Component implements IPlayersData
     public UUID usernameToUuid(final String username)
     {
         return this.nick2uuid.get(username);
+    }
+
+    private UUID findUuidFromNick(final String nick)
+    {
+        final Optional<UsernameCache.UsernameDetails> usernameDetails = this.usernameCache.getUsernameDetails(nick);
+        if (usernameDetails.isPresent())
+        {
+            return usernameDetails.get().getUuid();
+        }
+        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + nick).getBytes());
     }
 
     @Override

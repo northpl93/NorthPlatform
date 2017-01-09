@@ -16,9 +16,6 @@
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/ea/agentloader/ea-agent-loader/1.0.2/ea-agent-loader-1.0.2.jar" path-in-jar="/" />
       <element id="artifact" artifact-name="InstrumentationAgent" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/it/unimi/dsi/fastutil/7.0.12/fastutil-7.0.12.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/cetsoft/imcache-core/0.2.0/imcache-core-0.2.0.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/cetsoft/imcache-offheap/0.2.0/imcache-offheap-0.2.0.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/cetsoft/imcache/0.2.0/imcache-0.2.0.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

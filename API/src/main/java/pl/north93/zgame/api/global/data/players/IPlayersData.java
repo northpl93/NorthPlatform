@@ -13,6 +13,8 @@ public interface IPlayersData
 
     IOfflinePlayer getOfflinePlayer(UUID uuid);
 
+    IOfflinePlayer getOfflinePlayer(String nick);
+
     void savePlayer(IPlayer player);
 
     UUID usernameToUuid(String username);

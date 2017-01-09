@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -15,6 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import pl.north93.zgame.skyblock.api.utils.Coords2D;
 import pl.north93.zgame.skyblock.api.utils.Coords3D;
 
 public class IslandLocation
@@ -68,19 +68,19 @@ public class IslandLocation
      *
      * @return Zbiór chunków.
      */
-    public Set<Chunk> getIslandChunks()
+    public Set<Coords2D> getIslandChunks()
     {
-        final Set<Chunk> chunks = new HashSet<>();
+        final Set<Coords2D> chunks = new HashSet<>();
         final Pair<Location, Location> corners = this.getIslandCorners();
 
-        final Chunk upperLeft = this.world.getChunkAt(corners.getLeft());
-        final Chunk lowerRight = this.world.getChunkAt(corners.getRight());
+        final Coords2D upperLeft = new Coords2D(corners.getLeft().getBlockX() >> 4, corners.getLeft().getBlockZ() >> 4);
+        final Coords2D lowerRight = new Coords2D(corners.getRight().getBlockX() >> 4, corners.getRight().getBlockZ() >> 4);
 
         for (int x = lowerRight.getX(); x <= upperLeft.getX(); x++)
         {
             for (int z = lowerRight.getZ(); z <= upperLeft.getZ(); z++)
             {
-                chunks.add(this.world.getChunkAt(x, z));
+                chunks.add(new Coords2D(x, z));
             }
         }
 

@@ -12,6 +12,12 @@ public interface Value<T>
     T get();
 
     /**
+     * Returns value content ignoring cache.
+     * @return value content.
+     */
+    T getWithoutCache();
+
+    /**
      * Returns value content if this is in redis.
      * Otherwise it's obtained from provided supplier and uploaded to Redis.
      *
@@ -33,11 +39,6 @@ public interface Value<T>
     void set(T newValue);
 
     Value<T> setIfUnavailable(Supplier<T> defaultValue);
-
-    /**
-     * Uploads current cached value to redis.
-     */
-    void upload();
 
     /**
      * Deletes this value from redis and local cache.

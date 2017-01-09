@@ -22,6 +22,7 @@ import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackIgnore;
 import pl.north93.zgame.api.global.redis.messaging.impl.element.ITemplateElement;
 import pl.north93.zgame.api.global.redis.messaging.impl.element.TemplateElementFactory;
 import pl.north93.zgame.api.global.redis.messaging.templates.ArrayTemplate;
+import pl.north93.zgame.api.global.redis.messaging.templates.ByteArrayTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.EnumTemplate;
 
 public class TemplateFactoryImpl implements TemplateFactory
@@ -77,8 +78,15 @@ public class TemplateFactoryImpl implements TemplateFactory
             }
             else if (fieldType.isArray()) // support arrays
             {
-                final Class<?> typeNoArray = fieldType.getComponentType();
-                template = new ArrayTemplate(typeNoArray, templateManager.getTemplate(typeNoArray));
+                if (byte[].class == fieldType)
+                {
+                    template = new ByteArrayTemplate(); // support byte[] fields for performance
+                }
+                else
+                {
+                    final Class<?> typeNoArray = fieldType.getComponentType();
+                    template = new ArrayTemplate(typeNoArray, templateManager.getTemplate(typeNoArray));
+                }
             }
             else if (genericType instanceof ParameterizedType) // Get template with generic type
             {

@@ -11,17 +11,12 @@ public abstract class SkyPlayer
 {
     protected static final MetaKey PLAYER_HAS_ISLAND = MetaKey.get("sky:hasIsland");
     protected static final MetaKey PLAYER_ISLAND_ID  = MetaKey.get("sky:islandId");
-    protected static final MetaKey PLAYER_TP_TO      = MetaKey.get("sky:tpTo"); // teleportacja do wybranej wyspy
 
     public abstract boolean hasIsland();
 
     public abstract UUID getIslandId();
 
     public abstract void setIsland(final UUID islandId);
-
-    public abstract void setIslandToTp(final UUID islandId);
-
-    public abstract UUID getIslandTpTo();
 
     public static SkyPlayer get(final Value<IOnlinePlayer> onlinePlayer)
     {

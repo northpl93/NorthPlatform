@@ -3,8 +3,6 @@ package pl.north93.zgame.datashare.sharedimpl.basemcdata;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.datashare.api.data.IDataUnitSerialization;
 
 public class BaseMcDataSerialization implements IDataUnitSerialization<BaseMcDataContainer>
@@ -24,6 +22,8 @@ public class BaseMcDataSerialization implements IDataUnitSerialization<BaseMcDat
         container.setExhaustion(player.getExhaustion());
         container.setSaturation(player.getSaturation());
 
+        container.setPotions(VersionDepend.serializePlayerPotions(player));
+        container.setTotalExperience(player.getTotalExperience());
         container.setStatistics(VersionDepend.serializePlayerStatistics(player));
         container.setGameMode(player.getGameMode().ordinal());
 
@@ -31,7 +31,7 @@ public class BaseMcDataSerialization implements IDataUnitSerialization<BaseMcDat
     }
 
     @Override
-    public void fromRedis(final Player player, final BaseMcDataContainer dataUnit)
+    public void fromRedis(final Player player, final BaseMcDataContainer dataUnit) // synchronized to main server thread
     {
         VersionDepend.deserializePlayerInventory(player, dataUnit.getInventory());
         VersionDepend.deserializePlayerEnderchest(player, dataUnit.getEnderchest());
@@ -43,10 +43,9 @@ public class BaseMcDataSerialization implements IDataUnitSerialization<BaseMcDat
         player.setExhaustion(dataUnit.getExhaustion());
         player.setSaturation(dataUnit.getSaturation());
 
+        VersionDepend.deserializePlayerPotions(player, dataUnit.getPotions());
+        player.giveExp(dataUnit.getTotalExperience());
         VersionDepend.deserializePlayerStatistics(player, dataUnit.getStatistics());
-        if (player.getGameMode().ordinal() != dataUnit.getGameMode())
-        {
-            ((BukkitApiCore) API.getApiCore()).sync(() -> player.setGameMode(GameMode.values()[dataUnit.getGameMode()]));
-        }
+        player.setGameMode(GameMode.values()[dataUnit.getGameMode()]);
     }
 }

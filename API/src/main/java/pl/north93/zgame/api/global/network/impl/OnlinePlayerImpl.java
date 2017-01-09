@@ -13,8 +13,10 @@ import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.IOnlinePlayer;
+import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.zgame.api.global.network.ProxyRpc;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
+import pl.north93.zgame.api.global.network.server.joinaction.JoinActionsContainer;
 import pl.north93.zgame.api.global.permissions.Group;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
@@ -164,15 +166,15 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     }
 
     @Override
-    public void connectTo(final ServerProxyData server)
+    public void connectTo(final ServerProxyData server, IServerJoinAction... actions)
     {
-        this.getProxyRpc().connectPlayer(this.nick, server.getProxyName());
+        this.getProxyRpc().connectPlayer(this.nick, server.getProxyName(), new JoinActionsContainer(actions));
     }
 
     @Override
-    public void connectTo(final String serversGroupName)
+    public void connectTo(final String serversGroupName, IServerJoinAction... actions)
     {
-        this.getProxyRpc().connectPlayerToServersGroup(this.nick, serversGroupName);
+        this.getProxyRpc().connectPlayerToServersGroup(this.nick, serversGroupName, new JoinActionsContainer(actions));
     }
 
     private ProxyRpc getProxyRpc()
