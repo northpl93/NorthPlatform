@@ -1,11 +1,13 @@
 package pl.north93.zgame.api.global.redis.observable.impl;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import redis.clients.jedis.Jedis;
@@ -15,6 +17,7 @@ class CachedValueImpl<T> implements Value<T>
     private final ObservationManagerImpl observationManager;
     private final Class<T>               clazz;
     private final ObjectKey              objectKey;
+    private final Lock                   myLock;
     private       T                      cache;
 
     public CachedValueImpl(final ObservationManagerImpl observationManager, final Class<T> clazz, final ObjectKey objectKey)
@@ -22,6 +25,7 @@ class CachedValueImpl<T> implements Value<T>
         this.observationManager = observationManager;
         this.clazz = clazz;
         this.objectKey = objectKey;
+        this.myLock = observationManager.getLock("lock:" + objectKey.getKey());
         observationManager.getRedisSubscriber().subscribe(this.getChannelKey(), new ValueSubscriptionHandler(this));
     }
 
@@ -73,6 +77,27 @@ class CachedValueImpl<T> implements Value<T>
         {
             this.set(defaultValue.get());
             return this.cache;
+        }
+    }
+
+    @Override
+    public boolean update(final Function<T, T> update)
+    {
+        try
+        {
+            this.lock();
+            final T t = this.get();
+            if (t != null)
+            {
+                this.set(update.apply(t));
+                return true;
+            }
+
+            return false;
+        }
+        finally
+        {
+            this.unlock();
         }
     }
 
@@ -186,6 +211,18 @@ class CachedValueImpl<T> implements Value<T>
         {
             return jedis.ttl(this.objectKey.getKey());
         }
+    }
+
+    @Override
+    public void lock()
+    {
+        this.myLock.lock();
+    }
+
+    @Override
+    public void unlock()
+    {
+        this.myLock.unlock();
     }
 
     @Override

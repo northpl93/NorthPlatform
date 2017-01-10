@@ -7,16 +7,16 @@ import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
 import org.diorite.cfg.annotations.defaults.CfgIntDefault;
 import org.diorite.cfg.annotations.defaults.CfgStringDefault;
 
-@CfgComments({"Konfiguracja połączeń: MySQL i Redis"})
+@CfgComments({"Konfiguracja połączeń: MongoDB i Redis"})
 @CfgFooterComment("Koniec konfiguracji!")
 @CfgDelegateDefault("{new}")
 public class ConnectionConfig
 {
     @CfgComment("Host bazy danych i port")
-    @CfgStringDefault("mongodb://user:password@127.0.0.1:2137/?authSource=server")
+    @CfgStringDefault("mongodb://user:password@127.0.0.1:27017/?authSource=server")
     private String mongoDbConnect;
 
-    @CfgComment("Baza danych z której korzystać na API")
+    @CfgComment("Baza danych z której ma korzystać API")
     @CfgStringDefault("server")
     private String mongoMainDatabase;
 

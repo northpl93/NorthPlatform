@@ -14,5 +14,6 @@ components:
     dependencies:
       - API.Commands
       - API.MinecraftNetwork.NetworkManager
+      - API.MinecraftNetwork.PermissionsManager
     platforms:
       - BUKKIT

@@ -89,8 +89,6 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
         else
         {
             final Value<IOnlinePlayer> networkPlayer = this.networkManager.getOnlinePlayer(player.getName());
-            //final SkyPlayer skyPlayer = SkyPlayer.get(networkPlayer);
-            //skyPlayer.setIslandToTp(islandId);
             networkPlayer.get().connectTo(this.networkManager.getServer(islandData.getServerId()).get(), new TeleportPlayerToIsland(islandId));
         }
     }
@@ -176,21 +174,21 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
     @Override
     public void islandAdded(final IslandData islandData)
     {
-        this.logger.info("[SkyBlock] Received info about new island: " + islandData);
+        this.bukkitApiCore.debug("[SkyBlock] Received info about new island: " + islandData);
         this.getWorldManager(islandData.getIslandType()).islandAdded(islandData);
     }
 
     @Override
     public void islandRemoved(final IslandData islandData)
     {
-        this.logger.info("[SkyBlock] Received info about island to remove: " + islandData);
+        this.bukkitApiCore.debug("[SkyBlock] Received info about island to remove: " + islandData);
         this.getWorldManager(islandData.getIslandType()).islandRemoved(islandData);
     }
 
     @Override
     public void islandDataChanged(final IslandData islandData)
     {
-        this.logger.info("[SkyBlock] Received info about new island data: " + islandData);
+        this.bukkitApiCore.debug("[SkyBlock] Received info about new island data: " + islandData);
         this.getWorldManager(islandData.getIslandType()).islandUpdated(islandData);
     }
 

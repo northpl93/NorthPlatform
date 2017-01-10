@@ -1,7 +1,9 @@
 package pl.north93.zgame.api.global.redis.observable.impl;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -14,15 +16,18 @@ import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.observable.ICacheBuilder;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
+import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 import redis.clients.jedis.JedisPool;
+import redis.clients.util.SafeEncoder;
 
 public class ObservationManagerImpl extends Component implements IObservationManager
 {
     private final Map<String, WeakReference<Value<?>>> cachedValues = new HashMap<>();
+    private final List<LockImpl>                       waitingLocks = new ArrayList<>();
     @InjectComponent("API.Database.StorageConnector")
     private StorageConnector storageConnector;
     @InjectComponent("API.Database.Redis.MessagePackSerializer")
@@ -78,8 +83,38 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     }
 
     @Override
+    public Lock getLock(final String name)
+    {
+        return new LockImpl(this, name);
+    }
+
+    /*default*/ void addWaitingLock(final LockImpl lock)
+    {
+        synchronized (this.waitingLocks)
+        {
+            this.waitingLocks.add(lock);
+        }
+    }
+
+    private void unlockNotify(final String channel, final byte[] message)
+    {
+        final String lock = SafeEncoder.encode(message);
+        synchronized (this.waitingLocks)
+        {
+            for (final LockImpl waitingLock : this.waitingLocks)
+            {
+                if (waitingLock.getName().equals(lock))
+                {
+                    waitingLock.remoteUnlock();
+                }
+            }
+        }
+    }
+
+    @Override
     protected void enableComponent()
     {
+        this.redisSubscriber.subscribe("unlock", this::unlockNotify);
     }
 
     @Override

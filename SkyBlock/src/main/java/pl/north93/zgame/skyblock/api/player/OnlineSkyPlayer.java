@@ -39,6 +39,7 @@ class OnlineSkyPlayer extends SkyPlayer
     @Override
     public void setIsland(final UUID islandId)
     {
+        this.networkPlayer.lock();
         final IOnlinePlayer iOnlinePlayer = this.networkPlayer.get();
         final MetaStore metaStore = iOnlinePlayer.getMetaStore();
         if (islandId == null)
@@ -52,6 +53,7 @@ class OnlineSkyPlayer extends SkyPlayer
             metaStore.setUuid(PLAYER_ISLAND_ID, islandId);
         }
         this.networkPlayer.set(iOnlinePlayer);
+        this.networkPlayer.unlock();
     }
 
     @Override

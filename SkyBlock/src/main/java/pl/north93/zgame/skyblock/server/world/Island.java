@@ -1,8 +1,13 @@
 package pl.north93.zgame.skyblock.server.world;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -53,6 +58,14 @@ public class Island
     public void setHomeLocation(final Location location)
     {
         this.islandData.setHomeLocation(this.location.toRelative(location));
+    }
+
+    public List<Player> getPlayersInIsland()
+    {
+        return Bukkit.getOnlinePlayers()
+                     .stream()
+                     .filter(p -> p.getWorld().equals(this.getLocation().getWorld()) && this.location.isInside(p.getLocation()))
+                     .collect(Collectors.toList());
     }
 
     /**

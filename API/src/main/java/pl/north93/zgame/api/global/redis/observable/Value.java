@@ -1,6 +1,7 @@
 package pl.north93.zgame.api.global.redis.observable;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface Value<T>
@@ -25,6 +26,16 @@ public interface Value<T>
      * @return value or default value.
      */
     T getOr(Supplier<T> defaultValue);
+
+    boolean update(Function<T, T> update);
+
+    default boolean update(Consumer<T> value)
+    {
+        return this.update(remote -> {
+            value.accept(remote);
+            return remote;
+        });
+    }
 
     /**
      * Asynchronously gets value.
@@ -69,4 +80,8 @@ public interface Value<T>
      * @return TTL of this key.
      */
     long getTimeToLive();
+
+    void lock();
+
+    void unlock();
 }

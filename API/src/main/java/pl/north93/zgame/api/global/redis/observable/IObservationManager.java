@@ -11,4 +11,6 @@ public interface IObservationManager
     <T extends ProvidingRedisKey> Value<T> of(T preCachedObject);
 
     <K, V> ICacheBuilder<K, V> cacheBuilder(Class<K> keyClass, Class<V> valueClass);
+
+    Lock getLock(String name);
 }

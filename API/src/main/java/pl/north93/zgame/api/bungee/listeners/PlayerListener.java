@@ -124,15 +124,18 @@ public class PlayerListener implements Listener
     public void onLeave(final PlayerDisconnectEvent event)
     {
         final Value<IOnlinePlayer> player = this.bungeeApiCore.getNetworkManager().getOnlinePlayer(event.getPlayer().getName());
+        player.lock();
         this.playersDao.savePlayer(player.getWithoutCache());
         player.delete();
+        player.unlock();
     }
     
     @EventHandler
     public void onServerChange(final ServerSwitchEvent event)
     {
         final Value<IOnlinePlayer> player = this.bungeeApiCore.getNetworkManager().getOnlinePlayer(event.getPlayer().getName());
-        final IOnlinePlayer iOnlinePlayer = player.get();
+        player.lock();
+        final IOnlinePlayer iOnlinePlayer = player.getWithoutCache();
 
         try
         {
@@ -143,5 +146,6 @@ public class PlayerListener implements Listener
             this.bungeeApiCore.getLogger().log(Level.SEVERE, "Can't set player's serverId in onServerChange", ex);
         }
         player.set(iOnlinePlayer); // send new data to redis
+        player.unlock();
     }
 }

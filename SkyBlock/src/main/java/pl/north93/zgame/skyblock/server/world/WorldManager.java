@@ -5,6 +5,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.logging.Logger;
 
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -122,6 +123,10 @@ public class WorldManager
         island = this.islands.getByCoords(islandData.getIslandLocation());
         this.islands.removeIsland(island); // remove island from lists
         this.apiCore.sync(island::clear); // synchronize island clear to main server thread
+        for (final Player player : island.getPlayersInIsland())
+        {
+            this.skyBlockServer.getServerManager().tpPlayerToSpawn(player); // we're on island host so we can safely send players to spawn
+        }
     }
 
     public void islandUpdated(final IslandData islandData)
