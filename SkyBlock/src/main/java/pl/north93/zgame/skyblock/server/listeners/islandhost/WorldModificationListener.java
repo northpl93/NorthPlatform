@@ -1,6 +1,5 @@
 package pl.north93.zgame.skyblock.server.listeners.islandhost;
 
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.bukkit.Location;
@@ -18,7 +17,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.skyblock.api.IslandData;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.management.IslandHostManager;
 import pl.north93.zgame.skyblock.server.world.Island;
@@ -41,15 +39,7 @@ public class WorldModificationListener implements Listener
         }
 
         final Island island = manager.getIslands().getByChunk(location.getChunk());
-        if (island == null || !island.getLocation().isInside(location))
-        {
-            return false;
-        }
-
-        final IslandData islandData = island.getIslandData();
-        final UUID       playerId   = player.getUniqueId();
-
-        return islandData.getOwnerId().equals(playerId) || islandData.getMembersUuid().contains(playerId);
+        return ! (island == null || ! island.getLocation().isInside(location)) && island.canBuild(player.getUniqueId());
     }
 
     @EventHandler

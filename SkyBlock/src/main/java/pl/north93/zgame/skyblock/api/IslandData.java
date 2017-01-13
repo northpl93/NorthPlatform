@@ -24,11 +24,14 @@ public final class IslandData
     private Coords2D   islandLocation;
     private Coords3D   homeLocation;
     @MsgPackCustomTemplate(ArrayListTemplate.class)
+    private List<UUID> invitations;
+    @MsgPackCustomTemplate(ArrayListTemplate.class)
     private List<UUID> membersUuid;
 
     public IslandData()
     {
         this.membersUuid = new ArrayList<>(0);
+        this.invitations = new ArrayList<>(0);
     }
 
     public UUID getIslandId()
@@ -99,6 +102,21 @@ public final class IslandData
     public void setHomeLocation(final Coords3D homeLocation)
     {
         this.homeLocation = homeLocation;
+    }
+
+    public List<UUID> getInvitations()
+    {
+        return this.invitations;
+    }
+
+    public void setInvitations(final List<UUID> invitations)
+    {
+        this.invitations = invitations;
+    }
+
+    public void setMembers(final List<UUID> membersUuid)
+    {
+        this.membersUuid = membersUuid;
     }
 
     public List<UUID> getMembersUuid()

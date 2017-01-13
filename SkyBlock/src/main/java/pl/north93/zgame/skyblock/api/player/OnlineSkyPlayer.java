@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.skyblock.api.IslandRole;
 
 class OnlineSkyPlayer extends SkyPlayer
 {
@@ -37,7 +38,18 @@ class OnlineSkyPlayer extends SkyPlayer
     }
 
     @Override
-    public void setIsland(final UUID islandId)
+    public IslandRole getIslandRole()
+    {
+        final MetaStore metaStore = this.networkPlayer.get().getMetaStore();
+        if (! metaStore.contains(PLAYER_ROLE))
+        {
+            return null;
+        }
+        return IslandRole.values()[metaStore.getInteger(PLAYER_ROLE)];
+    }
+
+    @Override
+    public void setIsland(final UUID islandId, final IslandRole islandRole)
     {
         this.networkPlayer.lock();
         final IOnlinePlayer iOnlinePlayer = this.networkPlayer.get();
@@ -46,11 +58,13 @@ class OnlineSkyPlayer extends SkyPlayer
         {
             metaStore.setBoolean(PLAYER_HAS_ISLAND, false);
             metaStore.remove(PLAYER_ISLAND_ID);
+            metaStore.remove(PLAYER_ROLE);
         }
         else
         {
             metaStore.setBoolean(PLAYER_HAS_ISLAND, true);
             metaStore.setUuid(PLAYER_ISLAND_ID, islandId);
+            metaStore.setInteger(PLAYER_ROLE, islandRole.ordinal());
         }
         this.networkPlayer.set(iOnlinePlayer);
         this.networkPlayer.unlock();

@@ -7,6 +7,7 @@ import static java.util.regex.Pattern.compile;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -68,6 +69,14 @@ public class UsernameCache extends Component
         {
         }
 
+        public UsernameDetails(final String validSpelling, final Boolean isPremium, final Date fetchTime)
+        {
+            this.validSpelling = validSpelling;
+            this.uuid = UUID.nameUUIDFromBytes(("OfflinePlayer:" + validSpelling).getBytes(Charsets.UTF_8));
+            this.isPremium = isPremium;
+            this.fetchTime = fetchTime;
+        }
+
         public UsernameDetails(final String validSpelling, final UUID uuid, final boolean isPremium, final Date fetchTime)
         {
             this.validSpelling = validSpelling;
@@ -109,7 +118,13 @@ public class UsernameCache extends Component
         final Document results = this.mongoCache.find(new Document("validSpelling", usernamePattern)).first();
         if (results != null)
         {
-            return new UsernameDetails(results.getString("validSpelling"), results.get("uuid", UUID.class), results.getBoolean("isPremium"), results.getDate("fetchTime"));
+            final boolean isPremium = results.getBoolean("isPremium");
+            final Date fetchTime = results.getDate("fetchTime");
+            if (isPremium)
+            {
+                return new UsernameDetails(results.getString("validSpelling"), results.get("uuid", UUID.class), true, fetchTime);
+            }
+            return new UsernameDetails(username, false, fetchTime);
         }
 
         final Optional<UsernameDetails> usernameDetails = this.queryMojangApi(username);
@@ -118,7 +133,10 @@ public class UsernameCache extends Component
             final UsernameDetails fromMojang = usernameDetails.get();
             final Document document = new Document();
             document.put("validSpelling", fromMojang.validSpelling);
-            document.put("uuid", fromMojang.uuid);
+            if (fromMojang.isPremium)
+            {
+                document.put("uuid", fromMojang.uuid);
+            }
             document.put("isPremium", fromMojang.isPremium);
             document.put("fetchTime", fromMojang.fetchTime);
             this.mongoCache.updateOne(new Document("validSpelling", usernamePattern), new Document("$set", document), new UpdateOptions().upsert(true));
@@ -135,7 +153,7 @@ public class UsernameCache extends Component
             final String response = IOUtils.toString(new URL("https://api.mojang.com/users/profiles/minecraft/" + username));
             if (StringUtils.isEmpty(response))
             {
-                return Optional.of(new UsernameDetails(username, UUID.nameUUIDFromBytes(("OfflinePlayer:" + username).getBytes(Charsets.UTF_8)), false, new Date()));
+                return Optional.of(new UsernameDetails(username, false, new Date()));
             }
             final JsonObject jsonObject = this.json.parse(response).getAsJsonObject();
 
@@ -155,7 +173,7 @@ public class UsernameCache extends Component
 
     public Optional<UsernameDetails> getUsernameDetails(final String username)
     {
-        return Optional.ofNullable(this.localCache.get(username));
+        return Optional.ofNullable(this.localCache.get(username.toLowerCase(Locale.ENGLISH)));
     }
 
     @Override

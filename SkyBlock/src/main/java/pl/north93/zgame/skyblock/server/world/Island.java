@@ -1,6 +1,8 @@
 package pl.north93.zgame.skyblock.server.world;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -15,6 +17,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.skyblock.api.IslandDao;
 import pl.north93.zgame.skyblock.api.IslandData;
 import pl.north93.zgame.skyblock.api.utils.Coords2D;
 
@@ -23,25 +27,30 @@ import pl.north93.zgame.skyblock.api.utils.Coords2D;
  */
 public class Island
 {
-    private final IslandData     islandData;
-    private final IslandLocation location;
+    private final IslandDao         islandDao;
+    private final Value<IslandData> islandData;
+    private final UUID              islandId;
+    private final Coords2D          coordinates;
+    private final IslandLocation    location;
 
-    public Island(final IslandData islandData, final IslandLocation location)
+    public Island(final IslandDao islandDao, final Value<IslandData> islandData, final IslandLocation location)
     {
+        this.islandDao = islandDao;
         this.islandData = islandData;
         this.location = location;
+        final IslandData cacheData = islandData.get();
+        this.islandId = cacheData.getIslandId();
+        this.coordinates = cacheData.getIslandLocation();
     }
 
-    public IslandData getIslandData()
+    public UUID getId()
     {
-        return this.islandData;
+        return this.islandId; // it's cached because islandData can be null while deleting island.
     }
 
-    public void updateIslandData(final IslandData islandData)
+    public Coords2D getIslandCoordinates()
     {
-        this.islandData.setOwnerId(islandData.getOwnerId());
-        this.islandData.setName(islandData.getName());
-        this.islandData.setHomeLocation(islandData.getHomeLocation());
+        return this.coordinates; // it's cached because islandData can be null while deleting island.
     }
 
     public IslandLocation getLocation()
@@ -52,12 +61,21 @@ public class Island
     // calculate home location.
     public Location getHomeLocation()
     {
-        return this.location.fromRelative(this.islandData.getHomeLocation());
+        return this.location.fromRelative(this.islandData.get().getHomeLocation());
     }
 
     public void setHomeLocation(final Location location)
     {
-        this.islandData.setHomeLocation(this.location.toRelative(location));
+        this.updateData(data ->
+        {
+            data.setHomeLocation(this.location.toRelative(location));
+        });
+    }
+
+    public boolean canBuild(final UUID uuid)
+    {
+        final IslandData islandData = this.islandData.get();
+        return islandData.getOwnerId().equals(uuid) || islandData.getMembersUuid().contains(uuid);
     }
 
     public List<Player> getPlayersInIsland()
@@ -104,6 +122,15 @@ public class Island
     {
         this.clear();
         this.loadSchematic();
+    }
+
+    private void updateData(final Consumer<IslandData> updater)
+    {
+        this.islandData.update(data ->
+        {
+            updater.accept(data);
+            this.islandDao.saveIsland(data);
+        });
     }
 
     @Override

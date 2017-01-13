@@ -17,9 +17,6 @@ public interface ISkyBlockManager
     @DoNotWaitForResponse
     void teleportToIsland(String playerName, UUID islandId);
 
-    @DoNotWaitForResponse
-    void updateIslandData(IslandData islandData);
-
     // Ta metoda powinna sama znaleźć odpowiedni serwer
     // i przekazać mu info że trzeba zrobić wyspę
     @DoNotWaitForResponse
@@ -29,4 +26,17 @@ public interface ISkyBlockManager
     // usunac wyspe, usuwa ja z bazy danych i z metadanych gracza
     @DoNotWaitForResponse
     void deleteIsland(UUID islandId);
+
+    // dodajemy gracza do listy zaproszonych i wysyłamy mu informacje
+    // ofc sprawdzamy czy możemy to wszystko zrobić
+    @DoNotWaitForResponse
+    void invitePlayer(UUID islandId, String invitedPlayer);
+
+    // gracz wysyła info, że chce zaakceptować zaproszenie
+    @DoNotWaitForResponse
+    void invitationAccepted(UUID islandId, String invitedPlayer);
+
+    // wyrzuca danego gracza z listy osób uprawnionych do tej wyspy
+    @DoNotWaitForResponse
+    void leaveIsland(UUID islandId, String invoker, String leavingPlayer, Boolean isSelfLeaving);
 }

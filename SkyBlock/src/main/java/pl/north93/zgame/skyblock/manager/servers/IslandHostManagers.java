@@ -55,7 +55,7 @@ public class IslandHostManagers
      *
      * @return Serwer z najmniejszą ilością wysp.
      */
-    public IslandHostServer getLeastLoadedServer()
+    public synchronized IslandHostServer getLeastLoadedServer()
     {
         final MutablePair<IslandHostServer, Integer> leastLoaded = new MutablePair<>();
         for (final IslandHostServer server : this.servers)

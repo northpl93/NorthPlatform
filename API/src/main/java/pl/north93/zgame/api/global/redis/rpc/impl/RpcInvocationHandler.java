@@ -34,6 +34,9 @@ class RpcInvocationHandler implements InvocationHandler
 
         final int methodId = methodDescription.getId();
         final int requestId = requestCounter.getAndIncrement();
+        final boolean needsWaitForResponse = methodDescription.isNeedsWaitForResponse();
+
+        final RpcResponseLock lock = needsWaitForResponse ? this.rpcManager.createFor(requestId) : null;
 
         final RpcInvokeMessage rpcInvokeMessage = new RpcInvokeMessage(API.getApiCore().getId(), this.objectDescription.getClassId(), requestId, methodId, args == null ? EMPTY_ARRAY : args);
         try (final Jedis jedis = this.rpcManager.getJedisPool().getResource())
@@ -41,12 +44,11 @@ class RpcInvocationHandler implements InvocationHandler
             jedis.publish(this.invokeChannel, this.rpcManager.getMsgPack().serialize(rpcInvokeMessage));
         }
 
-        if (! methodDescription.isNeedsWaitForResponse())
+        if (! needsWaitForResponse)
         {
             return null; // Nie jest wymagana odpowiedz, idziemy sobie
         }
 
-        final RpcResponseLock lock = this.rpcManager.createFor(requestId);
         final Object response;
         try
         {
@@ -55,7 +57,7 @@ class RpcInvocationHandler implements InvocationHandler
         catch (final RpcTimeoutException e)
         {
             this.rpcManager.removeLock(requestId); // timeout happened so we will remove that lock
-            throw e; // rethrow timeout exception
+            throw new RuntimeException(e);
         }
 
         if (response instanceof RpcExceptionInfo)

@@ -114,6 +114,16 @@ class CachedValueImpl<T> implements Value<T>
         }
     }
 
+    @Override
+    public void ifPresent(final Consumer<T> action)
+    {
+        final T value = this.get();
+        if (value != null)
+        {
+            action.accept(value);
+        }
+    }
+
     private synchronized T getFromRedis()
     {
         try (final Jedis jedis = this.observationManager.getJedis().getResource())

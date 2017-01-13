@@ -9,11 +9,9 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.PendingConnection;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
-import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -23,6 +21,8 @@ import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.impl.Injector;
 import pl.north93.zgame.api.global.data.UsernameCache.UsernameDetails;
 import pl.north93.zgame.api.global.data.players.IPlayersData;
+import pl.north93.zgame.api.global.data.players.impl.NameSizeMistakeException;
+import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.impl.OnlinePlayerImpl;
@@ -38,6 +38,8 @@ public class PlayerListener implements Listener
     private       IObservationManager observationManager;
     @InjectComponent("API.MinecraftNetwork.PlayersStorage")
     private       IPlayersData        playersDao;
+    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    private       INetworkManager     networkManager;
 
     public PlayerListener(final BungeeApiCore bungeeApiCore)
     {
@@ -89,34 +91,51 @@ public class PlayerListener implements Listener
     }
 
     @EventHandler
-    public void onJoin(final PostLoginEvent event)
+    public void onJoin(final LoginEvent event)
     {
-        final ProxiedPlayer proxyPlayer = event.getPlayer();
+        final PendingConnection connection = event.getConnection();
         final JoiningPolicy joiningPolicy = this.bungeeApiCore.getNetworkManager().getJoiningPolicy();
-        final Optional<UsernameDetails> details = this.bungeeApiCore.getUsernameCache().getUsernameDetails(event.getPlayer().getName());
+        final Optional<UsernameDetails> details = this.bungeeApiCore.getUsernameCache().getUsernameDetails(connection.getName());
 
         if (! details.isPresent())
         {
-            proxyPlayer.disconnect(TextComponent.fromLegacyText(this.apiMessages.getString("join.username_details_not_present")));
+            event.setCancelled(true);
+            event.setCancelReason(this.apiMessages.getString("join.username_details_not_present"));
             return;
         }
 
-        if (joiningPolicy == JoiningPolicy.NOBODY) // blokada wpuszczania wszystkich
+        final Value<OnlinePlayerImpl> player;
+        try
         {
-            proxyPlayer.disconnect(TextComponent.fromLegacyText(this.apiMessages.getString("join.access_locked")));
+            player = this.playersDao.loadPlayer(connection.getUniqueId(), connection.getName(), details.get().isPremium(), this.bungeeApiCore.getProxyConfig().getUniqueName());
+        }
+        catch (final NameSizeMistakeException e)
+        {
+            event.setCancelled(true);
+            event.setCancelReason(message(this.apiMessages, "join.name_size_mistake", e.getNick(), connection.getName()));
+            return;
+        }
+        catch (final Throwable e)
+        {
+            event.setCancelled(true);
+            event.setCancelReason(message(this.apiMessages, "kick.generic_error", "failed to load player data: " + e));
             return;
         }
 
-        final Value<OnlinePlayerImpl> player = this.playersDao.loadPlayer(proxyPlayer.getUniqueId(), proxyPlayer.getName(), details.get().isPremium(), this.bungeeApiCore.getProxyConfig().getUniqueName());
-        /*if (! player.getNick().equals(proxyPlayer.getName()))
+        if (joiningPolicy == JoiningPolicy.NOBODY)
         {
-            proxyPlayer.disconnect(TextComponent.fromLegacyText(message(this.apiMessages, "join.name_size_mistake", player.getNick(), proxyPlayer.getName())));
-            return;
-        }*/
-
-        if (joiningPolicy == JoiningPolicy.ONLY_ADMIN && !player.get().hasPermission("join.admin")) // wpuszczanie tylko adminów
+            event.setCancelled(true);
+            event.setCancelReason(message(this.apiMessages, "join.access_locked"));
+        }
+        else if (joiningPolicy == JoiningPolicy.ONLY_ADMIN && !player.get().hasPermission("join.admin")) // wpuszczanie tylko adminów
         {
-            proxyPlayer.disconnect(TextComponent.fromLegacyText(message(this.apiMessages, "join.access_locked")));
+            event.setCancelled(true);
+            event.setCancelReason(message(this.apiMessages, "join.access_locked"));
+        }
+        else if (joiningPolicy == JoiningPolicy.ONLY_VIP && !player.get().hasPermission("join.vip"))
+        {
+            event.setCancelled(true);
+            event.setCancelReason(message(this.apiMessages, "join.access_locked"));
         }
     }
 
@@ -124,28 +143,36 @@ public class PlayerListener implements Listener
     public void onLeave(final PlayerDisconnectEvent event)
     {
         final Value<IOnlinePlayer> player = this.bungeeApiCore.getNetworkManager().getOnlinePlayer(event.getPlayer().getName());
-        player.lock();
-        this.playersDao.savePlayer(player.getWithoutCache());
-        player.delete();
-        player.unlock();
+        try
+        {
+            player.lock();
+            this.playersDao.savePlayer(player.getWithoutCache());
+            player.delete();
+        }
+        finally
+        {
+            player.unlock();
+        }
     }
     
     @EventHandler
     public void onServerChange(final ServerSwitchEvent event)
     {
         final Value<IOnlinePlayer> player = this.bungeeApiCore.getNetworkManager().getOnlinePlayer(event.getPlayer().getName());
-        player.lock();
-        final IOnlinePlayer iOnlinePlayer = player.getWithoutCache();
-
         try
         {
+            player.lock();
+            final IOnlinePlayer iOnlinePlayer = player.getWithoutCache();
             iOnlinePlayer.setServerId(UUID.fromString(event.getPlayer().getServer().getInfo().getName()));
+            player.set(iOnlinePlayer); // send new data to redis
         }
         catch (final IllegalArgumentException ex)
         {
             this.bungeeApiCore.getLogger().log(Level.SEVERE, "Can't set player's serverId in onServerChange", ex);
         }
-        player.set(iOnlinePlayer); // send new data to redis
-        player.unlock();
+        finally
+        {
+            player.unlock();
+        }
     }
 }

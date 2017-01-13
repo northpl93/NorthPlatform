@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.IOnlinePlayer;
+import pl.north93.zgame.api.global.redis.observable.IObservationManager;
+import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.skyblock.api.IslandData;
 import pl.north93.zgame.skyblock.server.actions.TeleportPlayerToIsland;
@@ -19,9 +21,11 @@ import pl.north93.zgame.skyblock.server.SkyBlockServer;
 public class LobbyManager implements ISkyBlockServerManager
 {
     @InjectComponent("API.MinecraftNetwork.NetworkManager")
-    private INetworkManager networkManager;
+    private INetworkManager     networkManager;
+    @InjectComponent("API.Database.Redis.Observer")
+    private IObservationManager observer;
     @InjectComponent("SkyBlock.Server")
-    private SkyBlockServer  server;
+    private SkyBlockServer      server;
 
     @Override
     public void start()
@@ -33,6 +37,12 @@ public class LobbyManager implements ISkyBlockServerManager
     public void stop()
     {
 
+    }
+
+    @Override
+    public Lock getIslandDataLock(final UUID islandId)
+    {
+        return this.observer.getLock("lock:isldata:" + islandId);
     }
 
     @Override

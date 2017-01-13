@@ -1,6 +1,7 @@
 package pl.north93.zgame.skyblock.server.world;
 
 import java.util.Queue;
+import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.logging.Logger;
 
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.skyblock.api.IslandData;
 import pl.north93.zgame.skyblock.api.cfg.IslandConfig;
 import pl.north93.zgame.skyblock.api.utils.Coords2D;
@@ -44,7 +46,8 @@ public class WorldManager
     public void init()
     {
         this.logger.info("[SkyBlock] Downloading all islands in this world...");
-        this.skyBlockServer.getIslandDao().getAllIslands(this.apiCore.getServer().get().getUuid(), this.islandConfig.getName()).stream().map(this::constructIsland).forEach(this.islands::addIsland);
+        this.skyBlockServer.getIslandDao().getAllIslands(this.apiCore.getServer().get().getUuid(), this.islandConfig.getName())
+                           .stream().map(IslandData::getIslandId).map(this::constructIsland).forEach(this.islands::addIsland);
         this.buildAvailableLocations();
         this.logger.info("[SkyBlock] World manager is ready.");
     }
@@ -65,17 +68,19 @@ public class WorldManager
     }
 
     // buduje obiekt wyspy na podstawie informacji o niej
-    private Island constructIsland(final IslandData islandData)
+    private Island constructIsland(final UUID islandId)
     {
+        final Value<IslandData> islandData = this.skyBlockServer.getIslandDao().getIslandValue(islandId);
+
         final int radius = this.islandConfig.getRadius();
-        final Coords2D islandLoc = islandData.getIslandLocation();
+        final Coords2D islandLoc = islandData.get().getIslandLocation();
         final int diameter = radius * 2;
         final int side = (int) Math.ceil((double) diameter / 16D);
 
         final int centerChunkX = side * 2 * islandLoc.getX();
         final int centerChunkZ = side * 2 * islandLoc.getZ();
 
-        return new Island(islandData, new IslandLocation(this.world, centerChunkX, centerChunkZ, radius));
+        return new Island(this.skyBlockServer.getIslandDao(), islandData, new IslandLocation(this.world, centerChunkX, centerChunkZ, radius));
     }
 
     public World getWorld()
@@ -110,29 +115,22 @@ public class WorldManager
         return this.availableCoords.poll();
     }
 
-    public void islandAdded(final IslandData islandData) // wywoływane gdy wyspa zotanie dodana
+    public void islandAdded(final UUID islandId) // wywoływane gdy wyspa zotanie dodana
     {
-        final Island island = this.constructIsland(islandData);
+        final Island island = this.constructIsland(islandId);
         this.islands.addIsland(island);
         this.apiCore.sync(island::loadSchematic); // synchronize schematic loading to main server thread
     }
 
     public void islandRemoved(final IslandData islandData) // wywoływane gdy wyspa zostanie usunięta
     {
-        final Island island;
-        island = this.islands.getByCoords(islandData.getIslandLocation());
+        final Island island = this.islands.getByCoords(islandData.getIslandLocation());
         this.islands.removeIsland(island); // remove island from lists
         this.apiCore.sync(island::clear); // synchronize island clear to main server thread
         for (final Player player : island.getPlayersInIsland())
         {
             this.skyBlockServer.getServerManager().tpPlayerToSpawn(player); // we're on island host so we can safely send players to spawn
         }
-    }
-
-    public void islandUpdated(final IslandData islandData)
-    {
-        final Island island = this.islands.getByCoords(islandData.getIslandLocation());
-        island.updateIslandData(islandData);
     }
 
     @Override

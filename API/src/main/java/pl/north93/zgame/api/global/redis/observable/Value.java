@@ -44,6 +44,12 @@ public interface Value<T>
     void get(Consumer<T> callback);
 
     /**
+     * Synchronously performs specified action if value is present.
+     * @param action Action to perform if value is present.
+     */
+    void ifPresent(Consumer<T> action);
+
+    /**
      * Sets new value and upload it to Redis.
      * @param newValue new value which will be uploaded to redis.
      */

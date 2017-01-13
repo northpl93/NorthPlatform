@@ -16,6 +16,8 @@ import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.IOnlinePlayer;
+import pl.north93.zgame.api.global.redis.observable.IObservationManager;
+import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.skyblock.api.IIslandHostManager;
@@ -33,15 +35,17 @@ import pl.north93.zgame.skyblock.server.world.WorldManagerList;
  */
 public class IslandHostManager implements ISkyBlockServerManager, IIslandHostManager
 {
-    private BukkitApiCore      bukkitApiCore;
+    private BukkitApiCore       bukkitApiCore;
     @InjectComponent("API.MinecraftNetwork.NetworkManager")
-    private INetworkManager    networkManager;
+    private INetworkManager     networkManager;
     @InjectComponent("SkyBlock.Server")
-    private SkyBlockServer     skyBlockServer;
+    private SkyBlockServer      skyBlockServer;
     @InjectComponent("API.Database.Redis.RPC")
-    private IRpcManager        rpcManager;
-    private Logger             logger;
-    private WorldManagerList   worldManagers;
+    private IRpcManager         rpcManager;
+    @InjectComponent("API.Database.Redis.Observer")
+    private IObservationManager observer;
+    private Logger              logger;
+    private WorldManagerList    worldManagers;
 
     @Override
     public void start()
@@ -76,6 +80,12 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
     @Override
     public void stop()
     {
+    }
+
+    @Override
+    public Lock getIslandDataLock(final UUID islandId)
+    {
+        return this.observer.getLock("lock:isldata:" + islandId);
     }
 
     @Override
@@ -172,10 +182,10 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
     }
 
     @Override
-    public void islandAdded(final IslandData islandData)
+    public void islandAdded(UUID islandId, String islandType)
     {
-        this.bukkitApiCore.debug("[SkyBlock] Received info about new island: " + islandData);
-        this.getWorldManager(islandData.getIslandType()).islandAdded(islandData);
+        this.bukkitApiCore.debug("[SkyBlock] Received info about new island: " + islandId);
+        this.getWorldManager(islandType).islandAdded(islandId);
     }
 
     @Override
@@ -183,13 +193,6 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
     {
         this.bukkitApiCore.debug("[SkyBlock] Received info about island to remove: " + islandData);
         this.getWorldManager(islandData.getIslandType()).islandRemoved(islandData);
-    }
-
-    @Override
-    public void islandDataChanged(final IslandData islandData)
-    {
-        this.bukkitApiCore.debug("[SkyBlock] Received info about new island data: " + islandData);
-        this.getWorldManager(islandData.getIslandType()).islandUpdated(islandData);
     }
 
     @Override

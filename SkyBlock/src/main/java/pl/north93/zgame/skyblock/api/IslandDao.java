@@ -3,6 +3,7 @@ package pl.north93.zgame.skyblock.api;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.UpdateOptions;
@@ -18,6 +19,7 @@ import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.redis.observable.Cache;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
+import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.skyblock.api.utils.Coords2D;
 import pl.north93.zgame.skyblock.api.utils.Coords3D;
 
@@ -37,6 +39,11 @@ public class IslandDao
                                             .keyMapper(uuid -> new ObjectKey(uuid.toString()))
                                             .provider(this::getIslandFromDatabase)
                                             .build();
+    }
+
+    public void modifyIsland(final UUID islandId, final Consumer<IslandData> modifier)
+    {
+        this.islandDataCache.getValue(islandId).update(modifier);
     }
 
     public void saveIsland(final IslandData islandData)
@@ -74,6 +81,11 @@ public class IslandDao
         }
 
         return tempList;
+    }
+
+    public Value<IslandData> getIslandValue(final UUID islandId)
+    {
+        return this.islandDataCache.getValue(islandId);
     }
 
     public IslandData getIsland(final UUID islandId)
@@ -119,6 +131,8 @@ public class IslandDao
 
         //noinspection unchecked
         ((List<UUID>) doc.get("members")).forEach(data::addMember);
+        //noinspection unchecked
+        data.getInvitations().addAll((List<UUID>) doc.get("invitations"));
 
         return data;
     }
@@ -144,6 +158,7 @@ public class IslandDao
         homeLocation.put("z", island.getHomeLocation().getZ());
         document.put("home", homeLocation);
 
+        document.put("invitations", island.getInvitations());
         document.put("members", island.getMembersUuid());
 
         return document;

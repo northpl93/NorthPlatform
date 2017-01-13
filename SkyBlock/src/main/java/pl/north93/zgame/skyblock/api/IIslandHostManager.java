@@ -22,13 +22,10 @@ public interface IIslandHostManager
 
     // Metoda wywoływana gdy wyspa ma zostać utworzona na tym serwerze.
     @DoNotWaitForResponse
-    void islandAdded(IslandData islandData);
+    void islandAdded(UUID islandId, String islandType);
 
     // Metoda wywoływana gdy wyspa ma zostać usunięta.
+    // Przesyłam tutaj IslandData ponieważ serwer nie mógłby wtedy pobrać tego z bazy
     @DoNotWaitForResponse
     void islandRemoved(IslandData islandData);
-
-    // Metoda wywoływana gdy trzeba zaktualizować informacje o wyspie.
-    @DoNotWaitForResponse
-    void islandDataChanged(IslandData islandData);
 }

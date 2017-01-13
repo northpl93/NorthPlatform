@@ -68,7 +68,6 @@ public class SetHomeCmd extends NorthCommand
             }
 
             island.setHomeLocation(newLocation);
-            this.server.getIslandDao().saveIsland(island.getIslandData()); // we're changing data on local server so we don't need to use updateIslandData
             sender.sendMessage(this.messages, "info.home_changed");
         });
     }

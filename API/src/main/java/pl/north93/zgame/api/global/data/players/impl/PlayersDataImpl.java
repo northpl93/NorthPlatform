@@ -1,9 +1,15 @@
 package pl.north93.zgame.api.global.data.players.impl;
 
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static java.util.regex.Pattern.compile;
+
+
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.UpdateOptions;
@@ -50,12 +56,14 @@ public class PlayersDataImpl extends Component implements IPlayersData
         this.uuid2nick = this.observationManager.cacheBuilder(UUID.class, String.class)
                                                 .name("uuid2nick:")
                                                 .keyMapper(uuid -> new ObjectKey(uuid.toString()))
+                                                .provider(this::findNickFromUuid)
+                                                .expire(TimeUnit.DAYS.toSeconds(2))
                                                 .build();
         this.nick2uuid = this.observationManager.cacheBuilder(String.class, UUID.class)
                                                 .name("nick2uuid:")
                                                 .keyMapper(ObjectKey::new)
                                                 .provider(this::findUuidFromNick)
-                                                .expire(TimeUnit.DAYS.toSeconds(1))
+                                                .expire(TimeUnit.DAYS.toSeconds(2))
                                                 .build();
         this.offlinePlayersData = this.observationManager.cacheBuilder(UUID.class, IOfflinePlayer.class)
                                                          .name("offlineplayers:")
@@ -75,9 +83,21 @@ public class PlayersDataImpl extends Component implements IPlayersData
     }
 
     @Override
-    public Value<OnlinePlayerImpl> loadPlayer(final UUID uuid, final String name, final Boolean premium, final String proxyId)
+    public Value<OnlinePlayerImpl> loadPlayer(final UUID uuid, final String name, final Boolean premium, final String proxyId) throws NameSizeMistakeException
     {
-        final IOfflinePlayer offlinePlayer = this.getOfflinePlayer(uuid);
+        final IOfflinePlayer offlinePlayer;
+        if (premium)
+        {
+            offlinePlayer = this.getOfflinePlayer(uuid);
+        }
+        else
+        {
+            offlinePlayer = this.getOfflinePlayer(name);
+            if (offlinePlayer != null && ! offlinePlayer.getLatestNick().equals(name))
+            {
+                throw new NameSizeMistakeException(offlinePlayer.getLatestNick());
+            }
+        }
         final OnlinePlayerImpl player = new OnlinePlayerImpl();
 
         player.setUuid(uuid);
@@ -88,14 +108,14 @@ public class PlayersDataImpl extends Component implements IPlayersData
         }
         else
         {
-            player.setLatestNick("");
+            player.setLatestNick(name);
             player.setGroup(this.permissionsManager.getDefaultGroup());
         }
         player.setServerId(UUID.randomUUID());
         player.setProxyId(proxyId);
         player.setPremium(premium);
 
-        this.nick2uuid.put(name, uuid);
+        this.nick2uuid.put(name.toLowerCase(Locale.ENGLISH), uuid);
         this.uuid2nick.put(uuid, name);
 
         return this.observationManager.of(player);
@@ -107,34 +127,38 @@ public class PlayersDataImpl extends Component implements IPlayersData
         return this.offlinePlayersData.get(uuid);
     }
 
-    private IOfflinePlayer loadOfflinePlayer(final UUID uuid)
+    private IOfflinePlayer loadOfflinePlayer(final UUID uuid) // used by online mode
     {
         final MongoCollection<Document> playersData = this.storageConnector.getMainDatabase().getCollection("players");
         final Document result = playersData.find(new Document("uuid", uuid)).limit(1).first();
+        return this.readOfflinePlayer(result);
+    }
 
-        if (result != null)
+    private OfflinePlayerImpl readOfflinePlayer(final Document result)
+    {
+        if (result == null)
         {
-            final String latestKnownUsername = result.getString("latestKnownUsername");
-            final Group group = this.permissionsManager.getGroupByName(result.getString("group"));
-
-            final MetaStore store = new MetaStore();
-            final Map<MetaKey, Object> playerMeta = store.getInternalMap();
-            final Document metadata = (Document) result.getOrDefault("metadata", new Document());
-            for (final Map.Entry<String, Object> entry : metadata.entrySet())
-            {
-                playerMeta.put(MetaKey.get(entry.getKey()), entry.getValue());
-            }
-
-            return new OfflinePlayerImpl(uuid, latestKnownUsername, group, store);
+            return null;
         }
 
-        return null;
+        final String latestKnownUsername = result.getString("latestKnownUsername");
+        final Group group = this.permissionsManager.getGroupByName(result.getString("group"));
+
+        final MetaStore store = new MetaStore();
+        final Map<MetaKey, Object> playerMeta = store.getInternalMap();
+        final Document metadata = (Document) result.getOrDefault("metadata", new Document());
+        for (final Map.Entry<String, Object> entry : metadata.entrySet())
+        {
+            playerMeta.put(MetaKey.get(entry.getKey()), entry.getValue());
+        }
+
+        return new OfflinePlayerImpl(result.get("uuid", UUID.class), latestKnownUsername, group, store);
     }
 
     @Override
     public IOfflinePlayer getOfflinePlayer(final String nick)
     {
-        final UUID uuid = this.nick2uuid.get(nick);
+        final UUID uuid = this.nick2uuid.get(nick.toLowerCase(Locale.ENGLISH));
         if (uuid == null)
         {
             return null;
@@ -172,6 +196,8 @@ public class PlayersDataImpl extends Component implements IPlayersData
             this.offlinePlayersData.put(player.getUuid(), (IOfflinePlayer) player);
         }
 
+
+
         final MongoCollection<Document> database = this.storageConnector.getMainDatabase().getCollection("players");
         database.updateOne(new Document("uuid", player.getUuid()), new Document("$set", playerData), new UpdateOptions().upsert(true));
     }
@@ -179,7 +205,13 @@ public class PlayersDataImpl extends Component implements IPlayersData
     @Override
     public UUID usernameToUuid(final String username)
     {
-        return this.nick2uuid.get(username);
+        return this.nick2uuid.get(username.toLowerCase(Locale.ENGLISH));
+    }
+
+    @Override
+    public String uuidToUsername(final UUID playerUuid)
+    {
+        return this.uuid2nick.get(playerUuid);
     }
 
     private UUID findUuidFromNick(final String nick)
@@ -187,14 +219,31 @@ public class PlayersDataImpl extends Component implements IPlayersData
         final Optional<UsernameCache.UsernameDetails> usernameDetails = this.usernameCache.getUsernameDetails(nick);
         if (usernameDetails.isPresent())
         {
-            return usernameDetails.get().getUuid();
+            final UsernameCache.UsernameDetails details = usernameDetails.get();
+            if (details.isPremium())
+            {
+                return details.getUuid();
+            }
         }
-        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + nick).getBytes());
+        return this.findUuidFromPlayersDb(nick);
     }
 
-    @Override
-    public String uuidToUsername(final UUID playerUuid)
+    private UUID findUuidFromPlayersDb(final String nick)
     {
-        return this.uuid2nick.get(playerUuid);
+        final MongoCollection<Document> playersData = this.storageConnector.getMainDatabase().getCollection("players");
+        final Pattern nickPattern = compile('^' + Pattern.quote(nick) + '$', CASE_INSENSITIVE);
+        final Document result = playersData.find(new Document("latestKnownUsername", nickPattern)).limit(1).first();
+        return result == null ? null : result.get("uuid", UUID.class);
+    }
+
+    private String findNickFromUuid(final UUID uuid)
+    {
+        final MongoCollection<Document> playersData = this.storageConnector.getMainDatabase().getCollection("players");
+        final Document result = playersData.find(new Document("uuid", uuid)).limit(1).first();
+        if (result != null)
+        {
+            return result.getString("latestKnownUsername");
+        }
+        return null;
     }
 }

@@ -33,6 +33,8 @@ public class WtfMyIsland extends NorthCommand
             sender.sendMessage("&aServer: " + island.getServerId());
             sender.sendMessage("&aType: " + island.getIslandType());
             sender.sendMessage("&aName: " + island.getName());
+            sender.sendMessage("&aInvites: " + island.getInvitations());
+            sender.sendMessage("&aMembers: " + island.getMembersUuid());
         }
         else
         {

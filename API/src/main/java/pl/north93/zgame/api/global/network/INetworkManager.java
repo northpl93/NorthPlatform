@@ -53,6 +53,10 @@ public interface INetworkManager
 
     int onlinePlayersCount();
 
+    String getNickFromUuid(UUID playerId);
+
+    UUID getUuidFromNick(String nick);
+
     Value<IOnlinePlayer> getOnlinePlayer(String nick);
 
     Value<IOnlinePlayer> getOnlinePlayer(UUID playerUuid);

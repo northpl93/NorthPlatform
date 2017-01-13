@@ -221,6 +221,18 @@ class NetworkManager extends Component implements INetworkManager
     }
 
     @Override
+    public String getNickFromUuid(final UUID playerId)
+    {
+        return this.playersData.uuidToUsername(playerId);
+    }
+
+    @Override
+    public UUID getUuidFromNick(final String nick)
+    {
+        return this.playersData.usernameToUuid(nick);
+    }
+
+    @Override
     public Value<IOnlinePlayer> getOnlinePlayer(final String nick)
     {
         //noinspection unchecked

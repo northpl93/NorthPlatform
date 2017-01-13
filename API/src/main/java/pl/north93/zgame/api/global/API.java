@@ -67,6 +67,6 @@ public final class API
 
     public static String message(final ResourceBundle resourceBundle, final String key, final Object... params)
     {
-        return MessageFormat.format(resourceBundle.getString(key), params);
+        return MessageFormat.format(resourceBundle.getString(key).replace('&', (char)167), params);
     }
 }

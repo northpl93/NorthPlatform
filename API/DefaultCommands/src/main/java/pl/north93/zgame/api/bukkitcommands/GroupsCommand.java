@@ -28,6 +28,7 @@ public class GroupsCommand extends NorthCommand
     public GroupsCommand()
     {
         super("groups", "group");
+        this.setPermission("api.command.groups");
     }
 
     @Override
@@ -60,7 +61,7 @@ public class GroupsCommand extends NorthCommand
                     sender.sendMessage("&eGrupa " + offlinePlayer.getLatestNick() + " (" + offlinePlayer.getUuid() + ") to " + offlinePlayer.getGroup().getName());
                 }
             }
-            else if (args.length() == 1)
+            else if (args.length() == 2)
             {
                 final String username = args.asString(0);
                 final Group newGroup = this.permissionsManager.getGroupByName(args.asString(1));
@@ -88,6 +89,10 @@ public class GroupsCommand extends NorthCommand
                 }
 
                 sender.sendMessage("&aPomyślnie zmieniono grupę na " + newGroup.getName());
+            }
+            else
+            {
+                sender.sendMessage("&cZła ilość argumentów!");
             }
         });
     }

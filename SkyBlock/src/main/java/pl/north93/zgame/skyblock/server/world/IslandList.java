@@ -32,12 +32,12 @@ public class IslandList
         try
         {
             this.lock.writeLock().lock();
-            this.byIslandCoords.put(island.getIslandData().getIslandLocation(), island);
+            this.byIslandCoords.put(island.getIslandCoordinates(), island);
             for (final Coords2D coords2D : island.getLocation().getIslandChunks())
             {
                 this.byChunkCoords.put(coords2D, island);
             }
-            this.byIslandId.put(island.getIslandData().getIslandId(), island);
+            this.byIslandId.put(island.getId(), island);
         }
         finally
         {
@@ -50,12 +50,12 @@ public class IslandList
         try
         {
             this.lock.writeLock().lock();
-            this.byIslandCoords.remove(island.getIslandData().getIslandLocation());
+            this.byIslandCoords.remove(island.getIslandCoordinates());
             for (final Coords2D coords2D : island.getLocation().getIslandChunks())
             {
                 this.byChunkCoords.remove(coords2D);
             }
-            this.byIslandId.remove(island.getIslandData().getIslandId());
+            this.byIslandId.remove(island.getId());
         }
         finally
         {
