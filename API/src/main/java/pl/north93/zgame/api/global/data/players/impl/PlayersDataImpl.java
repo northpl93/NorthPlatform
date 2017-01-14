@@ -122,9 +122,37 @@ public class PlayersDataImpl extends Component implements IPlayersData
     }
 
     @Override
+    public Value<IOfflinePlayer> getOfflinePlayerValue(final UUID uuid)
+    {
+        return this.offlinePlayersData.getValue(uuid);
+    }
+
+    @Override
+    public Value<IOfflinePlayer> getOfflinePlayerValue(final String nick)
+    {
+        final UUID uuid = this.nick2uuid.get(nick.toLowerCase(Locale.ENGLISH));
+        if (uuid == null)
+        {
+            return null;
+        }
+        return this.getOfflinePlayerValue(uuid);
+    }
+
+    @Override
     public IOfflinePlayer getOfflinePlayer(final UUID uuid)
     {
         return this.offlinePlayersData.get(uuid);
+    }
+
+    @Override
+    public IOfflinePlayer getOfflinePlayer(final String nick)
+    {
+        final UUID uuid = this.nick2uuid.get(nick.toLowerCase(Locale.ENGLISH));
+        if (uuid == null)
+        {
+            return null;
+        }
+        return this.getOfflinePlayer(uuid);
     }
 
     private IOfflinePlayer loadOfflinePlayer(final UUID uuid) // used by online mode
@@ -156,17 +184,6 @@ public class PlayersDataImpl extends Component implements IPlayersData
     }
 
     @Override
-    public IOfflinePlayer getOfflinePlayer(final String nick)
-    {
-        final UUID uuid = this.nick2uuid.get(nick.toLowerCase(Locale.ENGLISH));
-        if (uuid == null)
-        {
-            return null;
-        }
-        return this.getOfflinePlayer(uuid);
-    }
-
-    @Override
     public void savePlayer(final IPlayer player)
     {
         final Document playerData = new Document();
@@ -195,8 +212,6 @@ public class PlayersDataImpl extends Component implements IPlayersData
             playerData.put("isSavedWhileOnline", false);
             this.offlinePlayersData.put(player.getUuid(), (IOfflinePlayer) player);
         }
-
-
 
         final MongoCollection<Document> database = this.storageConnector.getMainDatabase().getCollection("players");
         database.updateOne(new Document("uuid", player.getUuid()), new Document("$set", playerData), new UpdateOptions().upsert(true));

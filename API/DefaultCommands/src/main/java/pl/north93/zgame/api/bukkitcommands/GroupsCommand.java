@@ -9,11 +9,8 @@ import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectResource;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.IOfflinePlayer;
-import pl.north93.zgame.api.global.network.IOnlinePlayer;
 import pl.north93.zgame.api.global.permissions.Group;
 import pl.north93.zgame.api.global.permissions.PermissionsManager;
-import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class GroupsCommand extends NorthCommand
 {
@@ -44,21 +41,18 @@ public class GroupsCommand extends NorthCommand
             else if (args.length() == 1)
             {
                 final String username = args.asString(0);
-                final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getOnlinePlayer(username);
-                if (onlinePlayer.isAvailable())
+
+                boolean result = this.networkManager.getPlayers().access(username, online ->
                 {
-                    final IOnlinePlayer iOnlinePlayer = onlinePlayer.get();
-                    sender.sendMessage("&eGrupa " + iOnlinePlayer.getNick() + " to " + iOnlinePlayer.getGroup().getName());
-                }
-                else
+                    sender.sendMessage("&eGrupa " + online.getNick() + " to " + online.getGroup().getName());
+                }, offline ->
                 {
-                    final IOfflinePlayer offlinePlayer = this.networkManager.getOfflinePlayer(username);
-                    if (offlinePlayer == null)
-                    {
-                        sender.sendMessage(this.messages, "command.no_player");
-                        return;
-                    }
-                    sender.sendMessage("&eGrupa " + offlinePlayer.getLatestNick() + " (" + offlinePlayer.getUuid() + ") to " + offlinePlayer.getGroup().getName());
+                    sender.sendMessage("&eGrupa " + offline.getLatestNick() + " (" + offline.getUuid() + ") to " + offline.getGroup().getName());
+                });
+
+                if (! result)
+                {
+                    sender.sendMessage(this.messages, "command.no_player");
                 }
             }
             else if (args.length() == 2)
@@ -70,25 +64,14 @@ public class GroupsCommand extends NorthCommand
                     sender.sendMessage("&cNie ma takiej grupy!");
                     return;
                 }
-
-                final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getOnlinePlayer(username);
-                if (! onlinePlayer.update(iOnlinePlayer ->
+                if (this.networkManager.getPlayers().access(username, player -> player.setGroup(newGroup)))
                 {
-                    iOnlinePlayer.setGroup(newGroup);
-                    iOnlinePlayer.sendMessage(this.messages, "command.groups.changed", newGroup.getName());
-                }))
-                {
-                    final IOfflinePlayer offlinePlayer = this.networkManager.getOfflinePlayer(username);
-                    if (offlinePlayer == null)
-                    {
-                        sender.sendMessage(this.messages, "command.no_player");
-                        return;
-                    }
-                    offlinePlayer.setGroup(newGroup);
-                    this.networkManager.savePlayer(offlinePlayer);
+                    sender.sendMessage("&aPomyślnie zmieniono grupę na " + newGroup.getName());
                 }
-
-                sender.sendMessage("&aPomyślnie zmieniono grupę na " + newGroup.getName());
+                else
+                {
+                    sender.sendMessage(this.messages, "command.no_player");
+                }
             }
             else
             {

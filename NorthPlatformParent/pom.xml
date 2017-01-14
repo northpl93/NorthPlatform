@@ -26,6 +26,7 @@
         <module>../Server Deamon</module>
         <module>../SkyBlock</module>
         <module>../PlayerDataShare</module>
+        <module>../RestfulApi</module>
     </modules>
 
     <repositories>

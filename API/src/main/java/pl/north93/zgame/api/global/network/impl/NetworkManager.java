@@ -39,6 +39,7 @@ import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.NetworkAction;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
 import pl.north93.zgame.api.global.network.minigame.MiniGame;
+import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerImpl;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
@@ -60,6 +61,7 @@ class NetworkManager extends Component implements INetworkManager
     private IObservationManager observationManager;
     @InjectComponent("API.MinecraftNetwork.PlayersStorage")
     private IPlayersData        playersData;
+    private PlayersManagerImpl  playersManager;
     private JedisPool           jedisPool;
     private Value<NetworkMeta>  networkMeta;
 
@@ -69,6 +71,7 @@ class NetworkManager extends Component implements INetworkManager
         this.jedisPool = this.<StorageConnector>getComponent("API.Database.StorageConnector").getJedisPool();
         this.networkMeta = this.observationManager.get(NetworkMeta.class, "network:meta");
         this.redisSubscriber.subscribe(NETWORK_ACTION, this::handleNetworkAction);
+        this.playersManager = new PlayersManagerImpl(this, this.playersData, this.observationManager);
     }
 
     @Override
@@ -217,7 +220,7 @@ class NetworkManager extends Component implements INetworkManager
     @Override
     public int onlinePlayersCount()
     {
-        return this.getProxyServers().stream().mapToInt(ProxyInstanceInfo::getOnlinePlayers).sum();
+        return this.playersManager.onlinePlayersCount();
     }
 
     @Override
@@ -304,6 +307,12 @@ class NetworkManager extends Component implements INetworkManager
     {
         // todo add local RpcManager module
         return this.getApiCore().getRpcManager().createRpcProxy(NetworkControllerRpc.class, Targets.networkController());
+    }
+
+    @Override
+    public IPlayersManager getPlayers()
+    {
+        return this.playersManager;
     }
 
     private void handleNetworkAction(final String channel, final byte[] message)

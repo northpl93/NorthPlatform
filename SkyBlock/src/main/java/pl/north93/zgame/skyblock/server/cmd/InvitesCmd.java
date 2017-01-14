@@ -4,6 +4,8 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.commands.Arguments;
@@ -49,11 +51,23 @@ public class InvitesCmd extends NorthCommand
             if (args.length() == 0)
             {
                 this.listInvites(sender, skyPlayer);
+                if (skyPlayer.getIslandRole().equals(IslandRole.OWNER))
+                {
+                    sender.sendMessage(this.messages, "cmd.invites.help", label);
+                }
             }
             else if (args.length() == 1)
             {
                 final String args1 = args.asString(0);
-
+                if (args1.equals("remove") || args1.equals("cofnij") || args1.equals("wyrzuc"))
+                {
+                    if (skyPlayer.getIslandRole().equals(IslandRole.MEMBER))
+                    {
+                        sender.sendMessage(this.messages, "error.you_must_be_owner");
+                        return;
+                    }
+                    sender.sendMessage(this.messages, "cmd.invites.help", label);
+                }
             }
             else if (args.length() == 2)
             {
@@ -65,11 +79,11 @@ public class InvitesCmd extends NorthCommand
                         sender.sendMessage(this.messages, "error.you_must_be_owner");
                         return;
                     }
-                    this.server.getSkyBlockManager().leaveIsland(skyPlayer.getIslandId(), sender.getName(), args.asString(1), true);
+                    this.server.getSkyBlockManager().leaveIsland(skyPlayer.getIslandId(), sender.getName(), args.asString(1), false);
                 }
                 else
                 {
-
+                    sender.sendMessage(this.messages, "cmd.invites.help", label);
                 }
             }
         });
@@ -91,5 +105,11 @@ public class InvitesCmd extends NorthCommand
             sender.sendMessage(this.messages, "cmd.invites.members", StringUtils.isEmpty(members) ? empty : members);
             sender.sendMessage(this.messages, "cmd.invites.list", StringUtils.isEmpty(invites) ? empty : invites);
         });
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

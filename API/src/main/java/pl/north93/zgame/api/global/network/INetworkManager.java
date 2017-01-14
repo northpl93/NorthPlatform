@@ -10,10 +10,11 @@ import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.messages.NetworkMeta;
 import pl.north93.zgame.api.global.messages.ProxyInstanceInfo;
 import pl.north93.zgame.api.global.network.minigame.MiniGame;
+import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
-public interface INetworkManager
+public interface INetworkManager extends IPlayerManagement
 {
     Value<NetworkMeta> getNetworkMeta();
 
@@ -51,25 +52,9 @@ public interface INetworkManager
 
     Value<Server> getServer(UUID uuid);
 
-    int onlinePlayersCount();
-
-    String getNickFromUuid(UUID playerId);
-
-    UUID getUuidFromNick(String nick);
-
-    Value<IOnlinePlayer> getOnlinePlayer(String nick);
-
-    Value<IOnlinePlayer> getOnlinePlayer(UUID playerUuid);
-
-    IOfflinePlayer getOfflinePlayer(UUID playerUuid);
-
-    IOfflinePlayer getOfflinePlayer(String nick);
-
-    void savePlayer(IPlayer player);
-
-    boolean isOnline(String nick);
-
     void broadcastNetworkAction(NetworkAction networkAction);
 
     NetworkControllerRpc getNetworkController();
+
+    IPlayersManager getPlayers();
 }

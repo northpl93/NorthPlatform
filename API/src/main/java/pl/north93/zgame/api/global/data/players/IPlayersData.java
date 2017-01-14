@@ -12,6 +12,10 @@ public interface IPlayersData
 {
     Value<OnlinePlayerImpl> loadPlayer(UUID uuid, String name, Boolean premium, String proxyId) throws NameSizeMistakeException;
 
+    Value<IOfflinePlayer> getOfflinePlayerValue(UUID uuid);
+
+    Value<IOfflinePlayer> getOfflinePlayerValue(String nick);
+
     IOfflinePlayer getOfflinePlayer(UUID uuid);
 
     IOfflinePlayer getOfflinePlayer(String nick);

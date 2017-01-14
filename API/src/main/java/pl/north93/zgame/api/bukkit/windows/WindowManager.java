@@ -10,6 +10,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 @SuppressWarnings("SuspiciousMethodCalls")
 public class WindowManager implements Listener
 {
@@ -37,5 +40,11 @@ public class WindowManager implements Listener
         }
         event.setCancelled(true);
         window.handleClick(event.getSlot());
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("openedWindows", this.openedWindows).toString();
     }
 }
