@@ -8,9 +8,11 @@ import java.io.File;
 import java.util.logging.Logger;
 
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.plugin.PluginManager;
 import pl.north93.zgame.api.bungee.cfg.ProxyInstanceConfig;
 import pl.north93.zgame.api.bungee.connection.ConnectionManager;
 import pl.north93.zgame.api.bungee.connection.NorthReconnectHandler;
+import pl.north93.zgame.api.bungee.listeners.PermissionsListener;
 import pl.north93.zgame.api.bungee.listeners.PingListener;
 import pl.north93.zgame.api.bungee.listeners.PlayerListener;
 import pl.north93.zgame.api.bungee.mods.IBungeeServersManager;
@@ -74,8 +76,10 @@ public class BungeeApiCore extends ApiCore
 
         this.getPlatformConnector().runTaskAsynchronously(this::sendProxyInfo, 300);
 
-        this.bungeePlugin.getProxy().getPluginManager().registerListener(this.bungeePlugin, new PingListener());
-        this.bungeePlugin.getProxy().getPluginManager().registerListener(this.bungeePlugin, new PlayerListener(this));
+        final PluginManager pluginManager = this.bungeePlugin.getProxy().getPluginManager();
+        pluginManager.registerListener(this.bungeePlugin, new PingListener());
+        pluginManager.registerListener(this.bungeePlugin, new PlayerListener(this));
+        pluginManager.registerListener(this.bungeePlugin, new PermissionsListener(this));
     }
 
     @Override

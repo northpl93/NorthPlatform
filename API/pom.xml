@@ -37,10 +37,17 @@
             <type>javadoc</type>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>1.7.22</version>
+        </dependency>
+
         <dependency>
             <groupId>it.unimi.dsi</groupId>
             <artifactId>fastutil</artifactId>
-            <version>7.0.12</version>
+            <version>7.0.13</version>
         </dependency>
 
         <dependency>
@@ -52,7 +59,7 @@
         <dependency> <!-- We doesn't have it in BungeeCord -->
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
+            <version>3.5</version>
         </dependency>
 
         <dependency> <!-- We doesn't have it in BungeeCord -->

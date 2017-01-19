@@ -1,4 +1,4 @@
-package pl.north93.zgame.skyblock.server.cmd;
+package pl.north93.zgame.skyblock.server.cmd.admin;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -17,6 +17,7 @@ public class IsTestCmd extends NorthCommand
     public IsTestCmd()
     {
         super("test");
+        this.setPermission("dev");
     }
 
     @Override

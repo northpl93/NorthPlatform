@@ -75,9 +75,7 @@ public class PermissionsManager extends Component
         this.cachedGroups.clear();
         for (final GroupsContainer.GroupEntry groupEntry : groupsContainer.groups)
         {
-            final Group group = new Group(groupEntry.name);
-            group.setChatFormat(groupEntry.chatFormat);
-            group.setJoinMessage(groupEntry.joinMessage);
+            final Group group = new Group(groupEntry.name, groupEntry.chatFormat, groupEntry.joinMessage);
             groupEntry.permissions.forEach(group::addPermission);
             this.cachedGroups.add(group);
         }

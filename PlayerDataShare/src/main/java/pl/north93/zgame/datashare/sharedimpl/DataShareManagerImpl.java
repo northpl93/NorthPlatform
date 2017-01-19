@@ -12,19 +12,23 @@ import org.bson.Document;
 
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
+import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 import pl.north93.zgame.datashare.api.DataSharingGroup;
 import pl.north93.zgame.datashare.api.IDataShareManager;
 import pl.north93.zgame.datashare.api.data.IDataUnit;
 import pl.north93.zgame.datashare.api.data.IDataUnitPersistence;
 import pl.north93.zgame.datashare.api.data.IDataUnitSerialization;
+import redis.clients.util.SafeEncoder;
 
 public class DataShareManagerImpl implements IDataShareManager
 {
     @InjectComponent("API.Database.Redis.Subscriber")
-    private RedisSubscriber subscriber;
+    private RedisSubscriber     subscriber;
     @InjectComponent("API.Database.Redis.MessagePackSerializer")
-    private TemplateManager msgPack;
+    private TemplateManager     msgPack;
+    @InjectComponent("API.Database.Redis.Observer")
+    private IObservationManager observer;
     private final ShareDataDao                    dataDao   = new ShareDataDao();
     private final Map<String, RegisteredDataUnit> dataUnits = new HashMap<>();
 
@@ -93,6 +97,24 @@ public class DataShareManagerImpl implements IDataShareManager
             }
             dataUnit.getSerialization().fromRedis(player, dataUnitDocument);
         }
+    }
+
+    @Override
+    public boolean isChatEnabled(final DataSharingGroup group)
+    {
+        return this.observer.get(Boolean.class, "pds:chatisenabled:" + group.getName()).getOr(() -> Boolean.TRUE);
+    }
+
+    @Override
+    public void setChatEnabled(final DataSharingGroup group, final boolean enabled)
+    {
+        this.observer.get(Boolean.class, "pds:chatisenabled:" + group.getName()).set(enabled);
+    }
+
+    @Override
+    public void broadcast(final DataSharingGroup group, final String message)
+    {
+        this.subscriber.publish("broadcast:" + group.getName(), SafeEncoder.encode(message));
     }
 
     @Override

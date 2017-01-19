@@ -6,8 +6,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.metadata.MetaStore;
-import pl.north93.zgame.api.global.network.IOfflinePlayer;
-import pl.north93.zgame.api.global.network.IOnlinePlayer;
+import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
+import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.permissions.Group;
 
 public class OfflinePlayerImpl implements IOfflinePlayer

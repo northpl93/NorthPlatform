@@ -60,7 +60,7 @@ public interface Value<T>
     /**
      * Deletes this value from redis and local cache.
      */
-    void delete();
+    boolean delete();
 
     /**
      * Checks if this value is available in redis.

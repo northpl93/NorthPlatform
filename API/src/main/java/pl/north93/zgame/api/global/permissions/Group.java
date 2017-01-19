@@ -23,9 +23,11 @@ public class Group
     private List<String> permissions;
     private List<Group>  inheritance;
 
-    public Group(final String name)
+    public Group(final String name, final String chatFormat, final String joinMessage)
     {
         this.name = name;
+        this.chatFormat = chatFormat;
+        this.joinMessage = joinMessage;
         this.permissions = new ArrayList<>(10);
         this.inheritance = new ArrayList<>(2);
     }
@@ -35,19 +37,9 @@ public class Group
         return this.name;
     }
 
-    public void setName(final String name)
-    {
-        this.name = name;
-    }
-
     public String getChatFormat()
     {
         return this.chatFormat;
-    }
-
-    public void setChatFormat(final String chatFormat)
-    {
-        this.chatFormat = chatFormat;
     }
 
     public String getJoinMessage()
@@ -55,14 +47,27 @@ public class Group
         return this.joinMessage;
     }
 
-    public void setJoinMessage(final String joinMessage)
-    {
-        this.joinMessage = joinMessage;
-    }
-
     public Collection<String> getPermissions()
     {
         return Collections.unmodifiableCollection(this.permissions);
+    }
+
+    public boolean hasPermission(final String permission)
+    {
+        if (this.permissions.contains(permission))
+        {
+            return true;
+        }
+
+        for (final Group group : this.inheritance)
+        {
+            if (group.hasPermission(permission))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void addPermission(final String permission)

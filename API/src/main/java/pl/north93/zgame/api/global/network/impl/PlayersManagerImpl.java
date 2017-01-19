@@ -12,14 +12,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.messages.ProxyInstanceInfo;
-import pl.north93.zgame.api.global.network.IOfflinePlayer;
-import pl.north93.zgame.api.global.network.IOnlinePlayer;
-import pl.north93.zgame.api.global.network.IPlayer;
+import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
+import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
+import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
-public class PlayersManagerImpl implements IPlayersManager
+class PlayersManagerImpl implements IPlayersManager
 {
     private final NetworkManager      networkManager;
     private final IPlayersData        playersData;

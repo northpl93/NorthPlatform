@@ -3,10 +3,6 @@ package pl.north93.zgame.api.global.network.players;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import pl.north93.zgame.api.global.network.IOfflinePlayer;
-import pl.north93.zgame.api.global.network.IOnlinePlayer;
-import pl.north93.zgame.api.global.network.IPlayer;
-
 public interface IPlayersManager
 {
     int onlinePlayersCount();

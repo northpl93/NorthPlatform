@@ -2,6 +2,9 @@ package pl.north93.zgame.api.global.network;
 
 import java.util.UUID;
 
+import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
+import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
+import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
 public interface IPlayerManagement

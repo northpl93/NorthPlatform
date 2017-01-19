@@ -1,6 +1,10 @@
 package pl.north93.zgame.datashare.server.listeners;
 
+import static org.bukkit.ChatColor.translateAlternateColorCodes;
+
+
 import java.util.Formatter;
+import java.util.ResourceBundle;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -15,10 +19,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.InjectResource;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 import pl.north93.zgame.datashare.api.DataSharingGroup;
 import pl.north93.zgame.datashare.api.chat.ChatMessage;
+import pl.north93.zgame.datashare.sharedimpl.PlayerDataShareComponent;
+import redis.clients.util.SafeEncoder;
 
 public class ChatSharingManager implements Listener
 {
@@ -27,12 +34,18 @@ public class ChatSharingManager implements Listener
     private RedisSubscriber  redisSubscriber;
     @InjectComponent("API.Database.Redis.MessagePackSerializer")
     private TemplateManager  msgPack;
+    @InjectComponent("PlayerDataShare.SharedImpl")
+    private PlayerDataShareComponent shareComponent;
+    @InjectResource(bundleName = "PlayerDataShare")
+    private ResourceBundle   messages;
     private UUID             serverId;
+    private boolean          isChatEnabled;
     private DataSharingGroup group;
 
     public void start(final DataSharingGroup group)
     {
         this.group = group;
+        this.redisSubscriber.subscribe("broadcast:" + group.getName(), this::onBroadcast);
         if (! group.getShareChat())
         {
             return;
@@ -52,6 +65,15 @@ public class ChatSharingManager implements Listener
         this.redisSubscriber.unSubscribe("chat:" + this.group.getName());
     }
 
+    private void onBroadcast(final String channel, final byte[] bytes)
+    {
+        final String message = SafeEncoder.encode(bytes);
+        for (final Player player : Bukkit.getOnlinePlayers())
+        {
+            player.sendMessage(message);
+        }
+    }
+
     private void onRemoteChat(final String channel, final byte[] bytes)
     {
         final ChatMessage chatMessage = this.msgPack.deserialize(ChatMessage.class, bytes);
@@ -66,8 +88,20 @@ public class ChatSharingManager implements Listener
         }
     }
 
+    @EventHandler(ignoreCancelled = true)
+    public void onChatNormal(final AsyncPlayerChatEvent event)
+    {
+        final boolean chatEnabled = this.shareComponent.getDataShareManager().isChatEnabled(this.group);
+        final Player player = event.getPlayer();
+        if (! chatEnabled && ! player.hasPermission("chat.bypass"))
+        {
+            player.sendMessage(translateAlternateColorCodes('&', this.messages.getString("chat.is_now_disabled")));
+            event.setCancelled(true);
+        }
+    }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onChat(final AsyncPlayerChatEvent event)
+    public void onChatMonitor(final AsyncPlayerChatEvent event)
     {
         final Formatter formatter = new Formatter();
         final String renderedMessage = formatter.format(event.getFormat(), event.getPlayer().getDisplayName(), event.getMessage()).toString();

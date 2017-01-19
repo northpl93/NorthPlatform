@@ -180,14 +180,16 @@ class CachedValueImpl<T> implements Value<T>
     }
 
     @Override
-    public void delete()
+    public boolean delete()
     {
         this.cache = null;
+        final boolean success;
         try (final Jedis jedis = this.observationManager.getJedis().getResource())
         {
-            jedis.del(this.objectKey.getKey());
+            success = jedis.del(this.objectKey.getKey()) != 0L;
             jedis.publish(this.getChannelKey().getBytes(), new byte[0]);
         }
+        return success;
     }
 
     @Override

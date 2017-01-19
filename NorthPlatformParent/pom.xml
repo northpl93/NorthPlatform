@@ -9,7 +9,7 @@
 
         <bungee-api.version>1.10-SNAPSHOT</bungee-api.version>
 
-        <mongodb.version>3.3.0</mongodb.version>
+        <mongodb.version>3.4.1</mongodb.version>
 
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -27,6 +27,7 @@
         <module>../SkyBlock</module>
         <module>../PlayerDataShare</module>
         <module>../RestfulApi</module>
+        <module>../NoPremiumAuth</module>
     </modules>
 
     <repositories>

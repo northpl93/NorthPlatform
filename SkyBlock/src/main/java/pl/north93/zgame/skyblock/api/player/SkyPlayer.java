@@ -3,8 +3,8 @@ package pl.north93.zgame.skyblock.api.player;
 import java.util.UUID;
 
 import pl.north93.zgame.api.global.metadata.MetaKey;
-import pl.north93.zgame.api.global.network.IOfflinePlayer;
-import pl.north93.zgame.api.global.network.IOnlinePlayer;
+import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
+import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.skyblock.api.IslandRole;
 

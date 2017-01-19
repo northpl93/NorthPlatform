@@ -16,6 +16,8 @@
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/ea/agentloader/ea-agent-loader/1.0.2/ea-agent-loader-1.0.2.jar" path-in-jar="/" />
       <element id="artifact" artifact-name="InstrumentationAgent" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/it/unimi/dsi/fastutil/7.0.12/fastutil-7.0.12.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.7.22/slf4j-api-1.7.22.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/slf4j/slf4j-jdk14/1.7.22/slf4j-jdk14-1.7.22.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

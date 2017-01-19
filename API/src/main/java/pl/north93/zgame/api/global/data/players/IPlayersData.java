@@ -3,8 +3,8 @@ package pl.north93.zgame.api.global.data.players;
 import java.util.UUID;
 
 import pl.north93.zgame.api.global.data.players.impl.NameSizeMistakeException;
-import pl.north93.zgame.api.global.network.IOfflinePlayer;
-import pl.north93.zgame.api.global.network.IPlayer;
+import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
+import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.impl.OnlinePlayerImpl;
 import pl.north93.zgame.api.global.redis.observable.Value;
 

@@ -93,6 +93,12 @@ class CacheImpl<K, V> implements Cache<K, V>
     }
 
     @Override
+    public void remove(final K key)
+    {
+        this.getValue(key).delete();
+    }
+
+    @Override
     public String toString()
     {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("keyClass", this.keyClass).append("valueClass", this.valueClass).append("prefix", this.prefix).toString();

@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.network;
+package pl.north93.zgame.api.global.network.players;
 
 import java.util.UUID;
 

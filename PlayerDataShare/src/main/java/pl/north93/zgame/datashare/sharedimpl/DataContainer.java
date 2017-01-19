@@ -33,19 +33,9 @@ public final class DataContainer
         return this.playerId;
     }
 
-    public void setPlayerId(final UUID playerId)
-    {
-        this.playerId = playerId;
-    }
-
     public Map<String, IDataUnit> getData()
     {
         return this.data;
-    }
-
-    public void setData(final Map<String, IDataUnit> data)
-    {
-        this.data = data;
     }
 
     @Override

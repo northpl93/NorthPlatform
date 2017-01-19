@@ -15,4 +15,6 @@ public interface Cache<K, V>
     void clear();
 
     boolean contains(K key);
+
+    void remove(K key);
 }

@@ -11,8 +11,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.metadata.MetaStore;
-import pl.north93.zgame.api.global.network.IOfflinePlayer;
-import pl.north93.zgame.api.global.network.IOnlinePlayer;
+import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
+import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.zgame.api.global.network.ProxyRpc;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
@@ -136,7 +136,7 @@ public class OnlinePlayerImpl implements IOnlinePlayer
 
     public boolean hasPermission(final String permission)
     {
-        return this.group != null && this.group.getPermissions().contains(permission);
+        return this.group != null && this.group.hasPermission(permission);
     }
 
     @Override

@@ -17,4 +17,10 @@ public interface IDataShareManager
     void loadPlayer(DataSharingGroup group, UUID playerId);
 
     void applyDataTo(DataSharingGroup group, Player player, DataContainer container);
+
+    boolean isChatEnabled(DataSharingGroup group);
+
+    void setChatEnabled(DataSharingGroup group,  boolean enabled);
+
+    void broadcast(DataSharingGroup group, String message);
 }

@@ -1,6 +1,8 @@
 package pl.north93.zgame.api.global.component.impl;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -14,6 +16,7 @@ import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.IComponentManager;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectResource;
+import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.utils.UTF8Control;
 
 public class Injector
@@ -92,6 +95,29 @@ public class Injector
                 {
                     e.printStackTrace();
                 }
+            }
+        }
+
+        for (final Method method : clazz.getDeclaredMethods())
+        {
+            method.setAccessible(true);
+            if (! method.isAnnotationPresent(PostInject.class))
+            {
+                continue;
+            }
+
+            if (Modifier.isStatic(method.getModifiers()))
+            {
+                throw new RuntimeException("Method annotated with @PostInject must be non-static.");
+            }
+
+            try
+            {
+                method.invoke(instance);
+            }
+            catch (final IllegalAccessException | InvocationTargetException e)
+            {
+                e.printStackTrace();
             }
         }
     }
