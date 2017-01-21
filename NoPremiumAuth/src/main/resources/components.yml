@@ -1,0 +1,20 @@
+components:
+  - name: NoPremiumAuth.Server
+    enabled: true
+    mainClass: "pl.north93.zgame.auth.server.AuthServerComponent"
+    description: "Manages no-premium authentication on server."
+    dependencies:
+      - API.Database.StorageConnector
+      - API.Database.Redis.Observer
+      - API.MinecraftNetwork.NetworkManager
+    platforms:
+      - BUKKIT
+  - name: NoPremiumAuth.Proxy
+    enabled: true
+    mainClass: "pl.north93.zgame.auth.bungee.AuthProxyComponent"
+    description: "Manages no-premium authentication on proxy."
+    dependencies:
+      - API.Database.StorageConnector
+      - API.MinecraftNetwork.NetworkManager
+    platforms:
+      - BUNGEE

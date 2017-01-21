@@ -17,7 +17,7 @@ public class AuthManagerImpl implements IAuthManager
 {
     @InjectComponent("NoPremiumAuth.Server")
     private AuthServerComponent  authServer;
-    @InjectComponent("")
+    @InjectComponent("API.Database.Redis.Observer")
     private IObservationManager  observer;
     private Cache<UUID, Boolean> logInStatus;
 
@@ -25,7 +25,7 @@ public class AuthManagerImpl implements IAuthManager
     private void init()
     {
         this.logInStatus = this.observer.cacheBuilder(UUID.class, Boolean.class)
-                                        .name("authstatus")
+                                        .name("auth:")
                                         .keyMapper(key -> new ObjectKey(key.toString()))
                                         .build();
     }

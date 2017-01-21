@@ -2,24 +2,26 @@ package pl.north93.zgame.api.global.component.impl;
 
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+
+import com.google.common.collect.Sets;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import pl.north93.zgame.api.global.component.IComponentManager;
 
 class JarComponentLoader extends URLClassLoader
 {
-    private final URL          fileUrl;
-    private final List<String> scannedPackages;
+    private final URL         fileUrl;
+    private final Set<String> scannedPackages;
 
     public JarComponentLoader(final URL url, final ClassLoader parent)
     {
         super(new URL[] { url }, parent);
         this.fileUrl = url;
-        this.scannedPackages = new ArrayList<>(4);
+        this.scannedPackages = new ObjectArraySet<>(4);
     }
 
     @Override
@@ -33,15 +35,17 @@ class JarComponentLoader extends URLClassLoader
         return this.fileUrl;
     }
 
-    public void scan(final IComponentManager componentManager, final String packageToScan)
+    public void scan(final IComponentManager componentManager, final Set<String> packagesToScan)
     {
-        if (this.scannedPackages.contains(packageToScan))
+        final Sets.SetView<String> toScan = Sets.difference(packagesToScan, this.scannedPackages);
+
+        if (toScan.isEmpty())
         {
             return;
         }
 
-        ClassScanner.scan(this.fileUrl, this, componentManager, packageToScan);
-        this.scannedPackages.add(packageToScan);
+        ClassScanner.scan(this.fileUrl, this, componentManager, toScan);
+        this.scannedPackages.addAll(toScan);
     }
 
     @Override

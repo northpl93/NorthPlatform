@@ -3,6 +3,7 @@ package pl.north93.zgame.api.global.component;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -83,7 +84,8 @@ public abstract class Component
 
     public final void enable()
     {
-        this.apiCore.getLogger().info("Enabling component " + this.getName() + " (package used to scan: " + this.componentBundle.getBasePackage() + ")");
+        final String prettyPackages = this.componentBundle.getBasePackages().stream().collect(Collectors.joining(", "));
+        this.apiCore.getLogger().info("Enabling component " + this.getName() + " (packages used to scan: " + prettyPackages + ")");
         try
         {
             Injector.inject(this.manager, this); // inject annotations

@@ -1,10 +1,11 @@
 package pl.north93.zgame.api.global.component;
 
 import java.util.Collection;
+import java.util.Set;
 
 public interface IComponentBundle
 {
-    String getBasePackage();
+    Set<String> getBasePackages();
 
     String getName();
 

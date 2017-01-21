@@ -1,16 +1,21 @@
 package pl.north93.zgame.api.global.component.impl;
 
 import java.util.List;
+import java.util.Set;
+
+import com.google.common.collect.Sets;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.ComponentStatus;
 import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.component.IExtensionPoint;
+import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 
 class ComponentBundle implements IComponentBundle
 {
@@ -18,8 +23,8 @@ class ComponentBundle implements IComponentBundle
     private final ComponentDescription description;
     private final ClassLoader          classLoader;
     private final List<ExtensionPointImpl<?>> extensionPoints;
-    private String    basePackage;
-    private Component component;
+    private Set<String> basePackages;
+    private Component   component;
 
     public ComponentBundle(final ComponentDescription description, final ClassLoader classLoader, final List<ExtensionPointImpl<?>> extensionPoints)
     {
@@ -27,25 +32,40 @@ class ComponentBundle implements IComponentBundle
         this.description = description;
         this.classLoader = classLoader;
         this.extensionPoints = extensionPoints;
+        this.basePackages = new ObjectArraySet<>();
     }
 
     @Override
-    public String getBasePackage()
+    public Set<String> getBasePackages()
     {
-        if (StringUtils.isEmpty(this.basePackage))
+        if (this.basePackages.isEmpty())
         {
+            final String mainClass = this.description.getMainClass();
+
             if (StringUtils.isEmpty(this.description.getPackageToScan()))
             {
-                final String mainClass = this.description.getMainClass();
                 final int lastIndexOfDot = mainClass.lastIndexOf(".");
-                this.basePackage = mainClass.substring(0, lastIndexOfDot);
+                this.basePackages.add(mainClass.substring(0, lastIndexOfDot));
             }
             else
             {
-                this.basePackage = this.description.getPackageToScan();
+                this.basePackages.add(this.description.getPackageToScan());
+            }
+
+            try
+            {
+                final Class<?> clazz = Class.forName(mainClass, true, this.classLoader);
+                for (final IncludeInScanning includeInScanning : clazz.getAnnotationsByType(IncludeInScanning.class))
+                {
+                    this.basePackages.add(includeInScanning.value());
+                }
+            }
+            catch (final Exception ignored)
+            {
             }
         }
-        return this.basePackage;
+
+        return Sets.newCopyOnWriteArraySet(this.basePackages);
     }
 
     @Override
@@ -105,7 +125,7 @@ class ComponentBundle implements IComponentBundle
         {
             return;
         }
-        ((JarComponentLoader) this.classLoader).scan(this.component.getComponentManager(), this.getBasePackage());
+        ((JarComponentLoader) this.classLoader).scan(this.component.getComponentManager(), this.getBasePackages());
     }
 
     public Component getComponent()

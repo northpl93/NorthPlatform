@@ -21,6 +21,12 @@ public class PingListener implements Listener
     {
         final NetworkMeta networkMeta = this.core.getNetworkManager().getNetworkMeta().get();
         final ServerPing response = event.getResponse();
+        if (networkMeta == null)
+        {
+            response.setDescriptionComponent(new TextComponent(TextComponent.fromLegacyText("&cProblemy techniczne. (networkMeta==null in onPing)")));
+            this.core.getLogger().severe("networkMeta is null in onPing");
+            return;
+        }
 
         response.setDescriptionComponent(new TextComponent(TextComponent.fromLegacyText(networkMeta.serverListMotd)));
 

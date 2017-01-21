@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.defaultcommands;
 
+import java.util.stream.Collectors;
+
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
@@ -24,7 +26,8 @@ public class ListComponents extends NorthCommand
         final IComponentManager componentManager = this.apiCore.getComponentManager();
         for (final IComponentBundle component : componentManager.getComponents())
         {
-            sender.sendMessage(" &3" + component.getName() + " [" + component.getBasePackage() + "]");
+            final String prettyPackages = component.getBasePackages().stream().collect(Collectors.joining(", "));
+            sender.sendMessage(" &3" + component.getName() + " [" + prettyPackages + "]");
             sender.sendMessage("  &c- Builtin: " + (component.isBuiltinComponent() ? "&atrue" : "&cfalse"));
             sender.sendMessage("  &c- Enabled: " + (component.getStatus().isEnabled() ? "&atrue" : "&cfalse"));
             sender.sendMessage("  &c- Description: " + component.getDescription().getDescription());
