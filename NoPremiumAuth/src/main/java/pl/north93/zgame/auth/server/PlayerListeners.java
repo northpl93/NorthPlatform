@@ -18,6 +18,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -145,6 +146,16 @@ public class PlayerListeners implements Listener
 
     @EventHandler(ignoreCancelled = true)
     public void onHeldItemChange(final PlayerItemHeldEvent event)
+    {
+        final Player player = event.getPlayer();
+        if (! this.authManager.isLoggedIn(player.getUniqueId()))
+        {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEat(final PlayerItemConsumeEvent event)
     {
         final Player player = event.getPlayer();
         if (! this.authManager.isLoggedIn(player.getUniqueId()))

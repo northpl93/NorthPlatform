@@ -1,5 +1,6 @@
 package pl.north93.zgame.skyblock.server.management;
 
+import java.io.File;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -50,6 +51,12 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
     @Override
     public void start()
     {
+        final File schematics = this.bukkitApiCore.getFile("schematics");
+        if (! schematics.exists())
+        {
+            final boolean mkdir = schematics.mkdir();
+            this.logger.info("[SkyBlock] Created schematics folder... (" + mkdir + ")");
+        }
         this.worldManagers = new WorldManagerList();
         this.logger.info("[SkyBlock] Setting up world managers...");
         this.skyBlockServer.getSkyBlockConfig().getIslandTypes().forEach(this::setupWorldFor);
@@ -69,9 +76,8 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
         worldCreator.generateStructures(false);
         final World world = Bukkit.createWorld(worldCreator);
 
-        this.logger.info("[SkyBlock] World " + worldName + " is ready!");
+        this.logger.info("[SkyBlock] World " + worldName + " is ready! Creating world manager...");
 
-        this.logger.info("[SkyBlock] Creating world manager...");
         final WorldManager manager = new WorldManager(islandConfig, world);
         manager.init();
         this.worldManagers.add(manager);

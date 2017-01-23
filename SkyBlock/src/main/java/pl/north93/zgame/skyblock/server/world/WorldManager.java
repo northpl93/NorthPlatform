@@ -1,10 +1,12 @@
 package pl.north93.zgame.skyblock.server.world;
 
+import java.io.File;
 import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.logging.Logger;
 
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -17,6 +19,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.skyblock.api.IslandData;
 import pl.north93.zgame.skyblock.api.cfg.IslandConfig;
 import pl.north93.zgame.skyblock.api.utils.Coords2D;
+import pl.north93.zgame.skyblock.api.utils.Coords3D;
 import pl.north93.zgame.skyblock.api.utils.SpiralOut;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 
@@ -83,6 +86,14 @@ public class WorldManager
         return new Island(this.skyBlockServer.getIslandDao(), islandData, new IslandLocation(this.world, centerChunkX, centerChunkZ, radius));
     }
 
+    private void loadSchematic(final Island island)
+    {
+        final Coords3D center = new Coords3D(7, this.islandConfig.getGenerateAtHeight(), 7);
+        final Location location = island.getLocation().fromRelative(center);
+        final File schema = new File(this.apiCore.getFile("schematics"), this.islandConfig.getSchematicName());
+        SchematicUtil.pasteSchematic(location, schema, "schematic");
+    }
+
     public World getWorld()
     {
         return this.world;
@@ -95,10 +106,7 @@ public class WorldManager
 
     public IslandList getIslands()
     {
-        synchronized (this.islands)
-        {
-            return this.islands;
-        }
+        return this.islands;
     }
 
     public int getIslandsCount() // zwraca ilość wysp na tym świecie.
@@ -108,18 +116,25 @@ public class WorldManager
 
     public Coords2D getFirstFreeLocation() // zwraca pierwszą wolną wyspę od środka
     {
-        if (this.availableCoords.isEmpty())
+        synchronized (this.availableCoords)
         {
-            this.buildAvailableLocations(); // we need more available locations!
+            if (this.availableCoords.isEmpty())
+            {
+                this.buildAvailableLocations(); // we need more available locations!
+            }
+            return this.availableCoords.poll();
         }
-        return this.availableCoords.poll();
     }
 
     public void islandAdded(final UUID islandId) // wywoływane gdy wyspa zotanie dodana
     {
         final Island island = this.constructIsland(islandId);
         this.islands.addIsland(island);
-        this.apiCore.sync(island::loadSchematic); // synchronize schematic loading to main server thread
+        this.apiCore.sync(() -> this.loadSchematic(island)); // synchronize schematic loading to main server thread
+        if (this.skyBlockServer.getSkyBlockConfig().getPlaceDebugWool())
+        {
+            island.buildWhiteWoolMarker();
+        }
     }
 
     public void islandRemoved(final IslandData islandData) // wywoływane gdy wyspa zostanie usunięta

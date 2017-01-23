@@ -14,7 +14,7 @@ import org.bson.Document;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.impl.Injector;
+import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.redis.observable.Cache;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
@@ -31,9 +31,9 @@ public class IslandDao
     private IObservationManager     observer;
     private Cache<UUID, IslandData> islandDataCache;
 
-    public IslandDao()
+    @PostInject
+    private void init()
     {
-        Injector.inject(API.getApiCore().getComponentManager(), this);
         this.islandDataCache = this.observer.cacheBuilder(UUID.class, IslandData.class)
                                             .name("isldata:")
                                             .keyMapper(uuid -> new ObjectKey(uuid.toString()))
@@ -122,6 +122,7 @@ public class IslandDao
         data.setServerId(doc.get("server", UUID.class));
         data.setIslandType(doc.getString("type"));
         data.setName(doc.getString("name"));
+        data.setAcceptingVisits(doc.getBoolean("visits"));
 
         final Document islandLocation = doc.get("loc", Document.class);
         data.setIslandLocation(new Coords2D(islandLocation.getInteger("x"), islandLocation.getInteger("z")));
@@ -146,6 +147,7 @@ public class IslandDao
         document.put("server", island.getServerId());
         document.put("type", island.getIslandType());
         document.put("name", island.getName());
+        document.put("visits", island.getAcceptingVisits());
 
         final Document islandLocation = new Document();
         islandLocation.put("x", island.getIslandLocation().getX());

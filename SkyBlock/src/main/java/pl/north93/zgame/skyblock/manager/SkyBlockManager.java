@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import pl.north93.zgame.api.global.cfg.ConfigUtils;
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectResource;
 import pl.north93.zgame.api.global.network.INetworkManager;
@@ -28,6 +29,7 @@ import pl.north93.zgame.skyblock.manager.servers.IslandHostManagers;
 import pl.north93.zgame.skyblock.manager.servers.IslandHostServer;
 import pl.north93.zgame.skyblock.server.actions.TeleportPlayerToIsland;
 
+@IncludeInScanning("pl.north93.zgame.skyblock.api")
 public class SkyBlockManager extends Component implements ISkyBlockManager
 {
     @InjectComponent("API.Database.Redis.RPC")
@@ -45,7 +47,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
     @Override
     protected void enableComponent()
     {
-        if (!this.getApiCore().getId().equals("controller"))
+        if (! this.getApiCore().getId().equals("controller"))
         {
             return; // for developer env
         }
@@ -147,6 +149,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
         island.setServerId(server.getUuid());
         island.setIslandLocation(islandLocation);
         island.setIslandType(islandType);
+        island.setAcceptingVisits(false);
         island.setName("Wyspa gracza " + ownerNick);
         island.setHomeLocation(config.getHomeLocation());
 

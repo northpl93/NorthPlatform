@@ -38,6 +38,7 @@ public class Island
         this.islandDao = islandDao;
         this.islandData = islandData;
         this.location = location;
+
         final IslandData cacheData = islandData.get();
         this.islandId = cacheData.getIslandId();
         this.coordinates = cacheData.getIslandLocation();
@@ -78,6 +79,11 @@ public class Island
         return islandData.getOwnerId().equals(uuid) || islandData.getMembersUuid().contains(uuid);
     }
 
+    public boolean isAcceptingVisits()
+    {
+        return this.islandData.get().getAcceptingVisits();
+    }
+
     public List<Player> getPlayersInIsland()
     {
         return Bukkit.getOnlinePlayers()
@@ -98,30 +104,17 @@ public class Island
         }
     }
 
-    /**
-     * Pastes schematic on island.
-     */
-    public void loadSchematic()
+    public void buildWhiteWoolMarker()
     {
-        // TODO
-        final Pair<Location, Location> corners = location.getIslandCorners();
+        final Pair<Location, Location> corners = this.location.getIslandCorners();
         final Location first = corners.getLeft();
-        first.setY(5);
+        first.setY(1);
         final Location right = corners.getRight();
-        right.setY(5);
+        right.setY(1);
         ((BukkitApiCore) API.getApiCore()).sync(() ->
         {
             IslandLocation.blocksFromTwoPoints(first, right).forEach(block -> block.setType(Material.WOOL));
         });
-    }
-
-    /**
-     * Resets this island.
-     */
-    public void reset()
-    {
-        this.clear();
-        this.loadSchematic();
     }
 
     private void updateData(final Consumer<IslandData> updater)

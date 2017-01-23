@@ -8,6 +8,7 @@ import pl.north93.zgame.skyblock.api.utils.Coords3D;
 public class IslandConfig
 {
     private String   name;
+    private String   schematicName;
     private Coords3D homeLocation;
     private Integer  generateAtHeight;
     private Integer  radius;
@@ -16,9 +17,10 @@ public class IslandConfig
     {
     }
 
-    public IslandConfig(final String name, final Coords3D homeLocation, final Integer generateAtHeight, final Integer radius)
+    public IslandConfig(final String name, final String schematicName, final Coords3D homeLocation, final Integer generateAtHeight, final Integer radius)
     {
         this.name = name;
+        this.schematicName = schematicName;
         this.homeLocation = homeLocation;
         this.generateAtHeight = generateAtHeight;
         this.radius = radius;
@@ -27,6 +29,11 @@ public class IslandConfig
     public String getName()
     {
         return this.name;
+    }
+
+    public String getSchematicName()
+    {
+        return this.schematicName;
     }
 
     public Coords3D getHomeLocation()
@@ -47,6 +54,6 @@ public class IslandConfig
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("generateAtHeight", this.generateAtHeight).append("radius", this.radius).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("schematicName", this.schematicName).append("homeLocation", this.homeLocation).append("generateAtHeight", this.generateAtHeight).append("radius", this.radius).toString();
     }
 }

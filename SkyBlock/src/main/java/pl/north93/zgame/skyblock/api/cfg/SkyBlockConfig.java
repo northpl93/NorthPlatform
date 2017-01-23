@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import org.diorite.cfg.annotations.CfgComment;
+import org.diorite.cfg.annotations.defaults.CfgBooleanDefault;
 import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
 import org.diorite.cfg.annotations.defaults.CfgStringDefault;
 
@@ -15,6 +16,10 @@ import pl.north93.zgame.skyblock.api.utils.Coords3D;
 @CfgComment("Konfiguracja SkyBlocka")
 public class SkyBlockConfig
 {
+    @CfgComment("Czy na dole wyspy generować wełne oznaczajaca teren wyspy")
+    @CfgBooleanDefault(false)
+    private Boolean            placeDebugWool;
+
     @CfgComment("Nazwa grupy serwerów z poczekalniami.")
     @CfgStringDefault("default")
     private String             lobbyServersGroup;
@@ -29,13 +34,18 @@ public class SkyBlockConfig
     private static List<IslandConfig> getDefaultIslandTypes()
     {
         //noinspection ArraysAsListWithZeroOrOneArgument
-        return Arrays.asList(new IslandConfig("Testowa", new Coords3D(5, 5, 5), 50, 16));
+        return Arrays.asList(new IslandConfig("Testowa", "nazwaPlikuWFolderzeSchematics", new Coords3D(5, 6, 5), 50, 16));
     }
 
     private static List<String> getDefaultSkyBlockServers()
     {
         //noinspection ArraysAsListWithZeroOrOneArgument
         return Arrays.asList("a89498a5-4571-41ab-a471-d78e325aeaba");
+    }
+
+    public Boolean getPlaceDebugWool()
+    {
+        return this.placeDebugWool;
     }
 
     public String getLobbyServersGroup()

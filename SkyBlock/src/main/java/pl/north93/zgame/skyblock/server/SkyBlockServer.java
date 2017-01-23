@@ -2,6 +2,7 @@ package pl.north93.zgame.skyblock.server;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
@@ -13,6 +14,7 @@ import pl.north93.zgame.skyblock.server.listeners.SetupListeners;
 import pl.north93.zgame.skyblock.server.management.ISkyBlockServerManager;
 import pl.north93.zgame.skyblock.server.management.ServerManagerFactory;
 
+@IncludeInScanning("pl.north93.zgame.skyblock.api")
 public class SkyBlockServer extends Component
 {
     private BukkitApiCore          bukkitApiCore;

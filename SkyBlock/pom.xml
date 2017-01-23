@@ -13,11 +13,32 @@
     <artifactId>skyblock</artifactId>
     <version>1.0-INDEV</version>
 
+    <repositories>
+        <repository>
+            <id>sk89q</id>
+            <url>https://maven.sk89q.com/repo</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>pl.north93.zgame</groupId>
             <artifactId>api</artifactId>
             <version>1.0-INDEV</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sk89q.worldedit</groupId>
+            <artifactId>worldedit-core</artifactId>
+            <version>6.1.4-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sk89q.worldedit</groupId>
+            <artifactId>worldedit-bukkit</artifactId>
+            <version>6.1.4</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

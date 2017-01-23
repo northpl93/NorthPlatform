@@ -1,13 +1,13 @@
 package pl.north93.zgame.skyblock.server.listeners.islandhost;
 
-import java.util.logging.Logger;
-
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -24,7 +24,6 @@ import pl.north93.zgame.skyblock.server.world.WorldManager;
 
 public class WorldModificationListener implements Listener
 {
-    private Logger          logger;
     @InjectComponent("API.MinecraftNetwork.NetworkManager")
     private INetworkManager networkManager;
     @InjectComponent("SkyBlock.Server")
@@ -82,6 +81,24 @@ public class WorldModificationListener implements Listener
     public void onPlayerArmorStandManipulate(final PlayerArmorStandManipulateEvent event)
     {
         if (! this.canAccess(event.getPlayer(), event.getRightClicked().getLocation()))
+        {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPistonMove(final BlockPistonExtendEvent event)
+    {
+        final Block block = event.getBlock().getRelative(event.getDirection(), event.getLength() + 1);
+
+        final WorldManager manager = this.server.<IslandHostManager>getServerManager().getWorldManager(block.getWorld());
+        if (manager == null)
+        {
+            return;
+        }
+
+        final Island island = manager.getIslands().getByChunk(block.getChunk());
+        if (island == null || !island.getLocation().isInside(block.getLocation()))
         {
             event.setCancelled(true);
         }

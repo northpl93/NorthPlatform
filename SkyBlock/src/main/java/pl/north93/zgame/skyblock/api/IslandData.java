@@ -6,6 +6,9 @@ import java.util.UUID;
 
 import com.google.common.collect.Lists;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
 import pl.north93.zgame.skyblock.api.utils.Coords2D;
@@ -21,6 +24,7 @@ public final class IslandData
     private UUID       serverId;
     private String     islandType;
     private String     name;
+    private Boolean    acceptingVisits;
     private Coords2D   islandLocation;
     private Coords3D   homeLocation;
     @MsgPackCustomTemplate(ArrayListTemplate.class)
@@ -84,6 +88,16 @@ public final class IslandData
         this.name = name;
     }
 
+    public Boolean getAcceptingVisits()
+    {
+        return this.acceptingVisits;
+    }
+
+    public void setAcceptingVisits(final Boolean acceptingVisits)
+    {
+        this.acceptingVisits = acceptingVisits;
+    }
+
     public Coords2D getIslandLocation()
     {
         return this.islandLocation;
@@ -132,5 +146,11 @@ public final class IslandData
     public void removeMember(final UUID memberUuid)
     {
         this.membersUuid.remove(memberUuid);
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("islandId", this.islandId).append("ownerId", this.ownerId).append("serverId", this.serverId).append("islandType", this.islandType).append("name", this.name).append("acceptingVisits", this.acceptingVisits).append("islandLocation", this.islandLocation).append("homeLocation", this.homeLocation).append("invitations", this.invitations).append("membersUuid", this.membersUuid).toString();
     }
 }
