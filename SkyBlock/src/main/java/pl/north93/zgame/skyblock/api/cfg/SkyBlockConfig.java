@@ -1,11 +1,15 @@
 package pl.north93.zgame.skyblock.api.cfg;
 
+import static org.diorite.cfg.annotations.CfgCollectionStyle.CollectionStyle.ALWAYS_NEW_LINE;
+
+
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import org.diorite.cfg.annotations.CfgCollectionStyle;
 import org.diorite.cfg.annotations.CfgComment;
 import org.diorite.cfg.annotations.defaults.CfgBooleanDefault;
 import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
@@ -26,6 +30,7 @@ public class SkyBlockConfig
 
     @CfgComment("Unikalne identyfikatory serwerów używanych jako hosty SkyBlocka")
     @CfgDelegateDefault("getDefaultSkyBlockServers")
+    @CfgCollectionStyle(ALWAYS_NEW_LINE)
     private List<String>       skyBlockServers;
 
     @CfgDelegateDefault("getDefaultIslandTypes")

@@ -1,11 +1,15 @@
 package pl.north93.zgame.api.global.messages;
 
+import static org.diorite.cfg.annotations.CfgCollectionStyle.CollectionStyle.ALWAYS_NEW_LINE;
+
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import org.diorite.cfg.annotations.CfgCollectionStyle;
 import org.diorite.cfg.annotations.CfgComment;
 import org.diorite.cfg.annotations.CfgComments;
 import org.diorite.cfg.annotations.CfgFooterComment;
@@ -59,8 +63,10 @@ public class GroupsContainer
         @CfgStringDefault("[Gracz] %s: %s")
         public String            chatFormat;
         @CfgComment("Lista uprawnień danej grupy")
+        @CfgCollectionStyle(ALWAYS_NEW_LINE)
         public ArrayList<String> permissions;
         @CfgComment("Lista grup po której ta dziedziczy uprawnienia")
+        @CfgCollectionStyle(ALWAYS_NEW_LINE)
         public ArrayList<String> inheritance;
 
         @Override
