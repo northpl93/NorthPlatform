@@ -226,6 +226,12 @@ class CachedValueImpl<T> implements Value<T>
     }
 
     @Override
+    public Lock getLock()
+    {
+        return this.myLock;
+    }
+
+    @Override
     public void lock()
     {
         this.myLock.lock();

@@ -26,4 +26,8 @@ public interface IPlayersManager
     void ifOnline(String nick, Consumer<IOnlinePlayer> onlineAction);
 
     void ifOnline(UUID uuid, Consumer<IOnlinePlayer> onlineAction);
+
+    IPlayerTransaction transaction(UUID playerId);
+
+    IPlayerTransaction transaction(String playerName);
 }

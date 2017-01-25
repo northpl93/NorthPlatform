@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/API/API.iml" filepath="$PROJECT_DIR$/API/API.iml" />
       <module fileurl="file://$PROJECT_DIR$/API/DefaultCommands/API.DefaultCommands.iml" filepath="$PROJECT_DIR$/API/DefaultCommands/API.DefaultCommands.iml" />
+      <module fileurl="file://$PROJECT_DIR$/API/Economy/API.Economy.iml" filepath="$PROJECT_DIR$/API/Economy/API.Economy.iml" />
       <module fileurl="file://$PROJECT_DIR$/API/Instrumentation Agent/API.InstrumentationAgent.iml" filepath="$PROJECT_DIR$/API/Instrumentation Agent/API.InstrumentationAgent.iml" />
       <module fileurl="file://$PROJECT_DIR$/Lobby/Lobby.iml" filepath="$PROJECT_DIR$/Lobby/Lobby.iml" />
       <module fileurl="file://$PROJECT_DIR$/Network Controller/Network Controller.iml" filepath="$PROJECT_DIR$/Network Controller/Network Controller.iml" />
@@ -13,6 +14,7 @@
       <module fileurl="file://$PROJECT_DIR$/RestfulApi/RestfulApi.iml" filepath="$PROJECT_DIR$/RestfulApi/RestfulApi.iml" />
       <module fileurl="file://$PROJECT_DIR$/Server Deamon/Server Deamon.iml" filepath="$PROJECT_DIR$/Server Deamon/Server Deamon.iml" />
       <module fileurl="file://$PROJECT_DIR$/SkyBlock/SkyBlock.iml" filepath="$PROJECT_DIR$/SkyBlock/SkyBlock.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WebAuth/WebAuth.iml" filepath="$PROJECT_DIR$/WebAuth/WebAuth.iml" />
       <module fileurl="file://$PROJECT_DIR$/NorthPlatformParent/platform.iml" filepath="$PROJECT_DIR$/NorthPlatformParent/platform.iml" />
     </modules>
   </component>

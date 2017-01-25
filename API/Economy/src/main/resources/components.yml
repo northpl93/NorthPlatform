@@ -1,0 +1,20 @@
+components:
+  - name: API.Economy
+    enabled: true
+    mainClass: "pl.north93.zgame.api.economy.impl.client.EconomyComponent"
+    description: "Provides API for accessing economy."
+    dependencies:
+      - API.Database.Redis.Observer
+      - API.MinecraftNetwork.NetworkManager
+    platforms:
+      - BUNGEE
+      - BUKKIT
+  - name: API.Economy.Controller
+    enabled: true
+    mainClass: "pl.north93.zgame.api.economy.impl.netcontroller.EconomyControllerComponent"
+    description: "Exposes config in the network."
+    dependencies:
+      - API.Database.Redis.Observer
+      - API.MinecraftNetwork.NetworkManager
+    platforms:
+      - STANDALONE

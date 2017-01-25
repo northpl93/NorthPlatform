@@ -28,6 +28,8 @@
         <module>../PlayerDataShare</module>
         <module>../RestfulApi</module>
         <module>../NoPremiumAuth</module>
+        <module>../API/Economy</module>
+        <module>../WebAuth</module>
     </modules>
 
     <repositories>

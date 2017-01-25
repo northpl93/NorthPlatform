@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="WebAuth">
+    <output-path>$PROJECT_DIR$/test/plugins/API/components</output-path>
+    <root id="archive" name="WebAuth.jar">
+      <element id="module-output" name="WebAuth" />
+    </root>
+  </artifact>
+</component>

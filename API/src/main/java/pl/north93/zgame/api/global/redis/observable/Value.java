@@ -87,6 +87,8 @@ public interface Value<T>
      */
     long getTimeToLive();
 
+    Lock getLock();
+
     void lock();
 
     void unlock();

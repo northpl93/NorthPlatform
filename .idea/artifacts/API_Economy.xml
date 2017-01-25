@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="API.Economy">
+    <output-path>$PROJECT_DIR$/test/plugins/API/components</output-path>
+    <root id="archive" name="API.Economy.jar">
+      <element id="module-output" name="API.Economy" />
+    </root>
+  </artifact>
+</component>

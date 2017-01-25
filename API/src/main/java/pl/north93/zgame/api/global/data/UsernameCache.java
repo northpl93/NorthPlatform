@@ -3,6 +3,8 @@ package pl.north93.zgame.api.global.data;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
 
+import static org.diorite.utils.DioriteUtils.getCrackedUuid;
+
 
 import java.io.IOException;
 import java.net.URL;
@@ -18,7 +20,6 @@ import com.google.gson.JsonParser;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.UpdateOptions;
 
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -72,7 +73,7 @@ public class UsernameCache extends Component
         public UsernameDetails(final String validSpelling, final Boolean isPremium, final Date fetchTime)
         {
             this.validSpelling = validSpelling;
-            this.uuid = UUID.nameUUIDFromBytes(("OfflinePlayer:" + validSpelling).getBytes(Charsets.UTF_8));
+            this.uuid = getCrackedUuid(validSpelling);
             this.isPremium = isPremium;
             this.fetchTime = fetchTime;
         }

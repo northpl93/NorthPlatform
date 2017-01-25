@@ -15,8 +15,10 @@ import pl.north93.zgame.api.global.messages.ProxyInstanceInfo;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
+import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
+import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
 class PlayersManagerImpl implements IPlayersManager
@@ -144,6 +146,60 @@ class PlayersManagerImpl implements IPlayersManager
     public void ifOnline(final UUID uuid, final Consumer<IOnlinePlayer> onlineAction)
     {
         this.ifOnline(this.getNickFromUuid(uuid), onlineAction);
+    }
+
+    @Override
+    public IPlayerTransaction transaction(final UUID playerId)
+    {
+        IPlayer player;
+        Lock lock;
+
+        final Value<IOnlinePlayer> onlinePlayerValue = this.onlinePlayerValue(playerId);
+        (lock = onlinePlayerValue.getLock()).lock();
+        if ((player = onlinePlayerValue.get()) == null)
+        {
+            onlinePlayerValue.unlock();
+
+            final Value<IOfflinePlayer> offlinePlayerValue = this.playersData.getOfflinePlayerValue(playerId);
+            if (offlinePlayerValue == null)
+            {
+                return null;
+            }
+            (lock = offlinePlayerValue.getLock()).lock();
+            if ((player = offlinePlayerValue.get()) == null)
+            {
+                lock.unlock();
+            }
+        }
+
+        return new PlayerTransactionImpl(player, lock);
+    }
+
+    @Override
+    public IPlayerTransaction transaction(final String playerName)
+    {
+        IPlayer player;
+        Lock lock;
+
+        final Value<IOnlinePlayer> onlinePlayerValue = this.onlinePlayerValue(playerName);
+        (lock = onlinePlayerValue.getLock()).lock();
+        if ((player = onlinePlayerValue.get()) == null)
+        {
+            onlinePlayerValue.unlock();
+
+            final Value<IOfflinePlayer> offlinePlayerValue = this.playersData.getOfflinePlayerValue(playerName);
+            if (offlinePlayerValue == null)
+            {
+                return null;
+            }
+            (lock = offlinePlayerValue.getLock()).lock();
+            if ((player = offlinePlayerValue.get()) == null)
+            {
+                lock.unlock();
+            }
+        }
+
+        return new PlayerTransactionImpl(player, lock);
     }
 
     private Value<IOnlinePlayer> onlinePlayerValue(final UUID uuid)

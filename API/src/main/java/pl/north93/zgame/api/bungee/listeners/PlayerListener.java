@@ -8,6 +8,9 @@ import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.event.LoginEvent;
@@ -16,30 +19,29 @@ import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
 import pl.north93.zgame.api.bungee.BungeeApiCore;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.InjectResource;
 import pl.north93.zgame.api.global.component.impl.Injector;
 import pl.north93.zgame.api.global.data.UsernameCache.UsernameDetails;
 import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.data.players.impl.NameSizeMistakeException;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.impl.OnlinePlayerImpl;
-import pl.north93.zgame.api.global.redis.observable.IObservationManager;
+import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.api.global.utils.UTF8Control;
 
 public class PlayerListener implements Listener
 {
-    private final ResourceBundle apiMessages = ResourceBundle.getBundle("Messages", new UTF8Control());
-    private final BungeeApiCore       bungeeApiCore;
-    @InjectComponent("API.Database.Redis.Observer")
-    private       IObservationManager observationManager;
+    private final BungeeApiCore   bungeeApiCore;
+    @InjectResource(bundleName = "Messages")
+    private       ResourceBundle  apiMessages;
     @InjectComponent("API.MinecraftNetwork.PlayersStorage")
-    private       IPlayersData        playersDao;
+    private       IPlayersData    playersDao;
     @InjectComponent("API.MinecraftNetwork.NetworkManager")
-    private       INetworkManager     networkManager;
+    private       INetworkManager networkManager;
 
     public PlayerListener(final BungeeApiCore bungeeApiCore)
     {
@@ -90,53 +92,75 @@ public class PlayerListener implements Listener
         });
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onJoin(final LoginEvent event)
     {
+        event.registerIntent(this.bungeeApiCore.getBungeePlugin()); // lock this event
+
         final PendingConnection connection = event.getConnection();
-        final JoiningPolicy joiningPolicy = this.bungeeApiCore.getNetworkManager().getJoiningPolicy();
-        final Optional<UsernameDetails> details = this.bungeeApiCore.getUsernameCache().getUsernameDetails(connection.getName());
+        this.bungeeApiCore.getPlatformConnector().runTaskAsynchronously(() -> // run async task
+        {
+            try
+            {
+                final JoiningPolicy joiningPolicy = this.bungeeApiCore.getNetworkManager().getJoiningPolicy();
+                final Optional<UsernameDetails> details = this.bungeeApiCore.getUsernameCache().getUsernameDetails(connection.getName());
 
-        if (! details.isPresent())
-        {
-            event.setCancelled(true);
-            event.setCancelReason(this.apiMessages.getString("join.username_details_not_present"));
-            return;
-        }
+                if (! details.isPresent())
+                {
+                    event.setCancelled(true);
+                    event.setCancelReason(this.apiMessages.getString("join.username_details_not_present"));
+                    return;
+                }
 
-        final Value<OnlinePlayerImpl> player;
-        try
-        {
-            player = this.playersDao.loadPlayer(connection.getUniqueId(), connection.getName(), details.get().isPremium(), this.bungeeApiCore.getProxyConfig().getUniqueName());
-        }
-        catch (final NameSizeMistakeException e)
-        {
-            event.setCancelled(true);
-            event.setCancelReason(message(this.apiMessages, "join.name_size_mistake", e.getNick(), connection.getName()));
-            return;
-        }
-        catch (final Throwable e)
-        {
-            event.setCancelled(true);
-            event.setCancelReason(message(this.apiMessages, "kick.generic_error", "failed to load player data: " + e));
-            return;
-        }
+                final Value<OnlinePlayerImpl> player;
+                try
+                {
+                    player = this.playersDao.loadPlayer(connection.getUniqueId(), connection.getName(), details.get().isPremium(), this.bungeeApiCore.getProxyConfig().getUniqueName());
+                }
+                catch (final NameSizeMistakeException e)
+                {
+                    event.setCancelled(true);
+                    event.setCancelReason(message(this.apiMessages, "join.name_size_mistake", e.getNick(), connection.getName()));
+                    return;
+                }
+                catch (final Throwable e)
+                {
+                    event.setCancelled(true);
+                    event.setCancelReason(message(this.apiMessages, "kick.generic_error", "failed to load player data: " + e));
+                    return;
+                }
 
-        if (joiningPolicy == JoiningPolicy.NOBODY)
-        {
-            event.setCancelled(true);
-            event.setCancelReason(message(this.apiMessages, "join.access_locked"));
-        }
-        else if (joiningPolicy == JoiningPolicy.ONLY_ADMIN && !player.get().hasPermission("join.admin")) // wpuszczanie tylko adminów
-        {
-            event.setCancelled(true);
-            event.setCancelReason(message(this.apiMessages, "join.access_locked"));
-        }
-        else if (joiningPolicy == JoiningPolicy.ONLY_VIP && !player.get().hasPermission("join.vip"))
-        {
-            event.setCancelled(true);
-            event.setCancelReason(message(this.apiMessages, "join.access_locked"));
-        }
+                if (joiningPolicy == JoiningPolicy.NOBODY)
+                {
+                    event.setCancelled(true);
+                    event.setCancelReason(message(this.apiMessages, "join.access_locked"));
+                }
+                else if (joiningPolicy == JoiningPolicy.ONLY_ADMIN && ! player.get().hasPermission("join.admin")) // wpuszczanie tylko adminów
+                {
+                    event.setCancelled(true);
+                    event.setCancelReason(message(this.apiMessages, "join.access_locked"));
+                }
+                else if (joiningPolicy == JoiningPolicy.ONLY_VIP && ! player.get().hasPermission("join.vip"))
+                {
+                    event.setCancelled(true);
+                    event.setCancelReason(message(this.apiMessages, "join.access_locked"));
+                }
+                else if (this.networkManager.onlinePlayersCount() > this.networkManager.getNetworkMeta().get().displayMaxPlayers && ! player.get().hasPermission("join.bypass"))
+                {
+                    event.setCancelled(true);
+                    event.setCancelReason(message(this.apiMessages, "join.server_full"));
+                }
+
+                if (event.isCancelled())
+                {
+                    player.delete(); // delete player data if event is cancelled.
+                }
+            }
+            finally
+            {
+                event.completeIntent(this.bungeeApiCore.getBungeePlugin());
+            }
+        });
     }
 
     @EventHandler
@@ -174,5 +198,11 @@ public class PlayerListener implements Listener
         {
             player.unlock();
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

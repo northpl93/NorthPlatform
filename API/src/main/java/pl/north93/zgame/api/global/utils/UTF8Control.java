@@ -16,7 +16,6 @@ public class UTF8Control extends ResourceBundle.Control
     {
         final String bundleName = this.toBundleName(baseName, locale);
         final String resourceName = this.toResourceName(bundleName, "properties");
-        ResourceBundle bundle = null;
         InputStream stream = null;
         if (reload)
         {
@@ -39,13 +38,13 @@ public class UTF8Control extends ResourceBundle.Control
         {
             try
             {
-                bundle = new PropertyResourceBundle(new InputStreamReader(stream, "UTF-8"));
+                return new PropertyResourceBundle(new InputStreamReader(stream, "UTF-8"));
             }
             finally
             {
                 stream.close();
             }
         }
-        return bundle;
+        return null;
     }
 }
