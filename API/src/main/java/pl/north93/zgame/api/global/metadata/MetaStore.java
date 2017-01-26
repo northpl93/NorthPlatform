@@ -79,6 +79,16 @@ public final class MetaStore
         return (UUID) this.get(key);
     }
 
+    public void setLong(final MetaKey key, final long value)
+    {
+        this.set(key, value);
+    }
+
+    public long getLong(final MetaKey key)
+    {
+        return (long) this.get(key);
+    }
+
     public boolean contains(final MetaKey key)
     {
         return this.metadata.containsKey(key);

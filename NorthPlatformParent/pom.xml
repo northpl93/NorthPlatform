@@ -30,6 +30,7 @@
         <module>../NoPremiumAuth</module>
         <module>../API/Economy</module>
         <module>../WebAuth</module>
+        <module>../TimeGroups</module>
     </modules>
 
     <repositories>
