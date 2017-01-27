@@ -84,11 +84,11 @@ public abstract class ApiCore
 
         this.componentManager.doComponentScan(this.getClass().getClassLoader()); // scan for builtin API components
         this.componentManager.injectComponents(this.messagePackTemplates, this.rpcManager); // inject base API components
-        this.componentManager.enableAllComponents(); // enable all components
-        this.componentManager.setAutoEnable(true); // auto enable all newly discovered components
         final File components = this.getFile("components");
         DioriteUtils.createDirectory(components);
-        this.componentManager.doComponentScan(components); // Scan componets directory and enable components
+        this.componentManager.doComponentScan(components); // Scan components directory and enable components
+        this.componentManager.enableAllComponents(); // enable all components
+        this.componentManager.setAutoEnable(true); // auto enable all newly discovered components
 
         try
         {

@@ -27,6 +27,7 @@ import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.component.IComponentManager;
+import pl.north93.zgame.api.global.utils.CollectionUtils;
 
 public class ComponentManagerImpl implements IComponentManager
 {
@@ -122,14 +123,7 @@ public class ComponentManagerImpl implements IComponentManager
 
     private ComponentBundle getComponentBundle(final String name)
     {
-        for (final ComponentBundle component : this.components)
-        {
-            if (component.getName().equals(name))
-            {
-                return component;
-            }
-        }
-        return null;
+        return CollectionUtils.findInCollection(this.components, ComponentBundle::getName, name);
     }
 
     /**
@@ -147,6 +141,14 @@ public class ComponentManagerImpl implements IComponentManager
             if (dependencyBundle == null) // can't find specified dependency.
             {
                 return false;
+            }
+            // register dependencies in JarComponentLoader
+            if (componentBundle.getClassLoader() instanceof JarComponentLoader && dependencyBundle.getClassLoader() instanceof JarComponentLoader)
+            {
+                final JarComponentLoader checkedLoader = (JarComponentLoader) componentBundle.getClassLoader();
+                final JarComponentLoader dependencyLoader = (JarComponentLoader) dependencyBundle.getClassLoader();
+
+                checkedLoader.registerDependency(dependencyLoader);
             }
             if (dependencyBundle.isEnabled()) // if dependencyBundle is already enabled, skip checking
             {
