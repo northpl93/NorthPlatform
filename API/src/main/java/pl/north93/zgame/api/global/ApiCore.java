@@ -86,9 +86,9 @@ public abstract class ApiCore
         this.componentManager.injectComponents(this.messagePackTemplates, this.rpcManager); // inject base API components
         final File components = this.getFile("components");
         DioriteUtils.createDirectory(components);
-        this.componentManager.doComponentScan(components); // Scan components directory and enable components
+        this.componentManager.doComponentScan(components); // Scan components directory
+        this.componentManager.setAutoEnable(true); // components may do own componentScan. So enable auto enable after discovery.
         this.componentManager.enableAllComponents(); // enable all components
-        this.componentManager.setAutoEnable(true); // auto enable all newly discovered components
 
         try
         {
