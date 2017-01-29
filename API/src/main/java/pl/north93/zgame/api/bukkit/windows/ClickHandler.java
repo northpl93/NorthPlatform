@@ -1,6 +1,7 @@
 package pl.north93.zgame.api.bukkit.windows;
 
+@FunctionalInterface
 public interface ClickHandler
 {
-    void handle(Window window);
+    void handle(ClickInfo clickInfo);
 }

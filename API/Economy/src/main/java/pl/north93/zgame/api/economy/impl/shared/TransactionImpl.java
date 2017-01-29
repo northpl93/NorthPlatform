@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.economy.impl.client;
+package pl.north93.zgame.api.economy.impl.shared;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -30,14 +30,37 @@ public class TransactionImpl implements ITransaction
     }
 
     @Override
-    public int getAmount()
+    public boolean has(final double amount)
     {
-        this.checkClosed();
+        return this.getAmount() > amount;
+    }
+
+    @Override
+    public void add(final double amount)
+    {
+        final MetaStore metaStore = this.getAssociatedPlayer().getMetaStore();
+        final MetaKey prefix = this.getPrefix();
+        final double current = metaStore.contains(prefix) ? metaStore.getDouble(prefix) : this.currency.getStartValue();
+        metaStore.setDouble(prefix, current + amount);
+    }
+
+    @Override
+    public void remove(final double amount)
+    {
+        final MetaStore metaStore = this.getAssociatedPlayer().getMetaStore();
+        final MetaKey prefix = this.getPrefix();
+        final double current = metaStore.contains(prefix) ? metaStore.getDouble(prefix) : this.currency.getStartValue();
+        metaStore.setDouble(prefix, current - amount);
+    }
+
+    @Override
+    public double getAmount()
+    {
         final MetaStore metaStore = this.getAssociatedPlayer().getMetaStore();
         final MetaKey prefix = this.getPrefix();
         if (metaStore.contains(prefix))
         {
-            return metaStore.getInteger(prefix);
+            return metaStore.getDouble(prefix);
         }
         else
         {
@@ -46,10 +69,10 @@ public class TransactionImpl implements ITransaction
     }
 
     @Override
-    public void setAmount(final int newAmount)
+    public void setAmount(final double newAmount)
     {
         this.checkClosed();
-        this.getAssociatedPlayer().getMetaStore().setInteger(this.getPrefix(), newAmount);
+        this.getAssociatedPlayer().getMetaStore().setDouble(this.getPrefix(), newAmount);
     }
 
     @Override

@@ -7,9 +7,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.economy.cfg.EconomyConfig;
-import pl.north93.zgame.api.economy.impl.client.EconomyManagerImpl;
+import pl.north93.zgame.api.economy.impl.shared.EconomyManagerImpl;
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 
+@IncludeInScanning("pl.north93.zgame.api.economy.impl.shared")
 public class EconomyControllerComponent extends Component
 {
     private EconomyConfig      config;

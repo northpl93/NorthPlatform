@@ -88,6 +88,28 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         return new LockImpl(this, name);
     }
 
+    @Override
+    public Lock getMultiLock(final String... names)
+    {
+        final int namesLength = names.length;
+        if (namesLength == 0)
+        {
+            throw new IllegalArgumentException("names must ne not empty");
+        }
+        else if (namesLength == 1)
+        {
+            return this.getLock(names[0]);
+        }
+
+        final Lock[] locks = new Lock[namesLength];
+        for (int i = 0; i < namesLength; i++)
+        {
+            locks[i] = this.getLock(names[i]);
+        }
+
+        return new MultiLockImpl(locks);
+    }
+
     /*default*/ void addWaitingLock(final LockImpl lock)
     {
         synchronized (this.waitingLocks)

@@ -13,4 +13,6 @@ public interface IObservationManager
     <K, V> ICacheBuilder<K, V> cacheBuilder(Class<K> keyClass, Class<V> valueClass);
 
     Lock getLock(String name);
+
+    Lock getMultiLock(String... names);
 }

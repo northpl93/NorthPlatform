@@ -51,11 +51,17 @@ public abstract class Window
         this.setListener(slot, handler);
     }
 
+    protected final void clear()
+    {
+        this.listeners.clear();
+        this.inventory.clear();
+    }
+
     final void setOpened(final Player player)
     {
         if (this.isOpened)
         {
-            throw new IllegalStateException("Window arleady opened.");
+            throw new IllegalStateException("Window already opened.");
         }
         this.isOpened = true;
         this.holder = player;
@@ -64,12 +70,12 @@ public abstract class Window
         player.openInventory(this.inventory);
     }
 
-    final void handleClick(final int slot)
+    final void handleClick(final ClickInfo clickInfo)
     {
-        final ClickHandler handler = this.listeners.get(slot);
+        final ClickHandler handler = this.listeners.get(clickInfo.getSlotId());
         if (handler != null)
         {
-            handler.handle(this);
+            handler.handle(clickInfo);
         }
     }
 

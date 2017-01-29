@@ -151,55 +151,53 @@ class PlayersManagerImpl implements IPlayersManager
     @Override
     public IPlayerTransaction transaction(final UUID playerId)
     {
-        IPlayer player;
-        Lock lock;
+        final String playerName = this.getNickFromUuid(playerId);
+        final Lock lock = this.getMultiLock(playerName, playerId);
+        lock.lock();
 
-        final Value<IOnlinePlayer> onlinePlayerValue = this.onlinePlayerValue(playerId);
-        (lock = onlinePlayerValue.getLock()).lock();
-        if ((player = onlinePlayerValue.get()) == null)
+        final Value<IOnlinePlayer> onlinePlayer = this.onlinePlayerValue(playerName);
+        if (onlinePlayer.isAvailable())
         {
-            onlinePlayerValue.unlock();
-
-            final Value<IOfflinePlayer> offlinePlayerValue = this.playersData.getOfflinePlayerValue(playerId);
-            if (offlinePlayerValue == null)
+            return new PlayerTransactionImpl(onlinePlayer, lock, player ->
             {
-                return null;
-            }
-            (lock = offlinePlayerValue.getLock()).lock();
-            if ((player = offlinePlayerValue.get()) == null)
-            {
-                lock.unlock();
-            }
+                onlinePlayer.set((IOnlinePlayer) player);
+            });
         }
 
-        return new PlayerTransactionImpl(player, lock);
+        final Value<IOfflinePlayer> offlinePlayer = this.playersData.getOfflinePlayerValue(playerId);
+        if (offlinePlayer.isAvailable())
+        {
+            return new PlayerTransactionImpl(offlinePlayer, lock, this.playersData::savePlayer);
+        }
+
+        lock.unlock();
+        return null;
     }
 
     @Override
     public IPlayerTransaction transaction(final String playerName)
     {
-        IPlayer player;
-        Lock lock;
+        final UUID playerId = this.getUuidFromNick(playerName);
+        final Lock lock = this.getMultiLock(playerName, playerId);
+        lock.lock();
 
-        final Value<IOnlinePlayer> onlinePlayerValue = this.onlinePlayerValue(playerName);
-        (lock = onlinePlayerValue.getLock()).lock();
-        if ((player = onlinePlayerValue.get()) == null)
+        final Value<IOnlinePlayer> onlinePlayer = this.onlinePlayerValue(playerName);
+        if (onlinePlayer.isAvailable())
         {
-            onlinePlayerValue.unlock();
-
-            final Value<IOfflinePlayer> offlinePlayerValue = this.playersData.getOfflinePlayerValue(playerName);
-            if (offlinePlayerValue == null)
+            return new PlayerTransactionImpl(onlinePlayer, lock, player ->
             {
-                return null;
-            }
-            (lock = offlinePlayerValue.getLock()).lock();
-            if ((player = offlinePlayerValue.get()) == null)
-            {
-                lock.unlock();
-            }
+                onlinePlayer.set((IOnlinePlayer) player);
+            });
         }
 
-        return new PlayerTransactionImpl(player, lock);
+        final Value<IOfflinePlayer> offlinePlayer = this.playersData.getOfflinePlayerValue(playerId);
+        if (offlinePlayer.isAvailable())
+        {
+            return new PlayerTransactionImpl(offlinePlayer, lock, this.playersData::savePlayer);
+        }
+
+        lock.unlock();
+        return null;
     }
 
     private Value<IOnlinePlayer> onlinePlayerValue(final UUID uuid)
@@ -211,6 +209,11 @@ class PlayersManagerImpl implements IPlayersManager
     {
         //noinspection unchecked
         return (Value) this.observer.get(OnlinePlayerImpl.class, PLAYERS + nick.toLowerCase(Locale.ROOT));
+    }
+
+    private Lock getMultiLock(final String nick, final UUID uuid)
+    {
+        return this.observer.getMultiLock("lock:players:" + nick.toLowerCase(Locale.ENGLISH), "lock:offlineplayers:" + uuid);
     }
 
     @Override

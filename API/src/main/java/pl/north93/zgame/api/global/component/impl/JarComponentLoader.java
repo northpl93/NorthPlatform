@@ -13,7 +13,12 @@ import com.google.common.collect.Sets;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import org.diorite.utils.lazy.LazyValue;
+
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
+import javassist.ClassPool;
+import javassist.LoaderClassPath;
+import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.IComponentManager;
 
 class JarComponentLoader extends URLClassLoader
@@ -22,6 +27,7 @@ class JarComponentLoader extends URLClassLoader
     private final Set<String>             scannedPackages;
     private final Map<String, Class<?>>   classCache;
     private final Set<JarComponentLoader> dependencies;
+    private final LazyValue<ClassPool>    classPool;
 
     public JarComponentLoader(final URL url, final ClassLoader parent)
     {
@@ -30,6 +36,19 @@ class JarComponentLoader extends URLClassLoader
         this.scannedPackages = new ObjectArraySet<>(4);
         this.classCache = new ConcurrentHashMap<>(16);
         this.dependencies = new HashSet<>();
+        this.classPool = new LazyValue<>(this::generateClassPool);
+    }
+
+    private ClassPool generateClassPool()
+    {
+        final ClassPool classPool = new ClassPool();
+        classPool.appendClassPath(new LoaderClassPath(ApiCore.class.getClassLoader())); // main API loader
+        classPool.appendClassPath(new LoaderClassPath(this));
+        for (final JarComponentLoader dependency : this.dependencies)
+        {
+            classPool.appendClassPath(new LoaderClassPath(dependency));
+        }
+        return classPool;
     }
 
     @Override
@@ -95,6 +114,11 @@ class JarComponentLoader extends URLClassLoader
             return;
         }
         this.dependencies.add(loader);
+    }
+
+    public ClassPool getClassPool()
+    {
+        return this.classPool.get();
     }
 
     @Override

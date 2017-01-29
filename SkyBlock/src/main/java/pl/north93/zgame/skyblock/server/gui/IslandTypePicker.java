@@ -37,8 +37,8 @@ public class IslandTypePicker extends Window
             itemMeta.setLore(Arrays.asList("Rozmiar: " + bok + "x" + bok));
             stack.setItemMeta(itemMeta);
 
-            this.addElement(i, stack, window -> {
-                window.close();
+            this.addElement(i, stack, event -> {
+                event.getWindow().close();
                 this.callback.accept(islandConfig.getName());
             });
         }

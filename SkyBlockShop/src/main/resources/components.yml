@@ -1,0 +1,8 @@
+components:
+  - name: SkyBlock.Shop.Server
+    mainClass: "pl.north93.zgame.skyblock.shop.ShopComponent"
+    description: "In-game shop with items in chest gui."
+    dependencies:
+      - API.Economy
+    platforms:
+      - BUKKIT

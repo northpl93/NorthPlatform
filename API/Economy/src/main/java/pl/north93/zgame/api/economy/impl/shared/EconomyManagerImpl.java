@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.economy.impl.client;
+package pl.north93.zgame.api.economy.impl.shared;
 
 import static pl.north93.zgame.api.global.utils.CollectionUtils.findInCollection;
 

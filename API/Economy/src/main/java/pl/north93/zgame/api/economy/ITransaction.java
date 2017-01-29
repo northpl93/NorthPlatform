@@ -6,7 +6,13 @@ public interface ITransaction extends AutoCloseable
 {
     IPlayer getAssociatedPlayer();
 
-    int getAmount();
+    boolean has(double amount);
 
-    void setAmount(int newAmount);
+    void add(double amount);
+
+    void remove(double amount);
+
+    double getAmount();
+
+    void setAmount(double newAmount);
 }

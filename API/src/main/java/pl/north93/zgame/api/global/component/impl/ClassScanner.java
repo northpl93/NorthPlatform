@@ -19,11 +19,9 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
 import javassist.CannotCompileException;
-import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtMethod;
-import javassist.LoaderClassPath;
 import javassist.NotFoundException;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.ApiCore;
@@ -37,12 +35,8 @@ import pl.north93.zgame.api.global.component.annotations.SkipInjections;
 
 class ClassScanner
 {
-    static void scan(final URL fileUrl, final ClassLoader classLoader, final IComponentManager componentManager, final Set<String> packagesToScan)
+    static void scan(final URL fileUrl, final JarComponentLoader classLoader, final IComponentManager componentManager, final Set<String> packagesToScan)
     {
-        final ClassPool classPool = new ClassPool();
-        classPool.appendClassPath(new LoaderClassPath(ApiCore.class.getClassLoader())); // main API loader
-        classPool.appendClassPath(new LoaderClassPath(classLoader)); // this Component loader
-
         final ConfigurationBuilder configuration = new ConfigurationBuilder();
         configuration.setClassLoaders(new ClassLoader[]{classLoader});
         configuration.setScanners(new SubTypesScanner(false)); // defaultly will exclude Object.class
@@ -66,7 +60,7 @@ class ClassScanner
 
             try
             {
-                final CtClass ctClass = classPool.get(aClass.getName());
+                final CtClass ctClass = classLoader.getClassPool().get(aClass.getName());
 
                 final Set<String> postInject = Arrays.stream(ctClass.getDeclaredMethods())
                                                      .filter(ctMethod -> ctMethod.hasAnnotation(PostInject.class))

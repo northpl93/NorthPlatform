@@ -20,6 +20,7 @@
         <module name="RestfulApi" />
         <module name="Server Deamon" />
         <module name="SkyBlock" />
+        <module name="SkyBlock.Shop" />
         <module name="TimeGroups" />
         <module name="WebAuth" />
       </profile>
@@ -38,6 +39,7 @@
       <module name="RestfulApi" target="8" />
       <module name="Server Deamon" target="8" />
       <module name="SkyBlock" target="8" />
+      <module name="SkyBlock.Shop" target="8" />
       <module name="TimeGroups" target="8" />
       <module name="WebAuth" target="8" />
     </bytecodeTargetLevel>

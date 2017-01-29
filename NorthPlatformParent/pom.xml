@@ -33,6 +33,7 @@
         <module>../API/Economy</module>
         <module>../WebAuth</module>
         <module>../TimeGroups</module>
+        <module>../SkyBlockShop</module>
     </modules>
 
     <repositories>

@@ -23,7 +23,7 @@ public class EconomyConfig
     private static List<CurrencyConfig> getDefaultCurrencies()
     {
         //noinspection ArraysAsListWithZeroOrOneArgument
-        return Arrays.asList(new CurrencyConfig("example", 0));
+        return Arrays.asList(new CurrencyConfig("example", 0D));
     }
 
     @Override

@@ -1,22 +1,28 @@
 package pl.north93.zgame.api.global.network.impl;
 
+import java.util.function.Consumer;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.redis.observable.Lock;
+import pl.north93.zgame.api.global.redis.observable.Value;
 
 class PlayerTransactionImpl implements IPlayerTransaction
 {
-    private final IPlayer player;
-    private final Lock    lock;
-    private boolean isClosed;
+    private final IPlayer           player;
+    private final Lock              lock;
+    private final Consumer<IPlayer> callback;
+    private       boolean           isClosed;
 
-    public PlayerTransactionImpl(final IPlayer player, final Lock lock)
+    public PlayerTransactionImpl(final Value<? extends IPlayer> playerValue, final Lock lock, final Consumer<IPlayer> callback)
     {
-        this.player = player;
+        //noinspection unchecked
+        this.player = playerValue.get();
         this.lock = lock;
+        this.callback = callback;
     }
 
     @Override
@@ -37,8 +43,9 @@ class PlayerTransactionImpl implements IPlayerTransaction
     public void close() throws Exception
     {
         this.checkClosed();
-        this.lock.unlock();
         this.isClosed = true;
+        this.callback.accept(this.player);
+        this.lock.unlock();
     }
 
     private void checkClosed()

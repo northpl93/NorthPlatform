@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import pl.north93.pets.IPet;
 import pl.north93.pets.exceptions.PetNotFoundException;
 import pl.north93.pets.system.support.HeadCreator;
+import pl.north93.zgame.api.bukkit.windows.ClickInfo;
 import pl.north93.zgame.api.bukkit.windows.Window;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
@@ -56,14 +57,14 @@ public class PetPicker extends Window
                 itemMeta.setLore(petConfig.description);
                 head.setItemMeta(itemMeta);
 
-                this.addElement(slot, head, (window) -> this.switchPet(window, petConfig));
+                this.addElement(slot, head, (event) -> this.switchPet(event, petConfig));
             }
         }
     }
 
-    private void switchPet(final Window window, final PetConfig petConfig)
+    private void switchPet(final ClickInfo event, final PetConfig petConfig)
     {
-        final Player player = window.getPlayer();
+        final Player player = event.getWindow().getPlayer();
         final PlayerPetsManager playersPets = this.component.getPlayerPetsManager();
 
         if (playersPets.hasPet(player))

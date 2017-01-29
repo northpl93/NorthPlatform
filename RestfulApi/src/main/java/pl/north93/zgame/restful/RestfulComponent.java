@@ -12,8 +12,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.messages.NetworkMeta;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.utils.Wrapper;
+import pl.north93.zgame.restful.models.NetworkStatus;
 import pl.north93.zgame.restful.models.PlayerModel;
 
 public class RestfulComponent extends Component
@@ -25,7 +27,7 @@ public class RestfulComponent extends Component
     @Override
     protected void enableComponent()
     {
-        get("player/:nick", ((request, response) ->
+        get("player/:nick", (request, response) ->
         {
             final Wrapper<Object> myResponse = new Wrapper<>();
             this.networkManager.getPlayers().access(request.params(":nick"), online ->
@@ -41,7 +43,15 @@ public class RestfulComponent extends Component
                 halt(404);
             }
             return myResponse.get();
-        }), this.gson::toJson);
+        }, this.gson::toJson);
+
+        get("network", (request, response) ->
+        {
+            final NetworkMeta meta = this.networkManager.getNetworkMeta().get();
+            final int onlinePlayers = this.networkManager.getPlayers().onlinePlayersCount();
+
+            return new NetworkStatus(meta.displayMaxPlayers, onlinePlayers, meta.joiningPolicy, meta.serverListMotd);
+        }, this.gson::toJson);
     }
 
     @Override

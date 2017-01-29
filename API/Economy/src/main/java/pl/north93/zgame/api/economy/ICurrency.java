@@ -4,5 +4,5 @@ public interface ICurrency
 {
     String getName();
 
-    int getStartValue();
+    double getStartValue();
 }

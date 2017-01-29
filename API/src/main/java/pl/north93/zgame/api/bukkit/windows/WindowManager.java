@@ -39,7 +39,7 @@ public class WindowManager implements Listener
             return;
         }
         event.setCancelled(true);
-        window.handleClick(event.getSlot());
+        window.handleClick(new ClickInfo(window, event.getSlot(), event.isRightClick()));
     }
 
     @Override
