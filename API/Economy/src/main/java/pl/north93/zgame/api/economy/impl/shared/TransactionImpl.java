@@ -32,7 +32,7 @@ public class TransactionImpl implements ITransaction
     @Override
     public boolean has(final double amount)
     {
-        return this.getAmount() > amount;
+        return this.getAmount() >= amount;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package pl.north93.zgame.api.global.component.impl;
 
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashSet;
@@ -129,18 +128,6 @@ class JarComponentLoader extends URLClassLoader
 
     static
     {
-        try
-        {
-            final Method ex = ClassLoader.class.getDeclaredMethod("registerAsParallelCapable");
-            if (ex != null)
-            {
-                ex.setAccessible(true);
-                ex.invoke(null);
-            }
-        }
-        catch (final Exception var3)
-        {
-            System.err.println("Failed to set JarComponentLoader as parallel capable");
-        }
+        registerAsParallelCapable();
     }
 }

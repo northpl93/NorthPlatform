@@ -9,6 +9,14 @@ components:
     platforms:
       - BUNGEE
       - BUKKIT
+  - name: API.Economy.VaultConnector
+    enabled: true
+    mainClass: "pl.north93.zgame.api.economy.impl.server.EconomyServerComponent"
+    description: "Connects economy API with Vault."
+    dependencies:
+      - API.Economy
+    platforms:
+      - BUKKIT
   - name: API.Economy.Controller
     enabled: true
     mainClass: "pl.north93.zgame.api.economy.impl.netcontroller.EconomyControllerComponent"

@@ -1,5 +1,7 @@
 package pl.north93.zgame.skyblock.shop;
 
+import static java.text.MessageFormat.format;
+
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
 
@@ -78,7 +80,7 @@ public class ShopManager
         final ItemStack itemStack = shopEntry.getBukkitItem().asBukkit();
 
 
-        if (!isBuy && !inventory.contains(itemStack))
+        if (!isBuy && !inventory.containsAtLeast(itemStack, itemStack.getAmount()))
         {
             player.sendMessage(RED + "Nie masz wymaganej ilosci przedmiotow do sprzedania");
             return;
@@ -99,7 +101,7 @@ public class ShopManager
                 if (failed.isEmpty())
                 {
                     transaction.remove(buyPrice);
-                    player.sendMessage(GREEN + "Usunieto z konta " + buyPrice);
+                    player.sendMessage(GREEN + format("Kupiono {0} x {1} za {2}", itemStack.getAmount(), itemStack.getType(), buyPrice));
                 }
                 else
                 {
@@ -108,10 +110,10 @@ public class ShopManager
             }
             else if (shopEntry.canSell())
             {
-                inventory.remove(itemStack);
+                inventory.removeItem(itemStack);
                 final Double sellPrice = shopEntry.getSellPrice();
                 transaction.add(sellPrice);
-                player.sendMessage(GREEN + "Dodano do konta " + sellPrice);
+                player.sendMessage(GREEN + format("Sprzedano {0} x {1} za {2}", itemStack.getAmount(), itemStack.getType(), sellPrice));
             }
         }
         catch (final Exception e)

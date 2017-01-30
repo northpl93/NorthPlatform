@@ -1,5 +1,8 @@
 package pl.north93.zgame.skyblock.server.management;
 
+import static java.lang.System.currentTimeMillis;
+
+
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -12,6 +15,7 @@ import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.skyblock.api.IslandData;
+import pl.north93.zgame.skyblock.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.server.actions.TeleportPlayerToIsland;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 
@@ -58,5 +62,12 @@ public class LobbyManager implements ISkyBlockServerManager
     public void tpPlayerToSpawn(final Player player)
     {
         player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
+    }
+
+    @Override
+    public boolean canGenerateIsland(final SkyPlayer skyPlayer)
+    {
+        final long islandCooldown = skyPlayer.getIslandCooldown();
+        return islandCooldown == 0 || (currentTimeMillis() - islandCooldown) > this.server.getSkyBlockConfig().getIslandGenerateCooldown();
     }
 }

@@ -5,6 +5,9 @@ import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.north93.zgame.api.global.cfg.ConfigUtils;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
@@ -283,8 +286,50 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
             this.deleteIslandFromPlayer(playerId);
             islandData.removeMember(playerId);
 
-            final Value<IOnlinePlayer> leaving = this.networkManager.getOnlinePlayer(invoker);
-            leaving.ifPresent(p -> p.sendMessage(this.messages, "info.removed_from_members"));
+            this.networkManager.getPlayers().ifOnline(leavingPlayer, p -> p.sendMessage(this.messages, "info.removed_from_members.removed"));
+            if (! isSelfLeaving)
+            {
+                player.ifPresent(p -> p.sendMessage(this.messages, "info.removed_from_members.remover"));
+            }
         });
+    }
+
+    @Override
+    public void visitIsland(final UUID islandId, final String visitor)
+    {
+        final Value<IOnlinePlayer> visitorValue = this.networkManager.getOnlinePlayer(visitor);
+        if (! visitorValue.isAvailable())
+        {
+            return;
+        }
+
+        final IslandData islandData = this.islandDao.getIsland(islandId);
+        if (islandData == null)
+        {
+            this.getLogger().severe("IslandData is null in visitIsland(" + islandId + ", " + visitor + ")");
+            return;
+        }
+
+        if (! islandData.getAcceptingVisits())
+        {
+            visitorValue.get().sendMessage(this.messages, "cmd.visit.unavailable");
+            return;
+        }
+
+        final UUID islandServer = islandData.getServerId();
+        if (visitorValue.get().getServerId().equals(islandServer))
+        {
+            this.islandHostManager.getServer(islandServer).getIslandHostManager().tpToIsland(visitorValue.get().getUuid(), islandData);
+        }
+        else
+        {
+            visitorValue.get().connectTo(this.networkManager.getServer(islandServer).get(), new TeleportPlayerToIsland(islandId)); // todo server may be null?
+        }
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("islandDao", this.islandDao).append("skyBlockConfig", this.skyBlockConfig).toString();
     }
 }

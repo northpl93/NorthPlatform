@@ -1,5 +1,8 @@
 package pl.north93.zgame.skyblock.api.player;
 
+import static pl.north93.zgame.skyblock.api.IslandRole.OWNER;
+
+
 import java.util.UUID;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -49,6 +52,27 @@ class OnlineSkyPlayer extends SkyPlayer
     }
 
     @Override
+    public long getIslandCooldown()
+    {
+        final MetaStore metaStore = this.networkPlayer.get().getMetaStore();
+        if (! metaStore.contains(PLAYER_ISLAND_COL))
+        {
+            return 0;
+        }
+        return metaStore.getLong(PLAYER_ISLAND_COL);
+    }
+
+    @Override
+    public void setIslandCooldown(final long cooldown)
+    {
+        this.networkPlayer.lock();
+        final IOnlinePlayer iOnlinePlayer = this.networkPlayer.get();
+        iOnlinePlayer.getMetaStore().setLong(PLAYER_ISLAND_COL, System.currentTimeMillis());
+        this.networkPlayer.set(iOnlinePlayer);
+        this.networkPlayer.unlock();
+    }
+
+    @Override
     public void setIsland(final UUID islandId, final IslandRole islandRole)
     {
         this.networkPlayer.lock();
@@ -65,6 +89,10 @@ class OnlineSkyPlayer extends SkyPlayer
             metaStore.setBoolean(PLAYER_HAS_ISLAND, true);
             metaStore.setUuid(PLAYER_ISLAND_ID, islandId);
             metaStore.setInteger(PLAYER_ROLE, islandRole.ordinal());
+            if (islandRole == OWNER)
+            {
+                metaStore.setLong(PLAYER_ISLAND_COL, System.currentTimeMillis()); // set island creation time
+            }
         }
         this.networkPlayer.set(iOnlinePlayer);
         this.networkPlayer.unlock();

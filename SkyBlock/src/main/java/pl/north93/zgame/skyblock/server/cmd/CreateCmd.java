@@ -17,6 +17,7 @@ import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectResource;
 import pl.north93.zgame.api.global.network.INetworkManager;
+import pl.north93.zgame.api.global.utils.DateUtil;
 import pl.north93.zgame.skyblock.api.cfg.IslandConfig;
 import pl.north93.zgame.skyblock.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
@@ -44,6 +45,13 @@ public class CreateCmd extends NorthCommand
         if (skyPlayer.hasIsland())
         {
             sender.sendMessage(this.messages, "error.already_has_island");
+            return;
+        }
+
+        if (! this.server.getServerManager().canGenerateIsland(skyPlayer))
+        {
+            final String createTime = DateUtil.formatDateDiff(skyPlayer.getIslandCooldown() + this.server.getSkyBlockConfig().getIslandGenerateCooldown());
+            sender.sendMessage(this.messages, "error.create_cooldown", createTime);
             return;
         }
 

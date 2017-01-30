@@ -9,6 +9,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -99,6 +100,21 @@ public class WorldModificationListener implements Listener
 
         final Island island = manager.getIslands().getByChunk(block.getChunk());
         if (island == null || !island.getLocation().isInside(block.getLocation()))
+        {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onEntityHit(final EntityDamageByEntityEvent event)
+    {
+        if (! (event.getDamager() instanceof Player))
+        {
+            return;
+        }
+
+        final Player damager = (Player) event.getDamager();
+        if (! this.canAccess(damager, event.getEntity().getLocation()))
         {
             event.setCancelled(true);
         }

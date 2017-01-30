@@ -39,4 +39,7 @@ public interface ISkyBlockManager
     // wyrzuca danego gracza z listy osób uprawnionych do tej wyspy
     @DoNotWaitForResponse
     void leaveIsland(UUID islandId, String invoker, String leavingPlayer, Boolean isSelfLeaving);
+
+    @DoNotWaitForResponse
+    void visitIsland(UUID islandId, String visitor);
 }

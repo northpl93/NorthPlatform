@@ -13,12 +13,17 @@ public abstract class SkyPlayer
     protected static final MetaKey PLAYER_HAS_ISLAND = MetaKey.get("sky:hasIsland");
     protected static final MetaKey PLAYER_ISLAND_ID  = MetaKey.get("sky:islandId");
     protected static final MetaKey PLAYER_ROLE       = MetaKey.get("sky:role");
+    protected static final MetaKey PLAYER_ISLAND_COL = MetaKey.get("sky:islColdown");
 
     public abstract boolean hasIsland();
 
     public abstract UUID getIslandId();
 
     public abstract IslandRole getIslandRole();
+
+    public abstract long getIslandCooldown();
+
+    public abstract void setIslandCooldown(long cooldown);
 
     public abstract void setIsland(final UUID islandId, final IslandRole islandRole);
 

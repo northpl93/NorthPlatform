@@ -1,5 +1,8 @@
 package pl.north93.zgame.skyblock.server.management;
 
+import static java.lang.System.currentTimeMillis;
+
+
 import java.io.File;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -23,6 +26,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.skyblock.api.IIslandHostManager;
 import pl.north93.zgame.skyblock.api.IslandData;
+import pl.north93.zgame.skyblock.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.server.actions.TeleportPlayerToIsland;
 import pl.north93.zgame.skyblock.api.cfg.IslandConfig;
 import pl.north93.zgame.skyblock.api.utils.Coords2D;
@@ -113,6 +117,13 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
     public void tpPlayerToSpawn(final Player player)
     {
         this.networkManager.getOnlinePlayer(player.getName()).get().connectTo(this.skyBlockServer.getSkyBlockConfig().getLobbyServersGroup());
+    }
+
+    @Override
+    public boolean canGenerateIsland(final SkyPlayer skyPlayer)
+    {
+        final long islandCooldown = skyPlayer.getIslandCooldown();
+        return islandCooldown == 0 || (currentTimeMillis() - islandCooldown) > this.skyBlockServer.getSkyBlockConfig().getIslandGenerateCooldown();
     }
 
     /**

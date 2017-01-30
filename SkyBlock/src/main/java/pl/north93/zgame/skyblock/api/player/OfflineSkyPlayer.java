@@ -48,6 +48,23 @@ class OfflineSkyPlayer extends SkyPlayer
     }
 
     @Override
+    public long getIslandCooldown()
+    {
+        final MetaStore metaStore = this.offlinePlayer.getMetaStore();
+        if (! metaStore.contains(PLAYER_ISLAND_COL))
+        {
+            return 0;
+        }
+        return metaStore.getLong(PLAYER_ISLAND_COL);
+    }
+
+    @Override
+    public void setIslandCooldown(final long cooldown)
+    {
+        this.offlinePlayer.getMetaStore().setLong(PLAYER_ISLAND_COL, cooldown);
+    }
+
+    @Override
     public void setIsland(final UUID islandId, final IslandRole islandRole)
     {
         final MetaStore metaStore = this.offlinePlayer.getMetaStore();

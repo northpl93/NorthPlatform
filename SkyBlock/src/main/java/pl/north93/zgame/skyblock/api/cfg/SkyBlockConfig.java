@@ -13,6 +13,7 @@ import org.diorite.cfg.annotations.CfgCollectionStyle;
 import org.diorite.cfg.annotations.CfgComment;
 import org.diorite.cfg.annotations.defaults.CfgBooleanDefault;
 import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
+import org.diorite.cfg.annotations.defaults.CfgLongDefault;
 import org.diorite.cfg.annotations.defaults.CfgStringDefault;
 
 import pl.north93.zgame.skyblock.api.utils.Coords3D;
@@ -23,6 +24,10 @@ public class SkyBlockConfig
     @CfgComment("Czy na dole wyspy generować wełne oznaczajaca teren wyspy")
     @CfgBooleanDefault(false)
     private Boolean            placeDebugWool;
+
+    @CfgComment("Czas w ms jaki gracz musi odczekac przed ponownym stworzeniem wyspy/regeneracja. Liczony od utworzenia/regeneracji")
+    @CfgLongDefault(60 * 60 * 1000)
+    private Long               islandGenerateCooldown;
 
     @CfgComment("Nazwa grupy serwerów z poczekalniami.")
     @CfgStringDefault("default")
@@ -51,6 +56,11 @@ public class SkyBlockConfig
     public Boolean getPlaceDebugWool()
     {
         return this.placeDebugWool;
+    }
+
+    public Long getIslandGenerateCooldown()
+    {
+        return this.islandGenerateCooldown;
     }
 
     public String getLobbyServersGroup()
@@ -83,6 +93,6 @@ public class SkyBlockConfig
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("skyBlockServers", this.skyBlockServers).append("islandTypes", this.islandTypes).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("placeDebugWool", this.placeDebugWool).append("islandGenerateCooldown", this.islandGenerateCooldown).append("lobbyServersGroup", this.lobbyServersGroup).append("skyBlockServers", this.skyBlockServers).append("islandTypes", this.islandTypes).toString();
     }
 }
