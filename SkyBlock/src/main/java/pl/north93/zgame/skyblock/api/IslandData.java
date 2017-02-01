@@ -27,6 +27,7 @@ public final class IslandData
     private Boolean    acceptingVisits;
     private Coords2D   islandLocation;
     private Coords3D   homeLocation;
+    private NorthBiome biome;
     @MsgPackCustomTemplate(ArrayListTemplate.class)
     private List<UUID> invitations;
     @MsgPackCustomTemplate(ArrayListTemplate.class)
@@ -118,6 +119,16 @@ public final class IslandData
         this.homeLocation = homeLocation;
     }
 
+    public NorthBiome getBiome()
+    {
+        return this.biome;
+    }
+
+    public void setBiome(final NorthBiome biome)
+    {
+        this.biome = biome;
+    }
+
     public List<UUID> getInvitations()
     {
         return this.invitations;
@@ -151,6 +162,6 @@ public final class IslandData
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("islandId", this.islandId).append("ownerId", this.ownerId).append("serverId", this.serverId).append("islandType", this.islandType).append("name", this.name).append("acceptingVisits", this.acceptingVisits).append("islandLocation", this.islandLocation).append("homeLocation", this.homeLocation).append("invitations", this.invitations).append("membersUuid", this.membersUuid).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("islandId", this.islandId).append("ownerId", this.ownerId).append("serverId", this.serverId).append("islandType", this.islandType).append("name", this.name).append("acceptingVisits", this.acceptingVisits).append("islandLocation", this.islandLocation).append("homeLocation", this.homeLocation).append("biome", this.biome).append("invitations", this.invitations).append("membersUuid", this.membersUuid).toString();
     }
 }

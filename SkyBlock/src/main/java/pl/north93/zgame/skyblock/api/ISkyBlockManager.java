@@ -27,6 +27,10 @@ public interface ISkyBlockManager
     @DoNotWaitForResponse
     void deleteIsland(UUID islandId);
 
+    // zmienia biom na wyspie
+    @DoNotWaitForResponse
+    void changeBiome(UUID islandId, NorthBiome biome);
+
     // dodajemy gracza do listy zaproszonych i wysyłamy mu informacje
     // ofc sprawdzamy czy możemy to wszystko zrobić
     @DoNotWaitForResponse

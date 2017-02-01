@@ -16,6 +16,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.permissions.PermissionsInjector;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.impl.Injector;
@@ -49,6 +50,7 @@ public class JoinLeftListener implements Listener
 
         event.setJoinMessage(null);
 
+        PermissionsInjector.inject(player);
         final PermissionAttachment attachment = player.addAttachment(this.bukkitApiCore.getPluginMain());
         this.addPermissions(attachment, group);
 

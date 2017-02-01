@@ -28,4 +28,8 @@ public interface IIslandHostManager
     // Przesyłam tutaj IslandData ponieważ serwer nie mógłby wtedy pobrać tego z bazy
     @DoNotWaitForResponse
     void islandRemoved(IslandData islandData);
+
+    // Wywoływane gdy na wyspie trzeba zmienić biom
+    @DoNotWaitForResponse
+    void biomeChanged(UUID islandId, String islandType, NorthBiome newBiome);
 }

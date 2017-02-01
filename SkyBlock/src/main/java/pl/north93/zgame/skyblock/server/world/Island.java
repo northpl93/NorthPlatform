@@ -1,14 +1,26 @@
 package pl.north93.zgame.skyblock.server.world;
 
+import static pl.north93.zgame.skyblock.server.BiomeMapper.toBukkit;
+
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import net.minecraft.server.v1_10_R1.BiomeBase;
+import net.minecraft.server.v1_10_R1.Chunk;
+import net.minecraft.server.v1_10_R1.PacketPlayOutMapChunk;
+import net.minecraft.server.v1_10_R1.PlayerConnection;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_10_R1.CraftChunk;
+import org.bukkit.craftbukkit.v1_10_R1.block.CraftBlock;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -20,6 +32,7 @@ import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.skyblock.api.IslandDao;
 import pl.north93.zgame.skyblock.api.IslandData;
+import pl.north93.zgame.skyblock.api.NorthBiome;
 import pl.north93.zgame.skyblock.api.utils.Coords2D;
 
 /**
@@ -115,6 +128,33 @@ public class Island
         {
             IslandLocation.blocksFromTwoPoints(first, right).forEach(block -> block.setType(Material.WOOL));
         });
+    }
+
+    /**
+     * This method only applies changes to island.
+     *
+     * @see pl.north93.zgame.skyblock.api.ISkyBlockManager#changeBiome(UUID, NorthBiome)
+     * @param newBiome new biome to apply.
+     */
+    public void setBiome(final NorthBiome newBiome)
+    {
+        final List<Player> playersInIsland = this.getPlayersInIsland();
+        for (final Coords2D chunkCoords : this.location.getIslandChunks())
+        {
+            // CraftWorld#setBiome(int, int, Biome)
+            final CraftChunk craftChunk = (CraftChunk) this.location.getWorld().getChunkAt(chunkCoords.getX(), chunkCoords.getZ());
+            final Chunk nmsChunk = craftChunk.getHandle();
+            final byte biomeId = (byte) BiomeBase.REGISTRY_ID.a(CraftBlock.biomeToBiomeBase(toBukkit(newBiome)));
+
+            Arrays.fill(nmsChunk.getBiomeIndex(), biomeId);
+
+            for (final Player player : playersInIsland)
+            {
+                final CraftPlayer craftPlayer = (CraftPlayer) player;
+                final PlayerConnection playerConnection = craftPlayer.getHandle().playerConnection;
+                playerConnection.sendPacket(new PacketPlayOutMapChunk(nmsChunk, '\uffff'));
+            }
+        }
     }
 
     private void updateData(final Consumer<IslandData> updater)

@@ -24,6 +24,7 @@ import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
+import pl.north93.zgame.skyblock.api.NorthBiome;
 import pl.north93.zgame.skyblock.api.IIslandHostManager;
 import pl.north93.zgame.skyblock.api.IslandData;
 import pl.north93.zgame.skyblock.api.player.SkyPlayer;
@@ -210,6 +211,13 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
     {
         this.bukkitApiCore.debug("[SkyBlock] Received info about island to remove: " + islandData);
         this.getWorldManager(islandData.getIslandType()).islandRemoved(islandData);
+    }
+
+    @Override
+    public void biomeChanged(final UUID islandId, final String islandType, final NorthBiome newBiome)
+    {
+        final Island island = this.getWorldManager(islandType).getIslands().getById(islandId);
+        this.bukkitApiCore.sync(() -> island.setBiome(newBiome));
     }
 
     @Override

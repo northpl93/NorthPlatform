@@ -19,6 +19,7 @@ import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
+import pl.north93.zgame.skyblock.api.NorthBiome;
 import pl.north93.zgame.skyblock.api.ISkyBlockManager;
 import pl.north93.zgame.skyblock.api.IslandDao;
 import pl.north93.zgame.skyblock.api.IslandData;
@@ -154,6 +155,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
         island.setIslandType(islandType);
         island.setAcceptingVisits(false);
         island.setName("Wyspa gracza " + ownerNick);
+        island.setBiome(NorthBiome.OVERWORLD);
         island.setHomeLocation(config.getHomeLocation());
 
         skyPlayer.setIsland(islandId, IslandRole.OWNER);
@@ -172,7 +174,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
         final IslandData data = this.islandDao.getIsland(islandId);
         if (data == null)
         {
-            this.getLogger().warning("islandId is null in SkyBlockManager#deleteIsland(" + islandId + ")");
+            this.getLogger().warning("data is null in SkyBlockManager#deleteIsland(" + islandId + ")");
             return;
         }
         this.islandDao.deleteIsland(islandId);
@@ -182,6 +184,17 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
 
         final IslandHostServer server = this.islandHostManager.getServer(data.getServerId());
         server.getIslandHostManager().islandRemoved(data); // we must send data because it's already removed from database
+    }
+
+    @Override
+    public void changeBiome(final UUID islandId, final NorthBiome biome)
+    {
+        this.islandDao.modifyIsland(islandId, data ->
+        {
+            data.setBiome(biome);
+            final IslandHostServer server = this.islandHostManager.getServer(data.getServerId());
+            server.getIslandHostManager().biomeChanged(islandId, data.getIslandType(), biome);
+        });
     }
 
     private void deleteIslandFromPlayer(final UUID playerId)

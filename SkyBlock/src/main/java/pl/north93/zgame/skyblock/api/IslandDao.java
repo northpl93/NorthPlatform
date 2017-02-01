@@ -43,7 +43,11 @@ public class IslandDao
 
     public void modifyIsland(final UUID islandId, final Consumer<IslandData> modifier)
     {
-        this.islandDataCache.getValue(islandId).update(modifier);
+        this.islandDataCache.getValue(islandId).update(data ->
+        {
+            modifier.accept(data);
+            this.saveIsland(data);
+        });
     }
 
     public void saveIsland(final IslandData islandData)
@@ -123,6 +127,7 @@ public class IslandDao
         data.setIslandType(doc.getString("type"));
         data.setName(doc.getString("name"));
         data.setAcceptingVisits(doc.getBoolean("visits"));
+        data.setBiome(NorthBiome.valueOf(doc.getString("biome")));
 
         final Document islandLocation = doc.get("loc", Document.class);
         data.setIslandLocation(new Coords2D(islandLocation.getInteger("x"), islandLocation.getInteger("z")));
@@ -148,6 +153,7 @@ public class IslandDao
         document.put("type", island.getIslandType());
         document.put("name", island.getName());
         document.put("visits", island.getAcceptingVisits());
+        document.put("biome", island.getBiome().toString());
 
         final Document islandLocation = new Document();
         islandLocation.put("x", island.getIslandLocation().getX());
