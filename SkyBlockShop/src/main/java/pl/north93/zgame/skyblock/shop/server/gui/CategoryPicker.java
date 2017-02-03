@@ -1,4 +1,4 @@
-package pl.north93.zgame.skyblock.shop.gui;
+package pl.north93.zgame.skyblock.shop.server.gui;
 
 import java.util.ArrayList;
 import java.util.Collection;

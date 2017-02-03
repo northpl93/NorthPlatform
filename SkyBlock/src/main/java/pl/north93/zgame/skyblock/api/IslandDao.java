@@ -21,7 +21,6 @@ import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.skyblock.api.utils.Coords2D;
-import pl.north93.zgame.skyblock.api.utils.Coords3D;
 
 public class IslandDao
 {
@@ -132,8 +131,8 @@ public class IslandDao
         final Document islandLocation = doc.get("loc", Document.class);
         data.setIslandLocation(new Coords2D(islandLocation.getInteger("x"), islandLocation.getInteger("z")));
 
-        final Document homeLocation = doc.get("home", Document.class);
-        data.setHomeLocation(new Coords3D(homeLocation.getInteger("x"), homeLocation.getInteger("y"), homeLocation.getInteger("z")));
+        final Document homeLoc = doc.get("home", Document.class);
+        data.setHomeLocation(new HomeLocation(homeLoc.getDouble("x"), homeLoc.getDouble("y"), homeLoc.getDouble("z"), new Float(homeLoc.getDouble("yaw")), new Float(homeLoc.getDouble("pitch"))));
 
         //noinspection unchecked
         ((List<UUID>) doc.get("members")).forEach(data::addMember);
@@ -164,6 +163,8 @@ public class IslandDao
         homeLocation.put("x", island.getHomeLocation().getX());
         homeLocation.put("y", island.getHomeLocation().getY());
         homeLocation.put("z", island.getHomeLocation().getZ());
+        homeLocation.put("yaw", island.getHomeLocation().getYaw());
+        homeLocation.put("pitch", island.getHomeLocation().getPitch());
         document.put("home", homeLocation);
 
         document.put("invitations", island.getInvitations());

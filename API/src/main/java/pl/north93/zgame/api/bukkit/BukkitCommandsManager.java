@@ -1,6 +1,8 @@
 package pl.north93.zgame.api.bukkit;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.bukkit.Bukkit;
@@ -23,8 +25,9 @@ import pl.north93.zgame.api.global.utils.UTF8Control;
 
 public class BukkitCommandsManager implements ICommandsManager
 {
-    private final ResourceBundle apiMessages = ResourceBundle.getBundle("Messages", new UTF8Control());
-    private CommandMap commandMap;
+    private final ResourceBundle       apiMessages = ResourceBundle.getBundle("Messages", new UTF8Control());
+    private final CommandMap           commandMap;
+    private final Map<String, Command> internalCommands;
 
     public BukkitCommandsManager()
     {
@@ -32,10 +35,14 @@ public class BukkitCommandsManager implements ICommandsManager
         try
         {
             this.commandMap = (CommandMap) craftServer.getMethod("getCommandMap").invoke(Bukkit.getServer());
+            final Field fieldKnownCommands = this.commandMap.getClass().getDeclaredField("knownCommands");
+            fieldKnownCommands.setAccessible(true);
+            //noinspection unchecked
+            this.internalCommands = (Map<String, Command>) fieldKnownCommands.get(this.commandMap);
         }
-        catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
+        catch (final IllegalAccessException | InvocationTargetException | NoSuchMethodException | NoSuchFieldException e)
         {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

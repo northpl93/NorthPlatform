@@ -3,21 +3,21 @@ package pl.north93.zgame.skyblock.api.cfg;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.skyblock.api.utils.Coords3D;
+import pl.north93.zgame.skyblock.api.HomeLocation;
 
 public class IslandConfig
 {
-    private String   name;
-    private String   schematicName;
-    private Coords3D homeLocation;
-    private Integer  generateAtHeight;
-    private Integer  radius;
+    private String       name;
+    private String       schematicName;
+    private HomeLocation homeLocation;
+    private Integer      generateAtHeight;
+    private Integer      radius;
 
     public IslandConfig()
     {
     }
 
-    public IslandConfig(final String name, final String schematicName, final Coords3D homeLocation, final Integer generateAtHeight, final Integer radius)
+    public IslandConfig(final String name, final String schematicName, final HomeLocation homeLocation, final Integer generateAtHeight, final Integer radius)
     {
         this.name = name;
         this.schematicName = schematicName;
@@ -36,7 +36,7 @@ public class IslandConfig
         return this.schematicName;
     }
 
-    public Coords3D getHomeLocation()
+    public HomeLocation getHomeLocation()
     {
         return this.homeLocation;
     }

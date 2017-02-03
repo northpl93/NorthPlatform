@@ -65,37 +65,49 @@ class OnlineSkyPlayer extends SkyPlayer
     @Override
     public void setIslandCooldown(final long cooldown)
     {
-        this.networkPlayer.lock();
-        final IOnlinePlayer iOnlinePlayer = this.networkPlayer.get();
-        iOnlinePlayer.getMetaStore().setLong(PLAYER_ISLAND_COL, System.currentTimeMillis());
-        this.networkPlayer.set(iOnlinePlayer);
-        this.networkPlayer.unlock();
+        try
+        {
+            this.networkPlayer.lock();
+            final IOnlinePlayer iOnlinePlayer = this.networkPlayer.get();
+            iOnlinePlayer.getMetaStore().setLong(PLAYER_ISLAND_COL, cooldown);
+            this.networkPlayer.set(iOnlinePlayer);
+        }
+        finally
+        {
+            this.networkPlayer.unlock();
+        }
     }
 
     @Override
     public void setIsland(final UUID islandId, final IslandRole islandRole)
     {
-        this.networkPlayer.lock();
-        final IOnlinePlayer iOnlinePlayer = this.networkPlayer.get();
-        final MetaStore metaStore = iOnlinePlayer.getMetaStore();
-        if (islandId == null)
+        try
         {
-            metaStore.setBoolean(PLAYER_HAS_ISLAND, false);
-            metaStore.remove(PLAYER_ISLAND_ID);
-            metaStore.remove(PLAYER_ROLE);
-        }
-        else
-        {
-            metaStore.setBoolean(PLAYER_HAS_ISLAND, true);
-            metaStore.setUuid(PLAYER_ISLAND_ID, islandId);
-            metaStore.setInteger(PLAYER_ROLE, islandRole.ordinal());
-            if (islandRole == OWNER)
+            this.networkPlayer.lock();
+            final IOnlinePlayer iOnlinePlayer = this.networkPlayer.get();
+            final MetaStore metaStore = iOnlinePlayer.getMetaStore();
+            if (islandId == null)
             {
-                metaStore.setLong(PLAYER_ISLAND_COL, System.currentTimeMillis()); // set island creation time
+                metaStore.setBoolean(PLAYER_HAS_ISLAND, false);
+                metaStore.remove(PLAYER_ISLAND_ID);
+                metaStore.remove(PLAYER_ROLE);
             }
+            else
+            {
+                metaStore.setBoolean(PLAYER_HAS_ISLAND, true);
+                metaStore.setUuid(PLAYER_ISLAND_ID, islandId);
+                metaStore.setInteger(PLAYER_ROLE, islandRole.ordinal());
+                if (islandRole == OWNER)
+                {
+                    metaStore.setLong(PLAYER_ISLAND_COL, System.currentTimeMillis()); // set island creation time
+                }
+            }
+            this.networkPlayer.set(iOnlinePlayer);
         }
-        this.networkPlayer.set(iOnlinePlayer);
-        this.networkPlayer.unlock();
+        finally
+        {
+            this.networkPlayer.unlock();
+        }
     }
 
     @Override

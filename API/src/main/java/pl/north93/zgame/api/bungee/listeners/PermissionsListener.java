@@ -9,7 +9,7 @@ import net.md_5.bungee.api.event.PermissionCheckEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import pl.north93.zgame.api.bungee.BungeeApiCore;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.api.global.permissions.Group;
 
 public class PermissionsListener implements Listener
 {
@@ -23,13 +23,20 @@ public class PermissionsListener implements Listener
     @EventHandler
     public void onPermissionCheck(final PermissionCheckEvent event)
     {
-        final Value<IOnlinePlayer> value = this.apiCore.getNetworkManager().getOnlinePlayer(event.getSender().getName());
-        final IOnlinePlayer online = value.get();
+        final IOnlinePlayer online = this.apiCore.getNetworkManager().getOnlinePlayer(event.getSender().getName()).get();
         if (online == null)
         {
             return;
         }
-        event.setHasPermission(online.getGroup().hasPermission(event.getPermission()));
+        final Group group = online.getGroup();
+        if (group.getPermissions().contains("*")) // TODO implement asterisk handling
+        {
+            event.setHasPermission(true);
+        }
+        else
+        {
+            event.setHasPermission(group.hasPermission(event.getPermission()));
+        }
     }
 
     @Override

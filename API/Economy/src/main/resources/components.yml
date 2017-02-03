@@ -24,5 +24,6 @@ components:
     dependencies:
       - API.Database.Redis.Observer
       - API.MinecraftNetwork.NetworkManager
+      - RestfulApi
     platforms:
       - STANDALONE

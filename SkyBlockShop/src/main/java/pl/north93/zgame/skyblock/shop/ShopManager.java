@@ -26,8 +26,8 @@ import pl.north93.zgame.api.economy.impl.client.EconomyComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.skyblock.shop.api.ICategory;
 import pl.north93.zgame.skyblock.shop.api.IShopEntry;
-import pl.north93.zgame.skyblock.shop.gui.CategoryPicker;
-import pl.north93.zgame.skyblock.shop.gui.CategoryView;
+import pl.north93.zgame.skyblock.shop.server.gui.CategoryPicker;
+import pl.north93.zgame.skyblock.shop.server.gui.CategoryView;
 
 public class ShopManager
 {
@@ -108,7 +108,7 @@ public class ShopManager
                     player.sendMessage(RED + "Masz pelny ekwipunek");
                 }
             }
-            else if (shopEntry.canSell())
+            else if (!isBuy && shopEntry.canSell())
             {
                 inventory.removeItem(itemStack);
                 final Double sellPrice = shopEntry.getSellPrice();

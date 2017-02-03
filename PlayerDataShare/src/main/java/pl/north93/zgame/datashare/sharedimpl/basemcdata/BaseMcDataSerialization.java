@@ -44,7 +44,7 @@ public class BaseMcDataSerialization implements IDataUnitSerialization<BaseMcDat
         player.setSaturation(dataUnit.getSaturation());
 
         VersionDepend.deserializePlayerPotions(player, dataUnit.getPotions());
-        player.giveExp(dataUnit.getTotalExperience());
+        player.setTotalExperience(dataUnit.getTotalExperience());
         VersionDepend.deserializePlayerStatistics(player, dataUnit.getStatistics());
         player.setGameMode(GameMode.values()[dataUnit.getGameMode()]);
     }

@@ -14,7 +14,7 @@ import org.diorite.cfg.annotations.defaults.CfgShortDefault;
 
 public class BukkitItem
 {
-    private Material     material;
+    private String       material;
     @CfgIntDefault(1)
     private int          amount;
     @CfgShortDefault(0)
@@ -24,7 +24,7 @@ public class BukkitItem
 
     public Material getMaterial()
     {
-        return this.material;
+        return Material.valueOf(this.material);
     }
 
     public int getAmount()
@@ -49,7 +49,7 @@ public class BukkitItem
 
     public ItemStack asBukkit()
     {
-        final ItemStack itemStack = new ItemStack(this.material, this.amount, this.data);
+        final ItemStack itemStack = new ItemStack(this.getMaterial(), this.amount, this.data);
         final ItemMeta itemMeta = itemStack.getItemMeta();
         if (this.name != null)
         {

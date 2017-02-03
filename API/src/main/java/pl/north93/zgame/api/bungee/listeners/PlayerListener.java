@@ -11,7 +11,11 @@ import java.util.logging.Level;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import org.diorite.utils.cooldown.CooldownEntry;
+import org.diorite.utils.cooldown.CooldownManager;
+
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
@@ -36,6 +40,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 public class PlayerListener implements Listener
 {
     private final BungeeApiCore   bungeeApiCore;
+    private final CooldownManager<UUID> cooldownManager = CooldownManager.createManager(128);
     @InjectResource(bundleName = "Messages")
     private       ResourceBundle  apiMessages;
     @InjectComponent("API.MinecraftNetwork.PlayersStorage")
@@ -46,6 +51,7 @@ public class PlayerListener implements Listener
     public PlayerListener(final BungeeApiCore bungeeApiCore)
     {
         this.bungeeApiCore = bungeeApiCore;
+        this.bungeeApiCore.getPlatformConnector().runTaskAsynchronously(this::fixPlayers, 20);
         Injector.inject(bungeeApiCore.getComponentManager(), this); // manually perform injections
     }
 
@@ -155,12 +161,32 @@ public class PlayerListener implements Listener
                 {
                     player.delete(); // delete player data if event is cancelled.
                 }
+                else
+                {
+                    //noinspection MagicNumber
+                    this.cooldownManager.add(connection.getUniqueId(), 100);
+                }
             }
             finally
             {
                 event.completeIntent(this.bungeeApiCore.getBungeePlugin());
             }
         });
+    }
+
+    private void fixPlayers()
+    {
+        for (final CooldownEntry<UUID> expired : this.cooldownManager.getExpired())
+        {
+            final ProxyServer proxy = this.bungeeApiCore.getBungeePlugin().getProxy();
+            final UUID key = expired.getKey();
+            if (proxy.getPlayer(key) == null)
+            {
+                this.networkManager.getOnlinePlayer(key).delete();
+                this.bungeeApiCore.getLogger().warning("PLAYER DATA WITH UUID " + key + " HAS BEEN DELETED (player is offline after some time)");
+            }
+            this.cooldownManager.remove(key);
+        }
     }
 
     @EventHandler

@@ -148,12 +148,16 @@ public class IslandLocation
 
     public Location fromRelative(final Coords3D coords3D)
     {
-        final Location drc = this.chunkDRCorner(this.centerChunkX, this.centerChunkZ);
-        final double x = drc.getX() + coords3D.getX();
-        final double y = coords3D.getY();
-        final double z = drc.getZ() + coords3D.getZ();
+        return this.fromRelative(coords3D.getX(), coords3D.getY(), coords3D.getZ());
+    }
 
-        return new Location(this.world, x, y, z);
+    public Location fromRelative(final double x, final double y, final double z)
+    {
+        final Location drc = this.chunkDRCorner(this.centerChunkX, this.centerChunkZ);
+        final double relx = drc.getX() + x;
+        final double relz = drc.getZ() + z;
+
+        return new Location(this.world, relx, y, relz);
     }
 
     // down right. In chunk x0/y0 its x0/y0

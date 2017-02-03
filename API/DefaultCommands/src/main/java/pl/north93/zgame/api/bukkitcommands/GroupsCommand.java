@@ -2,6 +2,9 @@ package pl.north93.zgame.api.bukkitcommands;
 
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
@@ -78,5 +81,11 @@ public class GroupsCommand extends NorthCommand
                 sender.sendMessage("&cZła ilość argumentów!");
             }
         });
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

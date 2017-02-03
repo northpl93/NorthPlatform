@@ -18,7 +18,6 @@ public class Msg extends NorthCommand
     public Msg()
     {
         super("msg", "pw");
-        this.setPermission("api.command.msg");
     }
 
     @Override

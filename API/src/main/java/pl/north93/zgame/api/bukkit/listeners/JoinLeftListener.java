@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.bukkit.listeners;
 
+import static org.bukkit.ChatColor.RED;
+
+
 import java.text.MessageFormat;
 
 import org.bukkit.Bukkit;
@@ -45,8 +48,13 @@ public class JoinLeftListener implements Listener
     public void onJoin(final PlayerJoinEvent event)
     {
         final Player player = event.getPlayer();
-        final Value<IOnlinePlayer> networkPlayer = this.networkManager.getOnlinePlayer(player.getName());
-        final Group group = networkPlayer.get().getGroup();
+        final IOnlinePlayer iplayer = this.networkManager.getOnlinePlayer(player.getName()).get();
+        if (iplayer == null)
+        {
+            player.kickPlayer(RED + "Połącz się z serwerem ponownie (iplayer==null in onJoin)");
+            return;
+        }
+        final Group group = iplayer.getGroup();
 
         event.setJoinMessage(null);
 
@@ -78,7 +86,14 @@ public class JoinLeftListener implements Listener
     {
         for (final String permission : group.getPermissions())
         {
-            attachment.setPermission(permission, true);
+            if (permission.startsWith("-"))
+            {
+                attachment.setPermission(permission.substring(1, permission.length()), false);
+            }
+            else
+            {
+                attachment.setPermission(permission, true);
+            }
         }
         for (final Group inheritGroup : group.getInheritance())
         {

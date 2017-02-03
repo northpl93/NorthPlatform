@@ -12,26 +12,25 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
 import pl.north93.zgame.skyblock.api.utils.Coords2D;
-import pl.north93.zgame.skyblock.api.utils.Coords3D;
 
 /**
  * Klasa przechowująca informacje o wyspie.
  */
 public final class IslandData
 {
-    private UUID       islandId;
-    private UUID       ownerId;
-    private UUID       serverId;
-    private String     islandType;
-    private String     name;
-    private Boolean    acceptingVisits;
-    private Coords2D   islandLocation;
-    private Coords3D   homeLocation;
-    private NorthBiome biome;
+    private UUID         islandId;
+    private UUID         ownerId;
+    private UUID         serverId;
+    private String       islandType;
+    private String       name;
+    private Boolean      acceptingVisits;
+    private Coords2D     islandLocation;
+    private HomeLocation homeLocation;
+    private NorthBiome   biome;
     @MsgPackCustomTemplate(ArrayListTemplate.class)
-    private List<UUID> invitations;
+    private List<UUID>   invitations;
     @MsgPackCustomTemplate(ArrayListTemplate.class)
-    private List<UUID> membersUuid;
+    private List<UUID>   membersUuid;
 
     public IslandData()
     {
@@ -109,12 +108,12 @@ public final class IslandData
         this.islandLocation = islandLocation;
     }
 
-    public Coords3D getHomeLocation()
+    public HomeLocation getHomeLocation()
     {
         return this.homeLocation;
     }
 
-    public void setHomeLocation(final Coords3D homeLocation)
+    public void setHomeLocation(final HomeLocation homeLocation)
     {
         this.homeLocation = homeLocation;
     }

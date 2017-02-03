@@ -3,6 +3,7 @@ package pl.north93.zgame.api.bungee.listeners;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.event.ProxyPingEvent;
@@ -28,7 +29,8 @@ public class PingListener implements Listener
             return;
         }
 
-        response.setDescriptionComponent(new TextComponent(TextComponent.fromLegacyText(networkMeta.serverListMotd)));
+        final String serverListMotd = ChatColor.translateAlternateColorCodes('&', networkMeta.serverListMotd);
+        response.setDescriptionComponent(new TextComponent(TextComponent.fromLegacyText(serverListMotd)));
 
         final ServerPing.Players players = response.getPlayers();
         players.setSample(null);

@@ -30,10 +30,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.skyblock.api.HomeLocation;
 import pl.north93.zgame.skyblock.api.IslandDao;
 import pl.north93.zgame.skyblock.api.IslandData;
 import pl.north93.zgame.skyblock.api.NorthBiome;
 import pl.north93.zgame.skyblock.api.utils.Coords2D;
+import pl.north93.zgame.skyblock.api.utils.Coords3D;
 
 /**
  * Reprezentuje wyspę znajdującą się na konkretnym serwerze i świecie.
@@ -75,14 +77,20 @@ public class Island
     // calculate home location.
     public Location getHomeLocation()
     {
-        return this.location.fromRelative(this.islandData.get().getHomeLocation());
+        final HomeLocation home = this.islandData.get().getHomeLocation();
+        final Location location = this.location.fromRelative(home.getX(), home.getY(), home.getZ());
+        location.setYaw(home.getYaw());
+        location.setPitch(home.getPitch());
+        return location;
     }
 
     public void setHomeLocation(final Location location)
     {
         this.updateData(data ->
         {
-            data.setHomeLocation(this.location.toRelative(location));
+            final Coords3D coords3D = this.location.toRelative(location);
+            final HomeLocation home = new HomeLocation(coords3D.getX(), coords3D.getY(), coords3D.getZ(), location.getYaw(), location.getPitch());
+            data.setHomeLocation(home);
         });
     }
 

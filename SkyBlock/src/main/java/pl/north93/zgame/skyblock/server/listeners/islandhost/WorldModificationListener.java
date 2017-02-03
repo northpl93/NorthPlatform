@@ -39,7 +39,14 @@ public class WorldModificationListener implements Listener
         }
 
         final Island island = manager.getIslands().getByChunk(location.getChunk());
-        return ! (island == null || ! island.getLocation().isInside(location)) && island.canBuild(player.getUniqueId());
+        if (island != null && island.getLocation().isInside(location))
+        {
+            if (island.canBuild(player.getUniqueId()))
+            {
+                return true;
+            }
+        }
+        return player.hasMetadata("skyblockbypass");
     }
 
     @EventHandler

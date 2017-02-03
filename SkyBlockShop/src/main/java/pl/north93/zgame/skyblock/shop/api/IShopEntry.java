@@ -4,6 +4,8 @@ import pl.north93.zgame.skyblock.shop.cfg.BukkitItem;
 
 public interface IShopEntry
 {
+    EntryType getEntryType();
+
     String getDisplayName();
 
     int getAmount();

@@ -28,6 +28,12 @@
         </dependency>
 
         <dependency>
+            <groupId>pl.north93.zgame</groupId>
+            <artifactId>restful</artifactId>
+            <version>1.0-INDEV</version>
+        </dependency>
+
+        <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>Vault</artifactId>
             <version>1.6.6</version>

@@ -16,7 +16,7 @@ import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
 import org.diorite.cfg.annotations.defaults.CfgLongDefault;
 import org.diorite.cfg.annotations.defaults.CfgStringDefault;
 
-import pl.north93.zgame.skyblock.api.utils.Coords3D;
+import pl.north93.zgame.skyblock.api.HomeLocation;
 
 @CfgComment("Konfiguracja SkyBlocka")
 public class SkyBlockConfig
@@ -44,7 +44,7 @@ public class SkyBlockConfig
     private static List<IslandConfig> getDefaultIslandTypes()
     {
         //noinspection ArraysAsListWithZeroOrOneArgument
-        return Arrays.asList(new IslandConfig("Testowa", "nazwaPlikuWFolderzeSchematics", new Coords3D(5, 6, 5), 50, 16));
+        return Arrays.asList(new IslandConfig("Testowa", "nazwaPlikuWFolderzeSchematics", new HomeLocation(10, 10, 10, 0, 0), 50, 16));
     }
 
     private static List<String> getDefaultSkyBlockServers()

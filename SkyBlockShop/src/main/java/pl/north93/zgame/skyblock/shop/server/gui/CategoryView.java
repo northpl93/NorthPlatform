@@ -1,4 +1,4 @@
-package pl.north93.zgame.skyblock.shop.gui;
+package pl.north93.zgame.skyblock.shop.server.gui;
 
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
@@ -41,7 +41,7 @@ public class CategoryView extends PaginateWindow<IShopEntry>
     {
         if (this.hasPreviousPage())
         {
-            final ItemStack itemStack = new ItemStack(Material.ARROW, 1);
+            final ItemStack itemStack = new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte)14);
             final ItemMeta itemMeta = itemStack.getItemMeta();
             itemMeta.setDisplayName(AQUA + "Poprzednia");
             itemStack.setItemMeta(itemMeta);
@@ -49,7 +49,7 @@ public class CategoryView extends PaginateWindow<IShopEntry>
         }
         else if (this.showBackToCategories)
         {
-            final ItemStack itemStack = new ItemStack(Material.WOOL, 1, (short) 14);
+            final ItemStack itemStack = new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte)14);
             final ItemMeta itemMeta = itemStack.getItemMeta();
             itemMeta.setDisplayName(AQUA + "Kategorie");
             itemStack.setItemMeta(itemMeta);
@@ -58,6 +58,8 @@ public class CategoryView extends PaginateWindow<IShopEntry>
                 this.shopComponent.getShopManager().openCategoriesPicker(this.getPlayer());
             });
         }
+
+
 
         {
             final ItemStack sign = new ItemStack(Material.SIGN, 1);
@@ -69,7 +71,7 @@ public class CategoryView extends PaginateWindow<IShopEntry>
 
         if (this.hasNextPage())
         {
-            final ItemStack itemStack = new ItemStack(Material.ARROW, 1);
+            final ItemStack itemStack = new ItemStack(Material.STAINED_GLASS_PANE, 5);
             final ItemMeta itemMeta = itemStack.getItemMeta();
             itemMeta.setDisplayName(AQUA + "Nastepna");
             itemStack.setItemMeta(itemMeta);
@@ -79,6 +81,27 @@ public class CategoryView extends PaginateWindow<IShopEntry>
 
     @Override
     protected Pair<ItemStack, ClickHandler> drawElement(final IShopEntry entry)
+    {
+        switch (entry.getEntryType())
+        {
+            case PLACEHOLDER:
+                return this.drawPlaceholder(entry);
+            case ITEM:
+                return this.drawItem(entry);
+        }
+        throw new RuntimeException(entry.toString());
+    }
+
+    private Pair<ItemStack, ClickHandler> drawPlaceholder(final IShopEntry shopEntry)
+    {
+        final ItemStack placeholder = new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 15);
+        final ItemMeta itemMeta = placeholder.getItemMeta();
+        itemMeta.setDisplayName(" ");
+        placeholder.setItemMeta(itemMeta);
+        return Pair.of(placeholder, event -> {});
+    }
+
+    private Pair<ItemStack, ClickHandler> drawItem(final IShopEntry entry)
     {
         final ItemStack itemStack = entry.getBukkitItem().asBukkit();
         final ItemMeta itemMeta = itemStack.getItemMeta();
