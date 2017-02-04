@@ -49,7 +49,7 @@ public class ReceiveGui extends Window
             {
                 case ITEM:
                 {
-                    final Material material = Material.valueOf(properties.get("material"));
+                    final Material material = Material.valueOf(properties.get("material").toUpperCase());
                     final int amount = Integer.parseInt(properties.get("amount"));
                     final short data = Short.parseShort(properties.get("data"));
 
