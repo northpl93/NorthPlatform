@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/API/DefaultCommands/API.DefaultCommands.iml" filepath="$PROJECT_DIR$/API/DefaultCommands/API.DefaultCommands.iml" />
       <module fileurl="file://$PROJECT_DIR$/API/Economy/API.Economy.iml" filepath="$PROJECT_DIR$/API/Economy/API.Economy.iml" />
       <module fileurl="file://$PROJECT_DIR$/API/Instrumentation Agent/API.InstrumentationAgent.iml" filepath="$PROJECT_DIR$/API/Instrumentation Agent/API.InstrumentationAgent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ItemShop/ItemShop.iml" filepath="$PROJECT_DIR$/ItemShop/ItemShop.iml" />
       <module fileurl="file://$PROJECT_DIR$/Lobby/Lobby.iml" filepath="$PROJECT_DIR$/Lobby/Lobby.iml" />
       <module fileurl="file://$PROJECT_DIR$/Network Controller/Network Controller.iml" filepath="$PROJECT_DIR$/Network Controller/Network Controller.iml" />
       <module fileurl="file://$PROJECT_DIR$/NoPremiumAuth/NoPremiumAuth.iml" filepath="$PROJECT_DIR$/NoPremiumAuth/NoPremiumAuth.iml" />

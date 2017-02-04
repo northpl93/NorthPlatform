@@ -14,7 +14,7 @@ import pl.north93.zgame.skyblock.server.SkyBlockServer;
 public class DieListener implements Listener
 {
     @InjectComponent("SkyBlock.Server")
-    private SkyBlockServer  server;
+    private SkyBlockServer server;
 
     @EventHandler
     public void changeDeadMessage(final PlayerDeathEvent event)

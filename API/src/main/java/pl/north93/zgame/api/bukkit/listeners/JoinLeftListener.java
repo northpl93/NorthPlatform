@@ -47,16 +47,17 @@ public class JoinLeftListener implements Listener
     @EventHandler
     public void onJoin(final PlayerJoinEvent event)
     {
+        event.setJoinMessage(null);
+
         final Player player = event.getPlayer();
         final IOnlinePlayer iplayer = this.networkManager.getOnlinePlayer(player.getName()).get();
         if (iplayer == null)
         {
+            this.bukkitApiCore.getLogger().warning("Player " + player.getName() + " (" + player.getUniqueId() + ") joined, but iplayer is null in onJoin");
             player.kickPlayer(RED + "Połącz się z serwerem ponownie (iplayer==null in onJoin)");
             return;
         }
         final Group group = iplayer.getGroup();
-
-        event.setJoinMessage(null);
 
         PermissionsInjector.inject(player);
         final PermissionAttachment attachment = player.addAttachment(this.bukkitApiCore.getPluginMain());

@@ -1,0 +1,19 @@
+components:
+  - name: ItemShop.Controller
+    enabled: true
+    mainClass: "pl.north93.zgame.itemshop.controller.ItemShopController"
+    description: "ItemShop controller."
+    dependencies:
+      - API.MinecraftNetwork.NetworkManager
+      - API.Economy.Controller
+    platforms:
+      - STANDALONE
+
+  - name: ItemShop.Server
+    enabled: true
+    mainClass: "pl.north93.zgame.itemshop.server.ItemShopServer"
+    description: "ItemShop server."
+    dependencies:
+      - API.MinecraftNetwork.NetworkManager
+    platforms:
+      - BUKKIT

@@ -15,9 +15,23 @@ public interface IPlayer extends Metadatable
      */
     String getLatestNick();
 
+    boolean isBanned();
+
+    void setBanned(boolean banned);
+
     Group getGroup();
 
+    long getGroupExpireAt(); // zwraca w milis kiedy grupa wygasa
+
     void setGroup(Group group);
+
+    void setGroupExpireAt(long expireAt);
+
+    default boolean isGroupExpired()
+    {
+        final long groupExpireAt = this.getGroupExpireAt();
+        return groupExpireAt != 0 && System.currentTimeMillis() > groupExpireAt;
+    }
 
     /**
      * Sprawdza czy ten gracz jest online na serwerze.

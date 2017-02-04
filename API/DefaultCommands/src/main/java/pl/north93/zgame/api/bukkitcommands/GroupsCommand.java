@@ -67,7 +67,11 @@ public class GroupsCommand extends NorthCommand
                     sender.sendMessage("&cNie ma takiej grupy!");
                     return;
                 }
-                if (this.networkManager.getPlayers().access(username, player -> player.setGroup(newGroup)))
+                if (this.networkManager.getPlayers().access(username, player ->
+                {
+                    player.setGroup(newGroup);
+                    player.setGroupExpireAt(0);
+                }))
                 {
                     sender.sendMessage("&aPomyślnie zmieniono grupę na " + newGroup.getName());
                 }

@@ -69,7 +69,7 @@ public class WebAuthManagerImpl implements IWebAuthManager
             final IPlayer player = transaction.getPlayer();
             final boolean isOnline = player.isOnline();
             final String nick = isOnline ? ((IOnlinePlayer) player).getNick() : player.getLatestNick();
-            return new PlayerModel(playerId, nick, isOnline, player.getGroup().getName(), player.getMetaStore());
+            return new PlayerModel(playerId, nick, isOnline, player.getGroup().getName(), player.getGroupExpireAt(), player.getMetaStore());
         }
         catch (final Exception e)
         {

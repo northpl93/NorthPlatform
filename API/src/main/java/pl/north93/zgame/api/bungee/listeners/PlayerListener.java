@@ -133,6 +133,7 @@ public class PlayerListener implements Listener
                 {
                     event.setCancelled(true);
                     event.setCancelReason(message(this.apiMessages, "kick.generic_error", "failed to load player data: " + e));
+                    e.printStackTrace();
                     return;
                 }
 

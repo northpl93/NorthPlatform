@@ -15,14 +15,16 @@ public final class PlayerModel
     private String              nick;
     private boolean             isOnline;
     private String              group;
+    private Long                groupExpireAt;
     private Map<String, Object> metadata;
 
-    public PlayerModel(final UUID uuid, final String nick, final boolean isOnline, final String group, final MetaStore metaStore)
+    public PlayerModel(final UUID uuid, final String nick, final boolean isOnline, final String group, final Long groupExpireAt, final MetaStore metaStore)
     {
         this.uuid = uuid;
         this.nick = nick;
         this.isOnline = isOnline;
         this.group = group;
+        this.groupExpireAt = groupExpireAt;
         this.metadata = metaStore.getInternalMap().entrySet().stream()
                                  .collect(Collectors.toMap(e -> e.getKey().getKey(), Map.Entry::getValue));
     }
@@ -30,6 +32,6 @@ public final class PlayerModel
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).append("nick", this.nick).append("isOnline", this.isOnline).append("group", this.group).append("metadata", this.metadata).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).append("nick", this.nick).append("isOnline", this.isOnline).append("group", this.group).append("groupExpireAt", this.groupExpireAt).append("metadata", this.metadata).toString();
     }
 }

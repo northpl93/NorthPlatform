@@ -32,10 +32,10 @@ public class RestfulComponent extends Component
             final Wrapper<Object> myResponse = new Wrapper<>();
             this.networkManager.getPlayers().access(request.params(":nick"), online ->
             {
-                myResponse.set(new PlayerModel(online.getUuid(), online.getNick(), true, online.getGroup().getName(), online.getMetaStore()));
+                myResponse.set(new PlayerModel(online.getUuid(), online.getNick(), true, online.getGroup().getName(), online.getGroupExpireAt(), online.getMetaStore()));
             }, offline ->
             {
-                myResponse.set(new PlayerModel(offline.getUuid(), offline.getLatestNick(), false, offline.getGroup().getName(), offline.getMetaStore()));
+                myResponse.set(new PlayerModel(offline.getUuid(), offline.getLatestNick(), false, offline.getGroup().getName(), offline.getGroupExpireAt(), offline.getMetaStore()));
             });
 
             if (myResponse.get() == null)

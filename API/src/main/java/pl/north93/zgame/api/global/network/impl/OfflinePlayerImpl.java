@@ -12,20 +12,24 @@ import pl.north93.zgame.api.global.permissions.Group;
 
 public class OfflinePlayerImpl implements IOfflinePlayer
 {
-    private UUID   uuid;
-    private String latestNick;
-    private Group  group;
+    private UUID    uuid;
+    private String  latestNick;
+    private Boolean isBanned;
+    private Group   group;
+    private Long    groupExpireAt;
     private MetaStore meta = new MetaStore();
 
     public OfflinePlayerImpl()
     {
     }
 
-    public OfflinePlayerImpl(final UUID uuid, final String latestNick, final Group group, final MetaStore meta)
+    public OfflinePlayerImpl(final UUID uuid, final String latestNick, final Boolean isBanned, final Group group, final Long groupExpireAt, final MetaStore meta)
     {
         this.uuid = uuid;
         this.latestNick = latestNick;
+        this.isBanned = isBanned;
         this.group = group;
+        this.groupExpireAt = groupExpireAt;
         this.meta = meta;
     }
 
@@ -33,7 +37,9 @@ public class OfflinePlayerImpl implements IOfflinePlayer
     {
         this.uuid = onlinePlayer.getUuid();
         this.latestNick = onlinePlayer.getLatestNick();
+        this.isBanned = onlinePlayer.isBanned();
         this.group = onlinePlayer.getGroup();
+        this.groupExpireAt = onlinePlayer.getGroupExpireAt();
         this.meta = onlinePlayer.getMetaStore();
     }
 
@@ -56,15 +62,47 @@ public class OfflinePlayerImpl implements IOfflinePlayer
     }
 
     @Override
+    public boolean isBanned()
+    {
+        if (this.isBanned == null)
+        {
+            return false;
+        }
+        return this.isBanned;
+    }
+
+    @Override
+    public void setBanned(final boolean banned)
+    {
+        this.isBanned = banned;
+    }
+
+    @Override
     public Group getGroup()
     {
         return this.group;
     }
 
     @Override
+    public long getGroupExpireAt()
+    {
+        if (this.groupExpireAt == null)
+        {
+            return 0;
+        }
+        return this.groupExpireAt;
+    }
+
+    @Override
     public void setGroup(final Group group)
     {
         this.group = group;
+    }
+
+    @Override
+    public void setGroupExpireAt(final long expireAt)
+    {
+        this.groupExpireAt = expireAt;
     }
 
     @Override

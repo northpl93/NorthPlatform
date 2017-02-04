@@ -105,10 +105,18 @@ public class PlayersDataImpl extends Component implements IPlayersData
         if (offlinePlayer != null)
         {
             player.transferDataFrom(offlinePlayer);
+
+            // check if group is expired
+            if (player.isGroupExpired())
+            {
+                player.setGroup(this.permissionsManager.getDefaultGroup());
+                player.setGroupExpireAt(0);
+            }
         }
         else
         {
             player.setLatestNick(name);
+            player.setGroupExpireAt(0);
             player.setGroup(this.permissionsManager.getDefaultGroup());
         }
         player.setServerId(UUID.randomUUID());
@@ -170,7 +178,9 @@ public class PlayersDataImpl extends Component implements IPlayersData
         }
 
         final String latestKnownUsername = result.getString("latestKnownUsername");
+        final boolean isBanned = result.containsKey("banned") ? result.getBoolean("banned") : false;
         final Group group = this.permissionsManager.getGroupByName(result.getString("group"));
+        final long groupExpireAt = result.containsKey("groupExpireAt") ? result.getLong("groupExpireAt") : 0;
 
         final MetaStore store = new MetaStore();
         final Map<MetaKey, Object> playerMeta = store.getInternalMap();
@@ -180,7 +190,7 @@ public class PlayersDataImpl extends Component implements IPlayersData
             playerMeta.put(MetaKey.get(entry.getKey()), entry.getValue());
         }
 
-        return new OfflinePlayerImpl(result.get("uuid", UUID.class), latestKnownUsername, group, store);
+        return new OfflinePlayerImpl(result.get("uuid", UUID.class), latestKnownUsername, isBanned, group, groupExpireAt, store);
     }
 
     @Override
@@ -190,7 +200,9 @@ public class PlayersDataImpl extends Component implements IPlayersData
 
         playerData.put("savedAt", System.currentTimeMillis());
         playerData.put("uuid", player.getUuid());
+        playerData.put("banned", player.isBanned());
         playerData.put("group", player.getGroup().getName());
+        playerData.put("groupExpireAt", player.getGroupExpireAt());
 
         final Document metadata = new Document();
         for (final Map.Entry<MetaKey, Object> entry : player.getMetaStore().getInternalMap().entrySet())

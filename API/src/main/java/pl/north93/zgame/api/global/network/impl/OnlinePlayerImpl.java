@@ -11,11 +11,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.metadata.MetaStore;
+import pl.north93.zgame.api.global.network.ProxyRpc;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
-import pl.north93.zgame.api.global.network.ProxyRpc;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
+import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.zgame.api.global.network.server.joinaction.JoinActionsContainer;
 import pl.north93.zgame.api.global.permissions.Group;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
@@ -32,7 +32,9 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     private UUID      serverId;
     private String    proxyId;
     private Boolean   premium;
+    private Boolean   isBanned;
     private Group     group;
+    private Long      groupExpireAt;
     private MetaStore meta = new MetaStore();
 
     @Override
@@ -45,7 +47,9 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     public void transferDataFrom(final IOfflinePlayer offlinePlayer)
     {
         this.latestNick = offlinePlayer.getLatestNick();
+        this.isBanned = offlinePlayer.isBanned();
         this.group = offlinePlayer.getGroup();
+        this.groupExpireAt = offlinePlayer.getGroupExpireAt();
         this.meta = offlinePlayer.getMetaStore();
     }
 
@@ -64,6 +68,18 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     public String getLatestNick()
     {
         return this.latestNick;
+    }
+
+    @Override
+    public boolean isBanned()
+    {
+        return this.isBanned;
+    }
+
+    @Override
+    public void setBanned(final boolean banned)
+    {
+        this.isBanned = banned;
     }
 
     public void setLatestNick(final String latestNick)
@@ -123,9 +139,21 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     }
 
     @Override
+    public long getGroupExpireAt()
+    {
+        return this.groupExpireAt;
+    }
+
+    @Override
     public void setGroup(final Group group)
     {
         this.group = group;
+    }
+
+    @Override
+    public void setGroupExpireAt(final long expireAt)
+    {
+        this.groupExpireAt = expireAt;
     }
 
     @Override
@@ -185,6 +213,6 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).append("nick", this.nick).append("latestNick", this.latestNick).append("serverId", this.serverId).append("proxyId", this.proxyId).append("premium", this.premium).append("group", this.group).append("meta", this.meta).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).append("nick", this.nick).append("latestNick", this.latestNick).append("serverId", this.serverId).append("proxyId", this.proxyId).append("premium", this.premium).append("group", this.group).append("groupExpireAt", this.groupExpireAt).append("meta", this.meta).toString();
     }
 }

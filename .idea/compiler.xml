@@ -12,6 +12,7 @@
         <module name="API.InstrumentationAgent" />
         <module name="DefaultCommands" />
         <module name="Instrumentation Agent" />
+        <module name="ItemShop" />
         <module name="Lobby" />
         <module name="Network Controller" />
         <module name="NoPremiumAuth" />
@@ -30,6 +31,7 @@
       <module name="API.DefaultCommands" target="8" />
       <module name="API.Economy" target="8" />
       <module name="API.InstrumentationAgent" target="8" />
+      <module name="ItemShop" target="8" />
       <module name="Lobby" target="8" />
       <module name="Network Controller" target="1.8" />
       <module name="NoPremiumAuth" target="8" />
