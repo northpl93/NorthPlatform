@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.global.redis.observable.impl;
 
+import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -12,7 +14,7 @@ class LockImpl implements Lock
     private final String                 name;
     private final Object                 waiter;
     private boolean isLockedLocally;
-    private boolean isWaiting;
+    private volatile boolean isWaiting;
 
     public LockImpl(final ObservationManagerImpl observationManager, final String name)
     {
@@ -42,7 +44,7 @@ class LockImpl implements Lock
             {
                 synchronized (this.waiter)
                 {
-                    this.waiter.wait();
+                    this.waiter.wait(TimeUnit.SECONDS.toMillis(2)); // after 2 seconds time out
                 }
             }
             catch (final InterruptedException e)

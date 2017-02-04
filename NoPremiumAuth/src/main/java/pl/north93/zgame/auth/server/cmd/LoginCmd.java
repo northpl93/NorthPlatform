@@ -32,6 +32,7 @@ public class LoginCmd extends NorthCommand
     public LoginCmd()
     {
         super("login", "l", "zaloguj");
+        this.setAsync(true);
     }
 
     @Override

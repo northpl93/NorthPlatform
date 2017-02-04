@@ -31,6 +31,7 @@ public class ChangePasswordCmd extends NorthCommand
     public ChangePasswordCmd()
     {
         super("changepassword", "zmienhaslo");
+        this.setAsync(true);
     }
 
     @Override

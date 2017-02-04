@@ -11,6 +11,7 @@ public abstract class NorthCommand
 {
     private final String       name;
     private final List<String> aliases;
+    private       boolean      isAsync;
     private       String       permission;
 
     public NorthCommand(final String name, final String... aliases)
@@ -37,6 +38,16 @@ public abstract class NorthCommand
     public final String getPermission()
     {
         return this.permission;
+    }
+
+    public final boolean isAsync()
+    {
+        return this.isAsync;
+    }
+
+    public final void setAsync(final boolean async)
+    {
+        this.isAsync = async;
     }
 
     public abstract void execute(final NorthCommandSender sender, final Arguments args, final String label);

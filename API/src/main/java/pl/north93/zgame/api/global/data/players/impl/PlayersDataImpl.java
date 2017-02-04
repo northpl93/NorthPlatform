@@ -118,6 +118,7 @@ public class PlayersDataImpl extends Component implements IPlayersData
             player.setLatestNick(name);
             player.setGroupExpireAt(0);
             player.setGroup(this.permissionsManager.getDefaultGroup());
+            player.setBanned(false);
         }
         player.setServerId(UUID.randomUUID());
         player.setProxyId(proxyId);

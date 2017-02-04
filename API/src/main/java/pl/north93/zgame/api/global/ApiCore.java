@@ -31,6 +31,7 @@ import pl.north93.zgame.api.global.redis.rpc.impl.RpcManagerImpl;
 
 public abstract class ApiCore
 {
+    private final boolean            isDebug;
     private final IAgentClient       instrumentationClient;
     private final IComponentManager  componentManager;
     private final Platform           platform;
@@ -42,6 +43,7 @@ public abstract class ApiCore
     {
         this.platform = platform;
         this.connector = platformConnector;
+        this.isDebug = System.getProperties().contains("debug");
         this.instrumentationClient = new LocalAgentClient();
         this.componentManager = new ComponentManagerImpl(this);
         this.messagePackTemplates = new TemplateManagerImpl();
@@ -100,6 +102,7 @@ public abstract class ApiCore
             this.getPlatformConnector().stop();
         }
         this.getLogger().info("Client id is " + this.getId());
+        this.debug("Debug mode is enabled");
     }
 
     private void setupInstrumentation()
@@ -179,7 +182,10 @@ public abstract class ApiCore
 
     public void debug(final Object object)
     {
-        this.getLogger().log(Level.INFO, "[DEBUG] " + object.toString());
+        if (this.isDebug)
+        {
+            this.getLogger().log(Level.INFO, "[DEBUG] " + object.toString());
+        }
     }
 
     /**

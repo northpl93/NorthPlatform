@@ -212,7 +212,14 @@ class CachedValueImpl<T> implements Value<T>
     {
         try (final Jedis jedis = this.observationManager.getJedis().getResource())
         {
-            jedis.expire(this.objectKey.getKey(), seconds);
+            if (seconds == -1)
+            {
+                jedis.persist(this.objectKey.getKey());
+            }
+            else
+            {
+                jedis.expire(this.objectKey.getKey(), seconds);
+            }
         }
     }
 

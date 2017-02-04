@@ -30,7 +30,11 @@ public class StorageConnector extends Component
     {
         this.connectionConfig = loadConfigFile(ConnectionConfig.class, this.getApiCore().getFile("connection.yml"));
 
-        this.pool = new JedisPool(new JedisPoolConfig(), this.connectionConfig.getRedisHost(), this.connectionConfig.getRedisPort(), this.connectionConfig.getRedisTimeout(), this.connectionConfig.getRedisPassword());
+        final JedisPoolConfig poolConfig = new JedisPoolConfig();
+        poolConfig.setMaxTotal(16);
+        poolConfig.setMaxIdle(10);
+        poolConfig.setMinIdle(2);
+        this.pool = new JedisPool(poolConfig, this.connectionConfig.getRedisHost(), this.connectionConfig.getRedisPort(), this.connectionConfig.getRedisTimeout(), this.connectionConfig.getRedisPassword());
         this.pool.getResource().ping(); // check connection
 
         this.fixMongoLogger(Logger.getLogger("org.mongodb.driver.connection"));

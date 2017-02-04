@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.ICommandsManager;
 import pl.north93.zgame.api.global.commands.NorthCommand;
@@ -118,7 +119,18 @@ public class BukkitCommandsManager implements ICommandsManager
                 commandSender.sendMessage(ChatColor.translateAlternateColorCodes('&', BukkitCommandsManager.this.apiMessages.getString("command.no_permissions")));
                 return true;
             }
-            this.wrapped.execute(new WrappedSender(commandSender), new Arguments(strings), s);
+            if (this.wrapped.isAsync())
+            {
+                API.getApiCore().getPlatformConnector().runTaskAsynchronously(() ->
+                {
+                    this.wrapped.execute(new WrappedSender(commandSender), new Arguments(strings), s);
+                });
+            }
+            else
+            {
+                this.wrapped.execute(new WrappedSender(commandSender), new Arguments(strings), s);
+            }
+
             return true;
         }
 

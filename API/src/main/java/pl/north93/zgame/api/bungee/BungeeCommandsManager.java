@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.bungee;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -32,7 +35,23 @@ public class BungeeCommandsManager implements ICommandsManager
         @Override
         public void execute(final CommandSender commandSender, final String[] strings)
         {
-            this.northCommand.execute(new WrappedSender(commandSender), new Arguments(strings), ""); // TODO
+            if (this.northCommand.isAsync())
+            {
+                API.getApiCore().getPlatformConnector().runTaskAsynchronously(() ->
+                {
+                    this.northCommand.execute(new WrappedSender(commandSender), new Arguments(strings), ""); // TODO
+                });
+            }
+            else
+            {
+                this.northCommand.execute(new WrappedSender(commandSender), new Arguments(strings), ""); // TODO
+            }
+        }
+
+        @Override
+        public String toString()
+        {
+            return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("northCommand", this.northCommand).toString();
         }
     }
 
@@ -73,6 +92,12 @@ public class BungeeCommandsManager implements ICommandsManager
         public Object unwrapped()
         {
             return this.sender;
+        }
+
+        @Override
+        public String toString()
+        {
+            return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("sender", this.sender).toString();
         }
     }
 }

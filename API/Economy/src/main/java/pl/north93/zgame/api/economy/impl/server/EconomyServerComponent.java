@@ -8,6 +8,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import net.milkbowl.vault.economy.Economy;
 import pl.north93.zgame.api.economy.IEconomyManager;
 import pl.north93.zgame.api.economy.impl.client.EconomyComponent;
@@ -49,5 +52,11 @@ public class EconomyServerComponent extends Component
     @Override
     protected void disableComponent()
     {
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("economy", this.economy).append("config", this.config).toString();
     }
 }
