@@ -11,6 +11,8 @@ import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Response;
+import redis.clients.jedis.Transaction;
 
 class CachedValueImpl<T> implements Value<T>
 {
@@ -78,6 +80,28 @@ class CachedValueImpl<T> implements Value<T>
             this.set(defaultValue.get());
             return this.cache;
         }
+    }
+
+    @Override
+    public T getAndDelete()
+    {
+        final String key = this.objectKey.getKey();
+        final Response<byte[]> response;
+
+        try (final Jedis jedis = this.observationManager.getJedis().getResource())
+        {
+            final Transaction multi = jedis.multi();
+            response = multi.get(key.getBytes());
+            multi.del(key);
+            multi.exec();
+        }
+
+        final byte[] bytes = response.get();
+        if (bytes == null)
+        {
+            return null;
+        }
+        return this.observationManager.getMsgPack().deserialize(this.clazz, bytes);
     }
 
     @Override

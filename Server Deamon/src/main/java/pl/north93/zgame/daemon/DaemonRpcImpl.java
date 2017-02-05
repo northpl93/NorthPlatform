@@ -8,9 +8,9 @@ import pl.north93.zgame.daemon.servers.ServerInstance;
 
 public class DaemonRpcImpl implements DaemonRpc
 {
-    private final DaemonCore daemonCore;
+    private final DaemonComponent daemonCore;
 
-    public DaemonRpcImpl(final DaemonCore daemonCore)
+    public DaemonRpcImpl(final DaemonComponent daemonCore)
     {
         this.daemonCore = daemonCore;
     }
@@ -18,7 +18,10 @@ public class DaemonRpcImpl implements DaemonRpc
     @Override
     public void setAcceptingNewServers(final Boolean isAcceptingNewServers)
     {
-        this.daemonCore.getDaemonInfo().setAcceptingServers(isAcceptingNewServers);
+        this.daemonCore.getDaemonInfo().update(daemon ->
+        {
+            daemon.setAcceptingServers(isAcceptingNewServers);
+        });
     }
 
     @Override

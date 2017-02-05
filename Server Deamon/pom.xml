@@ -12,7 +12,6 @@
     </parent>
 
     <artifactId>deamon</artifactId>
-    <version>1.0-INDEV</version>
 
     <dependencies>
         <dependency>

@@ -9,9 +9,9 @@
 
         <bungee-api.version>1.10-SNAPSHOT</bungee-api.version>
 
-        <mongodb.version>3.4.1</mongodb.version>
+        <mongodb.version>3.4.2</mongodb.version>
 
-        <spark.version>2.5.4</spark.version>
+        <spark.version>2.5.5</spark.version>
 
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -35,6 +35,8 @@
         <module>../TimeGroups</module>
         <module>../SkyBlockShop</module>
         <module>../ItemShop</module>
+        <module>../SkyBlockPlayerExperience</module>
+        <module>../SkyBlock.Quests</module>
     </modules>
 
     <repositories>
@@ -72,10 +74,8 @@
                                         <exclude>org.spigotmc:spigot-server</exclude>
                                         <exclude>net.md-5:*</exclude>
                                         <exclude>io.netty:*</exclude>
-                                        <exclude>com.google.code.gson:gson</exclude>
-                                        <exclude>org.yaml:snakeyaml</exclude>
-                                        <exclude>com.google.guava:guava</exclude>
                                         <exclude>net.sf.trove4j:trove4j</exclude>
+                                        <exclude>org.mongodb:bson</exclude>
                                     </excludes>
                                 </artifactSet>
                             </configuration>

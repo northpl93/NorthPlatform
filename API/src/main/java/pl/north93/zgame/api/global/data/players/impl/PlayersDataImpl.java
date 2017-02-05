@@ -83,6 +83,19 @@ public class PlayersDataImpl extends Component implements IPlayersData
     }
 
     @Override
+    public void logPlayerJoin(final UUID uuid, final String nick, final boolean premium, final String ip, final String bungee)
+    {
+        final MongoCollection<Document> history = this.storageConnector.getMainDatabase().getCollection("join_history");
+        final Document doc = new Document("uuid", uuid);
+        doc.put("nick", nick);
+        doc.put("premium", premium);
+        doc.put("ip", ip);
+        doc.put("bungee", bungee);
+        doc.put("at", System.currentTimeMillis());
+        history.insertOne(doc);
+    }
+
+    @Override
     public Value<OnlinePlayerImpl> loadPlayer(final UUID uuid, final String name, final Boolean premium, final String proxyId) throws NameSizeMistakeException
     {
         final IOfflinePlayer offlinePlayer;
@@ -133,6 +146,10 @@ public class PlayersDataImpl extends Component implements IPlayersData
     @Override
     public Value<IOfflinePlayer> getOfflinePlayerValue(final UUID uuid)
     {
+        if (uuid == null)
+        {
+            return null;
+        }
         return this.offlinePlayersData.getValue(uuid);
     }
 

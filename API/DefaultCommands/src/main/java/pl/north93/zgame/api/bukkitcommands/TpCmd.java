@@ -31,23 +31,40 @@ public class TpCmd extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        if (args.length() != 1)
+        if (args.length() > 2 || args.length() < 1)
         {
-            sender.sendMessage("&c/tp <nick>");
+            sender.sendMessage("&c/tp [nick] <nick>");
             return;
         }
 
-        final String destination = args.asString(0);
-        final Player destinationBukkitPlayer = Bukkit.getPlayer(destination);
-        if (destinationBukkitPlayer != null)
+        final int destinationArg;
+        final String origin;
+        if(args.length() == 2)
         {
-            ((Player) sender.unwrapped()).teleport(destinationBukkitPlayer.getLocation());
+            //players teleports to a plyer
+            destinationArg = 1;
+            origin = args.asString(0);
+        }
+        else
+        {
+            //command sender teleports to a player
+            destinationArg = 0;
+            origin = sender.getName();
+        }
+
+
+        final String destination = args.asString( destinationArg );
+        final Player destinationBukkitPlayer = Bukkit.getPlayer(destination);
+        final Player originBukkitPlayer = Bukkit.getPlayer(origin);
+        if (destinationBukkitPlayer != null && originBukkitPlayer != null)
+        {
+            originBukkitPlayer.teleport(destinationBukkitPlayer.getLocation());
             return;
         }
 
         this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
         {
-            final IOnlinePlayer playerSender = this.networkManager.getOnlinePlayer(sender.getName()).get();
+            final IOnlinePlayer playerSender = this.networkManager.getOnlinePlayer(origin).get();
             final IOnlinePlayer player = this.networkManager.getOnlinePlayer(destination).get();
             if (player == null || playerSender == null)
             {

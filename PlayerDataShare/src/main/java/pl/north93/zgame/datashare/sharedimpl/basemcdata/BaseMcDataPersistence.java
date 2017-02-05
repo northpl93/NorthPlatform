@@ -24,6 +24,8 @@ public class BaseMcDataPersistence implements IDataUnitPersistence<BaseMcDataCon
 
         doc.put("potions", dataUnit.getPotions());
         doc.put("totalexperience", dataUnit.getTotalExperience());
+        doc.put("expLevel", dataUnit.getLevel());
+        doc.put("experience", dataUnit.getExperience());
         doc.put("statistics", dataUnit.getStatistics());
         doc.put("gamemode", dataUnit.getGameMode());
 
@@ -47,6 +49,24 @@ public class BaseMcDataPersistence implements IDataUnitPersistence<BaseMcDataCon
 
         data.setPotions(doc.get("potions", Binary.class).getData());
         data.setTotalExperience(doc.getInteger("totalexperience"));
+        if (doc.containsKey("experience"))
+        {
+            data.setExperience(doc.getDouble("experience"));
+        }
+        else
+        {
+            data.setExperience(0d);
+            System.err.println("experience set to 0");
+        }
+        if (doc.containsKey("expLevel"))
+        {
+            data.setLevel(doc.getInteger("expLevel"));
+        }
+        else
+        {
+            data.setLevel(0);
+            System.err.println("expLevel set to 0");
+        }
         data.setStatistics(doc.getString("statistics"));
         data.setGameMode(doc.getInteger("gamemode", 1)); // 1 is survival
 

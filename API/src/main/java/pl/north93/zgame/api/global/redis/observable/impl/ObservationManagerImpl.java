@@ -19,6 +19,7 @@ import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
+import pl.north93.zgame.api.global.redis.observable.SortedSet;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 import redis.clients.jedis.JedisPool;
@@ -94,7 +95,7 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         final int namesLength = names.length;
         if (namesLength == 0)
         {
-            throw new IllegalArgumentException("names must ne not empty");
+            throw new IllegalArgumentException("names must be not empty");
         }
         else if (namesLength == 1)
         {
@@ -108,6 +109,12 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         }
 
         return new MultiLockImpl(locks);
+    }
+
+    @Override
+    public <K> SortedSet<K> getSortedSet(final String name)
+    {
+        return new SortedSetImpl<>(this, name);
     }
 
     /*default*/ void addWaitingLock(final LockImpl lock)

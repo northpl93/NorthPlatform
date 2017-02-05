@@ -1,5 +1,6 @@
 package pl.north93.zgame.skyblock.shop.cfg;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -29,6 +30,8 @@ public final class RootConfigs
 
         public List<CategoryConfig> getCategories()
         {
+            //sort categories by it's internal name
+            this.categories.sort((cat1, cat2) -> cat1.getInternalName().compareTo(cat2.getInternalName()));
             return this.categories;
         }
 
@@ -54,6 +57,21 @@ public final class RootConfigs
         public String toString()
         {
             return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("items", this.items).toString();
+        }
+    }
+
+    @CfgComment("Konfiguracja spawnera")
+    public static final class SpawnerConfig
+    {
+        @CfgDelegateDefault("{ArrayList}")
+        private List<SpawnerEntryConfig> mobs;
+
+        public List<SpawnerEntryConfig> getMobs() { return this.mobs; }
+
+        @Override
+        public String toString()
+        {
+            return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("mobs", this.mobs).toString();
         }
     }
 }

@@ -29,62 +29,60 @@ public class GroupsCommand extends NorthCommand
     {
         super("groups", "group");
         this.setPermission("api.command.groups");
+        this.setAsync(true);
     }
 
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
+        if (args.length() == 0)
         {
-            if (args.length() == 0)
-            {
-                sender.sendMessage("&e/" + label + " <gracz> - wyświetla grupę gracza");
-                sender.sendMessage("&e/" + label + " <gracz> <grupa> - zmienia grupę gracza");
-            }
-            else if (args.length() == 1)
-            {
-                final String username = args.asString(0);
+            sender.sendMessage("&e/" + label + " <gracz> - wyświetla grupę gracza");
+            sender.sendMessage("&e/" + label + " <gracz> <grupa> - zmienia grupę gracza");
+        }
+        else if (args.length() == 1)
+        {
+            final String username = args.asString(0);
 
-                boolean result = this.networkManager.getPlayers().access(username, online ->
-                {
-                    sender.sendMessage("&eGrupa " + online.getNick() + " to " + online.getGroup().getName());
-                }, offline ->
-                {
-                    sender.sendMessage("&eGrupa " + offline.getLatestNick() + " (" + offline.getUuid() + ") to " + offline.getGroup().getName());
-                });
-
-                if (! result)
-                {
-                    sender.sendMessage(this.messages, "command.no_player");
-                }
-            }
-            else if (args.length() == 2)
+            boolean result = this.networkManager.getPlayers().access(username, online ->
             {
-                final String username = args.asString(0);
-                final Group newGroup = this.permissionsManager.getGroupByName(args.asString(1));
-                if (newGroup == null)
-                {
-                    sender.sendMessage("&cNie ma takiej grupy!");
-                    return;
-                }
-                if (this.networkManager.getPlayers().access(username, player ->
-                {
-                    player.setGroup(newGroup);
-                    player.setGroupExpireAt(0);
-                }))
-                {
-                    sender.sendMessage("&aPomyślnie zmieniono grupę na " + newGroup.getName());
-                }
-                else
-                {
-                    sender.sendMessage(this.messages, "command.no_player");
-                }
+                sender.sendMessage("&eGrupa " + online.getNick() + " to " + online.getGroup().getName());
+            }, offline ->
+            {
+                sender.sendMessage("&eGrupa " + offline.getLatestNick() + " (" + offline.getUuid() + ") to " + offline.getGroup().getName());
+            });
+
+            if (! result)
+            {
+                sender.sendMessage(this.messages, "command.no_player");
+            }
+        }
+        else if (args.length() == 2)
+        {
+            final String username = args.asString(0);
+            final Group newGroup = this.permissionsManager.getGroupByName(args.asString(1));
+            if (newGroup == null)
+            {
+                sender.sendMessage("&cNie ma takiej grupy!");
+                return;
+            }
+            if (this.networkManager.getPlayers().access(username, player ->
+            {
+                player.setGroup(newGroup);
+                player.setGroupExpireAt(0);
+            }))
+            {
+                sender.sendMessage("&aPomyślnie zmieniono grupę na " + newGroup.getName());
             }
             else
             {
-                sender.sendMessage("&cZła ilość argumentów!");
+                sender.sendMessage(this.messages, "command.no_player");
             }
-        });
+        }
+        else
+        {
+            sender.sendMessage("&cZła ilość argumentów!");
+        }
     }
 
     @Override

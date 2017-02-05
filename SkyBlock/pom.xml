@@ -39,5 +39,13 @@
             <version>6.1.4</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <artifactId>FastAsyncWorldEdit</artifactId>
+            <groupId>com.boydti</groupId>
+            <version>3.5.1</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/../lib/FastAsyncWorldEdit.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>

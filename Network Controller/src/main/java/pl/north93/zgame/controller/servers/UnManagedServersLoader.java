@@ -16,7 +16,7 @@ import pl.north93.zgame.api.global.network.server.ServerImpl;
 import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.network.server.ServerType;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
-import pl.north93.zgame.controller.ConfigBroadcaster;
+import pl.north93.zgame.controller.configbroadcaster.ConfigBroadcaster;
 
 /**
  * Klasa wczytująca serwery unmanaged z configu, tworzy obiekty

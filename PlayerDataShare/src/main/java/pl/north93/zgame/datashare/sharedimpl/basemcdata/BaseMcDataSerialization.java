@@ -24,6 +24,8 @@ public class BaseMcDataSerialization implements IDataUnitSerialization<BaseMcDat
 
         container.setPotions(VersionDepend.serializePlayerPotions(player));
         container.setTotalExperience(player.getTotalExperience());
+        container.setExperience((double) player.getExp());
+        container.setLevel(player.getLevel());
         container.setStatistics(VersionDepend.serializePlayerStatistics(player));
         container.setGameMode(player.getGameMode().ordinal());
 
@@ -45,6 +47,8 @@ public class BaseMcDataSerialization implements IDataUnitSerialization<BaseMcDat
 
         VersionDepend.deserializePlayerPotions(player, dataUnit.getPotions());
         player.setTotalExperience(dataUnit.getTotalExperience());
+        player.setLevel(dataUnit.getLevel());
+        player.setExp(dataUnit.getExperience().floatValue());
         VersionDepend.deserializePlayerStatistics(player, dataUnit.getStatistics());
         player.setGameMode(GameMode.values()[dataUnit.getGameMode()]);
     }

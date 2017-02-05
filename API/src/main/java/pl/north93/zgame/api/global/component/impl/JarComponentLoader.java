@@ -77,11 +77,14 @@ class JarComponentLoader extends URLClassLoader
 
         for (final JarComponentLoader dependency : this.dependencies)
         {
-            final Class<?> fromDependency = dependency.findClass(name);
-            if (fromDependency != null)
+            try
             {
+                final Class<?> fromDependency = dependency.findClass(name);
                 this.classCache.put(name, fromDependency);
                 return fromDependency;
+            }
+            catch (final ClassNotFoundException ignored) // class not found in this dependency
+            {
             }
         }
 

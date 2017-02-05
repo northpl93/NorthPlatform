@@ -5,6 +5,7 @@ import java.util.UUID;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
+import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.skyblock.api.IslandRole;
 
@@ -27,13 +28,20 @@ public abstract class SkyPlayer
 
     public abstract void setIsland(final UUID islandId, final IslandRole islandRole);
 
+    @Deprecated
     public static SkyPlayer get(final Value<IOnlinePlayer> onlinePlayer)
     {
         return new OnlineSkyPlayer(onlinePlayer);
     }
 
+    @Deprecated
     public static SkyPlayer get(final IOfflinePlayer offlinePlayer)
     {
         return new OfflineSkyPlayer(offlinePlayer);
+    }
+
+    public static SkyPlayer get(final IPlayer player)
+    {
+        return new NewApiSkyPlayer(player);
     }
 }

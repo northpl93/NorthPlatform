@@ -15,4 +15,6 @@ public interface IObservationManager
     Lock getLock(String name);
 
     Lock getMultiLock(String... names);
+
+    <K> SortedSet<K> getSortedSet(String name);
 }

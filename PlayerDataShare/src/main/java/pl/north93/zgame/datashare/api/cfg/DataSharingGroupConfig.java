@@ -10,15 +10,17 @@ import org.diorite.cfg.annotations.CfgComment;
 public class DataSharingGroupConfig
 {
     @CfgComment("Wewnętrzna nazwa tej grupy")
-    private String       name;
+    private String          name;
     @CfgComment("Grupy serwerów należące do tej grupy udostępniania danych")
-    private List<String> serversGroups;
+    private List<String>    serversGroups;
     @CfgComment("Serwery należące do tej grupy udostępniania danych")
-    private List<String> servers;
+    private List<String>    servers;
     @CfgComment("Czy w tej grupie współdzielić czat?")
-    private boolean      shareChat;
+    private boolean         shareChat;
+    @CfgComment("Konfiguracja automatycznych wiadomości w tej grupie")
+    private AnnouncerConfig announcer;
     @CfgComment("Lista danych które należy synchronizować")
-    private List<String> dataUnits;
+    private List<String>    dataUnits;
 
     public String getName()
     {
@@ -35,6 +37,11 @@ public class DataSharingGroupConfig
         return this.servers;
     }
 
+    public AnnouncerConfig getAnnouncer()
+    {
+        return this.announcer;
+    }
+
     public boolean isShareChat()
     {
         return this.shareChat;
@@ -48,6 +55,6 @@ public class DataSharingGroupConfig
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("serversGroups", this.serversGroups).append("servers", this.servers).append("shareChat", this.shareChat).append("dataUnits", this.dataUnits).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("serversGroups", this.serversGroups).append("servers", this.servers).append("shareChat", this.shareChat).append("announcer", this.announcer).append("dataUnits", this.dataUnits).toString();
     }
 }

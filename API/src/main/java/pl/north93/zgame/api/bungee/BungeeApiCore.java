@@ -41,6 +41,10 @@ public class BungeeApiCore extends ApiCore
     @Override
     public Logger getLogger()
     {
+        if (this.bungeePlugin == null)
+        {
+            return null;
+        }
         return this.bungeePlugin.getLogger();
     }
 
@@ -48,6 +52,12 @@ public class BungeeApiCore extends ApiCore
     public String getId()
     {
         return PROXY_INSTANCE + this.config.getUniqueName();
+    }
+
+    @Override
+    public File getRootDirectory()
+    {
+        return new File(ProxyServer.class.getProtectionDomain().getCodeSource().getLocation().getFile());
     }
 
     @Override

@@ -3,6 +3,7 @@ package pl.north93.zgame.api.bungee;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -20,6 +21,12 @@ public class BungeeCommandsManager implements ICommandsManager
     public void registerCommand(final NorthCommand northCommand)
     {
         ProxyServer.getInstance().getPluginManager().registerCommand(((BungeeApiCore) API.getApiCore()).getBungeePlugin(), new WrappedCommand(northCommand));
+    }
+
+    @Override
+    public void stop()
+    {
+        // todo unregister commands?
     }
 
     private class WrappedCommand extends Command
@@ -71,9 +78,16 @@ public class BungeeCommandsManager implements ICommandsManager
         }
 
         @Override
-        public void sendMessage(final String message)
+        public void sendMessage(final String message, final boolean colorText)
         {
-            this.sender.sendMessage(TextComponent.fromLegacyText(message));
+            if (colorText)
+            {
+                this.sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message)));
+            }
+            else
+            {
+                this.sender.sendMessage(TextComponent.fromLegacyText(message));
+            }
         }
 
         @Override

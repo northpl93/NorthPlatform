@@ -15,6 +15,9 @@ public interface IIslandHostManager
 
     Coords2D getFirstFreeLocation(String islandType);
 
+    @DoNotWaitForResponse
+    void recalculatePoints();
+
     // Wysyłane gdy gracz znajduje się na tym serwerze i trzeba
     // go przenieść na konkretną wyspę.
     @DoNotWaitForResponse

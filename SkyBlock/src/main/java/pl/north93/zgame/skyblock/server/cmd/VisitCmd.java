@@ -12,9 +12,7 @@ import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectResource;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
-import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.skyblock.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 
@@ -29,7 +27,7 @@ public class VisitCmd extends NorthCommand
 
     public VisitCmd()
     {
-        super("visit", "odwiedz");
+        super("visit", "odwiedz", "odw");
         this.setAsync(true);
     }
 
@@ -54,19 +52,16 @@ public class VisitCmd extends NorthCommand
 
     private UUID islandIdFromOwnerName(final String owner)
     {
-        final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getOnlinePlayer(owner);
-        if (onlinePlayer.isAvailable())
+        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(owner))
         {
-            return SkyPlayer.get(onlinePlayer).getIslandId();
+            final SkyPlayer skyPlayer = SkyPlayer.get(t.getPlayer());
+            return skyPlayer.getIslandId();
         }
-
-        final IOfflinePlayer offlinePlayer = this.networkManager.getOfflinePlayer(owner);
-        if (offlinePlayer != null)
+        catch (final Exception e)
         {
-            return SkyPlayer.get(offlinePlayer).getIslandId();
+            e.printStackTrace();
+            return null;
         }
-
-        return null;
     }
 
     @Override

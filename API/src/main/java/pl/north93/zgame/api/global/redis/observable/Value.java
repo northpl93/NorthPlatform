@@ -27,6 +27,14 @@ public interface Value<T>
      */
     T getOr(Supplier<T> defaultValue);
 
+    /**
+     * Stomically get and delete key.
+     * It skips cache.
+     *
+     * @return value of that key, or null.
+     */
+    T getAndDelete();
+
     boolean update(Function<T, T> update);
 
     default boolean update(Consumer<T> value)

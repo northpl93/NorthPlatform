@@ -7,22 +7,19 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectResource;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.skyblock.api.IslandRole;
 import pl.north93.zgame.skyblock.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 
 public class InvitesCmd extends NorthCommand
 {
-    private ApiCore         apiCore;
     @InjectComponent("API.MinecraftNetwork.NetworkManager")
     private INetworkManager networkManager;
     @InjectComponent("SkyBlock.Server")
@@ -33,15 +30,15 @@ public class InvitesCmd extends NorthCommand
     public InvitesCmd()
     {
         super("invites", "zaproszenia");
+        this.setAsync(true);
     }
 
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
+        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(sender.getName()))
         {
-            final Value<IOnlinePlayer> onlineSender = this.networkManager.getOnlinePlayer(sender.getName());
-            final SkyPlayer skyPlayer = SkyPlayer.get(onlineSender);
+            final SkyPlayer skyPlayer = SkyPlayer.get(t.getPlayer());
             if (! skyPlayer.hasIsland())
             {
                 sender.sendMessage(this.messages, "error.you_must_have_island");
@@ -86,7 +83,11 @@ public class InvitesCmd extends NorthCommand
                     sender.sendMessage(this.messages, "cmd.invites.help", label);
                 }
             }
-        });
+        }
+        catch (final Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private void listInvites(final NorthCommandSender sender, final SkyPlayer skyPlayer)

@@ -13,6 +13,8 @@ import org.apache.commons.io.FileUtils;
 import org.diorite.utils.DioriteUtils;
 
 import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.ApiCore;
+import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.deployment.ServerPattern;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
 import pl.north93.zgame.api.global.network.server.ServerState;
@@ -24,6 +26,7 @@ import pl.north93.zgame.api.global.utils.JavaArguments;
  */
 public class ServersManager
 {
+    private final ApiCore                   apiCore    = null;
     private final NetworkControllerRpc      controller = API.getNetworkManager().getNetworkController();
     private final File                      workspace  = API.getFile("workspace");
     private final File                      engines    = API.getFile("engines");
@@ -31,6 +34,12 @@ public class ServersManager
     private final ServersWatchdog           watchdog   = new ServersWatchdog();
     private final Logger                    outputLog  = Logger.getLogger("Servers");
     private final Map<UUID, ServerInstance> servers    = new HashMap<>();
+
+    @PostInject
+    private void postInject()
+    {
+
+    }
 
     public void startServerManager()
     {

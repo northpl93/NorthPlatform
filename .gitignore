@@ -69,3 +69,15 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+# syf
+_windows
+inspection
+colors.scheme.xml
+debugger.xml
+diff.xml
+IntelliLang.xml
+vcs.xml
+web-browsers.xml
+find.xml
+gradle.run.settings.xml
+mavenVersion.xml

@@ -1,5 +1,6 @@
 package pl.north93.zgame.api.bungee.listeners;
 
+import static net.md_5.bungee.api.ChatColor.RED;
 import static pl.north93.zgame.api.global.API.message;
 
 
@@ -12,7 +13,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
@@ -29,6 +29,7 @@ import pl.north93.zgame.api.global.component.impl.Injector;
 import pl.north93.zgame.api.global.data.UsernameCache.UsernameDetails;
 import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.data.players.impl.NameSizeMistakeException;
+import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.impl.OnlinePlayerImpl;
@@ -37,7 +38,8 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class PlayerListener implements Listener
 {
-    private final Pattern         nickPattern = Pattern.compile("^[a-zA-Z0-9_]{3,16}$");
+    private static final MetaKey  BAN_EXPIRE   = MetaKey.get("banExpireAt");
+    private static final Pattern  NICK_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{3,16}$");
     private final BungeeApiCore   bungeeApiCore;
     @InjectResource(bundleName = "Messages")
     private       ResourceBundle  apiMessages;
@@ -63,10 +65,10 @@ public class PlayerListener implements Listener
             try
             {
                 final String nick = connection.getName();
-                if (! this.nickPattern.matcher(nick).matches())
+                if (! NICK_PATTERN.matcher(nick).matches())
                 {
                     event.setCancelled(true);
-                    event.setCancelReason(ChatColor.RED + this.apiMessages.getString("join.invalid_nick"));
+                    event.setCancelReason(RED + this.apiMessages.getString("join.invalid_nick"));
                     return;
                 }
 
@@ -75,7 +77,7 @@ public class PlayerListener implements Listener
                 if (! details.isPresent())
                 {
                     event.setCancelled(true);
-                    event.setCancelReason(ChatColor.RED + this.apiMessages.getString("join.premium.check_failed"));
+                    event.setCancelReason(RED + this.apiMessages.getString("join.premium.check_failed"));
                     return;
                 }
 
@@ -83,14 +85,14 @@ public class PlayerListener implements Listener
                 if (usernameDetails.isPremium() && !usernameDetails.getValidSpelling().equals(nick))
                 {
                     event.setCancelled(true);
-                    event.setCancelReason(ChatColor.RED + this.apiMessages.getString("join.premium.name_size_mistake"));
+                    event.setCancelReason(RED + this.apiMessages.getString("join.premium.name_size_mistake"));
                     return;
                 }
 
-                if (this.bungeeApiCore.getNetworkManager().isOnline(nick)) // sprawdzanie czy taki gracz juz jest w sieci
+                if (this.bungeeApiCore.getNetworkManager().getPlayers().isOnline(nick)) // sprawdzanie czy taki gracz juz jest w sieci
                 {
                     event.setCancelled(true);
-                    event.setCancelReason(ChatColor.RED + this.apiMessages.getString("join.already_online"));
+                    event.setCancelReason(RED + this.apiMessages.getString("join.already_online"));
                     return;
                 }
 
@@ -108,31 +110,23 @@ public class PlayerListener implements Listener
     {
         event.registerIntent(this.bungeeApiCore.getBungeePlugin()); // lock this event
 
-        final PendingConnection connection = event.getConnection();
+        final PendingConnection conn = event.getConnection();
         this.bungeeApiCore.getPlatformConnector().runTaskAsynchronously(() -> // run async task
         {
             try
             {
                 final JoiningPolicy joiningPolicy = this.bungeeApiCore.getNetworkManager().getJoiningPolicy();
-                final Optional<UsernameDetails> details = this.bungeeApiCore.getUsernameCache().getUsernameDetails(connection.getName());
-
-                if (! details.isPresent())
-                {
-                    event.setCancelled(true);
-                    event.setCancelReason(this.apiMessages.getString("join.username_details_not_present"));
-                    return;
-                }
 
                 final Value<OnlinePlayerImpl> player;
                 try
                 {
-                    player = this.playersDao.loadPlayer(connection.getUniqueId(), connection.getName(), details.get().isPremium(), this.bungeeApiCore.getProxyConfig().getUniqueName());
+                    player = this.playersDao.loadPlayer(conn.getUniqueId(), conn.getName(), conn.isOnlineMode(), this.bungeeApiCore.getProxyConfig().getUniqueName());
                     player.expire(2);
                 }
                 catch (final NameSizeMistakeException e)
                 {
                     event.setCancelled(true);
-                    event.setCancelReason(message(this.apiMessages, "join.name_size_mistake", e.getNick(), connection.getName()));
+                    event.setCancelReason(message(this.apiMessages, "join.name_size_mistake", e.getNick(), conn.getName()));
                     return;
                 }
                 catch (final Throwable e)
@@ -161,10 +155,21 @@ public class PlayerListener implements Listener
                 }
                 else if (cache.isBanned())
                 {
-                    event.setCancelled(true);
-                    event.setCancelReason(message(this.apiMessages, "join.banned"));
+                    if (cache.getMetaStore().contains(BAN_EXPIRE) && System.currentTimeMillis() > cache.getMetaStore().getLong(BAN_EXPIRE))
+                    {
+                        player.update(p ->
+                        {
+                            p.setBanned(false);
+                            p.getMetaStore().remove(BAN_EXPIRE);
+                        });
+                    }
+                    else
+                    {
+                        event.setCancelled(true);
+                        event.setCancelReason(message(this.apiMessages, "join.banned"));
+                    }
                 }
-                else if (this.networkManager.onlinePlayersCount() > this.networkManager.getNetworkMeta().get().displayMaxPlayers && ! cache.hasPermission("join.bypass"))
+                else if (this.networkManager.getPlayers().onlinePlayersCount() > this.networkManager.getNetworkMeta().get().displayMaxPlayers && ! cache.hasPermission("join.bypass"))
                 {
                     event.setCancelled(true);
                     event.setCancelReason(message(this.apiMessages, "join.server_full"));
@@ -173,7 +178,11 @@ public class PlayerListener implements Listener
                 if (event.isCancelled())
                 {
                     player.delete(); // delete player data if event is cancelled.
+                    return;
                 }
+
+                final String hostAddress = conn.getAddress().getHostString();
+                this.playersDao.logPlayerJoin(cache.getUuid(), cache.getNick(), cache.isPremium(), hostAddress, cache.getProxyId());
             }
             finally
             {
@@ -185,17 +194,24 @@ public class PlayerListener implements Listener
     @EventHandler
     public void postJoin(final PostLoginEvent event)
     {
-        this.networkManager.getOnlinePlayer(event.getPlayer().getName()).expire(-1);
+        this.networkManager.getPlayers().unsafe().getOnline(event.getPlayer().getName()).expire(-1);
     }
 
     @EventHandler
     public void onLeave(final PlayerDisconnectEvent event)
     {
-        final Value<IOnlinePlayer> player = this.bungeeApiCore.getNetworkManager().getOnlinePlayer(event.getPlayer().getName());
+        final Value<IOnlinePlayer> player = this.bungeeApiCore.getNetworkManager().getPlayers().unsafe().getOnline(event.getPlayer().getName());
+
         try
         {
             player.lock();
-            this.playersDao.savePlayer(player.getWithoutCache());
+            final IOnlinePlayer onlinePlayer = player.getWithoutCache();
+            if (onlinePlayer == null)
+            {
+                this.bungeeApiCore.getLogger().warning("onlinePlayer==null in onLeave. " + event);
+                return;
+            }
+            this.playersDao.savePlayer(onlinePlayer);
             player.delete();
         }
         finally
@@ -207,7 +223,8 @@ public class PlayerListener implements Listener
     @EventHandler
     public void onServerChange(final ServerSwitchEvent event)
     {
-        final Value<IOnlinePlayer> player = this.bungeeApiCore.getNetworkManager().getOnlinePlayer(event.getPlayer().getName());
+        final Value<IOnlinePlayer> player = this.bungeeApiCore.getNetworkManager().getPlayers().unsafe().getOnline(event.getPlayer().getName());
+
         try
         {
             player.lock();

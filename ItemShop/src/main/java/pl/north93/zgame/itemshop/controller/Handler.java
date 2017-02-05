@@ -92,12 +92,17 @@ public class Handler
             case GROUP:
             {
                 final int seconds = Integer.parseInt(properties.get("time"));
-                final long expireAt = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(seconds);
 
                 this.networkManager.getPlayers().access(playerId, player ->
                 {
                     player.setGroup(this.permissionsManager.getGroupByName(properties.get("group")));
-                    player.setGroupExpireAt(expireAt);
+                    if(player.getGroupExpireAt() == 0) {
+                        player.setGroupExpireAt( System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(seconds) );
+                    }
+                    else
+                    {
+                        player.setGroupExpireAt( player.getGroupExpireAt() + TimeUnit.SECONDS.toMillis(seconds) );
+                    }
                 });
                 break;
             }

@@ -35,5 +35,6 @@ components:
     dependencies:
       - PlayerDataShare.SharedImpl
       - API.MinecraftNetwork.NetworkManager
+      - NetworkController.ServersManager
     platforms:
       - STANDALONE

@@ -9,17 +9,19 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.IExtensionHandler;
 import pl.north93.zgame.api.global.component.IExtensionPoint;
+import pl.north93.zgame.api.global.utils.Wrapper;
 
 class ExtensionPointImpl<T> implements IExtensionPoint<T>
 {
     private final Class<T> clazz;
     private final List<T>  implementations;
-    private IExtensionHandler<T> handler;
+    private final Wrapper<IExtensionHandler<T>> handler;
 
     public ExtensionPointImpl(final Class<T> clazz)
     {
         this.clazz = clazz;
         this.implementations = new ArrayList<>(8);
+        this.handler = new Wrapper<>();
     }
 
     @Override
@@ -34,22 +36,38 @@ class ExtensionPointImpl<T> implements IExtensionPoint<T>
         return Collections.unmodifiableList(this.implementations);
     }
 
-    @SuppressWarnings("unchecked") // TODO check and fancy error?
     @Override
-    public void addImplementation(final Object impl)
+    public void addImplementation(final Object rawImpl)
     {
-        this.implementations.add((T) impl);
-        if (this.handler != null)
+        final Class<?> implClass = rawImpl.getClass();
+        if (! this.clazz.isAssignableFrom(implClass))
         {
-            this.handler.handle((T) impl);
+            throw new IllegalArgumentException(implClass.getSimpleName() + " doesn't implement " + this.clazz.getSimpleName());
+        }
+
+        @SuppressWarnings("unchecked")
+        final T impl = (T) rawImpl;
+
+        synchronized (this.handler)
+        {
+            this.implementations.add(impl);
+
+            final IExtensionHandler<T> handler = this.handler.get();
+            if (handler != null)
+            {
+                handler.handle(impl);
+            }
         }
     }
 
     @Override
     public void setHandler(final IExtensionHandler<T> handler)
     {
-        this.handler = handler;
-        this.implementations.forEach(handler::handle);
+        synchronized (this.handler)
+        {
+            this.handler.set(handler);
+            this.implementations.forEach(handler::handle);
+        }
     }
 
     @Override

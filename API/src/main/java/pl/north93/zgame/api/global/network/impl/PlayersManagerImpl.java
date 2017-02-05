@@ -11,6 +11,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.data.players.IPlayersData;
+import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
 import pl.north93.zgame.api.global.messages.ProxyInstanceInfo;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
@@ -26,12 +27,14 @@ class PlayersManagerImpl implements IPlayersManager
     private final NetworkManager      networkManager;
     private final IPlayersData        playersData;
     private final IObservationManager observer;
+    private final Unsafe              unsafe;
 
     public PlayersManagerImpl(final NetworkManager networkManager, final IPlayersData playersData, final IObservationManager observer)
     {
         this.networkManager = networkManager;
         this.playersData = playersData;
         this.observer = observer;
+        this.unsafe = new PlayersManagerUnsafeImpl();
     }
 
     @Override
@@ -149,9 +152,13 @@ class PlayersManagerImpl implements IPlayersManager
     }
 
     @Override
-    public IPlayerTransaction transaction(final UUID playerId)
+    public IPlayerTransaction transaction(final UUID playerId) throws PlayerNotFoundException
     {
         final String playerName = this.getNickFromUuid(playerId);
+        if (playerName == null)
+        {
+            throw new PlayerNotFoundException(playerId);
+        }
         final Lock lock = this.getMultiLock(playerName, playerId);
         lock.lock();
 
@@ -171,13 +178,17 @@ class PlayersManagerImpl implements IPlayersManager
         }
 
         lock.unlock();
-        return null;
+        throw new PlayerNotFoundException(playerId);
     }
 
     @Override
-    public IPlayerTransaction transaction(final String playerName)
+    public IPlayerTransaction transaction(final String playerName) throws PlayerNotFoundException
     {
         final UUID playerId = this.getUuidFromNick(playerName);
+        if (playerId == null)
+        {
+            throw new PlayerNotFoundException(playerName);
+        }
         final Lock lock = this.getMultiLock(playerName, playerId);
         lock.lock();
 
@@ -197,7 +208,40 @@ class PlayersManagerImpl implements IPlayersManager
         }
 
         lock.unlock();
-        return null;
+        throw new PlayerNotFoundException(playerName);
+    }
+
+    @Override
+    public Unsafe unsafe()
+    {
+        return this.unsafe;
+    }
+
+    class PlayersManagerUnsafeImpl implements Unsafe
+    {
+        @Override
+        public Value<IOnlinePlayer> getOnline(final String nick)
+        {
+            return PlayersManagerImpl.this.onlinePlayerValue(nick);
+        }
+
+        @Override
+        public Value<IOnlinePlayer> getOnline(final UUID uuid)
+        {
+            return PlayersManagerImpl.this.onlinePlayerValue(uuid);
+        }
+
+        @Override
+        public IOfflinePlayer getOffline(final String nick)
+        {
+            return PlayersManagerImpl.this.playersData.getOfflinePlayer(nick);
+        }
+
+        @Override
+        public IOfflinePlayer getOffline(final UUID uuid)
+        {
+            return PlayersManagerImpl.this.playersData.getOfflinePlayer(uuid);
+        }
     }
 
     private Value<IOnlinePlayer> onlinePlayerValue(final UUID uuid)

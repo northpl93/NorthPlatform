@@ -37,7 +37,7 @@ public class GroupBroadcastCmd extends NorthCommand
         }
         else
         {
-            this.dataShareComponent.getDataShareManager().broadcast(myGroup, translateAlternateColorCodes('&', args.asText()));
+            this.dataShareComponent.getDataShareManager().broadcast(myGroup, args.asText());
         }
     }
 

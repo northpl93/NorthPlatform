@@ -2,10 +2,12 @@ package pl.north93.zgame.skyblock.server.management;
 
 import java.util.UUID;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.skyblock.api.player.SkyPlayer;
+import pl.north93.zgame.skyblock.server.world.Island;
 
 public interface ISkyBlockServerManager
 {
@@ -20,4 +22,6 @@ public interface ISkyBlockServerManager
     void tpPlayerToSpawn(Player player);
 
     boolean canGenerateIsland(SkyPlayer skyPlayer);
+
+    Island getIslandAt(Location location);
 }

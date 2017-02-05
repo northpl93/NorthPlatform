@@ -6,6 +6,7 @@ import static java.lang.System.currentTimeMillis;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
@@ -18,6 +19,7 @@ import pl.north93.zgame.skyblock.api.IslandData;
 import pl.north93.zgame.skyblock.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.server.actions.TeleportPlayerToIsland;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
+import pl.north93.zgame.skyblock.server.world.Island;
 
 /**
  * Klasa zarządzająca serwerem pracującym w trybie lobby (czyli nie hostującym wysp)
@@ -34,13 +36,11 @@ public class LobbyManager implements ISkyBlockServerManager
     @Override
     public void start()
     {
-
     }
 
     @Override
     public void stop()
     {
-
     }
 
     @Override
@@ -69,5 +69,11 @@ public class LobbyManager implements ISkyBlockServerManager
     {
         final long islandCooldown = skyPlayer.getIslandCooldown();
         return islandCooldown == 0 || (currentTimeMillis() - islandCooldown) > this.server.getSkyBlockConfig().getIslandGenerateCooldown();
+    }
+
+    @Override
+    public Island getIslandAt(final Location location)
+    {
+        return null; // na lobby nie ma wysp więc zawsze bęzie null
     }
 }

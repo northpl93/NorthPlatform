@@ -4,7 +4,9 @@ import static org.diorite.cfg.annotations.CfgCollectionStyle.CollectionStyle.ALW
 
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -16,6 +18,8 @@ import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
 import org.diorite.cfg.annotations.defaults.CfgLongDefault;
 import org.diorite.cfg.annotations.defaults.CfgStringDefault;
 
+import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
+import pl.north93.zgame.api.global.redis.messaging.templates.HashMapTemplate;
 import pl.north93.zgame.skyblock.api.HomeLocation;
 
 @CfgComment("Konfiguracja SkyBlocka")
@@ -23,23 +27,28 @@ public class SkyBlockConfig
 {
     @CfgComment("Czy na dole wyspy generować wełne oznaczajaca teren wyspy")
     @CfgBooleanDefault(false)
-    private Boolean            placeDebugWool;
+    private Boolean             placeDebugWool;
 
     @CfgComment("Czas w ms jaki gracz musi odczekac przed ponownym stworzeniem wyspy/regeneracja. Liczony od utworzenia/regeneracji")
     @CfgLongDefault(60 * 60 * 1000)
-    private Long               islandGenerateCooldown;
+    private Long                islandGenerateCooldown;
 
     @CfgComment("Nazwa grupy serwerów z poczekalniami.")
     @CfgStringDefault("default")
-    private String             lobbyServersGroup;
+    private String              lobbyServersGroup;
 
     @CfgComment("Unikalne identyfikatory serwerów używanych jako hosty SkyBlocka")
     @CfgDelegateDefault("getDefaultSkyBlockServers")
     @CfgCollectionStyle(ALWAYS_NEW_LINE)
-    private List<String>       skyBlockServers;
+    private List<String>        skyBlockServers;
 
     @CfgDelegateDefault("getDefaultIslandTypes")
-    private List<IslandConfig> islandTypes;
+    private List<IslandConfig>  islandTypes;
+
+    @CfgComment("Punkty naliczane za bloki. Jako nazwe bloku podawac ta z Material.java")
+    @CfgDelegateDefault("getDefaultBlockValues")
+    @MsgPackCustomTemplate(HashMapTemplate.class)
+    private Map<String, Double> blockValues;
 
     private static List<IslandConfig> getDefaultIslandTypes()
     {
@@ -51,6 +60,16 @@ public class SkyBlockConfig
     {
         //noinspection ArraysAsListWithZeroOrOneArgument
         return Arrays.asList("a89498a5-4571-41ab-a471-d78e325aeaba");
+    }
+
+    private static Map<String, Double> getDefaultBlockValues()
+    {
+        final Map<String, Double> map = new HashMap<>();
+        map.put("DEFAULT", 1.0);
+        map.put("GRASS", 2.5);
+        map.put("DIRT", 1.5);
+        map.put("STONE:1", 0.95);
+        return map;
     }
 
     public Boolean getPlaceDebugWool()
@@ -88,6 +107,11 @@ public class SkyBlockConfig
             }
         }
         return null;
+    }
+
+    public Map<String, Double> getBlockValues()
+    {
+        return this.blockValues;
     }
 
     @Override

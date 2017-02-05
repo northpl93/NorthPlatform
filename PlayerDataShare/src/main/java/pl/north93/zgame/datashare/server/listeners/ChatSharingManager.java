@@ -3,9 +3,11 @@ package pl.north93.zgame.datashare.server.listeners;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 
+import java.text.MessageFormat;
 import java.util.Formatter;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,9 +19,13 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import org.diorite.utils.cooldown.CooldownEntry;
+import org.diorite.utils.cooldown.CooldownManager;
+
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectResource;
+import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 import pl.north93.zgame.datashare.api.DataSharingGroup;
@@ -29,28 +35,32 @@ import redis.clients.util.SafeEncoder;
 
 public class ChatSharingManager implements Listener
 {
-    private BukkitApiCore    apiCore;
+    private static final long COOLDOWN_TIME = TimeUnit.SECONDS.toMillis(15);
+    private BukkitApiCore apiCore;
     @InjectComponent("API.Database.Redis.Subscriber")
-    private RedisSubscriber  redisSubscriber;
+    private RedisSubscriber          redisSubscriber;
     @InjectComponent("API.Database.Redis.MessagePackSerializer")
-    private TemplateManager  msgPack;
+    private TemplateManager          msgPack;
     @InjectComponent("PlayerDataShare.SharedImpl")
     private PlayerDataShareComponent shareComponent;
     @InjectResource(bundleName = "PlayerDataShare")
-    private ResourceBundle   messages;
-    private UUID             serverId;
-    private boolean          isChatEnabled;
-    private DataSharingGroup group;
+    private ResourceBundle           messages;
+    private CooldownManager<UUID>    chatCooldown;
+    private UUID                     serverId;
+    private boolean                  isChatEnabled;
+    private DataSharingGroup         group;
 
     public void start(final DataSharingGroup group)
     {
         this.group = group;
         this.redisSubscriber.subscribe("broadcast:" + group.getName(), this::onBroadcast);
+        this.redisSubscriber.subscribe("ann:" + group.getName(), this::onAnn);
         if (! group.getShareChat())
         {
             return;
         }
         this.serverId = this.apiCore.getServer().get().getUuid();
+        this.chatCooldown = CooldownManager.createManager(100);
         Bukkit.getPluginManager().registerEvents(this, this.apiCore.getPluginMain());
         this.redisSubscriber.subscribe("chat:" + group.getName(), this::onRemoteChat);
     }
@@ -67,10 +77,19 @@ public class ChatSharingManager implements Listener
 
     private void onBroadcast(final String channel, final byte[] bytes)
     {
-        final String message = SafeEncoder.encode(bytes);
+        final String message = translateAlternateColorCodes('&', SafeEncoder.encode(bytes));
         for (final Player player : Bukkit.getOnlinePlayers())
         {
             player.sendMessage(message);
+        }
+    }
+
+    private void onAnn(final String channel, final byte[] bytes)
+    {
+        final String message = SafeEncoder.encode(bytes);
+        for (final Player player : Bukkit.getOnlinePlayers())
+        {
+            player.sendTitle(message, null);
         }
     }
 
@@ -91,12 +110,32 @@ public class ChatSharingManager implements Listener
     @EventHandler(ignoreCancelled = true)
     public void onChatNormal(final AsyncPlayerChatEvent event)
     {
-        final boolean chatEnabled = this.shareComponent.getDataShareManager().isChatEnabled(this.group);
+        final JoiningPolicy chatPolicy = this.shareComponent.getDataShareManager().getChatPolicy(this.group);
         final Player player = event.getPlayer();
-        if (! chatEnabled && ! player.hasPermission("chat.bypass"))
+
+        if (! player.hasPermission("chat.bypass"))
         {
-            player.sendMessage(translateAlternateColorCodes('&', this.messages.getString("chat.is_now_disabled")));
-            event.setCancelled(true);
+            final boolean chatEnabled;
+            switch(chatPolicy)
+            {
+                case ONLY_ADMIN: chatEnabled = false; break;
+                case ONLY_VIP: chatEnabled = player.hasPermission("chat.vip"); break;
+                default: chatEnabled = true;
+            }
+
+            if (! chatEnabled)
+            {
+                player.sendMessage(translateAlternateColorCodes('&', this.messages.getString("chat.is_now_disabled")));
+                event.setCancelled(true);
+            }
+            else if (! this.chatCooldown.hasExpiredOrAdd(player.getUniqueId(), COOLDOWN_TIME))
+            {
+                final CooldownEntry<UUID> entry = this.chatCooldown.getEntry(player.getUniqueId());
+                final long time = (entry.getStartTime() + entry.getCooldownTime() - System.currentTimeMillis()) / 1000;
+                final String message = MessageFormat.format(this.messages.getString("chat.cooldown"), time);
+                player.sendMessage(translateAlternateColorCodes('&', message));
+                event.setCancelled(true);
+            }
         }
     }
 

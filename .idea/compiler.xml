@@ -21,6 +21,8 @@
         <module name="RestfulApi" />
         <module name="Server Deamon" />
         <module name="SkyBlock" />
+        <module name="SkyBlock.PlayerExperience" />
+        <module name="SkyBlock.Quests" />
         <module name="SkyBlock.Shop" />
         <module name="TimeGroups" />
         <module name="WebAuth" />
@@ -41,6 +43,8 @@
       <module name="RestfulApi" target="8" />
       <module name="Server Deamon" target="8" />
       <module name="SkyBlock" target="8" />
+      <module name="SkyBlock.PlayerExperience" target="8" />
+      <module name="SkyBlock.Quests" target="8" />
       <module name="SkyBlock.Shop" target="8" />
       <module name="TimeGroups" target="8" />
       <module name="WebAuth" target="8" />

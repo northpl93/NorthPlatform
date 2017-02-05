@@ -10,6 +10,8 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
 public interface IPlayersData
 {
+    void logPlayerJoin(UUID uuid, String nick, boolean premium, String ip, String bungee);
+
     Value<OnlinePlayerImpl> loadPlayer(UUID uuid, String name, Boolean premium, String proxyId) throws NameSizeMistakeException;
 
     Value<IOfflinePlayer> getOfflinePlayerValue(UUID uuid);

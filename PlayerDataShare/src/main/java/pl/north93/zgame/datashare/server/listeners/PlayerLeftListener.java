@@ -26,7 +26,7 @@ public class PlayerLeftListener implements Listener
     {
         this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
         {
-            this.dataShareManager.getDataShareManager().savePlayer(this.dataShareServer.getMyGroup(), event.getPlayer());
+            this.dataShareManager.getDataShareManager().savePlayer(this.dataShareServer.getMyGroup(), event.getPlayer(), true);
         });
     }
 

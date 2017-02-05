@@ -11,12 +11,9 @@ import pl.north93.zgame.api.global.redis.observable.Cache;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.auth.api.IAuthManager;
-import pl.north93.zgame.auth.server.AuthServerComponent;
 
 public class AuthManagerImpl implements IAuthManager
 {
-    @InjectComponent("NoPremiumAuth.Server")
-    private AuthServerComponent  authServer;
     @InjectComponent("API.Database.Redis.Observer")
     private IObservationManager  observer;
     private Cache<UUID, Boolean> logInStatus;

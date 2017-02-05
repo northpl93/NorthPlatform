@@ -94,7 +94,7 @@ public class PlayerListeners implements Listener
         final String cmd = StringUtils.split(event.getMessage(), ' ')[0];
 
         if (cmd.equalsIgnoreCase("/l") || cmd.equalsIgnoreCase("/login") || cmd.equalsIgnoreCase("/zaloguj") ||
-                    cmd.equalsIgnoreCase("/r") || cmd.equalsIgnoreCase("/register") || cmd.equalsIgnoreCase("/zarejestruj"))
+                    cmd.equalsIgnoreCase("/register") || cmd.equalsIgnoreCase("/zarejestruj"))
         {
             return;
         }

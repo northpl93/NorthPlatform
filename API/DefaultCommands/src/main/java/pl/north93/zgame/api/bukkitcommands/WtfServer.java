@@ -2,6 +2,9 @@ package pl.north93.zgame.api.bukkitcommands;
 
 import java.util.Optional;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
@@ -16,6 +19,7 @@ public class WtfServer extends NorthCommand
     public WtfServer()
     {
         super("wtfserver");
+        this.setPermission("api.command.wtfserver");
     }
 
     @Override
@@ -29,5 +33,11 @@ public class WtfServer extends NorthCommand
         sender.sendMessage("Stan serwera: " + server.getServerState());
         final Optional<IServersGroup> serversGroup = server.getServersGroup();
         sender.sendMessage("Grupa serwerów: " + (serversGroup.isPresent() ? serversGroup.get().getName() : "brak"));
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

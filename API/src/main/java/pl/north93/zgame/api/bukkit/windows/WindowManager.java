@@ -1,6 +1,7 @@
 package pl.north93.zgame.api.bukkit.windows;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.WeakHashMap;
 
 import org.bukkit.entity.Player;
@@ -27,7 +28,7 @@ public class WindowManager implements Listener
     @EventHandler
     public void onClose(final InventoryCloseEvent event)
     {
-        this.openedWindows.remove(event.getPlayer());
+        Optional.ofNullable(this.openedWindows.remove(event.getPlayer())).ifPresent(Window::setClosed);
     }
 
     @EventHandler

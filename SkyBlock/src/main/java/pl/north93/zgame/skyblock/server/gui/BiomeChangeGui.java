@@ -10,11 +10,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.bukkit.utils.ItemStackBuilder;
 import pl.north93.zgame.api.bukkit.windows.Window;
 import pl.north93.zgame.skyblock.api.NorthBiome;
 
 public class BiomeChangeGui extends Window
 {
+    private static final ItemStack PLACEHOLDER = ItemStackBuilder.create().material(Material.STAINED_GLASS_PANE).data(15).name(" ").build();
     private final Consumer<NorthBiome> callback;
 
     public BiomeChangeGui(final Consumer<NorthBiome> callback)
@@ -27,10 +29,7 @@ public class BiomeChangeGui extends Window
     protected void onShow()
     {
         {
-            final ItemStack grass = new ItemStack(Material.GRASS);
-            final ItemMeta itemMeta = grass.getItemMeta();
-            itemMeta.setDisplayName(ChatColor.DARK_GREEN + "Domyslny");
-            grass.setItemMeta(itemMeta);
+            final ItemStack grass = ItemStackBuilder.create().material(Material.GRASS).name(ChatColor.DARK_GREEN + "Domyslny").build();
             this.addElement(10, grass, event -> this.callback.accept(NorthBiome.OVERWORLD));
         }
 
@@ -49,6 +48,8 @@ public class BiomeChangeGui extends Window
             end.setItemMeta(itemMeta);
             this.addElement(14, end, event -> this.callback.accept(NorthBiome.THE_END));
         }
+
+        this.fillEmpty(PLACEHOLDER);
     }
 
     @Override

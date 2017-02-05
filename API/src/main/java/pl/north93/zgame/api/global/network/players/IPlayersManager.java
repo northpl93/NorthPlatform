@@ -3,6 +3,9 @@ package pl.north93.zgame.api.global.network.players;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
+import pl.north93.zgame.api.global.redis.observable.Value;
+
 public interface IPlayersManager
 {
     int onlinePlayersCount();
@@ -27,7 +30,20 @@ public interface IPlayersManager
 
     void ifOnline(UUID uuid, Consumer<IOnlinePlayer> onlineAction);
 
-    IPlayerTransaction transaction(UUID playerId);
+    IPlayerTransaction transaction(UUID playerId) throws PlayerNotFoundException;
 
-    IPlayerTransaction transaction(String playerName);
+    IPlayerTransaction transaction(String playerName) throws PlayerNotFoundException;
+
+    Unsafe unsafe();
+
+    interface Unsafe
+    {
+        Value<IOnlinePlayer> getOnline(String nick);
+
+        Value<IOnlinePlayer> getOnline(UUID uuid);
+
+        IOfflinePlayer getOffline(String nick); // do not modify returned instance. It will be not saved!
+
+        IOfflinePlayer getOffline(UUID nick); // do not modify returned instance. It will be not saved!
+    }
 }

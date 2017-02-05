@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.standalone;
 
+import static pl.north93.zgame.api.global.cfg.ConfigUtils.loadConfigFile;
+
+
 import java.io.File;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
@@ -10,16 +13,24 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.utils.NorthFormatter;
+import pl.north93.zgame.api.standalone.cfg.EnvironmentCfg;
 
 public class StandaloneApiCore extends ApiCore
 {
-    private final Logger        logger = Logger.getLogger("North API");
-    private final StandaloneApp app;
+    private final Logger logger = Logger.getLogger("North API");
+    private EnvironmentCfg environmentCfg;
 
-    public StandaloneApiCore(final StandaloneApp standaloneApp)
+    public static void main(final String... args)
+    {
+        System.out.println("North API is running as standalone application");
+        final StandaloneApiCore apiCore = new StandaloneApiCore();
+        apiCore.startCore();
+        Runtime.getRuntime().addShutdownHook(new Thread(apiCore::stopCore));
+    }
+
+    public StandaloneApiCore()
     {
         super(Platform.STANDALONE, new StandalonePlatformConnector());
-        this.app = standaloneApp;
 
         final ConsoleHandler handler = new ConsoleHandler();
         handler.setFormatter(new NorthFormatter());
@@ -36,28 +47,34 @@ public class StandaloneApiCore extends ApiCore
     @Override
     public String getId()
     {
-        return this.app.getId();
+        return this.environmentCfg.getId();
+    }
+
+    @Override
+    public File getRootDirectory()
+    {
+        return new File(StandaloneApiCore.class.getProtectionDomain().getCodeSource().getLocation().getFile());
     }
 
     @Override
     protected void init() throws Exception
     {
         this.logger.info("Initialising standalone application");
-        this.app.init(this);
+        final String fileLoc = System.getProperty("northplatform.environmentFile", "environment.yml");
+        this.environmentCfg = loadConfigFile(EnvironmentCfg.class, this.getFile(fileLoc));
+        this.debug("Using environment file: " + fileLoc + " Loaded content: " + this.environmentCfg);
     }
 
     @Override
     protected void start()
     {
         this.logger.info("Starting standalone application");
-        this.app.start(this);
     }
 
     @Override
     protected void stop()
     {
         this.logger.info("Stopping standalone application");
-        this.app.stop();
     }
 
     @Override
@@ -69,6 +86,6 @@ public class StandaloneApiCore extends ApiCore
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("app", this.app).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("environmentCfg", this.environmentCfg).toString();
     }
 }

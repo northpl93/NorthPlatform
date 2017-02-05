@@ -32,9 +32,9 @@ public class Kick extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        if (args.length() < 2)
+        if (args.length() < 1)
         {
-            sender.sendMessage(this.messages, "command.usage", label, "<nick gracza> <wiadomosc wyrzucenia>");
+            sender.sendMessage(this.messages, "command.usage", label, "<nick gracza> [wiadomosc wyrzucenia]");
             return;
         }
 

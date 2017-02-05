@@ -1,6 +1,7 @@
 package pl.north93.zgame.datashare.netcontroller;
 
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -9,28 +10,65 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.cfg.ConfigUtils;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.datashare.api.DataSharingGroup;
 import pl.north93.zgame.datashare.api.IDataShareController;
+import pl.north93.zgame.datashare.api.cfg.AnnouncerConfig;
 import pl.north93.zgame.datashare.api.cfg.DataSharingConfig;
 import pl.north93.zgame.datashare.api.cfg.DataSharingGroupConfig;
 
 public class PlayerDataShareController extends Component implements IDataShareController
 {
     @InjectComponent("API.MinecraftNetwork.NetworkManager")
-    private INetworkManager     networkManager;
+    private INetworkManager             networkManager;
     @InjectComponent("API.Database.Redis.RPC")
-    private IRpcManager         rpcManager;
-    private DataSharingConfig   config;
+    private IRpcManager                 rpcManager;
+    private DataSharingConfig           config;
+    private Map<UUID, DataSharingGroup> servers = new HashMap<>();
 
     @Override
     protected void enableComponent()
     {
-        this.config = ConfigUtils.loadConfigFile(DataSharingConfig.class, this.getApiCore().getFile("datasharing.yml"));
+        this.loadConfig();
         this.rpcManager.addRpcImplementation(IDataShareController.class, this);
+        this.enableAnnouncers();
+    }
+
+    private void loadConfig()
+    {
+        this.config = ConfigUtils.loadConfigFile(DataSharingConfig.class, this.getApiCore().getFile("datasharing.yml"));
+        this.servers.clear();
+        for (final DataSharingGroupConfig groupConfig : this.config.getSharingGroups())
+        {
+            final DataSharingGroup group = new DataSharingGroup(groupConfig);
+            for (final String serverId : groupConfig.getServers())
+            {
+                this.servers.put(UUID.fromString(serverId), group);
+            }
+            for (final String serversGroup : groupConfig.getServersGroups())
+            {
+                for (final Server server : this.networkManager.getServers(serversGroup))
+                {
+                    this.servers.put(server.getUuid(), group);
+                }
+            }
+        }
+    }
+
+    private void enableAnnouncers()
+    {
+        for (final DataSharingGroupConfig config : this.config.getSharingGroups())
+        {
+            final AnnouncerConfig announcer = config.getAnnouncer();
+            if (! announcer.isEnabled())
+            {
+                continue;
+            }
+            final BroadcastTask task = new BroadcastTask(new DataSharingGroup(config));
+            this.getApiCore().getPlatformConnector().runTaskAsynchronously(task, announcer.getTime() * 20);
+        }
     }
 
     @Override
@@ -41,26 +79,7 @@ public class PlayerDataShareController extends Component implements IDataShareCo
     @Override
     public DataSharingGroup getMyGroup(final UUID serverId)
     {
-        final Server server = this.networkManager.getServer(serverId).get();
-
-        for (final DataSharingGroupConfig dataSharingGroupConfig : this.config.getSharingGroups())
-        {
-            final Optional<IServersGroup> serverGroup = server.getServersGroup();
-            if (serverGroup.isPresent())
-            {
-                if (dataSharingGroupConfig.getServersGroups().contains(serverGroup.get().getName()))
-                {
-                    return new DataSharingGroup(dataSharingGroupConfig);
-                }
-            }
-
-            if (dataSharingGroupConfig.getServers().contains(server.getUuid().toString()))
-            {
-                return new DataSharingGroup(dataSharingGroupConfig);
-            }
-        }
-
-        return null;
+        return this.servers.get(serverId);
     }
 
     @Override

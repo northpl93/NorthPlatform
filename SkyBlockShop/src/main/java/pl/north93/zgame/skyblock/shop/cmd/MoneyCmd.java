@@ -21,14 +21,24 @@ public class MoneyCmd extends NorthCommand
 
     public MoneyCmd()
     {
-        super("money", "pieniadze");
+        super("money", "balance", "pieniadze");
     }
 
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        final double balance = this.shopComponent.getShopManager().getBalance((Player) sender.unwrapped());
-        sender.sendMessage("&f&l> &7Aktualny stan konta: &6" + this.format.format(balance));
+        final Player player = (Player) sender.unwrapped();
+        if (args.length() == 1 && player.hasPermission("money.other"))
+        {
+            final String otherNick = args.asString(0);
+            final double balance = this.shopComponent.getShopManager().getBalance(otherNick);
+            sender.sendMessage("&f&l> &7Aktualny stan konta &6" + otherNick + "&7: &6" + this.format.format(balance));
+        }
+        else
+        {
+            final double balance = this.shopComponent.getShopManager().getBalance(player.getName());
+            sender.sendMessage("&f&l> &7Aktualny stan konta: &6" + this.format.format(balance));
+        }
     }
 
     @Override

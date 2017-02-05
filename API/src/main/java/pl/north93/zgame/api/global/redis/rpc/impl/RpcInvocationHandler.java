@@ -4,6 +4,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.redis.rpc.IRpcTarget;
 import pl.north93.zgame.api.global.redis.rpc.exceptions.RpcRemoteException;
@@ -41,7 +44,7 @@ class RpcInvocationHandler implements InvocationHandler
         final RpcInvokeMessage rpcInvokeMessage = new RpcInvokeMessage(API.getApiCore().getId(), this.objectDescription.getClassId(), requestId, methodId, args == null ? EMPTY_ARRAY : args);
         try (final Jedis jedis = this.rpcManager.getJedisPool().getResource())
         {
-            jedis.publish(this.invokeChannel, this.rpcManager.getMsgPack().serialize(rpcInvokeMessage));
+            jedis.publish(this.invokeChannel, this.rpcManager.getMsgPack().serialize(RpcInvokeMessage.class, rpcInvokeMessage));
         }
 
         if (! needsWaitForResponse)
@@ -65,5 +68,11 @@ class RpcInvocationHandler implements InvocationHandler
             throw new RpcRemoteException((RpcExceptionInfo) response);
         }
         return response;
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("objectDescription", this.objectDescription).append("invokeChannel", new String(this.invokeChannel)).toString();
     }
 }

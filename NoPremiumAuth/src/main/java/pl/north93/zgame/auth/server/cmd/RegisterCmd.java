@@ -31,7 +31,7 @@ public class RegisterCmd extends NorthCommand
 
     public RegisterCmd()
     {
-        super("register", "r", "zarejestruj");
+        super("register", "zarejestruj");
         this.setAsync(true);
     }
 

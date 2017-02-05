@@ -4,10 +4,12 @@ import static java.lang.System.currentTimeMillis;
 
 
 import java.io.File;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
@@ -18,30 +20,35 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.InjectNewInstance;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
-import pl.north93.zgame.skyblock.api.NorthBiome;
 import pl.north93.zgame.skyblock.api.IIslandHostManager;
+import pl.north93.zgame.skyblock.api.IslandDao;
 import pl.north93.zgame.skyblock.api.IslandData;
-import pl.north93.zgame.skyblock.api.player.SkyPlayer;
-import pl.north93.zgame.skyblock.server.actions.TeleportPlayerToIsland;
+import pl.north93.zgame.skyblock.api.NorthBiome;
 import pl.north93.zgame.skyblock.api.cfg.IslandConfig;
+import pl.north93.zgame.skyblock.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.api.utils.Coords2D;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
+import pl.north93.zgame.skyblock.server.actions.TeleportPlayerToIsland;
+import pl.north93.zgame.skyblock.server.world.AutoMobNerf;
 import pl.north93.zgame.skyblock.server.world.Island;
 import pl.north93.zgame.skyblock.server.world.MobSpawningFix;
 import pl.north93.zgame.skyblock.server.world.WorldManager;
 import pl.north93.zgame.skyblock.server.world.WorldManagerList;
+import pl.north93.zgame.skyblock.server.world.points.PointsHelper;
 
 /**
  * Klasa zarządzająca serwerem pracującym w trybie hosta wysp.
  */
 public class IslandHostManager implements ISkyBlockServerManager, IIslandHostManager
 {
+    private static final int POINTS_PERSIST_TICK = 5 * 60 * 20;
     private BukkitApiCore       bukkitApiCore;
     @InjectComponent("API.MinecraftNetwork.NetworkManager")
     private INetworkManager     networkManager;
@@ -52,11 +59,17 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
     @InjectComponent("API.Database.Redis.Observer")
     private IObservationManager observer;
     private Logger              logger;
+    @InjectNewInstance
     private WorldManagerList    worldManagers;
+    @InjectNewInstance
+    private PointsHelper        pointsHelper;
 
     @Override
     public void start()
     {
+        this.pointsHelper.load(this.skyBlockServer.getSkyBlockConfig().getBlockValues());
+        this.bukkitApiCore.getPlatformConnector().runTaskAsynchronously(() -> this.pointsHelper.persistAll(), POINTS_PERSIST_TICK);
+        this.bukkitApiCore.getPlatformConnector().runTaskAsynchronously(new AutoMobNerf(), 100); // server lag reduction every 5 sec
         try
         {
             MobSpawningFix.applyChange(this.bukkitApiCore.getInstrumentationClient());
@@ -72,7 +85,6 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
             final boolean mkdir = schematics.mkdir();
             this.logger.info("[SkyBlock] Created schematics folder... (" + mkdir + ")");
         }
-        this.worldManagers = new WorldManagerList();
         this.logger.info("[SkyBlock] Setting up world managers...");
         this.skyBlockServer.getSkyBlockConfig().getIslandTypes().forEach(this::setupWorldFor);
         this.rpcManager.addRpcImplementation(IIslandHostManager.class, this);
@@ -98,9 +110,26 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
         this.worldManagers.add(manager);
     }
 
+    private void exportIslandsTo(final UUID newServerId)
+    {
+        this.logger.info("Starting islands export to " + newServerId);
+        for (final WorldManager worldManager : this.getWorldManagers())
+        {
+            worldManager.getIslands().forEach(island ->
+            {
+                this.logger.info("Exporting island " + island.getId());
+                final IslandDao islandDao = this.skyBlockServer.getIslandDao();
+                final IslandData islandData = islandDao.getIsland(island.getId());
+                islandData.setServerId(newServerId);
+                islandDao.saveIsland(islandData);
+            });
+        }
+    }
+
     @Override
     public void stop()
     {
+        this.pointsHelper.persistAll();
     }
 
     @Override
@@ -137,6 +166,32 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
         return islandCooldown == 0 || (currentTimeMillis() - islandCooldown) > this.skyBlockServer.getSkyBlockConfig().getIslandGenerateCooldown();
     }
 
+    @Override
+    public Island getIslandAt(final Location location)
+    {
+        final WorldManager manager = this.getWorldManager(location.getWorld());
+        if (manager == null)
+        {
+            return null;
+        }
+
+        final Island island = manager.getIslands().getByChunk(location.getChunk());
+        if (island == null || ! island.getLocation().isInside(location))
+        {
+            return null;
+        }
+        return island;
+    }
+
+    /**
+     * Zwraca klasę pomocniczą obsługującą punkty i ranking wysp.
+     * @return klasa do zarządzania punktami wysp.
+     */
+    public PointsHelper getPointsHelper()
+    {
+        return this.pointsHelper;
+    }
+
     /**
      * Zwraca menadżera światów dla danego typu wyspy.
      *
@@ -157,6 +212,15 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
     public WorldManager getWorldManager(final World world)
     {
         return this.worldManagers.get(world);
+    }
+
+    /**
+     * Zwraca listę menadżerów światów na tym serwerze.
+     * @return menadżery światów.
+     */
+    public Collection<WorldManager> getWorldManagers()
+    {
+        return this.worldManagers.list();
     }
 
     /**
@@ -189,6 +253,12 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
     public Coords2D getFirstFreeLocation(final String islandType)
     {
         return this.getWorldManager(islandType).getFirstFreeLocation();
+    }
+
+    @Override
+    public void recalculatePoints()
+    {
+        this.pointsHelper.recalculateAll();
     }
 
     @Override

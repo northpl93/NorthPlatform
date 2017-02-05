@@ -11,6 +11,7 @@ import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectResource;
 import pl.north93.zgame.api.global.network.INetworkManager;
+import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.skyblock.api.IslandRole;
 import pl.north93.zgame.skyblock.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
@@ -27,30 +28,38 @@ public class VisitingCmd extends NorthCommand
     public VisitingCmd()
     {
         super("visiting", "odwiedziny", "odwiedzanie");
+        this.setAsync(true);
     }
 
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        final SkyPlayer skyPlayer = SkyPlayer.get(this.networkManager.getOnlinePlayer(sender.getName()));
-        if (! skyPlayer.hasIsland())
+        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(sender.getName()))
         {
-            sender.sendMessage(this.messages, "error.you_must_have_island");
-            return;
-        }
+            final SkyPlayer skyPlayer = SkyPlayer.get(t.getPlayer());
+            if (! skyPlayer.hasIsland())
+            {
+                sender.sendMessage(this.messages, "error.you_must_have_island");
+                return;
+            }
 
-        if (skyPlayer.getIslandRole().equals(IslandRole.MEMBER))
-        {
-            sender.sendMessage(this.messages, "error.you_must_be_owner");
-            return;
-        }
+            if (skyPlayer.getIslandRole().equals(IslandRole.MEMBER))
+            {
+                sender.sendMessage(this.messages, "error.you_must_be_owner");
+                return;
+            }
 
-        this.server.getIslandDao().modifyIsland(skyPlayer.getIslandId(), islandData ->
+            this.server.getIslandDao().modifyIsland(skyPlayer.getIslandId(), islandData ->
+            {
+                final Boolean newState = ! islandData.getAcceptingVisits();
+                sender.sendMessage(this.messages, newState ? "cmd.visiting.enabled" : "cmd.visiting.disabled");
+                islandData.setAcceptingVisits(newState);
+            });
+        }
+        catch (final Exception e)
         {
-            final Boolean newState = ! islandData.getAcceptingVisits();
-            sender.sendMessage(this.messages, newState ? "cmd.visiting.enabled" : "cmd.visiting.disabled");
-            islandData.setAcceptingVisits(newState);
-        });
+            e.printStackTrace();
+        }
     }
 
     @Override

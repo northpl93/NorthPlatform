@@ -29,7 +29,8 @@ import pl.north93.zgame.skyblock.server.SkyBlockServer;
  */
 public class WorldManager
 {
-    private BukkitApiCore         apiCore;
+    private static final int WAIT_BEFORE_RECALC = 500;
+    private BukkitApiCore apiCore;
     @InjectComponent("SkyBlock.Server")
     private SkyBlockServer        skyBlockServer;
     private Logger                logger;
@@ -83,15 +84,15 @@ public class WorldManager
         final int centerChunkX = side * 2 * islandLoc.getX();
         final int centerChunkZ = side * 2 * islandLoc.getZ();
 
-        return new Island(this.skyBlockServer.getIslandDao(), islandData, new IslandLocation(this.world, centerChunkX, centerChunkZ, radius));
+        return new Island(this.skyBlockServer, islandData, new IslandLocation(this.world, centerChunkX, centerChunkZ, radius));
     }
 
-    private void loadSchematic(final Island island)
+    private void loadSchematic(final Island island, final Runnable onComplete)
     {
         final Coords3D center = new Coords3D(7, this.islandConfig.getGenerateAtHeight(), 7);
         final Location location = island.getLocation().fromRelative(center);
         final File schema = new File(this.apiCore.getFile("schematics"), this.islandConfig.getSchematicName());
-        SchematicUtil.pasteSchematic(location, schema, "schematic");
+        SchematicUtil.pasteSchematic(location, schema, onComplete);
     }
 
     public World getWorld()
@@ -130,11 +131,14 @@ public class WorldManager
     {
         final Island island = this.constructIsland(islandId);
         this.islands.addIsland(island);
-        this.apiCore.sync(() -> this.loadSchematic(island)); // synchronize schematic loading to main server thread
-        if (this.skyBlockServer.getSkyBlockConfig().getPlaceDebugWool())
+        this.loadSchematic(island, () -> // load schematic for this island
         {
-            island.buildWhiteWoolMarker();
-        }
+            if (this.skyBlockServer.getSkyBlockConfig().getPlaceDebugWool())
+            {
+                island.buildWhiteWoolMarker();
+            }
+            island.getPoints().recalculate(); // recalculate points after creation
+        });
     }
 
     public void islandRemoved(final IslandData islandData) // wywoływane gdy wyspa zostanie usunięta

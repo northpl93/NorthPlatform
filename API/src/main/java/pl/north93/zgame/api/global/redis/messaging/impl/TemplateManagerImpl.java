@@ -25,6 +25,7 @@ import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemp
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackUseTemplateOf;
 import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.BooleanTemplate;
+import pl.north93.zgame.api.global.redis.messaging.templates.ByteArrayTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.DateTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.DoubleTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.FloatTemplate;
@@ -63,6 +64,7 @@ public class TemplateManagerImpl extends Component implements TemplateManager
         this.registerTemplate(String.class, new StringTemplate());
         this.registerTemplate(UUID.class, new UuidTemplate());
         this.registerTemplate(Date.class, new DateTemplate());
+        this.registerTemplate(byte[].class, new ByteArrayTemplate());
     }
 
     @Override

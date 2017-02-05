@@ -46,4 +46,6 @@ public interface ISkyBlockManager
 
     @DoNotWaitForResponse
     void visitIsland(UUID islandId, String visitor);
+
+    void setShowInRanking(UUID islandId, Boolean show); // will wait for response
 }

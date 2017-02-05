@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.scheduler.TaskScheduler;
 import pl.north93.zgame.api.global.PlatformConnector;
 
 public class BungeePlatformConnector implements PlatformConnector
@@ -30,12 +31,14 @@ public class BungeePlatformConnector implements PlatformConnector
     @Override
     public void runTaskAsynchronously(final Runnable runnable)
     {
-        this.bungeePlugin.getProxy().getScheduler().runAsync(this.bungeePlugin, runnable);
+        final TaskScheduler scheduler = this.bungeePlugin.getProxy().getScheduler();
+        scheduler.runAsync(this.bungeePlugin, runnable);
     }
 
     @Override
     public void runTaskAsynchronously(final Runnable runnable, final int ticks)
     {
-        this.bungeePlugin.getProxy().getScheduler().schedule(this.bungeePlugin, runnable, 0, ticks / 20, TimeUnit.SECONDS);
+        final TaskScheduler scheduler = this.bungeePlugin.getProxy().getScheduler();
+        scheduler.schedule(this.bungeePlugin, runnable, 0, ticks * 50, TimeUnit.MILLISECONDS);
     }
 }

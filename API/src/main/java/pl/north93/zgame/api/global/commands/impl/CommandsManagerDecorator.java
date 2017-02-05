@@ -43,6 +43,12 @@ public class CommandsManagerDecorator extends Component implements ICommandsMana
     }
 
     @Override
+    public void stop()
+    {
+        this.commandsManager.stop();
+    }
+
+    @Override
     public String toString()
     {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("commandsManager", this.commandsManager).toString();

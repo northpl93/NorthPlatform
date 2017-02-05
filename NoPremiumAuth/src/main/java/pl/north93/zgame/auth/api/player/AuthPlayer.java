@@ -8,6 +8,8 @@ public abstract class AuthPlayer
 {
     protected static final MetaKey PLAYER_PASSWORD = MetaKey.get("password");
 
+    public abstract boolean isPremium();
+
     public abstract boolean isRegistered();
 
     public abstract void unregister();

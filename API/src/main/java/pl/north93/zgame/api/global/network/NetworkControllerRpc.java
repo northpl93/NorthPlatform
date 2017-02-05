@@ -15,7 +15,14 @@ public interface NetworkControllerRpc
     /**
      * Wyłącza kontroler sieci.
      */
+    @DoNotWaitForResponse
     void stopController();
+
+    /**
+     * Przeładowuje uprawnienia w kontrolerze sieci.
+     */
+    @DoNotWaitForResponse
+    void updateConfigs();
 
     /**
      * Zmienia stan serwera o podanym UUID

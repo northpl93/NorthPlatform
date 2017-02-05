@@ -15,7 +15,7 @@ import pl.north93.zgame.api.global.component.annotations.SkipInjections;
 @SkipInjections
 public class SpiralOut implements Iterable<Coords2D>, Iterator<Coords2D>
 {
-    private int layer;
+    private int layer = 1;
     private int leg;
     private int x;
     private int z;

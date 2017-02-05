@@ -24,5 +24,15 @@ public class ChatListener implements Listener
         {
             event.setMessage(translateAlternateColorCodes('&', event.getMessage()));
         }
+
+        if (! event.getPlayer().hasPermission("chat.rawMessage"))
+        {
+            event.setMessage(
+                event.getMessage()
+                 .replaceAll("(\\?){4,}", "?")
+                 .replaceAll("(\\!){4,}", "!")
+                 .replaceAll("usun potwierdz", "")
+            );
+        }
     }
 }

@@ -2,7 +2,10 @@ package pl.north93.zgame.api.global.network.players;
 
 import java.util.UUID;
 
+import pl.north93.zgame.api.global.metadata.MetaKey;
+import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.metadata.Metadatable;
+import pl.north93.zgame.api.global.network.PrivateMessages;
 import pl.north93.zgame.api.global.permissions.Group;
 
 public interface IPlayer extends Metadatable
@@ -31,6 +34,22 @@ public interface IPlayer extends Metadatable
     {
         final long groupExpireAt = this.getGroupExpireAt();
         return groupExpireAt != 0 && System.currentTimeMillis() > groupExpireAt;
+    }
+
+    default PrivateMessages privateMessagesPolicy()
+    {
+        final MetaKey policy = MetaKey.get("privateMessages");
+        final MetaStore metaStore = this.getMetaStore();
+        if (! metaStore.contains(policy))
+        {
+            return PrivateMessages.ENABLED;
+        }
+        return PrivateMessages.values()[metaStore.getInteger(policy)];
+    }
+
+    default void setPrivateMessagesPolicy(final PrivateMessages newPolicy)
+    {
+        this.getMetaStore().setInteger(MetaKey.get("privateMessages"), newPolicy.ordinal());
     }
 
     /**

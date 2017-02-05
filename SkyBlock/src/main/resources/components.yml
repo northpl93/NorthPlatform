@@ -6,6 +6,7 @@ components:
       - API.Database.StorageConnector
       - API.Database.Redis.MessagePackSerializer
       - API.Database.Redis.RPC
+      - API.Database.Redis.Observer
       - API.MinecraftNetwork.NetworkManager
     platforms:
       - STANDALONE

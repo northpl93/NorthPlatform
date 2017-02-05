@@ -123,6 +123,7 @@ class ComponentBundle implements IComponentBundle
     {
         if (this.isBuiltinComponent())
         {
+            ((ComponentManagerImpl) this.component.getComponentManager()).scanBuiltinComponent(this);
             return;
         }
         ((JarComponentLoader) this.classLoader).scan(this.component.getComponentManager(), this.getBasePackages());

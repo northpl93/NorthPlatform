@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Daemon">
+    <output-path>$PROJECT_DIR$/test/daemon</output-path>
+    <root id="archive" name="Daemon.jar">
+      <element id="module-output" name="Server Deamon" />
+    </root>
+  </artifact>
+</component>

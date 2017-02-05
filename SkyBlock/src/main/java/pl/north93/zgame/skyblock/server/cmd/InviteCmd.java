@@ -23,7 +23,7 @@ public class InviteCmd extends NorthCommand
 
     public InviteCmd()
     {
-        super("invite", "zapros");
+        super("invite", "zapros", "dodaj");
     }
 
     @Override

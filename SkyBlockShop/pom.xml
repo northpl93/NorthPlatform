@@ -24,5 +24,12 @@
             <artifactId>economy</artifactId>
             <version>1.0-INDEV</version>
         </dependency>
+        <!--<dependency>
+            <artifactId>chestshop</artifactId>
+            <groupId>com.acrobot.chestshop</groupId>
+            <version>local-arieals</version>
+            <scope>system</scope>
+            <systemPath>${chestshop.location}</systemPath>
+        </dependency>-->
     </dependencies>
 </project>

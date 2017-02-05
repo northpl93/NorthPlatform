@@ -6,3 +6,11 @@ components:
       - API.Economy
     platforms:
       - BUKKIT
+
+  - name: SkyBlock.Shop.Spawner
+    mainClass: "pl.north93.zgame.skyblock.shop.SpawnerComponent"
+    description: "Spawner change menu"
+    dependencies:
+      - SkyBlock.Shop.Server
+    platforms:
+      - BUKKIT

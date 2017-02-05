@@ -14,16 +14,17 @@ import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectResource;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
+import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
-import pl.north93.zgame.skyblock.api.NorthBiome;
 import pl.north93.zgame.skyblock.api.ISkyBlockManager;
 import pl.north93.zgame.skyblock.api.IslandDao;
 import pl.north93.zgame.skyblock.api.IslandData;
 import pl.north93.zgame.skyblock.api.IslandRole;
+import pl.north93.zgame.skyblock.api.IslandsRanking;
+import pl.north93.zgame.skyblock.api.NorthBiome;
 import pl.north93.zgame.skyblock.api.ServerMode;
 import pl.north93.zgame.skyblock.api.cfg.IslandConfig;
 import pl.north93.zgame.skyblock.api.cfg.SkyBlockConfig;
@@ -46,6 +47,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
     private ResourceBundle      messages;
     private IslandDao           islandDao;
     private IslandHostManagers  islandHostManager;
+    private IslandsRanking      islandsRanking;
     private SkyBlockConfig      skyBlockConfig;
 
     @Override
@@ -57,6 +59,8 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
         }
         this.islandHostManager = new IslandHostManagers();
         this.islandDao = new IslandDao();
+        this.islandsRanking = new IslandsRanking();
+        this.islandDao.moveDataToRedisRanking(this.islandsRanking);
         this.skyBlockConfig = ConfigUtils.loadConfigFile(SkyBlockConfig.class, this.getApiCore().getFile("skyblock.yml"));
         this.rpcManager.addRpcImplementation(ISkyBlockManager.class, this);
     }
@@ -64,6 +68,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
     @Override
     protected void disableComponent()
     {
+        this.islandsRanking.clearRanking();
     }
 
     @Override
@@ -156,12 +161,15 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
         island.setAcceptingVisits(false);
         island.setName("Wyspa gracza " + ownerNick);
         island.setBiome(NorthBiome.OVERWORLD);
+        island.setPoints(0D);
+        island.setShowInRanking(true);
         island.setHomeLocation(config.getHomeLocation());
 
         skyPlayer.setIsland(islandId, IslandRole.OWNER);
 
         this.islandDao.saveIsland(island);
         server.getIslandHostManager().islandAdded(islandId, islandType);
+        this.islandsRanking.setPoints(islandId, 0); // add island to ranking
 
         networkPlayer.get().sendMessage(this.messages, "info.created_island");
         networkPlayer.get().connectTo(server.getServerValue().get(), new TeleportPlayerToIsland(islandId));
@@ -184,6 +192,8 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
 
         final IslandHostServer server = this.islandHostManager.getServer(data.getServerId());
         server.getIslandHostManager().islandRemoved(data); // we must send data because it's already removed from database
+
+        this.islandsRanking.removeIsland(islandId); // remove island from ranking
     }
 
     @Override
@@ -199,18 +209,14 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
 
     private void deleteIslandFromPlayer(final UUID playerId)
     {
-        final Value<IOnlinePlayer> onlinePlayerValue = this.networkManager.getOnlinePlayer(playerId);
-        if (onlinePlayerValue.isAvailable()) // is online
+        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(playerId))
         {
-            final SkyPlayer skyPlayer = SkyPlayer.get(onlinePlayerValue);
+            final SkyPlayer skyPlayer = SkyPlayer.get(t.getPlayer());
             skyPlayer.setIsland(null, null);
         }
-        else
+        catch (final Exception e)
         {
-            final IOfflinePlayer offlinePlayer = this.networkManager.getOfflinePlayer(playerId);
-            final SkyPlayer skyPlayer = SkyPlayer.get(offlinePlayer);
-            skyPlayer.setIsland(null, null);
-            this.networkManager.savePlayer(offlinePlayer);
+            e.printStackTrace();
         }
     }
 
@@ -219,9 +225,9 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
     {
         this.islandDao.modifyIsland(islandId, islandData ->
         {
-            final Value<IOnlinePlayer> islandOwner = this.networkManager.getOnlinePlayer(islandData.getOwnerId());
+            final Value<IOnlinePlayer> islandOwner = this.networkManager.getPlayers().unsafe().getOnline(islandData.getOwnerId());
 
-            final Value<IOnlinePlayer> invited = this.networkManager.getOnlinePlayer(invitedPlayer);
+            final Value<IOnlinePlayer> invited = this.networkManager.getPlayers().unsafe().getOnline(invitedPlayer);
             if (! invited.isAvailable())
             {
                 islandOwner.ifPresent(player -> player.sendMessage(this.messages, "error.invite.no_player"));
@@ -255,7 +261,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
     {
         this.islandDao.modifyIsland(islandId, islandData ->
         {
-            final Value<IOnlinePlayer> invited = this.networkManager.getOnlinePlayer(invitedPlayer);
+            final Value<IOnlinePlayer> invited = this.networkManager.getPlayers().unsafe().getOnline(invitedPlayer);
             if (! invited.isAvailable())
             {
                 return;
@@ -323,21 +329,41 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
             return;
         }
 
-        if (! islandData.getAcceptingVisits())
+        final IOnlinePlayer visitorCache = visitorValue.get();
+        if (! islandData.getAcceptingVisits() && ! visitorCache.getGroup().hasPermission("skyblock.visit.anyplayer"))
         {
-            visitorValue.get().sendMessage(this.messages, "cmd.visit.unavailable");
+            visitorCache.sendMessage(this.messages, "cmd.visit.unavailable");
             return;
         }
 
         final UUID islandServer = islandData.getServerId();
-        if (visitorValue.get().getServerId().equals(islandServer))
+        if (visitorCache.getServerId().equals(islandServer))
         {
-            this.islandHostManager.getServer(islandServer).getIslandHostManager().tpToIsland(visitorValue.get().getUuid(), islandData);
+            this.islandHostManager.getServer(islandServer).getIslandHostManager().tpToIsland(visitorCache.getUuid(), islandData);
         }
         else
         {
-            visitorValue.get().connectTo(this.networkManager.getServer(islandServer).get(), new TeleportPlayerToIsland(islandId)); // todo server may be null?
+            visitorCache.connectTo(this.networkManager.getServer(islandServer).get(), new TeleportPlayerToIsland(islandId)); // todo server may be null?
         }
+    }
+
+    @Override
+    public void setShowInRanking(final UUID islandId, final Boolean newValue)
+    {
+        this.islandDao.modifyIsland(islandId, data ->
+        {
+            final boolean oldValue = data.getShowInRanking();
+            if (oldValue && !newValue)
+            {
+                data.setShowInRanking(false);
+                this.islandsRanking.removeIsland(islandId);
+            }
+            else if (!oldValue && newValue)
+            {
+                data.setShowInRanking(true);
+                this.islandsRanking.setPoints(islandId, data.getPoints());
+            }
+        });
     }
 
     @Override

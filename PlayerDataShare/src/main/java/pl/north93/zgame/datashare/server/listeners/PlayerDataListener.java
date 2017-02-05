@@ -1,5 +1,7 @@
 package pl.north93.zgame.datashare.server.listeners;
 
+import java.text.MessageFormat;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -35,7 +37,18 @@ public class PlayerDataListener implements SubscriptionHandler
             return;
         }
 
-        this.apiCore.sync(() -> this.playerDataShare.getDataShareManager().applyDataTo(this.shareServer.getMyGroup(), player, dataContainer));
+        this.apiCore.sync(() ->
+        {
+            if (player.isDataLoaded())
+            {
+                return; // skip data loading...
+            }
+
+            this.playerDataShare.getDataShareManager().applyDataTo(this.shareServer.getMyGroup(), player, dataContainer);
+
+            final String log = "Received data of player {0} by redis publish";
+            this.apiCore.getLogger().info(MessageFormat.format(log, player.getName()));
+        });
     }
 
     @Override

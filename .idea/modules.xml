@@ -15,6 +15,8 @@
       <module fileurl="file://$PROJECT_DIR$/RestfulApi/RestfulApi.iml" filepath="$PROJECT_DIR$/RestfulApi/RestfulApi.iml" />
       <module fileurl="file://$PROJECT_DIR$/Server Deamon/Server Deamon.iml" filepath="$PROJECT_DIR$/Server Deamon/Server Deamon.iml" />
       <module fileurl="file://$PROJECT_DIR$/SkyBlock/SkyBlock.iml" filepath="$PROJECT_DIR$/SkyBlock/SkyBlock.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SkyBlockPlayerExperience/SkyBlock.PlayerExperience.iml" filepath="$PROJECT_DIR$/SkyBlockPlayerExperience/SkyBlock.PlayerExperience.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SkyBlock.Quests/SkyBlock.Quests.iml" filepath="$PROJECT_DIR$/SkyBlock.Quests/SkyBlock.Quests.iml" />
       <module fileurl="file://$PROJECT_DIR$/SkyBlockShop/SkyBlock.Shop.iml" filepath="$PROJECT_DIR$/SkyBlockShop/SkyBlock.Shop.iml" />
       <module fileurl="file://$PROJECT_DIR$/TimeGroups/TimeGroups.iml" filepath="$PROJECT_DIR$/TimeGroups/TimeGroups.iml" />
       <module fileurl="file://$PROJECT_DIR$/WebAuth/WebAuth.iml" filepath="$PROJECT_DIR$/WebAuth/WebAuth.iml" />

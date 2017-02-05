@@ -12,12 +12,14 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.PluginManager;
 
 import org.spigotmc.SpigotConfig;
 
 import pl.north93.zgame.api.bukkit.listeners.ChatListener;
 import pl.north93.zgame.api.bukkit.listeners.JoinLeftListener;
 import pl.north93.zgame.api.bukkit.listeners.SignListener;
+import pl.north93.zgame.api.bukkit.packets.PacketsHandler;
 import pl.north93.zgame.api.bukkit.windows.WindowManager;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
@@ -106,6 +108,12 @@ public class BukkitApiCore extends ApiCore
     }
 
     @Override
+    public File getRootDirectory()
+    {
+        return new File(Bukkit.class.getProtectionDomain().getCodeSource().getLocation().getFile());
+    }
+
+    @Override
     protected void init() throws Exception
     {
         try
@@ -116,6 +124,7 @@ public class BukkitApiCore extends ApiCore
         {
             throw new RuntimeException("Something went wrong ;/", e);
         }
+        new PacketsHandler(this.pluginMain);
     }
 
     @Override
@@ -136,10 +145,10 @@ public class BukkitApiCore extends ApiCore
     @Override
     protected void stop()
     {
-        if (! this.getServer().get().isLaunchedViaDaemon())
+        this.getServer().update(server ->
         {
-            this.getServer().delete(); // remove key from redis is that server is not managed by daemon
-        }
+            ((ServerImpl) server).setServerState(ServerState.STOPPED); // change server state to stopped.
+        });
     }
 
     @Override
@@ -148,11 +157,12 @@ public class BukkitApiCore extends ApiCore
         return new File(this.pluginMain.getDataFolder(), name);
     }
 
-    private void registerEvents(final Listener... listeners)
+    public void registerEvents(final Listener... listeners)
     {
+        final PluginManager pluginManager = this.pluginMain.getServer().getPluginManager();
         for (final Listener listener : listeners)
         {
-            this.pluginMain.getServer().getPluginManager().registerEvents(listener, this.pluginMain);
+            pluginManager.registerEvents(listener, this.pluginMain);
         }
     }
 

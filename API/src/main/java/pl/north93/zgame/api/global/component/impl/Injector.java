@@ -13,11 +13,27 @@ import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.IComponentManager;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.InjectNewInstance;
 import pl.north93.zgame.api.global.component.annotations.InjectResource;
 import pl.north93.zgame.api.global.utils.UTF8Control;
 
 public class Injector
 {
+    private static final Field F_MODIFIERS;
+
+    static
+    {
+        try
+        {
+            F_MODIFIERS = Field.class.getDeclaredField("modifiers");
+            F_MODIFIERS.setAccessible(true);
+        }
+        catch (final NoSuchFieldException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void inject(final IComponentManager componentManager, final Object instance)
     {
         final Class<?> clazz = instance.getClass();
@@ -27,7 +43,13 @@ public class Injector
 
             if (Modifier.isFinal(field.getModifiers()))
             {
-                continue; // field is final, we can't do anything
+                try
+                {
+                    F_MODIFIERS.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+                }
+                catch (final IllegalAccessException ignored) // will never happen
+                {
+                }
             }
 
             if (field.isAnnotationPresent(InjectComponent.class))
@@ -65,6 +87,18 @@ public class Injector
                     field.set(instance, bundle);
                 }
                 catch (final IllegalAccessException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+            if (field.isAnnotationPresent(InjectNewInstance.class))
+            {
+                try
+                {
+                    field.set(instance, field.getType().newInstance());
+                }
+                catch (final IllegalAccessException | InstantiationException e)
                 {
                     e.printStackTrace();
                 }

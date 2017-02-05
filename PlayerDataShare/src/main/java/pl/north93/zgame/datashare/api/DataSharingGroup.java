@@ -8,30 +8,33 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.component.annotations.SkipInjections;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
+import pl.north93.zgame.datashare.api.cfg.AnnouncerConfig;
 import pl.north93.zgame.datashare.api.cfg.DataSharingGroupConfig;
 
 @SkipInjections
 public final class DataSharingGroup
 {
-    private String       name;
-    private Boolean      shareChat;
+    private String          name;
+    private Boolean         shareChat;
+    private AnnouncerConfig announcer;
     @MsgPackCustomTemplate(ArrayListTemplate.class)
-    private List<String> dataUnits;
+    private List<String>    dataUnits;
 
     public DataSharingGroup()
     {
     }
 
-    public DataSharingGroup(final String name, final Boolean shareChat, final List<String> dataUnits)
+    public DataSharingGroup(final String name, final Boolean shareChat, final AnnouncerConfig announcer, final List<String> dataUnits)
     {
         this.name = name;
         this.shareChat = shareChat;
+        this.announcer = announcer;
         this.dataUnits = dataUnits;
     }
 
     public DataSharingGroup(final DataSharingGroupConfig config)
     {
-        this(config.getName(), config.isShareChat(), config.getDataUnits());
+        this(config.getName(), config.isShareChat(), config.getAnnouncer(), config.getDataUnits());
     }
 
     public String getName()
@@ -44,6 +47,11 @@ public final class DataSharingGroup
         return this.shareChat;
     }
 
+    public AnnouncerConfig getAnnouncer()
+    {
+        return this.announcer;
+    }
+
     public List<String> getDataUnits()
     {
         return this.dataUnits;
@@ -52,6 +60,6 @@ public final class DataSharingGroup
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("shareChat", this.shareChat).append("dataUnits", this.dataUnits).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("shareChat", this.shareChat).append("announcer", this.announcer).append("dataUnits", this.dataUnits).toString();
     }
 }

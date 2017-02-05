@@ -7,12 +7,15 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.network.INetworkManager;
 
 public class UnbanCommand extends NorthCommand
 {
     @InjectComponent("API.MinecraftNetwork.NetworkManager")
     private INetworkManager networkManager;
+
+    private static final MetaKey BAN_EXPIRE = MetaKey.get("banExpireAt");
 
     public UnbanCommand()
     {
@@ -28,7 +31,11 @@ public class UnbanCommand extends NorthCommand
             sender.sendMessage("&c/unban nick");
             return;
         }
-        this.networkManager.getPlayers().access(args.asString(0), player -> player.setBanned(false));
+        this.networkManager.getPlayers().access(args.asString(0), player ->
+        {
+            player.setBanned(false);
+            player.getMetaStore().remove(BAN_EXPIRE);
+        });
 
         sender.sendMessage("&cUzytkownik odbanowany");
     }

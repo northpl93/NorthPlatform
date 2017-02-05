@@ -8,9 +8,21 @@ public interface ITransaction extends AutoCloseable
 
     boolean has(double amount);
 
-    void add(double amount);
+    /**
+     * Dodaje wartość do konta.
+     *
+     * @param amount ilość pieniędzy.
+     * @return ilość pieniędzy PRZED dodaniem.
+     */
+    double add(double amount);
 
-    void remove(double amount);
+    /**
+     * Usuwa wartość z konta.
+     *
+     * @param amount ilość pieniędzy.
+     * @return ilość pieniędzy PRZED odjęcien.
+     */
+    double remove(double amount);
 
     double getAmount();
 

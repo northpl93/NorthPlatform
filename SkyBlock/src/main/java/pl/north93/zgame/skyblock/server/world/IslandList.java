@@ -2,14 +2,17 @@ package pl.north93.zgame.skyblock.server.world;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Consumer;
 
 import org.bukkit.Chunk;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import pl.north93.zgame.skyblock.api.utils.Coords2D;
 
 public class IslandList
@@ -126,6 +129,21 @@ public class IslandList
         {
             this.lock.readLock().unlock();
         }
+    }
+
+    public void forEach(final Consumer<Island> consumer)
+    {
+        final Set<Island> tempIslands;
+        try
+        {
+            this.lock.readLock().lock();
+            tempIslands = new ObjectArraySet<>(this.byIslandId.values());
+        }
+        finally
+        {
+            this.lock.readLock().unlock();
+        }
+        tempIslands.forEach(consumer); // to prevent a long lock, iterate over copy of islands list.
     }
 
     @Override

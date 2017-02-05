@@ -17,9 +17,12 @@ public class IslandCmd extends NorthCommand
         sender.sendMessage("&f&l> &6/stworz &7tworzy wyspe.");
         sender.sendMessage("&f&l> &6/usun &7usuwa wyspe.");
         sender.sendMessage("&f&l> &6/dom &7przenosi na wyspe.");
-        sender.sendMessage("&f&l> &6/ustawdom &7ustawia wyspe.");
-        sender.sendMessage("&f&l> &6/zapros nick &7zaprasza gracza.");
+        sender.sendMessage("&f&l> &6/ustawdom &7ustawia dom (musisz byc na wyspie).");
+        sender.sendMessage("&f&l> &6/zapros nick &7zaprasza gracza do wyspy.");
+        sender.sendMessage("&f&l> &6/akceptuj nick &7akceptuje zaproszenie do wyspy.");
         sender.sendMessage("&f&l> &6/zaproszenia &7lista graczy zaproszonych do wyspy.");
+        sender.sendMessage("&f&l> &6/wyrzuc &7usuwa gracza z listy zaproszonych do wyspy.");
+        sender.sendMessage("&f&l> &6/wykop &7wyrzuca odwiedzajacego z wyspy.");
         sender.sendMessage("&f&l> &6/opusc &7opuszczasz wyspe jesli byles zaproszony.");
         sender.sendMessage("&f&l> &6/odwiedzanie &7wlacza/wylacza odwiedzanie wyspy.");
         sender.sendMessage("&f&l> &6/odwiedz nick &7odwiedza gracza.");

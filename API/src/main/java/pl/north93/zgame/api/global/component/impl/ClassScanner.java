@@ -19,23 +19,30 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
 import javassist.CannotCompileException;
+import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtMethod;
+import javassist.LoaderClassPath;
 import javassist.NotFoundException;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.component.IComponentManager;
 import pl.north93.zgame.api.global.component.IExtensionPoint;
+import pl.north93.zgame.api.global.component.annotations.IgnoreExtensionPoint;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.InjectNewInstance;
 import pl.north93.zgame.api.global.component.annotations.InjectResource;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.component.annotations.SkipInjections;
 
 class ClassScanner
 {
-    static void scan(final URL fileUrl, final JarComponentLoader classLoader, final IComponentManager componentManager, final Set<String> packagesToScan)
+    private static final String INJECTOR_NAME = Injector.class.getName();
+    private static final String API_NAME = API.class.getName();
+
+    static void scan(final URL fileUrl, final ClassLoader classLoader, final IComponentManager componentManager, final Set<String> packagesToScan)
     {
         final ConfigurationBuilder configuration = new ConfigurationBuilder();
         configuration.setClassLoaders(new ClassLoader[]{classLoader});
@@ -50,6 +57,7 @@ class ClassScanner
         configuration.setInputsFilter(packagesFilter);
 
         final Reflections reflections = new Reflections(configuration);
+        final ClassPool classPool = getClassPool(classLoader);
 
         for (final Class<?> aClass : getAllClasses(reflections))
         {
@@ -60,7 +68,7 @@ class ClassScanner
 
             try
             {
-                final CtClass ctClass = classLoader.getClassPool().get(aClass.getName());
+                final CtClass ctClass = classPool.get(aClass.getName());
 
                 final Set<String> postInject = Arrays.stream(ctClass.getDeclaredMethods())
                                                      .filter(ctMethod -> ctMethod.hasAnnotation(PostInject.class))
@@ -70,7 +78,7 @@ class ClassScanner
 
                 for (final CtConstructor ctConstructor : ctClass.getConstructors())
                 {
-                    ctConstructor.insertAfter(Injector.class.getName() + ".inject(" + API.class.getName() + ".getApiCore().getComponentManager(), this);");
+                    ctConstructor.insertAfter(INJECTOR_NAME + ".inject(" + API_NAME + ".getApiCore().getComponentManager(), this);");
                     for (final String postInjectMethod : postInject)
                     {
                         ctConstructor.insertAfter("this." + postInjectMethod + "();");
@@ -94,19 +102,38 @@ class ClassScanner
                 final Set<Class<?>> extensions = (Set<Class<?>>) reflections.getSubTypesOf(clazzToSearch);
                 for (final Class<?> extension : extensions)
                 {
+                    if (extension.isAnnotationPresent(IgnoreExtensionPoint.class))
+                    {
+                        continue;
+                    }
+
                     try
                     {
                         final Object instanceOfExtension = extension.getConstructor().newInstance();
-                        // it's not needed(?) because I fixed all class scanning
-                        //Injector.inject(componentManager, instanceOfExtension); // inject fields
                         iExtensionPoint.addImplementation(instanceOfExtension);
                     }
-                    catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e)
+                    catch (final InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e)
                     {
                         e.printStackTrace();
                     }
                 }
             }
+        }
+    }
+
+    private static ClassPool getClassPool(final ClassLoader classLoader)
+    {
+        if (classLoader instanceof JarComponentLoader)
+        {
+            final JarComponentLoader componentLoader = (JarComponentLoader) classLoader;
+            return componentLoader.getClassPool();
+        }
+        else
+        {
+            final ClassPool classPool = new ClassPool();
+            classPool.appendClassPath(new LoaderClassPath(ApiCore.class.getClassLoader()));
+            classPool.appendClassPath(new LoaderClassPath(classLoader));
+            return classPool;
         }
     }
 
@@ -117,7 +144,18 @@ class ClassScanner
 
     private static boolean shouldAddInjector(final Class<?> clazz)
     {
-        for (final Field field : clazz.getDeclaredFields())
+        final Field[] declaredFields;
+        try
+        {
+            declaredFields = clazz.getDeclaredFields();
+        }
+        catch (final NoClassDefFoundError ex)
+        {
+            // may occur when we're scanning external classloader
+            return false;
+        }
+
+        for (final Field field : declaredFields)
         {
             final Class<?> type = field.getType();
             if (field.isAnnotationPresent(InjectComponent.class))
@@ -125,6 +163,10 @@ class ClassScanner
                 return true;
             }
             if (field.isAnnotationPresent(InjectResource.class))
+            {
+                return true;
+            }
+            if (field.isAnnotationPresent(InjectNewInstance.class))
             {
                 return true;
             }

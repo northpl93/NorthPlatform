@@ -32,13 +32,13 @@ import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.messages.NetworkMeta;
 import pl.north93.zgame.api.global.messages.ProxyInstanceInfo;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
-import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.NetworkAction;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
 import pl.north93.zgame.api.global.network.minigame.MiniGame;
+import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
+import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
+import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerImpl;
@@ -276,10 +276,7 @@ class NetworkManager extends Component implements INetworkManager
     @Override
     public boolean isOnline(final String nick)
     {
-        try (final Jedis jedis = this.jedisPool.getResource())
-        {
-            return jedis.exists(PLAYERS + nick.toLowerCase(Locale.ROOT));
-        }
+        return this.playersManager.isOnline(nick);
     }
 
     /**

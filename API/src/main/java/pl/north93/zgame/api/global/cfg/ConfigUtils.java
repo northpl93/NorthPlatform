@@ -39,20 +39,12 @@ public class ConfigUtils
             {
                 config = cfgTemp.fillDefaults(clazz.newInstance());
                 DioriteUtils.createFile(f);
+                cfgTemp.dump(f, config, false);
             }
             catch (final IOException | InstantiationException | IllegalAccessException e)
             {
                 throw new RuntimeException("Can't create configuration file!", e);
             }
-        }
-
-        try
-        {
-            cfgTemp.dump(f, config, false);
-        }
-        catch (final IOException e)
-        {
-            throw new RuntimeException("Can't dump configuration file!", e);
         }
 
         return config;

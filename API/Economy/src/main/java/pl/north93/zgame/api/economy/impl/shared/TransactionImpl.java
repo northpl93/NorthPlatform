@@ -12,14 +12,18 @@ import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 
 public class TransactionImpl implements ITransaction
 {
-    private final ICurrency          currency;
-    private final IPlayerTransaction playerTransaction;
+    private final ICurrency           currency;
+    private final IPlayerTransaction  playerTransaction;
+    private final CurrencyRankingImpl currencyRanking;
+    private final MetaKey             prefix;
     private boolean isClosed;
 
-    public TransactionImpl(final ICurrency currency, final IPlayerTransaction playerTransaction)
+    public TransactionImpl(final ICurrency currency, final IPlayerTransaction playerTransaction, final CurrencyRankingImpl currencyRanking)
     {
         this.currency = currency;
         this.playerTransaction = playerTransaction;
+        this.currencyRanking = currencyRanking;
+        this.prefix = MetaKey.get("currency:" + this.currency.getName());
     }
 
     @Override
@@ -36,31 +40,30 @@ public class TransactionImpl implements ITransaction
     }
 
     @Override
-    public void add(final double amount)
+    public double add(final double amount)
     {
         final MetaStore metaStore = this.getAssociatedPlayer().getMetaStore();
-        final MetaKey prefix = this.getPrefix();
-        final double current = metaStore.contains(prefix) ? metaStore.getDouble(prefix) : this.currency.getStartValue();
-        metaStore.setDouble(prefix, current + amount);
+        final double current = metaStore.contains(this.prefix) ? metaStore.getDouble(this.prefix) : this.currency.getStartValue();
+        metaStore.setDouble(this.prefix, current + amount);
+        return current;
     }
 
     @Override
-    public void remove(final double amount)
+    public double remove(final double amount)
     {
         final MetaStore metaStore = this.getAssociatedPlayer().getMetaStore();
-        final MetaKey prefix = this.getPrefix();
-        final double current = metaStore.contains(prefix) ? metaStore.getDouble(prefix) : this.currency.getStartValue();
-        metaStore.setDouble(prefix, current - amount);
+        final double current = metaStore.contains(this.prefix) ? metaStore.getDouble(this.prefix) : this.currency.getStartValue();
+        metaStore.setDouble(this.prefix, current - amount);
+        return current;
     }
 
     @Override
     public double getAmount()
     {
         final MetaStore metaStore = this.getAssociatedPlayer().getMetaStore();
-        final MetaKey prefix = this.getPrefix();
-        if (metaStore.contains(prefix))
+        if (metaStore.contains(this.prefix))
         {
-            return metaStore.getDouble(prefix);
+            return metaStore.getDouble(this.prefix);
         }
         else
         {
@@ -72,13 +75,13 @@ public class TransactionImpl implements ITransaction
     public void setAmount(final double newAmount)
     {
         this.checkClosed();
-        this.getAssociatedPlayer().getMetaStore().setDouble(this.getPrefix(), newAmount);
+        this.getAssociatedPlayer().getMetaStore().setDouble(this.prefix, newAmount);
     }
 
     @Override
     public void close() throws Exception
     {
-        this.checkClosed();
+        this.currencyRanking.update(this.getAssociatedPlayer().getUuid(), this.getAmount());
         this.isClosed = true;
         this.playerTransaction.close();
     }
@@ -89,11 +92,6 @@ public class TransactionImpl implements ITransaction
         {
             throw new RuntimeException("Transaction is already closed");
         }
-    }
-
-    private MetaKey getPrefix()
-    {
-        return MetaKey.get("currency:" + this.currency.getName());
     }
 
     @Override

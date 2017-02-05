@@ -12,7 +12,7 @@ import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.deployment.serversgroup.ManagedServersGroup;
 import pl.north93.zgame.api.global.network.server.ServerImpl;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
-import pl.north93.zgame.controller.ConfigBroadcaster;
+import pl.north93.zgame.controller.configbroadcaster.ConfigBroadcaster;
 import pl.north93.zgame.controller.servers.allocators.AllocationProcessor;
 
 public class NetworkServersManager extends Component implements INetworkServersManager, IServerCountManager

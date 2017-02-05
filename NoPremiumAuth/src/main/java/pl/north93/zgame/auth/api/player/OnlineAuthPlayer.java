@@ -17,6 +17,13 @@ class OnlineAuthPlayer extends AuthPlayer
     }
 
     @Override
+    public boolean isPremium()
+    {
+        final IOnlinePlayer player = this.playerValue.get();
+        return player != null && player.isPremium();
+    }
+
+    @Override
     public boolean isRegistered()
     {
         try

@@ -7,6 +7,7 @@ import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
+@Deprecated
 public interface IPlayerManagement
 {
     int onlinePlayersCount();

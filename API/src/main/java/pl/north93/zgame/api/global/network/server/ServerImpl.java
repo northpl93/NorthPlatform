@@ -17,6 +17,8 @@ import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackNullable;
 import pl.north93.zgame.api.global.redis.messaging.templates.extra.ServerPatternInStringTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.extra.ServersGroupInStringTemplate;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
+import pl.north93.zgame.api.global.redis.rpc.IRpcTarget;
+import pl.north93.zgame.api.global.redis.rpc.Targets;
 
 public class ServerImpl implements Server, ServerProxyData
 {
@@ -102,6 +104,12 @@ public class ServerImpl implements Server, ServerProxyData
     public Optional<IServersGroup> getServersGroup()
     {
         return Optional.ofNullable(this.serversGroup);
+    }
+
+    @Override
+    public IRpcTarget getRpcTarget()
+    {
+        return Targets.server(this.serverId);
     }
 
     @Override

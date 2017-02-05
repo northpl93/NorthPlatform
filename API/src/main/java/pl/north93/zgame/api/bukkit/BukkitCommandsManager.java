@@ -53,6 +53,12 @@ public class BukkitCommandsManager implements ICommandsManager
         this.commandMap.register(northCommand.getName(), "np-bukkit", new WrappedNorthCommand(northCommand));
     }
 
+    @Override
+    public void stop()
+    {
+        // todo unregister commands?
+    }
+
     private class WrappedSender implements NorthCommandSender
     {
         private final CommandSender wrappedSender;
@@ -69,9 +75,16 @@ public class BukkitCommandsManager implements ICommandsManager
         }
 
         @Override
-        public void sendMessage(final String message)
+        public void sendMessage(final String message, final boolean colorText)
         {
-            this.wrappedSender.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+            if (colorText)
+            {
+                this.wrappedSender.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+            }
+            else
+            {
+                this.wrappedSender.sendMessage(message);
+            }
         }
 
         @Override

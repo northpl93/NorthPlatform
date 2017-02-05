@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.global.component.impl;
 
+import static pl.north93.zgame.api.global.utils.CollectionUtils.findInCollection;
+
+
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -8,17 +11,22 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Sets;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.reflections.util.ClasspathHelper;
 
 import org.diorite.cfg.system.TemplateCreator;
 
@@ -27,7 +35,6 @@ import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.component.IComponentManager;
-import pl.north93.zgame.api.global.utils.CollectionUtils;
 
 public class ComponentManagerImpl implements IComponentManager
 {
@@ -38,6 +45,13 @@ public class ComponentManagerImpl implements IComponentManager
     public ComponentManagerImpl(final ApiCore apiCore)
     {
         this.apiCore = apiCore;
+    }
+
+    /*default*/ void scanBuiltinComponent(final ComponentBundle componentBundle)
+    {
+        final URL file = ApiCore.class.getProtectionDomain().getCodeSource().getLocation();
+        final ClassLoader classLoader = ApiCore.class.getClassLoader();
+        ClassScanner.scan(file, classLoader, this, componentBundle.getBasePackages());
     }
 
     private void initComponent(final ComponentBundle component)
@@ -123,7 +137,7 @@ public class ComponentManagerImpl implements IComponentManager
 
     private ComponentBundle getComponentBundle(final String name)
     {
-        return CollectionUtils.findInCollection(this.components, ComponentBundle::getName, name);
+        return findInCollection(this.components, ComponentBundle::getName, name);
     }
 
     /**
@@ -207,6 +221,18 @@ public class ComponentManagerImpl implements IComponentManager
                 this.doComponentScan(fileToCheck);
             }
         }
+    }
+
+    @Override
+    public void performInjectionScan(final ClassLoader classLoader, final String... packages)
+    {
+        final Collection<URL> paths = ClasspathHelper.forPackage(packages[0], classLoader);
+        final URL path = paths.iterator().next();
+
+        final HashSet<String> packageSet = Sets.newHashSet(packages);
+
+        this.apiCore.getLogger().info("Performing injection scan... Path:" + path + " ClassLoader:" + classLoader + " Packages:" + packageSet);
+        ClassScanner.scan(path, classLoader, this, packageSet);
     }
 
     private void loadComponentsFromFile(final File file)
@@ -318,15 +344,13 @@ public class ComponentManagerImpl implements IComponentManager
     @Override
     public <T extends Component> T getComponent(final String name)
     {
-        for (final ComponentBundle component : this.components)
+        final ComponentBundle bundle = findInCollection(this.components, ComponentBundle::getName, name);
+        if (bundle == null)
         {
-            if (component.getName().equals(name))
-            {
-                //noinspection unchecked
-                return (T) component.getComponent();
-            }
+            throw new IllegalArgumentException("Not found component with name " + name);
         }
-        return null;
+        //noinspection unchecked
+        return (T) bundle.getComponent();
     }
 
     @Override

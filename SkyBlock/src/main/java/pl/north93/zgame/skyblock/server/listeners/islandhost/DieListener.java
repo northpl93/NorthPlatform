@@ -1,5 +1,6 @@
 package pl.north93.zgame.skyblock.server.listeners.islandhost;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
+import pl.north93.zgame.skyblock.server.world.Island;
 
 public class DieListener implements Listener
 {
@@ -17,9 +19,19 @@ public class DieListener implements Listener
     private SkyBlockServer server;
 
     @EventHandler
-    public void changeDeadMessage(final PlayerDeathEvent event)
+    public void dontDropItems(final PlayerDeathEvent event)
     {
-        event.setDeathMessage(null);
+        final Player entity = event.getEntity();
+        final Island island = this.server.getServerManager().getIslandAt(entity.getLocation());
+        if (! this.server.canAccess(entity, island) || entity.hasPermission("skyblock.death.keepinventory"))
+        {
+            event.getDrops().clear();
+            event.setDroppedExp(0);
+            event.setKeepInventory(true);
+            event.setKeepLevel(true);
+        }
+
+        event.setDeathMessage(null); // remove death message
     }
 
     @EventHandler

@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -29,12 +28,20 @@ public class ReceiveGui extends Window
 
     private void receive(final ItemStack itemStack, final DataEntry dataEntry)
     {
-        final PlayerInventory inventory = this.getPlayer().getInventory();
-        final boolean isSuccess = inventory.addItem(itemStack).isEmpty();
-        if (isSuccess)
+        if (! this.getPlayer().getInventory().addItem(itemStack).isEmpty())
+        {
+            return;
+        }
+        this.clear();
+        this.receiveStorage.removeReceiveContent(this.getPlayer().getUniqueId(), dataEntry);
+        this.dataEntries.remove(dataEntry);
+        if (this.dataEntries.isEmpty())
         {
             this.close();
-            this.receiveStorage.removeReceiveContent(this.getPlayer().getUniqueId(), dataEntry);
+        }
+        else
+        {
+            this.onShow();
         }
     }
 

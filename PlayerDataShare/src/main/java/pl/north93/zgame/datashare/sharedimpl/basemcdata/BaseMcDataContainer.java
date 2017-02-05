@@ -22,6 +22,9 @@ public class BaseMcDataContainer implements IDataUnit
     // other
     private byte[]  potions;
     private Integer totalExperience;
+    private Integer level; // exp level
+    private Double  experience;
+
     private String  statistics;
     private Integer gameMode;
 
@@ -108,6 +111,26 @@ public class BaseMcDataContainer implements IDataUnit
     public void setTotalExperience(final Integer totalExperience)
     {
         this.totalExperience = totalExperience;
+    }
+
+    public Integer getLevel()
+    {
+        return this.level;
+    }
+
+    public void setLevel(final Integer level)
+    {
+        this.level = level;
+    }
+
+    public Double getExperience()
+    {
+        return this.experience;
+    }
+
+    public void setExperience(final Double experience)
+    {
+        this.experience = experience;
     }
 
     public void setSaturation(final Float saturation)

@@ -1,4 +1,12 @@
 components:
+  - name: API.UpdateClient
+    enabled: false #replaced by docker-powered deployment
+    mainClass: "pl.north93.zgame.api.global.update.client.impl.UpdateManager"
+    description: "North Platform updating client."
+    autoInstantiate: false
+    dependencies:
+      - API.Database.Redis.RPC
+
   - name: API.Commands
     enabled: true
     mainClass: "pl.north93.zgame.api.global.commands.impl.CommandsManagerDecorator"
@@ -81,3 +89,12 @@ components:
       - API.Database.Redis.Observer
       - API.MinecraftNetwork.PermissionsManager
       - API.MinecraftNetwork.UsernameCache
+
+  - name: API.BukkitPlayers
+    enabled: true
+    mainClass: "pl.north93.zgame.api.bukkit.player.impl.BukkitPlayerManagerImpl"
+    description: "Useful utils to manage players using Bukkit APIs"
+    dependencies:
+      - API.MinecraftNetwork.NetworkManager
+    platforms:
+      - BUKKIT

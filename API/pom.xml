@@ -17,6 +17,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>pl.north93.zgame.api</groupId>
+            <artifactId>instrumentationagent</artifactId>
+            <version>1.0-INDEV</version>
+        </dependency>
+
+        <dependency>
             <artifactId>spigot</artifactId>
             <groupId>org.spigotmc</groupId>
             <version>1.10-R1</version>
@@ -131,6 +137,20 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
+            </plugin>
+
+            <!-- API is a runnable application that can host components -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>pl.north93.zgame.api.standalone.StandaloneApiCore</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
     </build>

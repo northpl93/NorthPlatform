@@ -12,23 +12,13 @@ public class ByteArrayTemplate implements Template<byte[]>
     public void serializeObject(final TemplateManager templateManager, final MessageBufferPacker packer, final byte[] object) throws Exception
     {
         packer.packArrayHeader(object.length);
-        for (final byte b : object)
-        {
-            packer.packByte(b);
-        }
+        packer.writePayload(object);
     }
 
     @Override
     public byte[] deserializeObject(final TemplateManager templateManager, final MessageUnpacker unpacker) throws Exception
     {
         final int arraySize = unpacker.unpackArrayHeader();
-        final byte[] bytes = new byte[arraySize];
-
-        for (int i = 0; i < arraySize; i++)
-        {
-            bytes[i] = unpacker.unpackByte();
-        }
-
-        return bytes;
+        return unpacker.readPayload(arraySize);
     }
 }

@@ -28,6 +28,7 @@ public class HomeCmd extends NorthCommand
     public HomeCmd()
     {
         super("home", "dom");
+        this.setAsync(true);
     }
 
     @Override

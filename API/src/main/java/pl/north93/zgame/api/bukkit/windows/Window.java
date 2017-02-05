@@ -1,5 +1,9 @@
 package pl.north93.zgame.api.bukkit.windows;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -57,6 +61,19 @@ public abstract class Window
         this.inventory.clear();
     }
 
+    protected final void fillEmpty(final ItemStack itemStack)
+    {
+        for (int i = 0; i < this.size; i++)
+        {
+            if (this.inventory.getItem(i) != null)
+            {
+                continue;
+            }
+
+            this.inventory.setItem(i, itemStack.clone());
+        }
+    }
+
     final void setOpened(final Player player)
     {
         if (this.isOpened)
@@ -79,5 +96,26 @@ public abstract class Window
         }
     }
 
+    final void setClosed()
+    {
+        this.onClose();
+    }
+
     protected abstract void onShow();
+
+    protected void onClose()
+    {
+    }
+
+    // utils
+
+    protected static String color(final String message)
+    {
+        return org.bukkit.ChatColor.translateAlternateColorCodes('&', message);
+    }
+
+    protected static List<String> lore(final String... message)
+    {
+        return Arrays.stream(message).map(Window::color).collect(Collectors.toList());
+    }
 }

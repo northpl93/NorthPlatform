@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import com.ea.agentloader.AgentLoader;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import org.diorite.utils.DioriteUtils;
 
@@ -36,16 +37,19 @@ public abstract class ApiCore
     private final IComponentManager  componentManager;
     private final Platform           platform;
     private final PlatformConnector  connector;
+    //private final UpdateManager      updateManager;
     private final TemplateManager    messagePackTemplates;
     private final IRpcManager        rpcManager;
+    private       ApiState           apiState;
 
     public ApiCore(final Platform platform, final PlatformConnector platformConnector)
     {
         this.platform = platform;
         this.connector = platformConnector;
-        this.isDebug = System.getProperties().contains("debug");
+        this.isDebug = System.getProperties().containsKey("debug");
         this.instrumentationClient = new LocalAgentClient();
         this.componentManager = new ComponentManagerImpl(this);
+        //this.updateManager = new UpdateManager();
         this.messagePackTemplates = new TemplateManagerImpl();
         this.rpcManager = new RpcManagerImpl();
         try
@@ -56,6 +60,7 @@ public abstract class ApiCore
         {
             throw new RuntimeException("You can't create more than one ApiCore class instances.", e);
         }
+        this.setApiState(ApiState.CONSTRUCTED);
     }
 
     public final Platform getPlatform()
@@ -77,18 +82,24 @@ public abstract class ApiCore
         try
         {
             this.init();
+            this.setApiState(ApiState.INITIALISED);
         }
         catch (final Exception e)
         {
-            e.printStackTrace();
+            this.getLogger().log(Level.SEVERE, "Failed to initialise North API", e);
             return;
         }
 
         this.componentManager.doComponentScan(this.getClass().getClassLoader()); // scan for builtin API components
-        this.componentManager.injectComponents(this.messagePackTemplates, this.rpcManager); // inject base API components
+        this.componentManager.injectComponents(/*this.updateManager,*/ this.messagePackTemplates, this.rpcManager); // inject base API components
         final File components = this.getFile("components");
         DioriteUtils.createDirectory(components);
         this.componentManager.doComponentScan(components); // Scan components directory
+        final String extraDirectory = System.getProperty("northplatform.components");
+        if (! StringUtils.isEmpty(extraDirectory))
+        {
+            this.componentManager.doComponentScan(new File(extraDirectory));
+        }
         this.componentManager.setAutoEnable(true); // components may do own componentScan. So enable auto enable after discovery.
         this.componentManager.enableAllComponents(); // enable all components
 
@@ -100,7 +111,9 @@ public abstract class ApiCore
         {
             e.printStackTrace();
             this.getPlatformConnector().stop();
+            return;
         }
+        this.setApiState(ApiState.ENABLED);
         this.getLogger().info("Client id is " + this.getId());
         this.debug("Debug mode is enabled");
     }
@@ -136,6 +149,7 @@ public abstract class ApiCore
             e.printStackTrace();
         }
         this.componentManager.disableAllComponents();
+        this.setApiState(ApiState.DISABLED);
         this.getLogger().info("North API Core stopped.");
     }
 
@@ -182,9 +196,19 @@ public abstract class ApiCore
 
     public void debug(final Object object)
     {
-        if (this.isDebug)
+        if (! this.isDebug)
         {
-            this.getLogger().log(Level.INFO, "[DEBUG] " + object.toString());
+            return;
+        }
+
+        final Logger logger = this.getLogger();
+        if (logger == null)
+        {
+            System.out.println("[DEBUG] " + object);
+        }
+        else
+        {
+            logger.log(Level.INFO, "[DEBUG] " + object.toString());
         }
     }
 
@@ -205,9 +229,25 @@ public abstract class ApiCore
         }
     }
 
+    private void setApiState(final ApiState newState)
+    {
+        this.apiState = newState;
+        this.debug("Api forced into " + newState + " state.");
+    }
+
+    public final ApiState getApiState()
+    {
+        return this.apiState;
+    }
+
     public abstract Logger getLogger();
 
     public abstract String getId();
+
+    /**
+     * @return główny katalog serwera/bungeecorda.
+     */
+    public abstract File getRootDirectory();
 
     /**
      * @return file inside plugin's configuration directory

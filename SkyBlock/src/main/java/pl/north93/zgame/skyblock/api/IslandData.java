@@ -27,6 +27,8 @@ public final class IslandData
     private Coords2D     islandLocation;
     private HomeLocation homeLocation;
     private NorthBiome   biome;
+    private Double       points;
+    private Boolean      showInRanking;
     @MsgPackCustomTemplate(ArrayListTemplate.class)
     private List<UUID>   invitations;
     @MsgPackCustomTemplate(ArrayListTemplate.class)
@@ -126,6 +128,26 @@ public final class IslandData
     public void setBiome(final NorthBiome biome)
     {
         this.biome = biome;
+    }
+
+    public Double getPoints()
+    {
+        return this.points;
+    }
+
+    public void setPoints(final Double points)
+    {
+        this.points = points;
+    }
+
+    public Boolean getShowInRanking()
+    {
+        return this.showInRanking;
+    }
+
+    public void setShowInRanking(final Boolean showInRanking)
+    {
+        this.showInRanking = showInRanking;
     }
 
     public List<UUID> getInvitations()

@@ -1,8 +1,8 @@
 package pl.north93.zgame.restful;
 
 import static spark.Spark.get;
-import static spark.Spark.halt;
 import static spark.Spark.stop;
+import static spark.route.RouteOverview.enableRouteOverview;
 
 
 import com.google.gson.Gson;
@@ -11,47 +11,35 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.messages.NetworkMeta;
-import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.utils.Wrapper;
-import pl.north93.zgame.restful.models.NetworkStatus;
-import pl.north93.zgame.restful.models.PlayerModel;
+import pl.north93.zgame.restful.controllers.NetworkController;
+import pl.north93.zgame.restful.controllers.PlayerController;
+import pl.north93.zgame.restful.controllers.ServersController;
+import pl.north93.zgame.restful.security.ApiSecurity;
 
 public class RestfulComponent extends Component
 {
     private final Gson gson = new Gson();
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
-    private INetworkManager networkManager;
 
     @Override
     protected void enableComponent()
     {
-        get("player/:nick", (request, response) ->
-        {
-            final Wrapper<Object> myResponse = new Wrapper<>();
-            this.networkManager.getPlayers().access(request.params(":nick"), online ->
-            {
-                myResponse.set(new PlayerModel(online.getUuid(), online.getNick(), true, online.getGroup().getName(), online.getGroupExpireAt(), online.getMetaStore()));
-            }, offline ->
-            {
-                myResponse.set(new PlayerModel(offline.getUuid(), offline.getLatestNick(), false, offline.getGroup().getName(), offline.getGroupExpireAt(), offline.getMetaStore()));
-            });
+        final PlayerController player = new PlayerController();
+        get("player/:nick", player::root, this.gson::toJson);
 
-            if (myResponse.get() == null)
-            {
-                halt(404);
-            }
-            return myResponse.get();
-        }, this.gson::toJson);
+        final NetworkController network = new NetworkController();
+        get("network", network::root, this.gson::toJson);
+        get("network/joinpolicy/:policy", network::joinpolicy, this.gson::toJson);
+        get("network/action/kickall", network::kickall);
+        get("network/action/stopall", network::stopall);
 
-        get("network", (request, response) ->
-        {
-            final NetworkMeta meta = this.networkManager.getNetworkMeta().get();
-            final int onlinePlayers = this.networkManager.getPlayers().onlinePlayersCount();
+        final ServersController servers = new ServersController();
+        get("servers", servers::root, this.gson::toJson);
+        get("servers/:uuid", servers::getServer, this.gson::toJson);
 
-            return new NetworkStatus(meta.displayMaxPlayers, onlinePlayers, meta.joiningPolicy, meta.serverListMotd);
-        }, this.gson::toJson);
+        final ApiSecurity apiSecurity = new ApiSecurity();
+        apiSecurity.setupSecurity();
+
+        enableRouteOverview("help");
     }
 
     @Override

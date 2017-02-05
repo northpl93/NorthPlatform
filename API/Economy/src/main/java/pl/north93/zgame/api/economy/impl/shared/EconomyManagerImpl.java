@@ -15,6 +15,7 @@ import pl.north93.zgame.api.economy.cfg.CurrencyConfig;
 import pl.north93.zgame.api.economy.cfg.EconomyConfig;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
+import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
@@ -42,17 +43,23 @@ public class EconomyManagerImpl implements IEconomyManager
     }
 
     @Override
-    public ITransaction openTransaction(final ICurrency currency, final UUID playerId)
+    public CurrencyRankingImpl getRanking(final ICurrency currency)
     {
-        final IPlayerTransaction transaction = this.networkManager.getPlayers().transaction(playerId);
-        return new TransactionImpl(currency, transaction);
+        return new CurrencyRankingImpl(currency.getName());
     }
 
     @Override
-    public ITransaction openTransaction(final ICurrency currency, final String playerName)
+    public ITransaction openTransaction(final ICurrency currency, final UUID playerId) throws PlayerNotFoundException
+    {
+        final IPlayerTransaction transaction = this.networkManager.getPlayers().transaction(playerId);
+        return new TransactionImpl(currency, transaction, this.getRanking(currency));
+    }
+
+    @Override
+    public ITransaction openTransaction(final ICurrency currency, final String playerName) throws PlayerNotFoundException
     {
         final IPlayerTransaction transaction = this.networkManager.getPlayers().transaction(playerName);
-        return new TransactionImpl(currency, transaction);
+        return new TransactionImpl(currency, transaction, this.getRanking(currency));
     }
 
     public void setConfig(final EconomyConfig economyConfig)

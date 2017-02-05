@@ -24,6 +24,7 @@ public class SpawnCmd extends NorthCommand
     public SpawnCmd()
     {
         super("spawn");
+        this.setAsync(true);
     }
 
     @Override

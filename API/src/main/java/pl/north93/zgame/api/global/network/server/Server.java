@@ -7,6 +7,7 @@ import pl.north93.zgame.api.global.deployment.ServerPattern;
 import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
+import pl.north93.zgame.api.global.redis.rpc.IRpcTarget;
 
 /**
  * Klasa reprezenyująca serwer w sieci.
@@ -68,4 +69,12 @@ public interface Server extends ServerProxyData, ProvidingRedisKey
      * @return grupa serwerów do której należy ten serwer.
      */
     Optional<IServersGroup> getServersGroup();
+
+    /**
+     * Zwraca obiekt IRpcTarget do wykorzystania w zdalnym wywoływaniu
+     * procedur.
+     *
+     * @return {@link IRpcTarget}
+     */
+    IRpcTarget getRpcTarget();
 }

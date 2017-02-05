@@ -31,32 +31,37 @@ import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.skyblock.api.HomeLocation;
-import pl.north93.zgame.skyblock.api.IslandDao;
 import pl.north93.zgame.skyblock.api.IslandData;
 import pl.north93.zgame.skyblock.api.NorthBiome;
 import pl.north93.zgame.skyblock.api.utils.Coords2D;
 import pl.north93.zgame.skyblock.api.utils.Coords3D;
+import pl.north93.zgame.skyblock.server.SkyBlockServer;
+import pl.north93.zgame.skyblock.server.management.IslandHostManager;
+import pl.north93.zgame.skyblock.server.world.points.IslandPoints;
 
 /**
  * Reprezentuje wyspę znajdującą się na konkretnym serwerze i świecie.
  */
 public class Island
 {
-    private final IslandDao         islandDao;
+    private final SkyBlockServer    server;
     private final Value<IslandData> islandData;
     private final UUID              islandId;
     private final Coords2D          coordinates;
     private final IslandLocation    location;
+    private final IslandPoints      points;
 
-    public Island(final IslandDao islandDao, final Value<IslandData> islandData, final IslandLocation location)
+    public Island(final SkyBlockServer server, final Value<IslandData> islandData, final IslandLocation location)
     {
-        this.islandDao = islandDao;
+        this.server = server;
         this.islandData = islandData;
         this.location = location;
 
         final IslandData cacheData = islandData.get();
         this.islandId = cacheData.getIslandId();
         this.coordinates = cacheData.getIslandLocation();
+
+        this.points = new IslandPoints(this.server.<IslandHostManager>getServerManager().getPointsHelper(), this, islandData);
     }
 
     public UUID getId()
@@ -165,12 +170,17 @@ public class Island
         }
     }
 
+    public IslandPoints getPoints()
+    {
+        return this.points;
+    }
+
     private void updateData(final Consumer<IslandData> updater)
     {
         this.islandData.update(data ->
         {
             updater.accept(data);
-            this.islandDao.saveIsland(data);
+            this.server.getIslandDao().saveIsland(data);
         });
     }
 

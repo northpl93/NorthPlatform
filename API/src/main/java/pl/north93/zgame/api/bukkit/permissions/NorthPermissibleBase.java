@@ -2,7 +2,6 @@ package pl.north93.zgame.api.bukkit.permissions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import org.bukkit.permissions.PermissibleBase;
@@ -59,41 +58,47 @@ public class NorthPermissibleBase extends PermissibleBase
     @Override
     public boolean hasPermission(final String permission)
     {
-        final String perm = permission.toLowerCase(Locale.ENGLISH);
-        if (! this.original.hasPermission(perm))
+        final String perm = FastToLowerCase.toLowerCase(permission);
+
+        if (this.cache.containsKey(perm))
         {
-            if (this.cache.containsKey(perm))
-            {
-                return this.cache.getBoolean(perm);
-            }
-            else
-            {
-                final boolean has = this.checkAsterisk(perm);
-                this.cache.put(perm, has);
-                return has;
-            }
+            return this.cache.getBoolean(perm);
         }
-        return true;
+
+        if (! this.original.hasPermission(permission))
+        {
+            final boolean has = this.checkAsterisk(perm);
+            this.cache.put(perm, has);
+            return has;
+        }
+        else
+        {
+            this.cache.put(perm, true);
+            return true;
+        }
     }
 
     @Override
     public boolean hasPermission(final Permission permission)
     {
-        final String perm = permission.getName().toLowerCase(Locale.ENGLISH);
+        final String perm = FastToLowerCase.toLowerCase(permission.getName());
+
+        if (this.cache.containsKey(perm))
+        {
+            return this.cache.getBoolean(perm);
+        }
+
         if (! this.original.hasPermission(permission))
         {
-            if (this.cache.containsKey(perm))
-            {
-                return this.cache.getBoolean(perm);
-            }
-            else
-            {
-                final boolean has = this.checkAsterisk(perm);
-                this.cache.put(perm, has);
-                return has;
-            }
+            final boolean has = this.checkAsterisk(perm);
+            this.cache.put(perm, has);
+            return has;
         }
-        return true;
+        else
+        {
+            this.cache.put(perm, true);
+            return true;
+        }
     }
 
     @Override

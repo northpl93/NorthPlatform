@@ -234,13 +234,13 @@ public class NorthPlatformEconomy extends AbstractEconomy
     @Override
     public boolean createPlayerAccount(final String s)
     {
-        return true;
+        return false;
     }
 
     @Override
     public boolean createPlayerAccount(final String s, final String s1)
     {
-        return true;
+        return false;
     }
 
     @Override

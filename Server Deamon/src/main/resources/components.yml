@@ -1,0 +1,7 @@
+components:
+  - name: Daemon
+    enabled: true
+    mainClass: "pl.north93.zgame.daemon.DaemonComponent"
+    description: "Minecraft servers daemon."
+    dependencies:
+      - API.Database.Redis.Observer

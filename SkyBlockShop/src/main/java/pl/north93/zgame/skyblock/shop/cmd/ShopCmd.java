@@ -8,9 +8,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
+import pl.north93.zgame.api.global.component.annotations.IgnoreExtensionPoint;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.skyblock.shop.ShopComponent;
 
+@IgnoreExtensionPoint // we have custom category picker in SkyBlock.PlayerExperience
 public class ShopCmd extends NorthCommand
 {
     @InjectComponent("SkyBlock.Shop.Server")

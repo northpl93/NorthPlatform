@@ -19,6 +19,7 @@ public class SlotsCommand extends NorthCommand
     {
         super("slots");
         this.setPermission("api.command.slots");
+        this.setAsync(true); // causes tick drop
     }
 
     @Override
@@ -27,7 +28,7 @@ public class SlotsCommand extends NorthCommand
         if (args.length() == 0)
         {
             final NetworkMeta meta = this.networkManager.getNetworkMeta().get();
-            sender.sendMessage("&eAktualne sloty: " + meta.displayMaxPlayers + " Gracze: " + this.networkManager.onlinePlayersCount());
+            sender.sendMessage("&eAktualne sloty: " + meta.displayMaxPlayers + " Gracze: " + this.networkManager.getPlayers().onlinePlayersCount());
         }
         else if (args.length() == 1)
         {

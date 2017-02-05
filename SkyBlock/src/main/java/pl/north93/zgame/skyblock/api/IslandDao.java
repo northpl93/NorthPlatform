@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import com.mongodb.Block;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.UpdateOptions;
 
@@ -107,6 +109,20 @@ public class IslandDao
         this.islandDataCache.getValue(islandId).delete();
     }
 
+    public void moveDataToRedisRanking(final IslandsRanking ranking)
+    {
+        final MongoCollection<Document> database = this.storage.getMainDatabase().getCollection("islands");
+        final FindIterable<Document> documents = database.find();
+        documents.forEach((Block<? super Document>) document ->
+        {
+            final IslandData islandData = this.convert(document);
+            if (islandData.getShowInRanking())
+            {
+                ranking.setPoints(islandData.getIslandId(), islandData.getPoints());
+            }
+        });
+    }
+
     private IslandData getIslandFromDatabase(final UUID islandId) // used by Cache as provider
     {
         return this.convert(this.storage.getMainDatabase().getCollection("islands").find(new Document("islandId", islandId)).first());
@@ -127,6 +143,8 @@ public class IslandDao
         data.setName(doc.getString("name"));
         data.setAcceptingVisits(doc.getBoolean("visits"));
         data.setBiome(NorthBiome.valueOf(doc.getString("biome")));
+        data.setPoints((Double) doc.getOrDefault("points", 0d));
+        data.setShowInRanking((Boolean) doc.getOrDefault("showinranking", true));
 
         final Document islandLocation = doc.get("loc", Document.class);
         data.setIslandLocation(new Coords2D(islandLocation.getInteger("x"), islandLocation.getInteger("z")));
@@ -153,6 +171,8 @@ public class IslandDao
         document.put("name", island.getName());
         document.put("visits", island.getAcceptingVisits());
         document.put("biome", island.getBiome().toString());
+        document.put("points", island.getPoints());
+        document.put("showinranking", island.getShowInRanking());
 
         final Document islandLocation = new Document();
         islandLocation.put("x", island.getIslandLocation().getX());
