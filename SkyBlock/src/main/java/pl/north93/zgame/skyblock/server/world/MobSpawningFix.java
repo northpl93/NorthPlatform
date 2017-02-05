@@ -47,9 +47,9 @@ public class MobSpawningFix
 
         final BlockPosition.MutableBlockPosition blockPosition = new BlockPosition.MutableBlockPosition(locX, 0, locZ);
         final List<BlockPosition> candidates = new ArrayList<>(4);
-        for (int i = chunk.b(relX, relZ); i >= 0; i--)
+        for (int i = chunk.b(relX, relZ); i >= 0; i--) //chunk.b = najwyzszy blok
         {
-            blockPosition.c(locX, i, locZ);
+            blockPosition.c(locX, i, locZ); //BlockPosition.c = ustawienie lokacji
             if (chunk.getBlockData(blockPosition).getMaterial().isSolid())
             {
                 candidates.add(new BlockPosition(locX, i + 1, locZ));

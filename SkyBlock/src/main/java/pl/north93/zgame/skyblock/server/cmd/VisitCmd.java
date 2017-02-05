@@ -30,6 +30,7 @@ public class VisitCmd extends NorthCommand
     public VisitCmd()
     {
         super("visit", "odwiedz");
+        this.setAsync(true);
     }
 
     @Override

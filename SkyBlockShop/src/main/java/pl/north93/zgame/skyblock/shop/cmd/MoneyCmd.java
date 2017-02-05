@@ -1,5 +1,7 @@
 package pl.north93.zgame.skyblock.shop.cmd;
 
+import java.text.DecimalFormat;
+
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,6 +15,7 @@ import pl.north93.zgame.skyblock.shop.ShopComponent;
 
 public class MoneyCmd extends NorthCommand
 {
+    private final DecimalFormat format = new DecimalFormat("#.##");
     @InjectComponent("SkyBlock.Shop.Server")
     private ShopComponent shopComponent;
 
@@ -24,7 +27,8 @@ public class MoneyCmd extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        sender.sendMessage("&f&l> &7Aktualny stan konta: &6" + this.shopComponent.getShopManager().getBalance((Player) sender.unwrapped()));
+        final double balance = this.shopComponent.getShopManager().getBalance((Player) sender.unwrapped());
+        sender.sendMessage("&f&l> &7Aktualny stan konta: &6" + this.format.format(balance));
     }
 
     @Override
