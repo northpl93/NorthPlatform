@@ -1,7 +1,5 @@
 package pl.north93.zgame.api.bukkitcommands;
 
-import org.bukkit.ChatColor;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -11,15 +9,15 @@ import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.network.INetworkManager;
 
-public class BanCommand extends NorthCommand
+public class UnbanCommand extends NorthCommand
 {
     @InjectComponent("API.MinecraftNetwork.NetworkManager")
     private INetworkManager networkManager;
 
-    public BanCommand()
+    public UnbanCommand()
     {
-        super("ban");
-        this.setPermission("api.command.ban");
+        super("unban");
+        this.setPermission("api.command.unban");
     }
 
     @Override
@@ -27,24 +25,17 @@ public class BanCommand extends NorthCommand
     {
         if (args.length() != 1)
         {
-            sender.sendMessage("&c/ban nick");
+            sender.sendMessage("&c/unban nick");
             return;
         }
-        this.networkManager.getPlayers().access(args.asString(0), online ->
-        {
-            online.setBanned(true);
-            online.kick(ChatColor.RED + "Zostales zbanowany!");
-        }, offline ->
-        {
-            offline.setBanned(true);
-        });
+        this.networkManager.getPlayers().access(args.asString(0), player -> player.setBanned(false));
 
-        sender.sendMessage("&cUzytkownik zbanowany");
+        sender.sendMessage("&cUzytkownik odbanowany");
     }
 
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("networkManager", this.networkManager).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

@@ -33,6 +33,7 @@ import pl.north93.zgame.skyblock.api.cfg.IslandConfig;
 import pl.north93.zgame.skyblock.api.utils.Coords2D;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.world.Island;
+import pl.north93.zgame.skyblock.server.world.MobSpawningFix;
 import pl.north93.zgame.skyblock.server.world.WorldManager;
 import pl.north93.zgame.skyblock.server.world.WorldManagerList;
 
@@ -56,6 +57,15 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
     @Override
     public void start()
     {
+        try
+        {
+            MobSpawningFix.applyChange(this.bukkitApiCore.getInstrumentationClient());
+            this.logger.info("[SkyBlock] Applied mob-spawning fix.");
+        }
+        catch (final Exception e)
+        {
+            e.printStackTrace();
+        }
         final File schematics = this.bukkitApiCore.getFile("schematics");
         if (! schematics.exists())
         {
@@ -80,6 +90,9 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
         worldCreator.type(WorldType.FLAT);
         worldCreator.generateStructures(false);
         final World world = Bukkit.createWorld(worldCreator);
+        world.setSpawnFlags(true, true);
+        world.setAnimalSpawnLimit(100);
+        world.setTicksPerAnimalSpawns(1);
 
         this.logger.info("[SkyBlock] World " + worldName + " is ready! Creating world manager...");
 

@@ -73,7 +73,7 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     @Override
     public boolean isBanned()
     {
-        if (this.isBanned)
+        if (this.isBanned == null)
         {
             return false;
         }

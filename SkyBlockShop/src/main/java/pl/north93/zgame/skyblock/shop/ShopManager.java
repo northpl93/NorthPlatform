@@ -121,4 +121,17 @@ public class ShopManager
             e.printStackTrace();
         }
     }
+
+    public double getBalance(final Player player)
+    {
+        try (final ITransaction transaction = this.economyComponent.getEconomyManager().openTransaction(this.currency, player.getUniqueId()))
+        {
+            return transaction.getAmount();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return -1;
+        }
+    }
 }

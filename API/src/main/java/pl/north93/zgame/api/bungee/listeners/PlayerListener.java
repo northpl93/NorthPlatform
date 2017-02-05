@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -36,6 +37,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class PlayerListener implements Listener
 {
+    private final Pattern         nickPattern = Pattern.compile("^[a-zA-Z0-9_]{3,16}$");
     private final BungeeApiCore   bungeeApiCore;
     @InjectResource(bundleName = "Messages")
     private       ResourceBundle  apiMessages;
@@ -60,7 +62,15 @@ public class PlayerListener implements Listener
         {
             try
             {
-                final Optional<UsernameDetails> details = this.bungeeApiCore.getUsernameCache().getUsernameDetails(connection.getName());
+                final String nick = connection.getName();
+                if (! this.nickPattern.matcher(nick).matches())
+                {
+                    event.setCancelled(true);
+                    event.setCancelReason(ChatColor.RED + this.apiMessages.getString("join.invalid_nick"));
+                    return;
+                }
+
+                final Optional<UsernameDetails> details = this.bungeeApiCore.getUsernameCache().getUsernameDetails(nick);
 
                 if (! details.isPresent())
                 {
@@ -70,14 +80,14 @@ public class PlayerListener implements Listener
                 }
 
                 final UsernameDetails usernameDetails = details.get();
-                if (usernameDetails.isPremium() && !usernameDetails.getValidSpelling().equals(connection.getName()))
+                if (usernameDetails.isPremium() && !usernameDetails.getValidSpelling().equals(nick))
                 {
                     event.setCancelled(true);
                     event.setCancelReason(ChatColor.RED + this.apiMessages.getString("join.premium.name_size_mistake"));
                     return;
                 }
 
-                if (this.bungeeApiCore.getNetworkManager().isOnline(connection.getName())) // sprawdzanie czy taki gracz juz jest w sieci
+                if (this.bungeeApiCore.getNetworkManager().isOnline(nick)) // sprawdzanie czy taki gracz juz jest w sieci
                 {
                     event.setCancelled(true);
                     event.setCancelReason(ChatColor.RED + this.apiMessages.getString("join.already_online"));
@@ -133,22 +143,28 @@ public class PlayerListener implements Listener
                     return;
                 }
 
+                final OnlinePlayerImpl cache = player.get();
                 if (joiningPolicy == JoiningPolicy.NOBODY)
                 {
                     event.setCancelled(true);
                     event.setCancelReason(message(this.apiMessages, "join.access_locked"));
                 }
-                else if (joiningPolicy == JoiningPolicy.ONLY_ADMIN && ! player.get().hasPermission("join.admin")) // wpuszczanie tylko adminów
+                else if (joiningPolicy == JoiningPolicy.ONLY_ADMIN && ! cache.hasPermission("join.admin")) // wpuszczanie tylko adminów
                 {
                     event.setCancelled(true);
                     event.setCancelReason(message(this.apiMessages, "join.access_locked"));
                 }
-                else if (joiningPolicy == JoiningPolicy.ONLY_VIP && ! player.get().hasPermission("join.vip"))
+                else if (joiningPolicy == JoiningPolicy.ONLY_VIP && ! cache.hasPermission("join.vip"))
                 {
                     event.setCancelled(true);
                     event.setCancelReason(message(this.apiMessages, "join.access_locked"));
                 }
-                else if (this.networkManager.onlinePlayersCount() > this.networkManager.getNetworkMeta().get().displayMaxPlayers && ! player.get().hasPermission("join.bypass"))
+                else if (cache.isBanned())
+                {
+                    event.setCancelled(true);
+                    event.setCancelReason(message(this.apiMessages, "join.banned"));
+                }
+                else if (this.networkManager.onlinePlayersCount() > this.networkManager.getNetworkMeta().get().displayMaxPlayers && ! cache.hasPermission("join.bypass"))
                 {
                     event.setCancelled(true);
                     event.setCancelReason(message(this.apiMessages, "join.server_full"));
@@ -196,8 +212,15 @@ public class PlayerListener implements Listener
         {
             player.lock();
             final IOnlinePlayer iOnlinePlayer = player.getWithoutCache();
-            iOnlinePlayer.setServerId(UUID.fromString(event.getPlayer().getServer().getInfo().getName()));
-            player.set(iOnlinePlayer); // send new data to redis
+            if (iOnlinePlayer != null)
+            {
+                iOnlinePlayer.setServerId(UUID.fromString(event.getPlayer().getServer().getInfo().getName()));
+                player.set(iOnlinePlayer); // send new data to redis
+            }
+            else
+            {
+                this.bungeeApiCore.getLogger().warning("iOnlinePlayer==null in onServerChange. " + event);
+            }
         }
         catch (final IllegalArgumentException ex)
         {
