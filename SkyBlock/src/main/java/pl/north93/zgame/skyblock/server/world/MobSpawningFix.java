@@ -1,5 +1,8 @@
 package pl.north93.zgame.skyblock.server.world;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.server.v1_10_R1.BlockPosition;
 import net.minecraft.server.v1_10_R1.Chunk;
 import net.minecraft.server.v1_10_R1.SpawnerCreature;
@@ -37,20 +40,27 @@ public class MobSpawningFix
     private static BlockPosition getRandomPosition(final World world, final int chunkX, final int chunkZ)
     {
         final Chunk chunk = world.getChunkAt(chunkX, chunkZ);
-        final int locX = chunkX * 16 + world.random.nextInt(16);
-        final int locZ = chunkZ * 16 + world.random.nextInt(16);
+        final int relX = world.random.nextInt(16);
+        final int locX = chunkX * 16 + relX;
+        final int relZ = world.random.nextInt(16);
+        final int locZ = chunkZ * 16 + relZ;
 
-        for (int i = 128; i < 256; ++i)
+        final BlockPosition.MutableBlockPosition blockPosition = new BlockPosition.MutableBlockPosition(locX, 0, locZ);
+        final List<BlockPosition> candidates = new ArrayList<>(4);
+        for (int i = chunk.b(relX, relZ); i >= 0; i--)
         {
-
-
+            blockPosition.c(locX, i, locZ);
+            if (chunk.getBlockData(blockPosition).getMaterial().isSolid())
+            {
+                candidates.add(new BlockPosition(locX, i + 1, locZ));
+            }
         }
 
-        /*int i1 = MathHelper.c(chunk.e(new BlockPosition(locX, 0, locZ)) + 1, 16);
-        int j1 = world.random.nextInt(i1 > 0?i1:chunk.g() + 16 - 1);*/
+        if (candidates.isEmpty())
+        {
+            return blockPosition;
+        }
 
-        //final int j1 =
-
-        return chunk.getWorld().getHighestBlockYAt(new BlockPosition(locX,0, locZ));
+        return candidates.get(world.random.nextInt(candidates.size()));
     }
 }

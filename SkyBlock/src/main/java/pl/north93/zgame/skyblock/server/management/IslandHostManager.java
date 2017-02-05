@@ -90,9 +90,6 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
         worldCreator.type(WorldType.FLAT);
         worldCreator.generateStructures(false);
         final World world = Bukkit.createWorld(worldCreator);
-        world.setSpawnFlags(true, true);
-        world.setAnimalSpawnLimit(100);
-        world.setTicksPerAnimalSpawns(1);
 
         this.logger.info("[SkyBlock] World " + worldName + " is ready! Creating world manager...");
 
