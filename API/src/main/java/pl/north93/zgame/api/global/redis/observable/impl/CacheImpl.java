@@ -1,5 +1,6 @@
 package pl.north93.zgame.api.global.redis.observable.impl;
 
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -50,10 +51,13 @@ class CacheImpl<K, V> implements Cache<K, V>
     public void put(final K key, final V value)
     {
         final Value<V> remoteValue = this.getValue(key);
-        remoteValue.set(value);
         if (this.expire > 0)
         {
-            remoteValue.expire(this.expire);
+            remoteValue.setExpire(value, this.expire, TimeUnit.SECONDS);
+        }
+        else
+        {
+            remoteValue.set(value);
         }
     }
 

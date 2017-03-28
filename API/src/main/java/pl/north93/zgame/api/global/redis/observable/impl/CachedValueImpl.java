@@ -1,5 +1,6 @@
 package pl.north93.zgame.api.global.redis.observable.impl;
 
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -178,17 +179,38 @@ class CachedValueImpl<T> implements Value<T>
         else
         {
             this.cache = newValue;
-            this.upload();
+            this.upload(-1);
         }
     }
 
-    private void upload()
+    @Override
+    public void setExpire(final T newValue, final long time, final TimeUnit timeUnit)
+    {
+        if (newValue == null)
+        {
+            this.delete();
+        }
+        else
+        {
+            this.cache = newValue;
+            this.upload(timeUnit.toMillis(time));
+        }
+    }
+
+    private void upload(final long time)
     {
         final byte[] serialized = this.observationManager.getMsgPack().serialize(this.clazz, this.cache);
 
         try (final Jedis jedis = this.observationManager.getJedis().getResource())
         {
-            jedis.set(this.objectKey.getKey().getBytes(), serialized);
+            if (time == -1)
+            {
+                jedis.set(this.objectKey.getKey().getBytes(), serialized);
+            }
+            else
+            {
+                jedis.psetex(this.objectKey.getKey().getBytes(), time, serialized);
+            }
             jedis.publish(this.getChannelKey().getBytes(), serialized);
         }
     }

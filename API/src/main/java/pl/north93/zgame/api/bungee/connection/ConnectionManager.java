@@ -2,6 +2,7 @@ package pl.north93.zgame.api.bungee.connection;
 
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -40,8 +41,7 @@ public class ConnectionManager
         if (actions.getServerJoinActions().length != 0)
         {
             final Value<JoinActionsContainer> value = this.observationManager.get(JoinActionsContainer.class, "serveractions:" + player.getName());
-            value.set(actions);
-            value.expire(10);
+            value.setExpire(actions, 10, TimeUnit.SECONDS);
         }
         player.connect(ProxyServer.getInstance().getServerInfo(serverName));
     }

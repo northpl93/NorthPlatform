@@ -1,5 +1,6 @@
 package pl.north93.zgame.api.global.redis.observable;
 
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -62,6 +63,12 @@ public interface Value<T>
      * @param newValue new value which will be uploaded to redis.
      */
     void set(T newValue);
+
+    /**
+     * Sets new value, upload it to Redis and set expire.
+     * @param newValue new value which will be uploaded to redis.
+     */
+    void setExpire(T newValue, long time, TimeUnit timeUnit);
 
     Value<T> setIfUnavailable(Supplier<T> defaultValue);
 

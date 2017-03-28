@@ -121,7 +121,7 @@ public class PlayerListener implements Listener
                 try
                 {
                     player = this.playersDao.loadPlayer(conn.getUniqueId(), conn.getName(), conn.isOnlineMode(), this.bungeeApiCore.getProxyConfig().getUniqueName());
-                    player.expire(2);
+                    player.expire(5);
                 }
                 catch (final NameSizeMistakeException e)
                 {

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import org.bukkit.entity.Player;
 
@@ -98,8 +99,7 @@ public class DataShareManagerImpl implements IDataShareManager
         final byte[] bytes = this.msgPack.serialize(DataContainer.class, new DataContainer(playerId, dataUnitHashMap));
 
         final Value<byte[]> cache = this.observer.get(byte[].class, "playersdata:" + group.getName() + playerId);
-        cache.set(bytes);
-        cache.expire(10);
+        cache.setExpire(bytes, 10, TimeUnit.SECONDS);
 
         this.subscriber.publish("playersdata:" + group.getName(), bytes);
     }
