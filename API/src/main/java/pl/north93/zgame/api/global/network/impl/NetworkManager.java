@@ -12,6 +12,7 @@ import static pl.north93.zgame.api.global.redis.RedisKeys.SERVER;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -126,10 +127,11 @@ class NetworkManager extends Component implements INetworkManager
     @Override
     public Set<Server> getServers(final String serversGroup)
     {
-        return this.getServers().stream()
-                   .filter(server -> server.getServersGroup().isPresent())
-                   .filter(server -> server.getServersGroup().get().getName().equals(serversGroup))
-                   .collect(Collectors.toSet());
+        return this.getServers().stream().filter(server ->
+        {
+            final Optional<IServersGroup> group = server.getServersGroup();
+            return group.isPresent() && group.get().getName().equals(serversGroup);
+        }).collect(Collectors.toSet());
     }
 
     /**

@@ -80,7 +80,7 @@ public class JoinLeftListener implements Listener
     @EventHandler
     public void onKick(final PlayerKickEvent event)
     {
-        // TODO
+        event.setLeaveMessage(null);
     }
 
     private void addPermissions(final PermissionAttachment attachment, final Group group)
