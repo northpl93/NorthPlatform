@@ -28,7 +28,7 @@ import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.skyblock.shared.api.IIslandHostManager;
-import pl.north93.zgame.skyblock.shared.api.IslandDao;
+import pl.north93.zgame.skyblock.shared.impl.IslandDao;
 import pl.north93.zgame.skyblock.shared.api.IslandData;
 import pl.north93.zgame.skyblock.shared.api.NorthBiome;
 import pl.north93.zgame.skyblock.shared.api.cfg.IslandConfig;

@@ -13,7 +13,7 @@ import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 import pl.north93.zgame.skyblock.shared.api.IIslandsRanking;
 import pl.north93.zgame.skyblock.shared.api.ISkyBlockManager;
-import pl.north93.zgame.skyblock.shared.api.IslandDao;
+import pl.north93.zgame.skyblock.shared.impl.IslandDao;
 import pl.north93.zgame.skyblock.shared.impl.IslandsRankingImpl;
 import pl.north93.zgame.skyblock.shared.api.ServerMode;
 import pl.north93.zgame.skyblock.shared.api.cfg.SkyBlockConfig;
