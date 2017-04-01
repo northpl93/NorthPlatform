@@ -39,7 +39,19 @@ public class CurrencyRankingImpl implements ICurrencyRanking
     }
 
     @Override
-    public Set<Pair<UUID, Long>> getTopPlayers(final int count)
+    public Set<UUID> getTopPlayers(final int count)
+    {
+        final Set<String> range = this.ranking.getRevRange(0, count - 1);
+        final Set<UUID> topPlayers = new LinkedHashSet<>(range.size(), 0.001f);
+        for (final String stringUuid : range)
+        {
+            topPlayers.add(UUID.fromString(stringUuid));
+        }
+        return topPlayers;
+    }
+
+    @Override
+    public Set<Pair<UUID, Long>> getTopPlayersMoney(final int count)
     {
         final Set<Pair<String, Long>> range = this.ranking.getRevRangeWithScores(0, count - 1);
         final Set<Pair<UUID, Long>> topPlayers = new LinkedHashSet<>(range.size(), 0.001f);

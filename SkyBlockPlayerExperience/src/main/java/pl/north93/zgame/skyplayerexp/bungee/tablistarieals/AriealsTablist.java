@@ -117,7 +117,7 @@ public class AriealsTablist implements Listener
         final IEconomyManager ecoManager = this.economy.getEconomyManager();
         final ICurrency currency = ecoManager.getCurrency("skyblock");
         int j = 0;
-        for (final Pair<UUID, Long> player : ecoManager.getRanking(currency).getTopPlayers(15))
+        for (final Pair<UUID, Long> player : ecoManager.getRanking(currency).getTopPlayersMoney(15))
         {
             final String nick = this.networkManager.getPlayers().getNickFromUuid(player.getKey());
             final String amount = String.valueOf(player.getValue().intValue()).replace("\u00a0", "");

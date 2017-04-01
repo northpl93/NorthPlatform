@@ -9,5 +9,7 @@ public interface ICurrencyRanking
 {
     long getPosition(UUID playerId);
 
-    Set<Pair<UUID, Long>> getTopPlayers(final int count);
+    Set<UUID> getTopPlayers(final int count);
+
+    Set<Pair<UUID, Long>> getTopPlayersMoney(final int count);
 }
