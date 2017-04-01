@@ -16,6 +16,8 @@ public class SkyAdmin extends NorthCommand
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
         sender.sendMessage("&f&l> &6/odwiedz nick &7odwiedza gracza bez pozwolenia.");
+        sender.sendMessage("&f&l> &6/skyaddmember nick nick &7dodaje gracza do wyspy.");
+        sender.sendMessage("&f&l> &6/skysetowner nick nick &7zmienia wlasciciela wyspy.");
         sender.sendMessage("&f&l> &6/skybypass &7wlacza/wylacza ograniczenia budowania.");
         sender.sendMessage("&f&l> &6/skydelete nick &7usuwa wyspe danego gracza.");
         sender.sendMessage("&f&l> &6/skyresettimer nick &7resetuje czas oczekiwania na stworzenie wyspy.");
