@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -33,12 +34,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
-import pl.north93.zgame.skyblock.shared.api.IslandRole;
-import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.management.IslandHostManager;
 import pl.north93.zgame.skyblock.server.world.Island;
 import pl.north93.zgame.skyblock.server.world.WorldManager;
+import pl.north93.zgame.skyblock.shared.api.IslandRole;
+import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 
 public class WorldModificationListener implements Listener
 {
@@ -269,7 +270,8 @@ public class WorldModificationListener implements Listener
     @EventHandler
     public void onBlockIgnite(final BlockIgniteEvent event)
     {
-        if (event.getCause() == BlockIgniteEvent.IgniteCause.LIGHTNING)
+        final IgniteCause cause = event.getCause();
+        if (cause == IgniteCause.LIGHTNING || cause == IgniteCause.FIREBALL)
         {
             event.setCancelled(true);
         }
