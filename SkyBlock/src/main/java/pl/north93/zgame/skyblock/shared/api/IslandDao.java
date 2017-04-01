@@ -1,4 +1,4 @@
-package pl.north93.zgame.skyblock.api;
+package pl.north93.zgame.skyblock.shared.api;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import pl.north93.zgame.api.global.redis.observable.Cache;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.skyblock.api.utils.Coords2D;
+import pl.north93.zgame.skyblock.shared.api.utils.Coords2D;
 
 public class IslandDao
 {
@@ -109,7 +109,7 @@ public class IslandDao
         this.islandDataCache.getValue(islandId).delete();
     }
 
-    public void moveDataToRedisRanking(final IslandsRanking ranking)
+    public void moveDataToRedisRanking(final IIslandsRanking ranking)
     {
         final MongoCollection<Document> database = this.storage.getMainDatabase().getCollection("islands");
         final FindIterable<Document> documents = database.find();

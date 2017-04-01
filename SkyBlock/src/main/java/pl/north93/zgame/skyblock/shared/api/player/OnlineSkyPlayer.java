@@ -1,6 +1,6 @@
-package pl.north93.zgame.skyblock.api.player;
+package pl.north93.zgame.skyblock.shared.api.player;
 
-import static pl.north93.zgame.skyblock.api.IslandRole.OWNER;
+import static pl.north93.zgame.skyblock.shared.api.IslandRole.OWNER;
 
 
 import java.util.UUID;
@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.skyblock.api.IslandRole;
+import pl.north93.zgame.skyblock.shared.api.IslandRole;
 
 class OnlineSkyPlayer extends SkyPlayer
 {

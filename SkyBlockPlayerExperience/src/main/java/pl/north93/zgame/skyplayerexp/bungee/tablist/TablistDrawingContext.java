@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.skyblock.api.IslandData;
+import pl.north93.zgame.skyblock.shared.api.IslandData;
 
 public class TablistDrawingContext
 {

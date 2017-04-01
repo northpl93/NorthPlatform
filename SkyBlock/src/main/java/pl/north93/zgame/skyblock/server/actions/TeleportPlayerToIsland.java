@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackIgnore;
-import pl.north93.zgame.skyblock.api.ServerMode;
+import pl.north93.zgame.skyblock.shared.api.ServerMode;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.management.IslandHostManager;
 

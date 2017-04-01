@@ -15,7 +15,7 @@ import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
-import pl.north93.zgame.skyblock.api.IIslandHostManager;
+import pl.north93.zgame.skyblock.shared.api.IIslandHostManager;
 
 public class IslandHostManagers
 {

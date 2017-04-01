@@ -1,4 +1,4 @@
-package pl.north93.zgame.skyblock.api.cfg;
+package pl.north93.zgame.skyblock.shared.api.cfg;
 
 import static org.diorite.cfg.annotations.CfgCollectionStyle.CollectionStyle.ALWAYS_NEW_LINE;
 
@@ -20,7 +20,7 @@ import org.diorite.cfg.annotations.defaults.CfgStringDefault;
 
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.HashMapTemplate;
-import pl.north93.zgame.skyblock.api.HomeLocation;
+import pl.north93.zgame.skyblock.shared.api.HomeLocation;
 
 @CfgComment("Konfiguracja SkyBlocka")
 public class SkyBlockConfig

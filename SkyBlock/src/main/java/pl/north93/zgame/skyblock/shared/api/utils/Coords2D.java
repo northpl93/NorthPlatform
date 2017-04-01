@@ -1,4 +1,4 @@
-package pl.north93.zgame.skyblock.api.utils;
+package pl.north93.zgame.skyblock.shared.api.utils;
 
 import java.util.Objects;
 

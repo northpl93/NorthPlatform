@@ -22,7 +22,7 @@ import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
-import pl.north93.zgame.skyblock.api.IslandData;
+import pl.north93.zgame.skyblock.shared.api.IslandData;
 import pl.north93.zgame.skyblock.bungee.SkyBlockBungee;
 import pl.north93.zgame.skyplayerexp.bungee.tablist.StaticProvider;
 import pl.north93.zgame.skyplayerexp.bungee.tablist.TablistManager;

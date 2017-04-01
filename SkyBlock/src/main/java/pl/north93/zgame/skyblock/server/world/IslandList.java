@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
-import pl.north93.zgame.skyblock.api.utils.Coords2D;
+import pl.north93.zgame.skyblock.shared.api.utils.Coords2D;
 
 public class IslandList
 {

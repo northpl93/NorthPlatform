@@ -11,17 +11,18 @@ import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
-import pl.north93.zgame.skyblock.api.ISkyBlockManager;
-import pl.north93.zgame.skyblock.api.IslandDao;
-import pl.north93.zgame.skyblock.api.IslandsRanking;
-import pl.north93.zgame.skyblock.api.ServerMode;
-import pl.north93.zgame.skyblock.api.cfg.SkyBlockConfig;
+import pl.north93.zgame.skyblock.shared.api.IIslandsRanking;
+import pl.north93.zgame.skyblock.shared.api.ISkyBlockManager;
+import pl.north93.zgame.skyblock.shared.api.IslandDao;
+import pl.north93.zgame.skyblock.shared.impl.IslandsRankingImpl;
+import pl.north93.zgame.skyblock.shared.api.ServerMode;
+import pl.north93.zgame.skyblock.shared.api.cfg.SkyBlockConfig;
 import pl.north93.zgame.skyblock.server.listeners.SetupListeners;
 import pl.north93.zgame.skyblock.server.management.ISkyBlockServerManager;
 import pl.north93.zgame.skyblock.server.management.ServerManagerFactory;
 import pl.north93.zgame.skyblock.server.world.Island;
 
-@IncludeInScanning("pl.north93.zgame.skyblock.api")
+@IncludeInScanning("pl.north93.zgame.skyblock.shared")
 public class SkyBlockServer extends Component
 {
     private BukkitApiCore          bukkitApiCore;
@@ -32,7 +33,7 @@ public class SkyBlockServer extends Component
     private SkyBlockConfig         skyBlockConfig;
     private ISkyBlockManager       skyBlockManager;
     private ISkyBlockServerManager serverManager;
-    private IslandsRanking         islandsRanking;
+    private IIslandsRanking        IIslandsRanking;
 
     @Override
     protected void enableComponent()
@@ -44,7 +45,7 @@ public class SkyBlockServer extends Component
         this.getApiCore().getLogger().info("[SkyBlock] Server is running in " + this.serverMode + " mode");
         this.serverManager = ServerManagerFactory.INSTANCE.getServerManager(this.serverMode);
         this.serverManager.start();
-        this.islandsRanking = new IslandsRanking();
+        this.IIslandsRanking = new IslandsRankingImpl();
         SetupListeners.setup(this);
         this.getApiCore().getLogger().info("[SkyBlock] SkyBlock started...");
     }
@@ -58,7 +59,7 @@ public class SkyBlockServer extends Component
 
     /**
      * Zwraca DAO służące do obsługi danych wysp.
-     * @see pl.north93.zgame.skyblock.api.IslandData
+     * @see pl.north93.zgame.skyblock.shared.api.IslandData
      * @return Data Access Object dla IslandData
      */
     public IslandDao getIslandDao()
@@ -104,9 +105,9 @@ public class SkyBlockServer extends Component
      * Zwraca klasę pomocniczą obsługującą ranking skyblocka.
      * @return klasa do obsługi rankingu.
      */
-    public IslandsRanking getIslandsRanking()
+    public IIslandsRanking getIslandsRanking()
     {
-        return this.islandsRanking;
+        return this.IIslandsRanking;
     }
 
     public boolean canAccess(final Player player, final Island island)

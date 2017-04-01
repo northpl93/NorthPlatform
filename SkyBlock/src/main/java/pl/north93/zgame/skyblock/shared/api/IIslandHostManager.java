@@ -1,9 +1,9 @@
-package pl.north93.zgame.skyblock.api;
+package pl.north93.zgame.skyblock.shared.api;
 
 import java.util.UUID;
 
 import pl.north93.zgame.api.global.redis.rpc.annotation.DoNotWaitForResponse;
-import pl.north93.zgame.skyblock.api.utils.Coords2D;
+import pl.north93.zgame.skyblock.shared.api.utils.Coords2D;
 
 /**
  * Odpowiada za zarządzanie konkretną instancją hosta wysp.

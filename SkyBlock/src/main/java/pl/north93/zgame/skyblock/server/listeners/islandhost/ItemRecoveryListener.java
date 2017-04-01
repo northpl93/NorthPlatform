@@ -20,7 +20,7 @@ import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.skyblock.api.player.SkyPlayer;
+import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 
 public class ItemRecoveryListener implements Listener

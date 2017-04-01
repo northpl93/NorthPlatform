@@ -6,7 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import pl.north93.zgame.api.global.redis.observable.Lock;
-import pl.north93.zgame.skyblock.api.player.SkyPlayer;
+import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.server.world.Island;
 
 public interface ISkyBlockServerManager

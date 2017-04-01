@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.skyblock.api.IIslandHostManager;
+import pl.north93.zgame.skyblock.shared.api.IIslandHostManager;
 
 public class IslandHostServer
 {

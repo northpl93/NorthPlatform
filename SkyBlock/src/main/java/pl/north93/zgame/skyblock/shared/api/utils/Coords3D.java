@@ -1,4 +1,4 @@
-package pl.north93.zgame.skyblock.api.utils;
+package pl.north93.zgame.skyblock.shared.api.utils;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

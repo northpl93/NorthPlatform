@@ -19,7 +19,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.skyblock.api.IslandData;
+import pl.north93.zgame.skyblock.shared.api.IslandData;
 import pl.north93.zgame.skyblock.server.world.Island;
 import pl.north93.zgame.skyblock.server.world.IslandLocation;
 

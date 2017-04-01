@@ -15,9 +15,9 @@ import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectResource;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.skyblock.api.IslandRole;
-import pl.north93.zgame.skyblock.api.NorthBiome;
-import pl.north93.zgame.skyblock.api.player.SkyPlayer;
+import pl.north93.zgame.skyblock.shared.api.IslandRole;
+import pl.north93.zgame.skyblock.shared.api.NorthBiome;
+import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.gui.BiomeChangeGui;
 

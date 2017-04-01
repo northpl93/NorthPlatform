@@ -30,11 +30,11 @@ import org.apache.commons.lang3.tuple.Pair;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.skyblock.api.HomeLocation;
-import pl.north93.zgame.skyblock.api.IslandData;
-import pl.north93.zgame.skyblock.api.NorthBiome;
-import pl.north93.zgame.skyblock.api.utils.Coords2D;
-import pl.north93.zgame.skyblock.api.utils.Coords3D;
+import pl.north93.zgame.skyblock.shared.api.HomeLocation;
+import pl.north93.zgame.skyblock.shared.api.IslandData;
+import pl.north93.zgame.skyblock.shared.api.NorthBiome;
+import pl.north93.zgame.skyblock.shared.api.utils.Coords2D;
+import pl.north93.zgame.skyblock.shared.api.utils.Coords3D;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.management.IslandHostManager;
 import pl.north93.zgame.skyblock.server.world.points.IslandPoints;
@@ -146,7 +146,7 @@ public class Island
     /**
      * This method only applies changes to island.
      *
-     * @see pl.north93.zgame.skyblock.api.ISkyBlockManager#changeBiome(UUID, NorthBiome)
+     * @see pl.north93.zgame.skyblock.shared.api.ISkyBlockManager#changeBiome(UUID, NorthBiome)
      * @param newBiome new biome to apply.
      */
     public void setBiome(final NorthBiome newBiome)

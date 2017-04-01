@@ -1,4 +1,4 @@
-package pl.north93.zgame.skyblock.api;
+package pl.north93.zgame.skyblock.shared.api;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
-import pl.north93.zgame.skyblock.api.utils.Coords2D;
+import pl.north93.zgame.skyblock.shared.api.utils.Coords2D;
 
 /**
  * Klasa przechowująca informacje o wyspie.

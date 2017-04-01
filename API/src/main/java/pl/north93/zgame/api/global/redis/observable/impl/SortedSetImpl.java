@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.tuple.Pair;
 
-import javafx.util.Pair;
 import pl.north93.zgame.api.global.redis.observable.SortedSet;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Tuple;
@@ -124,7 +124,7 @@ class SortedSetImpl<K> implements SortedSet<K>
 
     private Pair<String, Long> tupleToPair(final Tuple tuple) // used by *WithScore
     {
-        return new Pair<>(tuple.getElement(), (long) tuple.getScore());
+        return Pair.of(tuple.getElement(), (long) tuple.getScore());
     }
 
     @Override

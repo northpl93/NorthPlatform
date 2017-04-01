@@ -1,4 +1,4 @@
-package pl.north93.zgame.skyblock.api.player;
+package pl.north93.zgame.skyblock.shared.api.player;
 
 import java.util.UUID;
 
@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
-import pl.north93.zgame.skyblock.api.IslandRole;
+import pl.north93.zgame.skyblock.shared.api.IslandRole;
 
 class OfflineSkyPlayer extends SkyPlayer
 {

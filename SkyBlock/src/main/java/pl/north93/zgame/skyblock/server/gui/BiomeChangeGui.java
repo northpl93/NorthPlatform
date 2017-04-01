@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.utils.ItemStackBuilder;
 import pl.north93.zgame.api.bukkit.windows.Window;
-import pl.north93.zgame.skyblock.api.NorthBiome;
+import pl.north93.zgame.skyblock.shared.api.NorthBiome;
 
 public class BiomeChangeGui extends Window
 {

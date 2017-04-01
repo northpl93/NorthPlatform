@@ -9,8 +9,8 @@ import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
-import pl.north93.zgame.skyblock.api.IslandRole;
-import pl.north93.zgame.skyblock.api.player.SkyPlayer;
+import pl.north93.zgame.skyblock.shared.api.IslandRole;
+import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 
 public class SkyAddMember extends NorthCommand

@@ -1,4 +1,4 @@
-package pl.north93.zgame.skyblock.api;
+package pl.north93.zgame.skyblock.shared.impl;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -11,8 +11,9 @@ import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.SortedSet;
+import pl.north93.zgame.skyblock.shared.api.IIslandsRanking;
 
-public final class IslandsRanking
+public final class IslandsRankingImpl implements IIslandsRanking
 {
     @InjectComponent("API.Database.Redis.Observer")
     private IObservationManager observationManager;
@@ -24,26 +25,31 @@ public final class IslandsRanking
         this.ranking = this.observationManager.getSortedSet("skyrank");
     }
 
+    @Override
     public void setPoints(final UUID islandId, final double points)
     {
         this.ranking.add(islandId, points);
     }
 
+    @Override
     public double getPoints(final UUID islandId)
     {
         return this.ranking.get(islandId);
     }
 
+    @Override
     public long getPosition(final UUID islandId)
     {
         return this.ranking.getRevRank(islandId);
     }
 
+    @Override
     public void removeIsland(final UUID islandId)
     {
         this.ranking.remove(islandId);
     }
 
+    @Override
     public Set<UUID> getTopIslands(final int count)
     {
         final Set<String> range = this.ranking.getRevRange(0, count - 1);
@@ -55,6 +61,7 @@ public final class IslandsRanking
         return topIslands;
     }
 
+    @Override
     public void clearRanking()
     {
         this.ranking.clear();

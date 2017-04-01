@@ -15,7 +15,7 @@ import pl.north93.zgame.api.bukkit.windows.ClickHandler;
 import pl.north93.zgame.api.bukkit.windows.Window;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.skyblock.api.player.SkyPlayer;
+import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 
 public class ServerMenu extends Window
 {

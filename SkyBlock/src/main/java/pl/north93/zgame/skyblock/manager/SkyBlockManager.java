@@ -19,22 +19,23 @@ import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
-import pl.north93.zgame.skyblock.api.ISkyBlockManager;
-import pl.north93.zgame.skyblock.api.IslandDao;
-import pl.north93.zgame.skyblock.api.IslandData;
-import pl.north93.zgame.skyblock.api.IslandRole;
-import pl.north93.zgame.skyblock.api.IslandsRanking;
-import pl.north93.zgame.skyblock.api.NorthBiome;
-import pl.north93.zgame.skyblock.api.ServerMode;
-import pl.north93.zgame.skyblock.api.cfg.IslandConfig;
-import pl.north93.zgame.skyblock.api.cfg.SkyBlockConfig;
-import pl.north93.zgame.skyblock.api.player.SkyPlayer;
-import pl.north93.zgame.skyblock.api.utils.Coords2D;
+import pl.north93.zgame.skyblock.shared.api.IIslandsRanking;
+import pl.north93.zgame.skyblock.shared.api.ISkyBlockManager;
+import pl.north93.zgame.skyblock.shared.api.IslandDao;
+import pl.north93.zgame.skyblock.shared.api.IslandData;
+import pl.north93.zgame.skyblock.shared.api.IslandRole;
+import pl.north93.zgame.skyblock.shared.impl.IslandsRankingImpl;
+import pl.north93.zgame.skyblock.shared.api.NorthBiome;
+import pl.north93.zgame.skyblock.shared.api.ServerMode;
+import pl.north93.zgame.skyblock.shared.api.cfg.IslandConfig;
+import pl.north93.zgame.skyblock.shared.api.cfg.SkyBlockConfig;
+import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
+import pl.north93.zgame.skyblock.shared.api.utils.Coords2D;
 import pl.north93.zgame.skyblock.manager.servers.IslandHostManagers;
 import pl.north93.zgame.skyblock.manager.servers.IslandHostServer;
 import pl.north93.zgame.skyblock.server.actions.TeleportPlayerToIsland;
 
-@IncludeInScanning("pl.north93.zgame.skyblock.api")
+@IncludeInScanning("pl.north93.zgame.skyblock.shared")
 public class SkyBlockManager extends Component implements ISkyBlockManager
 {
     @InjectComponent("API.Database.Redis.RPC")
@@ -47,7 +48,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
     private ResourceBundle      messages;
     private IslandDao           islandDao;
     private IslandHostManagers  islandHostManager;
-    private IslandsRanking      islandsRanking;
+    private IIslandsRanking     IIslandsRanking;
     private SkyBlockConfig      skyBlockConfig;
 
     @Override
@@ -59,8 +60,8 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
         }
         this.islandHostManager = new IslandHostManagers();
         this.islandDao = new IslandDao();
-        this.islandsRanking = new IslandsRanking();
-        this.islandDao.moveDataToRedisRanking(this.islandsRanking);
+        this.IIslandsRanking = new IslandsRankingImpl();
+        this.islandDao.moveDataToRedisRanking(this.IIslandsRanking);
         this.skyBlockConfig = ConfigUtils.loadConfigFile(SkyBlockConfig.class, this.getApiCore().getFile("skyblock.yml"));
         this.rpcManager.addRpcImplementation(ISkyBlockManager.class, this);
     }
@@ -68,7 +69,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
     @Override
     protected void disableComponent()
     {
-        this.islandsRanking.clearRanking();
+        this.IIslandsRanking.clearRanking();
     }
 
     @Override
@@ -169,7 +170,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
 
         this.islandDao.saveIsland(island);
         server.getIslandHostManager().islandAdded(islandId, islandType);
-        this.islandsRanking.setPoints(islandId, 0); // add island to ranking
+        this.IIslandsRanking.setPoints(islandId, 0); // add island to ranking
 
         networkPlayer.get().sendMessage(this.messages, "info.created_island");
         networkPlayer.get().connectTo(server.getServerValue().get(), new TeleportPlayerToIsland(islandId));
@@ -193,7 +194,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
         final IslandHostServer server = this.islandHostManager.getServer(data.getServerId());
         server.getIslandHostManager().islandRemoved(data); // we must send data because it's already removed from database
 
-        this.islandsRanking.removeIsland(islandId); // remove island from ranking
+        this.IIslandsRanking.removeIsland(islandId); // remove island from ranking
     }
 
     @Override
@@ -356,12 +357,12 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
             if (oldValue && !newValue)
             {
                 data.setShowInRanking(false);
-                this.islandsRanking.removeIsland(islandId);
+                this.IIslandsRanking.removeIsland(islandId);
             }
             else if (!oldValue && newValue)
             {
                 data.setShowInRanking(true);
-                this.islandsRanking.setPoints(islandId, data.getPoints());
+                this.IIslandsRanking.setPoints(islandId, data.getPoints());
             }
         });
     }

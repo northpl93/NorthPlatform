@@ -16,11 +16,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.skyblock.api.IslandData;
-import pl.north93.zgame.skyblock.api.cfg.IslandConfig;
-import pl.north93.zgame.skyblock.api.utils.Coords2D;
-import pl.north93.zgame.skyblock.api.utils.Coords3D;
-import pl.north93.zgame.skyblock.api.utils.SpiralOut;
+import pl.north93.zgame.skyblock.shared.api.IslandData;
+import pl.north93.zgame.skyblock.shared.api.cfg.IslandConfig;
+import pl.north93.zgame.skyblock.shared.api.utils.Coords2D;
+import pl.north93.zgame.skyblock.shared.api.utils.Coords3D;
+import pl.north93.zgame.skyblock.shared.api.utils.SpiralOut;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 
 /**

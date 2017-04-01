@@ -14,8 +14,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import pl.north93.zgame.skyblock.api.utils.Coords2D;
-import pl.north93.zgame.skyblock.api.utils.Coords3D;
+import pl.north93.zgame.skyblock.shared.api.utils.Coords2D;
+import pl.north93.zgame.skyblock.shared.api.utils.Coords3D;
 
 public class IslandLocation
 {

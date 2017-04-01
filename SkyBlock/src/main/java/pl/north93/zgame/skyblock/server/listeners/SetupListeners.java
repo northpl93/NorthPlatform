@@ -7,7 +7,7 @@ import org.bukkit.plugin.PluginManager;
 import pl.north93.northspigot.event.blockchange.BlockChangeInvoker;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.skyblock.api.ServerMode;
+import pl.north93.zgame.skyblock.shared.api.ServerMode;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.listeners.islandhost.BadMobsListener;
 import pl.north93.zgame.skyblock.server.listeners.islandhost.DieListener;

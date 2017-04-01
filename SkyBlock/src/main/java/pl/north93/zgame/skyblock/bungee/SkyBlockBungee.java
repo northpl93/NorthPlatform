@@ -10,26 +10,27 @@ import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
-import pl.north93.zgame.skyblock.api.ISkyBlockManager;
-import pl.north93.zgame.skyblock.api.IslandDao;
-import pl.north93.zgame.skyblock.api.IslandsRanking;
-import pl.north93.zgame.skyblock.api.cfg.SkyBlockConfig;
+import pl.north93.zgame.skyblock.shared.api.IIslandsRanking;
+import pl.north93.zgame.skyblock.shared.api.ISkyBlockManager;
+import pl.north93.zgame.skyblock.shared.api.IslandDao;
+import pl.north93.zgame.skyblock.shared.impl.IslandsRankingImpl;
+import pl.north93.zgame.skyblock.shared.api.cfg.SkyBlockConfig;
 
-@IncludeInScanning("pl.north93.zgame.skyblock.api")
+@IncludeInScanning("pl.north93.zgame.skyblock.shared")
 public class SkyBlockBungee extends Component
 {
     @InjectComponent("API.Database.Redis.RPC")
-    private IRpcManager    rpcManager;
-    private SkyBlockConfig config;
-    private IslandsRanking ranking;
-    private IslandDao      islandDao;
+    private IRpcManager     rpcManager;
+    private SkyBlockConfig  config;
+    private IIslandsRanking ranking;
+    private IslandDao       islandDao;
 
     @Override
     protected void enableComponent()
     {
         this.config = this.rpcManager.createRpcProxy(ISkyBlockManager.class, networkController()).getConfig();
         this.islandDao = new IslandDao();
-        this.ranking = new IslandsRanking();
+        this.ranking = new IslandsRankingImpl();
     }
 
     @Override
@@ -47,7 +48,7 @@ public class SkyBlockBungee extends Component
         return this.islandDao;
     }
 
-    public IslandsRanking getRanking()
+    public IIslandsRanking getRanking()
     {
         return this.ranking;
     }

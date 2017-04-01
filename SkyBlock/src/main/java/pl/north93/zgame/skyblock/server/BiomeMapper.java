@@ -2,7 +2,7 @@ package pl.north93.zgame.skyblock.server;
 
 import org.bukkit.block.Biome;
 
-import pl.north93.zgame.skyblock.api.NorthBiome;
+import pl.north93.zgame.skyblock.shared.api.NorthBiome;
 
 public final class BiomeMapper
 {

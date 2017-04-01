@@ -14,11 +14,11 @@ import pl.north93.zgame.api.bukkit.windows.ClickHandler;
 import pl.north93.zgame.api.bukkit.windows.Window;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.skyblock.api.IslandData;
-import pl.north93.zgame.skyblock.api.IslandRole;
-import pl.north93.zgame.skyblock.api.NorthBiome;
-import pl.north93.zgame.skyblock.api.cfg.IslandConfig;
-import pl.north93.zgame.skyblock.api.player.SkyPlayer;
+import pl.north93.zgame.skyblock.shared.api.IslandData;
+import pl.north93.zgame.skyblock.shared.api.IslandRole;
+import pl.north93.zgame.skyblock.shared.api.NorthBiome;
+import pl.north93.zgame.skyblock.shared.api.cfg.IslandConfig;
+import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 import pl.north93.zgame.skyplayerexp.server.ExperienceServer;
 
 public class IslandOptions extends Window

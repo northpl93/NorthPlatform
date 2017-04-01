@@ -13,7 +13,7 @@ import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.skyblock.api.ServerMode;
+import pl.north93.zgame.skyblock.shared.api.ServerMode;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyplayerexp.server.ExperienceServer;
 

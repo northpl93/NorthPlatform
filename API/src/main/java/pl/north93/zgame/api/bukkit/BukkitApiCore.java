@@ -98,6 +98,10 @@ public class BukkitApiCore extends ApiCore
     @Override
     public Logger getLogger()
     {
+        if (this.pluginMain == null) // can be true in constructor
+        {
+            return null;
+        }
         return this.pluginMain.getLogger();
     }
 

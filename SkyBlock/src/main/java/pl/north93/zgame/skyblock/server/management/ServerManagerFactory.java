@@ -1,6 +1,6 @@
 package pl.north93.zgame.skyblock.server.management;
 
-import pl.north93.zgame.skyblock.api.ServerMode;
+import pl.north93.zgame.skyblock.shared.api.ServerMode;
 
 public class ServerManagerFactory
 {

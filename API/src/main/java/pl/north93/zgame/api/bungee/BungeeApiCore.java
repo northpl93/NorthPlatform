@@ -41,7 +41,7 @@ public class BungeeApiCore extends ApiCore
     @Override
     public Logger getLogger()
     {
-        if (this.bungeePlugin == null)
+        if (this.bungeePlugin == null) // can be true in constructor
         {
             return null;
         }

@@ -1,4 +1,4 @@
-package pl.north93.zgame.skyblock.api;
+package pl.north93.zgame.skyblock.shared.api;
 
 public enum ServerMode
 {
