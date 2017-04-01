@@ -1,12 +1,15 @@
 package pl.north93.zgame.api.global.redis.observable.impl;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javafx.util.Pair;
 import pl.north93.zgame.api.global.redis.observable.SortedSet;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Tuple;
 
 class SortedSetImpl<K> implements SortedSet<K>
 {
@@ -99,6 +102,29 @@ class SortedSetImpl<K> implements SortedSet<K>
         {
             return jedis.zrevrange(this.prefix, from, to);
         }
+    }
+
+    @Override
+    public Set<Pair<String, Long>> getRangeWithScores(final long from, final long to)
+    {
+        try (final Jedis jedis = this.observationManager.getJedis().getResource())
+        {
+            return jedis.zrangeWithScores(this.prefix, from, to).stream().map(this::tupleToPair).collect(Collectors.toSet());
+        }
+    }
+
+    @Override
+    public Set<Pair<String, Long>> getRevRangeWithScores(final long from, final long to)
+    {
+        try (final Jedis jedis = this.observationManager.getJedis().getResource())
+        {
+            return jedis.zrevrangeWithScores(this.prefix, from, to).stream().map(this::tupleToPair).collect(Collectors.toSet());
+        }
+    }
+
+    private Pair<String, Long> tupleToPair(final Tuple tuple) // used by *WithScore
+    {
+        return new Pair<>(tuple.getElement(), (long) tuple.getScore());
     }
 
     @Override

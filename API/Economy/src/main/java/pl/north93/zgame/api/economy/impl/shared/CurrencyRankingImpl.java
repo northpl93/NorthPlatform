@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.tuple.Pair;
 
 import pl.north93.zgame.api.economy.ICurrencyRanking;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
@@ -38,13 +39,13 @@ public class CurrencyRankingImpl implements ICurrencyRanking
     }
 
     @Override
-    public Set<UUID> getTopPlayers(final int count)
+    public Set<Pair<UUID, Long>> getTopPlayers(final int count)
     {
-        final Set<String> range = this.ranking.getRevRange(0, count - 1);
-        final Set<UUID> topPlayers = new LinkedHashSet<>(range.size(), 0.001f);
-        for (final String stringUuid : range)
+        final Set<Pair<String, Long>> range = this.ranking.getRevRangeWithScores(0, count - 1);
+        final Set<Pair<UUID, Long>> topPlayers = new LinkedHashSet<>(range.size(), 0.001f);
+        for (final Pair<String, Long> element : range)
         {
-            topPlayers.add(UUID.fromString(stringUuid));
+            topPlayers.add(Pair.of(UUID.fromString(element.getKey()), element.getValue()));
         }
         return topPlayers;
     }

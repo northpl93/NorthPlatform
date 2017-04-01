@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.tuple.Pair;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
@@ -15,12 +16,10 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import pl.north93.zgame.api.economy.ICurrency;
 import pl.north93.zgame.api.economy.IEconomyManager;
-import pl.north93.zgame.api.economy.ITransaction;
 import pl.north93.zgame.api.economy.impl.client.EconomyComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 import pl.north93.zgame.skyblock.api.IslandData;
@@ -118,18 +117,12 @@ public class AriealsTablist implements Listener
         final IEconomyManager ecoManager = this.economy.getEconomyManager();
         final ICurrency currency = ecoManager.getCurrency("skyblock");
         int j = 0;
-        for (final UUID playerId : ecoManager.getRanking(currency).getTopPlayers(15))
+        for (final Pair<UUID, Long> player : ecoManager.getRanking(currency).getTopPlayers(15))
         {
-            try (final ITransaction t = ecoManager.openTransaction(currency, playerId))
-            {
-                final IPlayer player = t.getAssociatedPlayer();
-                final String amount = String.valueOf((int) t.getAmount()).replace("\u00a0", "");
-                final String msg = MessageFormat.format("&e{0}.&r{1} &6{2}", j + 1, player.getLatestNick(), amount);
-                this.moneyRanking[j++].setText(msg);
-            }
-            catch (final Exception ignored)
-            {
-            }
+            final String nick = this.networkManager.getPlayers().getNickFromUuid(player.getKey());
+            final String amount = String.valueOf(player.getValue().intValue()).replace("\u00a0", "");
+            final String msg = MessageFormat.format("&e{0}.&r{1} &6{2}", j + 1, nick, amount);
+            this.moneyRanking[j++].setText(msg);
         }
 
         for (final StaticProvider onlineAdmin : this.onlineAdmins)
