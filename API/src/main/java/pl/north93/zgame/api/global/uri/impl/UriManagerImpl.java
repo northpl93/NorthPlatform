@@ -25,14 +25,10 @@ public class UriManagerImpl extends Component implements IUriManager
     @Override
     public Object call(final URI uri, final Object... parameter)
     {
-        final String calledUri;
-        if (parameter.length == 0)
+        String calledUri = uri.getHost() + uri.getPath();
+        if (parameter.length != 0)
         {
-            calledUri = uri.getPath();
-        }
-        else
-        {
-            calledUri = MessageFormat.format(uri.getPath(), parameter);
+            calledUri = MessageFormat.format(calledUri, parameter);
         }
 
         final Routed routed = this.router.route(calledUri);

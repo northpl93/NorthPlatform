@@ -14,6 +14,11 @@ components:
     extensionPoints:
       - "pl.north93.zgame.api.global.commands.NorthCommand"
 
+  - name: API.URI
+    enabled: true
+    mainClass: "pl.north93.zgame.api.global.uri.impl.UriManagerImpl"
+    description: "Unified system for inter-component communication."
+
   - name: API.Database.StorageConnector
     enabled: true
     mainClass: "pl.north93.zgame.api.global.data.StorageConnector"
