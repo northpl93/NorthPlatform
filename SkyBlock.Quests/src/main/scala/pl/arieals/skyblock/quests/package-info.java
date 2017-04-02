@@ -1,1 +1,0 @@
-package pl.arieals.skyblock.quests;
