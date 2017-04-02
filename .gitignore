@@ -1,6 +1,6 @@
 ### NorthPL template
 # test server
-test/
+/test/
 # maven
 target/
 ### Windows template

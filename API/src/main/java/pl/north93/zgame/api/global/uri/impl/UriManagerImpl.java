@@ -36,6 +36,10 @@ public class UriManagerImpl extends Component implements IUriManager
         }
 
         final Routed routed = this.router.route(calledUri);
+        if (routed == null)
+        {
+            return null;
+        }
 
         return routed.handler().handle(calledUri, routed.params());
     }
@@ -54,6 +58,10 @@ public class UriManagerImpl extends Component implements IUriManager
         }
 
         final Routed routed = this.router.route(calledUri);
+        if (routed == null)
+        {
+            return null;
+        }
 
         return routed.handler().handle(calledUri, routed.params());
     }
