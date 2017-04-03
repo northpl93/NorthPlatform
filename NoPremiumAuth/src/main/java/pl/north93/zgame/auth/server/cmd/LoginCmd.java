@@ -1,6 +1,10 @@
 package pl.north93.zgame.auth.server.cmd;
 
+import static java.text.MessageFormat.format;
+
+
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
 
@@ -28,6 +32,7 @@ public class LoginCmd extends NorthCommand
     private ResourceBundle      messages;
     @InjectComponent("NoPremiumAuth.Server")
     private AuthServerComponent authServer;
+    private Logger              logger;
 
     public LoginCmd()
     {
@@ -62,11 +67,13 @@ public class LoginCmd extends NorthCommand
 
         if (! BCrypt.checkpw(args.asString(0), authPlayer.getPassword()))
         {
+            this.logger.info(format("User {0} specified invalid password!", player.getName()));
             sender.sendMessage(this.messages, "error.password_does_not_match");
             return;
         }
 
         authManager.setLoggedInStatus(player.getUniqueId(), true);
+        this.logger.info(format("User {0} successfully logged-in! (no-premium password)", player.getName()));
         sender.sendMessage(this.messages, "info.successfully_logged");
     }
 

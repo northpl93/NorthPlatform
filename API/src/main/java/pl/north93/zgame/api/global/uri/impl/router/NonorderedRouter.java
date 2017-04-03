@@ -123,7 +123,7 @@ public class NonorderedRouter
                     {
                         params.put(currToken.substring(1), token);
                     }
-                    else if (! token.equals(token))
+                    else if (! currToken.equals(token))
                     {
                         matched = false;
                         break;

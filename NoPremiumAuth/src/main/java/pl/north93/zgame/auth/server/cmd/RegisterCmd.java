@@ -1,6 +1,10 @@
 package pl.north93.zgame.auth.server.cmd;
 
+import static java.text.MessageFormat.format;
+
+
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
 
@@ -28,6 +32,7 @@ public class RegisterCmd extends NorthCommand
     private ResourceBundle      messages;
     @InjectComponent("NoPremiumAuth.Server")
     private AuthServerComponent authServer;
+    private Logger              logger;
 
     public RegisterCmd()
     {
@@ -63,6 +68,7 @@ public class RegisterCmd extends NorthCommand
         final String password = BCrypt.hashpw(args.asString(0), BCrypt.gensalt());
         authPlayer.setPassword(password);
         authManager.setLoggedInStatus(player.getUniqueId(), true);
+        this.logger.info(format("User {0} successfully registered! (no-premium password)", player.getName()));
         sender.sendMessage(this.messages, "info.successfully_registered");
     }
 

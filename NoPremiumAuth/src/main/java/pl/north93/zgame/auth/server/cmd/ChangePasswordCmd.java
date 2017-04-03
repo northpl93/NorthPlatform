@@ -1,6 +1,10 @@
 package pl.north93.zgame.auth.server.cmd;
 
+import static java.text.MessageFormat.format;
+
+
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
 
@@ -27,6 +31,7 @@ public class ChangePasswordCmd extends NorthCommand
     private ResourceBundle      messages;
     @InjectComponent("NoPremiumAuth.Server")
     private AuthServerComponent authServer;
+    private Logger              logger;
 
     public ChangePasswordCmd()
     {
@@ -55,11 +60,13 @@ public class ChangePasswordCmd extends NorthCommand
 
         if (! BCrypt.checkpw(args.asString(0), authPlayer.getPassword()))
         {
+            this.logger.info(format("User {0} specified invalid old password", player.getName()));
             sender.sendMessage(this.messages, "cmd.changepassword.old_password_not_match");
             return;
         }
 
         authPlayer.setPassword(BCrypt.hashpw(args.asString(1), BCrypt.gensalt()));
+        this.logger.info(format("User {0} successfully changed password! (no-premium password)", player.getName()));
         sender.sendMessage(this.messages, "cmd.changepassword.success");
     }
 
