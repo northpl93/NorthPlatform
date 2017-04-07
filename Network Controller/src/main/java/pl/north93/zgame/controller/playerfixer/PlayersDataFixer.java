@@ -1,9 +1,11 @@
 package pl.north93.zgame.controller.playerfixer;
 
 import java.text.MessageFormat;
-import java.util.Set;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.lambdaworks.redis.api.sync.RedisCommands;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -16,7 +18,6 @@ import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
-import redis.clients.jedis.Jedis;
 
 /**
  * Klasa ma za zadanie usuwać z Redisa dane graczy których już nie ma na bungee
@@ -48,10 +49,10 @@ public class PlayersDataFixer extends Component implements Runnable
     @Override
     public void run()
     {
-        final Set<String> keys;
-        try (final Jedis jedis = this.storage.getJedisPool().getResource())
+        final List<String> keys;
+        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
         {
-            keys = jedis.keys("players:*");
+            keys = redis.keys("players:*");
         }
 
         keys.stream().map(s -> StringUtils.replace(s, "players:", "")).forEach(this::checkPlayer);

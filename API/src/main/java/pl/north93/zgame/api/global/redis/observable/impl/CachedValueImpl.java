@@ -5,15 +5,14 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import com.lambdaworks.redis.api.sync.RedisCommands;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.redis.observable.Value;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Response;
-import redis.clients.jedis.Transaction;
 
 class CachedValueImpl<T> implements Value<T>
 {
@@ -87,22 +86,20 @@ class CachedValueImpl<T> implements Value<T>
     public T getAndDelete()
     {
         final String key = this.objectKey.getKey();
-        final Response<byte[]> response;
 
-        try (final Jedis jedis = this.observationManager.getJedis().getResource())
+        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
         {
-            final Transaction multi = jedis.multi();
-            response = multi.get(key.getBytes());
-            multi.del(key);
-            multi.exec();
-        }
+            redis.multi();
+            redis.get(key);
+            redis.del(key);
 
-        final byte[] bytes = response.get();
-        if (bytes == null)
-        {
-            return null;
+            final byte[] getResult = (byte[]) redis.exec().get(0);
+            if (getResult == null)
+            {
+                return null;
+            }
+            return this.observationManager.getMsgPack().deserialize(this.clazz, getResult);
         }
-        return this.observationManager.getMsgPack().deserialize(this.clazz, bytes);
     }
 
     @Override
@@ -151,9 +148,9 @@ class CachedValueImpl<T> implements Value<T>
 
     private synchronized T getFromRedis()
     {
-        try (final Jedis jedis = this.observationManager.getJedis().getResource())
+        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
         {
-            final byte[] bytes = jedis.get(this.objectKey.getKey().getBytes());
+            final byte[] bytes = redis.get(this.objectKey.getKey());
             if (bytes == null)
             {
                 this.cache = null;
@@ -201,17 +198,17 @@ class CachedValueImpl<T> implements Value<T>
     {
         final byte[] serialized = this.observationManager.getMsgPack().serialize(this.clazz, this.cache);
 
-        try (final Jedis jedis = this.observationManager.getJedis().getResource())
+        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
         {
             if (time == -1)
             {
-                jedis.set(this.objectKey.getKey().getBytes(), serialized);
+                redis.set(this.objectKey.getKey(), serialized);
             }
             else
             {
-                jedis.psetex(this.objectKey.getKey().getBytes(), time, serialized);
+                redis.psetex(this.objectKey.getKey(), time, serialized);
             }
-            jedis.publish(this.getChannelKey().getBytes(), serialized);
+            redis.publish(this.getChannelKey(), serialized);
         }
     }
 
@@ -230,10 +227,10 @@ class CachedValueImpl<T> implements Value<T>
     {
         this.cache = null;
         final boolean success;
-        try (final Jedis jedis = this.observationManager.getJedis().getResource())
+        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
         {
-            success = jedis.del(this.objectKey.getKey()) != 0L;
-            jedis.publish(this.getChannelKey().getBytes(), new byte[0]);
+            success = redis.del(this.objectKey.getKey()) != 0L;
+            redis.publish(this.getChannelKey(), new byte[0]);
         }
         return success;
     }
@@ -241,9 +238,9 @@ class CachedValueImpl<T> implements Value<T>
     @Override
     public boolean isAvailable()
     {
-        try (final Jedis jedis = this.observationManager.getJedis().getResource())
+        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
         {
-            return jedis.exists(this.objectKey.getKey());
+            return redis.exists(this.objectKey.getKey());
         }
     }
 
@@ -256,15 +253,15 @@ class CachedValueImpl<T> implements Value<T>
     @Override
     public void expire(final int seconds)
     {
-        try (final Jedis jedis = this.observationManager.getJedis().getResource())
+        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
         {
             if (seconds == -1)
             {
-                jedis.persist(this.objectKey.getKey());
+                redis.persist(this.objectKey.getKey());
             }
             else
             {
-                jedis.expire(this.objectKey.getKey(), seconds);
+                redis.expire(this.objectKey.getKey(), seconds);
             }
         }
     }
@@ -272,9 +269,9 @@ class CachedValueImpl<T> implements Value<T>
     @Override
     public long getTimeToLive()
     {
-        try (final Jedis jedis = this.observationManager.getJedis().getResource())
+        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
         {
-            return jedis.ttl(this.objectKey.getKey());
+            return redis.ttl(this.objectKey.getKey());
         }
     }
 

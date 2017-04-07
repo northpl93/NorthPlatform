@@ -2,6 +2,8 @@ package pl.north93.zgame.datashare.sharedimpl;
 
 import static java.text.MessageFormat.format;
 
+import static pl.north93.zgame.api.global.utils.StringUtils.toBytes;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +30,6 @@ import pl.north93.zgame.datashare.api.IDataShareManager;
 import pl.north93.zgame.datashare.api.data.IDataUnit;
 import pl.north93.zgame.datashare.api.data.IDataUnitPersistence;
 import pl.north93.zgame.datashare.api.data.IDataUnitSerialization;
-import redis.clients.util.SafeEncoder;
 
 public class DataShareManagerImpl implements IDataShareManager
 {
@@ -163,13 +164,13 @@ public class DataShareManagerImpl implements IDataShareManager
     @Override
     public void broadcast(final DataSharingGroup group, final String message)
     {
-        this.subscriber.publish("broadcast:" + group.getName(), SafeEncoder.encode(message));
+        this.subscriber.publish("broadcast:" + group.getName(), toBytes(message));
     }
 
     @Override
     public void ann(final DataSharingGroup group, final String message)
     {
-        this.subscriber.publish("ann:" + group.getName(), SafeEncoder.encode(message));
+        this.subscriber.publish("ann:" + group.getName(), toBytes(message));
     }
 
     @Override

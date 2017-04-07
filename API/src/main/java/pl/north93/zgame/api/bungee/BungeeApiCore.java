@@ -7,6 +7,8 @@ import static pl.north93.zgame.api.global.redis.RedisKeys.PROXY_INSTANCE;
 import java.io.File;
 import java.util.logging.Logger;
 
+import com.lambdaworks.redis.api.sync.RedisCommands;
+
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.PluginManager;
 import pl.north93.zgame.api.bungee.cfg.ProxyInstanceConfig;
@@ -23,7 +25,6 @@ import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.messages.ProxyInstanceInfo;
 import pl.north93.zgame.api.global.network.ProxyRpc;
-import redis.clients.jedis.Jedis;
 
 public class BungeeApiCore extends ApiCore
 {
@@ -96,9 +97,9 @@ public class BungeeApiCore extends ApiCore
     protected void stop()
     {
         final StorageConnector storageConnector = this.getComponentManager().getComponent("API.Database.StorageConnector"); // TODO
-        try (final Jedis jedis = storageConnector.getJedisPool().getResource())
+        try (final RedisCommands<String, byte[]> redis = storageConnector.getRedis())
         {
-            jedis.del(this.getId());
+            redis.del(this.getId());
         }
     }
 
@@ -131,7 +132,7 @@ public class BungeeApiCore extends ApiCore
     private void sendProxyInfo()
     {
         final StorageConnector storageConnector = API.getApiCore().getComponentManager().getComponent("API.Database.StorageConnector"); // TODO
-        try (final Jedis jedis = storageConnector.getJedisPool().getResource())
+        try (final RedisCommands<String, byte[]> redis = storageConnector.getRedis())
         {
             final ProxyInstanceInfo proxyInstanceInfo = new ProxyInstanceInfo();
 
@@ -139,7 +140,7 @@ public class BungeeApiCore extends ApiCore
             proxyInstanceInfo.setHostname(this.getHostName());
             proxyInstanceInfo.setOnlinePlayers(this.bungeePlugin.getProxy().getOnlineCount());
 
-            jedis.set(this.getId().getBytes(), this.getMessagePackTemplates().serialize(proxyInstanceInfo));
+            redis.set(this.getId(), this.getMessagePackTemplates().serialize(proxyInstanceInfo));
         }
     }
 }

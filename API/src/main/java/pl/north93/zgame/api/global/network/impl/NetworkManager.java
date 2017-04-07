@@ -8,6 +8,8 @@ import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_SERVER_GROUPS;
 import static pl.north93.zgame.api.global.redis.RedisKeys.PLAYERS;
 import static pl.north93.zgame.api.global.redis.RedisKeys.PROXY_INSTANCE;
 import static pl.north93.zgame.api.global.redis.RedisKeys.SERVER;
+import static pl.north93.zgame.api.global.utils.StringUtils.asString;
+import static pl.north93.zgame.api.global.utils.StringUtils.toBytes;
 
 
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
+import com.lambdaworks.redis.api.sync.RedisCommands;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -48,9 +51,6 @@ import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.util.SafeEncoder;
 
 class NetworkManager extends Component implements INetworkManager
 {
@@ -62,14 +62,14 @@ class NetworkManager extends Component implements INetworkManager
     private IObservationManager observationManager;
     @InjectComponent("API.MinecraftNetwork.PlayersStorage")
     private IPlayersData        playersData;
+    @InjectComponent("API.Database.StorageConnector")
+    private StorageConnector    storage;
     private PlayersManagerImpl  playersManager;
-    private JedisPool           jedisPool;
     private Value<NetworkMeta>  networkMeta;
 
     @Override
     protected void enableComponent()
     {
-        this.jedisPool = this.<StorageConnector>getComponent("API.Database.StorageConnector").getJedisPool();
         this.networkMeta = this.observationManager.get(NetworkMeta.class, "network:meta");
         this.redisSubscriber.subscribe(NETWORK_ACTION, this::handleNetworkAction);
         this.playersManager = new PlayersManagerImpl(this, this.playersData, this.observationManager);
@@ -95,18 +95,18 @@ class NetworkManager extends Component implements INetworkManager
     @Override
     public Set<ProxyInstanceInfo> getProxyServers()
     {
-        try (final Jedis jedis = this.jedisPool.getResource())
+        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
         {
-            return jedis.keys(PROXY_INSTANCE + "*").stream().map(id -> this.msgPack.deserialize(ProxyInstanceInfo.class, jedis.get(id.getBytes()))).collect(Collectors.toSet());
+            return redis.keys(PROXY_INSTANCE + "*").stream().map(id -> this.msgPack.deserialize(ProxyInstanceInfo.class, redis.get(id))).collect(Collectors.toSet());
         }
     }
 
     @Override
     public Set<RemoteDaemon> getDaemons()
     {
-        try (final Jedis jedis = this.jedisPool.getResource())
+        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
         {
-            return jedis.keys(DAEMON + "*").stream().map(id -> this.msgPack.deserialize(RemoteDaemon.class, jedis.get(id.getBytes()))).collect(Collectors.toSet());
+            return redis.keys(DAEMON + "*").stream().map(id -> this.msgPack.deserialize(RemoteDaemon.class, redis.get(id))).collect(Collectors.toSet());
         }
     }
 
@@ -118,9 +118,9 @@ class NetworkManager extends Component implements INetworkManager
     @Override
     public Set<Server> getServers()
     {
-        try (final Jedis jedis = this.jedisPool.getResource())
+        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
         {
-            return jedis.keys(SERVER + "*").stream().map(id -> this.msgPack.deserialize(ServerImpl.class, jedis.get(id.getBytes()))).collect(Collectors.toSet());
+            return redis.keys(SERVER + "*").stream().map(id -> this.msgPack.deserialize(ServerImpl.class, redis.get(id))).collect(Collectors.toSet());
         }
     }
 
@@ -142,9 +142,9 @@ class NetworkManager extends Component implements INetworkManager
     @Override
     public Set<IServersGroup> getServersGroups()
     {
-        try (final Jedis jedis = this.jedisPool.getResource())
+        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
         {
-            return Sets.newCopyOnWriteArraySet(this.msgPack.deserializeList(IServersGroup.class, jedis.get(NETWORK_SERVER_GROUPS.getBytes())));
+            return Sets.newCopyOnWriteArraySet(this.msgPack.deserializeList(IServersGroup.class, redis.get(NETWORK_SERVER_GROUPS)));
         }
     }
 
@@ -162,9 +162,9 @@ class NetworkManager extends Component implements INetworkManager
     @Override
     public List<MiniGame> getMiniGames()
     {
-        try (final Jedis jedis = this.jedisPool.getResource())
+        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
         {
-            return this.msgPack.deserializeList(MiniGame.class, jedis.get(NETWORK_MINIGAMES.getBytes()));
+            return this.msgPack.deserializeList(MiniGame.class, redis.get(NETWORK_MINIGAMES));
         }
     }
 
@@ -188,9 +188,9 @@ class NetworkManager extends Component implements INetworkManager
     @Override
     public List<ServerPattern> getServerPatterns()
     {
-        try (final Jedis jedis = this.jedisPool.getResource())
+        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
         {
-            return this.msgPack.deserializeList(ServerPattern.class, jedis.get(NETWORK_PATTERNS.getBytes()));
+            return this.msgPack.deserializeList(ServerPattern.class, redis.get(NETWORK_PATTERNS));
         }
     }
 
@@ -290,9 +290,9 @@ class NetworkManager extends Component implements INetworkManager
     @Override
     public void broadcastNetworkAction(final NetworkAction networkAction)
     {
-        try (final Jedis jedis = this.jedisPool.getResource())
+        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
         {
-            jedis.publish(NETWORK_ACTION, networkAction.toString());
+            redis.publish(NETWORK_ACTION, toBytes(networkAction.toString()));
         }
     }
 
@@ -316,7 +316,7 @@ class NetworkManager extends Component implements INetworkManager
 
     private void handleNetworkAction(final String channel, final byte[] message)
     {
-        final NetworkAction networkAction = NetworkAction.valueOf(SafeEncoder.encode(message));
+        final NetworkAction networkAction = NetworkAction.valueOf(asString(message));
         switch (networkAction)
         {
             case STOP_ALL:

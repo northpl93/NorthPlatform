@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.lambdaworks.redis.api.sync.RedisCommands;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,7 +15,6 @@ import pl.north93.zgame.api.global.redis.rpc.exceptions.RpcRemoteException;
 import pl.north93.zgame.api.global.redis.rpc.exceptions.RpcTimeoutException;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcExceptionInfo;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcInvokeMessage;
-import redis.clients.jedis.Jedis;
 
 class RpcInvocationHandler implements InvocationHandler
 {
@@ -21,13 +22,13 @@ class RpcInvocationHandler implements InvocationHandler
     private static final AtomicInteger requestCounter = new AtomicInteger(0);
     private final RpcManagerImpl       rpcManager;
     private final RpcObjectDescription objectDescription;
-    private final byte[]               invokeChannel;
+    private final String               invokeChannel;
 
     public RpcInvocationHandler(final RpcManagerImpl rpcManager, final Class<?> classInterface, final IRpcTarget target)
     {
         this.rpcManager = rpcManager;
         this.objectDescription = rpcManager.getObjectDescription(classInterface);
-        this.invokeChannel = (target.getRpcChannelName() + ":invoke").getBytes();
+        this.invokeChannel = target.getRpcChannelName() + ":invoke";
     }
 
     @Override
@@ -42,9 +43,9 @@ class RpcInvocationHandler implements InvocationHandler
         final RpcResponseLock lock = needsWaitForResponse ? this.rpcManager.createFor(requestId) : null;
 
         final RpcInvokeMessage rpcInvokeMessage = new RpcInvokeMessage(API.getApiCore().getId(), this.objectDescription.getClassId(), requestId, methodId, args == null ? EMPTY_ARRAY : args);
-        try (final Jedis jedis = this.rpcManager.getJedisPool().getResource())
+        try (final RedisCommands<String, byte[]> redis = this.rpcManager.getJedisPool())
         {
-            jedis.publish(this.invokeChannel, this.rpcManager.getMsgPack().serialize(RpcInvokeMessage.class, rpcInvokeMessage));
+            redis.publish(this.invokeChannel, this.rpcManager.getMsgPack().serialize(RpcInvokeMessage.class, rpcInvokeMessage));
         }
 
         if (! needsWaitForResponse)

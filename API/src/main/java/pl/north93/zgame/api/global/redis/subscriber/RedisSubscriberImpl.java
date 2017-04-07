@@ -1,152 +1,108 @@
 package pl.north93.zgame.api.global.redis.subscriber;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.lambdaworks.redis.api.sync.RedisCommands;
+import com.lambdaworks.redis.pubsub.RedisPubSubAdapter;
+import com.lambdaworks.redis.pubsub.StatefulRedisPubSubConnection;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.data.StorageConnector;
-import redis.clients.jedis.BinaryJedisPubSub;
-import redis.clients.jedis.Jedis;
-import redis.clients.util.SafeEncoder;
+import pl.north93.zgame.api.global.data.StringByteRedisCodec;
 
 public class RedisSubscriberImpl extends Component implements RedisSubscriber
 {
-    private final SubscriptionReceiver             subscriptionReceiver   = new SubscriptionReceiver();
-    private final Map<String, SubscriptionHandler> subscriptionHandlerMap = new ConcurrentHashMap<>();
-    private final ExecutorService                  executor               = Executors.newCachedThreadPool();
-    private final CountDownLatch                   subscriptionLock       = new CountDownLatch(1);
-    private final ReentrantLock                    lock                   = new ReentrantLock();
-    private       boolean                          isSubscribed;
+    private final Map<String, SubscriptionHandler> handlerMap = new ConcurrentHashMap<>();
+    private StatefulRedisPubSubConnection<String, byte[]> connection;
+    private ApiCore                                       apiCore;
+    private ExecutorService                               executorService = Executors.newCachedThreadPool();
+    private Logger                                        logger;
     @InjectComponent("API.Database.StorageConnector")
-    private StorageConnector storageConnector;
+    private StorageConnector                              storageConnector;
 
     @Override
     protected void enableComponent()
     {
+        this.connection = this.storageConnector.getRedisClient().connectPubSub(StringByteRedisCodec.INSTANCE);
+        this.connection.addListener(new MessageHandler());
     }
 
     @Override
     protected void disableComponent()
     {
         this.unSubscribeAll();
-        this.executor.shutdown();
+        this.executorService.shutdown();
     }
 
     @Override
     public void publish(final String channel, final byte[] message)
     {
-        try (final Jedis jedis = this.storageConnector.getJedisPool().getResource())
+        try (final RedisCommands<String, byte[]> redis = this.storageConnector.getRedis())
         {
-            jedis.publish(channel.getBytes(), message);
+            redis.publish(channel, message);
         }
     }
 
     @Override
     public void subscribe(final String channel, final SubscriptionHandler handler)
     {
-        try
+        synchronized (this)
         {
-            this.lock.lock();
-            this.subscriptionHandlerMap.put(channel, handler);
-            this.getApiCore().debug("Added subscription for " + channel);
-            if (! this.subscriptionReceiver.isSubscribed() && ! this.isSubscribed)
-            {
-                this.isSubscribed = true;
-                this.executor.execute(() ->
-                {
-                    this.getApiCore().debug("Subscriber thread started (jedis.subscribe will be invoked shortly...)");
-                    try (final Jedis jedis = this.storageConnector.getJedisPool().getResource())
-                    {
-                        jedis.subscribe(this.subscriptionReceiver, channel.getBytes());
-                    }
-                });
-                return;
-            }
-            this.subscriptionLock.await();
-            this.subscriptionReceiver.subscribe(channel.getBytes());
-        }
-        catch (final InterruptedException e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            this.lock.unlock();
+            this.handlerMap.put(channel, handler);
+            this.connection.sync().subscribe(channel);
         }
     }
 
     @Override
     public void unSubscribe(final String channel)
     {
-        try
+        synchronized (this)
         {
-            this.lock.lock();
-            if (this.subscriptionHandlerMap.remove(channel) != null)
-            {
-                this.subscriptionReceiver.unsubscribe(channel.getBytes());
-                this.getApiCore().debug("Removed subscription for " + channel);
-            }
-        }
-        finally
-        {
-            this.lock.unlock();
+            this.handlerMap.remove(channel);
+            this.connection.sync().unsubscribe(channel);
         }
     }
 
     @Override
     public void unSubscribeAll()
     {
-        try
+        synchronized (this)
         {
-            this.lock.lock();
-            this.subscriptionHandlerMap.keySet().stream().map(String::getBytes).forEach(this.subscriptionReceiver::unsubscribe);
-            this.subscriptionHandlerMap.clear();
-        }
-        finally
-        {
-            this.lock.unlock();
+            this.handlerMap.clear();
+            this.connection.sync().punsubscribe("*");
         }
     }
 
-    private class SubscriptionReceiver extends BinaryJedisPubSub
+    private class MessageHandler extends RedisPubSubAdapter<String, byte[]>
     {
         @Override
-        public void onSubscribe(final byte[] channel, final int subscribedChannels)
+        public void message(final String channel, final byte[] message)
         {
-            RedisSubscriberImpl.this.subscriptionLock.countDown();
-        }
-
-        @Override
-        public void onMessage(final byte[] byteChannel, final byte[] message)
-        {
-            final String channel = SafeEncoder.encode(byteChannel);
-            final SubscriptionHandler subscriptionHandler = RedisSubscriberImpl.this.subscriptionHandlerMap.get(channel);
-
-            if (subscriptionHandler == null)
+            final SubscriptionHandler handler = RedisSubscriberImpl.this.handlerMap.get(channel);
+            if (handler == null)
             {
-                RedisSubscriberImpl.this.getApiCore().getLogger().warning("Received an message from unhandled channel " + channel);
+                RedisSubscriberImpl.this.logger.warning("Received message from unhandled channel: " + channel);
                 return;
             }
-
-            RedisSubscriberImpl.this.executor.execute(() ->
+            RedisSubscriberImpl.this.executorService.submit(() ->
             {
                 try
                 {
-                    subscriptionHandler.handle(channel, message);
+                    handler.handle(channel, message);
                 }
-                catch (final Exception e)
+                catch (final Throwable e)
                 {
-                    RedisSubscriberImpl.this.getApiCore().getLogger().log(Level.SEVERE, "An exception has been thrown while handling message from Redis. Channel:" + channel + ", Message:" + Arrays.toString(message), e);
+                    // executor moze wygluszyc wyjatek, dlatego recznie zajmiemy sie jego wyprintowaniem
+                    e.printStackTrace();
                 }
             });
         }
@@ -155,6 +111,6 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("subscriptionHandlerMap", this.subscriptionHandlerMap).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("handlerMap", this.handlerMap).append("connection", this.connection).toString();
     }
 }

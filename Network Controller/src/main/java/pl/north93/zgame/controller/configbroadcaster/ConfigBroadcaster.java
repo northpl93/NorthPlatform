@@ -7,9 +7,12 @@ import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_MINIGAMES;
 import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_PATTERNS;
 import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_SERVER_GROUPS;
 import static pl.north93.zgame.api.global.redis.RedisKeys.PERMISSIONS_GROUPS;
+import static pl.north93.zgame.api.global.utils.StringUtils.toBytes;
 
 
 import java.util.ArrayList;
+
+import com.lambdaworks.redis.api.sync.RedisCommands;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -27,7 +30,6 @@ import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.controller.cfg.MinigamesConfig;
 import pl.north93.zgame.controller.cfg.ServersGroupsConfig;
 import pl.north93.zgame.controller.cfg.ServersPatternsConfig;
-import redis.clients.jedis.Jedis;
 
 /**
  * Klasa zarządzająca wczytywaniem konfiguracji sieci i wysyłaniem jej do Redisa.
@@ -54,9 +56,9 @@ public class ConfigBroadcaster extends Component
     @Override
     protected void disableComponent()
     {
-        try (final Jedis jedis = this.storage.getJedisPool().getResource())
+        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
         {
-            jedis.del(NETWORK_META, PERMISSIONS_GROUPS, NETWORK_MINIGAMES, NETWORK_SERVER_GROUPS, NETWORK_PATTERNS);
+            redis.del(NETWORK_META, PERMISSIONS_GROUPS, NETWORK_MINIGAMES, NETWORK_SERVER_GROUPS, NETWORK_PATTERNS);
         }
     }
 
@@ -92,20 +94,20 @@ public class ConfigBroadcaster extends Component
 
     private void broadcastNetworkConfigs()
     {
-        try (final Jedis jedis = this.storage.getJedisPool().getResource())
+        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
         {
-            jedis.set(NETWORK_META.getBytes(), this.msgPack.serialize(this.networkMeta));
-            jedis.set(PERMISSIONS_GROUPS.getBytes(), this.msgPack.serialize(this.groups));
-            jedis.set(NETWORK_MINIGAMES.getBytes(), this.msgPack.serializeList(MiniGame.class, this.miniGames.getMiniGames()));
+            redis.set(NETWORK_META, this.msgPack.serialize(this.networkMeta));
+            redis.set(PERMISSIONS_GROUPS, this.msgPack.serialize(this.groups));
+            redis.set(NETWORK_MINIGAMES, this.msgPack.serializeList(MiniGame.class, this.miniGames.getMiniGames()));
 
             final ArrayList<IServersGroup> serversGroups = new ArrayList<>();
             serversGroups.addAll(this.serversGroups.getManagedGroups());
             serversGroups.addAll(this.serversGroups.getUnManagedGroups());
-            jedis.set(NETWORK_SERVER_GROUPS.getBytes(), this.msgPack.serializeList(IServersGroup.class, serversGroups));
+            redis.set(NETWORK_SERVER_GROUPS, this.msgPack.serializeList(IServersGroup.class, serversGroups));
 
-            jedis.set(NETWORK_PATTERNS.getBytes(), this.msgPack.serializeList(ServerPattern.class, this.patternsConfig.getPatterns()));
+            redis.set(NETWORK_PATTERNS, this.msgPack.serializeList(ServerPattern.class, this.patternsConfig.getPatterns()));
 
-            jedis.publish(NETWORK_ACTION, NetworkAction.UPDATE_NETWORK_CONFIGS.toString());
+            redis.publish(NETWORK_ACTION, toBytes(NetworkAction.UPDATE_NETWORK_CONFIGS.toString()));
         }
     }
 

@@ -3,6 +3,8 @@ package pl.north93.zgame.api.global.redis.rpc.impl;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.lambdaworks.redis.api.sync.RedisCommands;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -19,8 +21,6 @@ import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcExceptionInfo;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcInvokeMessage;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcResponseMessage;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 public class RpcManagerImpl extends Component implements IRpcManager
 {
@@ -109,9 +109,9 @@ public class RpcManagerImpl extends Component implements IRpcManager
         }
     }
 
-    /*default*/ JedisPool getJedisPool()
+    /*default*/ RedisCommands<String, byte[]> getJedisPool()
     {
-        return this.storageConnector.getJedisPool();
+        return this.storageConnector.getRedis();
     }
 
     /*default*/ TemplateManager getMsgPack()
@@ -121,10 +121,10 @@ public class RpcManagerImpl extends Component implements IRpcManager
 
     /*default*/ void sendResponse(final String target, final Integer requestId, final Object response)
     {
-        try (final Jedis jedis = this.storageConnector.getJedisPool().getResource())
+        try (final RedisCommands<String, byte[]> redis = this.storageConnector.getRedis())
         {
             final RpcResponseMessage responseMessage = new RpcResponseMessage(requestId, response);
-            jedis.publish(("rpc:" + target + ":response").getBytes(), this.msgPack.serialize(RpcResponseMessage.class, responseMessage));
+            redis.publish("rpc:" + target + ":response", this.msgPack.serialize(RpcResponseMessage.class, responseMessage));
         }
     }
 

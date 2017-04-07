@@ -2,6 +2,8 @@ package pl.north93.zgame.datashare.server.listeners;
 
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
+import static pl.north93.zgame.api.global.utils.StringUtils.asString;
+
 
 import java.text.MessageFormat;
 import java.util.Formatter;
@@ -31,7 +33,6 @@ import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 import pl.north93.zgame.datashare.api.DataSharingGroup;
 import pl.north93.zgame.datashare.api.chat.ChatMessage;
 import pl.north93.zgame.datashare.sharedimpl.PlayerDataShareComponent;
-import redis.clients.util.SafeEncoder;
 
 public class ChatSharingManager implements Listener
 {
@@ -77,7 +78,7 @@ public class ChatSharingManager implements Listener
 
     private void onBroadcast(final String channel, final byte[] bytes)
     {
-        final String message = translateAlternateColorCodes('&', SafeEncoder.encode(bytes));
+        final String message = translateAlternateColorCodes('&', asString(bytes));
         for (final Player player : Bukkit.getOnlinePlayers())
         {
             player.sendMessage(message);
@@ -86,7 +87,7 @@ public class ChatSharingManager implements Listener
 
     private void onAnn(final String channel, final byte[] bytes)
     {
-        final String message = SafeEncoder.encode(bytes);
+        final String message = asString(bytes);
         for (final Player player : Bukkit.getOnlinePlayers())
         {
             player.sendTitle(message, null);

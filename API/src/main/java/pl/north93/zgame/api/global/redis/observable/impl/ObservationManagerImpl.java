@@ -1,10 +1,13 @@
 package pl.north93.zgame.api.global.redis.observable.impl;
 
 import java.lang.ref.WeakReference;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.lambdaworks.redis.api.sync.RedisCommands;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -22,8 +25,6 @@ import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
 import pl.north93.zgame.api.global.redis.observable.SortedSet;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
-import redis.clients.jedis.JedisPool;
-import redis.clients.util.SafeEncoder;
 
 public class ObservationManagerImpl extends Component implements IObservationManager
 {
@@ -127,7 +128,7 @@ public class ObservationManagerImpl extends Component implements IObservationMan
 
     private void unlockNotify(final String channel, final byte[] message)
     {
-        final String lock = SafeEncoder.encode(message);
+        final String lock = new String(message, StandardCharsets.UTF_8);
         synchronized (this.waitingLocks)
         {
             for (final LockImpl waitingLock : this.waitingLocks)
@@ -160,9 +161,9 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         return this.getApiCore().getPlatformConnector();
     }
 
-    /*default*/ JedisPool getJedis()
+    /*default*/ RedisCommands<String, byte[]> getJedis()
     {
-        return this.storageConnector.getJedisPool();
+        return this.storageConnector.getRedis();
     }
 
     /*default*/ TemplateManager getMsgPack()

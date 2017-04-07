@@ -2,11 +2,13 @@ package pl.north93.zgame.api.global.redis.observable.impl;
 
 import java.util.concurrent.TimeUnit;
 
+import com.lambdaworks.redis.ScriptOutputType;
+import com.lambdaworks.redis.api.sync.RedisCommands;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.redis.observable.Lock;
-import redis.clients.jedis.Jedis;
 
 class LockImpl implements Lock
 {
@@ -69,14 +71,14 @@ class LockImpl implements Lock
 
     private synchronized boolean tryLock0()
     {
-        try (final Jedis jedis = this.observationManager.getJedis().getResource())
+        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
         {
-            return ((long) jedis.eval("if (redis.call('exists', KEYS[1]) == 1) then\n" +
+            return ((long) redis.eval("if (redis.call('exists', KEYS[1]) == 1) then\n" +
                                "return 0\n" +
                                "else\n" +
                                "redis.call('set', KEYS[1], 1)\n" +
                                "return 1\n" +
-                               "end\n", 1, this.name)) == 1;
+                               "end\n", ScriptOutputType.INTEGER, this.name)) == 1;
         }
     }
 
@@ -96,14 +98,14 @@ class LockImpl implements Lock
 
     private boolean tryUnlock()
     {
-        try (final Jedis jedis = this.observationManager.getJedis().getResource())
+        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
         {
-            return ((long) jedis.eval("if (redis.call('del', KEYS[1]) == 1) then\n" +
+            return ((long) redis.eval("if (redis.call('del', KEYS[1]) == 1) then\n" +
                                              "redis.call('publish', \"unlock\", KEYS[1])\n" +
                                              "return 1\n" +
                                              "else\n" +
                                              "return 0\n" +
-                                             "end", 1, this.name)) == 1;
+                                             "end", ScriptOutputType.INTEGER, this.name)) == 1;
         }
     }
 

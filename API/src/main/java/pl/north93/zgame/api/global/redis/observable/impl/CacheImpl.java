@@ -3,13 +3,15 @@ package pl.north93.zgame.api.global.redis.observable.impl;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+import com.lambdaworks.redis.ScriptOutputType;
+import com.lambdaworks.redis.api.sync.RedisCommands;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.redis.observable.Cache;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.redis.observable.Value;
-import redis.clients.jedis.Jedis;
 
 class CacheImpl<K, V> implements Cache<K, V>
 {
@@ -35,9 +37,9 @@ class CacheImpl<K, V> implements Cache<K, V>
     @Override
     public int size()
     {
-        try (final Jedis resource = this.observationManager.getJedis().getResource())
+        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
         {
-            return (int) resource.eval("return #redis.call('keys', '" + this.prefix + "*')", 0);
+            return (int) redis.eval("return #redis.call('keys', '" + this.prefix + "*')", ScriptOutputType.INTEGER);
         }
     }
 
@@ -84,9 +86,9 @@ class CacheImpl<K, V> implements Cache<K, V>
     @Override
     public void clear()
     {
-        try (final Jedis resource = this.observationManager.getJedis().getResource())
+        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
         {
-            resource.eval("local k=redis.call('keys',ARGV[1])for i=1,#k,5000 do redis.call('del',unpack(k,i,math.min(i+4999,#k)))end", 0, this.prefix);
+            redis.eval("local k=redis.call('keys',KEYS[1])for i=1,#k,5000 do redis.call('del',unpack(k,i,math.min(i+4999,#k)))end", ScriptOutputType.INTEGER, this.prefix);
         }
     }
 

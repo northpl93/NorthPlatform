@@ -5,6 +5,8 @@ import static pl.north93.zgame.api.global.redis.RedisKeys.PERMISSIONS_GROUPS;
 
 import java.util.Set;
 
+import com.lambdaworks.redis.api.sync.RedisCommands;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -14,7 +16,6 @@ import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.messages.GroupsContainer;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
-import redis.clients.jedis.Jedis;
 
 public class PermissionsManager extends Component
 {
@@ -60,15 +61,15 @@ public class PermissionsManager extends Component
     {
         this.getApiCore().getLogger().info("Synchronizing groups...");
         final GroupsContainer groupsContainer;
-        try (final Jedis jedis = this.storageConnector.getJedisPool().getResource())
+        try (final RedisCommands<String, byte[]> redis = this.storageConnector.getRedis())
         {
-            if (! jedis.exists(PERMISSIONS_GROUPS))
+            if (! redis.exists(PERMISSIONS_GROUPS))
             {
                 this.getApiCore().getLogger().warning("Key " + PERMISSIONS_GROUPS + " doesn't exist! Synchronization skipped...");
                 return;
             }
 
-            final byte[] msgPackGroups = jedis.get(PERMISSIONS_GROUPS.getBytes());
+            final byte[] msgPackGroups = redis.get(PERMISSIONS_GROUPS);
             groupsContainer = this.msgPack.deserialize(GroupsContainer.class, msgPackGroups);
         }
         // Fetched from redis. Now load it into List
