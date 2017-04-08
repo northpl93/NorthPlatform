@@ -18,7 +18,14 @@ public class StandaloneCommandsManager implements ICommandsManager
             API.getApiCore().getLogger().warning("Console is unavailable");
             return;
         }
-        this.console.writer().format(API.getApiCore().getId() + " > ");
+        /*new Thread(() ->
+        {
+            while (true)
+            {
+                final String line = this.console.readLine(API.getApiCore().getId() + " > ");
+                System.out.println(line);
+            }
+        }).start();*/ // todo implement it
     }
 
     @Override

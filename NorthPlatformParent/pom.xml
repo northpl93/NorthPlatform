@@ -71,9 +71,10 @@
                             <configuration>
                                 <artifactSet>
                                     <excludes>
+                                        <exclude>pl.north93.zgame.api:instrumentationagent</exclude>
+                                        <exclude>com.google.code.findbugs:annotations</exclude>
                                         <exclude>org.spigotmc:spigot-server</exclude>
                                         <exclude>net.md-5:*</exclude>
-                                        <exclude>io.netty:*</exclude>
                                         <exclude>net.sf.trove4j:trove4j</exclude>
                                         <exclude>org.mongodb:bson</exclude>
                                     </excludes>

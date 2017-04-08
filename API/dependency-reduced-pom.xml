@@ -39,6 +39,12 @@
   </build>
   <dependencies>
     <dependency>
+      <groupId>pl.north93.zgame.api</groupId>
+      <artifactId>instrumentationagent</artifactId>
+      <version>1.0-INDEV</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>net.md-5</groupId>
       <artifactId>bungeecord-api</artifactId>
       <version>1.10-SNAPSHOT</version>
