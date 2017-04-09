@@ -25,7 +25,14 @@ public class StandaloneApiCore extends ApiCore
         System.out.println("North API is running as standalone application");
         final StandaloneApiCore apiCore = new StandaloneApiCore();
         apiCore.startCore();
-        Runtime.getRuntime().addShutdownHook(new Thread(apiCore::stopCore));
+        Runtime.getRuntime().addShutdownHook(new Thread(() ->
+        {
+            if (apiCore.getApiState().isDisabled())
+            {
+                return;
+            }
+            apiCore.stopCore();
+        }));
     }
 
     public StandaloneApiCore()

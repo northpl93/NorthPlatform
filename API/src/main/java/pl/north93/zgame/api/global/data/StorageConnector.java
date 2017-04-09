@@ -71,6 +71,17 @@ public class StorageConnector extends Component
         this.mongoClient.close();
     }
 
+    /**
+     * Ta metoda zwraca obiekt RedisCommands pobrany z poola połączeń.
+     * ZAWSZE po skończeniu używania go należy użyć metody close.
+     *
+     * Zalecam używanie tej metody w try/catch-with-resources
+     * try (final RedisCommands<String, byte[]> redis = storageConnector.getRedis()) {
+     *     // kod
+     * }
+     *
+     * @return obiekt do gadania z redisem synchronicznie.
+     */
     public RedisCommands<String, byte[]> getRedis()
     {
         final StatefulRedisConnection<String, byte[]> conn;
@@ -81,7 +92,7 @@ public class StorageConnector extends Component
         }
         catch (final Exception e)
         {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to borrow Redis connection from the pool.", e);
         }
         return conn.sync();
     }

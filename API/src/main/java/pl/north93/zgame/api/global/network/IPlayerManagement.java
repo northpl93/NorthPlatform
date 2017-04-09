@@ -7,6 +7,13 @@ import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
+/**
+ * Stare API do zarządzania graczami.
+ * Przestarzałe ponieważ nie ma dobrych narzędzi do zapewniania atomowości transakcji
+ * i jest niewygodnie rozbite na obsługę gracza Online i Offline.
+ * @deprecated
+ * @see pl.north93.zgame.api.global.network.players.IPlayersManager
+ */
 @Deprecated
 public interface IPlayerManagement
 {
