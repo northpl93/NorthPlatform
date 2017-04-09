@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="SkyBlock.PlayerExperience">
-    <output-path>$PROJECT_DIR$/test/plugins/API/components</output-path>
-    <root id="archive" name="SkyBlock.PlayerExperience.jar">
-      <element id="module-output" name="SkyBlock.PlayerExperience" />
-    </root>
-  </artifact>
-</component>

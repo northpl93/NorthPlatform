@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="NetworkController">
-    <output-path>$PROJECT_DIR$/test/controller</output-path>
-    <root id="archive" name="NetworkController.jar">
-      <element id="module-output" name="Network Controller" />
-    </root>
-  </artifact>
-</component>
