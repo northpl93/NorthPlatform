@@ -12,6 +12,7 @@
       <module fileurl="file://$PROJECT_DIR$/NoPremiumAuth/NoPremiumAuth.iml" filepath="$PROJECT_DIR$/NoPremiumAuth/NoPremiumAuth.iml" />
       <module fileurl="file://$PROJECT_DIR$/Pets/Pets.iml" filepath="$PROJECT_DIR$/Pets/Pets.iml" />
       <module fileurl="file://$PROJECT_DIR$/PlayerDataShare/PlayerDataShare.iml" filepath="$PROJECT_DIR$/PlayerDataShare/PlayerDataShare.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Punishments/Punishments.iml" filepath="$PROJECT_DIR$/Punishments/Punishments.iml" />
       <module fileurl="file://$PROJECT_DIR$/RestfulApi/RestfulApi.iml" filepath="$PROJECT_DIR$/RestfulApi/RestfulApi.iml" />
       <module fileurl="file://$PROJECT_DIR$/Server Deamon/Server Deamon.iml" filepath="$PROJECT_DIR$/Server Deamon/Server Deamon.iml" />
       <module fileurl="file://$PROJECT_DIR$/SkyBlock/SkyBlock.iml" filepath="$PROJECT_DIR$/SkyBlock/SkyBlock.iml" />

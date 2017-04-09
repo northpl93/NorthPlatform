@@ -3,6 +3,8 @@
 /test/
 # maven
 target/
+# include libraries
+!lib
 ### Windows template
 # Windows image file caches
 Thumbs.db
@@ -37,7 +39,7 @@ hs_err_pid*
 
 # IntelliJ
 /out/
-.idea
+.idea/*
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
