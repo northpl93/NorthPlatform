@@ -1,0 +1,9 @@
+components:
+  - name: MiniGameApi.Server
+    enabled: true
+    mainClass: "pl.arieals.api.minigame.server.MiniGameServer"
+    description: "MiniGames API."
+    dependencies:
+      - API.Database.StorageConnector
+      - API.Database.Redis.MessagePackSerializer
+      - API.Database.Redis.Subscriber

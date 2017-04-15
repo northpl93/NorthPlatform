@@ -38,6 +38,7 @@
         <module>../SkyBlockPlayerExperience</module>
         <module>../SkyBlock.Quests</module>
         <module>../Punishments</module>
+        <module>../API/MiniGame</module>
     </modules>
 
     <repositories>

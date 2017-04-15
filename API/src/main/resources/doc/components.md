@@ -123,6 +123,7 @@ Co jest wstrzykiwane
 | @InjectComponent("nazwa") zmienna                               | Wstrzykuje klasę główną komponentu o podanej nazwie.                                            |
 | @InjectResource(bundleName = "SkyBlock") ResourceBundle zmienna | Wstrzykuje ResourceBundle (plik z wiadomościami)                                                |
 | @InjectNewInstance                                              | Wstrzykuje nową instancję obiektu reprezentującego zmienną                                      |
+
 Przykład:
 ```java
 // komenda tworząca wyspę. Jest tu zaimplementowany extension point NorthCommand, dlatego nigdzie nie trzeba tej komendy ręcznie rejestrować
@@ -142,3 +143,33 @@ public class CreateCmd extends NorthCommand
     }
 }
 ```
+
+Metody @PostInject
+------------------
+Kod wstrzykujący zmienne jest dodawany na koniec konstruktora. To oznacza, że nie możesz uzyskać dostępu
+do wstrzykiwanych zmiennych w konstruktorze, bo są jeszcze nullem.
+Pomocne tu są metody oznaczone adnotacją @PostInject. Ich wykonanie jest doklejane do konstruktora po kodzie wstrzykującym,
+więc można w nich już bezpiecznie uzyskać dostęp do wstrzykniętych zmiennych.
+```java
+public class Test
+{
+    private BukkitApiCore apiCore;
+    private String        id;
+    
+    public Test()
+    {
+        // tutaj apiCore jest jeszcze nullem
+    }
+    
+    @PostInject
+    private void provideId()
+    {
+        // tutaj apiCore już jest wstrzyknięte i dalej jesteśmy w konstruktorze
+        this.id = this.apiCore.getId();
+    }
+}
+```
+Podsumowując, tak wygląda kolejność wywoływania:
+1. Zawartość konstruktora
+2. Kod wstrzykujący zmienne
+3. Metody z adnotacją @PostInject

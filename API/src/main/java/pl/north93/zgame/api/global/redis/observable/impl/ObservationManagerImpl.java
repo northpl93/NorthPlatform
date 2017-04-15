@@ -17,6 +17,7 @@ import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
+import pl.north93.zgame.api.global.redis.observable.Hash;
 import pl.north93.zgame.api.global.redis.observable.ICacheBuilder;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Lock;
@@ -116,6 +117,12 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     public <K> SortedSet<K> getSortedSet(final String name)
     {
         return new SortedSetImpl<>(this, name);
+    }
+
+    @Override
+    public <V> Hash<V> getHash(final Class<V> valueClass, final String name)
+    {
+        return new HashImpl<>(this, valueClass, name);
     }
 
     /*default*/ void addWaitingLock(final LockImpl lock)

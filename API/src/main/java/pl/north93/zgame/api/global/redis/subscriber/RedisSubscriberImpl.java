@@ -41,6 +41,7 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
     {
         this.unSubscribeAll();
         this.executorService.shutdown();
+        this.connection.close();
     }
 
     @Override
