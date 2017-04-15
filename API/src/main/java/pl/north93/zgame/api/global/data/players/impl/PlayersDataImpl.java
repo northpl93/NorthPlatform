@@ -225,7 +225,12 @@ public class PlayersDataImpl extends Component implements IPlayersData
         final Document metadata = new Document();
         for (final Map.Entry<MetaKey, Object> entry : player.getMetaStore().getInternalMap().entrySet())
         {
-            metadata.put(entry.getKey().getKey(), entry.getValue());
+            final MetaKey metaKey = entry.getKey();
+            if (metaKey.isPersist())
+            {
+                // save to database only when key is marked as persist.
+                metadata.put(metaKey.getKey(), entry.getValue());
+            }
         }
         playerData.put("metadata", metadata);
 

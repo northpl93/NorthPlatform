@@ -26,4 +26,11 @@ public class MetaKeysTest
 
         assertEquals(true, test1 == test2);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void persistMismatchTest()
+    {
+        MetaKey.get("test3", true);
+        MetaKey.get("test3", false);
+    }
 }

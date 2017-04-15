@@ -14,25 +14,42 @@ public final class MetaKey
 
     public static MetaKey get(final String keyName)
     {
+        return get(keyName, true);
+    }
+
+    public static MetaKey get(final String keyName, final boolean persist)
+    {
         if (StringUtils.isEmpty(keyName))
         {
             throw new IllegalArgumentException("keyName can't be null");
         }
-        return KEY_CACHE.computeIfAbsent(keyName, k -> new MetaKey(keyName));
+        final MetaKey metaKey = KEY_CACHE.computeIfAbsent(keyName, k -> new MetaKey(keyName, persist));
+        if (metaKey.persist != persist)
+        {
+            throw new IllegalArgumentException("Key " + keyName + " can't change persist state after creation!");
+        }
+        return metaKey;
     }
 
     // Class begin //
 
-    private final String key;
+    private final String  key;
+    private final boolean persist;
 
-    private MetaKey(final String key)
+    private MetaKey(final String key, final boolean persist)
     {
         this.key = key;
+        this.persist = persist;
     }
 
     public String getKey()
     {
         return this.key;
+    }
+
+    public boolean isPersist()
+    {
+        return this.persist;
     }
 
     @Override
@@ -49,13 +66,15 @@ public final class MetaKey
 
         final MetaKey metaKey = (MetaKey) o;
 
-        return this.key.equals(metaKey.key);
+        return this.persist == metaKey.persist && this.key.equals(metaKey.key);
     }
 
     @Override
     public int hashCode()
     {
-        return this.key.hashCode();
+        int result = this.key.hashCode();
+        result = 31 * result + (this.persist ? 1 : 0);
+        return result;
     }
 
     @Override
