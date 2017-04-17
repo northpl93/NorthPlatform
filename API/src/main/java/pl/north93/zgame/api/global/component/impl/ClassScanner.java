@@ -2,7 +2,6 @@ package pl.north93.zgame.api.global.component.impl;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.Arrays;
@@ -14,6 +13,8 @@ import com.google.common.collect.Sets;
 
 import org.reflections.ReflectionUtils;
 import org.reflections.Reflections;
+import org.reflections.scanners.FieldAnnotationsScanner;
+import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
@@ -30,7 +31,6 @@ import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.component.IComponentManager;
 import pl.north93.zgame.api.global.component.IExtensionPoint;
-import pl.north93.zgame.api.global.component.annotations.IgnoreExtensionPoint;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectNewInstance;
 import pl.north93.zgame.api.global.component.annotations.InjectResource;
@@ -46,7 +46,7 @@ class ClassScanner
     {
         final ConfigurationBuilder configuration = new ConfigurationBuilder();
         configuration.setClassLoaders(new ClassLoader[]{classLoader});
-        configuration.setScanners(new SubTypesScanner(false)); // defaultly will exclude Object.class
+        configuration.setScanners(new SubTypesScanner(false), new MethodAnnotationsScanner(), new FieldAnnotationsScanner());
         configuration.setUrls(fileUrl);
 
         final FilterBuilder packagesFilter = new FilterBuilder();
@@ -96,27 +96,7 @@ class ClassScanner
         {
             for (final IExtensionPoint<?> iExtensionPoint : iComponentBundle.getExtensionPoints())
             {
-                final Class<?> clazzToSearch = iExtensionPoint.getExtensionPointClass();
-
-                @SuppressWarnings("unchecked")
-                final Set<Class<?>> extensions = (Set<Class<?>>) reflections.getSubTypesOf(clazzToSearch);
-                for (final Class<?> extension : extensions)
-                {
-                    if (extension.isAnnotationPresent(IgnoreExtensionPoint.class))
-                    {
-                        continue;
-                    }
-
-                    try
-                    {
-                        final Object instanceOfExtension = extension.getConstructor().newInstance();
-                        iExtensionPoint.addImplementation(instanceOfExtension);
-                    }
-                    catch (final InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
+                iExtensionPoint.scan(reflections);
             }
         }
     }

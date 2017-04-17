@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.component.IComponentManager;
+import pl.north93.zgame.api.global.component.IExtensionPoint;
 
 public class ComponentManagerImpl implements IComponentManager
 {
@@ -71,28 +71,14 @@ public class ComponentManagerImpl implements IComponentManager
         }
         this.apiCore.getLogger().info("Loading component " + componentDescription.getName());
 
-        final List<ExtensionPointImpl<?>> extensionPoints = new ArrayList<>();
+        final List<IExtensionPoint<?>> extensionPoints = new ArrayList<>();
         for (final String extensionClassName : componentDescription.getExtensionPoints())
         {
-            final Class<?> extensionClass;
-            try
-            {
-                extensionClass = Class.forName(extensionClassName, true, classLoader);
-            }
-            catch (final ClassNotFoundException e)
-            {
-                e.printStackTrace();
-                continue;
-            }
-
-            if (!extensionClass.isInterface() && !Modifier.isAbstract(extensionClass.getModifiers()))
-            {
-                this.apiCore.getLogger().warning("Class " + extensionClassName + " must be interface or abstract!");
-                continue;
-            }
+            final ExtensionPointFactory factory = ExtensionPointFactory.INSTANCE;
+            final IExtensionPoint<Object> extensionPoint = factory.createExtensionPoint(classLoader, extensionClassName);
 
             this.apiCore.getLogger().info("Component " + componentDescription.getName() + " exposes extension point: " + extensionClassName);
-            extensionPoints.add(new ExtensionPointImpl<>(extensionClass));
+            extensionPoints.add(extensionPoint);
         }
 
         final ComponentBundle componentBundle = new ComponentBundle(componentDescription, classLoader, extensionPoints);

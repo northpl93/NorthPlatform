@@ -13,6 +13,7 @@ components:
     description: "Provides unified commands API."
     extensionPoints:
       - "pl.north93.zgame.api.global.commands.NorthCommand"
+      - "pl.north93.zgame.api.global.commands.annotation.QuickCommand"
 
   - name: API.URI
     enabled: true

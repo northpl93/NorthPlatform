@@ -49,6 +49,11 @@ public class LocalArena implements IArena
         return this.data.getPlayers();
     }
 
+    public RemoteArena getAsRemoteArena()
+    {
+        return this.data;
+    }
+
     public void addPlayer(final UUID uuid)
     {
         this.data.getPlayers().add(uuid);

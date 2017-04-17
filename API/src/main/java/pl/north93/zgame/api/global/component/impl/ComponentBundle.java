@@ -22,11 +22,11 @@ class ComponentBundle implements IComponentBundle
     private final String               name;
     private final ComponentDescription description;
     private final ClassLoader          classLoader;
-    private final List<ExtensionPointImpl<?>> extensionPoints;
+    private final List<IExtensionPoint<?>> extensionPoints;
     private Set<String> basePackages;
     private Component   component;
 
-    public ComponentBundle(final ComponentDescription description, final ClassLoader classLoader, final List<ExtensionPointImpl<?>> extensionPoints)
+    public ComponentBundle(final ComponentDescription description, final ClassLoader classLoader, final List<IExtensionPoint<?>> extensionPoints)
     {
         this.name = description.getName();
         this.description = description;
@@ -99,7 +99,7 @@ class ComponentBundle implements IComponentBundle
     }
 
     @Override
-    public List<ExtensionPointImpl<?>> getExtensionPoints()
+    public List<IExtensionPoint<?>> getExtensionPoints()
     {
         return this.extensionPoints;
     }
@@ -107,7 +107,7 @@ class ComponentBundle implements IComponentBundle
     @Override
     public <T> IExtensionPoint<T> getExtensionPoint(final Class<T> clazz)
     {
-        for (final ExtensionPointImpl<?> extensionPoint : this.extensionPoints)
+        for (final IExtensionPoint<?> extensionPoint : this.extensionPoints)
         {
             if (clazz == extensionPoint.getExtensionPointClass())
             {

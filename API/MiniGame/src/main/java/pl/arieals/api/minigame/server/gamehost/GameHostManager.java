@@ -30,4 +30,9 @@ public class GameHostManager implements IServerManager
     {
 
     }
+
+    public LocalArenaManager getArenaManager()
+    {
+        return this.arenaManager;
+    }
 }

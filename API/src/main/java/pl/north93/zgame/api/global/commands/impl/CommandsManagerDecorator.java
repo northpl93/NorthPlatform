@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.global.commands.impl;
 
+import java.lang.reflect.Method;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -7,7 +9,10 @@ import pl.north93.zgame.api.bukkit.BukkitCommandsManager;
 import pl.north93.zgame.api.bungee.BungeeCommandsManager;
 import pl.north93.zgame.api.global.commands.ICommandsManager;
 import pl.north93.zgame.api.global.commands.NorthCommand;
+import pl.north93.zgame.api.global.commands.annotation.QuickCommand;
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.IAnnotated;
+import pl.north93.zgame.api.global.component.IAnnotatedExtensionPoint;
 import pl.north93.zgame.api.standalone.commands.StandaloneCommandsManager;
 
 public class CommandsManagerDecorator extends Component implements ICommandsManager
@@ -28,7 +33,23 @@ public class CommandsManagerDecorator extends Component implements ICommandsMana
             case STANDALONE:
                 this.commandsManager = new StandaloneCommandsManager();
         }
+
         this.getExtensionPoint(NorthCommand.class).setHandler(this::registerCommand);
+
+        final IAnnotatedExtensionPoint quickCommandExtension = (IAnnotatedExtensionPoint) this.getExtensionPoint(QuickCommand.class);
+        quickCommandExtension.setAnnotatedHandler(this::handleQuickCommandAnnotation);
+    }
+
+    private void handleQuickCommandAnnotation(final IAnnotated annotated)
+    {
+        if (! annotated.isMethod())
+        {
+            return;
+        }
+        final QuickCommand annotation = annotated.getAnnotation();
+        final Method method = (Method) annotated.getElement();
+
+        this.registerCommand(new QuickNorthCommand(method, annotation));
     }
 
     @Override

@@ -1,14 +1,18 @@
 package pl.north93.zgame.api.global.component.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.reflections.Reflections;
 
 import pl.north93.zgame.api.global.component.IExtensionHandler;
 import pl.north93.zgame.api.global.component.IExtensionPoint;
+import pl.north93.zgame.api.global.component.annotations.IgnoreExtensionPoint;
 import pl.north93.zgame.api.global.utils.Wrapper;
 
 class ExtensionPointImpl<T> implements IExtensionPoint<T>
@@ -67,6 +71,32 @@ class ExtensionPointImpl<T> implements IExtensionPoint<T>
         {
             this.handler.set(handler);
             this.implementations.forEach(handler::handle);
+        }
+    }
+
+    @Override
+    public void scan(final Reflections reflections)
+    {
+        final Class<?> clazzToSearch = this.getExtensionPointClass();
+
+        @SuppressWarnings("unchecked")
+        final Set<Class<?>> extensions = (Set<Class<?>>) reflections.getSubTypesOf(clazzToSearch);
+        for (final Class<?> extension : extensions)
+        {
+            if (extension.isAnnotationPresent(IgnoreExtensionPoint.class))
+            {
+                continue;
+            }
+
+            try
+            {
+                final Object instanceOfExtension = extension.getConstructor().newInstance();
+                this.addImplementation(instanceOfExtension);
+            }
+            catch (final InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 

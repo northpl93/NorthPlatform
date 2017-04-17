@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * Classes annotated with this, will not be registered as extension points.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE, ElementType.METHOD})
 public @interface IgnoreExtensionPoint
 {
 }
