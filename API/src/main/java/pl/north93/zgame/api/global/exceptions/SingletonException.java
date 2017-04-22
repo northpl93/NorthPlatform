@@ -1,6 +1,6 @@
 package pl.north93.zgame.api.global.exceptions;
 
-public class SingletonException extends Exception
+public class SingletonException extends RuntimeException
 {
     public SingletonException(final String fieldName)
     {

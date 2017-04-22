@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.server.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.IGameHostRpc;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 
@@ -25,8 +26,15 @@ public class GameHostRpcImpl implements IGameHostRpc
     }
 
     @Override
-    public Boolean tryConnectPlayer(final UUID playerId, final UUID arenaId)
+    public Boolean tryConnectPlayers(final List<PlayerJoinInfo> players, final UUID arenaId, final Boolean spectator)
     {
+        final LocalArena arena = this.manager.getArenaManager().getArena(arenaId);
+        if (arena == null)
+        {
+            // todo log info
+            return false;
+        }
+
         return null;
     }
 }

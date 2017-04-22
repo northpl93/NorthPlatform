@@ -9,7 +9,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import pl.north93.zgame.api.global.component.annotations.ProvidesComponent;
-import pl.north93.zgame.api.global.exceptions.SingletonException;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 
@@ -17,7 +16,7 @@ public final class API
 {
     private static ApiCore apiCore;
 
-    public static void setApiCore(final ApiCore newApi) throws SingletonException
+    public static void setApiCore(final ApiCore newApi)
     {
         checkSingleton(apiCore, "apiCore");
         API.apiCore = newApi;

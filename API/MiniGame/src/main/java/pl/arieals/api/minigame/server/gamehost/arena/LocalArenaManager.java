@@ -3,8 +3,12 @@ package pl.arieals.api.minigame.server.gamehost.arena;
 import static java.text.MessageFormat.format;
 
 
+import static pl.arieals.api.minigame.shared.api.utils.ArenaStreamUtils.containsPlayer;
+
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -30,7 +34,7 @@ public class LocalArenaManager
         final UUID serverId = this.apiCore.getServer().get().getUuid();
 
         final RemoteArena arenaData = new RemoteArena(arenaId, serverId, GamePhase.LOBBY, new ArrayList<>());
-        final LocalArena localArena = new LocalArena(arenaManager, arenaData);
+        final LocalArena localArena = new LocalArena(this.miniGameServer.getServerManager(), arenaManager, arenaData);
         this.arenas.add(localArena);
         arenaManager.setArena(arenaData);
 
@@ -43,5 +47,22 @@ public class LocalArenaManager
     public List<LocalArena> getArenas()
     {
         return this.arenas;
+    }
+
+    public Optional<LocalArena> getArenaAssociatedWith(final UUID player)
+    {
+        return this.arenas.stream().filter(containsPlayer(player)).findFirst();
+    }
+
+    public LocalArena getArena(final UUID arenaId)
+    {
+        for (final LocalArena arena : this.arenas)
+        {
+            if (arena.getId().equals(arenaId))
+            {
+                return arena;
+            }
+        }
+        return null;
     }
 }

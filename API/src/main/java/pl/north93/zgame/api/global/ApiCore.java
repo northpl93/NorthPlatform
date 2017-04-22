@@ -22,7 +22,6 @@ import pl.north93.zgame.api.global.component.IComponentManager;
 import pl.north93.zgame.api.global.component.annotations.ProvidesComponent;
 import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
 import pl.north93.zgame.api.global.data.UsernameCache;
-import pl.north93.zgame.api.global.exceptions.SingletonException;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.permissions.PermissionsManager;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
@@ -52,14 +51,7 @@ public abstract class ApiCore
         //this.updateManager = new UpdateManager();
         this.messagePackTemplates = new TemplateManagerImpl();
         this.rpcManager = new RpcManagerImpl();
-        try
-        {
-            API.setApiCore(this);
-        }
-        catch (final SingletonException e)
-        {
-            throw new RuntimeException("You can't create more than one ApiCore class instances.", e);
-        }
+        API.setApiCore(this);
         this.setApiState(ApiState.CONSTRUCTED);
     }
 

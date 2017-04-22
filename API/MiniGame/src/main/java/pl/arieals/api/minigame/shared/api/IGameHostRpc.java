@@ -3,6 +3,7 @@ package pl.arieals.api.minigame.shared.api;
 import java.util.List;
 import java.util.UUID;
 
+import pl.arieals.api.minigame.server.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 
 /**
@@ -18,12 +19,13 @@ public interface IGameHostRpc
     List<RemoteArena> getArenas();
 
     /**
-     * Próbuje dodać gracza o podanym identyfikatorze do areny o
-     * podanym identyfikatorze.
+     * Próbuje dodać graczy(a) do areny o podanym ID.
+     * Umożliwia także dodawanie obserwatorów gry.
      *
-     * @param playerId UUID gracza.
-     * @param arenaId UUID areny.
-     * @return czy udało się dodać gracza (czy było wystarczająco miejsca)
+     * @param players lista graczy którzy mają zastać dodani
+     * @param arenaId identyfikator areny
+     * @param spectator czy dodajemy spectatorów
+     * @return czy serwer zezwolił na dołączenie (czy nie przekraczamy ilości graczy itp) i dodał graczy
      */
-    Boolean tryConnectPlayer(UUID playerId, UUID arenaId);
+    Boolean tryConnectPlayers(List<PlayerJoinInfo> players, UUID arenaId, Boolean spectator);
 }
