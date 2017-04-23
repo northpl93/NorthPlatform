@@ -38,6 +38,8 @@ public class LocalArenaManager
         this.arenas.add(localArena);
         arenaManager.setArena(arenaData);
 
+        localArena.setGamePhase(GamePhase.LOBBY); // invoke game phase changed events
+
         final String msg = "Added new local arena! Arena ID:{0}, Server ID:{1}, Game Phase:{2}";
         this.logger.info(format(msg, arenaId, serverId, arenaData.getGamePhase()));
 

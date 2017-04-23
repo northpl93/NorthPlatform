@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.server.gamehost.event;
+package pl.arieals.api.minigame.server.gamehost.event.player;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;

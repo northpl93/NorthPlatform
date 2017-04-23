@@ -2,9 +2,13 @@ package pl.arieals.api.minigame.server.gamehost;
 
 import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
+import pl.arieals.api.minigame.server.gamehost.listener.PlayerListener;
+import pl.arieals.api.minigame.server.gamehost.listener.WorldListener;
 import pl.arieals.api.minigame.shared.api.IGameHostRpc;
 import pl.arieals.api.minigame.shared.api.MiniGame;
 import pl.arieals.api.minigame.shared.api.arena.netevent.IArenaNetEvent;
+import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.global.cfg.ConfigUtils;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectNewInstance;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
@@ -13,11 +17,12 @@ import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 
 public class GameHostManager implements IServerManager
 {
-    @InjectComponent("")
+    private BukkitApiCore     apiCore;
+    @InjectComponent("API.Database.Redis.MessagePackSerializer")
     private TemplateManager   msgPack;
     @InjectComponent("API.Database.Redis.RPC")
     private IRpcManager       rpcManager;
-    @InjectComponent("")
+    @InjectComponent("API.Database.Redis.Subscriber")
     private RedisSubscriber   subscriber;
     @InjectNewInstance
     private LocalArenaManager arenaManager;
@@ -26,8 +31,10 @@ public class GameHostManager implements IServerManager
     @Override
     public void start()
     {
-        // todo load minigame config
+        this.miniGame = ConfigUtils.loadConfigFile(MiniGame.class, this.apiCore.getFile("minigame.yml"));
         this.rpcManager.addRpcImplementation(IGameHostRpc.class, new GameHostRpcImpl(this));
+
+        this.apiCore.registerEvents(new PlayerListener(), new WorldListener());
 
         for (int i = 0; i < 4; i++) // create 4 arenas.
         {

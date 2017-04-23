@@ -9,13 +9,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
-import pl.arieals.api.minigame.server.gamehost.event.PlayerJoinArenaEvent;
-import pl.arieals.api.minigame.server.gamehost.event.PlayerQuitArenaEvent;
+import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
+import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.server.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.MiniGame;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
 
+/**
+ * Każda LocalArena ma swojego PlayersManagera
+ */
 public class PlayersManager
 {
     private final GameHostManager      gameHostManager;
@@ -40,6 +43,7 @@ public class PlayersManager
 
     public boolean tryAddPlayers(final List<PlayerJoinInfo> players, final boolean spectator)
     {
+        // todo implement spectating?
         synchronized (this) // handle only one join request at same time
         {
             if (! this.canJoin(players))

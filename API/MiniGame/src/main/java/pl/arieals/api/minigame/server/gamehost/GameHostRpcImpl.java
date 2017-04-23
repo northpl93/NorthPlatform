@@ -2,6 +2,7 @@ package pl.arieals.api.minigame.server.gamehost;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
@@ -12,6 +13,7 @@ import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 public class GameHostRpcImpl implements IGameHostRpc
 {
     private final GameHostManager manager;
+    private Logger                logger;
 
     public GameHostRpcImpl(final GameHostManager manager)
     {
@@ -31,10 +33,10 @@ public class GameHostRpcImpl implements IGameHostRpc
         final LocalArena arena = this.manager.getArenaManager().getArena(arenaId);
         if (arena == null)
         {
-            // todo log info
+            this.logger.warning("arena is null in tryConnectPlayers()");
             return false;
         }
 
-        return null;
+        return arena.getPlayersManager().tryAddPlayers(players, spectator);
     }
 }

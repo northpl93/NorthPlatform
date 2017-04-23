@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
+import pl.arieals.api.minigame.server.gamehost.event.arena.GamePhaseEventFactory;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
@@ -47,6 +48,7 @@ public class LocalArena implements IArena
     {
         this.data.setGamePhase(gamePhase);
         this.arenaManager.setArena(this.data);
+        GamePhaseEventFactory.getInstance().callEvent(this);
         this.gameHostManager.publishArenaEvent(new ArenaDataChanged(this.data.getId(), gamePhase, this.data.getPlayers().size()));
     }
 
