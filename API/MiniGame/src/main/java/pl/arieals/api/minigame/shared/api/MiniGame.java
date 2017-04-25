@@ -1,5 +1,8 @@
 package pl.arieals.api.minigame.shared.api;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import org.diorite.cfg.annotations.CfgComment;
 
 public class MiniGame
@@ -31,5 +34,11 @@ public class MiniGame
     public Integer getVipSlots()
     {
         return this.vipSlots;
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("lobbyMode", this.lobbyMode).append("isDynamic", this.isDynamic).append("slots", this.slots).append("vipSlots", this.vipSlots).toString();
     }
 }

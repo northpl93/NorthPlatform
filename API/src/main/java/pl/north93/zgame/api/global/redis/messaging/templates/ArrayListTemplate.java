@@ -18,12 +18,15 @@ public class ArrayListTemplate implements TemplateGeneric<ArrayList<Object>>
 
     public ArrayListTemplate()
     {
+        // generic template will be optionally set later by setGenericType.
+        // By default we use dynamic template.
         this(null);
     }
 
     public ArrayListTemplate(final Class<?> genericType)
     {
-        this.genericType = genericType;
+        // if we receive null generic type we will use dynamic template (Object.class) to prevent NPE.
+        this.genericType = genericType != null ? genericType : Object.class;
     }
 
     @Override

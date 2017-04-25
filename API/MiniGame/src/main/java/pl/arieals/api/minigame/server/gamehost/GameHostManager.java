@@ -4,7 +4,11 @@ import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.arieals.api.minigame.server.gamehost.listener.PlayerListener;
 import pl.arieals.api.minigame.server.gamehost.listener.WorldListener;
+import pl.arieals.api.minigame.server.gamehost.lobby.ExternalLobby;
+import pl.arieals.api.minigame.server.gamehost.lobby.ILobbyManager;
+import pl.arieals.api.minigame.server.gamehost.lobby.IntegratedLobby;
 import pl.arieals.api.minigame.shared.api.IGameHostRpc;
+import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.MiniGame;
 import pl.arieals.api.minigame.shared.api.arena.netevent.IArenaNetEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
@@ -26,6 +30,7 @@ public class GameHostManager implements IServerManager
     private RedisSubscriber   subscriber;
     @InjectNewInstance
     private LocalArenaManager arenaManager;
+    private ILobbyManager     lobbyManager;
     private MiniGame          miniGame;
 
     @Override
@@ -33,6 +38,7 @@ public class GameHostManager implements IServerManager
     {
         this.miniGame = ConfigUtils.loadConfigFile(MiniGame.class, this.apiCore.getFile("minigame.yml"));
         this.rpcManager.addRpcImplementation(IGameHostRpc.class, new GameHostRpcImpl(this));
+        this.lobbyManager = (this.miniGame.getLobbyMode() == LobbyMode.EXTERNAL) ? new ExternalLobby() : new IntegratedLobby();
 
         this.apiCore.registerEvents(new PlayerListener(), new WorldListener());
 
@@ -54,6 +60,11 @@ public class GameHostManager implements IServerManager
     public MiniGame getMiniGame()
     {
         return this.miniGame;
+    }
+
+    public ILobbyManager getLobbyManager()
+    {
+        return this.lobbyManager;
     }
 
     public LocalArenaManager getArenaManager()

@@ -78,6 +78,7 @@ public class PlayersManager
     public void playerConnected(final Player player)
     {
         this.players.add(player);
+        this.gameHostManager.getLobbyManager().addPlayer(this.arena, player);
         Bukkit.getPluginManager().callEvent(new PlayerJoinArenaEvent(player, this.arena));
         Bukkit.broadcastMessage("playerConnected(" + player.getName() + ") arena " + this.arena.getId()); // debug message
     }

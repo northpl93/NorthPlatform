@@ -26,7 +26,7 @@ public class IncomingArenaNetEvent extends Event
 
     public ArenaEventType getType()
     {
-        return this.arenaNetEvent.getType();
+        return this.arenaNetEvent.getEventType();
     }
 
     @Override
