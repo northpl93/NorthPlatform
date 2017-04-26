@@ -7,6 +7,8 @@ import pl.arieals.api.minigame.server.gamehost.listener.WorldListener;
 import pl.arieals.api.minigame.server.gamehost.lobby.ExternalLobby;
 import pl.arieals.api.minigame.server.gamehost.lobby.ILobbyManager;
 import pl.arieals.api.minigame.server.gamehost.lobby.IntegratedLobby;
+import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
+import pl.arieals.api.minigame.server.gamehost.world.impl.WorldManager;
 import pl.arieals.api.minigame.shared.api.IGameHostRpc;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.MiniGame;
@@ -30,6 +32,8 @@ public class GameHostManager implements IServerManager
     private RedisSubscriber   subscriber;
     @InjectNewInstance
     private LocalArenaManager arenaManager;
+    @InjectNewInstance
+    private WorldManager      worldManager;
     private ILobbyManager     lobbyManager;
     private MiniGame          miniGame;
 
@@ -60,6 +64,11 @@ public class GameHostManager implements IServerManager
     public MiniGame getMiniGame()
     {
         return this.miniGame;
+    }
+
+    public IWorldManager getWorldManager()
+    {
+        return this.worldManager;
     }
 
     public ILobbyManager getLobbyManager()
