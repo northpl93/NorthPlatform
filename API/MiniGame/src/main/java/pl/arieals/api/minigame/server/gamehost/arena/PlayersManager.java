@@ -1,6 +1,7 @@
 package pl.arieals.api.minigame.server.gamehost.arena;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.server.shared.api.PlayerJoinInfo;
+import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.MiniGame;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
@@ -33,7 +35,7 @@ public class PlayersManager
         this.manager = manager;
         this.arena = arena;
         this.players = new ArrayList<>();
-        this.joinInfos = new ArrayList<>();
+        this.joinInfos = Collections.synchronizedList(new ArrayList<>()); // may be accessed by server thread and rpc method executor in tryAddPlayers
     }
 
     public List<Player> getPlayers()
@@ -46,6 +48,11 @@ public class PlayersManager
         // todo implement spectating?
         synchronized (this) // handle only one join request at same time
         {
+            if (this.gameHostManager.getMiniGame().getLobbyMode() == LobbyMode.INTEGRATED && ! this.arena.getWorld().isReady())
+            {
+                // jesli gra uzywa lobby zintegrowanego z mapa to mapa musi byc gotowa/zaladowana
+                return false;
+            }
             if (! this.canJoin(players))
             {
                 return false;

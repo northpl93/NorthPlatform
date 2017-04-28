@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.server.gamehost.utils;
+package pl.arieals.api.minigame.server.shared.utils;
 
 import java.util.ArrayList;
 import java.util.Iterator;

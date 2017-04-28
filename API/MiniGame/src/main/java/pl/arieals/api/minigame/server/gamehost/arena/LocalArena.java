@@ -1,5 +1,8 @@
 package pl.arieals.api.minigame.server.gamehost.arena;
 
+import static pl.arieals.api.minigame.shared.api.utils.InvalidGamePhaseException.checkGamePhase;
+
+
 import java.util.List;
 import java.util.UUID;
 
@@ -16,6 +19,7 @@ public class LocalArena implements IArena
     private final GameHostManager gameHostManager;
     private final ArenaManager    arenaManager;
     private final RemoteArena     data;
+    private final ArenaWorld      world;
     private final PlayersManager  playersManager;
 
     public LocalArena(final GameHostManager gameHostManager, final ArenaManager arenaManager, final RemoteArena data)
@@ -23,6 +27,7 @@ public class LocalArena implements IArena
         this.gameHostManager = gameHostManager;
         this.arenaManager = arenaManager;
         this.data = data;
+        this.world = new ArenaWorld(gameHostManager, this);
         this.playersManager = new PlayersManager(gameHostManager, arenaManager, this);
     }
 
@@ -48,14 +53,20 @@ public class LocalArena implements IArena
     {
         this.data.setGamePhase(gamePhase);
         this.arenaManager.setArena(this.data);
-        GamePhaseEventFactory.getInstance().callEvent(this);
         this.gameHostManager.publishArenaEvent(new ArenaDataChanged(this.data.getId(), gamePhase, this.data.getPlayers().size()));
+
+        GamePhaseEventFactory.getInstance().callEvent(this);
     }
 
     @Override
     public List<UUID> getPlayers()
     {
         return this.data.getPlayers();
+    }
+
+    public ArenaWorld getWorld()
+    {
+        return this.world;
     }
 
     public PlayersManager getPlayersManager()
@@ -68,10 +79,10 @@ public class LocalArena implements IArena
         return this.data;
     }
 
-    public void resetArena()
+    public void prepareNewCycle()
     {
-        this.data.setGamePhase(GamePhase.LOBBY);
-        this.data.getPlayers().clear();
-        this.arenaManager.setArena(this.data);
+        checkGamePhase(this.getGamePhase(), GamePhase.POST_GAME); // arena moze byc zresetowana tylko po grze
+
+        this.setGamePhase(GamePhase.LOBBY);
     }
 }

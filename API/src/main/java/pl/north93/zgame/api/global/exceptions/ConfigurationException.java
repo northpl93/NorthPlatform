@@ -4,7 +4,7 @@ package pl.north93.zgame.api.global.exceptions;
  * Wyjątek rzucany gdy występuje jakiś problem w konfiguracji sieci
  * który uniemożliwia pracę.
  */
-public class ConfigurationException extends Exception
+public class ConfigurationException extends RuntimeException
 {
     public ConfigurationException()
     {

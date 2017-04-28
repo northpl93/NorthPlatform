@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
@@ -18,7 +19,7 @@ import org.bukkit.event.world.WorldInitEvent;
 
 import org.apache.commons.io.FileUtils;
 
-import pl.arieals.api.minigame.server.gamehost.utils.Cuboid;
+import pl.arieals.api.minigame.server.shared.utils.Cuboid;
 import pl.arieals.api.minigame.server.gamehost.world.ILoadingProgress;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
@@ -72,9 +73,38 @@ public class WorldManager implements IWorldManager
     }
 
     @Override
-    public ILoadingProgress regenWorld(final String name)
+    public ILoadingProgress regenWorld(final String name, final File source, final Cuboid cuboid)
     {
-        return null; // todo
+        final World world = Bukkit.getWorld(name);
+        if (world == null)
+        {
+            return this.loadWorld(name, source, cuboid);
+        }
+
+        this.worlds.remove(world); // stop chunk unloading/loading tracking
+        for (final Chunk chunk : world.getLoadedChunks())
+        {
+            chunk.unload(false);
+        }
+        this.worlds.add(world); // start chunk unloading/loading tracking
+
+        final File mapDir = new File(Bukkit.getWorldContainer(), name);
+        try
+        {
+            FileUtils.cleanDirectory(new File(mapDir, "region"));
+            FileUtils.copyDirectory(source, mapDir);
+        }
+        catch (final IOException e)
+        {
+            throw new RuntimeException("Failed to remove/copy files for map " + name, e);
+        }
+
+        final LoadingProgressImpl progress = new LoadingProgressImpl(world);
+        this.chunkLoadingTask.queueTask(world, cuboid.getChunksCoordinates(), progress);
+
+        this.logger.info(MessageFormat.format("Queued loading chunks of {0}", name));
+
+        return progress;
     }
 
     @Override

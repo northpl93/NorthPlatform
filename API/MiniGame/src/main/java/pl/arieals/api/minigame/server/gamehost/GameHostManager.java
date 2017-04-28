@@ -1,7 +1,10 @@
 package pl.arieals.api.minigame.server.gamehost;
 
+import java.io.File;
+
 import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
+import pl.arieals.api.minigame.server.gamehost.listener.ArenaInitListener;
 import pl.arieals.api.minigame.server.gamehost.listener.PlayerListener;
 import pl.arieals.api.minigame.server.gamehost.listener.WorldListener;
 import pl.arieals.api.minigame.server.gamehost.lobby.ExternalLobby;
@@ -17,6 +20,7 @@ import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.cfg.ConfigUtils;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectNewInstance;
+import pl.north93.zgame.api.global.exceptions.ConfigurationException;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
@@ -41,10 +45,12 @@ public class GameHostManager implements IServerManager
     public void start()
     {
         this.miniGame = ConfigUtils.loadConfigFile(MiniGame.class, this.apiCore.getFile("minigame.yml"));
+        this.validateConfig(this.miniGame);
+
         this.rpcManager.addRpcImplementation(IGameHostRpc.class, new GameHostRpcImpl(this));
         this.lobbyManager = (this.miniGame.getLobbyMode() == LobbyMode.EXTERNAL) ? new ExternalLobby() : new IntegratedLobby();
 
-        this.apiCore.registerEvents(new PlayerListener(), new WorldListener());
+        this.apiCore.registerEvents(new PlayerListener(), new WorldListener(), new ArenaInitListener());
 
         for (int i = 0; i < 4; i++) // create 4 arenas.
         {
@@ -66,6 +72,15 @@ public class GameHostManager implements IServerManager
         return this.miniGame;
     }
 
+    /**
+     * Zwraca katalog przechowujący dostępne mapy dla minigry.
+     * @return katalog z mapami.
+     */
+    public File getWorldTemplatesDir()
+    {
+        return null; // todo
+    }
+
     public IWorldManager getWorldManager()
     {
         return this.worldManager;
@@ -85,5 +100,13 @@ public class GameHostManager implements IServerManager
     {
         final byte[] bytes = this.msgPack.serialize(IArenaNetEvent.class, event);
         this.subscriber.publish("minigames:arena_event", bytes);
+    }
+
+    private void validateConfig(final MiniGame miniGame)
+    {
+        if (miniGame.getMapVoting().getEnabled() && miniGame.getLobbyMode() != LobbyMode.EXTERNAL)
+        {
+            throw new ConfigurationException("Map voting can be only enabled when lobby mode is EXTERNAL.");
+        }
     }
 }
