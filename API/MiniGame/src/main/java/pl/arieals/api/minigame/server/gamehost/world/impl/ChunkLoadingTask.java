@@ -4,7 +4,6 @@ import java.text.MessageFormat;
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
-import java.util.logging.Logger;
 
 import org.bukkit.World;
 
@@ -15,7 +14,6 @@ import org.apache.commons.lang3.tuple.Pair;
 class ChunkLoadingTask implements Runnable
 {
     private final Queue<QueuedLoadingTask> tasks = new ArrayDeque<>();
-    private Logger            logger;
     private QueuedLoadingTask activeTask;
 
     public void queueTask(final World world, final List<Pair<Integer, Integer>> chunks, final LoadingProgressImpl progress)
@@ -44,7 +42,7 @@ class ChunkLoadingTask implements Runnable
             final Pair<Integer, Integer> chunk = chunks.poll();
             if (chunk == null)
             {
-                this.logger.info(MessageFormat.format("Completed loading of world {0}", task.world.getName()));
+                System.out.println(MessageFormat.format("Completed loading of world {0}", task.world.getName()));
 
                 this.activeTask = null;
                 task.progress.setCompleted();

@@ -25,9 +25,7 @@ import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.messages.GroupsContainer;
 import pl.north93.zgame.api.global.messages.NetworkMeta;
 import pl.north93.zgame.api.global.network.NetworkAction;
-import pl.north93.zgame.api.global.network.minigame.MiniGame;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
-import pl.north93.zgame.controller.cfg.MinigamesConfig;
 import pl.north93.zgame.controller.cfg.ServersGroupsConfig;
 import pl.north93.zgame.controller.cfg.ServersPatternsConfig;
 
@@ -43,7 +41,6 @@ public class ConfigBroadcaster extends Component
 
     private NetworkMeta           networkMeta;
     private GroupsContainer       groups;
-    private MinigamesConfig       miniGames;
     private ServersPatternsConfig patternsConfig;
     private ServersGroupsConfig   serversGroups;
 
@@ -67,11 +64,6 @@ public class ConfigBroadcaster extends Component
         return this.networkMeta;
     }
 
-    public MinigamesConfig getMiniGames()
-    {
-        return this.miniGames;
-    }
-
     public ServersGroupsConfig getServersGroups()
     {
         return this.serversGroups;
@@ -86,7 +78,6 @@ public class ConfigBroadcaster extends Component
     {
         this.networkMeta = loadConfigFile(NetworkMeta.class, this.getApiCore().getFile("network.yml"));
         this.groups = loadConfigFile(GroupsContainer.class, this.getApiCore().getFile("permissions.yml"));
-        this.miniGames = loadConfigFile(MinigamesConfig.class, this.getApiCore().getFile("minigames.yml"));
         this.patternsConfig = loadConfigFile(ServersPatternsConfig.class, this.getApiCore().getFile("instancepatterns.yml"));
         this.serversGroups = loadConfigFile(ServersGroupsConfig.class, this.getApiCore().getFile("serversgroups.yml"));
         this.broadcastNetworkConfigs();
@@ -98,7 +89,6 @@ public class ConfigBroadcaster extends Component
         {
             redis.set(NETWORK_META, this.msgPack.serialize(this.networkMeta));
             redis.set(PERMISSIONS_GROUPS, this.msgPack.serialize(this.groups));
-            redis.set(NETWORK_MINIGAMES, this.msgPack.serializeList(MiniGame.class, this.miniGames.getMiniGames()));
 
             final ArrayList<IServersGroup> serversGroups = new ArrayList<>();
             serversGroups.addAll(this.serversGroups.getManagedGroups());
@@ -114,6 +104,6 @@ public class ConfigBroadcaster extends Component
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("networkMeta", this.networkMeta).append("groups", this.groups).append("miniGames", this.miniGames).append("patternsConfig", this.patternsConfig).append("serversGroups", this.serversGroups).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("networkMeta", this.networkMeta).append("groups", this.groups).append("patternsConfig", this.patternsConfig).append("serversGroups", this.serversGroups).toString();
     }
 }

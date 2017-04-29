@@ -3,6 +3,9 @@ package pl.arieals.api.minigame.shared.impl;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
@@ -34,5 +37,16 @@ public class ArenaManager
     public void setArena(final RemoteArena arena)
     {
         this.arenas.put(arena.getId().toString(), arena);
+    }
+
+    public void removeArena(final UUID arenaId)
+    {
+        this.arenas.delete(arenaId.toString());
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("arenas", this.arenas).toString();
     }
 }

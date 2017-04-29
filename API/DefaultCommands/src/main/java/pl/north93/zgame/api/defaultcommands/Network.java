@@ -11,7 +11,6 @@ import pl.north93.zgame.api.global.deployment.RemoteDaemon;
 import pl.north93.zgame.api.global.messages.ProxyInstanceInfo;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.NetworkAction;
-import pl.north93.zgame.api.global.network.minigame.MiniGame;
 
 public class Network extends NorthCommand
 {
@@ -60,14 +59,6 @@ public class Network extends NorthCommand
                     sender.sendMessage("  |- Maksymalna ilość ramu: " + daemon.getMaxRam() + "MB");
                     sender.sendMessage("  |- Użyty ram: " + daemon.getRamUsed() + "MB (" + daemon.getRamUsed() / daemon.getMaxRam() * 100 + "%)");
                     sender.sendMessage("  |- Ilość serwerów hostowanych: " + daemon.getServerCount());
-                }
-            }
-            else if ("minigames".equals(args.asString(0)))
-            {
-                sender.sendMessage("&cSkonfigurowane minigry");
-                for (final MiniGame miniGame : this.networkManager.getMiniGames())
-                {
-                    sender.sendMessage(" * " + miniGame.getDisplayName() + " (" + miniGame.getSystemName() + ")");
                 }
             }
             else if ("stopall".equals(args.asString(0)))

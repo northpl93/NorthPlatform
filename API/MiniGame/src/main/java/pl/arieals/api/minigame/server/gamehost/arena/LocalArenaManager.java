@@ -67,4 +67,14 @@ public class LocalArenaManager
         }
         return null;
     }
+
+    public void removeArenas()
+    {
+        final ArenaManager arenaManager = this.miniGameServer.getArenaManager();
+        for (final LocalArena arena : this.arenas)
+        {
+            arenaManager.removeArena(arena.getId());
+        }
+        // todo unload worlds? kick players?
+    }
 }

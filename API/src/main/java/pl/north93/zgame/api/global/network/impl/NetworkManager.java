@@ -2,7 +2,6 @@ package pl.north93.zgame.api.global.network.impl;
 
 import static pl.north93.zgame.api.global.redis.RedisKeys.DAEMON;
 import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_ACTION;
-import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_MINIGAMES;
 import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_PATTERNS;
 import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_SERVER_GROUPS;
 import static pl.north93.zgame.api.global.redis.RedisKeys.PLAYERS;
@@ -39,7 +38,6 @@ import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.NetworkAction;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
-import pl.north93.zgame.api.global.network.minigame.MiniGame;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
@@ -152,32 +150,6 @@ class NetworkManager extends Component implements INetworkManager
     public IServersGroup getServersGroup(final String name)
     {
         return this.getServersGroups().stream().filter(serversGroup -> serversGroup.getName().equals(name)).findAny().orElse(null);
-    }
-
-    /**
-     * Zwraca aktualną listę minigier skonfigurowanych w tej sieci.
-     *
-     * @return lista mini gier.
-     */
-    @Override
-    public List<MiniGame> getMiniGames()
-    {
-        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
-        {
-            return this.msgPack.deserializeList(MiniGame.class, redis.get(NETWORK_MINIGAMES));
-        }
-    }
-
-    /**
-     * Zwraca konfigurację minigry o podanej nazwie systemowej.
-     *
-     * @param name nazwa systemowa minigry
-     * @return konfiguracja minigry
-     */
-    @Override
-    public MiniGame getMiniGame(final String name)
-    {
-        return this.getMiniGames().stream().filter(miniGame -> miniGame.getSystemName().equals(name)).findAny().orElse(null);
     }
 
     /**

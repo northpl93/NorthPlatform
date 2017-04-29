@@ -7,3 +7,5 @@ components:
       - API.Database.StorageConnector
       - API.Database.Redis.MessagePackSerializer
       - API.Database.Redis.Subscriber
+    platforms:
+      - BUKKIT

@@ -24,6 +24,7 @@ public class ArenaWorld
 {
     private final GameHostManager gameHostManager;
     private final LocalArena      arena;
+    private GameMap               activeMap;
     private World                 world;
     private ILoadingProgress      progress;
 
@@ -41,6 +42,11 @@ public class ArenaWorld
     public String getName()
     {
         return "arena_" + this.arena.getId();
+    }
+
+    public GameMap getActiveMap()
+    {
+        return this.activeMap;
     }
 
     /**
@@ -70,6 +76,7 @@ public class ArenaWorld
 
         final ILoadingProgress progress = worldManager.regenWorld(this.getName(), template, gameRegion);
 
+        this.activeMap = gameMap;
         this.progress = progress;
         this.world = progress.getWorld();
 

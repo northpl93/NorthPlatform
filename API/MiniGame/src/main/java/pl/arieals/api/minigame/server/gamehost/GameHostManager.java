@@ -61,6 +61,7 @@ public class GameHostManager implements IServerManager
     @Override
     public void stop()
     {
+        this.arenaManager.removeArenas();
     }
 
     /**
@@ -78,7 +79,7 @@ public class GameHostManager implements IServerManager
      */
     public File getWorldTemplatesDir()
     {
-        return null; // todo
+        return new File("game_worlds");
     }
 
     public IWorldManager getWorldManager()
@@ -107,6 +108,11 @@ public class GameHostManager implements IServerManager
         if (miniGame.getMapVoting().getEnabled() && miniGame.getLobbyMode() != LobbyMode.EXTERNAL)
         {
             throw new ConfigurationException("Map voting can be only enabled when lobby mode is EXTERNAL.");
+        }
+
+        if (miniGame.getGameMaps() == null || miniGame.getGameMaps().isEmpty())
+        {
+            throw new ConfigurationException("You must define at least one map in minigame.yml");
         }
     }
 }

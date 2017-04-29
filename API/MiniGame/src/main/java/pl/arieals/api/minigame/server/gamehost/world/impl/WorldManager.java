@@ -19,25 +19,24 @@ import org.bukkit.event.world.WorldInitEvent;
 
 import org.apache.commons.io.FileUtils;
 
-import pl.arieals.api.minigame.server.shared.utils.Cuboid;
 import pl.arieals.api.minigame.server.gamehost.world.ILoadingProgress;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
+import pl.arieals.api.minigame.server.shared.utils.Cuboid;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.Main;
-import pl.north93.zgame.api.global.component.annotations.InjectNewInstance;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
 
 public class WorldManager implements IWorldManager
 {
     private BukkitApiCore apiCore;
     private Logger        logger;
-    @InjectNewInstance
     private ChunkLoadingTask chunkLoadingTask;
     private final List<World> worlds = new ArrayList<>();
 
     @PostInject
     public void postInject()
     {
+        this.chunkLoadingTask = new ChunkLoadingTask();
         final Main plugin = this.apiCore.getPluginMain();
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this.chunkLoadingTask, 5, 5);
     }

@@ -9,7 +9,6 @@ import pl.north93.zgame.api.global.deployment.ServerPattern;
 import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.messages.NetworkMeta;
 import pl.north93.zgame.api.global.messages.ProxyInstanceInfo;
-import pl.north93.zgame.api.global.network.minigame.MiniGame;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.redis.observable.Value;
@@ -41,10 +40,6 @@ public interface INetworkManager extends IPlayerManagement
     Set<IServersGroup> getServersGroups();
 
     IServersGroup getServersGroup(String name);
-
-    List<MiniGame> getMiniGames();
-
-    MiniGame getMiniGame(String name);
 
     List<ServerPattern> getServerPatterns();
 

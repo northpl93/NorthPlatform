@@ -49,7 +49,10 @@ public class PlayerDataShareServer extends Component
     @Override
     protected void disableComponent()
     {
-        this.chatSharingManager.stop();
+        if (this.chatSharingManager != null) // may be null when sharingGroup is null
+        {
+            this.chatSharingManager.stop();
+        }
     }
 
     public DataSharingGroup getMyGroup()
