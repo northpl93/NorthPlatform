@@ -19,6 +19,8 @@ public class MiniGame
     private Integer         slots;
     @CfgComment("Sloty zarezerwowane dla VIPów (odejmowane od wartości slots)")
     private Integer         vipSlots;
+    @CfgComment("Ilosc graczy wymagana do rozpoczecia gry")
+    private Integer         toStart;
     @CfgComment("Konfiguracja map")
     private List<GameMap>   gameMaps;
 
@@ -47,6 +49,11 @@ public class MiniGame
         return this.vipSlots;
     }
 
+    public Integer getToStart()
+    {
+        return this.toStart;
+    }
+
     public List<GameMap> getGameMaps()
     {
         return this.gameMaps;
@@ -55,6 +62,6 @@ public class MiniGame
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("lobbyMode", this.lobbyMode).append("mapVoting", this.mapVoting).append("isDynamic", this.isDynamic).append("slots", this.slots).append("vipSlots", this.vipSlots).append("gameMaps", this.gameMaps).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("lobbyMode", this.lobbyMode).append("mapVoting", this.mapVoting).append("isDynamic", this.isDynamic).append("slots", this.slots).append("vipSlots", this.vipSlots).append("toStart", this.toStart).append("gameMaps", this.gameMaps).toString();
     }
 }

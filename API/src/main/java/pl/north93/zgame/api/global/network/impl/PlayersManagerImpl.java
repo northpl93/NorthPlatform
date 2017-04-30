@@ -220,6 +220,28 @@ class PlayersManagerImpl implements IPlayersManager
     class PlayersManagerUnsafeImpl implements Unsafe
     {
         @Override
+        public IPlayer get(final String nick)
+        {
+            final Value<IOnlinePlayer> online = this.getOnline(nick);
+            if (online.isCached() || online.isAvailable())
+            {
+                return online.get();
+            }
+            return this.getOffline(nick);
+        }
+
+        @Override
+        public IPlayer get(final UUID uuid)
+        {
+            final Value<IOnlinePlayer> online = this.getOnline(uuid);
+            if (online.isCached() || online.isAvailable())
+            {
+                return online.get();
+            }
+            return this.getOffline(uuid);
+        }
+
+        @Override
         public Value<IOnlinePlayer> getOnline(final String nick)
         {
             return PlayersManagerImpl.this.onlinePlayerValue(nick);

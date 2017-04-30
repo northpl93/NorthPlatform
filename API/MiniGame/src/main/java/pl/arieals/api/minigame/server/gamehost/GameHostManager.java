@@ -2,14 +2,17 @@ package pl.arieals.api.minigame.server.gamehost;
 
 import java.io.File;
 
+import org.spigotmc.SpigotConfig;
+
 import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.arieals.api.minigame.server.gamehost.listener.ArenaInitListener;
+import pl.arieals.api.minigame.server.gamehost.listener.GameStartListener;
+import pl.arieals.api.minigame.server.gamehost.listener.GameStartScheduler;
 import pl.arieals.api.minigame.server.gamehost.listener.PlayerListener;
-import pl.arieals.api.minigame.server.gamehost.listener.WorldListener;
-import pl.arieals.api.minigame.server.gamehost.lobby.ExternalLobby;
 import pl.arieals.api.minigame.server.gamehost.lobby.ILobbyManager;
-import pl.arieals.api.minigame.server.gamehost.lobby.IntegratedLobby;
+import pl.arieals.api.minigame.server.gamehost.lobby.external.ExternalLobby;
+import pl.arieals.api.minigame.server.gamehost.lobby.integrated.IntegratedLobby;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
 import pl.arieals.api.minigame.server.gamehost.world.impl.WorldManager;
 import pl.arieals.api.minigame.shared.api.IGameHostRpc;
@@ -44,13 +47,19 @@ public class GameHostManager implements IServerManager
     @Override
     public void start()
     {
+        SpigotConfig.config.set("verbose", false); // disable map-loading spam
+
         this.miniGame = ConfigUtils.loadConfigFile(MiniGame.class, this.apiCore.getFile("minigame.yml"));
         this.validateConfig(this.miniGame);
 
         this.rpcManager.addRpcImplementation(IGameHostRpc.class, new GameHostRpcImpl(this));
         this.lobbyManager = (this.miniGame.getLobbyMode() == LobbyMode.EXTERNAL) ? new ExternalLobby() : new IntegratedLobby();
 
-        this.apiCore.registerEvents(new PlayerListener(), new WorldListener(), new ArenaInitListener());
+        this.apiCore.registerEvents(
+                new PlayerListener(), // dodaje graczy do aren
+                new ArenaInitListener(), // inicjuje arene po dodaniu/zakonczeniu poprzedniej gry
+                new GameStartScheduler(), // planuje rozpoczecie gry gdy arena jest w lobby
+                new GameStartListener()); // inicjuje gre po starcie
 
         for (int i = 0; i < 4; i++) // create 4 arenas.
         {

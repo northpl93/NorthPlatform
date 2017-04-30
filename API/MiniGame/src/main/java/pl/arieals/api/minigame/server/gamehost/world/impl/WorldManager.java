@@ -132,6 +132,7 @@ public class WorldManager implements IWorldManager
     @EventHandler
     public void onChunkUnload(final ChunkUnloadEvent event)
     {
+        event.setSaveChunk(false); // do not save anything on gamehost
         if (this.worlds.contains(event.getWorld()))
         {
             event.setCancelled(true); // do not unload chunks from managed worlds

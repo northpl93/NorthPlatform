@@ -11,7 +11,7 @@ public class InvalidGamePhaseException extends RuntimeException
 
     public InvalidGamePhaseException(final GamePhase current)
     {
-        super(format("Arena is in invalid game phase ({}).", current));
+        super(format("Arena is in invalid game phase ({0}).", current));
         this.current = current;
     }
 

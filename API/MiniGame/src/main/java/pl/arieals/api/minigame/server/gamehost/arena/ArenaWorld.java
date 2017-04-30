@@ -6,14 +6,17 @@ import static pl.arieals.api.minigame.shared.api.utils.InvalidGamePhaseException
 import javax.vecmath.Point3i;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
+import pl.arieals.api.minigame.server.gamehost.event.arena.MapSwitchedEvent;
 import pl.arieals.api.minigame.server.gamehost.world.ILoadingProgress;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
 import pl.arieals.api.minigame.server.shared.utils.Cuboid;
@@ -24,6 +27,7 @@ public class ArenaWorld
 {
     private final GameHostManager gameHostManager;
     private final LocalArena      arena;
+    private final MapVote         mapVote; // logika systemu glosowania
     private GameMap               activeMap;
     private World                 world;
     private ILoadingProgress      progress;
@@ -32,6 +36,12 @@ public class ArenaWorld
     {
         this.gameHostManager = gameHostManager;
         this.arena = arena;
+        this.mapVote = new MapVote();
+    }
+
+    public MapVote getMapVote()
+    {
+        return this.mapVote;
     }
 
     public World getWorld()
@@ -80,7 +90,24 @@ public class ArenaWorld
         this.progress = progress;
         this.world = progress.getWorld();
 
-        progress.onComplete(() -> System.out.println("Wczytano mape!"));
+        progress.onComplete(() ->
+        {
+            Bukkit.getPluginManager().callEvent(new MapSwitchedEvent(this.arena));
+        });
+    }
+
+    public void delete()
+    {
+        Bukkit.unloadWorld(this.world, false);
+        final File worldDir = new File(Bukkit.getWorldContainer(), this.getName());
+        try
+        {
+            FileUtils.deleteDirectory(worldDir);
+        }
+        catch (final IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override

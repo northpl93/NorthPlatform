@@ -87,7 +87,6 @@ public class PlayersManager
         this.players.add(player);
         this.gameHostManager.getLobbyManager().addPlayer(this.arena, player);
         Bukkit.getPluginManager().callEvent(new PlayerJoinArenaEvent(player, this.arena));
-        Bukkit.broadcastMessage("playerConnected(" + player.getName() + ") arena " + this.arena.getId()); // debug message
     }
 
     public void playerDisconnected(final Player player)
@@ -98,6 +97,8 @@ public class PlayersManager
         final RemoteArena remoteArena = this.arena.getAsRemoteArena();
         remoteArena.getPlayers().remove(player.getUniqueId());
         this.manager.setArena(remoteArena);
+
+        this.arena.getWorld().getMapVote().removeVote(player);
 
         Bukkit.getPluginManager().callEvent(new PlayerQuitArenaEvent(player, this.arena));
     }

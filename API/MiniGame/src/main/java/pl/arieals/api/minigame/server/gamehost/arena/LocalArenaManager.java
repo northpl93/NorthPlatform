@@ -2,7 +2,6 @@ package pl.arieals.api.minigame.server.gamehost.arena;
 
 import static java.text.MessageFormat.format;
 
-
 import static pl.arieals.api.minigame.shared.api.utils.ArenaStreamUtils.containsPlayer;
 
 
@@ -74,7 +73,7 @@ public class LocalArenaManager
         for (final LocalArena arena : this.arenas)
         {
             arenaManager.removeArena(arena.getId());
+            arena.getWorld().delete();
         }
-        // todo unload worlds? kick players?
     }
 }

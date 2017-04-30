@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.GamePhaseEventFactory;
+import pl.arieals.api.minigame.server.gamehost.utils.Timer;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
@@ -21,6 +22,7 @@ public class LocalArena implements IArena
     private final RemoteArena     data;
     private final ArenaWorld      world;
     private final PlayersManager  playersManager;
+    private final Timer           timer;
 
     public LocalArena(final GameHostManager gameHostManager, final ArenaManager arenaManager, final RemoteArena data)
     {
@@ -29,6 +31,7 @@ public class LocalArena implements IArena
         this.data = data;
         this.world = new ArenaWorld(gameHostManager, this);
         this.playersManager = new PlayersManager(gameHostManager, arenaManager, this);
+        this.timer = new Timer();
     }
 
     @Override
@@ -62,6 +65,11 @@ public class LocalArena implements IArena
     public List<UUID> getPlayers()
     {
         return this.data.getPlayers();
+    }
+
+    public Timer getTimer()
+    {
+        return this.timer;
     }
 
     public ArenaWorld getWorld()
