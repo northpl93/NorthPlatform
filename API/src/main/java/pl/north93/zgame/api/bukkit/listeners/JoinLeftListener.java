@@ -2,6 +2,8 @@ package pl.north93.zgame.api.bukkit.listeners;
 
 import static org.bukkit.ChatColor.RED;
 
+import static pl.north93.zgame.api.bukkit.listeners.LanguageKeeper.updateLocale;
+
 
 import java.text.MessageFormat;
 
@@ -58,6 +60,8 @@ public class JoinLeftListener implements Listener
             return;
         }
         final Group group = iplayer.getGroup();
+
+        updateLocale(player, iplayer.getLocale());
 
         PermissionsInjector.inject(player);
         final PermissionAttachment attachment = player.addAttachment(this.bukkitApiCore.getPluginMain());

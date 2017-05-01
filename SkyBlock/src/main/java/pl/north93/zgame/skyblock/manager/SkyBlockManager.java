@@ -1,7 +1,6 @@
 package pl.north93.zgame.skyblock.manager;
 
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -12,28 +11,29 @@ import pl.north93.zgame.api.global.cfg.ConfigUtils;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectResource;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
+import pl.north93.zgame.skyblock.manager.servers.IslandHostManagers;
+import pl.north93.zgame.skyblock.manager.servers.IslandHostServer;
+import pl.north93.zgame.skyblock.server.actions.TeleportPlayerToIsland;
 import pl.north93.zgame.skyblock.shared.api.IIslandsRanking;
 import pl.north93.zgame.skyblock.shared.api.ISkyBlockManager;
-import pl.north93.zgame.skyblock.shared.impl.IslandDao;
 import pl.north93.zgame.skyblock.shared.api.IslandData;
 import pl.north93.zgame.skyblock.shared.api.IslandRole;
-import pl.north93.zgame.skyblock.shared.impl.IslandsRankingImpl;
 import pl.north93.zgame.skyblock.shared.api.NorthBiome;
 import pl.north93.zgame.skyblock.shared.api.ServerMode;
 import pl.north93.zgame.skyblock.shared.api.cfg.IslandConfig;
 import pl.north93.zgame.skyblock.shared.api.cfg.SkyBlockConfig;
 import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.shared.api.utils.Coords2D;
-import pl.north93.zgame.skyblock.manager.servers.IslandHostManagers;
-import pl.north93.zgame.skyblock.manager.servers.IslandHostServer;
-import pl.north93.zgame.skyblock.server.actions.TeleportPlayerToIsland;
+import pl.north93.zgame.skyblock.shared.impl.IslandDao;
+import pl.north93.zgame.skyblock.shared.impl.IslandsRankingImpl;
 
 @IncludeInScanning("pl.north93.zgame.skyblock.shared")
 public class SkyBlockManager extends Component implements ISkyBlockManager
@@ -44,8 +44,8 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
     private INetworkManager     networkManager;
     @InjectComponent("API.Database.Redis.Observer")
     private IObservationManager observer;
-    @InjectResource(bundleName = "SkyBlock")
-    private ResourceBundle      messages;
+    @InjectMessages("SkyBlock")
+    private MessagesBox         messages;
     private IslandDao           islandDao;
     private IslandHostManagers  islandHostManager;
     private IIslandsRanking     IIslandsRanking;

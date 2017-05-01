@@ -1,10 +1,13 @@
-package pl.north93.zgame.skyblock.server.cmd;
+package pl.north93.zgame.api.bukkitcommands;
 
-import java.util.UUID;
+import java.util.Locale;
+
+import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.bukkit.listeners.LanguageKeeper;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
@@ -13,55 +16,55 @@ import pl.north93.zgame.api.global.component.annotations.InjectMessages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
-import pl.north93.zgame.skyblock.server.SkyBlockServer;
-import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 
-public class VisitCmd extends NorthCommand
+public class LanguageCmd extends NorthCommand
 {
+    @InjectMessages("Commands")
+    private MessagesBox     messages;
     @InjectComponent("API.MinecraftNetwork.NetworkManager")
     private INetworkManager networkManager;
-    @InjectComponent("SkyBlock.Server")
-    private SkyBlockServer  server;
-    @InjectMessages("SkyBlock")
-    private MessagesBox     messages;
 
-    public VisitCmd()
+    public LanguageCmd()
     {
-        super("visit", "odwiedz", "odw");
-        this.setAsync(true);
+        super("language", "jezyk");
     }
 
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
+        final Player player = (Player) sender.unwrapped();
+
         if (args.length() != 1)
         {
-            sender.sendMessage(this.messages, "cmd.visit.args");
+            sender.sendMessage(this.messages, "command.language.help");
             return;
         }
 
-        final String visited = args.asString(0);
-        final UUID islandId = this.islandIdFromOwnerName(visited);
-        if (islandId == null)
+        final Locale locale;
+        switch (args.asString(0).toLowerCase())
         {
-            sender.sendMessage(this.messages, "cmd.visit.no_player");
-            return;
+            case "pl":
+            case "polski":
+                locale = Locale.forLanguageTag("pl-PL");
+                break;
+            case "en":
+            case "english":
+                locale = Locale.forLanguageTag("en-GB");
+                break;
+            default:
+                locale = Locale.forLanguageTag("pl-PL");
         }
-        this.server.getSkyBlockManager().visitIsland(islandId, sender.getName());
-    }
 
-    private UUID islandIdFromOwnerName(final String owner)
-    {
-        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(owner))
+        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(player.getUniqueId()))
         {
-            final SkyPlayer skyPlayer = SkyPlayer.get(t.getPlayer());
-            return skyPlayer.getIslandId();
+            t.getPlayer().setLocale(locale);
         }
         catch (final Exception e)
         {
             e.printStackTrace();
-            return null;
         }
+        LanguageKeeper.updateLocale(player, locale);
+        sender.sendMessage(this.messages, "command.language.changed");
     }
 
     @Override

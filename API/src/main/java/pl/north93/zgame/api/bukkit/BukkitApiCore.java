@@ -17,6 +17,7 @@ import org.bukkit.plugin.PluginManager;
 import org.spigotmc.SpigotConfig;
 
 import pl.north93.zgame.api.bukkit.listeners.ChatListener;
+import pl.north93.zgame.api.bukkit.listeners.LanguageKeeper;
 import pl.north93.zgame.api.bukkit.listeners.JoinLeftListener;
 import pl.north93.zgame.api.bukkit.listeners.SignListener;
 import pl.north93.zgame.api.bukkit.packets.PacketsHandler;
@@ -143,7 +144,7 @@ public class BukkitApiCore extends ApiCore
             this.getServer().set(impl);
         }); // on bukkit it will be invoked after server start
 
-        this.registerEvents(new JoinLeftListener(), new ChatListener(), new SignListener(), this.windowManager);
+        this.registerEvents(new JoinLeftListener(), new ChatListener(), new SignListener(), this.windowManager, new LanguageKeeper());
     }
 
     @Override

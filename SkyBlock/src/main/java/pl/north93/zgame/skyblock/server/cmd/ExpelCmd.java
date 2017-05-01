@@ -1,7 +1,5 @@
 package pl.north93.zgame.skyblock.server.cmd;
 
-import java.util.ResourceBundle;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -10,13 +8,14 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectResource;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.shared.api.IslandRole;
 import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
-import pl.north93.zgame.skyblock.server.SkyBlockServer;
 
 public class ExpelCmd extends NorthCommand
 {
@@ -25,8 +24,8 @@ public class ExpelCmd extends NorthCommand
     private INetworkManager networkManager;
     @InjectComponent("SkyBlock.Server")
     private SkyBlockServer  server;
-    @InjectResource(bundleName = "SkyBlock")
-    private ResourceBundle  messages;
+    @InjectMessages("SkyBlock")
+    private MessagesBox     messages;
 
     public ExpelCmd()
     {

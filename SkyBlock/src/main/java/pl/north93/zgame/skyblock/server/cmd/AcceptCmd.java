@@ -1,6 +1,5 @@
 package pl.north93.zgame.skyblock.server.cmd;
 
-import java.util.ResourceBundle;
 import java.util.UUID;
 
 import pl.north93.zgame.api.global.ApiCore;
@@ -8,13 +7,14 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectResource;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
+import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 
 public class AcceptCmd extends NorthCommand
 {
@@ -23,8 +23,8 @@ public class AcceptCmd extends NorthCommand
     private INetworkManager networkManager;
     @InjectComponent("SkyBlock.Server")
     private SkyBlockServer  server;
-    @InjectResource(bundleName = "SkyBlock")
-    private ResourceBundle  messages;
+    @InjectMessages("SkyBlock")
+    private MessagesBox     messages;
 
     public AcceptCmd()
     {

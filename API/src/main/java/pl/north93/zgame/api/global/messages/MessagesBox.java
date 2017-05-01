@@ -2,6 +2,7 @@ package pl.north93.zgame.api.global.messages;
 
 import java.text.MessageFormat;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -21,7 +22,15 @@ public class MessagesBox
 
     public ResourceBundle getBundle(final Locale locale)
     {
-        return ResourceBundle.getBundle(this.fileName, locale, this.loader, CONTROL);
+        try
+        {
+            return ResourceBundle.getBundle(this.fileName, locale, this.loader, CONTROL);
+        }
+        catch (final MissingResourceException e)
+        {
+            e.printStackTrace();
+            return this.getBundle(Locale.forLanguageTag("pl-PL"));
+        }
     }
 
     public String getMessage(final Locale locale, final String key)
@@ -37,7 +46,7 @@ public class MessagesBox
     @Deprecated // uniemozliwia tlumaczenie wiadomosci per-gracz
     public String getMessage(final String key)
     {
-        return this.getMessage(Locale.forLanguageTag("pl_PL"), key);
+        return this.getMessage(Locale.forLanguageTag("pl-PL"), key);
     }
 
     public void sendMessage(final Messageable messageable, final String key, final String... params)

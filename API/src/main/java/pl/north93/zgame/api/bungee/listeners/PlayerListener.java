@@ -4,6 +4,7 @@ import static net.md_5.bungee.api.ChatColor.RED;
 import static pl.north93.zgame.api.global.messages.MessagesBox.message;
 
 
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -12,7 +13,11 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import org.diorite.utils.reflections.DioriteReflectionUtils;
+import org.diorite.utils.reflections.FieldAccessor;
+
 import net.md_5.bungee.api.connection.PendingConnection;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
@@ -233,6 +238,7 @@ public class PlayerListener implements Listener
             {
                 iOnlinePlayer.setServerId(UUID.fromString(event.getPlayer().getServer().getInfo().getName()));
                 player.set(iOnlinePlayer); // send new data to redis
+                this.updateLocale(event.getPlayer(), iOnlinePlayer.getLocale());
             }
             else
             {
@@ -247,6 +253,12 @@ public class PlayerListener implements Listener
         {
             player.unlock();
         }
+    }
+
+    private static final FieldAccessor<Locale> player_locale = DioriteReflectionUtils.getField("net.md_5.bungee.UserConnection", "locale", Locale.class);
+    private void updateLocale(final ProxiedPlayer player, final Locale newLocale)
+    {
+        player_locale.set(player, newLocale);
     }
 
     @Override

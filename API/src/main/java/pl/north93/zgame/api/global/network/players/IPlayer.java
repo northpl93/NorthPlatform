@@ -1,5 +1,6 @@
 package pl.north93.zgame.api.global.network.players;
 
+import java.util.Locale;
 import java.util.UUID;
 
 import pl.north93.zgame.api.global.metadata.MetaKey;
@@ -58,4 +59,9 @@ public interface IPlayer extends Metadatable
      * @return true - jesli gracz jest online.
      */
     boolean isOnline();
+
+    default void setLocale(final Locale locale)
+    {
+        this.getMetaStore().setString(MetaKey.get("lang"), locale.toLanguageTag());
+    }
 }

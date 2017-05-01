@@ -185,7 +185,12 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     @Override
     public Locale getLocale()
     {
-        return Locale.forLanguageTag(this.meta.getString(MetaKey.get("lang")));
+        final MetaKey metaKey = MetaKey.get("lang");
+        if (this.meta.contains(metaKey))
+        {
+            return Locale.forLanguageTag(this.meta.getString(metaKey));
+        }
+        return Locale.forLanguageTag("pl-PL");
     }
 
     /**

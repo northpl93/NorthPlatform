@@ -1,7 +1,5 @@
 package pl.north93.zgame.skyblock.server.cmd;
 
-import java.util.ResourceBundle;
-
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -11,15 +9,16 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectResource;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 
 public class SpawnCmd extends NorthCommand
 {
     @InjectComponent("SkyBlock.Server")
-    private SkyBlockServer  server;
-    @InjectResource(bundleName = "SkyBlock")
-    private ResourceBundle  messages;
+    private SkyBlockServer server;
+    @InjectMessages("SkyBlock")
+    private MessagesBox    messages;
 
     public SpawnCmd()
     {

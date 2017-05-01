@@ -1,6 +1,5 @@
 package pl.north93.zgame.skyblock.server.cmd;
 
-import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -11,12 +10,13 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectResource;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
+import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.shared.api.IslandRole;
 import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
-import pl.north93.zgame.skyblock.server.SkyBlockServer;
 
 public class InvitesCmd extends NorthCommand
 {
@@ -24,8 +24,8 @@ public class InvitesCmd extends NorthCommand
     private INetworkManager networkManager;
     @InjectComponent("SkyBlock.Server")
     private SkyBlockServer  server;
-    @InjectResource(bundleName = "SkyBlock")
-    private ResourceBundle  messages;
+    @InjectMessages("SkyBlock")
+    private MessagesBox     messages;
 
     public InvitesCmd()
     {
@@ -102,7 +102,7 @@ public class InvitesCmd extends NorthCommand
                                              .map(this.networkManager::getNickFromUuid)
                                              .collect(Collectors.joining(", "));
 
-            final String empty = this.messages.getString("cmd.invites.empty_list");
+            final String empty = this.messages.getMessage(sender.getLocale(), "cmd.invites.empty_list");
             sender.sendMessage(this.messages, "cmd.invites.members", StringUtils.isEmpty(members) ? empty : members);
             sender.sendMessage(this.messages, "cmd.invites.list", StringUtils.isEmpty(invites) ? empty : invites);
         });
