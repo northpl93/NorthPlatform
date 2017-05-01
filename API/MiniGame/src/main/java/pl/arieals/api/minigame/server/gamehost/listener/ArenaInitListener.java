@@ -11,7 +11,7 @@ import org.diorite.utils.math.DioriteRandomUtils;
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.event.arena.GameInitEvent;
+import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameInitEvent;
 import pl.arieals.api.minigame.shared.api.GameMap;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;

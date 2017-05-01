@@ -1,14 +1,14 @@
-package pl.arieals.api.minigame.server.gamehost.event.arena;
+package pl.arieals.api.minigame.server.gamehost.event.arena.gamephase;
 
 import org.bukkit.event.HandlerList;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 
-public class GameEndEvent extends ArenaEvent
+public class GameInitEvent extends ArenaEvent
 {
     private static final HandlerList handlers = new HandlerList();
 
-    public GameEndEvent(final LocalArena arena)
+    public GameInitEvent(final LocalArena arena)
     {
         super(arena);
     }

@@ -102,4 +102,10 @@ public class PlayersManager
 
         Bukkit.getPluginManager().callEvent(new PlayerQuitArenaEvent(player, this.arena));
     }
+
+    public boolean isEnoughToStart()
+    {
+        final MiniGame miniGame = this.gameHostManager.getMiniGame();
+        return this.players.size() >= miniGame.getToStart();
+    }
 }

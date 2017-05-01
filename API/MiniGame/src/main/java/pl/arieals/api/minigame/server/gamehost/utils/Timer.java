@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Timer
 {
+    private static final int ONE_TICK_MILIS = 50;
     private long    startTime;
     private long    baseTime;
     private boolean isGrowing;
@@ -90,6 +91,16 @@ public class Timer
             final long result = currTime - targetUnit.toMillis(target);
             return resultUnit.convert(result, TimeUnit.MILLISECONDS);
         }
+    }
+
+    /**
+     * Oblicza czas w tickach do momentu podanego w argumencie.
+     *
+     * @see Timer#calcTimeTo(long, TimeUnit, TimeUnit)
+     */
+    public long calcTimeToInTicks(final long target, final TimeUnit targetUnit)
+    {
+        return this.calcTimeTo(target, targetUnit, TimeUnit.MILLISECONDS) / ONE_TICK_MILIS;
     }
 
     @Override

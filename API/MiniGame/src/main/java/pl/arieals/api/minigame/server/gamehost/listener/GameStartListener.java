@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import pl.arieals.api.minigame.server.gamehost.event.arena.GameStartedEvent;
+import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartedEvent;
 
 public class GameStartListener implements Listener
 {

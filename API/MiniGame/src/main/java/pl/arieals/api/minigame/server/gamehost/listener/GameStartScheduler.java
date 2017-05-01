@@ -1,5 +1,8 @@
 package pl.arieals.api.minigame.server.gamehost.listener;
 
+import static org.diorite.utils.math.DioriteRandomUtils.getRandom;
+
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +14,6 @@ import org.bukkit.event.Listener;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import org.diorite.utils.math.DioriteRandomUtils;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
@@ -44,49 +45,68 @@ public class GameStartScheduler implements Listener
             // licznik wystartowal lub arena nie jest w lobby
             return;
         }
-        final MiniGame miniGame = gameHostManager.getMiniGame();
-        if (miniGame.getToStart() > arena.getPlayers().size())
+        if (! arena.getPlayersManager().isEnoughToStart())
         {
             // brakuje graczy
             return;
         }
 
-        Bukkit.broadcastMessage("Warunki spelnione! Arena zaplanowana do rozpoczecia");
-
         timer.start(GAME_START_COOLDOWN, TimeUnit.SECONDS, false);
-        Bukkit.getScheduler().runTaskLater(this.apiCore.getPluginMain(), () ->
-        {
-            arena.setGamePhase(GamePhase.STARTED);
-            Bukkit.broadcastMessage("Arena " + arena.getId() + " wystartowala!!!");
-        }, timer.calcTimeTo(0, TimeUnit.MILLISECONDS, TimeUnit.MILLISECONDS) / 50);
+        Bukkit.getScheduler().runTaskLater(
+                this.apiCore.getPluginMain(),
+                () -> this.startArena(arena),
+                timer.calcTimeToInTicks(0, TimeUnit.MILLISECONDS));
 
+        final MiniGame miniGame = gameHostManager.getMiniGame();
         if (miniGame.getMapVoting().getEnabled())
         {
             // odpalamy glosowanie
             final List<GameMap> maps = new ArrayList<>();
-            DioriteRandomUtils.getRandom(miniGame.getGameMaps(), maps, miniGame.getMapVoting().getNumberOfMaps(), true);
+            getRandom(miniGame.getGameMaps(), maps, miniGame.getMapVoting().getNumberOfMaps(), true);
 
             final MapVote mapVote = arena.getWorld().getMapVote();
             mapVote.startVote(maps);
-            Bukkit.broadcastMessage("Rozpoczeto glosowanie na mape na arenie " + arena.getId());
+            this.printStartVoteInfo(arena);
 
-            for (int i = 0; i < mapVote.getOptions().length; i++)
-            {
-                final GameMap gameMap = mapVote.getOptions()[i];
-                Bukkit.broadcastMessage(MessageFormat.format("[{0}] {1}", i, gameMap.getDisplayName()));
-            }
-
-            Bukkit.getScheduler().runTaskLater(this.apiCore.getPluginMain(), () ->
-            {
-                Bukkit.broadcastMessage("Zakonczono glosowanie na mape na arenie " + arena.getId());
-
-                final GameMap winner = mapVote.getWinner();
-                Bukkit.broadcastMessage("Wygrala mapa: " + winner.getDisplayName());
-
-                arena.getWorld().setActiveMap(winner);
-
-            }, timer.calcTimeTo(7, TimeUnit.SECONDS, TimeUnit.MILLISECONDS) / 50);
+            Bukkit.getScheduler().runTaskLater(
+                    this.apiCore.getPluginMain(),
+                    () -> this.completeVoting(arena),
+                    timer.calcTimeToInTicks(7, TimeUnit.SECONDS));
         }
+    }
+
+    private void startArena(final LocalArena arena)
+    {
+        if (! arena.getPlayersManager().isEnoughToStart())
+        {
+            arena.getTimer().stop();
+            return;
+        }
+        arena.setGamePhase(GamePhase.STARTED);
+    }
+
+    private void printStartVoteInfo(final LocalArena arena)
+    {
+        final MapVote mapVote = arena.getWorld().getMapVote();
+        Bukkit.broadcastMessage("Rozpoczeto glosowanie na mape na arenie " + arena.getId());
+
+        for (int i = 0; i < mapVote.getOptions().length; i++)
+        {
+            final GameMap gameMap = mapVote.getOptions()[i];
+            Bukkit.broadcastMessage(MessageFormat.format("[{0}] {1}", i, gameMap.getDisplayName()));
+        }
+    }
+
+    private void completeVoting(final LocalArena arena)
+    {
+        final MapVote mapVote = arena.getWorld().getMapVote();
+        Bukkit.broadcastMessage("Zakonczono glosowanie na mape na arenie " + arena.getId());
+
+        final GameMap winner = mapVote.getWinner();
+        Bukkit.broadcastMessage("Wygrala mapa: " + winner.getDisplayName());
+
+        arena.getWorld().setActiveMap(winner);
+        mapVote.resetVoting();
     }
 
     @Override

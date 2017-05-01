@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
-import pl.arieals.api.minigame.server.gamehost.event.arena.GamePhaseEventFactory;
+import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
 import pl.arieals.api.minigame.server.gamehost.utils.Timer;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
