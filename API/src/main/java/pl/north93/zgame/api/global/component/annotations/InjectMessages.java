@@ -7,9 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface InjectResource
+public @interface InjectMessages
 {
-    String bundleName();
-
-    String locale() default "";
+    String value(); // nazwa pliku z wiadomosciami
 }

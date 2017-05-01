@@ -4,8 +4,6 @@ import static pl.north93.zgame.api.global.exceptions.SingletonException.checkSin
 
 
 import java.io.File;
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import pl.north93.zgame.api.global.component.annotations.ProvidesComponent;
@@ -62,10 +60,5 @@ public final class API
     public static Logger getLogger()
     {
         return apiCore.getLogger();
-    }
-
-    public static String message(final ResourceBundle resourceBundle, final String key, final Object... params)
-    {
-        return MessageFormat.format(resourceBundle.getString(key).replace('&', (char)167), params);
     }
 }

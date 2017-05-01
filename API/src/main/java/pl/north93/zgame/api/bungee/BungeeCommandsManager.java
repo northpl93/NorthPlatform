@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.bungee;
 
+import java.util.Locale;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -75,6 +77,16 @@ public class BungeeCommandsManager implements ICommandsManager
         public String getName()
         {
             return this.sender.getName();
+        }
+
+        @Override
+        public Locale getLocale()
+        {
+            if (this.sender instanceof ProxiedPlayer)
+            {
+                return ((ProxiedPlayer) this.sender).getLocale();
+            }
+            return Locale.getDefault();
         }
 
         @Override

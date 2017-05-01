@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
-import pl.north93.zgame.api.global.messages.ProxyInstanceInfo;
+import pl.north93.zgame.api.global.network.ProxyInstanceInfo;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;

@@ -2,20 +2,16 @@ package pl.north93.zgame.api.global.component.impl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.logging.Logger;
-
-import org.apache.commons.lang3.StringUtils;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.IComponentManager;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
 import pl.north93.zgame.api.global.component.annotations.InjectNewInstance;
-import pl.north93.zgame.api.global.component.annotations.InjectResource;
-import pl.north93.zgame.api.global.utils.UTF8Control;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class Injector
 {
@@ -68,23 +64,14 @@ public class Injector
                 continue;
             }
 
-            if (field.isAnnotationPresent(InjectResource.class))
+            if (field.isAnnotationPresent(InjectMessages.class))
             {
-                final InjectResource annotation = field.getAnnotation(InjectResource.class);
+                final InjectMessages annotation = field.getAnnotation(InjectMessages.class);
                 final ClassLoader classLoader = instance.getClass().getClassLoader();
-                final ResourceBundle bundle;
-                if (StringUtils.isEmpty(annotation.locale()))
-                {
-                    bundle = ResourceBundle.getBundle(annotation.bundleName(), Locale.getDefault(), classLoader, new UTF8Control());
-                }
-                else
-                {
-                    bundle = ResourceBundle.getBundle(annotation.bundleName(), Locale.forLanguageTag(annotation.locale()), classLoader, new UTF8Control());
-                }
 
                 try
                 {
-                    field.set(instance, bundle);
+                    field.set(instance, new MessagesBox(classLoader, annotation.value()));
                 }
                 catch (final IllegalAccessException e)
                 {

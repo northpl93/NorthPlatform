@@ -14,7 +14,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.data.StorageConnector;
-import pl.north93.zgame.api.global.messages.GroupsContainer;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 
 public class PermissionsManager extends Component

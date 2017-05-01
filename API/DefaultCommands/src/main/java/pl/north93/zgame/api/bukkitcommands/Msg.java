@@ -1,7 +1,5 @@
 package pl.north93.zgame.api.bukkitcommands;
 
-import java.util.ResourceBundle;
-
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +10,8 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectResource;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.INetworkManager;
@@ -23,8 +22,8 @@ public class Msg extends NorthCommand
 {
     @InjectComponent("API.MinecraftNetwork.NetworkManager")
     private INetworkManager networkManager;
-    @InjectResource(bundleName = "Commands")
-    private ResourceBundle  messages;
+    @InjectMessages("Commands")
+    private MessagesBox     messages;
 
     private static final MetaKey LAST_SENDER = MetaKey.get("lastMessageSender");
 
@@ -66,8 +65,8 @@ public class Msg extends NorthCommand
 
         final boolean colorText = ((Player) sender.unwrapped()).hasPermission("api.command.msg.colorize");
         final String message = colorText ? args.asText(1) : StringUtils.replace(args.asText(1), "&", "");
-        sender.sendMessage(this.messages, "command.msg.message", this.messages.getString("command.msg.you"), receiver.getNick(), message);
-        receiver.sendMessage(this.messages, "command.msg.message", sender.getName(), this.messages.getString("command.msg.you"), message);
+        sender.sendMessage(this.messages, "command.msg.message", this.messages.getMessage("command.msg.you"), receiver.getNick(), message);
+        receiver.sendMessage(this.messages, "command.msg.message", sender.getName(), this.messages.getMessage("command.msg.you"), message);
 
         this.networkManager.getPlayers().access(receiver.getNick(), iPlayer ->
         {

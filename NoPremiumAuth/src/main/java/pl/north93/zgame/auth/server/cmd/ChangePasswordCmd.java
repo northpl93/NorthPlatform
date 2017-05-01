@@ -3,7 +3,6 @@ package pl.north93.zgame.auth.server.cmd;
 import static java.text.MessageFormat.format;
 
 
-import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
@@ -16,7 +15,8 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectResource;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
@@ -27,8 +27,8 @@ public class ChangePasswordCmd extends NorthCommand
 {
     @InjectComponent("API.MinecraftNetwork.NetworkManager")
     private INetworkManager     networkManager;
-    @InjectResource(bundleName = "NoPremiumAuth")
-    private ResourceBundle      messages;
+    @InjectMessages("NoPremiumAuth")
+    private MessagesBox         messages;
     @InjectComponent("NoPremiumAuth.Server")
     private AuthServerComponent authServer;
     private Logger              logger;

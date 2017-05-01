@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.messages;
+package pl.north93.zgame.api.global.network;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -15,8 +15,6 @@ import org.diorite.cfg.annotations.defaults.CfgCustomDefault;
 import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
 import org.diorite.cfg.annotations.defaults.CfgIntDefault;
 import org.diorite.cfg.annotations.defaults.CfgStringDefault;
-
-import pl.north93.zgame.api.global.network.JoiningPolicy;
 
 /**
  * Używane do wczytywania konfiguracji z yaml i do wysyłanie przez msg pack

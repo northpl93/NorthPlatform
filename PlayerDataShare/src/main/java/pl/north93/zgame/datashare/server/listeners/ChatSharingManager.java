@@ -7,7 +7,6 @@ import static pl.north93.zgame.api.global.utils.StringUtils.asString;
 
 import java.text.MessageFormat;
 import java.util.Formatter;
-import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -26,7 +25,8 @@ import org.diorite.utils.cooldown.CooldownManager;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectResource;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
@@ -37,15 +37,15 @@ import pl.north93.zgame.datashare.sharedimpl.PlayerDataShareComponent;
 public class ChatSharingManager implements Listener
 {
     private static final long COOLDOWN_TIME = TimeUnit.SECONDS.toMillis(15);
-    private BukkitApiCore apiCore;
+    private BukkitApiCore            apiCore;
     @InjectComponent("API.Database.Redis.Subscriber")
     private RedisSubscriber          redisSubscriber;
     @InjectComponent("API.Database.Redis.MessagePackSerializer")
     private TemplateManager          msgPack;
     @InjectComponent("PlayerDataShare.SharedImpl")
     private PlayerDataShareComponent shareComponent;
-    @InjectResource(bundleName = "PlayerDataShare")
-    private ResourceBundle           messages;
+    @InjectMessages("PlayerDataShare")
+    private MessagesBox              messages;
     private CooldownManager<UUID>    chatCooldown;
     private UUID                     serverId;
     private boolean                  isChatEnabled;
@@ -126,14 +126,14 @@ public class ChatSharingManager implements Listener
 
             if (! chatEnabled)
             {
-                player.sendMessage(translateAlternateColorCodes('&', this.messages.getString("chat.is_now_disabled")));
+                player.sendMessage(translateAlternateColorCodes('&', this.messages.getMessage(player.spigot().getLocale(), "chat.is_now_disabled")));
                 event.setCancelled(true);
             }
             else if (! this.chatCooldown.hasExpiredOrAdd(player.getUniqueId(), COOLDOWN_TIME))
             {
                 final CooldownEntry<UUID> entry = this.chatCooldown.getEntry(player.getUniqueId());
                 final long time = (entry.getStartTime() + entry.getCooldownTime() - System.currentTimeMillis()) / 1000;
-                final String message = MessageFormat.format(this.messages.getString("chat.cooldown"), time);
+                final String message = MessageFormat.format(this.messages.getMessage(player.spigot().getLocale(), "chat.cooldown"), time);
                 player.sendMessage(translateAlternateColorCodes('&', message));
                 event.setCancelled(true);
             }

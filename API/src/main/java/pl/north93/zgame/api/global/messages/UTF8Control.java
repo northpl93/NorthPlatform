@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.utils;
+package pl.north93.zgame.api.global.messages;
 
 import java.io.IOException;
 import java.io.InputStream;

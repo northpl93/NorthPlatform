@@ -32,8 +32,8 @@ import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.component.IComponentManager;
 import pl.north93.zgame.api.global.component.IExtensionPoint;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
 import pl.north93.zgame.api.global.component.annotations.InjectNewInstance;
-import pl.north93.zgame.api.global.component.annotations.InjectResource;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.component.annotations.SkipInjections;
 
@@ -142,7 +142,7 @@ class ClassScanner
             {
                 return true;
             }
-            if (field.isAnnotationPresent(InjectResource.class))
+            if (field.isAnnotationPresent(InjectMessages.class))
             {
                 return true;
             }

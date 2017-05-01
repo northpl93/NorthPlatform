@@ -2,6 +2,7 @@ package pl.north93.zgame.api.bukkit;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -22,7 +23,7 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.ICommandsManager;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.utils.UTF8Control;
+import pl.north93.zgame.api.global.messages.UTF8Control;
 
 public class BukkitCommandsManager implements ICommandsManager
 {
@@ -72,6 +73,17 @@ public class BukkitCommandsManager implements ICommandsManager
         public String getName()
         {
             return this.wrappedSender.getName();
+        }
+
+        @Override
+        public Locale getLocale()
+        {
+            if (this.wrappedSender instanceof Player)
+            {
+                final Player player = (Player) this.wrappedSender;
+                return Locale.forLanguageTag(player.spigot().getLocale());
+            }
+            return Locale.getDefault();
         }
 
         @Override

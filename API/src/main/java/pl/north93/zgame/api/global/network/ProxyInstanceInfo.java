@@ -1,10 +1,9 @@
-package pl.north93.zgame.api.global.messages;
+package pl.north93.zgame.api.global.network;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.network.ProxyRpc;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 
 public class ProxyInstanceInfo

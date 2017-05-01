@@ -1,20 +1,19 @@
 package pl.north93.zgame.api.defaultcommands;
 
-import java.util.ResourceBundle;
-
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.InjectResource;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class PlayerInfoCmd extends NorthCommand
 {
-    @InjectResource(bundleName = "Commands")
-    private ResourceBundle messages;
+    @InjectMessages("Commands")
+    private MessagesBox messages;
 
     public PlayerInfoCmd()
     {
@@ -35,7 +34,7 @@ public class PlayerInfoCmd extends NorthCommand
                     final IOfflinePlayer offlinePlayer = API.getApiCore().getNetworkManager().getOfflinePlayer(args.asString(0));
                     if (offlinePlayer == null)
                     {
-                        sender.sendMessage(this.messages.getString("command.no_player"));
+                        sender.sendMessage(this.messages, "command.no_player");
                         return;
                     }
                     this.printOfflinePlayer(sender, offlinePlayer);

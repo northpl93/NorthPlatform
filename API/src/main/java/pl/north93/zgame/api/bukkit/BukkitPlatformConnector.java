@@ -5,7 +5,7 @@ import java.util.ResourceBundle;
 import org.bukkit.Bukkit;
 
 import pl.north93.zgame.api.global.PlatformConnector;
-import pl.north93.zgame.api.global.utils.UTF8Control;
+import pl.north93.zgame.api.global.messages.UTF8Control;
 
 public class BukkitPlatformConnector implements PlatformConnector
 {

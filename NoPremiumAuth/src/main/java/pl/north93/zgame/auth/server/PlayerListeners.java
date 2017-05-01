@@ -4,7 +4,7 @@ import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 
 import java.text.MessageFormat;
-import java.util.ResourceBundle;
+import java.util.Locale;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -28,7 +28,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectResource;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.auth.api.IAuthManager;
 import pl.north93.zgame.auth.api.player.AuthPlayer;
@@ -37,8 +38,8 @@ public class PlayerListeners implements Listener
 {
     @InjectComponent("API.MinecraftNetwork.NetworkManager")
     private INetworkManager networkManager;
-    @InjectResource(bundleName = "NoPremiumAuth")
-    private ResourceBundle  messages;
+    @InjectMessages("NoPremiumAuth")
+    private MessagesBox     messages;
     private IAuthManager    authManager;
 
     public PlayerListeners(final IAuthManager authManager)
@@ -48,7 +49,16 @@ public class PlayerListeners implements Listener
 
     private void sendMessage(final CommandSender sender, final String message, final Object... args)
     {
-        final String msg = MessageFormat.format(this.messages.getString(message), args);
+        final Locale locale;
+        if (sender instanceof Player)
+        {
+            locale = Locale.forLanguageTag(((Player) sender).spigot().getLocale());
+        }
+        else
+        {
+            locale = Locale.getDefault();
+        }
+        final String msg = MessageFormat.format(this.messages.getMessage(locale, message), args);
         sender.sendMessage(translateAlternateColorCodes('&', msg));
     }
 

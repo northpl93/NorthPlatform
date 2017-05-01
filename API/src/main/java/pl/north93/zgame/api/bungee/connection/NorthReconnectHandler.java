@@ -17,10 +17,10 @@ import net.md_5.bungee.api.ReconnectHandler;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import pl.north93.zgame.api.bungee.BungeeApiCore;
-import pl.north93.zgame.api.global.messages.NetworkMeta;
+import pl.north93.zgame.api.global.network.NetworkMeta;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.server.Server;
-import pl.north93.zgame.api.global.utils.UTF8Control;
+import pl.north93.zgame.api.global.messages.UTF8Control;
 
 public class NorthReconnectHandler implements ReconnectHandler
 {

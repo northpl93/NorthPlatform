@@ -1,7 +1,6 @@
 package pl.north93.zgame.api.bukkitcommands;
 
 import java.text.MessageFormat;
-import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -10,7 +9,8 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectResource;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
@@ -20,8 +20,8 @@ public class Kick extends NorthCommand
     private ApiCore         apiCore;
     @InjectComponent("API.MinecraftNetwork.NetworkManager")
     private INetworkManager networkManager;
-    @InjectResource(bundleName = "Commands")
-    private ResourceBundle  messages;
+    @InjectMessages("Commands")
+    private MessagesBox     messages;
 
     public Kick()
     {
@@ -51,11 +51,11 @@ public class Kick extends NorthCommand
             final String kickMessage;
             if (StringUtils.isEmpty(reason))
             {
-                kickMessage = this.messages.getString("kick.by_command.without_reason");
+                kickMessage = this.messages.getMessage(networkPlayer.get().getLocale(), "kick.by_command.without_reason");
             }
             else
             {
-                kickMessage = MessageFormat.format(this.messages.getString("kick.by_command.with_reason"), reason);
+                kickMessage = MessageFormat.format(this.messages.getMessage(networkPlayer.get().getLocale(), "kick.by_command.with_reason"), reason);
             }
 
             networkPlayer.get().kick(kickMessage);

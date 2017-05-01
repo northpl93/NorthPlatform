@@ -14,7 +14,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.ApiCore;
-import pl.north93.zgame.api.global.messages.NetworkMeta;
+import pl.north93.zgame.api.global.network.NetworkMeta;
 
 public class PingListener implements Listener
 {

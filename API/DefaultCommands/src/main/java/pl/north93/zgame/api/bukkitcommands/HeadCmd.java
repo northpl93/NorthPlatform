@@ -1,7 +1,5 @@
 package pl.north93.zgame.api.bukkitcommands;
 
-import java.util.ResourceBundle;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -13,12 +11,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.InjectResource;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class HeadCmd extends NorthCommand
 {
-    @InjectResource(bundleName = "Commands")
-    private ResourceBundle messages;
+    @InjectMessages("Commands")
+    private MessagesBox messages;
 
     public HeadCmd()
     {

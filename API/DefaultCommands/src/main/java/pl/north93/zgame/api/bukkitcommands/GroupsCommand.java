@@ -1,7 +1,5 @@
 package pl.north93.zgame.api.bukkitcommands;
 
-import java.util.ResourceBundle;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -10,7 +8,8 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectResource;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.permissions.Group;
 import pl.north93.zgame.api.global.permissions.PermissionsManager;
@@ -22,8 +21,8 @@ public class GroupsCommand extends NorthCommand
     private PermissionsManager permissionsManager;
     @InjectComponent("API.MinecraftNetwork.NetworkManager")
     private INetworkManager    networkManager;
-    @InjectResource(bundleName = "Commands")
-    private ResourceBundle     messages;
+    @InjectMessages("Commands")
+    private MessagesBox        messages;
 
     public GroupsCommand()
     {

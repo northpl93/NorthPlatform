@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.messages;
+package pl.north93.zgame.api.global.permissions;
 
 import static org.diorite.cfg.annotations.CfgCollectionStyle.CollectionStyle.ALWAYS_NEW_LINE;
 

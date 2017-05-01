@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.ProxyRpc;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
@@ -179,6 +180,12 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     public MetaStore getMetaStore()
     {
         return this.meta;
+    }
+
+    @Override
+    public Locale getLocale()
+    {
+        return Locale.forLanguageTag(this.meta.getString(MetaKey.get("lang")));
     }
 
     /**

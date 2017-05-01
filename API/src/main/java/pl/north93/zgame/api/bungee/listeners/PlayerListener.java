@@ -1,11 +1,10 @@
 package pl.north93.zgame.api.bungee.listeners;
 
 import static net.md_5.bungee.api.ChatColor.RED;
-import static pl.north93.zgame.api.global.API.message;
+import static pl.north93.zgame.api.global.messages.MessagesBox.message;
 
 
 import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
@@ -24,11 +23,12 @@ import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 import pl.north93.zgame.api.bungee.BungeeApiCore;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectResource;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
 import pl.north93.zgame.api.global.component.impl.Injector;
 import pl.north93.zgame.api.global.data.UsernameCache.UsernameDetails;
 import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.data.players.impl.NameSizeMistakeException;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
@@ -41,8 +41,8 @@ public class PlayerListener implements Listener
     private static final MetaKey  BAN_EXPIRE   = MetaKey.get("banExpireAt");
     private static final Pattern  NICK_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{3,16}$");
     private final BungeeApiCore   bungeeApiCore;
-    @InjectResource(bundleName = "Messages")
-    private       ResourceBundle  apiMessages;
+    @InjectMessages("Messages")
+    private       MessagesBox     apiMessages;
     @InjectComponent("API.MinecraftNetwork.PlayersStorage")
     private       IPlayersData    playersDao;
     @InjectComponent("API.MinecraftNetwork.NetworkManager")
@@ -68,7 +68,7 @@ public class PlayerListener implements Listener
                 if (! NICK_PATTERN.matcher(nick).matches())
                 {
                     event.setCancelled(true);
-                    event.setCancelReason(RED + this.apiMessages.getString("join.invalid_nick"));
+                    event.setCancelReason(RED + this.apiMessages.getMessage("join.invalid_nick"));
                     return;
                 }
 
@@ -77,7 +77,7 @@ public class PlayerListener implements Listener
                 if (! details.isPresent())
                 {
                     event.setCancelled(true);
-                    event.setCancelReason(RED + this.apiMessages.getString("join.premium.check_failed"));
+                    event.setCancelReason(RED + this.apiMessages.getMessage("join.premium.check_failed"));
                     return;
                 }
 
@@ -85,14 +85,14 @@ public class PlayerListener implements Listener
                 if (usernameDetails.isPremium() && !usernameDetails.getValidSpelling().equals(nick))
                 {
                     event.setCancelled(true);
-                    event.setCancelReason(RED + this.apiMessages.getString("join.premium.name_size_mistake"));
+                    event.setCancelReason(RED + this.apiMessages.getMessage("join.premium.name_size_mistake"));
                     return;
                 }
 
                 if (this.bungeeApiCore.getNetworkManager().getPlayers().isOnline(nick)) // sprawdzanie czy taki gracz juz jest w sieci
                 {
                     event.setCancelled(true);
-                    event.setCancelReason(RED + this.apiMessages.getString("join.already_online"));
+                    event.setCancelReason(RED + this.apiMessages.getMessage("join.already_online"));
                     return;
                 }
 
