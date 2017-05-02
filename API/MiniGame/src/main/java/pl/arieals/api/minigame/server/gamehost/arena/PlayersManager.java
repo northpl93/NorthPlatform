@@ -1,12 +1,15 @@
 package pl.arieals.api.minigame.server.gamehost.arena;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
@@ -17,6 +20,7 @@ import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.MiniGame;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 /**
  * Każda LocalArena ma swojego PlayersManagera
@@ -103,9 +107,30 @@ public class PlayersManager
         Bukkit.getPluginManager().callEvent(new PlayerQuitArenaEvent(player, this.arena));
     }
 
+    /**
+     * Sprawdza czy na arenie jest wymagana ilość graczy do wystartowania.
+     *
+     * @return czy jest wymagana ilość graczy do wystartowania.
+     */
     public boolean isEnoughToStart()
     {
         final MiniGame miniGame = this.gameHostManager.getMiniGame();
         return this.players.size() >= miniGame.getToStart();
+    }
+
+    /**
+     * Wysyła przetłumaczoną wiadomość do graczy znajdujących się na tej arenie.
+     *
+     * @param messagesBox obiekt przechowujący wiadomości.
+     * @param messageKey klucz wiadomości.
+     * @param args argumenty.
+     */
+    public void broadcast(final MessagesBox messagesBox, final String messageKey, final Object... args)
+    {
+        for (final Player player : this.players)
+        {
+            final String message = messagesBox.getMessage(Locale.forLanguageTag(player.spigot().getLocale()), messageKey);
+            player.sendMessage(MessageFormat.format(ChatColor.translateAlternateColorCodes('&', message), args));
+        }
     }
 }

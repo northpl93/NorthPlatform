@@ -1,0 +1,9 @@
+components:
+  - name: MiniGame.GoldHunter
+    enabled: true
+    mainClass: "pl.arieals.minigame.goldhunter.GoldHunterComponent"
+    description: "Gold Hunter plugin."
+    dependencies:
+      - MiniGameApi.Server
+    platforms:
+      - BUKKIT

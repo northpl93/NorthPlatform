@@ -3,7 +3,6 @@ package pl.arieals.api.minigame.server.gamehost.listener;
 import static org.diorite.utils.math.DioriteRandomUtils.getRandom;
 
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +25,8 @@ import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.MiniGame;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class GameStartScheduler implements Listener
 {
@@ -33,6 +34,8 @@ public class GameStartScheduler implements Listener
     private BukkitApiCore  apiCore;
     @InjectComponent("MiniGameApi.Server")
     private MiniGameServer server;
+    @InjectMessages("MiniGameApi")
+    private MessagesBox    messages;
 
     @EventHandler
     public void onArenaJoin(final PlayerJoinArenaEvent event)
@@ -88,22 +91,21 @@ public class GameStartScheduler implements Listener
     private void printStartVoteInfo(final LocalArena arena)
     {
         final MapVote mapVote = arena.getWorld().getMapVote();
-        Bukkit.broadcastMessage("Rozpoczeto glosowanie na mape na arenie " + arena.getId());
+        arena.getPlayersManager().broadcast(this.messages, "vote.started");
 
         for (int i = 0; i < mapVote.getOptions().length; i++)
         {
             final GameMap gameMap = mapVote.getOptions()[i];
-            Bukkit.broadcastMessage(MessageFormat.format("[{0}] {1}", i, gameMap.getDisplayName()));
+            arena.getPlayersManager().broadcast(this.messages, "vote.option_line", i, gameMap.getDisplayName());
         }
     }
 
     private void completeVoting(final LocalArena arena)
     {
         final MapVote mapVote = arena.getWorld().getMapVote();
-        Bukkit.broadcastMessage("Zakonczono glosowanie na mape na arenie " + arena.getId());
 
         final GameMap winner = mapVote.getWinner();
-        Bukkit.broadcastMessage("Wygrala mapa: " + winner.getDisplayName());
+        arena.getPlayersManager().broadcast(this.messages, "vote.winner", winner.getDisplayName());
 
         arena.getWorld().setActiveMap(winner);
         mapVote.resetVoting();
