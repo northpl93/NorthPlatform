@@ -6,6 +6,9 @@ import static pl.arieals.api.minigame.shared.api.utils.InvalidGamePhaseException
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
 import pl.arieals.api.minigame.server.gamehost.utils.Timer;
@@ -23,6 +26,7 @@ public class LocalArena implements IArena
     private final ArenaWorld      world;
     private final PlayersManager  playersManager;
     private final Timer           timer;
+    private       IArenaData      arenaData;
 
     public LocalArena(final GameHostManager gameHostManager, final ArenaManager arenaManager, final RemoteArena data)
     {
@@ -87,10 +91,27 @@ public class LocalArena implements IArena
         return this.data;
     }
 
+    public void setArenaData(final IArenaData arenaData)
+    {
+        this.arenaData = arenaData;
+    }
+
+    public <T extends IArenaData> T getArenaData()
+    {
+        //noinspection unchecked
+        return (T) this.arenaData;
+    }
+
     public void prepareNewCycle()
     {
         checkGamePhase(this.getGamePhase(), GamePhase.POST_GAME); // arena moze byc zresetowana tylko po grze
 
         this.setGamePhase(GamePhase.LOBBY);
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("data", this.data).append("world", this.world).append("playersManager", this.playersManager).append("timer", this.timer).append("arenaData", this.arenaData).toString();
     }
 }

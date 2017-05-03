@@ -28,9 +28,9 @@ public class IntegratedLobby implements ILobbyManager
 
     private Location readSpawnLocation(final Map<String, String> properties, final World world)
     {
-        final double x = Double.parseDouble(properties.get("spawn-x"));
-        final double y = Double.parseDouble(properties.get("spawn-y"));
-        final double z = Double.parseDouble(properties.get("spawn-z"));
+        final double x = Double.parseDouble(properties.get("lobby-x"));
+        final double y = Double.parseDouble(properties.get("lobby-y"));
+        final double z = Double.parseDouble(properties.get("lobby-z"));
         return new Location(world, x, y, z);
     }
 }

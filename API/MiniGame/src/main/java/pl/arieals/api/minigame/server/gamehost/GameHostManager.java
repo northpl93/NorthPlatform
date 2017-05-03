@@ -6,6 +6,7 @@ import org.spigotmc.SpigotConfig;
 
 import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
+import pl.arieals.api.minigame.server.gamehost.listener.ArenaEndListener;
 import pl.arieals.api.minigame.server.gamehost.listener.ArenaInitListener;
 import pl.arieals.api.minigame.server.gamehost.listener.GameStartListener;
 import pl.arieals.api.minigame.server.gamehost.listener.GameStartScheduler;
@@ -59,7 +60,10 @@ public class GameHostManager implements IServerManager
                 new PlayerListener(), // dodaje graczy do aren
                 new ArenaInitListener(), // inicjuje arene po dodaniu/zakonczeniu poprzedniej gry
                 new GameStartScheduler(), // planuje rozpoczecie gry gdy arena jest w lobby
-                new GameStartListener()); // inicjuje gre po starcie
+                new GameStartListener(), // inicjuje gre po starcie
+                new ArenaEndListener()); // pilnuje by arena nie stala pusta i wykonuje czynnosci koncowe
+
+        new MiniGameApi(); // inicjuje zmienne w klasie i statyczną INSTANCE
 
         for (int i = 0; i < 4; i++) // create 4 arenas.
         {

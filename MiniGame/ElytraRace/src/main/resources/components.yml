@@ -1,0 +1,9 @@
+components:
+  - name: MiniGame.ElytraRace
+    enabled: true
+    mainClass: "pl.arieals.minigame.elytrarace.ElytraRaceComponent"
+    description: "Elytra Race plugin."
+    dependencies:
+      - MiniGameApi.Server
+    platforms:
+      - BUKKIT
