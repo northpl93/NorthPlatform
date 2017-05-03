@@ -98,6 +98,10 @@ class HashImpl<V> implements Hash<V>
 
     private V deserialize(final byte[] bytes)
     {
+        if (bytes == null)
+        {
+            return null; // there is nothing to deserialize. Prevent NPE from deserializer.
+        }
         return this.observer.getMsgPack().deserialize(this.valueClass, bytes);
     }
 
