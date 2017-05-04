@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.server.gamehost.utils.xml;
+package pl.north93.zgame.api.bukkit.utils.xml;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
