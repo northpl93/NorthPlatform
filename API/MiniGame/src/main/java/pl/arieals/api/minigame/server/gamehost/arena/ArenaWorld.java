@@ -7,6 +7,7 @@ import javax.vecmath.Point3i;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -47,6 +48,23 @@ public class ArenaWorld
     public File getWorldDirectory()
     {
         return new File(Bukkit.getWorldContainer(), this.getName());
+    }
+
+    public File getResource(final String name)
+    {
+        return new File(this.getWorldDirectory(), name);
+    }
+
+    public InputStream getResourceAsStream(final String name)
+    {
+        try
+        {
+            return FileUtils.openInputStream(this.getResource(name));
+        }
+        catch (final IOException e)
+        {
+            throw new RuntimeException("Exception in getResourceAsStream(" + name + ")", e);
+        }
     }
 
     public World getWorld()
