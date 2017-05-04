@@ -2,7 +2,6 @@ package pl.arieals.minigame.elytrarace.listener;
 
 import javax.xml.bind.JAXB;
 
-import java.io.File;
 import java.util.Iterator;
 
 import org.bukkit.Material;
@@ -41,8 +40,7 @@ public class ArenaStartListener implements Listener
 
     private ArenaConfig loadConfig(final LocalArena arena)
     {
-        final File arenaXml = new File(arena.getWorld().getWorldDirectory(), "ElytraRaceArena.xml");
-        return JAXB.unmarshal(arenaXml, ArenaConfig.class);
+        return JAXB.unmarshal(arena.getWorld().getResource("ElytraRaceArena.xml"), ArenaConfig.class);
     }
 
     private void setupPlayers(final LocalArena arena, final ElytraRaceArena elytraRaceArena)
