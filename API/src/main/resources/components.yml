@@ -104,3 +104,10 @@ components:
       - API.MinecraftNetwork.NetworkManager
     platforms:
       - BUKKIT
+  - name: API.TickableManager
+    enabled: true
+    mainClass: "pl.north93.zgame.api.bukkit.tick.impl.TickableManagerImpl"
+    description: "An simple api to calls methods on every server tick"
+    dependencies: []
+    platforms:
+      - BUKKIT
