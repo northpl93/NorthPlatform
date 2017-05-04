@@ -44,6 +44,11 @@ public class ArenaWorld
         return this.mapVote;
     }
 
+    public File getWorldDirectory()
+    {
+        return new File(Bukkit.getWorldContainer(), this.getName());
+    }
+
     public World getWorld()
     {
         return this.world;
@@ -99,10 +104,9 @@ public class ArenaWorld
     public void delete()
     {
         Bukkit.unloadWorld(this.world, false);
-        final File worldDir = new File(Bukkit.getWorldContainer(), this.getName());
         try
         {
-            FileUtils.deleteDirectory(worldDir);
+            FileUtils.deleteDirectory(this.getWorldDirectory());
         }
         catch (final IOException e)
         {
