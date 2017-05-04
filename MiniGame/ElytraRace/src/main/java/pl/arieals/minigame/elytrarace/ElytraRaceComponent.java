@@ -1,21 +1,21 @@
 package pl.arieals.minigame.elytrarace;
 
-import javax.xml.bind.JAXB;
-
 import java.io.File;
 import java.util.Arrays;
+
+import javax.xml.bind.JAXB;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
-import pl.arieals.api.minigame.server.gamehost.utils.xml.XmlLocation;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
 import pl.arieals.minigame.elytrarace.listener.ArenaStartListener;
 import pl.arieals.minigame.elytrarace.listener.ModifyListener;
 import pl.arieals.minigame.elytrarace.listener.MoveListener;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 

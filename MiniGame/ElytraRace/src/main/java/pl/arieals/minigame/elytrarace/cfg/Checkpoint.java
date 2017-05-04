@@ -8,8 +8,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.utils.xml.XmlCuboid;
-import pl.arieals.api.minigame.server.gamehost.utils.xml.XmlLocation;
+import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
+import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
+
 
 @XmlRootElement(name = "arena")
 @XmlAccessorType(XmlAccessType.FIELD)

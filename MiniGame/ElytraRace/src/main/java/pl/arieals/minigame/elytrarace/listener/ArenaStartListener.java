@@ -1,9 +1,11 @@
 package pl.arieals.minigame.elytrarace.listener;
 
-import javax.xml.bind.JAXB;
-
 import java.util.Iterator;
 
+import javax.xml.bind.JAXB;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,16 +13,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartedEvent;
-import pl.arieals.api.minigame.server.gamehost.utils.xml.XmlLocation;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.StartCountdown;
 import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 
 public class ArenaStartListener implements Listener
 {

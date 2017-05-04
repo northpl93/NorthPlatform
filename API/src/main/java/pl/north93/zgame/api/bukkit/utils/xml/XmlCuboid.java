@@ -7,10 +7,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.bukkit.World;
 
+import pl.north93.zgame.api.bukkit.utils.Cuboid;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.arieals.api.minigame.server.shared.utils.Cuboid;
 
 @XmlRootElement(name = "cuboid")
 @XmlAccessorType(XmlAccessType.FIELD)

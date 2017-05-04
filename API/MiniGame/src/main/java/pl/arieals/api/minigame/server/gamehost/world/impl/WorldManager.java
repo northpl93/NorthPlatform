@@ -21,9 +21,9 @@ import org.apache.commons.io.FileUtils;
 
 import pl.arieals.api.minigame.server.gamehost.world.ILoadingProgress;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
-import pl.arieals.api.minigame.server.shared.utils.Cuboid;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.Main;
+import pl.north93.zgame.api.bukkit.utils.Cuboid;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
 
 public class WorldManager implements IWorldManager

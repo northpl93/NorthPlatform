@@ -20,9 +20,9 @@ import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.MapSwitchedEvent;
 import pl.arieals.api.minigame.server.gamehost.world.ILoadingProgress;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
-import pl.arieals.api.minigame.server.shared.utils.Cuboid;
 import pl.arieals.api.minigame.shared.api.GameMap;
 import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.north93.zgame.api.bukkit.utils.Cuboid;
 
 public class ArenaWorld
 {
