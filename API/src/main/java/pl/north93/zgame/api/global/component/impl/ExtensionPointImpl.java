@@ -77,10 +77,10 @@ class ExtensionPointImpl<T> implements IExtensionPoint<T>
     @Override
     public void scan(final Reflections reflections)
     {
-        final Class<?> clazzToSearch = this.getExtensionPointClass();
+        final Class<T> clazzToSearch = this.getExtensionPointClass();
 
         @SuppressWarnings("unchecked")
-        final Set<Class<?>> extensions = (Set<Class<?>>) reflections.getSubTypesOf(clazzToSearch);
+        final Set<Class<? extends T>> extensions = reflections.getSubTypesOf(clazzToSearch);
         for (final Class<?> extension : extensions)
         {
             if (extension.isAnnotationPresent(IgnoreExtensionPoint.class))
