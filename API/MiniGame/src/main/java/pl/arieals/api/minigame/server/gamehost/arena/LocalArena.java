@@ -11,6 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
+import pl.arieals.api.minigame.server.gamehost.region.IRegionManager;
 import pl.arieals.api.minigame.server.gamehost.utils.Timer;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
@@ -79,6 +80,15 @@ public class LocalArena implements IArena
     public ArenaWorld getWorld()
     {
         return this.world;
+    }
+
+    /**
+     * Metoda pomocnicza, zwraca Region Managera z GameHostManagera
+     * @return {@code IRegionManager}
+     */
+    public IRegionManager getRegionManager()
+    {
+        return this.gameHostManager.getRegionManager();
     }
 
     public PlayersManager getPlayersManager()

@@ -5,8 +5,8 @@ import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
 
 public class ElytraRaceArena implements IArenaData
 {
-    private final ArenaConfig arenaConfig;
-    private       boolean     isStarted;
+    private final ArenaConfig             arenaConfig;
+    private       boolean                 isStarted;
 
     public ElytraRaceArena(final ArenaConfig arenaConfig)
     {

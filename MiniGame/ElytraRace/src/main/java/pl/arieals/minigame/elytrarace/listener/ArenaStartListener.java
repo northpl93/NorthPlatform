@@ -1,11 +1,12 @@
 package pl.arieals.minigame.elytrarace.listener;
 
-import java.util.Iterator;
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.setPlayerData;
+
 
 import javax.xml.bind.JAXB;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import java.util.Iterator;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,9 +14,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartedEvent;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
+import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.StartCountdown;
 import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
@@ -48,6 +53,8 @@ public class ArenaStartListener implements Listener
 
         for (final Player player : arena.getPlayersManager().getPlayers())
         {
+            setPlayerData(player, new ElytraRacePlayer());
+
             player.teleport(locations.next().toBukkit(arena.getWorld().getWorld()));
 
             player.getInventory().setChestplate(this.createElytra());
