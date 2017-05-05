@@ -22,7 +22,7 @@ import pl.arieals.api.minigame.server.gamehost.world.ILoadingProgress;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
 import pl.arieals.api.minigame.shared.api.GameMap;
 import pl.arieals.api.minigame.shared.api.GamePhase;
-import pl.north93.zgame.api.bukkit.utils.Cuboid;
+import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 
 public class ArenaWorld
 {

@@ -2,7 +2,7 @@ package pl.arieals.api.minigame.server.gamehost.world;
 
 import java.io.File;
 
-import pl.north93.zgame.api.bukkit.utils.Cuboid;
+import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 
 public interface IWorldManager
 {
