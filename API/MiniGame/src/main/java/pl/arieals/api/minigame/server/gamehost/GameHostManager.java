@@ -14,6 +14,7 @@ import pl.arieals.api.minigame.server.gamehost.listener.PlayerListener;
 import pl.arieals.api.minigame.server.gamehost.lobby.ILobbyManager;
 import pl.arieals.api.minigame.server.gamehost.lobby.external.ExternalLobby;
 import pl.arieals.api.minigame.server.gamehost.lobby.integrated.IntegratedLobby;
+import pl.arieals.api.minigame.server.gamehost.region.impl.RegionManagerImpl;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
 import pl.arieals.api.minigame.server.gamehost.world.impl.WorldManager;
 import pl.arieals.api.minigame.shared.api.IGameHostRpc;
@@ -42,6 +43,8 @@ public class GameHostManager implements IServerManager
     private LocalArenaManager arenaManager;
     @InjectNewInstance
     private WorldManager      worldManager;
+    @InjectNewInstance
+    private RegionManagerImpl regionManager;
     private ILobbyManager     lobbyManager;
     private MiniGame          miniGame;
 
@@ -108,6 +111,11 @@ public class GameHostManager implements IServerManager
     public LocalArenaManager getArenaManager()
     {
         return this.arenaManager;
+    }
+
+    public RegionManagerImpl getRegionManager()
+    {
+        return this.regionManager;
     }
 
     public void publishArenaEvent(final IArenaNetEvent event)
