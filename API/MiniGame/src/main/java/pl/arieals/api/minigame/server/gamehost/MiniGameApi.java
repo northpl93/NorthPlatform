@@ -30,6 +30,18 @@ public final class MiniGameApi
         return manager.getArenaManager().getArenaAssociatedWith(player.getUniqueId()).orElse(null);
     }
 
+    public static <T> T getPlayerData(final Player player, final Class<T> clazz)
+    {
+        final GameHostManager manager = INSTANCE.server.getServerManager();
+        return manager.getPlayerData(player, clazz);
+    }
+
+    public static void setPlayerData(final Player player, final Object data)
+    {
+        final GameHostManager manager = INSTANCE.server.getServerManager();
+        manager.setPlayerData(player, data);
+    }
+
     @Override
     public String toString()
     {

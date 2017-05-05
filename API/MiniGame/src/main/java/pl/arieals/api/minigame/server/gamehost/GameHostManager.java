@@ -2,6 +2,10 @@ package pl.arieals.api.minigame.server.gamehost;
 
 import java.io.File;
 
+import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import org.spigotmc.SpigotConfig;
 
 import pl.arieals.api.minigame.server.IServerManager;
@@ -81,6 +85,15 @@ public class GameHostManager implements IServerManager
     }
 
     /**
+     * Zwraca obiekt pluginu API.
+     * @return obiekt pluginu API.
+     */
+    public JavaPlugin getPlugin()
+    {
+        return this.apiCore.getPluginMain();
+    }
+
+    /**
      * Konfiguracja minigry uruchamianej na tym serwerze.
      * @return konfiguracja minigry.
      */
@@ -116,6 +129,17 @@ public class GameHostManager implements IServerManager
     public RegionManagerImpl getRegionManager()
     {
         return this.regionManager;
+    }
+
+    public <T> T getPlayerData(final Player player, final Class<T> clazz)
+    {
+        //noinspection unchecked
+        return (T) player.getMetadata(clazz.getName()).get(0).value();
+    }
+
+    public void setPlayerData(final Player player, final Object data)
+    {
+        player.setMetadata(data.getClass().getName(), new FixedMetadataValue(this.apiCore.getPluginMain(), data));
     }
 
     public void publishArenaEvent(final IArenaNetEvent event)
