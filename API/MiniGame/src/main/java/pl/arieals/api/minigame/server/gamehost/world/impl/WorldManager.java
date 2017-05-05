@@ -23,7 +23,7 @@ import pl.arieals.api.minigame.server.gamehost.world.ILoadingProgress;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.Main;
-import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
+import pl.north93.zgame.api.bukkit.utils.region.IRegion;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
 
 public class WorldManager implements IWorldManager
@@ -42,7 +42,7 @@ public class WorldManager implements IWorldManager
     }
 
     @Override
-    public LoadingProgressImpl loadWorld(final String name, final File source, final Cuboid cuboid)
+    public LoadingProgressImpl loadWorld(final String name, final File source, final IRegion gameRegion)
     {
         final WorldCreator creator = new WorldCreator(name);
         creator.generateStructures(false);
@@ -64,7 +64,7 @@ public class WorldManager implements IWorldManager
         this.worlds.add(world);
 
         final LoadingProgressImpl progress = new LoadingProgressImpl(world);
-        this.chunkLoadingTask.queueTask(world, cuboid.getChunksCoordinates(), progress);
+        this.chunkLoadingTask.queueTask(world, gameRegion.getChunksCoordinates(), progress);
 
         this.logger.info(MessageFormat.format("Queued loading chunks of {0}", name));
 
@@ -72,12 +72,12 @@ public class WorldManager implements IWorldManager
     }
 
     @Override
-    public ILoadingProgress regenWorld(final String name, final File source, final Cuboid cuboid)
+    public ILoadingProgress regenWorld(final String name, final File source, final IRegion gameRegion)
     {
         final World world = Bukkit.getWorld(name);
         if (world == null)
         {
-            return this.loadWorld(name, source, cuboid);
+            return this.loadWorld(name, source, gameRegion);
         }
 
         this.worlds.remove(world); // stop chunk unloading/loading tracking
@@ -99,7 +99,7 @@ public class WorldManager implements IWorldManager
         }
 
         final LoadingProgressImpl progress = new LoadingProgressImpl(world);
-        this.chunkLoadingTask.queueTask(world, cuboid.getChunksCoordinates(), progress);
+        this.chunkLoadingTask.queueTask(world, gameRegion.getChunksCoordinates(), progress);
 
         this.logger.info(MessageFormat.format("Queued loading chunks of {0}", name));
 
