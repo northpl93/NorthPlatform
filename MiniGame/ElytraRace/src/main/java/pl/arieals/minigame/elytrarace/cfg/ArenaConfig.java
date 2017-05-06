@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 
 
@@ -23,7 +24,9 @@ public class ArenaConfig
     private List<XmlLocation> startLocations;
     @XmlElementWrapper(name = "checkpoints")
     @XmlElement(name = "checkpoint")
-    private List<Checkpoint> checkpoints;
+    private List<Checkpoint>  checkpoints;
+    @XmlElement(name = "metaRegion")
+    private XmlCuboid         metaRegion;
 
     public ArenaConfig()
     {
@@ -43,6 +46,11 @@ public class ArenaConfig
     public List<Checkpoint> getCheckpoints()
     {
         return this.checkpoints;
+    }
+
+    public XmlCuboid getMetaRegion()
+    {
+        return this.metaRegion;
     }
 
     @Override

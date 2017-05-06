@@ -1,22 +1,16 @@
 package pl.arieals.minigame.elytrarace;
 
-import javax.xml.bind.JAXB;
-
-import java.io.File;
-import java.util.Arrays;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
-import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
 import pl.arieals.minigame.elytrarace.listener.ArenaStartListener;
 import pl.arieals.minigame.elytrarace.listener.CheckpointListener;
+import pl.arieals.minigame.elytrarace.listener.MetaListener;
 import pl.arieals.minigame.elytrarace.listener.ModifyListener;
 import pl.arieals.minigame.elytrarace.listener.MoveListener;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 
@@ -37,12 +31,13 @@ public class ElytraRaceComponent extends Component
                 new ArenaStartListener(),
                 new MoveListener(),
                 new ModifyListener(),
-                new CheckpointListener());
+                new CheckpointListener(),
+                new MetaListener());
 
-        final XmlLocation location1 = new XmlLocation(1, 1, 1, 0, 0);
+        /*final XmlLocation location1 = new XmlLocation(1, 1, 1, 0, 0);
         final XmlLocation location2 = new XmlLocation(2, 1, 2, 5, 5);
         final ArenaConfig config = new ArenaConfig(Arrays.asList(location1, location2), null);
-        JAXB.marshal(config, new File("test.xml"));
+        JAXB.marshal(config, new File("test.xml"));*/
     }
 
     @Override

@@ -19,6 +19,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartedEvent;
+import pl.arieals.minigame.elytrarace.ElytraRaceMode;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.StartCountdown;
@@ -33,7 +34,7 @@ public class ArenaStartListener implements Listener
     @EventHandler
     public void startGame(final GameStartedEvent event)
     {
-        final ElytraRaceArena arenaData = new ElytraRaceArena(this.loadConfig(event.getArena()));
+        final ElytraRaceArena arenaData = new ElytraRaceArena(this.loadConfig(event.getArena()), ElytraRaceMode.RACE_MODE);
         event.getArena().setArenaData(arenaData);
 
         this.setupPlayers(event.getArena(), arenaData);
