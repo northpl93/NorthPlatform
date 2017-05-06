@@ -92,6 +92,8 @@ public class CheckpointListener implements Listener
         event.setCancelled(true);
     }
 
+    // TODO blokowanie wyłączenia latania/teleport na checkpoint przy wyłączeniu?
+
     @Override
     public String toString()
     {

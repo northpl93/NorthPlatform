@@ -2,6 +2,7 @@ package pl.arieals.api.minigame.server.gamehost;
 
 import java.io.File;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -81,6 +82,7 @@ public class GameHostManager implements IServerManager
     @Override
     public void stop()
     {
+        Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer("")); // prevent errors (especially in testing environment)
         this.arenaManager.removeArenas();
     }
 

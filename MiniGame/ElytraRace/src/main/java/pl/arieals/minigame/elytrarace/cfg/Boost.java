@@ -26,10 +26,11 @@ public class Boost
     {
     }
 
-    public Boost(final XmlCuboid area, final BoostType boostType)
+    public Boost(final XmlCuboid area, final BoostType boostType, final Integer boostPower)
     {
         this.area = area;
         this.boostType = boostType;
+        this.boostPower = boostPower;
     }
 
     public XmlCuboid getArea()
@@ -42,9 +43,14 @@ public class Boost
         return this.boostType;
     }
 
+    public Integer getBoostPower()
+    {
+        return this.boostPower;
+    }
+
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("area", this.area).append("boostType", this.boostType).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("area", this.area).append("boostType", this.boostType).append("boostPower", this.boostPower).toString();
     }
 }

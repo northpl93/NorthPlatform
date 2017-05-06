@@ -25,6 +25,9 @@ public class ArenaConfig
     @XmlElementWrapper(name = "checkpoints")
     @XmlElement(name = "checkpoint")
     private List<Checkpoint>  checkpoints;
+    @XmlElementWrapper(name = "boosts")
+    @XmlElement(name = "boost")
+    private List<Boost>       boosts;
     @XmlElement(name = "metaRegion")
     private XmlCuboid         metaRegion;
 
@@ -46,6 +49,11 @@ public class ArenaConfig
     public List<Checkpoint> getCheckpoints()
     {
         return this.checkpoints;
+    }
+
+    public List<Boost> getBoosts()
+    {
+        return this.boosts;
     }
 
     public XmlCuboid getMetaRegion()
