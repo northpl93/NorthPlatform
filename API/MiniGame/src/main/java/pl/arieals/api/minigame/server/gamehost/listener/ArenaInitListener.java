@@ -1,5 +1,7 @@
 package pl.arieals.api.minigame.server.gamehost.listener;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,7 +43,8 @@ public class ArenaInitListener implements Listener
         }
         else
         {
-            arena.getPlayersManager().getPlayers().forEach(player -> player.kickPlayer("Powinienes wyleciec do poczekalni serwera, ale // TODO"));
+            final ArrayList<Player> players = new ArrayList<>(arena.getPlayersManager().getPlayers()); // prevent ConcurrentModificationException
+            players.forEach(player -> player.kickPlayer("Powinienes wyleciec do poczekalni serwera, ale // TODO"));
             Bukkit.broadcastMessage("Now kick all players to server lobby");
             // todo kick all players to server lobby
         }
