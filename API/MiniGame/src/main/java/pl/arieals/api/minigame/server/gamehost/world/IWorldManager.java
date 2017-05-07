@@ -10,5 +10,5 @@ public interface IWorldManager
 
     ILoadingProgress regenWorld(String name, File source, IRegion gameRegion);
 
-    void unloadWorld(String name);
+    boolean unloadWorld(String name);
 }

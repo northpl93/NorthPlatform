@@ -73,7 +73,10 @@ public class LocalArenaManager
         for (final LocalArena arena : this.arenas)
         {
             arenaManager.removeArena(arena.getId());
-            arena.getWorld().delete();
+            if (! arena.getWorld().delete())
+            {
+                this.logger.warning("Failed to unload world " + arena.getWorld().getName());
+            }
         }
     }
 }

@@ -107,11 +107,11 @@ public class WorldManager implements IWorldManager
     }
 
     @Override
-    public void unloadWorld(final String name)
+    public boolean unloadWorld(final String name)
     {
         final World world = Bukkit.getWorld(name);
         this.worlds.remove(world);
-        Bukkit.unloadWorld(world, false);
+        return Bukkit.unloadWorld(world, false);
     }
 
     @EventHandler

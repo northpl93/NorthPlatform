@@ -119,9 +119,13 @@ public class ArenaWorld
         });
     }
 
-    public void delete()
+    public boolean delete()
     {
-        Bukkit.unloadWorld(this.world, false);
+        final IWorldManager worldManager = this.gameHostManager.getWorldManager();
+        if (! worldManager.unloadWorld(this.getName()))
+        {
+            return false;
+        }
         try
         {
             FileUtils.deleteDirectory(this.getWorldDirectory());
@@ -129,7 +133,9 @@ public class ArenaWorld
         catch (final IOException e)
         {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
