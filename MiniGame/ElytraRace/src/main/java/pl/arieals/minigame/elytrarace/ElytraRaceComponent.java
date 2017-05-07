@@ -11,6 +11,7 @@ import pl.arieals.minigame.elytrarace.listener.CheckpointListener;
 import pl.arieals.minigame.elytrarace.listener.MetaListener;
 import pl.arieals.minigame.elytrarace.listener.ModifyListener;
 import pl.arieals.minigame.elytrarace.listener.MoveListener;
+import pl.arieals.minigame.elytrarace.listener.ScoreListener;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
@@ -34,6 +35,7 @@ public class ElytraRaceComponent extends Component
                 new ModifyListener(),
                 new CheckpointListener(),
                 new BoostListener(),
+                new ScoreListener(),
                 new MetaListener());
 
         /*final XmlLocation location1 = new XmlLocation(1, 1, 1, 0, 0);

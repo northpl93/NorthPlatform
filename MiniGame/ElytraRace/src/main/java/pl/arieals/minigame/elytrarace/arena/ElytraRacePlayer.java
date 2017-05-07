@@ -7,8 +7,7 @@ import pl.arieals.minigame.elytrarace.cfg.Checkpoint;
 
 public class ElytraRacePlayer
 {
-    private Checkpoint checkpoint;
-    private Integer    points; // uzywane w SCORE_MODE
+    private Checkpoint  checkpoint;
 
     public Checkpoint getCheckpoint()
     {
@@ -18,16 +17,6 @@ public class ElytraRacePlayer
     public void setCheckpoint(final Checkpoint checkpoint)
     {
         this.checkpoint = checkpoint;
-    }
-
-    public Integer getPoints()
-    {
-        return this.points;
-    }
-
-    public void setPoints(final Integer points)
-    {
-        this.points = points;
     }
 
     @Override

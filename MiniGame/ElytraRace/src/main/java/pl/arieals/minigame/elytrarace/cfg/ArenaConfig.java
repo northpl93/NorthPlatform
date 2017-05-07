@@ -28,6 +28,12 @@ public class ArenaConfig
     @XmlElementWrapper(name = "boosts")
     @XmlElement(name = "boost")
     private List<Boost>       boosts;
+    @XmlElementWrapper(name = "scoreGroups")
+    @XmlElement(name = "scoreGroup")
+    private List<ScoreGroup>  scoreGroups;
+    @XmlElementWrapper(name = "scores")
+    @XmlElement(name = "score")
+    private List<Score>       scores;
     @XmlElement(name = "metaRegion")
     private XmlCuboid         metaRegion;
 
@@ -56,6 +62,16 @@ public class ArenaConfig
         return this.boosts;
     }
 
+    public List<ScoreGroup> getScoreGroups()
+    {
+        return this.scoreGroups;
+    }
+
+    public List<Score> getScores()
+    {
+        return this.scores;
+    }
+
     public XmlCuboid getMetaRegion()
     {
         return this.metaRegion;
@@ -64,6 +80,6 @@ public class ArenaConfig
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("startLocations", this.startLocations).append("checkpoints", this.checkpoints).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("startLocations", this.startLocations).append("checkpoints", this.checkpoints).append("boosts", this.boosts).append("scoreGroups", this.scoreGroups).append("scores", this.scores).append("metaRegion", this.metaRegion).toString();
     }
 }

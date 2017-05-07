@@ -16,7 +16,7 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Checkpoint
 {
-    @XmlAttribute
+    @XmlAttribute(required = true)
     private int         number;
     private XmlCuboid   area;
     private XmlLocation teleport;

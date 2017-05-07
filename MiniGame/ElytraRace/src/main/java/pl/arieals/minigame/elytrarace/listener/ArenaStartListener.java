@@ -22,6 +22,7 @@ import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStarted
 import pl.arieals.minigame.elytrarace.ElytraRaceMode;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
+import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.arieals.minigame.elytrarace.arena.StartCountdown;
 import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
@@ -34,7 +35,7 @@ public class ArenaStartListener implements Listener
     @EventHandler
     public void startGame(final GameStartedEvent event)
     {
-        final ElytraRaceArena arenaData = new ElytraRaceArena(this.loadConfig(event.getArena()), ElytraRaceMode.RACE_MODE);
+        final ElytraRaceArena arenaData = new ElytraRaceArena(this.loadConfig(event.getArena()), ElytraRaceMode.SCORE_MODE);
         event.getArena().setArenaData(arenaData);
 
         this.setupPlayers(event.getArena(), arenaData);
@@ -55,6 +56,12 @@ public class ArenaStartListener implements Listener
         for (final Player player : arena.getPlayersManager().getPlayers())
         {
             setPlayerData(player, new ElytraRacePlayer());
+            if (elytraRaceArena.getGameMode() == ElytraRaceMode.SCORE_MODE)
+            {
+                // w trybie score ustawiamy graczowi dodatkowy obiekt
+                // sledzacy ilosc punktów, combo itp.
+                setPlayerData(player, new ElytraScorePlayer());
+            }
 
             player.teleport(locations.next().toBukkit(arena.getWorld().getWorld()));
 

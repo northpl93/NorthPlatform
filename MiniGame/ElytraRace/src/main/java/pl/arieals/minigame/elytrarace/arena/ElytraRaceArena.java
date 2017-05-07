@@ -1,5 +1,8 @@
 package pl.arieals.minigame.elytrarace.arena;
 
+import static pl.north93.zgame.api.global.utils.CollectionUtils.findInCollection;
+
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -7,6 +10,7 @@ import java.util.UUID;
 import pl.arieals.api.minigame.server.gamehost.arena.IArenaData;
 import pl.arieals.minigame.elytrarace.ElytraRaceMode;
 import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
+import pl.arieals.minigame.elytrarace.cfg.ScoreGroup;
 
 public class ElytraRaceArena implements IArenaData
 {
@@ -59,5 +63,15 @@ public class ElytraRaceArena implements IArenaData
     public Map<UUID, Integer> getPoints()
     {
         return this.points;
+    }
+
+    /**
+     * Metoda pomocnicza do pobierania obiektu punktacji po nazwie.
+     * @param name nazwa score group.
+     * @return score group o podanej nazwie na tej mapie.
+     */
+    public ScoreGroup getScoreGroup(final String name)
+    {
+        return findInCollection(this.arenaConfig.getScoreGroups(), ScoreGroup::getName, name);
     }
 }
