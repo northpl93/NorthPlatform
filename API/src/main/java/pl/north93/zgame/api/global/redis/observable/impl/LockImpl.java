@@ -46,7 +46,7 @@ class LockImpl implements Lock
             {
                 synchronized (this.waiter)
                 {
-                    this.waiter.wait(TimeUnit.SECONDS.toMillis(2)); // after 2 seconds time out
+                    this.waiter.wait(TimeUnit.SECONDS.toMillis(1)); // after 1 second time out
                 }
             }
             catch (final InterruptedException e)
