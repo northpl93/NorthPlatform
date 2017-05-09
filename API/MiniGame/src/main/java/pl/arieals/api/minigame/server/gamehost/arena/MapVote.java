@@ -5,22 +5,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.bukkit.entity.Player;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.bukkit.entity.Player;
 
-import pl.arieals.api.minigame.shared.api.GameMap;
+import pl.arieals.api.minigame.shared.api.MapTemplate;
 
 public class MapVote
 {
-    private final Map<Player, GameMap> votes = new WeakHashMap<>();
-    private GameMap[] options;
+    private final Map<Player, MapTemplate> votes = new WeakHashMap<>();
+    private MapTemplate[] options;
 
-    public void startVote(final List<GameMap> options)
+    public void startVote(final List<MapTemplate> options)
     {
         this.votes.clear();
-        this.options = options.toArray(new GameMap[options.size()]);
+        this.options = options.toArray(new MapTemplate[options.size()]);
     }
 
     public void removeVote(final Player player)
@@ -34,13 +33,13 @@ public class MapVote
         {
             return false;
         }
-        final GameMap selectedMap = this.options[option];
+        final MapTemplate selectedMap = this.options[option];
 
         this.votes.put(player, selectedMap);
         return true;
     }
 
-    public GameMap[] getOptions()
+    public MapTemplate[] getOptions()
     {
         return this.options;
     }
@@ -51,22 +50,22 @@ public class MapVote
         this.votes.clear();
     }
 
-    public Map<GameMap, Integer> getResults()
+    public Map<MapTemplate, Integer> getResults()
     {
-        final Map<GameMap, Integer> results = new HashMap<>();
-        for (final Map.Entry<Player, GameMap> entry : this.votes.entrySet())
+        final Map<MapTemplate, Integer> results = new HashMap<>();
+        for (final Map.Entry<Player, MapTemplate> entry : this.votes.entrySet())
         {
-            final GameMap map = entry.getValue();
+            final MapTemplate map = entry.getValue();
             results.put(map, results.getOrDefault(map, 0) + 1);
         }
         return results;
     }
 
-    public GameMap getWinner()
+    public MapTemplate getWinner()
     {
-        GameMap winner = null;
+        MapTemplate winner = null;
         int winnerPoints = 0;
-        for (final Map.Entry<GameMap, Integer> entry : this.getResults().entrySet())
+        for (final Map.Entry<MapTemplate, Integer> entry : this.getResults().entrySet())
         {
             if (winner == null || winnerPoints < entry.getValue())
             {

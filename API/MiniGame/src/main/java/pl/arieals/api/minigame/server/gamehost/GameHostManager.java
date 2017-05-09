@@ -2,11 +2,14 @@ package pl.arieals.api.minigame.server.gamehost;
 
 import java.io.File;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
-
+import org.spigotmc.SneakyThrow;
 import org.spigotmc.SpigotConfig;
 
 import pl.arieals.api.minigame.server.IServerManager;
@@ -20,14 +23,15 @@ import pl.arieals.api.minigame.server.gamehost.lobby.ILobbyManager;
 import pl.arieals.api.minigame.server.gamehost.lobby.external.ExternalLobby;
 import pl.arieals.api.minigame.server.gamehost.lobby.integrated.IntegratedLobby;
 import pl.arieals.api.minigame.server.gamehost.region.impl.RegionManagerImpl;
+import pl.arieals.api.minigame.server.gamehost.world.IMapTemplateManager;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
+import pl.arieals.api.minigame.server.gamehost.world.impl.MapTemplateManager;
 import pl.arieals.api.minigame.server.gamehost.world.impl.WorldManager;
 import pl.arieals.api.minigame.shared.api.IGameHostRpc;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
-import pl.arieals.api.minigame.shared.api.MiniGame;
+import pl.arieals.api.minigame.shared.api.MiniGameConfig;
 import pl.arieals.api.minigame.shared.api.arena.netevent.IArenaNetEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.cfg.ConfigUtils;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectNewInstance;
 import pl.north93.zgame.api.global.exceptions.ConfigurationException;
@@ -50,19 +54,20 @@ public class GameHostManager implements IServerManager
     private WorldManager      worldManager;
     @InjectNewInstance
     private RegionManagerImpl regionManager;
+    @InjectNewInstance
+    private MapTemplateManager mapTemplateManager;
     private ILobbyManager     lobbyManager;
-    private MiniGame          miniGame;
+    private MiniGameConfig    miniGameConfig;
 
     @Override
     public void start()
     {
         SpigotConfig.config.set("verbose", false); // disable map-loading spam
 
-        this.miniGame = ConfigUtils.loadConfigFile(MiniGame.class, this.apiCore.getFile("minigame.yml"));
-        this.validateConfig(this.miniGame);
+        loadConfig();
 
         this.rpcManager.addRpcImplementation(IGameHostRpc.class, new GameHostRpcImpl(this));
-        this.lobbyManager = (this.miniGame.getLobbyMode() == LobbyMode.EXTERNAL) ? new ExternalLobby() : new IntegratedLobby();
+        this.lobbyManager = (this.miniGameConfig.getLobbyMode() == LobbyMode.EXTERNAL) ? new ExternalLobby() : new IntegratedLobby();
 
         this.apiCore.registerEvents(
                 new PlayerListener(), // dodaje graczy do aren
@@ -70,7 +75,9 @@ public class GameHostManager implements IServerManager
                 new GameStartScheduler(), // planuje rozpoczecie gry gdy arena jest w lobby
                 new GameStartListener(), // inicjuje gre po starcie
                 new ArenaEndListener()); // pilnuje by arena nie stala pusta i wykonuje czynnosci koncowe
-
+        
+        loadMapTemplates();
+        
         new MiniGameApi(); // inicjuje zmienne w klasie i statyczną INSTANCE
 
         for (int i = 0; i < 4; i++) // create 4 arenas.
@@ -99,9 +106,9 @@ public class GameHostManager implements IServerManager
      * Konfiguracja minigry uruchamianej na tym serwerze.
      * @return konfiguracja minigry.
      */
-    public MiniGame getMiniGame()
+    public MiniGameConfig getMiniGameConfig()
     {
-        return this.miniGame;
+        return this.miniGameConfig;
     }
 
     /**
@@ -121,6 +128,11 @@ public class GameHostManager implements IServerManager
     public ILobbyManager getLobbyManager()
     {
         return this.lobbyManager;
+    }
+    
+    public IMapTemplateManager getMapTemplateManager()
+    {
+        return mapTemplateManager;
     }
 
     public LocalArenaManager getArenaManager()
@@ -150,16 +162,38 @@ public class GameHostManager implements IServerManager
         this.subscriber.publish("minigames:arena_event", bytes);
     }
 
-    private void validateConfig(final MiniGame miniGame)
+    private void loadConfig()
     {
-        if (miniGame.getMapVoting().getEnabled() && miniGame.getLobbyMode() != LobbyMode.EXTERNAL)
+        try
+        {
+            JAXBContext ctx = JAXBContext.newInstance(MiniGameConfig.class);
+            miniGameConfig = (MiniGameConfig) ctx.createUnmarshaller().unmarshal(apiCore.getFile("minigame.xml"));
+            validateConfig();
+        }
+        catch ( JAXBException e )
+        {
+            SneakyThrow.sneaky(e);
+        }
+    }
+    
+    private void validateConfig()
+    {
+        if (miniGameConfig.getMapVoting().getEnabled() && miniGameConfig.getLobbyMode() != LobbyMode.EXTERNAL)
         {
             throw new ConfigurationException("Map voting can be only enabled when lobby mode is EXTERNAL.");
         }
-
-        if (miniGame.getGameMaps() == null || miniGame.getGameMaps().isEmpty())
+    }
+    
+    private void loadMapTemplates()
+    {
+        try
         {
-            throw new ConfigurationException("You must define at least one map in minigame.yml");
+            mapTemplateManager.setTemplatesDirectory(new File(miniGameConfig.getMapsDirecotry()));
+            mapTemplateManager.loadTemplatesFromDirectory();
+        }
+        catch ( Throwable e )
+        {
+            SneakyThrow.sneaky(e);
         }
     }
 }

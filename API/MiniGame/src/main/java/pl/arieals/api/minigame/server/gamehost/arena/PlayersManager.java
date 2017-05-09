@@ -17,7 +17,7 @@ import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.server.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
-import pl.arieals.api.minigame.shared.api.MiniGame;
+import pl.arieals.api.minigame.shared.api.MiniGameConfig;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -52,7 +52,7 @@ public class PlayersManager
         // todo implement spectating?
         synchronized (this) // handle only one join request at same time
         {
-            if (this.gameHostManager.getMiniGame().getLobbyMode() == LobbyMode.INTEGRATED && ! this.arena.getWorld().isReady())
+            if (this.gameHostManager.getMiniGameConfig().getLobbyMode() == LobbyMode.INTEGRATED && ! this.arena.getWorld().isReady())
             {
                 // jesli gra uzywa lobby zintegrowanego z mapa to mapa musi byc gotowa/zaladowana
                 return false;
@@ -74,7 +74,7 @@ public class PlayersManager
 
     private boolean canJoin(final List<PlayerJoinInfo> players)
     {
-        final MiniGame miniGame = this.gameHostManager.getMiniGame();
+        final MiniGameConfig miniGame = this.gameHostManager.getMiniGameConfig();
         final int normalSlots = miniGame.getSlots() - miniGame.getVipSlots();
 
         final int totalPlayers = this.joinInfos.size();
@@ -114,7 +114,7 @@ public class PlayersManager
      */
     public boolean isEnoughToStart()
     {
-        final MiniGame miniGame = this.gameHostManager.getMiniGame();
+        final MiniGameConfig miniGame = this.gameHostManager.getMiniGameConfig();
         return this.players.size() >= miniGame.getToStart();
     }
 

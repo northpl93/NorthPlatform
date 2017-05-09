@@ -71,7 +71,7 @@ public class PlayerListener implements Listener
         final String msgKey = join ? "player.joined_arena" : "player.quit_arena";
         final String name = player.getName();
         final int playersCount = manager.getPlayers().size();
-        final int maxPlayers = gameHostManager.getMiniGame().getSlots();
+        final int maxPlayers = gameHostManager.getMiniGameConfig().getSlots();
 
         manager.broadcast(this.messages, msgKey, name, playersCount, maxPlayers);
     }

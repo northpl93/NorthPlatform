@@ -63,8 +63,7 @@ public class ArenaStartListener implements Listener
                 setPlayerData(player, new ElytraScorePlayer());
             }
 
-            player.teleport(locations.next().toBukkit(arena.getWorld().getWorld()));
-
+            player.teleport(locations.next().toBukkit(arena.getWorld().getCurrentWorld()));
             player.getInventory().setChestplate(this.createElytra());
 
             player.setAllowFlight(true);

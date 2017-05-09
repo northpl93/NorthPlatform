@@ -2,35 +2,33 @@ package pl.arieals.api.minigame.server.gamehost.arena;
 
 import static pl.arieals.api.minigame.shared.api.utils.InvalidGamePhaseException.checkGamePhase;
 
-
-import javax.vecmath.Point3i;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.MapSwitchedEvent;
 import pl.arieals.api.minigame.server.gamehost.world.ILoadingProgress;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
-import pl.arieals.api.minigame.shared.api.GameMap;
+import pl.arieals.api.minigame.shared.api.GameMapConfig;
 import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.arieals.api.minigame.shared.api.MapTemplate;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
+import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
 
 public class ArenaWorld
 {
     private final GameHostManager gameHostManager;
     private final LocalArena      arena;
     private final MapVote         mapVote; // logika systemu glosowania
-    private GameMap               activeMap;
-    private World                 world;
+    private MapTemplate           currentMapTemplate;
+    private World                 currentWorld;
     private ILoadingProgress      progress;
 
     public ArenaWorld(final GameHostManager gameHostManager, final LocalArena arena)
@@ -67,9 +65,9 @@ public class ArenaWorld
         }
     }
 
-    public World getWorld()
+    public World getCurrentWorld()
     {
-        return this.world;
+        return this.currentWorld;
     }
 
     public String getName()
@@ -77,9 +75,19 @@ public class ArenaWorld
         return "arena_" + this.arena.getId();
     }
 
-    public GameMap getActiveMap()
+    public MapTemplate getCurrentMapTemplate()
     {
-        return this.activeMap;
+        return currentMapTemplate;
+    }
+    
+    public GameMapConfig getCurrentMapConfig()
+    {
+        return currentMapTemplate.getMapConfig();
+    }
+    
+    public String getProperty(String key)
+    {
+        return currentMapTemplate.getMapConfig().getProperties().get(key);
     }
 
     /**
@@ -88,7 +96,7 @@ public class ArenaWorld
      */
     public boolean isReady()
     {
-        return this.world != null && this.progress != null && this.progress.isComplete();
+        return this.currentWorld != null && this.progress != null && this.progress.isComplete();
     }
 
     /**
@@ -96,22 +104,20 @@ public class ArenaWorld
      * Może być wykonane tylko gdy arena znajduje się w GamePhase LOBBY.
      * @param gameMap informacje o mapie.
      */
-    public void setActiveMap(final GameMap gameMap)
+    public void setActiveMap(final MapTemplate template)
     {
         checkGamePhase(this.arena.getGamePhase(), GamePhase.LOBBY);
         final IWorldManager worldManager = this.gameHostManager.getWorldManager();
+        
+        XmlCuboid arenaRegion = template.getMapConfig().getArenaRegion();
+        final Cuboid gameRegion = arenaRegion.toCuboid(Bukkit.getWorlds().get(0));
 
-        final Point3i arenaRegion1 = gameMap.getArenaRegion1();
-        final Point3i arenaRegion2 = gameMap.getArenaRegion2();
+        final File templateDir = template.getMapDirectory();
+        final ILoadingProgress progress = worldManager.regenWorld(this.getName(), templateDir, gameRegion);
 
-        final File template = new File(this.gameHostManager.getWorldTemplatesDir(), gameMap.getDirectory());
-        final Cuboid gameRegion = new Cuboid(Bukkit.getWorlds().get(0), arenaRegion1.x, arenaRegion1.y, arenaRegion1.z, arenaRegion2.x, arenaRegion2.y, arenaRegion2.z);
-
-        final ILoadingProgress progress = worldManager.regenWorld(this.getName(), template, gameRegion);
-
-        this.activeMap = gameMap;
+        this.currentMapTemplate = template;
         this.progress = progress;
-        this.world = progress.getWorld();
+        this.currentWorld = progress.getWorld();
 
         progress.onComplete(() ->
         {
@@ -126,6 +132,7 @@ public class ArenaWorld
         {
             return false;
         }
+
         try
         {
             FileUtils.deleteDirectory(this.getWorldDirectory());
@@ -141,6 +148,6 @@ public class ArenaWorld
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("world", this.world).append("progress", this.progress).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("world", this.currentWorld).append("progress", this.progress).toString();
     }
 }

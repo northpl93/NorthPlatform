@@ -2,17 +2,15 @@ package pl.arieals.api.minigame.server.gamehost.listener;
 
 import static org.diorite.utils.math.DioriteRandomUtils.getRandom;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
@@ -20,9 +18,9 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.arena.MapVote;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.utils.Timer;
-import pl.arieals.api.minigame.shared.api.GameMap;
 import pl.arieals.api.minigame.shared.api.GamePhase;
-import pl.arieals.api.minigame.shared.api.MiniGame;
+import pl.arieals.api.minigame.shared.api.MapTemplate;
+import pl.arieals.api.minigame.shared.api.MiniGameConfig;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectMessages;
@@ -60,12 +58,12 @@ public class GameStartScheduler implements Listener
                 () -> this.startArena(arena),
                 timer.calcTimeToInTicks(0, TimeUnit.MILLISECONDS));
 
-        final MiniGame miniGame = gameHostManager.getMiniGame();
+        final MiniGameConfig miniGame = gameHostManager.getMiniGameConfig();
         if (miniGame.getMapVoting().getEnabled())
         {
             // odpalamy glosowanie
-            final List<GameMap> maps = new ArrayList<>();
-            getRandom(miniGame.getGameMaps(), maps, miniGame.getMapVoting().getNumberOfMaps(), true);
+            final List<MapTemplate> maps = new ArrayList<>();
+            getRandom(gameHostManager.getMapTemplateManager().getAllTemplates(), maps, miniGame.getMapVoting().getNumberOfMaps(), true);
 
             final MapVote mapVote = arena.getWorld().getMapVote();
             mapVote.startVote(maps);
@@ -95,7 +93,7 @@ public class GameStartScheduler implements Listener
 
         for (int i = 0; i < mapVote.getOptions().length; i++)
         {
-            final GameMap gameMap = mapVote.getOptions()[i];
+            final MapTemplate gameMap = mapVote.getOptions()[i];
             arena.getPlayersManager().broadcast(this.messages, "vote.option_line", i, gameMap.getDisplayName());
         }
     }
@@ -104,7 +102,7 @@ public class GameStartScheduler implements Listener
     {
         final MapVote mapVote = arena.getWorld().getMapVote();
 
-        final GameMap winner = mapVote.getWinner();
+        final MapTemplate winner = mapVote.getWinner();
         arena.getPlayersManager().broadcast(this.messages, "vote.winner", winner.getDisplayName());
 
         arena.getWorld().setActiveMap(winner);

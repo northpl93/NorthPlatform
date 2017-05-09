@@ -8,15 +8,15 @@ import org.bukkit.entity.Player;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.lobby.ILobbyManager;
-import pl.arieals.api.minigame.shared.api.GameMap;
+import pl.arieals.api.minigame.shared.api.GameMapConfig;
 
 public class IntegratedLobby implements ILobbyManager
 {
     @Override
     public void addPlayer(final LocalArena arena, final Player player)
     {
-        final GameMap activeMap = arena.getWorld().getActiveMap();
-        final Location location = this.readSpawnLocation(activeMap.getProperties(), arena.getWorld().getWorld());
+        final GameMapConfig activeMap = arena.getWorld().getCurrentMapConfig();
+        final Location location = this.readSpawnLocation(activeMap.getProperties(), arena.getWorld().getCurrentWorld());
 
         player.teleport(location);
     }

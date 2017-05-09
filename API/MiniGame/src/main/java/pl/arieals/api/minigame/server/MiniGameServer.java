@@ -39,6 +39,7 @@ public class MiniGameServer extends Component
         return this.arenaManager;
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends IServerManager> T getServerManager()
     {
         //noinspection unchecked

@@ -3,7 +3,7 @@ package pl.arieals.api.minigame.server.gamehost.event.arena;
 import org.bukkit.event.HandlerList;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.shared.api.GameMap;
+import pl.arieals.api.minigame.shared.api.MapTemplate;
 
 public class MapSwitchedEvent extends ArenaEvent
 {
@@ -14,9 +14,9 @@ public class MapSwitchedEvent extends ArenaEvent
         super(arena);
     }
 
-    public GameMap getGameMap()
+    public MapTemplate getGameMap()
     {
-        return this.arena.getWorld().getActiveMap();
+        return this.arena.getWorld().getCurrentMapTemplate();
     }
 
     @Override

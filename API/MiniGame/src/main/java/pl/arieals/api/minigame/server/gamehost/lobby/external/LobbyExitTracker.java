@@ -18,7 +18,7 @@ public class LobbyExitTracker implements Listener
     public void onPlayerExitLobby(final PlayerTeleportEvent event)
     {
         final GameHostManager gameHostManager = this.server.getServerManager();
-        if (gameHostManager.getMiniGame().getLobbyMode() == LobbyMode.INTEGRATED)
+        if (gameHostManager.getMiniGameConfig().getLobbyMode() == LobbyMode.INTEGRATED)
         {
             return;
         }
