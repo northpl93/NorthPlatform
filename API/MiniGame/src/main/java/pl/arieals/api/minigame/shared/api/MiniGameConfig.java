@@ -1,34 +1,31 @@
 package pl.arieals.api.minigame.shared.api;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.diorite.cfg.annotations.CfgComment;
 
+@XmlRootElement(name = "minigame")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class MiniGameConfig
 {
-    @CfgComment("Tryb pracy lobby")
     @XmlElement
-    private LobbyMode       lobbyMode;
-    @CfgComment("Ustawienia glosowania na mape")
+    private LobbyMode       lobbyMode; // Tryb pracy lobby
     @XmlElement
-    private MapVotingConfig mapVoting;
-    @CfgComment("Czy gra jest dynamiczna (pozwalajaca na wchodzenie w trakcie gry)")
+    private MapVotingConfig mapVoting; // Ustawienia glosowania na mape
     @XmlElement
-    private Boolean         isDynamic;
-    @CfgComment("Maksymalna ilość graczy na arenie")
+    private Boolean         isDynamic; // Czy gra jest dynamiczna (pozwalajaca na wchodzenie w trakcie gry)
     @XmlElement
-    private Integer         slots;
-    @CfgComment("Sloty zarezerwowane dla VIPów (odejmowane od wartości slots)")
+    private Integer         slots; // Maksymalna ilość graczy na arenie
     @XmlElement
-    private Integer         vipSlots;
-    @CfgComment("Ilosc graczy wymagana do rozpoczecia gry")
+    private Integer         vipSlots; // Sloty zarezerwowane dla VIPów (odejmowane od wartości slots)
     @XmlElement
-    private Integer         toStart;
-    @CfgComment("Konfiguracja map")
+    private Integer         toStart; // Ilosc graczy wymagana do rozpoczecia gry
     @XmlElement
-    private String          mapsDirectory;
+    private String          mapsDirectory; // Katalog z konfiguracją map
 
     public LobbyMode getLobbyMode()
     {
@@ -60,7 +57,7 @@ public class MiniGameConfig
         return this.toStart;
     }
 
-    public String getMapsDirecotry()
+    public String getMapsDirectory()
     {
         return this.mapsDirectory;
     }

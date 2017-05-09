@@ -1,12 +1,12 @@
 package pl.arieals.api.minigame.shared.api;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -38,7 +38,7 @@ public class GameMapConfig
 
     public boolean isEnabled()
     {
-        return enabled;
+        return this.enabled;
     }
     
     public void setEnabled(boolean enabled)
@@ -48,7 +48,7 @@ public class GameMapConfig
     
     public XmlCuboid getArenaRegion()
     {
-        return arenaRegion;
+        return this.arenaRegion;
     }
     
     public void setArenaRegion(XmlCuboid arenaRegion)
@@ -64,6 +64,6 @@ public class GameMapConfig
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("displayName", this.displayName).append("arenaRegion", this.arenaRegion).append("properties", this.properties).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("displayName", this.displayName).append("enabled", this.enabled).append("arenaRegion", this.arenaRegion).append("properties", this.properties).toString();
     }
 }

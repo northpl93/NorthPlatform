@@ -24,7 +24,7 @@ public class BoostListener implements Listener
 
         for (final Boost boost : arenaData.getArenaConfig().getBoosts())
         {
-            final Cuboid boostArea = boost.getArea().toCuboid(arena.getWorld().getWorld());
+            final Cuboid boostArea = boost.getArea().toCuboid(arena.getWorld().getCurrentWorld());
             final ITrackedRegion boostRegion = arena.getRegionManager().create(boostArea);
 
             boostRegion.whenEnter(player -> this.boostPlayer(player, boost));

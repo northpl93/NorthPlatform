@@ -25,7 +25,7 @@ public class MetaListener implements Listener
     {
         final ElytraRaceArena arenaData = event.getArena().getArenaData();
         final XmlCuboid metaRegion = arenaData.getArenaConfig().getMetaRegion();
-        final Cuboid metaCuboid = metaRegion.toCuboid(event.getArena().getWorld().getWorld());
+        final Cuboid metaCuboid = metaRegion.toCuboid(event.getArena().getWorld().getCurrentWorld());
 
         final IRegionManager regionManager = event.getArena().getRegionManager();
         final ITrackedRegion trackedRegion = regionManager.create(metaCuboid);

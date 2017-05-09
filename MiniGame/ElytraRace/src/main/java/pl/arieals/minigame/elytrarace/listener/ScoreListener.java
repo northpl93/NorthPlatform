@@ -49,7 +49,7 @@ public class ScoreListener implements Listener
         for (final Score score : arenaData.getArenaConfig().getScores())
         {
             final IRegionManager regionManager = arena.getRegionManager();
-            final Cuboid cuboid = score.getArea().toCuboid(arena.getWorld().getWorld());
+            final Cuboid cuboid = score.getArea().toCuboid(arena.getWorld().getCurrentWorld());
 
             final World world = cuboid.getWorld();
             for (final Block block : cuboid)
@@ -103,7 +103,7 @@ public class ScoreListener implements Listener
     {
         for (final Score score : arenaData.getArenaConfig().getScores())
         {
-            final Cuboid cuboid = score.getArea().toCuboid(arena.getWorld().getWorld());
+            final Cuboid cuboid = score.getArea().toCuboid(arena.getWorld().getCurrentWorld());
             for (final Block block : cuboid)
             {
                 if (block.isEmpty())

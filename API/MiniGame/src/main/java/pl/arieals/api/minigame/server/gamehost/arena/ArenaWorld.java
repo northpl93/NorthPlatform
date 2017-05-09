@@ -2,15 +2,17 @@ package pl.arieals.api.minigame.server.gamehost.arena;
 
 import static pl.arieals.api.minigame.shared.api.utils.InvalidGamePhaseException.checkGamePhase;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.MapSwitchedEvent;
@@ -77,17 +79,17 @@ public class ArenaWorld
 
     public MapTemplate getCurrentMapTemplate()
     {
-        return currentMapTemplate;
+        return this.currentMapTemplate;
     }
     
     public GameMapConfig getCurrentMapConfig()
     {
-        return currentMapTemplate.getMapConfig();
+        return this.currentMapTemplate.getMapConfig();
     }
     
-    public String getProperty(String key)
+    public String getProperty(final String key)
     {
-        return currentMapTemplate.getMapConfig().getProperties().get(key);
+        return this.currentMapTemplate.getMapConfig().getProperties().get(key);
     }
 
     /**
@@ -102,14 +104,14 @@ public class ArenaWorld
     /**
      * Wczytuje wybraną mapę dla tej areny.
      * Może być wykonane tylko gdy arena znajduje się w GamePhase LOBBY.
-     * @param gameMap informacje o mapie.
+     * @param template Mapa do załadowania.
      */
     public void setActiveMap(final MapTemplate template)
     {
         checkGamePhase(this.arena.getGamePhase(), GamePhase.LOBBY);
         final IWorldManager worldManager = this.gameHostManager.getWorldManager();
         
-        XmlCuboid arenaRegion = template.getMapConfig().getArenaRegion();
+        final XmlCuboid arenaRegion = template.getMapConfig().getArenaRegion();
         final Cuboid gameRegion = arenaRegion.toCuboid(Bukkit.getWorlds().get(0));
 
         final File templateDir = template.getMapDirectory();

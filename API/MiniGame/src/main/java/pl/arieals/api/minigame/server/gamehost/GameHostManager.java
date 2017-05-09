@@ -1,14 +1,14 @@
 package pl.arieals.api.minigame.server.gamehost;
 
-import java.io.File;
+import javax.xml.bind.JAXB;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
+import java.io.File;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import org.spigotmc.SneakyThrow;
 import org.spigotmc.SpigotConfig;
 
@@ -64,7 +64,7 @@ public class GameHostManager implements IServerManager
     {
         SpigotConfig.config.set("verbose", false); // disable map-loading spam
 
-        loadConfig();
+        this.loadConfig();
 
         this.rpcManager.addRpcImplementation(IGameHostRpc.class, new GameHostRpcImpl(this));
         this.lobbyManager = (this.miniGameConfig.getLobbyMode() == LobbyMode.EXTERNAL) ? new ExternalLobby() : new IntegratedLobby();
@@ -76,7 +76,7 @@ public class GameHostManager implements IServerManager
                 new GameStartListener(), // inicjuje gre po starcie
                 new ArenaEndListener()); // pilnuje by arena nie stala pusta i wykonuje czynnosci koncowe
         
-        loadMapTemplates();
+        this.loadMapTemplates();
         
         new MiniGameApi(); // inicjuje zmienne w klasie i statyczną INSTANCE
 
@@ -84,6 +84,13 @@ public class GameHostManager implements IServerManager
         {
             this.arenaManager.createArena();
         }
+
+        /*final GameMapConfig config = new GameMapConfig();
+        config.setDisplayName("test");
+        config.setEnabled(true);
+        config.getProperties().put("klucz1", "wartosc1");
+        config.getProperties().put("klucz2", "wartosc2");
+        JAXB.marshal(config, new File("testy.xml"));*/
     }
 
     @Override
@@ -132,7 +139,7 @@ public class GameHostManager implements IServerManager
     
     public IMapTemplateManager getMapTemplateManager()
     {
-        return mapTemplateManager;
+        return this.mapTemplateManager;
     }
 
     public LocalArenaManager getArenaManager()
@@ -164,21 +171,13 @@ public class GameHostManager implements IServerManager
 
     private void loadConfig()
     {
-        try
-        {
-            JAXBContext ctx = JAXBContext.newInstance(MiniGameConfig.class);
-            miniGameConfig = (MiniGameConfig) ctx.createUnmarshaller().unmarshal(apiCore.getFile("minigame.xml"));
-            validateConfig();
-        }
-        catch ( JAXBException e )
-        {
-            SneakyThrow.sneaky(e);
-        }
+        this.miniGameConfig = JAXB.unmarshal(this.apiCore.getFile("minigame.xml"), MiniGameConfig.class);
+        this.validateConfig();
     }
     
     private void validateConfig()
     {
-        if (miniGameConfig.getMapVoting().getEnabled() && miniGameConfig.getLobbyMode() != LobbyMode.EXTERNAL)
+        if (this.miniGameConfig.getMapVoting().getEnabled() && this.miniGameConfig.getLobbyMode() != LobbyMode.EXTERNAL)
         {
             throw new ConfigurationException("Map voting can be only enabled when lobby mode is EXTERNAL.");
         }
@@ -188,7 +187,7 @@ public class GameHostManager implements IServerManager
     {
         try
         {
-            mapTemplateManager.setTemplatesDirectory(new File(miniGameConfig.getMapsDirecotry()));
+            mapTemplateManager.setTemplatesDirectory(new File(miniGameConfig.getMapsDirectory()));
             mapTemplateManager.loadTemplatesFromDirectory();
         }
         catch ( Throwable e )

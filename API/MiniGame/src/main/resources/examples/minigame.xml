@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<minigame>
+    <lobbyMode>INTEGRATED</lobbyMode>
+	<mapVoting>
+	    <enabled>false</enabled>
+		<numberOfMaps>3</numberOfMaps>
+	</mapVoting>
+	<isDynamic>false</isDynamic>
+	<slots>12</slots>
+	<vipSlots>2</vipSlots>
+	<toStart>1</toStart>
+	<mapsDirectory>game_worlds</mapsDirectory>
+</minigame>

@@ -40,7 +40,7 @@ public class CheckpointListener implements Listener
     {
         for (final Checkpoint checkpoint : elytraRaceArena.getArenaConfig().getCheckpoints())
         {
-            final Cuboid region = checkpoint.getArea().toCuboid(arena.getWorld().getWorld());
+            final Cuboid region = checkpoint.getArea().toCuboid(arena.getWorld().getCurrentWorld());
             final ITrackedRegion tracked = arena.getRegionManager().create(region);
             tracked.whenEnter(player -> this.playerEnterCheckpoint(player, checkpoint));
         }
