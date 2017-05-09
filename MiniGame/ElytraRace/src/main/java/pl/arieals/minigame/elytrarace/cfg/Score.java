@@ -2,6 +2,7 @@ package pl.arieals.minigame.elytrarace.cfg;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -14,17 +15,35 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Score
 {
+    // TODO
+    // gdy gracz przeleci przez achieveGroup to wyszarzamy
+    // pozostale ringi i niepozwalamy mu na zdobywanie ich
+
     @XmlElement(required = true)
     private XmlCuboid area;
+    @XmlAttribute()
+    private String    achieveGroup;
     private String    scoreGroup;
 
     public Score()
     {
     }
 
+    public Score(final XmlCuboid area, final String achieveGroup, final String scoreGroup)
+    {
+        this.area = area;
+        this.achieveGroup = achieveGroup;
+        this.scoreGroup = scoreGroup;
+    }
+
     public XmlCuboid getArea()
     {
         return this.area;
+    }
+
+    public String getAchieveGroup()
+    {
+        return this.achieveGroup;
     }
 
     public String getScoreGroup()
