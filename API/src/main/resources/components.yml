@@ -1,3 +1,8 @@
+# Dołączenie pozostałych plików
+include:
+  - components_bukkit.yml
+
+# Lista komponentów dla platformy STANDALONE
 components:
   - name: API.UpdateClient
     enabled: false #replaced by docker-powered deployment
@@ -95,19 +100,3 @@ components:
       - API.Database.Redis.Observer
       - API.MinecraftNetwork.PermissionsManager
       - API.MinecraftNetwork.UsernameCache
-
-  - name: API.BukkitPlayers
-    enabled: true
-    mainClass: "pl.north93.zgame.api.bukkit.player.impl.BukkitPlayerManagerImpl"
-    description: "Useful utils to manage players using Bukkit APIs"
-    dependencies:
-      - API.MinecraftNetwork.NetworkManager
-    platforms:
-      - BUKKIT
-  - name: API.TickableManager
-    enabled: true
-    mainClass: "pl.north93.zgame.api.bukkit.tick.impl.TickableManagerImpl"
-    description: "An simple api to calls methods on every server tick"
-    dependencies: []
-    platforms:
-      - BUKKIT

@@ -1,0 +1,26 @@
+# Lista komponentów dla platformy BUKKIT
+components:
+  - name: API.BukkitPlayers
+    enabled: true
+    mainClass: "pl.north93.zgame.api.bukkit.player.impl.BukkitPlayerManagerImpl"
+    description: "Useful utils to manage players using Bukkit APIs"
+    dependencies:
+      - API.MinecraftNetwork.NetworkManager
+    platforms:
+      - BUKKIT
+
+  - name: API.TickableManager
+    enabled: true
+    mainClass: "pl.north93.zgame.api.bukkit.tick.impl.TickableManagerImpl"
+    description: "An simple api to calls methods on every server tick"
+    dependencies: []
+    platforms:
+      - BUKKIT
+
+  - name: API.Scoreboard
+    enabled: true
+    mainClass: "pl.north93.zgame.api.bukkit.scoreboard.impl.ScoreboardManagerImpl"
+    description: "An simple api to calls methods on every server tick"
+    dependencies: []
+    platforms:
+      - BUKKIT
