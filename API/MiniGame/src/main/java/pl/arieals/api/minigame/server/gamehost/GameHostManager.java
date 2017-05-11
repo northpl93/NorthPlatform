@@ -189,6 +189,7 @@ public class GameHostManager implements IServerManager
         {
             mapTemplateManager.setTemplatesDirectory(new File(miniGameConfig.getMapsDirectory()));
             mapTemplateManager.loadTemplatesFromDirectory();
+            apiCore.getLogger().info("Loaded " + mapTemplateManager.getAllTemplates().size() + " maps templates!");
         }
         catch ( Throwable e )
         {
