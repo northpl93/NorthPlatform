@@ -15,4 +15,6 @@ public interface IScoreboardContext
     void set(Map<String, Object> data);
 
     <T> T get(String key);
+
+    void update(); // force update
 }

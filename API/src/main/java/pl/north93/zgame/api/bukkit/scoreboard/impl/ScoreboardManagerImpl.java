@@ -1,7 +1,14 @@
 package pl.north93.zgame.api.bukkit.scoreboard.impl;
 
+import java.util.List;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
@@ -22,14 +29,26 @@ public class ScoreboardManagerImpl extends Component implements IScoreboardManag
     }
 
     @Override
-    public IScoreboardContext getContext(final Player player)
+    public ScoreboardContextImpl getContext(final Player player)
     {
-        return (IScoreboardContext) player.getMetadata("scoreboard_context").get(0).value();
+        final List<MetadataValue> metadata = player.getMetadata("scoreboard_context");
+        if (metadata.isEmpty())
+        {
+            return null;
+        }
+        return (ScoreboardContextImpl) metadata.get(0).value();
     }
 
     private void setContext(final Player player, final ScoreboardContextImpl scoreboardContext)
     {
+        final ScoreboardContextImpl old = this.getContext(player);
+        if (old != null)
+        {
+            old.cleanup();
+        }
         player.setMetadata("scoreboard_context", new FixedMetadataValue(this.apiCore.getPluginMain(), scoreboardContext));
+        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+        scoreboardContext.update();
     }
 
     @Override
@@ -40,5 +59,11 @@ public class ScoreboardManagerImpl extends Component implements IScoreboardManag
     @Override
     protected void disableComponent()
     {
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }
