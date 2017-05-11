@@ -70,3 +70,4 @@ find.xml
 gradle.run.settings.xml
 mavenVersion.xml
 ui.lnf.xml
+dependency-reduced-pom.xml
