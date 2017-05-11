@@ -15,6 +15,8 @@ import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
+import pl.arieals.api.minigame.server.gamehost.lobby.LobbyScoreboard;
+import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.InjectMessages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -25,6 +27,8 @@ public class PlayerListener implements Listener
     private MessagesBox    messages;
     @InjectComponent("MiniGameApi.Server")
     private MiniGameServer server;
+    @InjectComponent("API.Scoreboard")
+    private IScoreboardManager scoreboardManager;
 
     @EventHandler
     public void onPlayerJoin(final PlayerJoinEvent event)
@@ -44,6 +48,8 @@ public class PlayerListener implements Listener
         {
             player.sendMessage("Dolaczyles do GameHosta, ale nie znaleziono powiazanej areny"); // debug msg
         }
+
+        this.scoreboardManager.setLayout(player, new LobbyScoreboard()); // TODO temporary. Move it.
     }
 
     @EventHandler

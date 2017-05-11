@@ -2,21 +2,24 @@ package pl.arieals.api.minigame.server.gamehost.listener;
 
 import static org.diorite.utils.math.DioriteRandomUtils.getRandom;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.arena.MapVote;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
+import pl.arieals.api.minigame.server.gamehost.lobby.StartCountdown;
 import pl.arieals.api.minigame.server.gamehost.utils.Timer;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
@@ -53,6 +56,10 @@ public class GameStartScheduler implements Listener
         }
 
         timer.start(GAME_START_COOLDOWN, TimeUnit.SECONDS, false);
+        new StartCountdown(arena).runTaskTimer(
+                this.apiCore.getPluginMain(),
+                0,
+                20);
         Bukkit.getScheduler().runTaskLater(
                 this.apiCore.getPluginMain(),
                 () -> this.startArena(arena),
