@@ -1,9 +1,13 @@
 package pl.arieals.api.minigame.server.gamehost.world.impl;
 
-import java.text.MessageFormat;
+import static java.text.MessageFormat.format;
+
+
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
+
+import com.google.common.collect.Queues;
 
 import org.bukkit.World;
 
@@ -13,15 +17,12 @@ import org.apache.commons.lang3.tuple.Pair;
 
 class ChunkLoadingTask implements Runnable
 {
-    private final Queue<QueuedLoadingTask> tasks = new ArrayDeque<>();
+    private final Queue<QueuedLoadingTask> tasks = Queues.synchronizedQueue(new ArrayDeque<>());
     private QueuedLoadingTask activeTask;
 
     public void queueTask(final World world, final List<Pair<Integer, Integer>> chunks, final LoadingProgressImpl progress)
     {
-        synchronized (this.tasks)
-        {
-            this.tasks.add(new QueuedLoadingTask(world, new ArrayDeque<>(chunks), progress));
-        }
+        this.tasks.add(new QueuedLoadingTask(world, new ArrayDeque<>(chunks), progress, System.currentTimeMillis()));
     }
 
     @Override
@@ -42,7 +43,8 @@ class ChunkLoadingTask implements Runnable
             final Pair<Integer, Integer> chunk = chunks.poll();
             if (chunk == null)
             {
-                System.out.println(MessageFormat.format("Completed loading of world {0}", task.world.getName()));
+                final long totalTime = System.currentTimeMillis() - task.startTime;
+                System.out.println(format("Completed loading of world {0} in {1}ms", task.world.getName(), totalTime));
 
                 this.activeTask = null;
                 task.progress.setCompleted();
@@ -56,10 +58,7 @@ class ChunkLoadingTask implements Runnable
     {
         if (this.activeTask == null || this.activeTask.chunks.isEmpty()) // no active tasks or completed task
         {
-            synchronized (this.tasks)
-            {
-                return this.activeTask = this.tasks.poll();
-            }
+            return this.activeTask = this.tasks.poll();
         }
         return this.activeTask;
     }
@@ -69,12 +68,14 @@ class ChunkLoadingTask implements Runnable
         private final World world;
         private final Queue<Pair<Integer, Integer>> chunks;
         private final LoadingProgressImpl progress;
+        private final long startTime;
 
-        private QueuedLoadingTask(final World world, final Queue<Pair<Integer, Integer>> chunks, final LoadingProgressImpl progress)
+        private QueuedLoadingTask(final World world, final Queue<Pair<Integer, Integer>> chunks, final LoadingProgressImpl progress, final long startTime)
         {
             this.world = world;
             this.chunks = chunks;
             this.progress = progress;
+            this.startTime = startTime;
         }
 
         @Override

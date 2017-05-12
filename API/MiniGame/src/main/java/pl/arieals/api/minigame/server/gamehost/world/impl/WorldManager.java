@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
@@ -75,35 +74,11 @@ public class WorldManager implements IWorldManager
     public ILoadingProgress regenWorld(final String name, final File source, final IRegion gameRegion)
     {
         final World world = Bukkit.getWorld(name);
-        if (world == null)
+        if (world != null && ! this.unloadWorld(name))
         {
-            return this.loadWorld(name, source, gameRegion);
+            throw new RuntimeException("Can't regenerate world " + name + ". Failed to unload previous world.");
         }
-
-        this.worlds.remove(world); // stop chunk unloading/loading tracking
-        for (final Chunk chunk : world.getLoadedChunks())
-        {
-            chunk.unload(false);
-        }
-        this.worlds.add(world); // start chunk unloading/loading tracking
-
-        final File mapDir = new File(Bukkit.getWorldContainer(), name);
-        try
-        {
-            FileUtils.cleanDirectory(new File(mapDir, "region"));
-            FileUtils.copyDirectory(source, mapDir);
-        }
-        catch (final IOException e)
-        {
-            throw new RuntimeException("Failed to remove/copy files for map " + name, e);
-        }
-
-        final LoadingProgressImpl progress = new LoadingProgressImpl(world);
-        this.chunkLoadingTask.queueTask(world, gameRegion.getChunksCoordinates(), progress);
-
-        this.logger.info(MessageFormat.format("Queued loading chunks of {0}", name));
-
-        return progress;
+        return this.loadWorld(name, source, gameRegion);
     }
 
     @Override
