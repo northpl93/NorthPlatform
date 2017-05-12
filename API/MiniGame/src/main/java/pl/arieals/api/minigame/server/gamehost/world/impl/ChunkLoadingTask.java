@@ -50,7 +50,7 @@ class ChunkLoadingTask implements Runnable
                 task.progress.setCompleted();
                 break;
             }
-            task.world.loadChunk(chunk.getKey(), chunk.getValue());
+            task.world.loadChunk(chunk.getKey(), chunk.getValue(), false);
         } while (System.currentTimeMillis() < stopTime);
     }
 
