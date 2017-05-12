@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
+import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
@@ -37,7 +38,7 @@ public class LocalArenaManager
         this.arenas.add(localArena);
         arenaManager.setArena(arenaData);
 
-        localArena.setGamePhase(GamePhase.LOBBY); // invoke game phase changed events
+        GamePhaseEventFactory.getInstance().callEvent(localArena); // invoke GameInitEvent
 
         final String msg = "Added new local arena! Arena ID:{0}, Server ID:{1}, Game Phase:{2}";
         this.logger.info(format(msg, arenaId, serverId, arenaData.getGamePhase()));
