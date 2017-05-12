@@ -2,8 +2,10 @@ package pl.arieals.api.minigame.server.gamehost.arena;
 
 import static pl.arieals.api.minigame.shared.api.utils.InvalidGamePhaseException.checkGamePhase;
 
-
+import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -59,6 +61,11 @@ public class LocalArena implements IArena
 
     public void setGamePhase(final GamePhase gamePhase)
     {
+        if ( this.getGamePhase() == gamePhase )
+        {
+            return; // nic nie rób, jeżeli nie następuje zmiana fazy gry
+        }
+        
         this.data.setGamePhase(gamePhase);
         this.arenaManager.setArena(this.data);
         this.gameHostManager.publishArenaEvent(new ArenaDataChanged(this.data.getId(), gamePhase, this.data.getPlayers().size()));
@@ -106,6 +113,7 @@ public class LocalArena implements IArena
         this.arenaData = arenaData;
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends IArenaData> T getArenaData()
     {
         //noinspection unchecked

@@ -11,11 +11,16 @@ public class ArenaEndListener implements Listener
     @EventHandler
     public void stopEmptyArena(final PlayerQuitArenaEvent event)
     {
+        if ( event.getArena().getGamePhase() == GamePhase.LOBBY )
+        {
+            return;
+        }
+        
         if (event.getArena().getPlayersManager().getPlayers().size() > 0)
         {
             return;
         }
 
-        event.getArena().setGamePhase(GamePhase.POST_GAME);
+        event.getArena().setGamePhase(GamePhase.LOBBY);
     }
 }
