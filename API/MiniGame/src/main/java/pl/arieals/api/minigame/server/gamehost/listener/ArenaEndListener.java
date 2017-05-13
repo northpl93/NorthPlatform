@@ -11,8 +11,13 @@ public class ArenaEndListener implements Listener
     @EventHandler
     public void stopEmptyArena(final PlayerQuitArenaEvent event)
     {
-        if ( event.getArena().getGamePhase() == GamePhase.LOBBY )
+        if ( event.getArena().getGamePhase() != GamePhase.STARTED )
         {
+            // 1. jesli arena jest w lobby to nie ma sensu nic robic
+            //    gra po prostu nie wystartuje (zbyt mala ilosc graczy do startu)
+            // 2. jesli arena jest w post_game to tez nie trzeba nic robic
+            //    bo minigra powinna obsluzyc powrot areny do LOBBY po
+            //    jakims czasie
             return;
         }
         
