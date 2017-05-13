@@ -9,9 +9,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.utils.Countdown;
+import pl.north93.zgame.api.bukkit.utils.SimpleCountdown;
 
-public class StartCountdown extends Countdown
+public class StartCountdown extends SimpleCountdown
 {
     private final LocalArena arena;
 

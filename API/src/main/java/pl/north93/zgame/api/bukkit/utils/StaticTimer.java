@@ -1,8 +1,8 @@
-package pl.arieals.api.minigame.server.gamehost.utils;
+package pl.north93.zgame.api.bukkit.utils;
 
 import java.util.concurrent.TimeUnit;
 
-public class Timer
+public class StaticTimer
 {
     private static final int ONE_TICK_MILIS = 50;
     private long    startTime;
@@ -10,7 +10,7 @@ public class Timer
     private boolean isGrowing;
     private long    stoppedTime;
 
-    public Timer()
+    public StaticTimer()
     {
         this.stoppedTime = -1; // mark timer as stopped
     }
@@ -96,7 +96,7 @@ public class Timer
     /**
      * Oblicza czas w tickach do momentu podanego w argumencie.
      *
-     * @see Timer#calcTimeTo(long, TimeUnit, TimeUnit)
+     * @see StaticTimer#calcTimeTo(long, TimeUnit, TimeUnit)
      */
     public long calcTimeToInTicks(final long target, final TimeUnit targetUnit)
     {

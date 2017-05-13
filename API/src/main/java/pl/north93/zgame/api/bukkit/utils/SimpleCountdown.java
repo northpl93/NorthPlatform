@@ -1,17 +1,27 @@
-package pl.arieals.api.minigame.server.gamehost.utils;
+package pl.north93.zgame.api.bukkit.utils;
 
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public abstract class Countdown extends BukkitRunnable
+import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.global.API;
+
+public abstract class SimpleCountdown extends BukkitRunnable
 {
+    private static final JavaPlugin PLUGIN = ((BukkitApiCore) API.getApiCore()).getPluginMain();
     private int time;
 
-    public Countdown(final int time)
+    public SimpleCountdown(final int time)
     {
         this.time = time;
+    }
+
+    public final void start(final int every)
+    {
+        this.runTaskTimer(PLUGIN, 0, every);
     }
 
     @Override

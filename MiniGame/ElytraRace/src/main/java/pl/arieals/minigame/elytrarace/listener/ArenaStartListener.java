@@ -41,7 +41,7 @@ public class ArenaStartListener implements Listener
         this.setupPlayers(event.getArena(), arenaData);
 
         // task odpalający arenę po 10 sekundach
-        new StartCountdown(10, event.getArena()).runTaskTimer(this.apiCore.getPluginMain(), 20, 20);
+        new StartCountdown(10, event.getArena()).start(20);
     }
 
     private ArenaConfig loadConfig(final LocalArena arena)

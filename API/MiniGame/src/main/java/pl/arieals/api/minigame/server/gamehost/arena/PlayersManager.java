@@ -102,7 +102,11 @@ public class PlayersManager
         remoteArena.getPlayers().remove(player.getUniqueId());
         this.manager.setArena(remoteArena);
 
-        this.arena.getMapVote().removeVote(player);
+        final MapVote mapVote = this.arena.getMapVote();
+        if (mapVote != null)
+        {
+            mapVote.removeVote(player);
+        }
 
         Bukkit.getPluginManager().callEvent(new PlayerQuitArenaEvent(player, this.arena));
     }

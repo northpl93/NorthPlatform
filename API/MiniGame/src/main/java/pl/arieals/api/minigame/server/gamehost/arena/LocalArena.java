@@ -1,19 +1,17 @@
 package pl.arieals.api.minigame.server.gamehost.arena;
 
-import static pl.arieals.api.minigame.shared.api.utils.InvalidGamePhaseException.checkGamePhase;
-
 import java.util.List;
 import java.util.UUID;
+
+import com.google.common.base.Preconditions;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.google.common.base.Preconditions;
-
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
 import pl.arieals.api.minigame.server.gamehost.region.IRegionManager;
-import pl.arieals.api.minigame.server.gamehost.utils.Timer;
+import pl.north93.zgame.api.bukkit.utils.StaticTimer;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
@@ -22,14 +20,14 @@ import pl.arieals.api.minigame.shared.impl.ArenaManager;
 
 public class LocalArena implements IArena
 {
-    private final GameHostManager gameHostManager;
-    private final ArenaManager    arenaManager;
-    private final RemoteArena     data;
-    private final ArenaWorld      world;
-    private final PlayersManager  playersManager;
-    private final Timer           timer;
-    private       IArenaData      arenaData;
-    private       MapVote         mapVote;
+    private final GameHostManager     gameHostManager;
+    private final ArenaManager        arenaManager;
+    private final RemoteArena         data;
+    private final ArenaWorld          world;
+    private final PlayersManager      playersManager;
+    private final StaticTimer         timer;
+    private       IArenaData          arenaData;
+    private       MapVote             mapVote;
     private final ArenaStartScheduler startScheduler;
 
     public LocalArena(final GameHostManager gameHostManager, final ArenaManager arenaManager, final RemoteArena data)
@@ -39,7 +37,7 @@ public class LocalArena implements IArena
         this.data = data;
         this.world = new ArenaWorld(gameHostManager, this);
         this.playersManager = new PlayersManager(gameHostManager, arenaManager, this);
-        this.timer = new Timer();
+        this.timer = new StaticTimer();
         this.startScheduler = new ArenaStartScheduler(this);
     }
 
@@ -81,7 +79,7 @@ public class LocalArena implements IArena
         return this.data.getPlayers();
     }
 
-    public Timer getTimer()
+    public StaticTimer getTimer()
     {
         return this.timer;
     }
@@ -138,8 +136,7 @@ public class LocalArena implements IArena
 
     public void prepareNewCycle()
     {
-        checkGamePhase(this.getGamePhase(), GamePhase.POST_GAME); // arena moze byc zresetowana tylko po grze
-
+        Preconditions.checkState(this.getGamePhase() == GamePhase.POST_GAME); // arena moze byc zresetowana tylko po grze
         this.setGamePhase(GamePhase.LOBBY);
     }
 
