@@ -7,7 +7,7 @@ public class GoldHunterComponent extends Component
     @Override
     protected void enableComponent()
     {
-
+        
     }
 
     @Override

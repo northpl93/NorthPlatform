@@ -1,5 +1,7 @@
 package pl.arieals.api.minigame.server.gamehost.arena;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,18 +10,42 @@ import java.util.WeakHashMap;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bukkit.entity.Player;
+import org.diorite.utils.math.DioriteRandomUtils;
 
+import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class MapVote
 {
+    private final GameHostManager gameHostManager;
+    private final LocalArena arena;
+    
     private final Map<Player, MapTemplate> votes = new WeakHashMap<>();
     private MapTemplate[] options;
+    
+    @InjectMessages("MiniGameApi")
+    private MessagesBox    messages;
 
-    public void startVote(final List<MapTemplate> options)
+    public MapVote(GameHostManager gameHostManager, LocalArena arena)
     {
-        this.votes.clear();
-        this.options = options.toArray(new MapTemplate[options.size()]);
+        this.gameHostManager = gameHostManager;
+        this.arena = arena;
+        
+        prepareOptions();
+    }
+    
+    private void prepareOptions()
+    {
+        int numberOfOptions = this.gameHostManager.getMiniGameConfig().getMapVoting().getNumberOfMaps();
+        Collection<MapTemplate> allTemlates = this.gameHostManager.getMapTemplateManager().getAllTemplates();
+        
+        List<MapTemplate> results = new ArrayList<>(numberOfOptions);
+        DioriteRandomUtils.getRandom(allTemlates, results, 3, true);
+        
+        MapTemplate[] options = new MapTemplate[numberOfOptions];
+        this.options = results.toArray(options);
     }
 
     public void removeVote(final Player player)
@@ -53,11 +79,13 @@ public class MapVote
     public Map<MapTemplate, Integer> getResults()
     {
         final Map<MapTemplate, Integer> results = new HashMap<>();
-        for (final Map.Entry<Player, MapTemplate> entry : this.votes.entrySet())
+        
+        for ( MapTemplate option : options )
         {
-            final MapTemplate map = entry.getValue();
-            results.put(map, results.getOrDefault(map, 0) + 1);
+            int count = votes.values().stream().filter(o -> o == option).mapToInt(o -> 1).sum();
+            results.put(option, count);
         }
+        
         return results;
     }
 
@@ -73,7 +101,27 @@ public class MapVote
                 winnerPoints = entry.getValue();
             }
         }
+        
         return winner;
+    }
+    
+    public void printStartVoteInfo()
+    {;
+        arena.getPlayersManager().broadcast(this.messages, "vote.started");
+
+        for (int i = 0; i < this.getOptions().length; i++)
+        {
+            final MapTemplate gameMap = this.getOptions()[i];
+            arena.getPlayersManager().broadcast(this.messages, "vote.option_line", i, gameMap.getDisplayName());
+        }
+    }
+
+    public void completeVoting()
+    {
+        final MapTemplate winner = this.getWinner();
+        arena.getPlayersManager().broadcast(this.messages, "vote.winner", winner.getDisplayName());
+
+        arena.getWorld().setActiveMap(winner);
     }
 
     @Override

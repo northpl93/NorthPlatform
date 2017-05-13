@@ -2,14 +2,13 @@ package pl.arieals.api.minigame.server.gamehost.arena;
 
 import static pl.arieals.api.minigame.shared.api.utils.InvalidGamePhaseException.checkGamePhase;
 
-import java.util.HashMap;
-import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import com.google.common.base.Preconditions;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
@@ -30,6 +29,8 @@ public class LocalArena implements IArena
     private final PlayersManager  playersManager;
     private final Timer           timer;
     private       IArenaData      arenaData;
+    private       MapVote         mapVote;
+    private final ArenaStartScheduler startScheduler;
 
     public LocalArena(final GameHostManager gameHostManager, final ArenaManager arenaManager, final RemoteArena data)
     {
@@ -39,6 +40,7 @@ public class LocalArena implements IArena
         this.world = new ArenaWorld(gameHostManager, this);
         this.playersManager = new PlayersManager(gameHostManager, arenaManager, this);
         this.timer = new Timer();
+        this.startScheduler = new ArenaStartScheduler(this);
     }
 
     @Override
@@ -89,6 +91,20 @@ public class LocalArena implements IArena
         return this.world;
     }
 
+    public ArenaStartScheduler getStartScheduler()
+    {
+        return startScheduler;
+    }
+    
+    public MapVote getMapVote()
+    {
+        return mapVote;
+    }
+    
+    void setMapVote(MapVote mapVote)
+    {
+        this.mapVote = mapVote;
+    }
     /**
      * Metoda pomocnicza, zwraca Region Managera z GameHostManagera
      * @return {@code IRegionManager}
@@ -127,6 +143,27 @@ public class LocalArena implements IArena
         this.setGamePhase(GamePhase.LOBBY);
     }
 
+    public void startVoting()
+    {
+        Preconditions.checkState(getGamePhase() == GamePhase.LOBBY);
+        
+        if ( this.gameHostManager.getMiniGameConfig().getMapVoting().getEnabled() )
+        {
+            this.mapVote = new MapVote(gameHostManager, this);
+            mapVote.printStartVoteInfo();
+        }
+    }
+    
+    void startArenaGame()
+    {
+        if ( mapVote != null )
+        {
+            mapVote.completeVoting();
+        }
+        
+        setGamePhase(GamePhase.STARTED);
+    }
+    
     @Override
     public String toString()
     {

@@ -36,7 +36,7 @@ public class MapVoteCmd extends NorthCommand
 
         final LocalArena arena = arenaOptional.get();
 
-        if (arena.getWorld().getMapVote().vote(player, args.asInt(0)))
+        if (arena.getMapVote().vote(player, args.asInt(0)))
         {
             sender.sendMessage("&cUdalo sie zaglosowac!");
         }

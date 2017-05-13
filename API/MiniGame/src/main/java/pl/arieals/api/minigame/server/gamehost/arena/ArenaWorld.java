@@ -28,7 +28,6 @@ public class ArenaWorld
 {
     private final GameHostManager gameHostManager;
     private final LocalArena      arena;
-    private final MapVote         mapVote; // logika systemu glosowania
     private MapTemplate           currentMapTemplate;
     private World                 currentWorld;
     private ILoadingProgress      progress;
@@ -36,13 +35,7 @@ public class ArenaWorld
     public ArenaWorld(final GameHostManager gameHostManager, final LocalArena arena)
     {
         this.gameHostManager = gameHostManager;
-        this.arena = arena;
-        this.mapVote = new MapVote();
-    }
-
-    public MapVote getMapVote()
-    {
-        return this.mapVote;
+        this.arena = arena;;
     }
 
     public File getWorldDirectory()

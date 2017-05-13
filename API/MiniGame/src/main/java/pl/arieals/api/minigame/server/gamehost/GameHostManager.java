@@ -17,7 +17,6 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.arieals.api.minigame.server.gamehost.listener.ArenaEndListener;
 import pl.arieals.api.minigame.server.gamehost.listener.ArenaInitListener;
 import pl.arieals.api.minigame.server.gamehost.listener.GameStartListener;
-import pl.arieals.api.minigame.server.gamehost.listener.GameStartScheduler;
 import pl.arieals.api.minigame.server.gamehost.listener.PlayerListener;
 import pl.arieals.api.minigame.server.gamehost.lobby.ILobbyManager;
 import pl.arieals.api.minigame.server.gamehost.lobby.external.ExternalLobby;
@@ -72,7 +71,6 @@ public class GameHostManager implements IServerManager
         this.apiCore.registerEvents(
                 new PlayerListener(), // dodaje graczy do aren
                 new ArenaInitListener(), // inicjuje arene po dodaniu/zakonczeniu poprzedniej gry
-                new GameStartScheduler(), // planuje rozpoczecie gry gdy arena jest w lobby
                 new GameStartListener(), // inicjuje gre po starcie
                 new ArenaEndListener()); // pilnuje by arena nie stala pusta i wykonuje czynnosci koncowe
         
