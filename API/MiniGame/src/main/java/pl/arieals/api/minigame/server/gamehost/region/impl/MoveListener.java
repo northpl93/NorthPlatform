@@ -35,8 +35,8 @@ class MoveListener implements Listener
         final Set<TrackedRegionImpl> regionsFrom = (Set) this.manager.getRegions(from);
         final Set<TrackedRegionImpl> regionsTo = (Set) this.manager.getRegions(to);
 
-        final Sets.SetView<TrackedRegionImpl> entered = Sets.difference(regionsFrom, regionsTo);
-        final Sets.SetView<TrackedRegionImpl> exited = Sets.difference(regionsTo, regionsFrom);
+        final Sets.SetView<TrackedRegionImpl> entered = Sets.difference(regionsTo, regionsFrom);
+        final Sets.SetView<TrackedRegionImpl> exited = Sets.difference(regionsFrom, regionsTo);
 
         for (final TrackedRegionImpl enteredRegion : entered)
         {
