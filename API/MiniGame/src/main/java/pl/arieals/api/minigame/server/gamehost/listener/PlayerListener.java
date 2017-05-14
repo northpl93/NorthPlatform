@@ -42,7 +42,11 @@ public class PlayerListener implements Listener
         }
         else
         {
+            // TODO: Jeżeli gracz dołączy do gamehosta, ale nie będzie miał powiązanej areny
+            //       to należy go ukryć przed wszystkimi graczami którzy są na arenach.
+            //       Potrzebne jest to aby moderatorzy mogli nadzorować graczy bez wpływu na rozgrywkę
             player.sendMessage("Dolaczyles do GameHosta, ale nie znaleziono powiazanej areny"); // debug msg
+            return;
         }
     }
 
