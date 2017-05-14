@@ -11,10 +11,11 @@ import pl.arieals.minigame.elytrarace.cfg.ScoreGroup;
 
 public class ElytraScorePlayer // uzywane w SCORE_MODE
 {
-    private int         points;
-    private ScoreGroup  latestScoreGroup;
-    private int         combo;
-    private List<Score> reachedScores = new ArrayList<>();
+    private int          points;
+    private ScoreGroup   latestScoreGroup;
+    private int          combo;
+    private List<Score>  reachedScores        = new ArrayList<>();
+    private List<String> reachedAchieveGroups = new ArrayList<>();
 
     public int getPoints()
     {
@@ -34,6 +35,11 @@ public class ElytraScorePlayer // uzywane w SCORE_MODE
     public List<Score> getReachedScores()
     {
         return this.reachedScores;
+    }
+
+    public List<String> getReachedAchieveGroups()
+    {
+        return this.reachedAchieveGroups;
     }
 
     public Integer getCombo()

@@ -8,8 +8,7 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftFallingSand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -59,9 +58,9 @@ public class ScoreListener implements Listener
                     continue; // air
                 }
 
-                // pobierze typ bloku z podanej lokalizacji
-                final Entity fallingBlock = world.spawnEntity(block.getLocation(), EntityType.FALLING_BLOCK);
+                final CraftFallingSand fallingBlock = (CraftFallingSand) world.spawnFallingBlock(block.getLocation(), block.getType(), block.getData());
                 fallingBlock.setGravity(false);
+                fallingBlock.getHandle().fromMobSpawner = true; // disable ticking
 
                 block.setType(Material.AIR);
             }
@@ -76,6 +75,19 @@ public class ScoreListener implements Listener
         final ScoreGroup scoreGroup = arena.getScoreGroup(score.getScoreGroup());
         final ElytraScorePlayer scorePlayer = getPlayerData(player, ElytraScorePlayer.class);
 
+        // gracz moze zaliczyc tylko jeden score z danej achieveGroup
+        final String achieveGroup = score.getAchieveGroup();
+        if (achieveGroup != null)
+        {
+            final List<String> reachedAchieveGroups = scorePlayer.getReachedAchieveGroups();
+            if (reachedAchieveGroups.contains(achieveGroup))
+            {
+                return;
+            }
+            reachedAchieveGroups.add(achieveGroup);
+        }
+
+        // gracz moze zaliczyc kazdy score jeden raz
         final List<Score> reachedScores = scorePlayer.getReachedScores();
         if (reachedScores.contains(score))
         {
