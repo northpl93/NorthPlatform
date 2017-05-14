@@ -1,56 +1,147 @@
 package pl.north93.zgame.api.bukkit.utils;
 
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitTask;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import com.google.common.base.Preconditions;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.API;
 
-public abstract class SimpleCountdown extends BukkitRunnable
+public class SimpleCountdown
 {
-    private static final JavaPlugin PLUGIN = ((BukkitApiCore) API.getApiCore()).getPluginMain();
-    private int time;
+    private final BukkitApiCore apiCore = (BukkitApiCore) API.getApiCore();
 
-    public SimpleCountdown(final int time)
+    private int ticksLeft;
+    private int ticks;
+    
+    private Runnable endCallback;
+    private Runnable tickCallback;
+    
+    private BukkitTask task;
+    
+    public SimpleCountdown(int ticks)
     {
-        this.time = time;
+        this.ticksLeft = ticks;
+        this.ticks = ticks;
     }
-
-    public final void start(final int every)
+    
+    public SimpleCountdown reset()
     {
-        this.runTaskTimer(PLUGIN, 0, every);
+        return reset(ticks);
     }
-
-    @Override
-    public final void run()
+    
+    public SimpleCountdown reset(int ticks)
     {
-        if (this.time == 0)
+        boolean started = this.isStarted();
+        
+        if ( started )
         {
-            this.end();
-            this.cancel();
+            this.stop();
         }
-        else
+        
+        this.ticksLeft = ticks;
+        this.ticks = ticks;
+        
+        if ( started )
         {
-            this.loop(this.time);
-            this.time--;
+            this.start();
         }
+        
+        return this;
     }
-
-    public final int getTime()
+    
+    public SimpleCountdown start()
     {
-        return this.time;
+        Preconditions.checkState(this.task == null, "Countdown already started");
+        Preconditions.checkState(this.ticksLeft > 0, "Ticks left is 0");
+        
+        this.task = Bukkit.getScheduler().runTaskTimer(this.apiCore.getPluginMain(), () -> this.tick(), 1, 1);
+        return this;
     }
-
-    protected abstract void loop(int time);
-
-    protected abstract void end();
-
-    @Override
-    public String toString()
+    
+    public SimpleCountdown stop()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("time", this.time).toString();
+        Preconditions.checkState(this.task != null, "Countdown already stopped");
+        
+        this.task.cancel();
+        this.task = null;
+        return this;
+    }
+    
+    public SimpleCountdown tickCallback(Runnable tickCallback)
+    {
+        this.tickCallback = tickCallback;
+        return this;
+    }
+    
+    public SimpleCountdown endCallback(Runnable endCallback)
+    {
+        this.endCallback = endCallback;
+        return this;
+    }
+    
+    public boolean isStarted()
+    {
+        return this.task != null;
+    }
+    
+    public double getProgress()
+    {
+        return (double) this.ticksLeft / this.ticks;
+    }
+    
+    public int getTicks()
+    {
+        return this.ticks;
+    }
+    
+    public int getTicksLeft()
+    {
+        return this.ticksLeft;
+    }
+    
+    public int getSeconds()
+    {
+        return (int) Math.ceil(this.ticks);
+    }
+    
+    public int getSecondsLeft()
+    {
+        return (int) Math.ceil(this.ticksLeft);
+    }
+    
+    public String getTimeLeftString()
+    {
+        int sec = this.getSecondsLeft() % 60;
+        int min = this.getSecondsLeft() / 60;
+        
+        StringBuilder result = new StringBuilder();
+        result.append(min).append(':');
+        if ( sec < 10 )
+        {
+            result.append('0');
+        }
+        
+        result.append(sec);
+        return result.toString();
+    }
+    
+    private void tick()
+    {
+        if ( this.ticksLeft > 0 )
+        {
+            this.ticksLeft--;
+            if ( this.tickCallback != null )
+            {
+                this.tickCallback.run();
+            }
+            
+            if ( this.ticksLeft == 0 && this.endCallback != null )
+            {   
+                this.stop();
+                this.endCallback.run();
+            }
+        }
     }
 }

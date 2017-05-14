@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.shared.api.GamePhase;
-import pl.north93.zgame.api.bukkit.utils.Countdown;
+import pl.north93.zgame.api.bukkit.utils.SimpleCountdown;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 
 public class ArenaStartScheduler
@@ -16,14 +16,14 @@ public class ArenaStartScheduler
     
     private int gameStartCooldown = 600;
     
-    private Countdown startCountdown;
+    private SimpleCountdown startCountdown;
     
     public ArenaStartScheduler(LocalArena arena)
     {
         this.arena = arena;
     }
     
-    public Countdown getStartCountdown()
+    public SimpleCountdown getStartCountdown()
     {
         return this.startCountdown;
     }
@@ -50,7 +50,7 @@ public class ArenaStartScheduler
         Preconditions.checkState(! this.isStartScheduled(), "Game start is already scheduled");
         
         this.arena.startVoting();
-        this.startCountdown = new Countdown(this.gameStartCooldown).endCallback(this.arena::startArenaGame).start();
+        this.startCountdown = new SimpleCountdown(this.gameStartCooldown).endCallback(this.arena::startArenaGame).start();
     }
     
     public void cancelStarting()
