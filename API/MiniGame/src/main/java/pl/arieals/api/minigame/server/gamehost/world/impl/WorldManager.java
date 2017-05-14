@@ -6,14 +6,21 @@ import static java.text.MessageFormat.format;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
+import org.bukkit.craftbukkit.v1_10_R1.CraftChunk;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldInitEvent;
@@ -30,13 +37,14 @@ import pl.north93.zgame.api.bukkit.Main;
 import pl.north93.zgame.api.bukkit.utils.region.IRegion;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
 
-public class WorldManager implements IWorldManager
+public class WorldManager implements IWorldManager, Listener
 {
     private BukkitApiCore    apiCore;
     private Logger           logger;
     private NmsWorldHelper   worldHelper;
     private ChunkLoadingTask chunkLoadingTask;
     private final List<World> worlds = new ArrayList<>();
+    private final Set<Chunk> chunksToUnload = Collections.newSetFromMap(new WeakHashMap<>());
 
     @PostInject
     public void postInject()
@@ -45,6 +53,7 @@ public class WorldManager implements IWorldManager
         this.chunkLoadingTask = new ChunkLoadingTask();
         final Main plugin = this.apiCore.getPluginMain();
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this.chunkLoadingTask, 5, 5);
+        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @Override
@@ -118,6 +127,8 @@ public class WorldManager implements IWorldManager
     {
         if (event.isNewChunk() && this.worlds.contains(event.getWorld()))
         {
+            ((CraftChunk) event.getChunk()).getHandle().mustSave = false; // this can override flag in Chunk#unload(boolean)
+            chunksToUnload.add(event.getChunk());
             event.getChunk().unload(false); // do not generate new chunks in managed worlds
         }
     }
@@ -126,7 +137,7 @@ public class WorldManager implements IWorldManager
     public void onChunkUnload(final ChunkUnloadEvent event)
     {
         event.setSaveChunk(false); // do not save anything on gamehost // TODO TEMPORARY
-        if (this.worlds.contains(event.getWorld()))
+        if (this.worlds.contains(event.getWorld()) && !chunksToUnload.remove(event.getChunk()))
         {
             event.setCancelled(true); // do not unload chunks from managed worlds
         }
