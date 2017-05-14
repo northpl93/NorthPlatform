@@ -2,13 +2,15 @@ package pl.arieals.api.minigame.server.gamehost.listener;
 
 import java.util.ArrayList;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import org.diorite.utils.math.DioriteRandomUtils;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
@@ -46,7 +48,8 @@ public class ArenaInitListener implements Listener
             Bukkit.broadcastMessage("Now kick all players to server lobby");
             // todo kick all players to server lobby
         }
-        
+
+        // usuwamy wszystkie regiony pozostale po poprzedniej grze
         hostManager.getRegionManager().getRegions(arena.getWorld().getCurrentWorld()).forEach(ITrackedRegion::unTrack);
 
         if (hostManager.getMiniGameConfig().getLobbyMode() == LobbyMode.INTEGRATED)

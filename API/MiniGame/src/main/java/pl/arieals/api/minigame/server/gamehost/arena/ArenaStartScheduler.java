@@ -40,13 +40,14 @@ public class ArenaStartScheduler
     
     public boolean isStartScheduled()
     {
-        return this.startCountdown != null;
+        // isStarted zwroci takze false jesli task sie zakonczyl
+        return this.startCountdown != null && this.startCountdown.isStarted();
     }
     
     public void scheduleStart()
     {
         Preconditions.checkState(this.arena.getGamePhase() == GamePhase.LOBBY, "Invalid arena game phase");
-        Preconditions.checkState(this.startCountdown == null, "Game start is alredy scheduled");
+        Preconditions.checkState(! this.isStartScheduled(), "Game start is already scheduled");
         
         this.arena.startVoting();
         this.startCountdown = new Countdown(this.gameStartCooldown).endCallback(this.arena::startArenaGame).start();

@@ -1,13 +1,23 @@
 package pl.arieals.api.minigame.server.gamehost.listener;
 
+import static java.text.MessageFormat.format;
+
+
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.north93.zgame.api.bukkit.BukkitApiCore;
 
 public class ArenaEndListener implements Listener
 {
+    private BukkitApiCore apiCore;
+
     @EventHandler
     public void stopEmptyArena(final PlayerQuitArenaEvent event)
     {
@@ -26,6 +36,16 @@ public class ArenaEndListener implements Listener
             return;
         }
 
-        event.getArena().setGamePhase(GamePhase.LOBBY);
+        this.apiCore.getLogger().info(format("Arena {0} jest pusta, przelaczanie do LOBBY...", event.getArena().getId()));
+        Bukkit.getScheduler().runTaskLater(this.apiCore.getPluginMain(), () ->
+        {
+            event.getArena().setGamePhase(GamePhase.LOBBY);
+        }, 1);
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }
