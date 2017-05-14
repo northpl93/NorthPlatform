@@ -116,12 +116,10 @@ public class MapVote
         }
     }
 
-    public void completeVoting()
+    public void printVotingResult()
     {
         final MapTemplate winner = this.getWinner();
         arena.getPlayersManager().broadcast(this.messages, "vote.winner", winner.getDisplayName());
-
-        arena.getWorld().setActiveMap(winner);
     }
 
     @Override

@@ -16,6 +16,7 @@ import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.server.shared.api.PlayerJoinInfo;
+import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.MiniGameConfig;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
@@ -52,7 +53,8 @@ public class PlayersManager
         // todo implement spectating?
         synchronized (this) // handle only one join request at same time
         {
-            if (this.gameHostManager.getMiniGameConfig().getLobbyMode() == LobbyMode.INTEGRATED && ! this.arena.getWorld().isReady())
+            //if (this.gameHostManager.getMiniGameConfig().getLobbyMode() == LobbyMode.INTEGRATED && ! this.arena.getWorld().isReady())
+            if ( this.arena.getGamePhase() == GamePhase.RESTARTING )
             {
                 // jesli gra uzywa lobby zintegrowanego z mapa to mapa musi byc gotowa/zaladowana
                 return false;

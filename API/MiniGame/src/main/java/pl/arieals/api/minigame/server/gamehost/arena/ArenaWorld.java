@@ -21,6 +21,8 @@ import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
 import pl.arieals.api.minigame.shared.api.GameMapConfig;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
+import pl.north93.zgame.api.bukkit.utils.ISyncCallback;
+import pl.north93.zgame.api.bukkit.utils.SimpleSyncCallback;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
 
@@ -98,8 +100,9 @@ public class ArenaWorld
      * Wczytuje wybraną mapę dla tej areny.
      * Może być wykonane tylko gdy arena znajduje się w GamePhase LOBBY.
      * @param template Mapa do załadowania.
+     * @return callback który informuje o pomyślnym załadowaniu mapy.
      */
-    public void setActiveMap(final MapTemplate template)
+    public ISyncCallback setActiveMap(final MapTemplate template)
     {
         checkGamePhase(this.arena.getGamePhase(), GamePhase.LOBBY);
         final IWorldManager worldManager = this.gameHostManager.getWorldManager();
@@ -114,10 +117,15 @@ public class ArenaWorld
         this.progress = progress;
         this.currentWorld = progress.getWorld();
 
+        SimpleSyncCallback callback = new SimpleSyncCallback();
+        
         progress.onComplete(() ->
         {
             Bukkit.getPluginManager().callEvent(new MapSwitchedEvent(this.arena));
+            callback.callComplete();
         });
+        
+        return callback;
     }
 
     public boolean delete()

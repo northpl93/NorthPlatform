@@ -16,8 +16,9 @@ import org.diorite.utils.math.DioriteRandomUtils;
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameInitEvent;
+import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameRestartEvent;
 import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
+import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
@@ -28,12 +29,12 @@ public class ArenaInitListener implements Listener
     private MiniGameServer server;
 
     @EventHandler(priority = EventPriority.LOW) // before normal
-    public void onArenaInit(final GameInitEvent event)
+    public void onArenaInit(final GameRestartEvent event)
     {
         final GameHostManager hostManager = this.server.getServerManager();
         final LocalArena arena = event.getArena();
 
-        if (hostManager.getMiniGameConfig().isDynamic())
+        if (arena.isDynamic())
         {
             // przenosimy wszystkich graczy do lobby areny jesli gra jest dynamiczna
             for (final Player player : arena.getPlayersManager().getPlayers())
@@ -52,13 +53,13 @@ public class ArenaInitListener implements Listener
         // usuwamy wszystkie regiony pozostale po poprzedniej grze
         hostManager.getRegionManager().getRegions(arena.getWorld().getCurrentWorld()).forEach(ITrackedRegion::unTrack);
 
-        if (hostManager.getMiniGameConfig().getLobbyMode() == LobbyMode.INTEGRATED)
+        if (arena.getLobbyMode() == LobbyMode.INTEGRATED)
         {
             // jesli lobby jest zintegrowane z mapa to glosowanie na pewno jest wylaczone
             // i musimy juz teraz zaladowac nowa losowa mape.
             // Gracze nie beda mogli wejsc dopoki mapa sie nie zaladuje.
             final MapTemplate map = DioriteRandomUtils.getRandom(hostManager.getMapTemplateManager().getAllTemplates());
-            arena.getWorld().setActiveMap(map);
+            arena.getWorld().setActiveMap(map).onComplete(() -> arena.setGamePhase(GamePhase.LOBBY));
         }
     }
     
