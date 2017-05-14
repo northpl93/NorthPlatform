@@ -103,12 +103,12 @@ public class SimpleCountdown
     
     public int getSeconds()
     {
-        return (int) Math.ceil(this.ticks);
+        return (int) Math.ceil(this.ticks / 20.0);
     }
     
     public int getSecondsLeft()
     {
-        return (int) Math.ceil(this.ticksLeft);
+        return (int) Math.ceil(this.ticksLeft / 20.0);
     }
     
     public String getTimeLeftString()
