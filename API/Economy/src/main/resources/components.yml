@@ -9,14 +9,16 @@ components:
     platforms:
       - BUNGEE
       - BUKKIT
+
   - name: API.Economy.VaultConnector
-    enabled: true
+    enabled: false # powoduje bledy gdy nie ma zainstalowanego Vaulta. Na razie nie potrzebujemy vault.
     mainClass: "pl.north93.zgame.api.economy.impl.server.EconomyServerComponent"
     description: "Connects economy API with Vault."
     dependencies:
       - API.Economy
     platforms:
       - BUKKIT
+
   - name: API.Economy.Controller
     enabled: true
     mainClass: "pl.north93.zgame.api.economy.impl.netcontroller.EconomyControllerComponent"
