@@ -7,19 +7,17 @@ import com.google.common.base.Preconditions;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.bukkit.Bukkit;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameRestartEvent;
 import pl.arieals.api.minigame.server.gamehost.region.IRegionManager;
-import pl.north93.zgame.api.bukkit.utils.StaticTimer;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDataChanged;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
+import pl.north93.zgame.api.bukkit.utils.StaticTimer;
 
 public class LocalArena implements IArena
 {
@@ -69,7 +67,7 @@ public class LocalArena implements IArena
             return; // nic nie rób, jeżeli nie następuje zmiana fazy gry
         }
         
-        if ( gamePhase == GamePhase.RESTARTING && getLobbyMode() == LobbyMode.EXTERNAL )
+        /*if ( gamePhase == GamePhase.INITIALISING && getLobbyMode() == LobbyMode.EXTERNAL )
         {
             // W zewnetrzym lobby nie ma potrzeby restartowania mapy, ponieważ lobby jest zawsze załadowane
             // Manualnie wywołujemy event, aby nie rozgłaszać sieci zmiany stanu gry,
@@ -77,7 +75,7 @@ public class LocalArena implements IArena
             Bukkit.getPluginManager().callEvent(new GameRestartEvent(this));
             setGamePhase(GamePhase.LOBBY);
             return;
-        }
+        }*/
         
         this.data.setGamePhase(gamePhase);
         this.arenaManager.setArena(this.data);
@@ -160,7 +158,7 @@ public class LocalArena implements IArena
     public void prepareNewCycle()
     {
         Preconditions.checkState(this.getGamePhase() == GamePhase.POST_GAME); // arena moze byc zresetowana tylko po grze
-        this.setGamePhase(GamePhase.RESTARTING);
+        this.setGamePhase(GamePhase.INITIALISING);
     }
 
     public void startVoting()

@@ -20,6 +20,7 @@ import pl.arieals.api.minigame.server.gamehost.world.ILoadingProgress;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
 import pl.arieals.api.minigame.shared.api.GameMapConfig;
 import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
 import pl.north93.zgame.api.bukkit.utils.ISyncCallback;
 import pl.north93.zgame.api.bukkit.utils.SimpleSyncCallback;
@@ -104,7 +105,15 @@ public class ArenaWorld
      */
     public ISyncCallback setActiveMap(final MapTemplate template)
     {
-        checkGamePhase(this.arena.getGamePhase(), GamePhase.LOBBY);
+        if (this.arena.getLobbyMode() == LobbyMode.EXTERNAL)
+        {
+            checkGamePhase(this.arena.getGamePhase(), GamePhase.LOBBY);
+        }
+        else
+        {
+            checkGamePhase(this.arena.getGamePhase(), GamePhase.INITIALISING);
+        }
+
         final IWorldManager worldManager = this.gameHostManager.getWorldManager();
         
         final XmlCuboid arenaRegion = template.getMapConfig().getArenaRegion();

@@ -16,7 +16,7 @@ import org.diorite.utils.math.DioriteRandomUtils;
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameRestartEvent;
+import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameInitEvent;
 import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
@@ -29,7 +29,7 @@ public class ArenaInitListener implements Listener
     private MiniGameServer server;
 
     @EventHandler(priority = EventPriority.LOW) // before normal
-    public void onArenaInit(final GameRestartEvent event)
+    public void onArenaInit(final GameInitEvent event)
     {
         final GameHostManager hostManager = this.server.getServerManager();
         final LocalArena arena = event.getArena();
@@ -57,9 +57,20 @@ public class ArenaInitListener implements Listener
         {
             // jesli lobby jest zintegrowane z mapa to glosowanie na pewno jest wylaczone
             // i musimy juz teraz zaladowac nowa losowa mape.
-            // Gracze nie beda mogli wejsc dopoki mapa sie nie zaladuje.
+            // Po zakonczeniu arena bedzie przelaczona w LOBBY.
             final MapTemplate map = DioriteRandomUtils.getRandom(hostManager.getMapTemplateManager().getAllTemplates());
             arena.getWorld().setActiveMap(map).onComplete(() -> arena.setGamePhase(GamePhase.LOBBY));
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void postArenaInit(final GameInitEvent event)
+    {
+        final LocalArena arena = event.getArena();
+        if (arena.getLobbyMode() == LobbyMode.EXTERNAL)
+        {
+            // na arenie z lobby zewnętrznym możemy bez czekania przełączyć arenę w tryb LOBBY
+            arena.setGamePhase(GamePhase.LOBBY);
         }
     }
     

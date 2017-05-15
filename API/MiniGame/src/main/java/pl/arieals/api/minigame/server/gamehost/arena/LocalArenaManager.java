@@ -33,7 +33,7 @@ public class LocalArenaManager
         final UUID arenaId = UUID.randomUUID();
         final UUID serverId = this.apiCore.getServer().get().getUuid();
 
-        final RemoteArena arenaData = new RemoteArena(arenaId, serverId, GamePhase.LOBBY, new ArrayList<>());
+        final RemoteArena arenaData = new RemoteArena(arenaId, serverId, GamePhase.INITIALISING, new ArrayList<>());
         final LocalArena localArena = new LocalArena(this.miniGameServer.getServerManager(), arenaManager, arenaData);
         this.arenas.add(localArena);
         arenaManager.setArena(arenaData);

@@ -18,7 +18,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.diorite.utils.math.DioriteRandomUtils;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartedEvent;
+import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
@@ -29,7 +29,7 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 public class CheckpointListener implements Listener
 {
     @EventHandler(priority = EventPriority.HIGH) // post ArenaStartListener
-    public void startGame(final GameStartedEvent event)
+    public void startGame(final GameStartEvent event)
     {
         final ElytraRaceArena arenaData = event.getArena().getArenaData();
 

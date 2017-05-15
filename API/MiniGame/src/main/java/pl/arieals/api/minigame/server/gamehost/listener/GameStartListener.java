@@ -7,8 +7,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameInitEvent;
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartedEvent;
+import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
+import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.shared.api.GamePhase;
@@ -16,13 +16,13 @@ import pl.arieals.api.minigame.shared.api.GamePhase;
 public class GameStartListener implements Listener
 {
     @EventHandler(priority = EventPriority.LOW) // before normal
-    public void onGameStart(final GameStartedEvent event)
+    public void onGameStart(final GameStartEvent event)
     {
         event.getArena().getTimer().start(0, TimeUnit.MILLISECONDS, true);
     }
     
     @EventHandler
-    public void onGameInit(final GameInitEvent event)
+    public void onLobbyInit(final LobbyInitEvent event)
     {
         if ( event.getArena().getPlayersManager().isEnoughToStart() )
         {

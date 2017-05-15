@@ -22,12 +22,12 @@ public final class GamePhaseEventFactory
     {
         switch (arena.getGamePhase())
         {
-            case RESTARTING:
-                return new GameRestartEvent(arena);
-            case LOBBY:
+            case INITIALISING:
                 return new GameInitEvent(arena);
+            case LOBBY:
+                return new LobbyInitEvent(arena);
             case STARTED:
-                return new GameStartedEvent(arena);
+                return new GameStartEvent(arena);
             case POST_GAME:
                 return new GameEndEvent(arena);
             default:

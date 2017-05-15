@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.util.Vector;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartedEvent;
+import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.arieals.minigame.elytrarace.BoostType;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
@@ -17,7 +17,7 @@ import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 public class BoostListener implements Listener
 {
     @EventHandler(priority = EventPriority.HIGH) // post ArenaStartListener
-    public void startGame(final GameStartedEvent event)
+    public void startGame(final GameStartEvent event)
     {
         final LocalArena arena = event.getArena();
         final ElytraRaceArena arenaData = arena.getArenaData();
