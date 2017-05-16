@@ -63,7 +63,7 @@ public class ArenaInitListener implements Listener
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR) // wykonuje sie na samym koncu
     public void postArenaInit(final GameInitEvent event)
     {
         final LocalArena arena = event.getArena();

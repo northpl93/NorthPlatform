@@ -26,6 +26,8 @@ public class MiniGameConfig
     private Integer         toStart; // Ilosc graczy wymagana do rozpoczecia gry
     @XmlElement
     private String          mapsDirectory; // Katalog z konfiguracją map
+    @XmlElement
+    private Integer         arenas; // Liczba aren uruchamianych na serwerze hostującym minigrę
 
     public LobbyMode getLobbyMode()
     {
@@ -62,9 +64,14 @@ public class MiniGameConfig
         return this.mapsDirectory;
     }
 
+    public Integer getArenas()
+    {
+        return this.arenas;
+    }
+
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("lobbyMode", this.lobbyMode).append("mapVoting", this.mapVoting).append("isDynamic", this.isDynamic).append("slots", this.slots).append("vipSlots", this.vipSlots).append("toStart", this.toStart).append("mapsDirectory", this.mapsDirectory).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("lobbyMode", this.lobbyMode).append("mapVoting", this.mapVoting).append("isDynamic", this.isDynamic).append("slots", this.slots).append("vipSlots", this.vipSlots).append("toStart", this.toStart).append("mapsDirectory", this.mapsDirectory).append("arenas", this.arenas).toString();
     }
 }

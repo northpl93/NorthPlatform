@@ -78,7 +78,7 @@ public class GameHostManager implements IServerManager
         
         new MiniGameApi(); // inicjuje zmienne w klasie i statyczną INSTANCE
 
-        for (int i = 0; i < 4; i++) // create 4 arenas.
+        for (int i = 0; i < this.miniGameConfig.getArenas(); i++) // create arenas.
         {
             this.arenaManager.createArena();
         }
