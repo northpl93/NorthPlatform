@@ -6,6 +6,7 @@ import static java.text.MessageFormat.format;
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
+import java.util.logging.Logger;
 
 import com.google.common.collect.Queues;
 
@@ -19,10 +20,12 @@ class ChunkLoadingTask implements Runnable
 {
     private final Queue<QueuedLoadingTask> tasks = Queues.synchronizedQueue(new ArrayDeque<>());
     private QueuedLoadingTask activeTask;
+    private Logger            logger;
 
     public void queueTask(final World world, final List<Pair<Integer, Integer>> chunks, final LoadingProgressImpl progress)
     {
         this.tasks.add(new QueuedLoadingTask(world, new ArrayDeque<>(chunks), progress, System.currentTimeMillis()));
+        this.logger.info(format("Queued loading {0} chunks of {1}", chunks.size(), world.getName()));
     }
 
     @Override
@@ -44,7 +47,7 @@ class ChunkLoadingTask implements Runnable
             if (chunk == null)
             {
                 final long totalTime = System.currentTimeMillis() - task.startTime;
-                System.out.println(format("Completed loading of world {0} in {1}ms", task.world.getName(), totalTime));
+                this.logger.info(format("Completed loading of world {0} in {1}ms", task.world.getName(), totalTime));
 
                 this.activeTask = null;
                 task.progress.setCompleted();

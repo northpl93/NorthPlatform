@@ -6,7 +6,6 @@ import static java.text.MessageFormat.format;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -91,7 +90,6 @@ public class WorldManager implements IWorldManager, Listener
             }
             final List<Pair<Integer, Integer>> chunks = gameRegion.getChunksCoordinates();
             this.chunkLoadingTask.queueTask(world, chunks, progress);
-            this.logger.info(format("Queued loading {0} chunks of {1}", chunks.size(), name));
         });
 
         return progress;
