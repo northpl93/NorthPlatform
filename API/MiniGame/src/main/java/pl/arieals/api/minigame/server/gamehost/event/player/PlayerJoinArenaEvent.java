@@ -13,8 +13,10 @@ public class PlayerJoinArenaEvent extends PlayerEvent
 {
     private static final HandlerList handlers = new HandlerList();
     private final LocalArena arena;
+    
+    private String joinMessage;
 
-    public PlayerJoinArenaEvent(final Player who, final LocalArena arena)
+    public PlayerJoinArenaEvent(final Player who, final LocalArena arena, final String joinMessage)
     {
         super(who);
         this.arena = arena;
@@ -25,6 +27,16 @@ public class PlayerJoinArenaEvent extends PlayerEvent
         return this.arena;
     }
 
+    public String getJoinMessage()
+    {
+        return this.joinMessage;
+    }
+    
+    public void setJoinMessage(String joinMessage)
+    {
+        this.joinMessage = joinMessage;
+    }
+    
     @Override
     public HandlerList getHandlers()
     {

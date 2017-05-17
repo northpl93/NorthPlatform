@@ -68,18 +68,6 @@ public class PlayerListener implements Listener
         this.announceJoinLeft(playersManager, player, false);
     }
 
-    private void announceJoinLeft(final PlayersManager manager, final Player player, final boolean join)
-    {
-        final GameHostManager gameHostManager = this.server.getServerManager();
-
-        final String msgKey = join ? "player.joined_arena" : "player.quit_arena";
-        final String name = player.getName();
-        final int playersCount = manager.getPlayers().size();
-        final int maxPlayers = gameHostManager.getMiniGameConfig().getSlots();
-
-        manager.broadcast(this.messages, msgKey, name, playersCount, maxPlayers);
-    }
-
     @Override
     public String toString()
     {

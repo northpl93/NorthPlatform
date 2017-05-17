@@ -14,10 +14,13 @@ public class PlayerQuitArenaEvent extends PlayerEvent
     private static final HandlerList handlers = new HandlerList();
     private final LocalArena arena;
 
-    public PlayerQuitArenaEvent(final Player who, final LocalArena arena)
+    private String quitMessage;
+    
+    public PlayerQuitArenaEvent(final Player who, final LocalArena arena, final String quitMessage)
     {
         super(who);
         this.arena = arena;
+        this.quitMessage = quitMessage;
     }
 
     public LocalArena getArena()
@@ -25,6 +28,16 @@ public class PlayerQuitArenaEvent extends PlayerEvent
         return this.arena;
     }
 
+    public String getQuitMessage()
+    {
+        return this.quitMessage;
+    }
+    
+    public void setQuitMessage(String quitMessage)
+    {
+        this.quitMessage = quitMessage;
+    }
+    
     @Override
     public HandlerList getHandlers()
     {

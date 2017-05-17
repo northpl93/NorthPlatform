@@ -20,6 +20,7 @@ import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.MiniGameConfig;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
 /**
@@ -27,6 +28,9 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
  */
 public class PlayersManager
 {
+    @InjectMessages("MiniGameApi")
+    private MessagesBox    messages;
+    
     private final GameHostManager      gameHostManager;
     private final ArenaManager         manager;
     private final LocalArena           arena;
@@ -47,6 +51,11 @@ public class PlayersManager
         return this.players;
     }
 
+    public int getMaxPlayers()
+    {
+        return gameHostManager.getMiniGameConfig().getSlots();
+    }
+    
     public boolean tryAddPlayers(final List<PlayerJoinInfo> players, final boolean spectator)
     {
         // todo implement spectating?
@@ -91,7 +100,14 @@ public class PlayersManager
     {
         this.players.add(player);
         this.gameHostManager.getLobbyManager().addPlayer(this.arena, player);
-        Bukkit.getPluginManager().callEvent(new PlayerJoinArenaEvent(player, this.arena));
+        
+        PlayerJoinArenaEvent event = new PlayerJoinArenaEvent(player, this.arena, "player.joined_arena");
+        Bukkit.getPluginManager().callEvent(event);
+        
+        if ( event.getJoinMessage() != null )
+        {
+            announceJoinLeft(player, event.getJoinMessage());
+        }
     }
 
     public void playerDisconnected(final Player player)
@@ -109,7 +125,13 @@ public class PlayersManager
             mapVote.removeVote(player);
         }
 
-        Bukkit.getPluginManager().callEvent(new PlayerQuitArenaEvent(player, this.arena));
+        PlayerQuitArenaEvent event = new PlayerQuitArenaEvent(player, this.arena, "player.quit_arena");
+        Bukkit.getPluginManager().callEvent(event);
+        
+        if ( event.getQuitMessage() != null )
+        {
+            this.announceJoinLeft(player, event.getQuitMessage());
+        }
     }
 
     /**
@@ -137,5 +159,14 @@ public class PlayersManager
             final String message = messagesBox.getMessage(Locale.forLanguageTag(player.spigot().getLocale()), messageKey);
             player.sendMessage(MessageFormat.format(ChatColor.translateAlternateColorCodes('&', message), args));
         }
+    }
+    
+    private void announceJoinLeft(final Player player, String messageKey)
+    {
+        final String name = player.getName();
+        final int playersCount = getPlayers().size();
+        final int maxPlayers = gameHostManager.getMiniGameConfig().getSlots();
+
+        broadcast(this.messages, messageKey, name, playersCount, maxPlayers);
     }
 }
