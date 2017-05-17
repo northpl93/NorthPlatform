@@ -6,9 +6,9 @@ import static pl.north93.zgame.api.global.utils.CollectionUtils.findInCollection
 
 import pl.arieals.api.minigame.server.gamehost.arena.IArenaData;
 import pl.arieals.minigame.elytrarace.ElytraRaceMode;
-import pl.arieals.minigame.elytrarace.arena.meta.IFinishHandler;
-import pl.arieals.minigame.elytrarace.arena.meta.RaceMetaHandler;
-import pl.arieals.minigame.elytrarace.arena.meta.ScoreMetaHandler;
+import pl.arieals.minigame.elytrarace.arena.finish.IFinishHandler;
+import pl.arieals.minigame.elytrarace.arena.finish.RaceMetaHandler;
+import pl.arieals.minigame.elytrarace.arena.finish.ScoreMetaHandler;
 import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
 import pl.arieals.minigame.elytrarace.cfg.ScoreGroup;
 

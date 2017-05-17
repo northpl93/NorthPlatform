@@ -11,7 +11,7 @@ import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
 
-public class MetaListener implements Listener
+public class FinishLineListener implements Listener
 {
     @EventHandler(priority = EventPriority.HIGH) // post ArenaStartListener
     public void startGame(final GameStartEvent event)

@@ -1,4 +1,4 @@
-package pl.arieals.minigame.elytrarace.arena.meta;
+package pl.arieals.minigame.elytrarace.arena.finish;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 

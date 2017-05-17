@@ -9,7 +9,7 @@ import pl.arieals.minigame.elytrarace.listener.ArenaEndListener;
 import pl.arieals.minigame.elytrarace.listener.ArenaStartListener;
 import pl.arieals.minigame.elytrarace.listener.BoostListener;
 import pl.arieals.minigame.elytrarace.listener.CheckpointListener;
-import pl.arieals.minigame.elytrarace.listener.MetaListener;
+import pl.arieals.minigame.elytrarace.listener.FinishLineListener;
 import pl.arieals.minigame.elytrarace.listener.ModifyListener;
 import pl.arieals.minigame.elytrarace.listener.MoveListener;
 import pl.arieals.minigame.elytrarace.listener.ScoreListener;
@@ -37,7 +37,7 @@ public class ElytraRaceComponent extends Component
                 new CheckpointListener(),
                 new BoostListener(),
                 new ScoreListener(),
-                new MetaListener(),
+                new FinishLineListener(),
                 new ArenaEndListener());
 
         /*final XmlLocation location1 = new XmlLocation(1, 1, 1, 0, 0);
