@@ -1,33 +1,29 @@
 package pl.arieals.minigame.elytrarace.arena;
 
+import static pl.arieals.minigame.elytrarace.ElytraRaceMode.RACE_MODE;
 import static pl.north93.zgame.api.global.utils.CollectionUtils.findInCollection;
 
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import pl.arieals.api.minigame.server.gamehost.arena.IArenaData;
 import pl.arieals.minigame.elytrarace.ElytraRaceMode;
+import pl.arieals.minigame.elytrarace.arena.meta.IFinishHandler;
+import pl.arieals.minigame.elytrarace.arena.meta.RaceMetaHandler;
+import pl.arieals.minigame.elytrarace.arena.meta.ScoreMetaHandler;
 import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
 import pl.arieals.minigame.elytrarace.cfg.ScoreGroup;
 
 public class ElytraRaceArena implements IArenaData
 {
-    private final ArenaConfig        arenaConfig;
-    private final ElytraRaceMode     gameMode;
-    private       boolean            isStarted; // czy odliczanie do startu dobieglo konca
-    private       int                place; // uzywane w RACE_MODE do okreslania miejsca gracza
-    private       Map<UUID, Integer> points; // uzywane w SCORE_MODE do przyznawania nagrod nawet gdy gracz wyjdzie
+    private final ArenaConfig    arenaConfig;
+    private final ElytraRaceMode gameMode;
+    private final IFinishHandler metaHandler;
+    private       boolean        isStarted; // czy odliczanie do startu dobieglo konca
 
     public ElytraRaceArena(final ArenaConfig arenaConfig, final ElytraRaceMode gameMode)
     {
         this.arenaConfig = arenaConfig;
         this.gameMode = gameMode;
-        if (gameMode == ElytraRaceMode.SCORE_MODE)
-        {
-            this.points = new HashMap<>();
-        }
+        this.metaHandler = gameMode == RACE_MODE ? new RaceMetaHandler() : new ScoreMetaHandler();
     }
 
     public ArenaConfig getArenaConfig()
@@ -50,19 +46,9 @@ public class ElytraRaceArena implements IArenaData
         this.isStarted = started;
     }
 
-    public int getPlace()
+    public IFinishHandler getMetaHandler()
     {
-        return this.place;
-    }
-
-    public void setPlace(final int place)
-    {
-        this.place = place;
-    }
-
-    public Map<UUID, Integer> getPoints()
-    {
-        return this.points;
+        return this.metaHandler;
     }
 
     /**

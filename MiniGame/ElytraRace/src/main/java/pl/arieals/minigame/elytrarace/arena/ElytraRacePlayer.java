@@ -7,7 +7,18 @@ import pl.arieals.minigame.elytrarace.cfg.Checkpoint;
 
 public class ElytraRacePlayer
 {
-    private Checkpoint  checkpoint;
+    private boolean    finished;
+    private Checkpoint checkpoint;
+
+    public boolean isFinished()
+    {
+        return this.finished;
+    }
+
+    public void setFinished(final boolean finished)
+    {
+        this.finished = finished;
+    }
 
     public Checkpoint getCheckpoint()
     {
@@ -22,6 +33,6 @@ public class ElytraRacePlayer
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("checkpoint", this.checkpoint).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("finished", this.finished).append("checkpoint", this.checkpoint).toString();
     }
 }
