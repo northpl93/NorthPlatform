@@ -52,7 +52,7 @@ public class WorldManager implements IWorldManager, Listener
         this.worldHelper = new NmsWorldHelper();
         this.chunkLoadingTask = new ChunkLoadingTask();
         final Main plugin = this.apiCore.getPluginMain();
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this.chunkLoadingTask, 5, 5);
+        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this.chunkLoadingTask, 0, 5);
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 

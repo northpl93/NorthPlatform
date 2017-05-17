@@ -56,9 +56,9 @@ class ChunkLoadingTask implements Runnable
 
     private QueuedLoadingTask getCurrentTask()
     {
-        if (this.activeTask == null || this.activeTask.chunks.isEmpty()) // no active tasks or completed task
+        if (this.activeTask == null) // no active task
         {
-            return this.activeTask = this.tasks.poll();
+            this.activeTask = this.tasks.poll();
         }
         return this.activeTask;
     }
