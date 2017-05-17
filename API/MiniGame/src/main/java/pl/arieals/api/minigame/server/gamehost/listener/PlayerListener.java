@@ -38,7 +38,6 @@ public class PlayerListener implements Listener
         {
             final PlayersManager playersManager = arena.get().getPlayersManager();
             playersManager.playerConnected(player);
-            this.announceJoinLeft(playersManager, player, true);
         }
         else
         {
@@ -65,7 +64,6 @@ public class PlayerListener implements Listener
 
         final PlayersManager playersManager = arena.get().getPlayersManager();
         playersManager.playerDisconnected(player);
-        this.announceJoinLeft(playersManager, player, false);
     }
 
     @Override

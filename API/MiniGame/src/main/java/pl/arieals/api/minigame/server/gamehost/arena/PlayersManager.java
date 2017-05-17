@@ -106,7 +106,7 @@ public class PlayersManager
         
         if ( event.getJoinMessage() != null )
         {
-            announceJoinLeft(player, event.getJoinMessage());
+            this.announceJoinLeft(player, event.getJoinMessage());
         }
     }
 
@@ -161,12 +161,12 @@ public class PlayersManager
         }
     }
     
-    private void announceJoinLeft(final Player player, String messageKey)
+    private void announceJoinLeft(final Player player, final String messageKey)
     {
         final String name = player.getName();
-        final int playersCount = getPlayers().size();
-        final int maxPlayers = gameHostManager.getMiniGameConfig().getSlots();
+        final int playersCount = this.getPlayers().size();
+        final int maxPlayers = this.gameHostManager.getMiniGameConfig().getSlots();
 
-        broadcast(this.messages, messageKey, name, playersCount, maxPlayers);
+        this.broadcast(this.messages, messageKey, name, playersCount, maxPlayers);
     }
 }
