@@ -5,7 +5,7 @@ public enum GamePhase
     /**
      * Wykonywane po utworzeniu areny i po zakonczeniu.
      * W przypadku areny z zewnetrznym lobby automatycznie przejdzie do LOBBY.
-     * Przy zintegrowanym lobby bedzie czekal na wcztyanie mapy.
+     * Przy zintegrowanym lobby bedzie czekal na wczytanie mapy.
      */
     INITIALISING,
     /**

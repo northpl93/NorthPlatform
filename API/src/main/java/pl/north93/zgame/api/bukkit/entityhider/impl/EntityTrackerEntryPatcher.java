@@ -33,7 +33,7 @@ class EntityTrackerEntryPatcher
                     "        final java.util.List metadata = $1.getBukkitEntity().getMetadata(\"API.EntityHider/hiddenEntities\");\n" +
                     "        if (metadata.size() != 0)\n" +
                     "        {\n" +
-                    "            final java.util.List hiddenEntities = (java.util.List) ((org.bukkit.metadata.MetadataValue) metadata.get(0)).value();\n" +
+                    "            final java.util.Set hiddenEntities = (java.util.Set) ((org.bukkit.metadata.MetadataValue) metadata.get(0)).value();\n" +
                     "            if (hiddenEntities.contains(java.lang.Integer.valueOf($0.tracker.getId())))\n" +
                     "            {\n" +
                     "                return false;\n" +

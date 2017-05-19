@@ -51,6 +51,11 @@ public class GamePhaseCmd extends NorthCommand
         final LocalArena arena = getArena(player);
 
         final GamePhase gamePhase = args.asEnumValue(GamePhase.class, 0);
+        if (gamePhase == null)
+        {
+            sender.sendMessage("&cUwazaj co wpisujesz.");
+            return;
+        }
         arena.setGamePhase(gamePhase);
         arena.getPlayersManager().broadcast(this.messages, "arena.forced_gamephase", gamePhase);
     }
