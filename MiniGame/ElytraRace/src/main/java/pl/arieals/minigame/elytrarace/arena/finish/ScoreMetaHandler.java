@@ -30,7 +30,7 @@ public class ScoreMetaHandler implements IFinishHandler
 
         final ElytraScorePlayer scoreData = getPlayerData(player, ElytraScorePlayer.class);
 
-        player.sendMessage("Masz " + scoreData.getPoints() + " punktów!");
+        player.sendMessage("Dotarles na mete i masz " + scoreData.getPoints() + " punktów!");
         this.points.put(player.getUniqueId(), scoreData.getPoints());
 
         if (! IFinishHandler.checkFinished(arena))
@@ -39,5 +39,11 @@ public class ScoreMetaHandler implements IFinishHandler
         }
 
         arena.setGamePhase(GamePhase.POST_GAME);
+
+        player.sendMessage("= = = = = = = = = = = = =");
+        for (final Map.Entry<UUID, Integer> entry : this.points.entrySet())
+        {
+            player.sendMessage(entry.getKey() + " - " + entry.getValue() + "pkt");
+        }
     }
 }

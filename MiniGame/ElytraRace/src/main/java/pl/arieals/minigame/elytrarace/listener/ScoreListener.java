@@ -6,9 +6,7 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import java.util.List;
 
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftFallingSand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,6 +19,7 @@ import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.arieals.minigame.elytrarace.ElytraRaceMode;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
+import pl.arieals.minigame.elytrarace.arena.ScoreController;
 import pl.arieals.minigame.elytrarace.cfg.Score;
 import pl.arieals.minigame.elytrarace.cfg.ScoreGroup;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
@@ -50,23 +49,16 @@ public class ScoreListener implements Listener
             final IRegionManager regionManager = arena.getRegionManager();
             final Cuboid cuboid = score.getArea().toCuboid(arena.getWorld().getCurrentWorld());
 
-            final World world = cuboid.getWorld();
-            for (final Block block : cuboid)
-            {
-                if (block.isEmpty())
-                {
-                    continue; // air
-                }
-
-                final CraftFallingSand fallingBlock = (CraftFallingSand) world.spawnFallingBlock(block.getLocation(), block.getType(), block.getData());
-                fallingBlock.setGravity(false);
-                fallingBlock.getHandle().fromMobSpawner = true; // disable ticking
-
-                block.setType(Material.AIR);
-            }
-
             final ITrackedRegion region = regionManager.create(cuboid);
             region.whenEnter(player -> this.addPoints(player, arenaData, score));
+
+            final ScoreController scoreController = new ScoreController(arena, score);
+            arenaData.getScoreControllers().put(score, scoreController);
+            scoreController.setup();
+            for (final Player player : arena.getPlayersManager().getPlayers())
+            {
+                scoreController.makeNormal(player);
+            }
         }
     }
 
@@ -85,6 +77,21 @@ public class ScoreListener implements Listener
                 return;
             }
             reachedAchieveGroups.add(achieveGroup);
+        }
+
+        // wyszarzamy odpowiednie score na podstawie achievegroup
+        arena.getScoreController(score).makeGray(player);
+        if (score.getAchieveGroup() != null)
+        {
+            for (final Score scoreToCheck : arena.getArenaConfig().getScores())
+            {
+                if (scoreToCheck == score || ! score.getAchieveGroup().equals(scoreToCheck.getAchieveGroup()))
+                {
+                    continue;
+                }
+
+                arena.getScoreController(scoreToCheck).makeGray(player);
+            }
         }
 
         // gracz moze zaliczyc kazdy score jeden raz
