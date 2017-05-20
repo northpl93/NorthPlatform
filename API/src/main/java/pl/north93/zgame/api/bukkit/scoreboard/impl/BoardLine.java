@@ -25,8 +25,10 @@ class BoardLine
         this.text = "";
     }
 
-    void updateText(final String newText)
+    void updateText(String newText)
     {
+        newText = ChatColor.translateAlternateColorCodes('&', newText);
+        
         if (this.text.equals(newText))
         {
             return; // nie potrzebujemy aktualizacji
