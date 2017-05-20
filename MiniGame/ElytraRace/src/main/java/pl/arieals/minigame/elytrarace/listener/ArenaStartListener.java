@@ -19,18 +19,31 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.minigame.elytrarace.ElytraRaceMode;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.arieals.minigame.elytrarace.arena.StartCountdown;
 import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
+import pl.arieals.minigame.elytrarace.scoreboard.LobbyScoreboard;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
+import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 
 public class ArenaStartListener implements Listener
 {
+    @InjectComponent("API.Scoreboard")
+    private IScoreboardManager scoreboardManager;
     private BukkitApiCore apiCore;
+
+    @EventHandler
+    public void onPlayerJoin(final PlayerJoinArenaEvent event)
+    {
+        // ustawiamy graczowi scoreboard lobby gdy wejdzie
+        this.scoreboardManager.setLayout(event.getPlayer(), LobbyScoreboard.INSTANCE);
+    }
 
     @EventHandler
     public void startGame(final GameStartEvent event)

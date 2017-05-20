@@ -34,6 +34,12 @@ public class RaceMetaHandler implements IFinishHandler
     }
 
     @Override
+    public void gameEnd(final LocalArena arena)
+    {
+        // todo wywalic top3?
+    }
+
+    @Override
     public String toString()
     {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("place", this.place).toString();

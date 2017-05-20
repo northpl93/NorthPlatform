@@ -9,13 +9,20 @@ import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class ScoreMetaHandler implements IFinishHandler
 {
+    @InjectMessages("ElytraRace")
+    private MessagesBox messages;
     private final Map<UUID, Integer> points = new HashMap<>(); // uzywane w SCORE_MODE do przyznawania nagrod nawet gdy gracz wyjdzie
 
     @Override
@@ -39,11 +46,20 @@ public class ScoreMetaHandler implements IFinishHandler
         }
 
         arena.setGamePhase(GamePhase.POST_GAME);
+    }
 
-        player.sendMessage("= = = = = = = = = = = = =");
+    @Override
+    public void gameEnd(final LocalArena arena)
+    {
         for (final Map.Entry<UUID, Integer> entry : this.points.entrySet())
         {
-            player.sendMessage(entry.getKey() + " - " + entry.getValue() + "pkt");
+            arena.getPlayersManager().broadcast(this.messages, "score.finish.leaderboard_line", entry.getKey(), entry.getValue());
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("points", this.points).toString();
     }
 }
