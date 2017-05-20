@@ -69,16 +69,6 @@ public class LocalArena implements IArena
             return; // nic nie rób, jeżeli nie następuje zmiana fazy gry
         }
         
-        /*if ( gamePhase == GamePhase.INITIALISING && getLobbyMode() == LobbyMode.EXTERNAL )
-        {
-            // W zewnetrzym lobby nie ma potrzeby restartowania mapy, ponieważ lobby jest zawsze załadowane
-            // Manualnie wywołujemy event, aby nie rozgłaszać sieci zmiany stanu gry,
-            // Natychmiast po wywołaniu ewentu przełącza gre w stan LOBBY
-            Bukkit.getPluginManager().callEvent(new GameRestartEvent(this));
-            setGamePhase(GamePhase.LOBBY);
-            return;
-        }*/
-        
         this.data.setGamePhase(gamePhase);
         this.arenaManager.setArena(this.data);
         this.gameHostManager.publishArenaEvent(new ArenaDataChanged(this.data.getId(), gamePhase, this.data.getPlayers().size()));
@@ -104,18 +94,19 @@ public class LocalArena implements IArena
 
     public ArenaStartScheduler getStartScheduler()
     {
-        return startScheduler;
+        return this.startScheduler;
     }
     
     public MapVote getMapVote()
     {
-        return mapVote;
+        return this.mapVote;
     }
     
     void setMapVote(MapVote mapVote)
     {
         this.mapVote = mapVote;
     }
+
     /**
      * Metoda pomocnicza, zwraca Region Managera z GameHostManagera
      * @return {@code IRegionManager}
@@ -142,12 +133,12 @@ public class LocalArena implements IArena
 
     public LobbyMode getLobbyMode()
     {
-        return gameHostManager.getMiniGameConfig().getLobbyMode();
+        return this.gameHostManager.getMiniGameConfig().getLobbyMode();
     }
     
     public boolean isDynamic()
     {
-        return gameHostManager.getMiniGameConfig().isDynamic();
+        return this.gameHostManager.getMiniGameConfig().isDynamic();
     }
     
     public void teleportToLobby(Player player)
@@ -176,25 +167,25 @@ public class LocalArena implements IArena
 
     public void startVoting()
     {
-        Preconditions.checkState(getGamePhase() == GamePhase.LOBBY);
+        Preconditions.checkState(this.getGamePhase() == GamePhase.LOBBY);
         
         if ( this.gameHostManager.getMiniGameConfig().getMapVoting().getEnabled() )
         {
-            this.mapVote = new MapVote(gameHostManager, this);
-            mapVote.printStartVoteInfo();
+            this.mapVote = new MapVote(this.gameHostManager, this);
+            this.mapVote.printStartVoteInfo();
         }
     }
     
     void startArenaGame()
     {
-        if ( mapVote == null )
+        if (this.mapVote == null )
         {
-            setGamePhase(GamePhase.STARTED);
+            this.setGamePhase(GamePhase.STARTED);
             return;
         }
-        
-        mapVote.printVotingResult();
-        world.setActiveMap(mapVote.getWinner()).onComplete(() -> setGamePhase(GamePhase.STARTED));
+
+        this.mapVote.printVotingResult();
+        this.world.setActiveMap(this.mapVote.getWinner()).onComplete(() -> this.setGamePhase(GamePhase.STARTED));
     }
     
     @Override

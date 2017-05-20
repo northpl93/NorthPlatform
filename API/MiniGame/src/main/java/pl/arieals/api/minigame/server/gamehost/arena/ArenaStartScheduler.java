@@ -1,5 +1,7 @@
 package pl.arieals.api.minigame.server.gamehost.arena;
 
+import java.util.concurrent.TimeUnit;
+
 import com.google.common.base.Preconditions;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
@@ -51,6 +53,7 @@ public class ArenaStartScheduler
         
         this.arena.startVoting();
         this.startCountdown = new SimpleCountdown(this.gameStartCooldown).endCallback(this.arena::startArenaGame).start();
+        this.arena.getTimer().start(this.gameStartCooldown / 20, TimeUnit.SECONDS, false);
     }
     
     public void cancelStarting()
@@ -58,6 +61,7 @@ public class ArenaStartScheduler
         Preconditions.checkState(this.startCountdown != null, "Game start isn't scheduled now");
         this.startCountdown.stop();
         this.startCountdown = null;
+        this.arena.getTimer().stop();
     }
     
     
