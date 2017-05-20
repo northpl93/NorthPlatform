@@ -4,7 +4,11 @@ import java.util.Collection;
 
 public interface ITickableManager
 {
-    void addTickableObjects(Collection<? extends ITickable> objects);
+    void addTickableObject(ITickable tickable);
     
-    void removeTickableObjects(Collection<? extends ITickable> objects);
+    void removeTickableObject(ITickable tickable);
+    
+    void addTickableObjectsCollection(Collection<? extends ITickable> objects);
+    
+    void removeTickableObjectsCollection(Collection<? extends ITickable> objects);
 }

@@ -1,12 +1,16 @@
 package pl.north93.zgame.api.bukkit.tick.impl;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,6 +19,10 @@ import java.util.WeakHashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 import org.spigotmc.SneakyThrow;
+
+import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.MapMaker;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
@@ -25,7 +33,8 @@ import pl.north93.zgame.api.global.component.Component;
 public class TickableManagerImpl extends Component implements ITickableManager
 {
     private final Map<Class<? extends ITickable>, Method[]> registeredTickableClasses = new WeakHashMap<>();
-    private final Set<Collection<? extends ITickable>> tickableObjects = Collections.newSetFromMap(new IdentityHashMap<>());
+    private final Set<Collection<? extends ITickable>> tickableObjectsCollection = Collections.newSetFromMap(new IdentityHashMap<>());
+    private final Set<TickableWeakReference> tickableObjects = new HashSet<>();
     
     private BukkitApiCore apiCore;
     
@@ -92,25 +101,53 @@ public class TickableManagerImpl extends Component implements ITickableManager
     }
     
     @Override
-    public void addTickableObjects(Collection<? extends ITickable> objects)
+    public void addTickableObject(ITickable tickable)
     {
-        tickableObjects.add(objects);
+        Preconditions.checkArgument(tickable != null);
+        tickableObjects.add(new TickableWeakReference(tickable));
+    }
+    
+    @Override
+    public void removeTickableObject(ITickable tickableToRemove)
+    {
+        Preconditions.checkArgument(tickableToRemove != null);
+        tickableObjects.remove(new TickableWeakReference(tickableToRemove));
+    } 
+    
+    @Override
+    public void addTickableObjectsCollection(Collection<? extends ITickable> objects)
+    {
+        tickableObjectsCollection.add(objects);
     }
 
     @Override
-    public void removeTickableObjects(Collection<? extends ITickable> objects)
+    public void removeTickableObjectsCollection(Collection<? extends ITickable> objects)
     {
-        tickableObjects.remove(objects);
+        tickableObjectsCollection.remove(objects);
     }
     
     private void onTick()
     {
-        for ( Collection<? extends ITickable> objects : tickableObjects )
+        for ( Collection<? extends ITickable> objects : tickableObjectsCollection )
         {
             for ( ITickable tickable : objects )
             {
                 handle(tickable);
             }
+        }
+        
+        Iterator<TickableWeakReference> it = tickableObjects.iterator();
+        
+        while ( it.hasNext() )
+        {
+            ITickable tickable = it.next().get();
+            if ( tickable == null )
+            {
+                // tickable has been garbage collected
+                it.remove();
+            }
+            
+            handle(tickable);
         }
     }
 
