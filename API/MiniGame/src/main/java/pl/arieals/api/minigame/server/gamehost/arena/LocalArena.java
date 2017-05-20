@@ -3,10 +3,12 @@ package pl.arieals.api.minigame.server.gamehost.arena;
 import java.util.List;
 import java.util.UUID;
 
-import com.google.common.base.Preconditions;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
+import com.google.common.base.Preconditions;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
@@ -146,6 +148,17 @@ public class LocalArena implements IArena
     public boolean isDynamic()
     {
         return gameHostManager.getMiniGameConfig().isDynamic();
+    }
+    
+    public void teleportToLobby(Player player)
+    {
+        if ( getLobbyMode() == LobbyMode.EXTERNAL )
+        {
+            player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
+        }
+        
+        // TODO: rewrite lobby system
+        gameHostManager.getLobbyManager().addPlayer(this, player);
     }
     
     @SuppressWarnings("unchecked")
