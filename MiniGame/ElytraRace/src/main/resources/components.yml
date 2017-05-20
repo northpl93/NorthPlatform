@@ -4,6 +4,7 @@ components:
     mainClass: "pl.arieals.minigame.elytrarace.ElytraRaceComponent"
     description: "Elytra Race plugin."
     dependencies:
+      - API.EntityHider
       - MiniGameApi.Server
     platforms:
       - BUKKIT

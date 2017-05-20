@@ -65,7 +65,7 @@ public class ScoreController
                 this.grayedBlocks.add(fallingBlock.getBukkitEntity());
             }
 
-            block.setType(Material.AIR);
+            block.setType(Material.AIR, false);
         }
     }
 
