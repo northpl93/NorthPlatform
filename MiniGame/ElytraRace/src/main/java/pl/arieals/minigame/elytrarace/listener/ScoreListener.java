@@ -42,7 +42,6 @@ public class ScoreListener implements Listener
         }
     }
 
-    // https://timings.aikar.co/?id=a291f2e002c241598e115574a2ef2701
     private void setupScoreMode(final LocalArena arena, final ElytraRaceArena arenaData)
     {
         for (final Score score : arenaData.getArenaConfig().getScores())
@@ -130,7 +129,7 @@ public class ScoreListener implements Listener
                 {
                     continue; // air
                 }
-                block.setType(Material.AIR);
+                block.setType(Material.AIR, false);
             }
         }
     }

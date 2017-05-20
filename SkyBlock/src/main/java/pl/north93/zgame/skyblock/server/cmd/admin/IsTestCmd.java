@@ -43,6 +43,6 @@ public class IsTestCmd extends NorthCommand
         final Location right = corners.getRight();
         right.setY(5);
 
-        IslandLocation.blocksFromTwoPoints(first, right).forEach(block -> block.setType(Material.WOOL));
+        IslandLocation.blocksFromTwoPoints(first, right).forEach(block -> block.setType(Material.WOOL, false));
     }
 }

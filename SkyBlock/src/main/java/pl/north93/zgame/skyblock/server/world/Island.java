@@ -139,7 +139,7 @@ public class Island
         right.setY(1);
         ((BukkitApiCore) API.getApiCore()).sync(() ->
         {
-            IslandLocation.blocksFromTwoPoints(first, right).forEach(block -> block.setType(Material.WOOL));
+            IslandLocation.blocksFromTwoPoints(first, right).forEach(block -> block.setType(Material.WOOL, false));
         });
     }
 

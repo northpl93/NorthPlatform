@@ -6,7 +6,6 @@ import java.util.List;
 import net.minecraft.server.v1_10_R1.EntityFallingBlock;
 
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
 import org.bukkit.entity.Entity;
@@ -43,7 +42,7 @@ public class ScoreController
     {
         final Cuboid cuboid = this.score.getArea().toCuboid(this.arena.getWorld().getCurrentWorld());
 
-        final World world = cuboid.getWorld();
+        final CraftWorld world = (CraftWorld) cuboid.getWorld();
         for (final Block block : cuboid)
         {
             if (block.isEmpty())
@@ -53,14 +52,14 @@ public class ScoreController
 
             {
                 final EntityFallingBlock fallingBlock = NorthFallingBlock.create(block.getLocation(), block.getType(), block.getData());
-                ((CraftWorld) world).addEntity(fallingBlock, CreatureSpawnEvent.SpawnReason.CUSTOM);
+                world.addEntity(fallingBlock, CreatureSpawnEvent.SpawnReason.CUSTOM);
 
                 this.normalBlocks.add(fallingBlock.getBukkitEntity());
             }
 
             {
                 final EntityFallingBlock fallingBlock = NorthFallingBlock.create(block.getLocation(), Material.WOOL, (byte) 7);
-                ((CraftWorld) world).addEntity(fallingBlock, CreatureSpawnEvent.SpawnReason.CUSTOM);
+                world.addEntity(fallingBlock, CreatureSpawnEvent.SpawnReason.CUSTOM);
 
                 this.grayedBlocks.add(fallingBlock.getBukkitEntity());
             }
