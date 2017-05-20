@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -94,7 +95,7 @@ class ScoreboardContextImpl implements IScoreboardContext
             // rozmiar this.boardLines i content jest taki sam; dba o to checkLines
             final BoardLine boardLine = linesIterator.next();
 
-            boardLine.updateText(aContent);
+            boardLine.updateText(ChatColor.translateAlternateColorCodes('&', aContent));
         }
     }
 

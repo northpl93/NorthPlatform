@@ -7,4 +7,14 @@ public interface IScoreboardLayout
     String getTitle(IScoreboardContext context);
 
     List<String> getContent(IScoreboardContext context);
+
+    default int updateEvery()
+    {
+        return 0;
+    }
+
+    static ContentBuilder builder()
+    {
+        return new ContentBuilder();
+    }
 }

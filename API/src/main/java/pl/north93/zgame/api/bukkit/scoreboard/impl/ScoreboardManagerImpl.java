@@ -1,6 +1,8 @@
 package pl.north93.zgame.api.bukkit.scoreboard.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -18,13 +20,20 @@ import pl.north93.zgame.api.global.component.Component;
 
 public class ScoreboardManagerImpl extends Component implements IScoreboardManager
 {
+    private final Map<LayoutUpdateTask, IScoreboardLayout> layoutUpdaters;
     private BukkitApiCore apiCore;
+
+    public ScoreboardManagerImpl()
+    {
+        this.layoutUpdaters = new HashMap<>();
+    }
 
     @Override
     public IScoreboardContext setLayout(final Player player, final IScoreboardLayout layout)
     {
         final ScoreboardContextImpl context = new ScoreboardContextImpl(player, layout);
         this.setContext(player, context);
+        this.checkRunUpdater(layout);
         return context;
     }
 
@@ -49,6 +58,32 @@ public class ScoreboardManagerImpl extends Component implements IScoreboardManag
         player.setMetadata("scoreboard_context", new FixedMetadataValue(this.apiCore.getPluginMain(), scoreboardContext));
         player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         scoreboardContext.update();
+    }
+
+    private void checkRunUpdater(final IScoreboardLayout layout)
+    {
+        final int updateEvery = layout.updateEvery();
+        if (updateEvery <= 0)
+        {
+            return;
+        }
+
+        // uruchamiane taski sa synchroniczne, API jest przeznaczone
+        // do uzytko synchronicznego wiec nie musimy sie bac, ze
+        // cos sie spierdoli.
+        if (this.layoutUpdaters.values().contains(layout))
+        {
+            return;
+        }
+
+        final LayoutUpdateTask task = new LayoutUpdateTask(this, layout);
+        this.layoutUpdaters.put(task, layout);
+        task.runTaskTimer(this.apiCore.getPluginMain(), updateEvery, updateEvery);
+    }
+
+    /*default*/ void removeTask(final LayoutUpdateTask task)
+    {
+        this.layoutUpdaters.remove(task);
     }
 
     @Override
