@@ -5,6 +5,7 @@ import javax.xml.bind.JAXB;
 import java.io.File;
 
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_10_R1.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,6 +13,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.spigotmc.SneakyThrow;
 import org.spigotmc.SpigotConfig;
 
+import net.minecraft.server.v1_10_R1.DedicatedPlayerList;
+import net.minecraft.server.v1_10_R1.DedicatedServer;
+import net.minecraft.server.v1_10_R1.EntityHuman;
+import net.minecraft.server.v1_10_R1.IPlayerFileData;
+import net.minecraft.server.v1_10_R1.MinecraftServer;
+import net.minecraft.server.v1_10_R1.NBTTagCompound;
 import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.arieals.api.minigame.server.gamehost.listener.ArenaEndListener;
@@ -62,7 +69,8 @@ public class GameHostManager implements IServerManager
     public void start()
     {
         SpigotConfig.config.set("verbose", false); // disable map-loading spam
-
+        disableSavePlayerData();
+        
         this.loadConfig();
 
         this.rpcManager.addRpcImplementation(IGameHostRpc.class, new GameHostRpcImpl(this));
@@ -193,5 +201,34 @@ public class GameHostManager implements IServerManager
         {
             SneakyThrow.sneaky(e);
         }
+    }
+    
+    private void disableSavePlayerData()
+    {
+        DedicatedPlayerList playerList = ((CraftServer) Bukkit.getServer()).getHandle();
+        IPlayerFileData current = playerList.playerFileData;
+        
+        IPlayerFileData data = new IPlayerFileData()
+        {
+            
+            @Override
+            public void save(EntityHuman player)
+            {
+            }
+            
+            @Override
+            public NBTTagCompound load(EntityHuman player)
+            {
+                return current.load(player);
+            }
+            
+            @Override
+            public String[] getSeenPlayers()
+            {
+                return current.getSeenPlayers();
+            }
+        };
+        
+        playerList.playerFileData = data;
     }
 }
