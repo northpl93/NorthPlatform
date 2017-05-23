@@ -4,6 +4,7 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,6 +24,7 @@ import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.cfg.Checkpoint;
+import pl.arieals.minigame.elytrarace.event.PlayerCheckpointEvent;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 
@@ -52,6 +54,13 @@ public class CheckpointListener implements Listener
 
         final Checkpoint prevCheck = elytraPlayer.getCheckpoint();
         if (prevCheck != null && prevCheck.getNumber() >= checkpoint.getNumber())
+        {
+            return;
+        }
+
+        final PlayerCheckpointEvent event = new PlayerCheckpointEvent(player, checkpoint);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled())
         {
             return;
         }

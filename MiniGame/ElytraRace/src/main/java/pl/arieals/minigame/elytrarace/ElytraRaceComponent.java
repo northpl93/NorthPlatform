@@ -13,6 +13,7 @@ import pl.arieals.minigame.elytrarace.listener.FinishLineListener;
 import pl.arieals.minigame.elytrarace.listener.ModifyListener;
 import pl.arieals.minigame.elytrarace.listener.MoveListener;
 import pl.arieals.minigame.elytrarace.listener.ScoreListener;
+import pl.arieals.minigame.elytrarace.listener.ScoreboardListener;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
@@ -32,6 +33,7 @@ public class ElytraRaceComponent extends Component
         }
         this.apiCore.registerEvents(
                 new ArenaStartListener(),
+                new ScoreboardListener(),
                 new MoveListener(),
                 new ModifyListener(),
                 new CheckpointListener(),

@@ -103,19 +103,22 @@ public class StaticTimer
         return this.calcTimeTo(target, targetUnit, TimeUnit.MILLISECONDS) / ONE_TICK_MILIS;
     }
 
-    @Override
-    public String toString()
+    public String humanReadableTimeAfterStart()
     {
         final long time = this.getCurrentTime(TimeUnit.SECONDS);
         final int minutes = (int) (time / 60);
         final int seconds = (int) (time - minutes * 60);
 
+        return String.format("%d:%02d", minutes, seconds);
+    }
+
+    @Override
+    public String toString()
+    {
         final StringBuilder builder = new StringBuilder();
 
         builder.append(this.isGrowing ? "/\\ " : "\\/ ");
-        builder.append(minutes);
-        builder.append(":");
-        builder.append(seconds);
+        builder.append(this.humanReadableTimeAfterStart());
 
         return builder.toString();
     }
