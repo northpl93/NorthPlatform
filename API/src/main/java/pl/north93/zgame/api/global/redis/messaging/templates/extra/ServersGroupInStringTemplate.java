@@ -20,6 +20,6 @@ public class ServersGroupInStringTemplate implements Template<IServersGroup>
     public IServersGroup deserializeObject(final TemplateManager templateManager, final MessageUnpacker unpacker) throws Exception
     {
         final String message = unpacker.unpackString();
-        return API.getNetworkManager().getServersGroup(message);
+        return API.getNetworkManager().getServers().getServersGroup(message);
     }
 }

@@ -30,6 +30,7 @@ import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 public class ObservationManagerImpl extends Component implements IObservationManager
 {
     private final Map<String, WeakReference<Value<?>>> cachedValues = new HashMap<>();
+    private final ValueSubscriptionHandler             valueSubHandler;
     private final List<LockImpl>                       waitingLocks = new ArrayList<>();
     @InjectComponent("API.Database.StorageConnector")
     private StorageConnector storageConnector;
@@ -37,6 +38,11 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     private TemplateManager  msgPack;
     @InjectComponent("API.Database.Redis.Subscriber")
     private RedisSubscriber  redisSubscriber;
+
+    public ObservationManagerImpl()
+    {
+        this.valueSubHandler = new ValueSubscriptionHandler(this);
+    }
 
     @Override
     public <T> Value<T> get(final Class<T> clazz, final String objectKey)
@@ -68,6 +74,13 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     public <T> Value<T> get(final Class<T> clazz, final ProvidingRedisKey keyProvider)
     {
         return this.get(clazz, keyProvider.getKey());
+    }
+
+    @Override
+    public <T> Value<T> get(final Hash<T> hash, final String key)
+    {
+        final HashImpl<T> hashImpl = (HashImpl<T>) hash;
+        return new CachedHashValueImpl<>(this, hashImpl, key, hashImpl.getClazz());
     }
 
     @Override
@@ -152,6 +165,7 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     protected void enableComponent()
     {
         this.redisSubscriber.subscribe("unlock", this::unlockNotify);
+        this.redisSubscriber.subscribe(ValueSubscriptionHandler.CHANNEL_PREFIX + "*", this.valueSubHandler, true);
     }
 
     @Override
@@ -181,6 +195,11 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     /*default*/ RedisSubscriber getRedisSubscriber()
     {
         return this.redisSubscriber;
+    }
+
+    /*default*/ ValueSubscriptionHandler getValueSubHandler()
+    {
+        return this.valueSubHandler;
     }
 
     @Override

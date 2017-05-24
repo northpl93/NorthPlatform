@@ -20,6 +20,6 @@ public class ServerPatternInStringTemplate implements Template<ServerPattern>
     public ServerPattern deserializeObject(final TemplateManager templateManager, final MessageUnpacker unpacker) throws Exception
     {
         final String message = unpacker.unpackString();
-        return API.getNetworkManager().getServerPattern(message);
+        return API.getNetworkManager().getServers().getServerPattern(message);
     }
 }

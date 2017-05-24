@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.network;
+package pl.north93.zgame.api.global.network.proxy;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

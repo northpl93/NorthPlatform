@@ -23,8 +23,8 @@ import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.data.StorageConnector;
-import pl.north93.zgame.api.global.network.ProxyInstanceInfo;
-import pl.north93.zgame.api.global.network.ProxyRpc;
+import pl.north93.zgame.api.global.network.proxy.ProxyInstanceInfo;
+import pl.north93.zgame.api.global.network.proxy.ProxyRpc;
 
 public class BungeeApiCore extends ApiCore
 {

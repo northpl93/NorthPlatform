@@ -16,7 +16,6 @@ import pl.north93.zgame.api.global.deployment.ServerPattern;
 import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.server.Server;
-import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.restful.models.ServerModel;
 import spark.Request;
 import spark.Response;
@@ -28,18 +27,18 @@ public class ServersController
 
     public Object root(final Request request, final Response response)
     {
-        return this.networkManager.getServers().stream().map(this::serverToModel).collect(Collectors.toList());
+        return this.networkManager.getServers().all().stream().map(this::serverToModel).collect(Collectors.toList());
     }
 
     public Object getServer(final Request request, final Response response)
     {
         final UUID serverId = UUID.fromString(request.params(":uuid"));
-        final Value<Server> server = this.networkManager.getServer(serverId);
-        if (! server.isAvailable())
+        final Server server = this.networkManager.getServers().withUuid(serverId);
+        if (server == null)
         {
             halt(404);
         }
-        return this.serverToModel(server.get());
+        return this.serverToModel(server);
     }
 
     private ServerModel serverToModel(final Server s)

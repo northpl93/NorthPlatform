@@ -59,7 +59,7 @@ public class ConnectionManager
 
     public Server getBestServerFromServersGroup(final String serversGroup)
     {
-        final Set<Server> servers = this.networkManager.getServers(serversGroup);
+        final Set<Server> servers = this.networkManager.getServers().inGroup(serversGroup);
         if (servers.isEmpty())
         {
             return null;

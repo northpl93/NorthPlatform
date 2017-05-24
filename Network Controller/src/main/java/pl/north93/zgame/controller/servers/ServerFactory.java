@@ -8,7 +8,7 @@ import java.util.UUID;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.deployment.ServerPattern;
 import pl.north93.zgame.api.global.deployment.serversgroup.ManagedServersGroup;
-import pl.north93.zgame.api.global.network.server.ServerImpl;
+import pl.north93.zgame.api.global.network.impl.ServerImpl;
 
 public class ServerFactory
 {
@@ -25,7 +25,7 @@ public class ServerFactory
      */
     public ServerImpl createNewServer(final ManagedServersGroup serversGroup)
     {
-        final ServerPattern serverPattern = API.getNetworkManager().getServerPattern(serversGroup.getServerPattern());
+        final ServerPattern serverPattern = API.getNetworkManager().getServers().getServerPattern(serversGroup.getServerPattern());
         return new ServerImpl(UUID.randomUUID(), true, serversGroup.getServersType(), ALLOCATING, serversGroup.getJoiningPolicy(), "", 0, serversGroup, serverPattern);
     }
 }

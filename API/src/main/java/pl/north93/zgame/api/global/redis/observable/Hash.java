@@ -4,9 +4,13 @@ import java.util.Set;
 
 public interface Hash<V>
 {
+    String getName();
+
     void put(String key, V value);
 
     V get(String key);
+
+    Value<V> getAsValue(String key);
 
     Set<String> keys();
 

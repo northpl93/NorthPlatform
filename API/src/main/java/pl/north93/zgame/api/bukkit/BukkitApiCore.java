@@ -17,20 +17,14 @@ import org.bukkit.plugin.PluginManager;
 import org.spigotmc.SpigotConfig;
 
 import pl.north93.zgame.api.bukkit.listeners.ChatListener;
-import pl.north93.zgame.api.bukkit.listeners.LanguageKeeper;
 import pl.north93.zgame.api.bukkit.listeners.JoinLeftListener;
+import pl.north93.zgame.api.bukkit.listeners.LanguageKeeper;
 import pl.north93.zgame.api.bukkit.listeners.SignListener;
 import pl.north93.zgame.api.bukkit.packets.PacketsHandler;
 import pl.north93.zgame.api.bukkit.windows.WindowManager;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.exceptions.ConfigurationException;
-import pl.north93.zgame.api.global.network.JoiningPolicy;
-import pl.north93.zgame.api.global.network.server.Server;
-import pl.north93.zgame.api.global.network.server.ServerImpl;
-import pl.north93.zgame.api.global.network.server.ServerState;
-import pl.north93.zgame.api.global.network.server.ServerType;
-import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class BukkitApiCore extends ApiCore
 {
@@ -53,11 +47,6 @@ public class BukkitApiCore extends ApiCore
     public WindowManager getWindowManager()
     {
         return this.windowManager;
-    }
-
-    public final Value<Server> getServer()
-    {
-        return this.getNetworkManager().getServer(this.serverId).setIfUnavailable(this::generateServer);
     }
 
     public final org.bukkit.Server getBukkit()
@@ -112,6 +101,11 @@ public class BukkitApiCore extends ApiCore
         return SERVER + this.serverId;
     }
 
+    public UUID getServerId()
+    {
+        return this.serverId;
+    }
+
     @Override
     public File getRootDirectory()
     {
@@ -123,7 +117,7 @@ public class BukkitApiCore extends ApiCore
     {
         try
         {
-            this.serverId = this.getServerId();
+            this.serverId = this.obtainServerId();
         }
         catch (final ConfigurationException e)
         {
@@ -137,23 +131,16 @@ public class BukkitApiCore extends ApiCore
     {
         SpigotConfig.bungee = true; // force enable IP forwarding
 
-        this.getPlatformConnector().runTaskAsynchronously(() ->
-        {
-            final ServerImpl impl = (ServerImpl) this.getServer().get();
-            impl.setServerState(ServerState.WORKING);
-            this.getServer().set(impl);
-        }); // on bukkit it will be invoked after server start
-
-        this.registerEvents(new JoinLeftListener(), new ChatListener(), new SignListener(), this.windowManager, new LanguageKeeper());
+        this.registerEvents(
+                new JoinLeftListener(),
+                new ChatListener(),
+                new SignListener(),
+                this.windowManager, new LanguageKeeper());
     }
 
     @Override
     protected void stop()
     {
-        this.getServer().update(server ->
-        {
-            ((ServerImpl) server).setServerState(ServerState.STOPPED); // change server state to stopped.
-        });
     }
 
     @Override
@@ -171,7 +158,7 @@ public class BukkitApiCore extends ApiCore
         }
     }
 
-    private UUID getServerId() throws ConfigurationException
+    private UUID obtainServerId() throws ConfigurationException
     {
         final Properties properties = System.getProperties();
         if (properties.containsKey("northplatform.serverid")) // Konfiguracja serwera pobierana jest z Redisa
@@ -188,11 +175,5 @@ public class BukkitApiCore extends ApiCore
         {
             throw new ConfigurationException("Invalid startup parameters. Please specify northplatform.serverid or northplatform.servertype");
         }
-    }
-
-    private Server generateServer()
-    {
-        final Properties properties = System.getProperties();
-        return new ServerImpl(this.serverId, false, ServerType.valueOf(properties.getProperty("northplatform.servertype")), ServerState.STARTING, JoiningPolicy.EVERYONE, Bukkit.getIp(), Bukkit.getPort());
     }
 }

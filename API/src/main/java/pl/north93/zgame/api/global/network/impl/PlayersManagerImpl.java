@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
-import pl.north93.zgame.api.global.network.ProxyInstanceInfo;
+import pl.north93.zgame.api.global.network.proxy.ProxyInstanceInfo;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
@@ -279,7 +279,7 @@ class PlayersManagerImpl implements IPlayersManager
 
     private Lock getMultiLock(final String nick, final UUID uuid)
     {
-        return this.observer.getMultiLock("lock:players:" + nick.toLowerCase(Locale.ENGLISH), "lock:offlineplayers:" + uuid);
+        return this.observer.getMultiLock("caval_lock:key:players:" + nick.toLowerCase(Locale.ENGLISH), "caval_lock:key:offlineplayers:" + uuid);
     }
 
     @Override

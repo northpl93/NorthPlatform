@@ -10,7 +10,7 @@ import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.deployment.RemoteDaemon;
 import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.deployment.serversgroup.ManagedServersGroup;
-import pl.north93.zgame.api.global.network.server.ServerImpl;
+import pl.north93.zgame.api.global.network.impl.ServerImpl;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.controller.configbroadcaster.ConfigBroadcaster;
 import pl.north93.zgame.controller.servers.allocators.AllocationProcessor;
@@ -83,7 +83,7 @@ public class NetworkServersManager extends Component implements INetworkServersM
     @Override
     public long getServersCount(final ManagedServersGroup serversGroup)
     {
-        return API.getNetworkManager().getServers().stream()
+        return API.getNetworkManager().getServers().all().stream()
                   .filter(server -> {
                       final Optional<IServersGroup> sGroup = server.getServersGroup();
                       return sGroup.isPresent() && sGroup.get().equals(serversGroup);

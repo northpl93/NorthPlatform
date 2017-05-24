@@ -1,14 +1,11 @@
 package pl.north93.zgame.api.global.network;
 
-import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import pl.north93.zgame.api.global.deployment.RemoteDaemon;
-import pl.north93.zgame.api.global.deployment.ServerPattern;
-import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
-import pl.north93.zgame.api.global.network.server.Server;
+import pl.north93.zgame.api.global.network.proxy.ProxyInstanceInfo;
+import pl.north93.zgame.api.global.network.server.IServersManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
 public interface INetworkManager extends IPlayerManagement
@@ -31,23 +28,11 @@ public interface INetworkManager extends IPlayerManagement
      */
     Set<RemoteDaemon> getDaemons();
 
-    Set<Server> getServers();
-
-    Set<Server> getServers(String serversGroup);
-
-    Set<IServersGroup> getServersGroups();
-
-    IServersGroup getServersGroup(String name);
-
-    List<ServerPattern> getServerPatterns();
-
-    ServerPattern getServerPattern(String name);
-
-    Value<Server> getServer(UUID uuid);
-
     void broadcastNetworkAction(NetworkAction networkAction);
 
     NetworkControllerRpc getNetworkController();
+
+    IServersManager getServers();
 
     IPlayersManager getPlayers();
 }

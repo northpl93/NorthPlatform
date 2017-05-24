@@ -49,7 +49,7 @@ public class PlayerDataShareController extends Component implements IDataShareCo
             }
             for (final String serversGroup : groupConfig.getServersGroups())
             {
-                for (final Server server : this.networkManager.getServers(serversGroup))
+                for (final Server server : this.networkManager.getServers().inGroup(serversGroup))
                 {
                     this.servers.put(server.getUuid(), group);
                 }

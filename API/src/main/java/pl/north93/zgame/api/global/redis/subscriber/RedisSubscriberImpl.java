@@ -13,7 +13,6 @@ import com.lambdaworks.redis.pubsub.StatefulRedisPubSubConnection;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.data.StorageConnector;
@@ -23,7 +22,6 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
 {
     private final Map<String, SubscriptionHandler> handlerMap = new ConcurrentHashMap<>();
     private StatefulRedisPubSubConnection<String, byte[]> connection;
-    private ApiCore                                       apiCore;
     private ExecutorService                               executorService = Executors.newCachedThreadPool();
     private Logger                                        logger;
     @InjectComponent("API.Database.StorageConnector")
@@ -54,12 +52,19 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
     }
 
     @Override
-    public void subscribe(final String channel, final SubscriptionHandler handler)
+    public void subscribe(final String channel, final SubscriptionHandler handler, final boolean pattern)
     {
         synchronized (this)
         {
             this.handlerMap.put(channel, handler);
-            this.connection.sync().subscribe(channel);
+            if (pattern)
+            {
+                this.connection.sync().psubscribe(channel);
+            }
+            else
+            {
+                this.connection.sync().subscribe(channel);
+            }
         }
     }
 
@@ -89,11 +94,24 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
         public void message(final String channel, final byte[] message)
         {
             final SubscriptionHandler handler = RedisSubscriberImpl.this.handlerMap.get(channel);
+            this.handle(handler, channel, message);
+        }
+
+        @Override
+        public void message(final String pattern, final String channel, final byte[] message)
+        {
+            final SubscriptionHandler handler = RedisSubscriberImpl.this.handlerMap.get(pattern);
+            this.handle(handler, channel, message);
+        }
+
+        private void handle(final SubscriptionHandler handler, final String channel, final byte[] message)
+        {
             if (handler == null)
             {
                 RedisSubscriberImpl.this.logger.warning("Received message from unhandled channel: " + channel);
                 return;
             }
+
             RedisSubscriberImpl.this.executorService.submit(() ->
             {
                 try

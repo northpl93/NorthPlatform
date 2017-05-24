@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.network.server;
+package pl.north93.zgame.api.global.network.impl;
 
 import static pl.north93.zgame.api.global.redis.RedisKeys.SERVER;
 
@@ -12,6 +12,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.deployment.ServerPattern;
 import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
+import pl.north93.zgame.api.global.network.server.Server;
+import pl.north93.zgame.api.global.network.server.ServerProxyData;
+import pl.north93.zgame.api.global.network.server.ServerState;
+import pl.north93.zgame.api.global.network.server.ServerType;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackNullable;
 import pl.north93.zgame.api.global.redis.messaging.templates.extra.ServerPatternInStringTemplate;

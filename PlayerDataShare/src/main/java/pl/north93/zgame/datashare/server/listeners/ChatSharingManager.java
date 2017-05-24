@@ -60,7 +60,7 @@ public class ChatSharingManager implements Listener
         {
             return;
         }
-        this.serverId = this.apiCore.getServer().get().getUuid();
+        this.serverId = this.apiCore.getServerId();
         this.chatCooldown = CooldownManager.createManager(100);
         Bukkit.getPluginManager().registerEvents(this, this.apiCore.getPluginMain());
         this.redisSubscriber.subscribe("chat:" + group.getName(), this::onRemoteChat);

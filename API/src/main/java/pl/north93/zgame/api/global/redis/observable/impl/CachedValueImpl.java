@@ -14,28 +14,29 @@ import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
-class CachedValueImpl<T> implements Value<T>
+class CachedValueImpl<T> extends CachedValue<T>
 {
-    private final ObservationManagerImpl observationManager;
-    private final Class<T>               clazz;
-    private final ObjectKey              objectKey;
-    private final Lock                   myLock;
-    private       T                      cache;
+    private final Class<T>  clazz;
+    private final ObjectKey objectKey;
+    private final Lock      myLock;
+    private       T         cache;
 
     public CachedValueImpl(final ObservationManagerImpl observationManager, final Class<T> clazz, final ObjectKey objectKey)
     {
-        this.observationManager = observationManager;
+        super(observationManager);
         this.clazz = clazz;
         this.objectKey = objectKey;
-        this.myLock = observationManager.getLock("lock:" + objectKey.getKey());
-        observationManager.getRedisSubscriber().subscribe(this.getChannelKey(), new ValueSubscriptionHandler(this));
+        this.myLock = observationManager.getLock("caval_lock:" + this.getInternalName());
+        observationManager.getValueSubHandler().addListener(this);
     }
 
-    private String getChannelKey()
+    @Override
+    /*default*/ String getInternalName()
     {
-        return "newvalue:" + this.objectKey.getKey();
+        return "key:" + this.objectKey.getKey();
     }
 
+    @Override
     /*default*/ void handleNewValue(final byte[] newValue)
     {
         if (newValue.length == 0)
@@ -208,7 +209,7 @@ class CachedValueImpl<T> implements Value<T>
             {
                 redis.psetex(this.objectKey.getKey(), time, serialized);
             }
-            redis.publish(this.getChannelKey(), serialized);
+            this.observationManager.getValueSubHandler().update(this, serialized);
         }
     }
 
@@ -230,7 +231,7 @@ class CachedValueImpl<T> implements Value<T>
         try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
         {
             success = redis.del(this.objectKey.getKey()) != 0L;
-            redis.publish(this.getChannelKey(), new byte[0]);
+            this.observationManager.getValueSubHandler().update(this, new byte[0]);
         }
         return success;
     }
@@ -296,7 +297,7 @@ class CachedValueImpl<T> implements Value<T>
     @Override
     protected void finalize() throws Throwable
     {
-        this.observationManager.getRedisSubscriber().unSubscribe(this.getChannelKey());
+        this.observationManager.getValueSubHandler().removeListener(this);
     }
 
     @Override

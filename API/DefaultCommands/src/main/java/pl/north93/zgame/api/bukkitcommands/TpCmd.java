@@ -72,7 +72,7 @@ public class TpCmd extends NorthCommand
                 return;
             }
 
-            final Server destinationServer = this.networkManager.getServer(player.getServerId()).get();
+            final Server destinationServer = this.networkManager.getServers().withUuid(player.getServerId());
             playerSender.connectTo(destinationServer, new TeleportToPlayer(player.getUuid()));
         });
     }

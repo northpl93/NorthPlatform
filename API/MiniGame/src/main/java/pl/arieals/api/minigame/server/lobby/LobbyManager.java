@@ -47,7 +47,7 @@ public class LobbyManager implements IServerManager
         if (rpcProxy.tryConnectPlayers(arrayList, arena, false))
         {
             player.sendMessage("Od serwera przyszlo true, przenosze na gamehosta.");
-            this.networkManager.getOnlinePlayer(player.getUniqueId()).get().connectTo(this.networkManager.getServer(arena1.getServerId()).get());
+            this.networkManager.getOnlinePlayer(player.getUniqueId()).get().connectTo(this.networkManager.getServers().withUuid(arena1.getServerId()));
         }
         else
         {

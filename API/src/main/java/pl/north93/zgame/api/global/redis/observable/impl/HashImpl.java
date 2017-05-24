@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.redis.observable.Hash;
+import pl.north93.zgame.api.global.redis.observable.Value;
 
 class HashImpl<V> implements Hash<V>
 {
@@ -25,11 +26,25 @@ class HashImpl<V> implements Hash<V>
     }
 
     @Override
+    public String getName()
+    {
+        return this.name;
+    }
+
+    @Override
     public void put(final String key, final V value)
     {
         try (final RedisCommands<String, byte[]> redis = this.observer.getJedis())
         {
             redis.hset(this.name, key, this.observer.getMsgPack().serialize(this.valueClass, value));
+        }
+    }
+
+    /*default*/ void put(final String key, final byte[] bytes)
+    {
+        try (final RedisCommands<String, byte[]> redis = this.observer.getJedis())
+        {
+            redis.hset(this.name, key, bytes);
         }
     }
 
@@ -40,6 +55,12 @@ class HashImpl<V> implements Hash<V>
         {
             return this.deserialize(redis.hget(this.name, key));
         }
+    }
+
+    @Override
+    public Value<V> getAsValue(final String key)
+    {
+        return this.observer.get(this, key);
     }
 
     @Override
@@ -103,6 +124,11 @@ class HashImpl<V> implements Hash<V>
             return null; // there is nothing to deserialize. Prevent NPE from deserializer.
         }
         return this.observer.getMsgPack().deserialize(this.valueClass, bytes);
+    }
+
+    /*default*/ Class<V> getClazz()
+    {
+        return this.valueClass;
     }
 
     @Override

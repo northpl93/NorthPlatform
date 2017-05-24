@@ -32,7 +32,7 @@ public class PlayerDataShareServer extends Component
     protected void enableComponent()
     {
         final IDataShareController controller = this.rpcManager.createRpcProxy(IDataShareController.class, Targets.networkController());
-        this.sharingGroup = controller.getMyGroup(this.apiCore.getServer().get().getUuid());
+        this.sharingGroup = controller.getMyGroup(this.apiCore.getServerId());
         if (this.sharingGroup == null)
         {
             this.apiCore.getLogger().warning("PlayerDataShare plugin is enabled, but sharing group is unknown.");

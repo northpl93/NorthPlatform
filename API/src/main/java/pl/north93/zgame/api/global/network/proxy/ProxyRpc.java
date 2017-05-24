@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.network;
+package pl.north93.zgame.api.global.network.proxy;
 
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.network.server.joinaction.JoinActionsContainer;

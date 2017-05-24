@@ -4,6 +4,11 @@ import javax.xml.bind.JAXB;
 
 import java.io.File;
 
+import net.minecraft.server.v1_10_R1.DedicatedPlayerList;
+import net.minecraft.server.v1_10_R1.EntityHuman;
+import net.minecraft.server.v1_10_R1.IPlayerFileData;
+import net.minecraft.server.v1_10_R1.NBTTagCompound;
+
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_10_R1.CraftServer;
 import org.bukkit.entity.Player;
@@ -13,12 +18,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.spigotmc.SneakyThrow;
 import org.spigotmc.SpigotConfig;
 
-import net.minecraft.server.v1_10_R1.DedicatedPlayerList;
-import net.minecraft.server.v1_10_R1.DedicatedServer;
-import net.minecraft.server.v1_10_R1.EntityHuman;
-import net.minecraft.server.v1_10_R1.IPlayerFileData;
-import net.minecraft.server.v1_10_R1.MinecraftServer;
-import net.minecraft.server.v1_10_R1.NBTTagCompound;
 import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.arieals.api.minigame.server.gamehost.listener.ArenaEndListener;
@@ -130,7 +129,7 @@ public class GameHostManager implements IServerManager
      */
     public File getWorldTemplatesDir()
     {
-        return new File("game_worlds");
+        return this.mapTemplateManager.getTemplatesDirectory();
     }
 
     public IWorldManager getWorldManager()

@@ -27,7 +27,7 @@ public class BungeeServersManager implements IBungeeServersManager
     {
         API.getLogger().info("Synchronizing servers...");
         this.removeAllServers();
-        for (final Server server : API.getNetworkManager().getServers())
+        for (final Server server : API.getNetworkManager().getServers().all())
         {
             this.addServer(server);
         }

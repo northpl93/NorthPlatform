@@ -1,5 +1,12 @@
 # Lista komponentów dla platformy BUKKIT
 components:
+  - name: API.BukkitServerManager
+    mainClass: "pl.north93.zgame.api.bukkit.server.impl.BukkitServerManagerImpl"
+    description: "Core component that manages the server instance."
+    dependencies: []
+    platforms:
+      - BUKKIT
+
   - name: API.BukkitPlayers
     mainClass: "pl.north93.zgame.api.bukkit.player.impl.BukkitPlayerManagerImpl"
     description: "Useful utils to manage players using Bukkit APIs"

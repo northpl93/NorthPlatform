@@ -1,6 +1,8 @@
 package pl.north93.zgame.api.global.redis.observable.impl;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -9,21 +11,54 @@ import pl.north93.zgame.api.global.redis.subscriber.SubscriptionHandler;
 
 class ValueSubscriptionHandler implements SubscriptionHandler
 {
-    private final WeakReference<CachedValueImpl<?>> wrappedValue;
+    /*default*/ final static String CHANNEL_PREFIX = "caval_upd:";
+    private final ObservationManagerImpl                     observationManager;
+    private final Map<String, WeakReference<CachedValue<?>>> listeners;
 
-    public ValueSubscriptionHandler(final CachedValueImpl<?> value)
+    public ValueSubscriptionHandler(final ObservationManagerImpl observationManager)
     {
-        this.wrappedValue = new WeakReference<>(value);
+        this.observationManager = observationManager;
+        this.listeners = new HashMap<>(128);
+    }
+
+    public void addListener(final CachedValue<?> value)
+    {
+        synchronized (this.listeners)
+        {
+            this.listeners.put(value.getInternalName(), new WeakReference<>(value));
+        }
+    }
+
+    public void removeListener(final CachedValue<?> value)
+    {
+        synchronized (this.listeners)
+        {
+            this.listeners.remove(value.getInternalName());
+        }
+    }
+
+    public void update(final CachedValue<?> value, final byte[] message)
+    {
+        final String channel = CHANNEL_PREFIX + value.getInternalName();
+        this.observationManager.getRedisSubscriber().publish(channel, message);
     }
 
     @Override
     public void handle(final String channel, final byte[] message)
     {
-        final CachedValueImpl<?> value;
-        if ((value = this.wrappedValue.get()) != null)
+        final String name = channel.substring(CHANNEL_PREFIX.length());
+
+        final CachedValue<?> value;
+        synchronized (this.listeners)
         {
-            value.handleNewValue(message);
+            final WeakReference<CachedValue<?>> valueRef = this.listeners.get(name);
+            if (valueRef == null || (value = valueRef.get()) == null)
+            {
+                return;
+            }
         }
+
+        value.handleNewValue(message);
     }
 
     @Override

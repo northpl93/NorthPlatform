@@ -2,23 +2,17 @@ package pl.north93.zgame.api.global.network.impl;
 
 import static pl.north93.zgame.api.global.redis.RedisKeys.DAEMON;
 import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_ACTION;
-import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_PATTERNS;
-import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_SERVER_GROUPS;
 import static pl.north93.zgame.api.global.redis.RedisKeys.PLAYERS;
 import static pl.north93.zgame.api.global.redis.RedisKeys.PROXY_INSTANCE;
-import static pl.north93.zgame.api.global.redis.RedisKeys.SERVER;
 import static pl.north93.zgame.api.global.utils.StringUtils.asString;
 import static pl.north93.zgame.api.global.utils.StringUtils.toBytes;
 
 
-import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Sets;
 import com.lambdaworks.redis.api.sync.RedisCommands;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -30,20 +24,17 @@ import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.deployment.RemoteDaemon;
-import pl.north93.zgame.api.global.deployment.ServerPattern;
-import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
-import pl.north93.zgame.api.global.network.NetworkMeta;
-import pl.north93.zgame.api.global.network.ProxyInstanceInfo;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.NetworkAction;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
+import pl.north93.zgame.api.global.network.NetworkMeta;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
-import pl.north93.zgame.api.global.network.server.Server;
-import pl.north93.zgame.api.global.network.server.ServerImpl;
+import pl.north93.zgame.api.global.network.proxy.ProxyInstanceInfo;
+import pl.north93.zgame.api.global.network.server.IServersManager;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
@@ -62,6 +53,7 @@ class NetworkManager extends Component implements INetworkManager
     private IPlayersData        playersData;
     @InjectComponent("API.Database.StorageConnector")
     private StorageConnector    storage;
+    private ServersManagerImpl  serversManager;
     private PlayersManagerImpl  playersManager;
     private Value<NetworkMeta>  networkMeta;
 
@@ -70,6 +62,7 @@ class NetworkManager extends Component implements INetworkManager
     {
         this.networkMeta = this.observationManager.get(NetworkMeta.class, "network:meta");
         this.redisSubscriber.subscribe(NETWORK_ACTION, this::handleNetworkAction);
+        this.serversManager = new ServersManagerImpl(this.storage, this, this.msgPack, this.observationManager);
         this.playersManager = new PlayersManagerImpl(this, this.playersData, this.observationManager);
     }
 
@@ -106,89 +99,6 @@ class NetworkManager extends Component implements INetworkManager
         {
             return redis.keys(DAEMON + "*").stream().map(id -> this.msgPack.deserialize(RemoteDaemon.class, redis.get(id))).collect(Collectors.toSet());
         }
-    }
-
-    /**
-     * Zwraca aktualną listę serwerów w tej sieci.
-     *
-     * @return lista serwerów.
-     */
-    @Override
-    public Set<Server> getServers()
-    {
-        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
-        {
-            return redis.keys(SERVER + "*").stream().map(id -> this.msgPack.deserialize(ServerImpl.class, redis.get(id))).collect(Collectors.toSet());
-        }
-    }
-
-    @Override
-    public Set<Server> getServers(final String serversGroup)
-    {
-        return this.getServers().stream().filter(server ->
-        {
-            final Optional<IServersGroup> group = server.getServersGroup();
-            return group.isPresent() && group.get().getName().equals(serversGroup);
-        }).collect(Collectors.toSet());
-    }
-
-    /**
-     * Zwraca aktualną listę grup serwerów skonfigurowanych w tej sieci.
-     *
-     * @return lista grup serwerów.
-     */
-    @Override
-    public Set<IServersGroup> getServersGroups()
-    {
-        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
-        {
-            return Sets.newCopyOnWriteArraySet(this.msgPack.deserializeList(IServersGroup.class, redis.get(NETWORK_SERVER_GROUPS)));
-        }
-    }
-
-    @Override
-    public IServersGroup getServersGroup(final String name)
-    {
-        return this.getServersGroups().stream().filter(serversGroup -> serversGroup.getName().equals(name)).findAny().orElse(null);
-    }
-
-    /**
-     * Zwraca aktualną listę wzorów instancji serwerów skonfigurowanych w tej sieci.
-     *
-     * @return lista server patternów.
-     */
-    @Override
-    public List<ServerPattern> getServerPatterns()
-    {
-        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
-        {
-            return this.msgPack.deserializeList(ServerPattern.class, redis.get(NETWORK_PATTERNS));
-        }
-    }
-
-    /**
-     * Zwraca konfigurację tego wzoru serwera.
-     *
-     * @param name nazwa wzoru.
-     * @return konfiguracja wzoru.
-     */
-    @Override
-    public ServerPattern getServerPattern(final String name)
-    {
-        return this.getServerPatterns().stream().filter(serverPattern -> serverPattern.getPatternName().equals(name)).findAny().orElse(null);
-    }
-
-    /**
-     * Zwraca obiekt przechowujący informacje o danym serwerze.
-     *
-     * @param uuid unikalny identyfikator serwera.
-     * @return informacje o serwerze.
-     */
-    @Override
-    public Value<Server> getServer(final UUID uuid)
-    {
-        //noinspection unchecked
-        return (Value) this.observationManager.get(ServerImpl.class, SERVER + uuid);
     }
 
     @Override
@@ -284,6 +194,12 @@ class NetworkManager extends Component implements INetworkManager
     public IPlayersManager getPlayers()
     {
         return this.playersManager;
+    }
+
+    @Override
+    public IServersManager getServers()
+    {
+        return this.serversManager;
     }
 
     private void handleNetworkAction(final String channel, final byte[] message)
