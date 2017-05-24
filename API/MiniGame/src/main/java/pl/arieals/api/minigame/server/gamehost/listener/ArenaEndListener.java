@@ -36,10 +36,10 @@ public class ArenaEndListener implements Listener
             return;
         }
 
-        this.apiCore.getLogger().info(format("Arena {0} jest pusta, przelaczanie do LOBBY...", event.getArena().getId()));
+        this.apiCore.getLogger().info(format("Arena {0} jest pusta, przelaczanie do INITIALISING...", event.getArena().getId()));
         Bukkit.getScheduler().runTaskLater(this.apiCore.getPluginMain(), () ->
         {
-            event.getArena().setGamePhase(GamePhase.LOBBY);
+            event.getArena().setGamePhase(GamePhase.INITIALISING);
         }, 1);
     }
 

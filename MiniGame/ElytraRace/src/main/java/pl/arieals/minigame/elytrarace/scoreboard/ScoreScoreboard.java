@@ -52,7 +52,7 @@ public class ScoreScoreboard implements IScoreboardLayout
 
         builder.add("Score Attack", "");
 
-        builder.add("Punkty " + playerData.getPoints());
+        builder.add("Punkty " + playerData.getPoints(), "", "Top3");
 
         for (final Map.Entry<Player, Integer> entry : this.getRanking(arena, 3).entrySet())
         {
@@ -83,5 +83,11 @@ public class ScoreScoreboard implements IScoreboardLayout
     private int rankingComparator(final Map.Entry<Player, Integer> p1, final Map.Entry<Player, Integer> p2)
     {
         return p1.getValue() - p2.getValue();
+    }
+
+    @Override
+    public int updateEvery()
+    {
+        return 10;
     }
 }
