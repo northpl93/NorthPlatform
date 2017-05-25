@@ -11,15 +11,22 @@ import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.north93.zgame.api.bukkit.scoreboard.ContentBuilder;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardLayout;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class ScoreScoreboard implements IScoreboardLayout
 {
     public static final ScoreScoreboard INSTANCE = new ScoreScoreboard();
+    @InjectMessages("ElytraRace")
+    private MessagesBox msg;
 
     private ScoreScoreboard()
     {
@@ -45,6 +52,7 @@ public class ScoreScoreboard implements IScoreboardLayout
     public List<String> getContent(final IScoreboardContext context)
     {
         final Player player = context.getPlayer();
+        final String locale = player.spigot().getLocale();
         final LocalArena arena = getArena(player);
         final ElytraScorePlayer playerData = getPlayerData(player, ElytraScorePlayer.class);
 
@@ -52,14 +60,17 @@ public class ScoreScoreboard implements IScoreboardLayout
 
         builder.add("Score Attack", "");
 
-        builder.add("Punkty " + playerData.getPoints(), "", "Top3");
+        builder.add(
+                this.msg.getMessage(locale, "scoreboard.score.points", playerData.getPoints()),
+                "",
+                this.msg.getMessage(locale, "scoreboard.score.top3"));
 
         for (final Map.Entry<Player, Integer> entry : this.getRanking(arena, 3).entrySet())
         {
-            builder.add(entry.getValue() + " " + entry.getKey().getDisplayName());
+            builder.add(this.msg.getMessage(locale, "scoreboard.score.top3_line", entry.getValue(), entry.getKey()));
         }
 
-        builder.add("", "mc.piraci.pl");
+        builder.add("", this.msg.getMessage(locale, "scoreboard.ip"));
 
         return builder.getContent();
     }
@@ -89,5 +100,11 @@ public class ScoreScoreboard implements IScoreboardLayout
     public int updateEvery()
     {
         return 10;
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

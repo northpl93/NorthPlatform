@@ -43,9 +43,9 @@ public class MessagesBox
         return this.getMessage(Locale.forLanguageTag(locale), key);
     }
     
-    public String getMessage(final String locale, final String key, final String... params)
+    public String getMessage(final String locale, final String key, final Object... params)
     {
-        return MessageFormat.format(getMessage(locale, key), (Object[]) params);
+        return MessageFormat.format(this.getMessage(locale, key), (Object[]) params);
     }
 
     @Deprecated // uniemozliwia tlumaczenie wiadomosci per-gracz

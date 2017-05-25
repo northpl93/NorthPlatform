@@ -10,10 +10,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.zgame.api.bukkit.utils.AbstractCountdown;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class StartCountdown extends AbstractCountdown
 {
     private final LocalArena arena;
+    @InjectMessages("ElytraRace")
+    private MessagesBox msg;
 
     public StartCountdown(final int time, final LocalArena arena)
     {
@@ -26,7 +30,11 @@ public class StartCountdown extends AbstractCountdown
     {
         for (final Player player : this.arena.getPlayersManager().getPlayers())
         {
-            final Title title = new Title("Start za " + time, "", 0, 21, 0);
+            final String locale = player.spigot().getLocale();
+
+            final String message = this.msg.getMessage(locale, "start_countdown", time);
+            final Title title = new Title(message, "", 0, 21, 0);
+
             player.sendTitle(title);
         }
     }
