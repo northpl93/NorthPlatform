@@ -27,9 +27,14 @@ import pl.arieals.minigame.elytrarace.cfg.Checkpoint;
 import pl.arieals.minigame.elytrarace.event.PlayerCheckpointEvent;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class CheckpointListener implements Listener
 {
+    @InjectMessages("ElytraRace")
+    private MessagesBox messages;
+
     @EventHandler(priority = EventPriority.HIGH) // post ArenaStartListener
     public void startGame(final GameStartEvent event)
     {
@@ -66,7 +71,7 @@ public class CheckpointListener implements Listener
         }
 
         elytraPlayer.setCheckpoint(checkpoint);
-        player.sendMessage("Zaliczyles checkpoint: " + checkpoint);
+        this.messages.sendMessage(player, "checkpoint_taken");
     }
 
     @EventHandler

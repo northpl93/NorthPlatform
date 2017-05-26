@@ -24,13 +24,8 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class ScoreScoreboard implements IScoreboardLayout
 {
-    public static final ScoreScoreboard INSTANCE = new ScoreScoreboard();
     @InjectMessages("ElytraRace")
     private MessagesBox msg;
-
-    private ScoreScoreboard()
-    {
-    }
 
     // Score Attack
     //
@@ -52,25 +47,24 @@ public class ScoreScoreboard implements IScoreboardLayout
     public List<String> getContent(final IScoreboardContext context)
     {
         final Player player = context.getPlayer();
-        final String locale = player.spigot().getLocale();
         final LocalArena arena = getArena(player);
         final ElytraScorePlayer playerData = getPlayerData(player, ElytraScorePlayer.class);
 
         final ContentBuilder builder = IScoreboardLayout.builder();
+        builder.box(this.msg).locale(player.spigot().getLocale());
 
         builder.add("Score Attack", "");
-
-        builder.add(
-                this.msg.getMessage(locale, "scoreboard.score.points", playerData.getPoints()),
-                "",
-                this.msg.getMessage(locale, "scoreboard.score.top3"));
+        builder.translated("scoreboard.score.points", playerData.getPoints());
+        builder.add("");
+        builder.translated("scoreboard.score.top3");
 
         for (final Map.Entry<Player, Integer> entry : this.getRanking(arena, 3).entrySet())
         {
-            builder.add(this.msg.getMessage(locale, "scoreboard.score.top3_line", entry.getValue(), entry.getKey()));
+            builder.translated("scoreboard.score.top3_line", entry.getValue(), entry.getKey().getDisplayName());
         }
 
-        builder.add("", this.msg.getMessage(locale, "scoreboard.ip"));
+        builder.add("");
+        builder.translated("scoreboard.ip");
 
         return builder.getContent();
     }

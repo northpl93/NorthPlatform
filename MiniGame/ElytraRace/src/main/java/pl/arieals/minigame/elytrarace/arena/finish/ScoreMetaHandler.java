@@ -37,7 +37,7 @@ public class ScoreMetaHandler implements IFinishHandler
 
         final ElytraScorePlayer scoreData = getPlayerData(player, ElytraScorePlayer.class);
 
-        player.sendMessage("Dotarles na mete i masz " + scoreData.getPoints() + " punktów!");
+        this.messages.sendMessage(player, "score.finish.your_points", scoreData.getPoints());
         this.points.put(player.getUniqueId(), scoreData.getPoints());
 
         if (! IFinishHandler.checkFinished(arena))

@@ -29,7 +29,7 @@ public class ScoreboardListener implements Listener
     public void lobbyJoin(final PlayerJoinArenaEvent event)
     {
         // ustawiamy graczowi scoreboard lobby gdy wejdzie
-        this.scoreboardManager.setLayout(event.getPlayer(), LobbyScoreboard.INSTANCE);
+        this.scoreboardManager.setLayout(event.getPlayer(), new LobbyScoreboard());
     }
 
     @EventHandler
@@ -37,7 +37,7 @@ public class ScoreboardListener implements Listener
     {
         final ElytraRaceArena arenaData = event.getArena().getArenaData();
 
-        final IScoreboardLayout layout = arenaData.getGameMode() == RACE_MODE ? RaceScoreboard.INSTANCE : ScoreScoreboard.INSTANCE;
+        final IScoreboardLayout layout = arenaData.getGameMode() == RACE_MODE ? new RaceScoreboard() : new ScoreScoreboard();
 
         for (final Player player : event.getArena().getPlayersManager().getPlayers())
         {

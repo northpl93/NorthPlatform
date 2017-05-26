@@ -8,18 +8,20 @@ import java.util.concurrent.TimeUnit;
 
 import org.bukkit.entity.Player;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.zgame.api.bukkit.scoreboard.ContentBuilder;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardLayout;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class LobbyScoreboard implements IScoreboardLayout
 {
-    public static final LobbyScoreboard INSTANCE = new LobbyScoreboard();
-
-    private LobbyScoreboard()
-    {
-    }
+    @InjectMessages("ElytraRace")
+    private MessagesBox msg;
 
     @Override
     public String getTitle(final IScoreboardContext context)
@@ -34,18 +36,19 @@ public class LobbyScoreboard implements IScoreboardLayout
         final LocalArena arena = getArena(player);
 
         final ContentBuilder content = IScoreboardLayout.builder();
+        content.box(this.msg).locale(player.spigot().getLocale());
 
         if (arena.getStartScheduler().isStartScheduled())
         {
-            content.add("&7Start za");
-            content.add("&6" + arena.getTimer().calcTimeTo(0, TimeUnit.SECONDS, TimeUnit.SECONDS) + " sekund");
+            content.translated("scoreboard.lobby.start", arena.getTimer().calcTimeTo(0, TimeUnit.SECONDS, TimeUnit.SECONDS));
         }
         else
         {
-            content.add("&7Czekanie na", "&7graczy");
+            content.translated("scoreboard.lobby.waiting");
         }
 
-        content.add("", "&7Ilosc graczy", "&6" + arena.getPlayers().size() + " / " + arena.getPlayersManager().getMaxPlayers());
+        content.add("");
+        content.translated("scoreboard.lobby.players", arena.getPlayers().size(), arena.getPlayersManager().getMaxPlayers());
 
         return content.getContent();
     }
@@ -54,5 +57,11 @@ public class LobbyScoreboard implements IScoreboardLayout
     public int updateEvery()
     {
         return 10;
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

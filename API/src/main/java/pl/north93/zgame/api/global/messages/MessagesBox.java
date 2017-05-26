@@ -5,6 +5,8 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.bukkit.ChatColor;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -42,7 +44,12 @@ public class MessagesBox
     {
         return this.getMessage(Locale.forLanguageTag(locale), key);
     }
-    
+
+    public String getMessage(final Locale locale, final String key, final Object... params)
+    {
+        return MessageFormat.format(this.getMessage(locale, key), (Object[]) params);
+    }
+
     public String getMessage(final String locale, final String key, final Object... params)
     {
         return MessageFormat.format(this.getMessage(locale, key), (Object[]) params);
@@ -54,9 +61,15 @@ public class MessagesBox
         return this.getMessage(Locale.forLanguageTag("pl-PL"), key);
     }
 
-    public void sendMessage(final Messageable messageable, final String key, final String... params)
+    public void sendMessage(final Messageable messageable, final String key, final Object... params)
     {
         messageable.sendMessage(this.getMessage(messageable.getLocale(), key), (Object[]) params);
+    }
+
+    // nie powinno jebnac na innych platformach niz Bukkit o ile nie wykonamy tej metody
+    public void sendMessage(final org.bukkit.entity.Player player, final String key, final Object... params)
+    {
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getMessage(player.spigot().getLocale(), key, (Object[]) params)));
     }
 
     @Override

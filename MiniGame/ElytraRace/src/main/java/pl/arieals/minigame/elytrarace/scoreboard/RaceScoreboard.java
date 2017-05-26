@@ -23,13 +23,8 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class RaceScoreboard implements IScoreboardLayout
 {
-    public static final RaceScoreboard INSTANCE = new RaceScoreboard();
     @InjectMessages("ElytraRace")
     private MessagesBox msg;
-
-    private RaceScoreboard()
-    {
-    }
 
     @Override
     public String getTitle(final IScoreboardContext context)
@@ -41,19 +36,19 @@ public class RaceScoreboard implements IScoreboardLayout
     public List<String> getContent(final IScoreboardContext context)
     {
         final Player player = context.getPlayer();
-        final String locale = player.spigot().getLocale();
         final ElytraRacePlayer playerData = getPlayerData(player, ElytraRacePlayer.class);
         final LocalArena arena = getArena(player);
 
         final ContentBuilder builder = IScoreboardLayout.builder();
 
-        builder.add(
-                "&cTime Attack",
-                this.msg.getMessage(locale, "scoreboard.race.time", arena.getTimer().humanReadableTimeAfterStart()),
-                "",
-                this.msg.getMessage(locale, "scoreboard.race.checkpoint", this.getPlayerCheckpoint(playerData), this.getMaxCheckpoints(arena)),
-                "",
-                this.msg.getMessage(locale, "scoreboard.ip"));
+        builder.box(this.msg).locale(player.spigot().getLocale());
+
+        builder.add("&cTime Attack");
+        builder.translated("scoreboard.race.time", arena.getTimer().humanReadableTimeAfterStart());
+        builder.add("");
+        builder.translated("scoreboard.race.checkpoint", this.getPlayerCheckpoint(playerData), this.getMaxCheckpoints(arena));
+        builder.add("");
+        builder.translated("scoreboard.ip");
 
         return builder.getContent();
     }

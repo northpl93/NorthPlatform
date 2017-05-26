@@ -11,9 +11,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class RaceMetaHandler implements IFinishHandler
 {
+    @InjectMessages("ElytraRace")
+    private MessagesBox messages;
     private int place; // uzywane w RACE_MODE do okreslania miejsca gracza
 
     @Override
@@ -25,7 +29,7 @@ public class RaceMetaHandler implements IFinishHandler
         final int playerPlace = this.place + 1;
         this.place = playerPlace;
 
-        player.sendMessage("Zajales " + playerPlace + " miejsce!");
+        this.messages.sendMessage(player, "race.finish.your_place", playerPlace);
 
         if (IFinishHandler.checkFinished(arena))
         {
