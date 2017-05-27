@@ -19,15 +19,6 @@ public interface IComponentManager
      */
     void doComponentScan(File file);
 
-    /**
-     * Scans specified classloader for fields which can be injected.
-     * This WILL NOT scan for new components.
-     *
-     * @param classLoader classloader to scan.
-     * @param packages packages to scan.
-     */
-    void performInjectionScan(ClassLoader classLoader, String... packages);
-
     void setAutoEnable(boolean autoEnable);
 
     void injectComponent(Object component); // component must be registered in manifest

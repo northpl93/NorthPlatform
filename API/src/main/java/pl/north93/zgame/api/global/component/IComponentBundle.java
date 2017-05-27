@@ -1,9 +1,8 @@
 package pl.north93.zgame.api.global.component;
 
-import java.util.Collection;
 import java.util.Set;
 
-public interface IComponentBundle
+public interface IComponentBundle extends IBeanContext
 {
     Set<String> getBasePackages();
 
@@ -22,13 +21,4 @@ public interface IComponentBundle
     ComponentDescription getDescription();
 
     ClassLoader getClassLoader();
-
-    Collection<? extends IExtensionPoint<?>> getExtensionPoints();
-
-    <T> IExtensionPoint<T> getExtensionPoint(Class<T> clazz);
-
-    /**
-     * Scans this component for implementations of extension points.
-     */
-    void doExtensionsScan();
 }

@@ -30,31 +30,19 @@ import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.component.IComponentManager;
-import pl.north93.zgame.api.global.component.IExtensionPoint;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectMessages;
-import pl.north93.zgame.api.global.component.annotations.InjectNewInstance;
-import pl.north93.zgame.api.global.component.annotations.PostInject;
-import pl.north93.zgame.api.global.component.annotations.SkipInjections;
+import pl.north93.zgame.api.global.component.annotations.*;
 
 class ClassScanner
 {
     private static final String INJECTOR_NAME = Injector.class.getName();
     private static final String API_NAME = API.class.getName();
 
-    static void scan(final URL fileUrl, final ClassLoader classLoader, final IComponentManager componentManager, final Set<String> packagesToScan)
+    static void scan(final URL fileUrl, final ClassLoader classLoader, final IComponentManager componentManager)
     {
         final ConfigurationBuilder configuration = new ConfigurationBuilder();
         configuration.setClassLoaders(new ClassLoader[]{classLoader});
         configuration.setScanners(new SubTypesScanner(false), new MethodAnnotationsScanner(), new FieldAnnotationsScanner());
         configuration.setUrls(fileUrl);
-
-        final FilterBuilder packagesFilter = new FilterBuilder();
-        for (final String packageToScan : packagesToScan)
-        {
-            packagesFilter.includePackage(packageToScan);
-        }
-        configuration.setInputsFilter(packagesFilter);
 
         final Reflections reflections = new Reflections(configuration);
         final ClassPool classPool = getClassPool(classLoader);
@@ -135,26 +123,14 @@ class ClassScanner
             return false;
         }
 
+        if (clazz.isAnnotationPresent(Bean.class) )
+        {
+            return true;
+        }
+
         for (final Field field : declaredFields)
         {
-            final Class<?> type = field.getType();
-            if (field.isAnnotationPresent(InjectComponent.class))
-            {
-                return true;
-            }
-            if (field.isAnnotationPresent(InjectMessages.class))
-            {
-                return true;
-            }
-            if (field.isAnnotationPresent(InjectNewInstance.class))
-            {
-                return true;
-            }
-            if (ApiCore.class.isAssignableFrom(type))
-            {
-                return true;
-            }
-            if (Logger.class.equals(type))
+            if (field.isAnnotationPresent(Inject.class))
             {
                 return true;
             }

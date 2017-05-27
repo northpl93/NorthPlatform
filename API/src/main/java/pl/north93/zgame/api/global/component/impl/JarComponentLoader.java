@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.google.common.collect.Sets;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -18,15 +16,14 @@ import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import javassist.ClassPool;
 import javassist.LoaderClassPath;
 import pl.north93.zgame.api.global.ApiCore;
-import pl.north93.zgame.api.global.component.IComponentManager;
 
 class JarComponentLoader extends URLClassLoader
 {
-    private final URL                     fileUrl;
-    private final Set<String>             scannedPackages;
-    private final Map<String, Class<?>>   classCache;
-    private final Set<JarComponentLoader> dependencies;
-    private final LazyValue<ClassPool>    classPool;
+    private final URL                      fileUrl;
+    private final Set<String>              scannedPackages;
+    private final Map<String, Class<?>>    classCache;
+    private final Set<JarComponentLoader>  dependencies;
+    private final LazyValue<ClassPool>     classPool;
 
     public JarComponentLoader(final URL url, final ClassLoader parent)
     {
@@ -34,6 +31,7 @@ class JarComponentLoader extends URLClassLoader
         this.fileUrl = url;
         this.scannedPackages = new ObjectArraySet<>(4);
         this.classCache = new ConcurrentHashMap<>(16);
+        this.classMetaMap = new ConcurrentHashMap<>(16);
         this.dependencies = new HashSet<>();
         this.classPool = new LazyValue<>(this::generateClassPool);
     }
@@ -69,6 +67,7 @@ class JarComponentLoader extends URLClassLoader
         {
             final Class<?> clazz = super.findClass(name);
             this.classCache.put(name, clazz);
+            this.classMetaMap.put(clazz, new ClassMeta(clazz));
             return clazz;
         }
         catch (final ClassNotFoundException ignored)
@@ -94,19 +93,6 @@ class JarComponentLoader extends URLClassLoader
     public URL getFileUrl()
     {
         return this.fileUrl;
-    }
-
-    public void scan(final IComponentManager componentManager, final Set<String> packagesToScan)
-    {
-        final Sets.SetView<String> toScan = Sets.difference(packagesToScan, this.scannedPackages);
-
-        if (toScan.isEmpty())
-        {
-            return;
-        }
-
-        ClassScanner.scan(this.fileUrl, this, componentManager, toScan);
-        this.scannedPackages.addAll(toScan);
     }
 
     public void registerDependency(final JarComponentLoader loader)

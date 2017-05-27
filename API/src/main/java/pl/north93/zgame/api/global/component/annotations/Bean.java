@@ -5,9 +5,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Rejestruje nowego beana.
+ */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface IncludeInScanningContainer
+@Target({ElementType.TYPE, ElementType.CONSTRUCTOR, ElementType.METHOD})
+public @interface Bean
 {
-    IncludeInScanning[] value();
+    String name() default "";
 }

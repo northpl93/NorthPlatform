@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.impl.Injector;
 
-public abstract class Component
+public abstract class Component implements IBeanContext
 {
     private ApiCore           apiCore;
     private IComponentManager manager;
@@ -56,16 +56,6 @@ public abstract class Component
     protected final <T extends Component> T getComponent(final String name)
     {
         return this.manager.getComponent(name);
-    }
-
-    protected final Collection<? extends IExtensionPoint<?>> getExtensionPoints()
-    {
-        return this.componentBundle.getExtensionPoints();
-    }
-
-    protected final <T> IExtensionPoint<T> getExtensionPoint(final Class<T> clazz)
-    {
-        return this.componentBundle.getExtensionPoint(clazz);
     }
 
     public final void init(final IComponentBundle componentBundle, final IComponentManager componentManager, final ApiCore apiCore)
@@ -115,6 +105,42 @@ public abstract class Component
             return;
         }
         this.status = ComponentStatus.DISABLED;
+    }
+
+    @Override
+    public String getBeanContextName()
+    {
+        return this.componentBundle.getBeanContextName();
+    }
+
+    @Override
+    public IBeanContext getParent()
+    {
+        return this.componentBundle.getParent();
+    }
+
+    @Override
+    public <T> T getBean(final Class<T> clazz)
+    {
+        return this.componentBundle.getBean(clazz);
+    }
+
+    @Override
+    public <T> T getBean(final String beanName)
+    {
+        return this.componentBundle.getBean(beanName);
+    }
+
+    @Override
+    public <T> Collection<T> getBeans(final Class<T> clazz)
+    {
+        return this.componentBundle.getBeans(clazz);
+    }
+
+    @Override
+    public <T> Collection<T> getBeans(final String name)
+    {
+        return this.componentBundle.getBeans(name);
     }
 
     @Override

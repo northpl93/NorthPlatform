@@ -5,9 +5,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Oznacza, ze moze istniec tylko jedna instancja tej klasy.
+ */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface InjectMessages
+@Target(ElementType.TYPE)
+public @interface SingleInstance
 {
-    String value(); // nazwa pliku z wiadomosciami
 }

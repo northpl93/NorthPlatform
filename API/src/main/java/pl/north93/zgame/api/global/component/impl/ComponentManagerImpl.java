@@ -10,22 +10,18 @@ import java.io.Reader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Sets;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.reflections.util.ClasspathHelper;
 
 import org.diorite.cfg.system.TemplateCreator;
 
@@ -34,24 +30,19 @@ import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.component.IComponentManager;
-import pl.north93.zgame.api.global.component.IExtensionPoint;
 
 public class ComponentManagerImpl implements IComponentManager
 {
-    private final ApiCore               apiCore;
-    private final List<ComponentBundle> components = new ArrayList<>();
+    private final ApiCore                  apiCore;
+    private final List<ComponentBundle>    components = new ArrayList<>();
+    private final Map<Class<?>, ClassMeta> classMetaMap;
+    private final AbstractBeanContext      rootBeanCtx = new AbstractBeanContext(null, "Root") {};
     private boolean autoEnable;
 
     public ComponentManagerImpl(final ApiCore apiCore)
     {
         this.apiCore = apiCore;
-    }
-
-    /*default*/ void scanBuiltinComponent(final ComponentBundle componentBundle)
-    {
-        final URL file = ApiCore.class.getProtectionDomain().getCodeSource().getLocation();
-        final ClassLoader classLoader = ApiCore.class.getClassLoader();
-        ClassScanner.scan(file, classLoader, this, componentBundle.getBasePackages());
+        this.classMetaMap = new ConcurrentHashMap<>(128);
     }
 
     private void initComponent(final ComponentBundle component)
@@ -71,17 +62,7 @@ public class ComponentManagerImpl implements IComponentManager
         }
         this.apiCore.getLogger().info("Loading component " + componentDescription.getName());
 
-        final List<IExtensionPoint<?>> extensionPoints = new ArrayList<>();
-        for (final String extensionClassName : componentDescription.getExtensionPoints())
-        {
-            final ExtensionPointFactory factory = ExtensionPointFactory.INSTANCE;
-            final IExtensionPoint<Object> extensionPoint = factory.createExtensionPoint(classLoader, extensionClassName);
-
-            this.apiCore.getLogger().info("Component " + componentDescription.getName() + " exposes extension point: " + extensionClassName);
-            extensionPoints.add(extensionPoint);
-        }
-
-        final ComponentBundle componentBundle = new ComponentBundle(componentDescription, classLoader, extensionPoints);
+        final ComponentBundle componentBundle = new ComponentBundle(componentDescription, classLoader, this.rootBeanCtx);
         this.components.add(componentBundle);
         if (componentDescription.isAutoInstantiate()) // instantiate component class auto-instantiation is enabled
         {
@@ -167,6 +148,11 @@ public class ComponentManagerImpl implements IComponentManager
         return true;
     }
 
+    public ClassMeta getClassMeta()
+    {
+
+    }
+
     @Override
     public void doComponentScan(final String componentsYml, final ClassLoader classLoader)
     {
@@ -207,18 +193,6 @@ public class ComponentManagerImpl implements IComponentManager
                 this.doComponentScan(fileToCheck);
             }
         }
-    }
-
-    @Override
-    public void performInjectionScan(final ClassLoader classLoader, final String... packages)
-    {
-        final Collection<URL> paths = ClasspathHelper.forPackage(packages[0], classLoader);
-        final URL path = paths.iterator().next();
-
-        final HashSet<String> packageSet = Sets.newHashSet(packages);
-
-        this.apiCore.getLogger().info("Performing injection scan... Path:" + path + " ClassLoader:" + classLoader + " Packages:" + packageSet);
-        ClassScanner.scan(path, classLoader, this, packageSet);
     }
 
     private void loadComponentsFromFile(final File file)
