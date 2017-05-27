@@ -56,6 +56,11 @@ public class PlayersManager
         return gameHostManager.getMiniGameConfig().getSlots();
     }
     
+    public int getMinPlayers()
+    {
+        return gameHostManager.getMiniGameConfig().getToStart();
+    }
+    
     public boolean tryAddPlayers(final List<PlayerJoinInfo> players, final boolean spectator)
     {
         // todo implement spectating?
