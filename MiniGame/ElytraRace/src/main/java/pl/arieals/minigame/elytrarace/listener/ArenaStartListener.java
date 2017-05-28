@@ -35,7 +35,7 @@ public class ArenaStartListener implements Listener
     @EventHandler
     public void startGame(final GameStartEvent event)
     {
-        final ElytraRaceArena arenaData = new ElytraRaceArena(this.loadConfig(event.getArena()), ElytraRaceMode.SCORE_MODE);
+        final ElytraRaceArena arenaData = new ElytraRaceArena(this.loadConfig(event.getArena()), ElytraRaceMode.RACE_MODE);
         event.getArena().setArenaData(arenaData);
 
         this.setupPlayers(event.getArena(), arenaData);

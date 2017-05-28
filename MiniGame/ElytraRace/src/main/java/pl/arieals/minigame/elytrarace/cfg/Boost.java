@@ -20,13 +20,13 @@ public class Boost
     @XmlElement(required = true)
     private BoostType boostType;
     @XmlElement(required = true)
-    private Integer   boostPower;
+    private Double    boostPower;
 
     public Boost()
     {
     }
 
-    public Boost(final XmlCuboid area, final BoostType boostType, final Integer boostPower)
+    public Boost(final XmlCuboid area, final BoostType boostType, final Double boostPower)
     {
         this.area = area;
         this.boostType = boostType;
@@ -43,7 +43,7 @@ public class Boost
         return this.boostType;
     }
 
-    public Integer getBoostPower()
+    public Double getBoostPower()
     {
         return this.boostPower;
     }

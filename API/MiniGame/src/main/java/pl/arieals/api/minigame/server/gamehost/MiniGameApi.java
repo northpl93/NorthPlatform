@@ -3,6 +3,8 @@ package pl.arieals.api.minigame.server.gamehost;
 import static pl.north93.zgame.api.global.exceptions.SingletonException.checkSingleton;
 
 
+import java.util.List;
+
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -28,6 +30,12 @@ public final class MiniGameApi
     {
         final GameHostManager manager = INSTANCE.server.getServerManager();
         return manager.getArenaManager().getArenaAssociatedWith(player.getUniqueId()).orElse(null);
+    }
+
+    public static List<LocalArena> getArenas()
+    {
+        final GameHostManager manager = INSTANCE.server.getServerManager();
+        return manager.getArenaManager().getArenas();
     }
 
     public static <T> T getPlayerData(final Player player, final Class<T> clazz)

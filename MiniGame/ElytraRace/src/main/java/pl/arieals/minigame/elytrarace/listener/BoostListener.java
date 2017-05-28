@@ -36,7 +36,7 @@ public class BoostListener implements Listener
         if (boost.getBoostType() == BoostType.SPEED)
         {
             final Vector playerVector = player.getLocation().getDirection();
-            final Integer power = boost.getBoostPower();
+            final Double power = boost.getBoostPower();
 
             playerVector.setX(playerVector.getX() * power);
             playerVector.setZ(playerVector.getZ() * power);
@@ -46,9 +46,9 @@ public class BoostListener implements Listener
         else if (boost.getBoostType() == BoostType.HEIGHT)
         {
             final Vector playerVector = player.getLocation().getDirection();
-            final Integer power = boost.getBoostPower();
+            final Double power = boost.getBoostPower();
 
-            playerVector.setY(playerVector.getY() * power);
+            playerVector.setY(power);
 
             player.setVelocity(playerVector);
         }

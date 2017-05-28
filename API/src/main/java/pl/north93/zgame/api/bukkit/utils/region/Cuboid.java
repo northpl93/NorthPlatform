@@ -14,6 +14,8 @@ import org.bukkit.block.Block;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import org.diorite.utils.math.DioriteRandomUtils;
+
 public class Cuboid implements IRegion
 {
     protected final String worldName;
@@ -648,6 +650,16 @@ public class Cuboid implements IRegion
             }
         }
         return res;
+    }
+
+    @Override
+    public Block randomBlock()
+    {
+        final int x = DioriteRandomUtils.getRandomInt(this.getLowerX(), this.getUpperX());
+        final int y = DioriteRandomUtils.getRandomInt(this.getLowerY(), this.getUpperY());
+        final int z = DioriteRandomUtils.getRandomInt(this.getLowerZ(), this.getUpperZ());
+
+        return this.getWorld().getBlockAt(x, y, z);
     }
 
     @Nonnull

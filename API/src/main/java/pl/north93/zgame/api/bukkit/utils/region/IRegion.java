@@ -26,4 +26,6 @@ public interface IRegion extends Iterable<Block>, Cloneable
     List<Pair<Integer, Integer>> getChunksCoordinates();
 
     List<Chunk> getChunks();
+
+    Block randomBlock();
 }

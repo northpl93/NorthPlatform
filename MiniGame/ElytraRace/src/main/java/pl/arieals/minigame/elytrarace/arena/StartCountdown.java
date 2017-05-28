@@ -1,7 +1,11 @@
 package pl.arieals.minigame.elytrarace.arena;
 
+import static org.bukkit.ChatColor.translateAlternateColorCodes;
+
+
 import com.destroystokyo.paper.Title;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -34,8 +38,22 @@ public class StartCountdown extends AbstractCountdown
         {
             final String locale = player.spigot().getLocale();
 
+            final ChatColor color;
+            if (time < 4)
+            {
+                color = ChatColor.RED;
+            }
+            else if (time < 6)
+            {
+                color = ChatColor.YELLOW;
+            }
+            else
+            {
+                color = ChatColor.GREEN;
+            }
+
             final String message = this.msg.getMessage(locale, "start_countdown", time);
-            final Title title = new Title(message, "", 0, 21, 0);
+            final Title title = new Title(color + message, "", 0, 21, 0);
 
             player.sendTitle(title);
         }
@@ -49,6 +67,10 @@ public class StartCountdown extends AbstractCountdown
 
         for (final Player player : this.arena.getPlayersManager().getPlayers())
         {
+            final String message = translateAlternateColorCodes('&', this.msg.getMessage(player.spigot().getLocale(), "start"));
+            final Title title = new Title(message, "", 0, 10, 0);
+            player.sendTitle(title);
+
             player.setFlying(false);
             player.setAllowFlight(false);
             player.setGliding(true);

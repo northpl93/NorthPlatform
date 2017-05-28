@@ -3,6 +3,7 @@ package pl.arieals.api.minigame.server.gamehost;
 import javax.xml.bind.JAXB;
 
 import java.io.File;
+import java.util.List;
 
 import net.minecraft.server.v1_10_R1.DedicatedPlayerList;
 import net.minecraft.server.v1_10_R1.EntityHuman;
@@ -13,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_10_R1.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import org.spigotmc.SneakyThrow;
@@ -155,8 +157,13 @@ public class GameHostManager implements IServerManager
 
     public <T> T getPlayerData(final Player player, final Class<T> clazz)
     {
+        final List<MetadataValue> metadata = player.getMetadata(clazz.getName());
+        if (metadata.isEmpty())
+        {
+            return null;
+        }
         //noinspection unchecked
-        return (T) player.getMetadata(clazz.getName()).get(0).value();
+        return (T) metadata.get(0).value();
     }
 
     public void setPlayerData(final Player player, final Object data)

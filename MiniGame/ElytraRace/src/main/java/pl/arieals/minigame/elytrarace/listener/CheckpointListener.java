@@ -12,6 +12,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityToggleGlideEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -21,6 +22,7 @@ import org.diorite.utils.math.DioriteRandomUtils;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
+import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.cfg.Checkpoint;
@@ -84,31 +86,64 @@ public class CheckpointListener implements Listener
             return;
         }
 
+        event.setCancelled(true);
+
         final Player player = (Player) event.getEntity();
+        if (getArena(player).getGamePhase() != GamePhase.STARTED)
+        {
+            return;
+        }
 
         final DamageCause cause = event.getCause();
         if (cause == DamageCause.FLY_INTO_WALL || cause == DamageCause.FALL || cause == DamageCause.VOID)
         {
-            final ElytraRacePlayer elytraPlayer = getPlayerData(player, ElytraRacePlayer.class);
-
-            final Checkpoint checkpoint = elytraPlayer.getCheckpoint();
-            if (checkpoint != null)
-            {
-                player.teleport(checkpoint.getTeleport().toBukkit(player.getWorld()));
-            }
-            else
-            {
-                final ElytraRaceArena data = getArena(player).getArenaData();
-                final XmlLocation randomLocation = DioriteRandomUtils.getRandom(data.getArenaConfig().getStartLocations());
-
-                player.teleport(randomLocation.toBukkit(player.getWorld()));
-            }
+            this.backToCheckpoint(player);
         }
-
-        event.setCancelled(true);
     }
 
-    // TODO blokowanie wyłączenia latania/teleport na checkpoint przy wyłączeniu?
+    @EventHandler
+    public void playerGlideDisable(final EntityToggleGlideEvent event)
+    {
+        if (event.getEntityType() != EntityType.PLAYER)
+        {
+            return;
+        }
+
+        final Player player = (Player) event.getEntity();
+        if (getArena(player).getGamePhase() != GamePhase.STARTED)
+        {
+            return;
+        }
+
+        if (event.isGliding())
+        {
+            return;
+        }
+
+        this.backToCheckpoint(player);
+    }
+
+    private void backToCheckpoint(final Player player)
+    {
+        final ElytraRacePlayer elytraPlayer = getPlayerData(player, ElytraRacePlayer.class);
+        if (elytraPlayer == null)
+        {
+            return;
+        }
+
+        final Checkpoint checkpoint = elytraPlayer.getCheckpoint();
+        if (checkpoint != null)
+        {
+            player.teleport(checkpoint.getTeleport().toBukkit(player.getWorld()));
+        }
+        else
+        {
+            final ElytraRaceArena data = getArena(player).getArenaData();
+            final XmlLocation randomLocation = DioriteRandomUtils.getRandom(data.getArenaConfig().getStartLocations());
+
+            player.teleport(randomLocation.toBukkit(player.getWorld()));
+        }
+    }
 
     @Override
     public String toString()

@@ -1,5 +1,7 @@
 package pl.arieals.minigame.elytrarace;
 
+import org.bukkit.Bukkit;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -42,6 +44,8 @@ public class ElytraRaceComponent extends Component
                 new ScoreListener(),
                 new FinishLineListener(),
                 new ArenaEndListener());
+
+        Bukkit.getScheduler().runTaskTimer(this.apiCore.getPluginMain(), new ParticleTask(), 1, 1);
 
         /*final XmlLocation location1 = new XmlLocation(1, 1, 1, 0, 0);
         final XmlLocation location2 = new XmlLocation(2, 1, 2, 5, 5);
