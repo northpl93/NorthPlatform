@@ -53,11 +53,11 @@ public class CheckpointListener implements Listener
         {
             final Cuboid region = checkpoint.getArea().toCuboid(arena.getWorld().getCurrentWorld());
             final ITrackedRegion tracked = arena.getRegionManager().create(region);
-            tracked.whenEnter(player -> this.playerEnterCheckpoint(player, checkpoint));
+            tracked.whenEnter(player -> this.playerEnterCheckpoint(player, elytraRaceArena, checkpoint));
         }
     }
 
-    private void playerEnterCheckpoint(final Player player, final Checkpoint checkpoint)
+    private void playerEnterCheckpoint(final Player player, final ElytraRaceArena arena, final Checkpoint checkpoint)
     {
         final ElytraRacePlayer elytraPlayer = getPlayerData(player, ElytraRacePlayer.class);
 
@@ -75,7 +75,7 @@ public class CheckpointListener implements Listener
         }
 
         elytraPlayer.setCheckpoint(checkpoint);
-        this.messages.sendMessage(player, "checkpoint_taken");
+        this.messages.sendMessage(player, "checkpoint_taken", elytraPlayer.getCheckpointNumber(), arena.getMaxCheckpoints());
     }
 
     @EventHandler
@@ -126,7 +126,7 @@ public class CheckpointListener implements Listener
     private void backToCheckpoint(final Player player)
     {
         final ElytraRacePlayer elytraPlayer = getPlayerData(player, ElytraRacePlayer.class);
-        if (elytraPlayer == null)
+        if (elytraPlayer == null || elytraPlayer.isDev())
         {
             return;
         }

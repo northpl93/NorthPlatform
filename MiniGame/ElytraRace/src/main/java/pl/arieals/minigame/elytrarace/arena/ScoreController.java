@@ -3,12 +3,18 @@ package pl.arieals.minigame.elytrarace.arena;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.server.v1_10_R1.BlockPosition;
+import net.minecraft.server.v1_10_R1.Chunk;
 import net.minecraft.server.v1_10_R1.EntityFallingBlock;
+import net.minecraft.server.v1_10_R1.EnumSkyBlock;
 
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_10_R1.CraftChunk;
 import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
@@ -65,6 +71,10 @@ public class ScoreController
             }
 
             block.setType(Material.AIR, false);
+
+            final Chunk chunk = ((CraftChunk) block.getChunk()).getHandle();
+            // metoda ustawiajaca oswietlenie. Latwo znalezc bo przyjmuje EnumSkyBlock, lokacje i poziom swiatla
+            chunk.a(EnumSkyBlock.BLOCK, new BlockPosition(block.getX(), block.getY(), block.getZ()), 15);
         }
     }
 
@@ -78,6 +88,16 @@ public class ScoreController
     {
         this.entityHider.hideEntities(player, this.grayedBlocks);
         this.entityHider.showEntities(player, this.normalBlocks);
+    }
+
+    public void playBreakAnimation(final Player player)
+    {
+        for (final Entity entity : this.normalBlocks)
+        {
+            final FallingBlock block = (FallingBlock) entity;
+
+            player.spawnParticle(Particle.BLOCK_CRACK, block.getLocation(), 10, block.getMaterial().getNewData(block.getBlockData()));
+        }
     }
 
     @Override

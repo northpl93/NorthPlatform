@@ -26,12 +26,36 @@ public class RaceMetaHandler implements IFinishHandler
     public void handle(final LocalArena arena, final Player player)
     {
         final ElytraRacePlayer playerData = getPlayerData(player, ElytraRacePlayer.class);
+        if (playerData.isFinished())
+        {
+            // gracz juz przekroczyl linie mety, wiecej razy nie mozemy go obslugiwac
+            return;
+        }
         playerData.setFinished(true);
 
         final int playerPlace = this.place + 1;
         this.place = playerPlace;
 
-        this.messages.sendMessage(player, "race.finish.your_place", playerPlace);
+        if (playerPlace == 1)
+        {
+            arena.getPlayersManager().broadcast(
+                    this.messages,
+                    "race.finish.broadcast_first",
+                    player.getDisplayName(),
+                    arena.getTimer().humanReadableTimeAfterStart());
+        }
+        else
+        {
+            arena.getPlayersManager().broadcast(
+                    this.messages,
+                    "race.finish.broadcast",
+                    player.getDisplayName(),
+                    playerPlace,
+                    arena.getTimer().humanReadableTimeAfterStart());
+        }
+
+        // todo wyswietlic graczowi duży komunikat
+        // todo rekordy
 
         if (IFinishHandler.checkFinished(arena))
         {

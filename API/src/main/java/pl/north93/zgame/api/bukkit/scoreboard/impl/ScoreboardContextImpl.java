@@ -120,7 +120,7 @@ class ScoreboardContextImpl implements IScoreboardContext
 
             int removed = 0;
             final ListIterator<BoardLine> iter = this.boardLines.listIterator(actual);
-            while (removed != diff && iter.hasPrevious())
+            while (removed++ != diff && iter.hasPrevious())
             {
                 final BoardLine previous = iter.previous();
                 previous.cleanup();

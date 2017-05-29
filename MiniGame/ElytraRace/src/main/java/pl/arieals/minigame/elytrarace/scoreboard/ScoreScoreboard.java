@@ -4,13 +4,14 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -42,7 +43,7 @@ public class ScoreScoreboard implements IScoreboardLayout
     @Override
     public String getTitle(final IScoreboardContext context)
     {
-        return "&6Elytra Race";
+        return "&e&lScore Attack";
     }
 
     @Override
@@ -55,14 +56,18 @@ public class ScoreScoreboard implements IScoreboardLayout
         final ContentBuilder builder = IScoreboardLayout.builder();
         builder.box(this.msg).locale(player.spigot().getLocale());
 
-        builder.add("Score Attack", "");
+        builder.add("");
         builder.translated("scoreboard.score.points", playerData.getPoints());
         builder.add("");
         builder.translated("scoreboard.score.top3");
 
-        for (final Map.Entry<Player, Integer> entry : this.getRanking(arena, 3).entrySet())
+        final Map<Player, Integer> ranking = this.getRanking(arena, 3);
+
+        final int max = ranking.values().iterator().next();
+
+        for (final Map.Entry<Player, Integer> entry : ranking.entrySet())
         {
-            builder.translated("scoreboard.score.top3_line", entry.getValue(), entry.getKey().getDisplayName());
+            builder.translated("scoreboard.score.top3_line", this.align(max, entry.getValue()), entry.getKey().getDisplayName());
         }
 
         builder.add("");
@@ -71,9 +76,16 @@ public class ScoreScoreboard implements IScoreboardLayout
         return builder.getContent();
     }
 
+    private String align(final int max, final int points)
+    {
+        final int maxLength = String.valueOf(max).length();
+        final String pointsString = String.valueOf(points);
+        return StringUtils.repeat('0', maxLength - pointsString.length()) + pointsString;
+    }
+
     private Map<Player, Integer> getRanking(final LocalArena arena, int limit)
     {
-        final Map<Player, Integer> ranking = new HashMap<>();
+        final Map<Player, Integer> ranking = new LinkedHashMap<>();
         for (final Player player : arena.getPlayersManager().getPlayers())
         {
             final ElytraScorePlayer playerData = getPlayerData(player, ElytraScorePlayer.class);
@@ -84,12 +96,12 @@ public class ScoreScoreboard implements IScoreboardLayout
                       .stream()
                       .sorted(this::rankingComparator)
                       .limit(limit)
-                      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
 
     private int rankingComparator(final Map.Entry<Player, Integer> p1, final Map.Entry<Player, Integer> p2)
     {
-        return p1.getValue() - p2.getValue();
+        return p2.getValue() - p1.getValue();
     }
 
     @Override

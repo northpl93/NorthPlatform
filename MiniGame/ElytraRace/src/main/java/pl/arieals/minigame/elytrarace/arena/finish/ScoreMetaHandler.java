@@ -39,7 +39,11 @@ public class ScoreMetaHandler implements IFinishHandler
 
         final ElytraScorePlayer scoreData = getPlayerData(player, ElytraScorePlayer.class);
 
-        this.messages.sendMessage(player, "score.finish.your_points", scoreData.getPoints());
+        arena.getPlayersManager().broadcast(
+                this.messages,
+                "score.finish.broadcast",
+                player.getDisplayName(),
+                scoreData.getPoints());
         this.points.put(player.getUniqueId(), scoreData.getPoints());
 
         if (! IFinishHandler.checkFinished(arena))

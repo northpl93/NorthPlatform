@@ -68,7 +68,7 @@ public class StartCountdown extends AbstractCountdown
         for (final Player player : this.arena.getPlayersManager().getPlayers())
         {
             final String message = translateAlternateColorCodes('&', this.msg.getMessage(player.spigot().getLocale(), "start"));
-            final Title title = new Title(message, "", 0, 10, 0);
+            final Title title = new Title(message, "", 0, 20, 0);
             player.sendTitle(title);
 
             player.setFlying(false);

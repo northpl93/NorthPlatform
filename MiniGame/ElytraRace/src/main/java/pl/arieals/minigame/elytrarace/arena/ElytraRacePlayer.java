@@ -7,8 +7,19 @@ import pl.arieals.minigame.elytrarace.cfg.Checkpoint;
 
 public class ElytraRacePlayer
 {
+    private boolean    isDev;
     private boolean    finished;
     private Checkpoint checkpoint;
+
+    public boolean isDev()
+    {
+        return this.isDev;
+    }
+
+    public void setDev(final boolean dev)
+    {
+        this.isDev = dev;
+    }
 
     public boolean isFinished()
     {
@@ -30,9 +41,23 @@ public class ElytraRacePlayer
         this.checkpoint = checkpoint;
     }
 
+    public int getCheckpointNumber()
+    {
+        final int checkpointNumber;
+        if (this.checkpoint == null)
+        {
+            checkpointNumber = 0;
+        }
+        else
+        {
+            checkpointNumber = this.checkpoint.getNumber();
+        }
+        return checkpointNumber;
+    }
+
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("finished", this.finished).append("checkpoint", this.checkpoint).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("isDev", this.isDev).append("finished", this.finished).append("checkpoint", this.checkpoint).toString();
     }
 }

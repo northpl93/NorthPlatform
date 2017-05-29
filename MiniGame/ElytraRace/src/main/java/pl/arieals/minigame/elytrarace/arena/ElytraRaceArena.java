@@ -16,6 +16,7 @@ import pl.arieals.minigame.elytrarace.arena.finish.IFinishHandler;
 import pl.arieals.minigame.elytrarace.arena.finish.RaceMetaHandler;
 import pl.arieals.minigame.elytrarace.arena.finish.ScoreMetaHandler;
 import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
+import pl.arieals.minigame.elytrarace.cfg.Checkpoint;
 import pl.arieals.minigame.elytrarace.cfg.Score;
 import pl.arieals.minigame.elytrarace.cfg.ScoreGroup;
 
@@ -78,6 +79,11 @@ public class ElytraRaceArena implements IArenaData
     public ScoreGroup getScoreGroup(final String name)
     {
         return findInCollection(this.arenaConfig.getScoreGroups(), ScoreGroup::getName, name);
+    }
+
+    public int getMaxCheckpoints() // ilosc checkpointow, uzywane przy wyswietlaniu rzeczy typu: 2/7 checkpointy zaliczone.
+    {
+        return this.arenaConfig.getCheckpoints().stream().mapToInt(Checkpoint::getNumber).max().orElse(0);
     }
 
     @Override

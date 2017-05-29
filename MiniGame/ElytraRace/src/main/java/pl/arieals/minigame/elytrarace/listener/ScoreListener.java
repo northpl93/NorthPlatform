@@ -84,12 +84,8 @@ public class ScoreListener implements Listener
                 return;
             }
             reachedAchieveGroups.add(achieveGroup);
-        }
 
-        // wyszarzamy odpowiednie score na podstawie achievegroup
-        arena.getScoreController(score).makeGray(player);
-        if (score.getAchieveGroup() != null)
-        {
+            // wyszarzamy odpowiednie score na podstawie achievegroup
             for (final Score scoreToCheck : arena.getArenaConfig().getScores())
             {
                 if (scoreToCheck == score || ! score.getAchieveGroup().equals(scoreToCheck.getAchieveGroup()))
@@ -100,6 +96,11 @@ public class ScoreListener implements Listener
                 arena.getScoreController(scoreToCheck).makeGray(player);
             }
         }
+
+        // wyszarzamy ten score.
+        final ScoreController scoreController = arena.getScoreController(score);
+        scoreController.makeGray(player);
+        scoreController.playBreakAnimation(player);
 
         // gracz moze zaliczyc kazdy score jeden raz
         final List<Score> reachedScores = scorePlayer.getReachedScores();
