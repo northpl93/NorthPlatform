@@ -29,7 +29,7 @@ public class ModifyListener implements Listener
     public void destroyBlock(final BlockBreakEvent event)
     {
         final ElytraRacePlayer playerData = getPlayerData(event.getPlayer(), ElytraRacePlayer.class);
-        if (playerData.isDev())
+        if (playerData != null && playerData.isDev())
         {
             return;
         }
@@ -40,7 +40,7 @@ public class ModifyListener implements Listener
     public void inventoryModify(final InventoryClickEvent event)
     {
         final ElytraRacePlayer playerData = getPlayerData((Player) event.getWhoClicked(), ElytraRacePlayer.class);
-        if (playerData.isDev())
+        if (playerData != null && playerData.isDev())
         {
             return;
         }

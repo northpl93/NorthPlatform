@@ -75,7 +75,7 @@ public class CheckpointListener implements Listener
         }
 
         elytraPlayer.setCheckpoint(checkpoint);
-        this.messages.sendMessage(player, "checkpoint_taken", elytraPlayer.getCheckpointNumber(), arena.getMaxCheckpoints());
+        this.messages.sendMessage(player, "checkpoint.taken", elytraPlayer.getCheckpointNumber(), arena.getMaxCheckpoints());
     }
 
     @EventHandler
@@ -95,7 +95,11 @@ public class CheckpointListener implements Listener
         }
 
         final DamageCause cause = event.getCause();
-        if (cause == DamageCause.FLY_INTO_WALL || cause == DamageCause.FALL || cause == DamageCause.VOID)
+        if (cause == DamageCause.FLY_INTO_WALL || cause == DamageCause.VOID)
+        {
+            this.backToCheckpoint(player);
+        }
+        else if (cause == DamageCause.FALL && event.getDamage() > 1)
         {
             this.backToCheckpoint(player);
         }
@@ -130,6 +134,8 @@ public class CheckpointListener implements Listener
         {
             return;
         }
+
+        this.messages.sendMessage(player, "checkpoint.teleport");
 
         final Checkpoint checkpoint = elytraPlayer.getCheckpoint();
         if (checkpoint != null)

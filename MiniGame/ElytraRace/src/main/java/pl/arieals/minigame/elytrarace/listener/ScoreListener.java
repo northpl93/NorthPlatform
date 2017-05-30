@@ -111,19 +111,19 @@ public class ScoreListener implements Listener
         reachedScores.add(score);
 
         final int combo = scorePlayer.checkCombo(scoreGroup);
-        final int points;
+        int points = scoreGroup.getPoints();
+
+        this.messages.sendMessage(player, "score.points_added", points);
+
         if (combo >= 3)
         {
             scorePlayer.setCombo(0);
-            points = scoreGroup.getComboPoints();
-        }
-        else
-        {
-            points = scoreGroup.getPoints();
+            final int comboPoints = scoreGroup.getComboPoints();
+            points += comboPoints;
+            this.messages.sendMessage(player, "score.points_added_combo", comboPoints);
         }
 
         scorePlayer.incrementPoints(points);
-        this.messages.sendMessage(player, "score.points_added", points);
     }
 
     private void removeScorePoints(final LocalArena arena, final ElytraRaceArena arenaData)
