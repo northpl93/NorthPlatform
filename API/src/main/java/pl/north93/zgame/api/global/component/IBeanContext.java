@@ -8,6 +8,8 @@ public interface IBeanContext
 
     String getBeanContextName();
 
+    <T> T getBean(IBeanQuery query);
+
     <T> T getBean(Class<T> clazz);
 
     <T> T getBean(String beanName);
@@ -15,4 +17,6 @@ public interface IBeanContext
     <T> Collection<T> getBeans(Class<T> clazz);
 
     <T> Collection<T> getBeans(String name);
+
+    <T> Collection<T> getBeans(IBeanQuery query);
 }

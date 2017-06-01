@@ -9,7 +9,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.ApiCore;
-import pl.north93.zgame.api.global.component.impl.Injector;
 
 public abstract class Component implements IBeanContext
 {
@@ -78,8 +77,6 @@ public abstract class Component implements IBeanContext
         this.apiCore.getLogger().info("Enabling component " + this.getName() + " (packages used to scan: " + prettyPackages + ")");
         try
         {
-            Injector.inject(this.manager, this); // inject annotations
-            this.componentBundle.doExtensionsScan();
             this.enableComponent();
         }
         catch (final Exception e)

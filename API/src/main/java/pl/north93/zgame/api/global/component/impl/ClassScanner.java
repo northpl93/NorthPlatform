@@ -6,7 +6,6 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
@@ -17,7 +16,6 @@ import org.reflections.scanners.FieldAnnotationsScanner;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -31,11 +29,35 @@ import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.component.IComponentManager;
 import pl.north93.zgame.api.global.component.annotations.*;
+import pl.north93.zgame.api.global.component.annotations.bean.Bean;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 class ClassScanner
 {
     private static final String INJECTOR_NAME = Injector.class.getName();
     private static final String API_NAME = API.class.getName();
+
+    static void scan(final ComponentManagerImpl manager, final URL fileUrl, final ClassLoader classLoader, final AbstractBeanContext beanContext)
+    {
+        final ConfigurationBuilder configuration = new ConfigurationBuilder();
+        configuration.setClassLoaders(new ClassLoader[]{classLoader});
+        configuration.setScanners(new SubTypesScanner(false), new MethodAnnotationsScanner(), new FieldAnnotationsScanner());
+        configuration.setUrls(fileUrl);
+
+        final Reflections reflections = new Reflections(configuration);
+        final ClassPool classPool = getClassPool(classLoader);
+
+        for (final Class<?> aClass : getAllClasses(reflections))
+        {
+            if (aClass.isAnnotationPresent(SkipInjections.class))
+            {
+                continue;
+            }
+
+
+        }
+
+    }
 
     static void scan(final URL fileUrl, final ClassLoader classLoader, final IComponentManager componentManager)
     {

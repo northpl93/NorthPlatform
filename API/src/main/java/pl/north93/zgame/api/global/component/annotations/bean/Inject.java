@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.component.annotations;
+package pl.north93.zgame.api.global.component.annotations.bean;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,11 +9,4 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 public @interface Inject
 {
-    /**
-     * Opcjonalna nazwa beana do wstrzyknięcia.
-     * Jeśli nie podana wstrzykiwanie będzie oparte o typ.
-     *
-     * @return nazwa beana.
-     */
-    String name() default "";
 }

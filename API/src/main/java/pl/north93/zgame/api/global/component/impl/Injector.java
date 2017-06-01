@@ -2,16 +2,9 @@ package pl.north93.zgame.api.global.component.impl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.logging.Logger;
 
-import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.ApiCore;
-import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.IComponentManager;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectMessages;
-import pl.north93.zgame.api.global.component.annotations.InjectNewInstance;
-import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.component.annotations.bean.Named;
 
 public class Injector
 {
@@ -30,12 +23,22 @@ public class Injector
         }
     }
 
-    public static void inject(final IComponentManager componentManager, final Object instance)
+    public static void inject(final Object instance)
     {
+        final ComponentManagerImpl manager = ComponentManagerImpl.instance;
         final Class<?> clazz = instance.getClass();
+
+        final AbstractBeanContext context = manager.getOwningContext(clazz);
+
         for (final Field field : clazz.getDeclaredFields())
         {
             field.setAccessible(true);
+
+            final Inject injectAnn = field.getAnnotation(Inject.class);
+            if (injectAnn == null)
+            {
+                continue;
+            }
 
             if (Modifier.isFinal(field.getModifiers()))
             {
@@ -48,72 +51,16 @@ public class Injector
                 }
             }
 
-            if (field.isAnnotationPresent(InjectComponent.class))
+            final BeanQuery query = new BeanQuery();
+            query.type(field.getType());
+            final Named namedAnn = field.getAnnotation(Named.class);
+            if (namedAnn != null)
             {
-                final InjectComponent annotation = field.getAnnotation(InjectComponent.class);
-                final Component component = componentManager.getComponent(annotation.value());
-
-                try
-                {
-                    field.set(instance, component);
-                }
-                catch (final IllegalAccessException e)
-                {
-                    e.printStackTrace();
-                }
-                continue;
+                query.name(namedAnn.value());
             }
 
-            if (field.isAnnotationPresent(InjectMessages.class))
-            {
-                final InjectMessages annotation = field.getAnnotation(InjectMessages.class);
-                final ClassLoader classLoader = instance.getClass().getClassLoader();
+            final Object bean = context.getBean(query);
 
-                try
-                {
-                    field.set(instance, new MessagesBox(classLoader, annotation.value()));
-                }
-                catch (final IllegalAccessException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-
-            if (field.isAnnotationPresent(InjectNewInstance.class))
-            {
-                try
-                {
-                    field.set(instance, field.getType().newInstance());
-                }
-                catch (final IllegalAccessException | InstantiationException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-
-            if (ApiCore.class.isAssignableFrom(field.getType()))
-            {
-                try
-                {
-                    field.set(instance, API.getApiCore());
-                }
-                catch (final IllegalAccessException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-
-            if (field.getType().equals(Logger.class))
-            {
-                try
-                {
-                    field.set(instance, API.getApiCore().getLogger());
-                }
-                catch (final IllegalAccessException e)
-                {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 }

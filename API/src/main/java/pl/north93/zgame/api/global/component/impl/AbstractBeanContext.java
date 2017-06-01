@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import pl.north93.zgame.api.global.component.IBeanContext;
+import pl.north93.zgame.api.global.component.IBeanQuery;
 import pl.north93.zgame.api.global.component.exceptions.BeanNotFoundException;
 
 abstract class AbstractBeanContext implements IBeanContext
@@ -29,6 +30,18 @@ abstract class AbstractBeanContext implements IBeanContext
         this.registeredBeans.add(bean);
     }
 
+    @Override
+    public IBeanContext getParent()
+    {
+        return this.parent;
+    }
+
+    @Override
+    public String getBeanContextName()
+    {
+        return this.name;
+    }
+
     public Collection<BeanContainer> getAll()
     {
         if (this.parent != null)
@@ -42,37 +55,48 @@ abstract class AbstractBeanContext implements IBeanContext
     }
 
     @Override
-    public IBeanContext getParent()
+    public <T> T getBean(final IBeanQuery query)
     {
-        return this.parent;
+        //noinspection unchecked
+        return (T) this.beanStream()
+                       .filter((BeanQuery) query)
+                       .reduce((u, v) -> { throw new IllegalStateException("More than one bean found. Use getBeans!"); })
+                       .map(BeanContainer::getValue)
+                       .orElseThrow(BeanNotFoundException::new);
     }
 
     @Override
-    public String getBeanContextName()
+    public <T> Collection<T> getBeans(final IBeanQuery query)
     {
-        return this.name;
+        //noinspection unchecked
+        return (Collection<T>) this.beanStream()
+                                   .filter((BeanQuery) query)
+                                   .map(BeanContainer::getValue)
+                                   .collect(Collectors.toSet());
+    }
+
+    @Override
+    public <T> Collection<T> getBeans(final Class<T> clazz)
+    {
+        return this.getBeans(new BeanQuery());
+    }
+
+    @Override
+    public <T> Collection<T> getBeans(final String name)
+    {
+        return this.getBeans(new BeanQuery());
     }
 
     @Override
     public <T> T getBean(final Class<T> clazz)
     {
-        final Collection<T> beans = this.getBeans(clazz);
-        if (beans.size() < 2)
-        {
-            return beans.stream().findFirst().orElseThrow(BeanNotFoundException::new);
-        }
-        return null;
+        return this.getBean(new BeanQuery().type(clazz));
     }
 
     @Override
     public <T> T getBean(final String beanName)
     {
-        final Collection<T> beans = this.getBeans(beanName);
-        if (beans.size() < 2)
-        {
-            return beans.stream().findFirst().orElseThrow(BeanNotFoundException::new);
-        }
-        return null;
+        return this.getBean(new BeanQuery().name(beanName));
     }
 
     private Stream<BeanContainer> beanStream()
@@ -82,19 +106,5 @@ abstract class AbstractBeanContext implements IBeanContext
             return Stream.concat(this.registeredBeans.stream(), this.parent.beanStream());
         }
         return this.registeredBeans.stream();
-    }
-
-    @Override
-    public <T> Collection<T> getBeans(final Class<T> clazz)
-    {
-        //noinspection unchecked
-        return (Collection<T>) this.beanStream().filter(bean -> bean.getType().equals(clazz)).map(BeanContainer::getValue).collect(Collectors.toSet());
-    }
-
-    @Override
-    public <T> Collection<T> getBeans(final String name)
-    {
-        //noinspection unchecked
-        return (Collection<T>) this.beanStream().filter(bean -> bean.getName().equals(name)).map(BeanContainer::getValue).collect(Collectors.toSet());
     }
 }

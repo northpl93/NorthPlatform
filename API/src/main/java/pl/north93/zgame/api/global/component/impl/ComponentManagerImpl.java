@@ -17,7 +17,6 @@ import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -33,16 +32,18 @@ import pl.north93.zgame.api.global.component.IComponentManager;
 
 public class ComponentManagerImpl implements IComponentManager
 {
+    /*default*/ static ComponentManagerImpl instance;
     private final ApiCore                  apiCore;
     private final List<ComponentBundle>    components = new ArrayList<>();
-    private final Map<Class<?>, ClassMeta> classMetaMap;
-    private final AbstractBeanContext      rootBeanCtx = new AbstractBeanContext(null, "Root") {};
+    private final RootBeanContext          rootBeanCtx = new RootBeanContext();
+    private final ApiBeanContext           apiBeanCtx  = new ApiBeanContext(this.rootBeanCtx);
+
     private boolean autoEnable;
 
     public ComponentManagerImpl(final ApiCore apiCore)
     {
+        instance = this;
         this.apiCore = apiCore;
-        this.classMetaMap = new ConcurrentHashMap<>(128);
     }
 
     private void initComponent(final ComponentBundle component)
@@ -148,11 +149,6 @@ public class ComponentManagerImpl implements IComponentManager
         return true;
     }
 
-    public ClassMeta getClassMeta()
-    {
-
-    }
-
     @Override
     public void doComponentScan(final String componentsYml, final ClassLoader classLoader)
     {
@@ -200,7 +196,7 @@ public class ComponentManagerImpl implements IComponentManager
         final JarComponentLoader loader;
         try
         {
-            loader = new JarComponentLoader(file.toURI().toURL(), this.getClass().getClassLoader());
+            loader = new JarComponentLoader(this.rootBeanCtx, file.toURI().toURL(), this.getClass().getClassLoader());
         }
         catch (final MalformedURLException e)
         {
@@ -317,6 +313,39 @@ public class ComponentManagerImpl implements IComponentManager
     public Collection<? extends IComponentBundle> getComponents()
     {
         return Collections.unmodifiableList(this.components);
+    }
+
+    /*default*/ AbstractBeanContext getOwningContext(final Class<?> clazz)
+    {
+        final ClassLoader classLoader = clazz.getClassLoader();
+        if (classLoader == this.getClass().getClassLoader())
+        {
+            return this.apiBeanCtx;
+        }
+
+        final String packageName = clazz.getPackage().getName();
+        for (final ComponentBundle component : this.components)
+        {
+            if (component.getClassLoader() != classLoader)
+            {
+                continue;
+            }
+
+            for (final String basePackage : component.getBasePackages())
+            {
+                if (basePackage.startsWith(packageName))
+                {
+                    return component;
+                }
+            }
+        }
+
+        if (classLoader instanceof JarComponentLoader)
+        {
+            return ((JarComponentLoader) classLoader).getBeanContext();
+        }
+
+        throw new IllegalArgumentException("Not found bean context for class " + clazz.getName());
     }
 
     @Override

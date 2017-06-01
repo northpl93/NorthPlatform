@@ -12,7 +12,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import org.diorite.utils.lazy.LazyValue;
 
-import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import javassist.ClassPool;
 import javassist.LoaderClassPath;
 import pl.north93.zgame.api.global.ApiCore;
@@ -20,20 +19,19 @@ import pl.north93.zgame.api.global.ApiCore;
 class JarComponentLoader extends URLClassLoader
 {
     private final URL                      fileUrl;
-    private final Set<String>              scannedPackages;
     private final Map<String, Class<?>>    classCache;
     private final Set<JarComponentLoader>  dependencies;
     private final LazyValue<ClassPool>     classPool;
+    private final JarBeanContext           beanContext;
 
-    public JarComponentLoader(final URL url, final ClassLoader parent)
+    public JarComponentLoader(final RootBeanContext rootBeanContext, final URL url, final ClassLoader parent)
     {
         super(new URL[] { url }, parent);
         this.fileUrl = url;
-        this.scannedPackages = new ObjectArraySet<>(4);
         this.classCache = new ConcurrentHashMap<>(16);
-        this.classMetaMap = new ConcurrentHashMap<>(16);
         this.dependencies = new HashSet<>();
         this.classPool = new LazyValue<>(this::generateClassPool);
+        this.beanContext = new JarBeanContext(rootBeanContext, this);
     }
 
     private ClassPool generateClassPool()
@@ -67,7 +65,6 @@ class JarComponentLoader extends URLClassLoader
         {
             final Class<?> clazz = super.findClass(name);
             this.classCache.put(name, clazz);
-            this.classMetaMap.put(clazz, new ClassMeta(clazz));
             return clazz;
         }
         catch (final ClassNotFoundException ignored)
@@ -107,6 +104,11 @@ class JarComponentLoader extends URLClassLoader
     public ClassPool getClassPool()
     {
         return this.classPool.get();
+    }
+
+    public JarBeanContext getBeanContext()
+    {
+        return this.beanContext;
     }
 
     @Override
