@@ -18,7 +18,7 @@ public class ModifyListener implements Listener
     public void placeBlock(final BlockPlaceEvent event)
     {
         final ElytraRacePlayer playerData = getPlayerData(event.getPlayer(), ElytraRacePlayer.class);
-        if (playerData.isDev())
+        if (playerData != null && playerData.isDev())
         {
             return;
         }
