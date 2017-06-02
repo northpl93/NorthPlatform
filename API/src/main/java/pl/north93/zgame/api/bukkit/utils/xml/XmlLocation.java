@@ -30,6 +30,15 @@ public class XmlLocation
     {
     }
 
+    public XmlLocation(final Location location)
+    {
+        this.x = location.getX();
+        this.y = location.getY();
+        this.z = location.getZ();
+        this.yaw = location.getYaw();
+        this.pitch = location.getPitch();
+    }
+
     public XmlLocation(final double x, final double y, final double z, final float yaw, final float pitch)
     {
         this.x = x;

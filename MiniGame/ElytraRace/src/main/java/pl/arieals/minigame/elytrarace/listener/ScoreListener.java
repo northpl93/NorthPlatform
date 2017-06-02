@@ -97,11 +97,6 @@ public class ScoreListener implements Listener
             }
         }
 
-        // wyszarzamy ten score.
-        final ScoreController scoreController = arena.getScoreController(score);
-        scoreController.makeGray(player);
-        scoreController.playBreakAnimation(player);
-
         // gracz moze zaliczyc kazdy score jeden raz
         final List<Score> reachedScores = scorePlayer.getReachedScores();
         if (reachedScores.contains(score))
@@ -109,6 +104,11 @@ public class ScoreListener implements Listener
             return;
         }
         reachedScores.add(score);
+
+        // wyszarzamy ten score.
+        final ScoreController scoreController = arena.getScoreController(score);
+        scoreController.makeGray(player);
+        scoreController.playBreakAnimation(player);
 
         final int combo = scorePlayer.checkCombo(scoreGroup);
         int points = scoreGroup.getPoints();

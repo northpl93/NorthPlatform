@@ -15,10 +15,6 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Score
 {
-    // TODO
-    // gdy gracz przeleci przez achieveGroup to wyszarzamy
-    // pozostale ringi i niepozwalamy mu na zdobywanie ich
-
     @XmlElement(required = true)
     private XmlCuboid area;
     @XmlAttribute()

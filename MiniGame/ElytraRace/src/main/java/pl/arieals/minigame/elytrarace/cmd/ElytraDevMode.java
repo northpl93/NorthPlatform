@@ -25,6 +25,12 @@ public class ElytraDevMode extends NorthCommand
         final Player player = (Player) sender.unwrapped();
         final ElytraRacePlayer playerData = getPlayerData(player, ElytraRacePlayer.class);
 
+        if (playerData == null)
+        {
+            player.sendMessage(ChatColor.RED + "Brak ElytraRacePlayer, tej komendy mozesz uzyc tylko po starcie gry.");
+            return;
+        }
+
         if (playerData.isDev())
         {
             player.sendMessage(ChatColor.RED + "Wylaczono tryb dev dla " + player.getDisplayName());
