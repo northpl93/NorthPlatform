@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.IBeanQuery;
 
-class BeanQuery implements IBeanQuery, Predicate<BeanContainer>
+class BeanQuery implements IBeanQuery, Predicate<AbstractBeanContainer>
 {
     private String name;
     private Class<?> type;
@@ -36,7 +36,7 @@ class BeanQuery implements IBeanQuery, Predicate<BeanContainer>
     }
 
     @Override
-    public boolean test(final BeanContainer beanContainer)
+    public boolean test(final AbstractBeanContainer beanContainer)
     {
         if (! StringUtils.isEmpty(this.name) && ! beanContainer.getName().equals(this.name))
         {

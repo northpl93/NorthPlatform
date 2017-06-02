@@ -14,9 +14,9 @@ import pl.north93.zgame.api.global.component.exceptions.BeanNotFoundException;
 
 abstract class AbstractBeanContext implements IBeanContext
 {
-    private final AbstractBeanContext parent;
-    private final String              name;
-    private final List<BeanContainer> registeredBeans;
+    protected final AbstractBeanContext         parent;
+    protected final String                      name;
+    protected final List<AbstractBeanContainer> registeredBeans;
 
     public AbstractBeanContext(final AbstractBeanContext parent, final String name)
     {
@@ -25,7 +25,7 @@ abstract class AbstractBeanContext implements IBeanContext
         this.name = name;
     }
 
-    public void add(final BeanContainer bean)
+    public void add(final AbstractBeanContainer bean)
     {
         this.registeredBeans.add(bean);
     }
@@ -42,11 +42,11 @@ abstract class AbstractBeanContext implements IBeanContext
         return this.name;
     }
 
-    public Collection<BeanContainer> getAll()
+    public Collection<AbstractBeanContainer> getAll()
     {
         if (this.parent != null)
         {
-            final Set<BeanContainer> beans = new HashSet<>();
+            final Set<AbstractBeanContainer> beans = new HashSet<>();
             beans.addAll(this.parent.getAll());
             beans.addAll(this.registeredBeans);
             return beans;
@@ -61,7 +61,7 @@ abstract class AbstractBeanContext implements IBeanContext
         return (T) this.beanStream()
                        .filter((BeanQuery) query)
                        .reduce((u, v) -> { throw new IllegalStateException("More than one bean found. Use getBeans!"); })
-                       .map(BeanContainer::getValue)
+                       .map(container -> container.getValue(null))
                        .orElseThrow(BeanNotFoundException::new);
     }
 
@@ -71,7 +71,7 @@ abstract class AbstractBeanContext implements IBeanContext
         //noinspection unchecked
         return (Collection<T>) this.beanStream()
                                    .filter((BeanQuery) query)
-                                   .map(BeanContainer::getValue)
+                                   .map(container -> container.getValue(null))
                                    .collect(Collectors.toSet());
     }
 
@@ -99,7 +99,7 @@ abstract class AbstractBeanContext implements IBeanContext
         return this.getBean(new BeanQuery().name(beanName));
     }
 
-    private Stream<BeanContainer> beanStream()
+    private Stream<AbstractBeanContainer> beanStream()
     {
         if (this.parent != null)
         {
