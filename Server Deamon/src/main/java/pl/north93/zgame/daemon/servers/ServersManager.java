@@ -95,7 +95,7 @@ public class ServersManager
     {
         API.getLogger().info("Deploying new server with id " + serverId + " and template " + serverTemplate);
         this.controller.updateServerState(serverId, ServerState.INSTALLING);
-        final ServerPattern pattern = API.getNetworkManager().getServerPattern(serverTemplate);
+        final ServerPattern pattern = API.getNetworkManager().getServers().getServerPattern(serverTemplate);
 
         final File serverWorkspace = new File(this.workspace, serverId.toString());
         this.setupWorkspace(serverWorkspace, pattern);
