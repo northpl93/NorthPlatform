@@ -27,9 +27,13 @@ import pl.arieals.minigame.elytrarace.arena.StartCountdown;
 import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
+import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class ArenaStartListener implements Listener
 {
+    @InjectMessages("ElytraRace")
+    private MessagesBox messages;
     private BukkitApiCore apiCore;
 
     @EventHandler
@@ -40,8 +44,10 @@ public class ArenaStartListener implements Listener
 
         this.setupPlayers(event.getArena(), arenaData);
 
-        // task odpalający arenę po 10 sekundach
-        new StartCountdown(10, event.getArena()).start(20);
+        event.getArena().getPlayersManager().broadcast(this.messages, arenaData.getGameMode() == ElytraRaceMode.SCORE_MODE ? "score.welcome" : "race.welcome");
+
+        // task odpalający arenę po 15 sekundach
+        new StartCountdown(15, event.getArena()).start(20);
     }
 
     private ArenaConfig loadConfig(final LocalArena arena)

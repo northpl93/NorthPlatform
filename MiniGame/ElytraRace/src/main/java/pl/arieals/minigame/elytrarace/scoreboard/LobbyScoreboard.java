@@ -28,7 +28,7 @@ public class LobbyScoreboard implements IScoreboardLayout
     @Override
     public String getTitle(final IScoreboardContext context)
     {
-        return "&eElytra Race";
+        return "&e&lElytra Race";
     }
 
     @Override
@@ -40,6 +40,7 @@ public class LobbyScoreboard implements IScoreboardLayout
         final ContentBuilder content = IScoreboardLayout.builder();
         content.box(this.msg).locale(player.spigot().getLocale());
 
+        content.add("");
         if (arena.getStartScheduler().isStartScheduled())
         {
             content.translated("scoreboard.lobby.start", arena.getTimer().calcTimeTo(0, TimeUnit.SECONDS, TimeUnit.SECONDS));
