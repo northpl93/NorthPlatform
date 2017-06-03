@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.global.commands.impl;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -8,10 +11,12 @@ import pl.north93.zgame.api.bungee.BungeeCommandsManager;
 import pl.north93.zgame.api.global.commands.ICommandsManager;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.standalone.commands.StandaloneCommandsManager;
 
 public class CommandsManagerDecorator extends Component implements ICommandsManager
 {
+    private Set<NorthCommand> northCommands = new HashSet<>();
     private ICommandsManager commandsManager;
 
     @Override
@@ -29,10 +34,28 @@ public class CommandsManagerDecorator extends Component implements ICommandsMana
                 this.commandsManager = new StandaloneCommandsManager();
         }
 
+        for (final NorthCommand northCommand : this.northCommands)
+        {
+            this.registerCommand(northCommand);
+        }
+
         //this.getExtensionPoint(NorthCommand.class).setHandler(this::registerCommand);
 
         //final IAnnotatedExtensionPoint quickCommandExtension = (IAnnotatedExtensionPoint) this.getExtensionPoint(QuickCommand.class);
         //quickCommandExtension.setAnnotatedHandler(this::handleQuickCommandAnnotation);
+    }
+
+    @Aggregator(NorthCommand.class)
+    public void handleNorthCommand(final NorthCommand northCommand)
+    {
+        if (this.commandsManager != null)
+        {
+            this.commandsManager.registerCommand(northCommand);
+        }
+        else
+        {
+            this.northCommands.add(northCommand);
+        }
     }
 
     /*private void handleQuickCommandAnnotation(final IAnnotated annotated)

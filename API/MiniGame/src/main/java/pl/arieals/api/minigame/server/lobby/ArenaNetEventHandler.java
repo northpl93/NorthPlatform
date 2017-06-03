@@ -7,13 +7,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.lobby.event.IncomingArenaNetEvent;
 import pl.arieals.api.minigame.shared.api.arena.netevent.IArenaNetEvent;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.subscriber.SubscriptionHandler;
 
 public class ArenaNetEventHandler implements SubscriptionHandler
 {
-    @InjectComponent("API.Database.Redis.MessagePackSerializer")
+    @Inject
     private TemplateManager msgPack;
 
     @Override

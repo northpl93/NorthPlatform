@@ -24,8 +24,8 @@ import org.diorite.utils.cooldown.CooldownEntry;
 import org.diorite.utils.cooldown.CooldownManager;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
@@ -37,14 +37,15 @@ import pl.north93.zgame.datashare.sharedimpl.PlayerDataShareComponent;
 public class ChatSharingManager implements Listener
 {
     private static final long COOLDOWN_TIME = TimeUnit.SECONDS.toMillis(15);
+    @Inject
     private BukkitApiCore            apiCore;
-    @InjectComponent("API.Database.Redis.Subscriber")
+    @Inject
     private RedisSubscriber          redisSubscriber;
-    @InjectComponent("API.Database.Redis.MessagePackSerializer")
+    @Inject
     private TemplateManager          msgPack;
-    @InjectComponent("PlayerDataShare.SharedImpl")
+    @Inject
     private PlayerDataShareComponent shareComponent;
-    @InjectMessages("PlayerDataShare")
+    @Inject @Messages("PlayerDataShare")
     private MessagesBox              messages;
     private CooldownManager<UUID>    chatCooldown;
     private UUID                     serverId;

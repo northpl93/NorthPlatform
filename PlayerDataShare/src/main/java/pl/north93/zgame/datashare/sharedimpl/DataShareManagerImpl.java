@@ -19,7 +19,7 @@ import org.bson.Document;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.ApiCore;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
@@ -33,12 +33,13 @@ import pl.north93.zgame.datashare.api.data.IDataUnitSerialization;
 
 public class DataShareManagerImpl implements IDataShareManager
 {
+    @Inject
     private ApiCore             apiCore;
-    @InjectComponent("API.Database.Redis.Subscriber")
+    @Inject
     private RedisSubscriber     subscriber;
-    @InjectComponent("API.Database.Redis.MessagePackSerializer")
+    @Inject
     private TemplateManager     msgPack;
-    @InjectComponent("API.Database.Redis.Observer")
+    @Inject
     private IObservationManager observer;
     private final ShareDataDao                    dataDao   = new ShareDataDao();
     private final Map<String, RegisteredDataUnit> dataUnits = new HashMap<>();

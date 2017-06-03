@@ -13,8 +13,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
@@ -32,9 +32,9 @@ public class WebAuthManagerImpl implements IWebAuthManager
 {
     private static final Gson gson = new Gson();
     private final WebAuthConfig config;
-    @InjectComponent("API.Database.Redis.Observer")
+    @Inject
     private IObservationManager observer;
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager     networkManager;
     private Cache<String, UUID> keys;
 

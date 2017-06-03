@@ -9,15 +9,15 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.Pair;
 
 import pl.north93.zgame.api.economy.ICurrencyRanking;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.SortedSet;
 
 public class CurrencyRankingImpl implements ICurrencyRanking
 {
     private final String currencyName;
-    @InjectComponent("API.Database.Redis.Observer")
+    @Inject
     private IObservationManager observationManager;
     private SortedSet<UUID>     ranking;
 

@@ -37,6 +37,7 @@ public class ComponentManagerImpl implements IComponentManager
     private final ApiCore                  apiCore;
     private final List<ComponentBundle>    components = new ArrayList<>();
     private final RootBeanContext          rootBeanCtx = new RootBeanContext();
+    private final AggregationManager       aggregationManager = new AggregationManager();
 
     private boolean autoEnable;
     private List<ClassLoader> scannedClassloaders = new ArrayList<>();
@@ -45,9 +46,12 @@ public class ComponentManagerImpl implements IComponentManager
     {
         instance = this;
         this.apiCore = apiCore;
+    }
 
-        this.rootBeanCtx.add(new StaticBeanContainer(apiCore.getClass(), "ApiCore", apiCore));
-        this.rootBeanCtx.add(new StaticBeanContainer(Logger.class, "ApiLogger", apiCore.getLogger()));
+    public void initDefaultBeans()
+    {
+        this.rootBeanCtx.add(new StaticBeanContainer(this.apiCore.getClass(), "ApiCore", this.apiCore));
+        this.rootBeanCtx.add(new StaticBeanContainer(Logger.class, "ApiLogger", this.apiCore.getLogger()));
     }
 
     private void initComponent(final ComponentBundle component)
@@ -59,9 +63,14 @@ public class ComponentManagerImpl implements IComponentManager
         }
     }
 
+    private boolean canLoad(final ComponentDescription componentDescription)
+    {
+        return componentDescription.isEnabled() && ArrayUtils.contains(componentDescription.getPlatforms(), this.apiCore.getPlatform());
+    }
+
     private void loadComponent(final ClassLoader classLoader, final ComponentDescription componentDescription)
     {
-        if (! componentDescription.isEnabled() || ! ArrayUtils.contains(componentDescription.getPlatforms(), this.apiCore.getPlatform()))
+        if (! this.canLoad(componentDescription))
         {
             return; // skip loading of component
         }
@@ -97,6 +106,7 @@ public class ComponentManagerImpl implements IComponentManager
 
             this.initComponent(componentBundle);
         }
+        return;
     }
 
     private boolean canEnableComponent(final ComponentBundle componentBundle)
@@ -178,12 +188,13 @@ public class ComponentManagerImpl implements IComponentManager
         }
         final Reader reader = new InputStreamReader(stream);
         final ComponentsConfig componentsConfig = TemplateCreator.getTemplate(ComponentsConfig.class).load(reader, classLoader);
+
         for (final ComponentDescription componentDescription : componentsConfig.getComponents())
         {
             this.loadComponent(classLoader, componentDescription);
         }
 
-        this.scanClassloader(classLoader);
+        this.scanClassloader(classLoader, componentsConfig.getRootPackage(), componentsConfig.getComponents());
 
         for (final String includeConfig : componentsConfig.getInclude())
         {
@@ -191,20 +202,14 @@ public class ComponentManagerImpl implements IComponentManager
         }
     }
 
-    private void scanClassloader(final ClassLoader classLoader)
+    private void scanClassloader(final ClassLoader classLoader, final String rootPackage, final List<ComponentDescription> components)
     {
         if (this.scannedClassloaders.contains(classLoader))
         {
             return;
         }
-        if (classLoader instanceof JarComponentLoader)
-        {
-            new ClassloaderScanningTask(this, classLoader, ((JarComponentLoader) classLoader).getFileUrl()).scan();
-        }
-        else if (classLoader == this.getClass().getClassLoader())
-        {
-            new ClassloaderScanningTask(this, classLoader, this.getClass().getProtectionDomain().getCodeSource().getLocation()).scan();
-        }
+
+        ClassloaderScanningTask.create(this, classLoader).scanWithoutComponents(rootPackage, components);
         this.scannedClassloaders.add(classLoader);
     }
 
@@ -371,7 +376,7 @@ public class ComponentManagerImpl implements IComponentManager
 
             for (final String basePackage : component.getBasePackages())
             {
-                if (basePackage.startsWith(packageName))
+                if (packageName.startsWith(basePackage))
                 {
                     return component.getBeanContext();
                 }
@@ -384,6 +389,11 @@ public class ComponentManagerImpl implements IComponentManager
         }
 
         throw new IllegalArgumentException("Not found bean context for class " + clazz.getName());
+    }
+
+    /*default*/ AggregationManager getAggregationManager()
+    {
+        return this.aggregationManager;
     }
 
     @Override

@@ -9,12 +9,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.Document;
 
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.data.StorageConnector;
 
 public class ShareDataDao
 {
-    @InjectComponent("API.Database.StorageConnector")
+    @Inject
     private StorageConnector storage;
 
     public void save(final String name, final Document document)

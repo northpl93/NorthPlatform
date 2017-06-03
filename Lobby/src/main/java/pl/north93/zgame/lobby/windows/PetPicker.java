@@ -23,7 +23,7 @@ import pl.north93.zgame.lobby.config.LobbyConfig.PetConfig;
 
 public class PetPicker extends Window
 {
-    @InjectComponent("Lobby.Features")
+    @Inject
     private LobbyFeatures component;
 
     public PetPicker()

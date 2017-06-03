@@ -5,19 +5,23 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.FieldAnnotationsScanner;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 
 import javassist.ClassPool;
 import javassist.LoaderClassPath;
 import pl.north93.zgame.api.global.ApiCore;
+import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.annotations.SkipInjections;
 
 class ClassloaderScanningTask
@@ -26,7 +30,6 @@ class ClassloaderScanningTask
     private final ClassLoader                 classLoader;
     private final URL                         loadedFile;
     private final ClassPool                   classPool;
-    private final Reflections                 reflections;
     private final Queue<AbstractScanningTask> pendingTasks;
 
     public ClassloaderScanningTask(final ComponentManagerImpl manager, final ClassLoader classLoader, final URL loadedFile)
@@ -35,13 +38,59 @@ class ClassloaderScanningTask
         this.classLoader = classLoader;
         this.loadedFile = loadedFile;
         this.classPool = this.createClassPool();
-        this.reflections = this.createReflections();
         this.pendingTasks = new ArrayDeque<>();
     }
 
-    /*default*/ void scan()
+    public static ClassloaderScanningTask create(final ComponentManagerImpl manager, final ClassLoader classLoader)
     {
-        for (final Class<?> aClass : this.getAllClasses())
+        if (classLoader instanceof JarComponentLoader)
+        {
+            return new ClassloaderScanningTask(manager, classLoader, ((JarComponentLoader) classLoader).getFileUrl());
+        }
+        else if (classLoader == ClassloaderScanningTask.class.getClassLoader())
+        {
+            return new ClassloaderScanningTask(manager, classLoader, ClassloaderScanningTask.class.getProtectionDomain().getCodeSource().getLocation());
+        }
+        throw new IllegalArgumentException();
+    }
+
+    public void scanWithoutComponents(final String rootPackage, final List<ComponentDescription> components)
+    {
+        final FilterBuilder filter = new FilterBuilder();
+        filter.includePackage(rootPackage);
+        for (final ComponentDescription component : components)
+        {
+            final String pack;
+            if (StringUtils.isEmpty(component.getPackageToScan()))
+            {
+                final int lastDot = component.getMainClass().lastIndexOf('.');
+                pack = component.getMainClass().substring(0, lastDot);
+            }
+            else
+            {
+                pack = component.getPackageToScan();
+            }
+            filter.excludePackage(pack);
+        }
+        this.scan(filter);
+    }
+
+    public void scanComponent(final ComponentBundle bundle)
+    {
+        final FilterBuilder filter = new FilterBuilder();
+        for (final String pack : bundle.getBasePackages())
+        {
+            filter.includePackage(pack);
+        }
+        this.scan(filter);
+    }
+
+    /*default*/ void scan(final FilterBuilder filter)
+    {
+        final Reflections reflections = this.createReflections(filter);
+
+        final Set<Class<?>> allClasses = this.getAllClasses(reflections);
+        for (final Class<?> aClass : allClasses)
         {
             if (aClass.isAnnotationPresent(SkipInjections.class))
             {
@@ -70,20 +119,25 @@ class ClassloaderScanningTask
         {
             throw new RuntimeException("There're uncompletable class processing tasks."); // todo other exception
         }
+
+        for (final Class<?> aClass : allClasses)
+        {
+            final AbstractBeanContext beanContext = this.manager.getOwningContext(aClass);
+            this.manager.getAggregationManager().call(beanContext, aClass);
+        }
     }
 
-    /*default*/ Set<Class<?>> getAllClasses()
+    /*default*/ Set<Class<?>> getAllClasses(final Reflections reflections)
     {
-        final Collection<String> classes = this.reflections.getStore().get(SubTypesScanner.class.getSimpleName()).values();
+        final Collection<String> classes = reflections.getStore().get(SubTypesScanner.class.getSimpleName()).values();
         final Set<Class<?>> out = new HashSet<>(classes.size());
         for (final String clazz : classes)
         {
             try
             {
-                final Class<?> outClass = forName(clazz, this.reflections.getConfiguration().getClassLoaders());
+                final Class<?> outClass = forName(clazz, reflections.getConfiguration().getClassLoaders());
                 if (outClass != null)
                 {
-                    outClass.getDeclaredMethods();
                     outClass.getDeclaredFields();
                     out.add(outClass);
                 }
@@ -123,11 +177,6 @@ class ClassloaderScanningTask
         return this.classPool;
     }
 
-    /*default*/ Reflections getReflections()
-    {
-        return this.reflections;
-    }
-
     private ClassPool createClassPool()
     {
         if (this.classLoader instanceof JarComponentLoader)
@@ -144,14 +193,13 @@ class ClassloaderScanningTask
         }
     }
 
-    private Reflections createReflections()
+    private Reflections createReflections(final FilterBuilder packageFilter)
     {
         final ConfigurationBuilder configuration = new ConfigurationBuilder();
         configuration.setClassLoaders(new ClassLoader[]{this.classLoader});
         configuration.setScanners(new SubTypesScanner(false), new MethodAnnotationsScanner(), new FieldAnnotationsScanner());
         configuration.setUrls(this.loadedFile);
-
-        configuration.setInputsFilter(pack -> pack.startsWith("pl.north93"));
+        configuration.filterInputsBy(packageFilter);
 
         return new Reflections(configuration);
     }

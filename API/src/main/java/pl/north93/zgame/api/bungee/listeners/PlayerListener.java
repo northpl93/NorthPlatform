@@ -31,6 +31,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.data.UsernameCache.UsernameDetails;
 import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.data.players.impl.NameSizeMistakeException;
+import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.network.INetworkManager;
@@ -44,7 +45,7 @@ public class PlayerListener implements Listener
     private static final MetaKey  BAN_EXPIRE   = MetaKey.get("banExpireAt");
     private static final Pattern  NICK_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{3,16}$");
     private final BungeeApiCore   bungeeApiCore;
-    @Inject
+    @Inject @Messages("Messages")
     private       MessagesBox     apiMessages;
     @Inject
     private       IPlayersData    playersDao;

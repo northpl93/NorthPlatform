@@ -15,11 +15,11 @@ import net.milkbowl.vault.economy.Economy;
 import pl.north93.zgame.api.economy.IEconomyManager;
 import pl.north93.zgame.api.economy.impl.client.EconomyComponent;
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class EconomyServerComponent extends Component
 {
-    @InjectComponent("API.Economy")
+    @Inject
     private EconomyComponent economy;
     private VaultConfig      config;
 

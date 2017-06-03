@@ -43,9 +43,9 @@ import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 
 public class WorldModificationListener implements Listener
 {
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager networkManager;
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     private SkyBlockServer  server;
 
     @EventHandler

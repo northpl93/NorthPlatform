@@ -7,11 +7,11 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class LobbyExitTracker implements Listener
 {
-    @InjectComponent("MiniGameApi.Server")
+    @Inject
     private MiniGameServer server;
 
     @EventHandler

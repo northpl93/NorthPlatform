@@ -16,7 +16,7 @@ import pl.north93.zgame.skyblock.shop.ShopComponent;
 public class MoneyCmd extends NorthCommand
 {
     private final DecimalFormat format = new DecimalFormat("#.##");
-    @InjectComponent("SkyBlock.Shop.Server")
+    @Inject
     private ShopComponent shopComponent;
 
     public MoneyCmd()

@@ -47,7 +47,7 @@ public class CompassManager implements Listener, ICompassManager
 {
     private static final ItemStack COMPASS;
     private BukkitApiCore    apiCore;
-    @InjectComponent("SkyBlock.PlayerExperience.Server")
+    @Inject
     private ExperienceServer experience;
     @InjectNewInstance
     private CompassConnector compassConnector;

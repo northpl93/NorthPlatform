@@ -9,16 +9,17 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.ApiCore;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.datashare.server.PlayerDataShareServer;
 import pl.north93.zgame.datashare.sharedimpl.PlayerDataShareComponent;
 
 public class PlayerLeftListener implements Listener
 {
+    @Inject
     private ApiCore                  apiCore;
-    @InjectComponent("PlayerDataShare.SharedImpl")
+    @Inject
     private PlayerDataShareComponent dataShareManager;
-    @InjectComponent("PlayerDataShare.Bukkit")
+    @Inject
     private PlayerDataShareServer    dataShareServer;
 
     @EventHandler(priority = EventPriority.MONITOR)

@@ -20,7 +20,7 @@ import pl.north93.zgame.skyblock.server.world.WorldManager;
 
 public class TeleportListener implements Listener
 {
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     private SkyBlockServer server;
 
     private boolean canTeleport(final Player player, final Location location)

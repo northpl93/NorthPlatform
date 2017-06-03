@@ -27,12 +27,14 @@ import pl.arieals.minigame.elytrarace.cfg.Checkpoint;
 import pl.arieals.minigame.elytrarace.event.PlayerCheckpointEvent;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
-import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class CheckpointListener implements Listener
 {
-    @InjectMessages("ElytraRace")
+    @Inject
+    @Messages("ElytraRace")
     private MessagesBox messages;
 
     @EventHandler(priority = EventPriority.HIGH) // post ArenaStartListener

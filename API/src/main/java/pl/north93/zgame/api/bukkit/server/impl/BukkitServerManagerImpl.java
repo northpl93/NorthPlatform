@@ -18,6 +18,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class BukkitServerManagerImpl extends Component implements IBukkitServerManager
 {
+    @Inject
     private BukkitApiCore       apiCore;
     @Inject
     private IObservationManager observer;

@@ -15,9 +15,9 @@ import pl.north93.zgame.skyblock.server.SkyBlockServer;
 
 public class PointsCmd extends NorthCommand
 {
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager networkManager;
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     private SkyBlockServer server;
 
     public PointsCmd()

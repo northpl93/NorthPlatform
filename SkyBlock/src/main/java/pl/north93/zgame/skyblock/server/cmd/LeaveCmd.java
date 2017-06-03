@@ -15,11 +15,11 @@ import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 
 public class LeaveCmd extends NorthCommand
 {
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager networkManager;
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     private SkyBlockServer  server;
-    @InjectMessages("SkyBlock")
+    @Inject @Messages("SkyBlock")
     private MessagesBox     messages;
 
     public LeaveCmd()

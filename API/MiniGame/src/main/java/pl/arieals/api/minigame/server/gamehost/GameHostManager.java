@@ -37,8 +37,7 @@ import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.MiniGameConfig;
 import pl.arieals.api.minigame.shared.api.arena.netevent.IArenaNetEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectNewInstance;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.exceptions.ConfigurationException;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
@@ -46,21 +45,18 @@ import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 
 public class GameHostManager implements IServerManager
 {
+    @Inject
     private BukkitApiCore     apiCore;
-    @InjectComponent("API.Database.Redis.MessagePackSerializer")
+    @Inject
     private TemplateManager   msgPack;
-    @InjectComponent("API.Database.Redis.RPC")
+    @Inject
     private IRpcManager       rpcManager;
-    @InjectComponent("API.Database.Redis.Subscriber")
+    @Inject
     private RedisSubscriber   subscriber;
-    @InjectNewInstance
-    private LocalArenaManager arenaManager;
-    @InjectNewInstance
-    private WorldManager      worldManager;
-    @InjectNewInstance
-    private RegionManagerImpl regionManager;
-    @InjectNewInstance
-    private MapTemplateManager mapTemplateManager;
+    private LocalArenaManager arenaManager = new LocalArenaManager();
+    private WorldManager      worldManager = new WorldManager();
+    private RegionManagerImpl regionManager = new RegionManagerImpl();
+    private MapTemplateManager mapTemplateManager = new MapTemplateManager();
     private ILobbyManager     lobbyManager;
     private MiniGameConfig    miniGameConfig;
 

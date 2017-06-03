@@ -10,12 +10,12 @@ import org.bson.Document;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.data.StorageConnector;
 
 public class UnbanAll extends NorthCommand
 {
-    @InjectComponent("API.Database.StorageConnector")
+    @Inject
     private StorageConnector storage;
 
     public UnbanAll()

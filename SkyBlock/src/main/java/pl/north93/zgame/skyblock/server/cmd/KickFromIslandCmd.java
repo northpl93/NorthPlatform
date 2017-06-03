@@ -17,9 +17,9 @@ import pl.north93.zgame.skyblock.server.world.Island;
 
 public class KickFromIslandCmd extends NorthCommand
 {
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager networkManager;
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     private SkyBlockServer server;
 
     public KickFromIslandCmd()

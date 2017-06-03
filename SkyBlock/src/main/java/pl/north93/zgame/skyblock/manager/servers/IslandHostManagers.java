@@ -19,9 +19,9 @@ import pl.north93.zgame.skyblock.shared.api.IIslandHostManager;
 
 public class IslandHostManagers
 {
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager networkManager;
-    @InjectComponent("API.Database.Redis.RPC")
+    @Inject
     private IRpcManager     rpcManager;
     private Logger          logger;
     private final List<IslandHostServer> servers;

@@ -22,7 +22,7 @@ import pl.north93.zgame.lobby.windows.PetPicker;
 public class InventoryListener implements Listener
 {
     private BukkitApiCore apiCore;
-    @InjectComponent("Lobby.Features")
+    @Inject
     private LobbyFeatures component;
 
     @EventHandler

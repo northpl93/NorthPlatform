@@ -20,7 +20,8 @@ import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.MiniGameConfig;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
-import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
 /**
@@ -28,9 +29,8 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
  */
 public class PlayersManager
 {
-    @InjectMessages("MiniGameApi")
+    @Inject @Messages("MiniGameApi")
     private MessagesBox    messages;
-    
     private final GameHostManager      gameHostManager;
     private final ArenaManager         manager;
     private final LocalArena           arena;

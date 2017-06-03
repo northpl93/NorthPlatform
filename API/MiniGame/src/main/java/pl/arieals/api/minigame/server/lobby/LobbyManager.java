@@ -10,20 +10,18 @@ import pl.arieals.api.minigame.server.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.IGameHostRpc;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectNewInstance;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 
 public class LobbyManager implements IServerManager
 {
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager networkManager;
-    @InjectComponent("API.Database.Redis.RPC")
+    @Inject
     private IRpcManager     rpcManager;
-    @InjectNewInstance
-    private ArenaManager    arenaManager;
+    private ArenaManager    arenaManager = new ArenaManager();
 
     @Override
     public void start()

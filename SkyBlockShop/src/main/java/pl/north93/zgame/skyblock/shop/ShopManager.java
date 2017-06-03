@@ -39,7 +39,7 @@ import pl.north93.zgame.skyblock.shop.gui.CategoryView;
 public class ShopManager
 {
     private       BukkitApiCore                   apiCore;
-    @InjectComponent("API.Economy")
+    @Inject
     private       EconomyComponent                economyComponent;
     private final ICurrency                       currency;
     private final Multimap<ICategory, IShopEntry> shopEntries;

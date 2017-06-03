@@ -12,9 +12,9 @@ import pl.north93.zgame.api.global.network.INetworkManager;
 
 public class GroupsManager
 {
-    @InjectComponent("")
+    @Inject
     private StorageConnector storage;
-    @InjectComponent("")
+    @Inject
     private INetworkManager  networkManager;
 
     public GroupExpireInfo getExpireInfo(final UUID playerId)

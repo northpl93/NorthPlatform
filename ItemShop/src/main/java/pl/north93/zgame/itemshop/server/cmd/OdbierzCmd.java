@@ -9,7 +9,7 @@ import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.itemshop.server.ItemShopServer;
 import pl.north93.zgame.itemshop.server.gui.ReceiveGui;
 import pl.north93.zgame.itemshop.shared.ReceiveStorage;
@@ -17,7 +17,7 @@ import pl.north93.zgame.itemshop.shared.ReceiveStorage;
 public class OdbierzCmd extends NorthCommand
 {
     private BukkitApiCore  bukkitApiCore;
-    @InjectComponent("ItemShop.Server")
+    @Inject
     private ItemShopServer itemShopServer;
 
     public OdbierzCmd()

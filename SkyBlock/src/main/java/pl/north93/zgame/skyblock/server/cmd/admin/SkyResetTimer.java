@@ -13,7 +13,7 @@ import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 
 public class SkyResetTimer extends NorthCommand
 {
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager networkManager;
 
     public SkyResetTimer()

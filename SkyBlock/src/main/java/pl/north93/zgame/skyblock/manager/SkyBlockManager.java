@@ -38,13 +38,13 @@ import pl.north93.zgame.skyblock.shared.impl.IslandsRankingImpl;
 @IncludeInScanning("pl.north93.zgame.skyblock.shared")
 public class SkyBlockManager extends Component implements ISkyBlockManager
 {
-    @InjectComponent("API.Database.Redis.RPC")
+    @Inject
     private IRpcManager         rpcManager;
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager     networkManager;
-    @InjectComponent("API.Database.Redis.Observer")
+    @Inject
     private IObservationManager observer;
-    @InjectMessages("SkyBlock")
+    @Inject @Messages("SkyBlock")
     private MessagesBox         messages;
     private IslandDao           islandDao;
     private IslandHostManagers  islandHostManager;

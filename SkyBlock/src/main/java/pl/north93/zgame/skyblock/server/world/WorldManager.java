@@ -31,7 +31,7 @@ public class WorldManager
 {
     private static final int WAIT_BEFORE_RECALC = 500;
     private BukkitApiCore apiCore;
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     private SkyBlockServer        skyBlockServer;
     private Logger                logger;
     private final IslandConfig    islandConfig;

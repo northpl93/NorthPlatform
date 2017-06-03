@@ -18,12 +18,14 @@ import pl.arieals.minigame.elytrarace.cfg.Checkpoint;
 import pl.north93.zgame.api.bukkit.scoreboard.ContentBuilder;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardLayout;
-import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class RaceScoreboard implements IScoreboardLayout
 {
-    @InjectMessages("ElytraRace")
+    @Inject
+    @Messages("ElytraRace")
     private MessagesBox msg;
 
     @Override

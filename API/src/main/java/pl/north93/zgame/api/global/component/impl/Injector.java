@@ -64,7 +64,7 @@ public class Injector
             final Object bean;
             try
             {
-                bean = context.getBean(query);
+                bean = context.getBeanContainer(query).getValue(field);
             }
             catch (final Exception e)
             {

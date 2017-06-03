@@ -1,14 +1,13 @@
 package pl.north93.zgame.api.bukkitcommands;
 
+import java.util.Set;
+
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.util.BlockIterator;
+
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-
-import java.util.Set;
 
 /**
  * Created by Konrad on 2017-02-12.

@@ -24,7 +24,7 @@ import pl.north93.zgame.skyblock.shop.cfg.ShopEntryConfig;
 
 public class ShopComponent extends Component
 {
-    @InjectComponent("API.Economy")
+    @Inject
     private EconomyComponent economyComponent;
     private ShopManager      shopManager;
 

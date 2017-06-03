@@ -33,6 +33,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class JoinLeftListener implements Listener
 {
+    @Inject
     private BukkitApiCore       bukkitApiCore;
     @Inject
     private INetworkManager     networkManager;

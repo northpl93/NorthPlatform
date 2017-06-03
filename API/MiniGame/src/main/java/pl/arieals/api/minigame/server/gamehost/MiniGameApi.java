@@ -10,12 +10,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public final class MiniGameApi
 {
     private static MiniGameApi INSTANCE;
-    @InjectComponent("MiniGameApi.Server")
+    @Inject
     private MiniGameServer server;
 
     MiniGameApi() // package-local constructor

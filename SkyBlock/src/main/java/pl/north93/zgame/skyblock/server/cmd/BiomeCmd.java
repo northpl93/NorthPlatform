@@ -11,8 +11,8 @@ import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
@@ -24,11 +24,11 @@ import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 public class BiomeCmd extends NorthCommand
 {
     private BukkitApiCore   apiCore;
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager networkManager;
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     private SkyBlockServer  server;
-    @InjectMessages("SkyBlock")
+    @Inject @Messages("SkyBlock")
     private MessagesBox     messages;
 
     public BiomeCmd()

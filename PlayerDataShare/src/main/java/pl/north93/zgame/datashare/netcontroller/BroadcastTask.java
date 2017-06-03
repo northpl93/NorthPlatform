@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.datashare.api.DataSharingGroup;
 import pl.north93.zgame.datashare.api.IDataShareManager;
 import pl.north93.zgame.datashare.sharedimpl.PlayerDataShareComponent;
@@ -14,7 +14,7 @@ import pl.north93.zgame.datashare.sharedimpl.PlayerDataShareComponent;
 public class BroadcastTask implements Runnable
 {
     private final DataSharingGroup    group;
-    @InjectComponent("PlayerDataShare.SharedImpl")
+    @Inject
     private PlayerDataShareComponent  shared;
 
     public BroadcastTask(final DataSharingGroup group)

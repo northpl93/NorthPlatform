@@ -11,12 +11,12 @@ import net.md_5.bungee.api.chat.TextComponent;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.webauth.server.WebAuthServerComponent;
 
 public class ZalogujsieCmd extends NorthCommand
 {
-    @InjectComponent("WebAuth.Server")
+    @Inject
     private WebAuthServerComponent webAuthServer;
 
     public ZalogujsieCmd()

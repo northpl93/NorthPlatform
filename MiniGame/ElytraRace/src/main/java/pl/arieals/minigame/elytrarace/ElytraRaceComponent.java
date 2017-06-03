@@ -16,12 +16,13 @@ import pl.arieals.minigame.elytrarace.listener.ScoreListener;
 import pl.arieals.minigame.elytrarace.listener.ScoreboardListener;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ElytraRaceComponent extends Component
 {
-    @InjectComponent("MiniGameApi.Server")
+    @Inject
     private MiniGameServer server;
+    @Inject
     private BukkitApiCore  apiCore;
 
     @Override

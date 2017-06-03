@@ -15,9 +15,9 @@ import pl.north93.zgame.skyblock.server.SkyBlockServer;
 
 public class SpawnCmd extends NorthCommand
 {
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     private SkyBlockServer server;
-    @InjectMessages("SkyBlock")
+    @Inject @Messages("SkyBlock")
     private MessagesBox    messages;
 
     public SpawnCmd()

@@ -17,7 +17,7 @@ import pl.north93.zgame.api.economy.ICurrency;
 import pl.north93.zgame.api.economy.ITransaction;
 import pl.north93.zgame.api.economy.impl.netcontroller.EconomyControllerComponent;
 import pl.north93.zgame.api.economy.impl.shared.EconomyManagerImpl;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.permissions.PermissionsManager;
@@ -28,13 +28,13 @@ import pl.north93.zgame.itemshop.shared.ReceiveStorage;
 public class Handler
 {
     private final Gson gson = new Gson();
-    @InjectComponent("API.Database.StorageConnector")
+    @Inject
     private StorageConnector           storageConnector;
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager            networkManager;
-    @InjectComponent("API.Economy.Controller")
+    @Inject
     private EconomyControllerComponent economyController;
-    @InjectComponent("API.MinecraftNetwork.PermissionsManager")
+    @Inject
     private PermissionsManager         permissionsManager;
     private ReceiveStorage             receiveStorage;
 

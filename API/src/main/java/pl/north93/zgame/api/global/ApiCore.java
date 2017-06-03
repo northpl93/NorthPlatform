@@ -82,6 +82,7 @@ public abstract class ApiCore
             return;
         }
 
+        ((ComponentManagerImpl) this.componentManager).initDefaultBeans();
         this.componentManager.doComponentScan(this.getClass().getClassLoader()); // scan for builtin API components
         this.componentManager.injectComponents(/*this.updateManager,*/ this.messagePackTemplates, this.rpcManager); // inject base API components
         final File components = this.getFile("components");

@@ -11,7 +11,7 @@ import pl.north93.zgame.skyblock.shop.ShopComponent;
 
 public class MoneySetCmd extends NorthCommand
 {
-    @InjectComponent("SkyBlock.Shop.Server")
+    @Inject
     private ShopComponent shopComponent;
 
     public MoneySetCmd()

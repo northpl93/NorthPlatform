@@ -7,12 +7,14 @@ import net.md_5.bungee.api.ProxyServer;
 import pl.north93.zgame.api.bungee.BungeeApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.auth.api.IAuthManager;
 import pl.north93.zgame.auth.sharedimpl.AuthManagerImpl;
 
 @IncludeInScanning("pl.north93.zgame.auth.sharedimpl")
 public class AuthProxyComponent extends Component
 {
+    @Inject
     private BungeeApiCore apiCore;
     private IAuthManager  authManager;
 

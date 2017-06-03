@@ -7,13 +7,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.webauth.IWebAuthManager;
 
 public class WebAuthServerComponent extends Component
 {
-    @InjectComponent("API.Database.Redis.RPC")
+    @Inject
     private IRpcManager     rpcManager;
     private IWebAuthManager webAuthManager;
 

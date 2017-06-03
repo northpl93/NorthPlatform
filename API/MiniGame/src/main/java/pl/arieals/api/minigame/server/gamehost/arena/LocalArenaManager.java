@@ -17,13 +17,15 @@ import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class LocalArenaManager
 {
+    @Inject
     private BukkitApiCore          apiCore;
+    @Inject
     private Logger                 logger;
-    @InjectComponent("MiniGameApi.Server")
+    @Inject
     private MiniGameServer         miniGameServer;
     private final List<LocalArena> arenas = new ArrayList<>();
 

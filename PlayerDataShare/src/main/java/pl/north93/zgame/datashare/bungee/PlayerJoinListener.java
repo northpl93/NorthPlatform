@@ -17,17 +17,18 @@ import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import pl.north93.zgame.api.global.ApiCore;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.datashare.api.DataSharingGroup;
 import pl.north93.zgame.datashare.api.IDataShareController;
 import pl.north93.zgame.datashare.sharedimpl.PlayerDataShareComponent;
 
 public class PlayerJoinListener implements Listener
 {
+    @Inject
     private ApiCore                     apiCore;
-    @InjectComponent("PlayerDataShare.Bungee")
+    @Inject
     private PlayerDataShareBungee       playerDataShareBungee;
-    @InjectComponent("PlayerDataShare.SharedImpl")
+    @Inject
     private PlayerDataShareComponent    playerDataShareComponent;
     private Map<UUID, DataSharingGroup> requiresInventorySent = Maps.newHashMap();
 

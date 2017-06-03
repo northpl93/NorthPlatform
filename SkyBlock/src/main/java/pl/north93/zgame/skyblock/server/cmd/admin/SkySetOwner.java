@@ -18,9 +18,9 @@ import pl.north93.zgame.skyblock.server.SkyBlockServer;
 public class SkySetOwner extends NorthCommand
 {
     private ApiCore         apiCore;
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager networkManager;
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     private SkyBlockServer  server;
 
     public SkySetOwner()

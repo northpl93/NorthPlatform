@@ -10,9 +10,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ApiSecurity
 {
+    @Inject
     private ApiCore   api;
     private ApiConfig apiConfig;
 

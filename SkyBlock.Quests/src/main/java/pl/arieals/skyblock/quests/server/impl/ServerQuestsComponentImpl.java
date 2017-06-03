@@ -10,7 +10,7 @@ import pl.north93.zgame.api.global.redis.rpc.Targets;
 
 public class ServerQuestsComponentImpl extends Component implements IServerQuestsComponent
 {
-    @InjectComponent("")
+    @Inject
     private IRpcManager rpcManager;
     private IQuestsController questsController;
 

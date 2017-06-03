@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.datashare.api.DataSharingGroup;
 import pl.north93.zgame.datashare.api.IDataShareManager;
 import pl.north93.zgame.datashare.server.PlayerDataShareServer;
@@ -19,10 +19,11 @@ import pl.north93.zgame.datashare.sharedimpl.PlayerDataShareComponent;
 
 public class PlayerJoinListener implements Listener
 {
+    @Inject
     private BukkitApiCore            apiCore;
-    @InjectComponent("PlayerDataShare.SharedImpl")
+    @Inject
     private PlayerDataShareComponent dataShareManager;
-    @InjectComponent("PlayerDataShare.Bukkit")
+    @Inject
     private PlayerDataShareServer    dataShareServer;
 
     @EventHandler

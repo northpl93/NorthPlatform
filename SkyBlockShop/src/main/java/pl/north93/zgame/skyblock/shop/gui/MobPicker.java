@@ -14,7 +14,7 @@ import java.util.List;
 
 public class MobPicker extends Window
 {
-    @InjectComponent("SkyBlock.Shop.Spawner")
+    @Inject
     private SpawnerComponent spawnerComponent;
 
     private final List<SpawnerEntryConfig> mobs;

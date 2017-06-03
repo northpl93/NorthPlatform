@@ -15,11 +15,11 @@ import pl.north93.zgame.skyplayerexp.server.ExperienceServer;
 
 public class ServerGuiManager implements IServerGuiManager
 {
-    @InjectComponent("SkyBlock.PlayerExperience.Server")
+    @Inject
     private ExperienceServer experience;
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager  networkManager;
-    @InjectComponent("SkyBlock.Shop.Server")
+    @Inject
     private ShopComponent    shopComponent;
     private BukkitApiCore    apiCore;
 

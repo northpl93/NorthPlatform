@@ -17,7 +17,7 @@ import pl.north93.zgame.skyblock.server.world.points.PointsHelper;
 public class SkyPoints extends NorthCommand
 {
     private BukkitApiCore  apiCore;
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     private SkyBlockServer server;
 
     public SkyPoints()

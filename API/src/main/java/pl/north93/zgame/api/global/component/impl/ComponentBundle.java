@@ -138,6 +138,12 @@ class ComponentBundle implements IComponentBundle
     }
 
     @Override
+    public void scanNow()
+    {
+        ClassloaderScanningTask.create(ComponentManagerImpl.instance, this.classLoader).scanComponent(this);
+    }
+
+    @Override
     public String toString()
     {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("description", this.description).append("classLoader", this.classLoader).append("component", this.component).toString();

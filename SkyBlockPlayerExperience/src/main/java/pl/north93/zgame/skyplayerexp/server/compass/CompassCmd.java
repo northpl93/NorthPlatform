@@ -13,7 +13,7 @@ import pl.north93.zgame.skyplayerexp.server.ExperienceServer;
 public class CompassCmd extends NorthCommand
 {
     private BukkitApiCore    apiCore;
-    @InjectComponent("SkyBlock.PlayerExperience.Server")
+    @Inject
     private ExperienceServer experience;
 
     public CompassCmd()

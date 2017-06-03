@@ -17,10 +17,12 @@ import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardLayout;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ScoreboardManagerImpl extends Component implements IScoreboardManager
 {
     private final Map<LayoutUpdateTask, IScoreboardLayout> layoutUpdaters;
+    @Inject
     private BukkitApiCore apiCore;
 
     public ScoreboardManagerImpl()

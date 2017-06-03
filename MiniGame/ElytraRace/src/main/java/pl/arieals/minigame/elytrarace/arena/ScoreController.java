@@ -19,11 +19,11 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.elytrarace.cfg.Score;
 import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ScoreController
 {
-    @InjectComponent("API.EntityHider")
+    @Inject
     private IEntityHider entityHider;
     private final LocalArena   arena;
     private final Score        score; // score point associated with this controller

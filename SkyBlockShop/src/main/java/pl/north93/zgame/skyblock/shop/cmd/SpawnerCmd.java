@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class SpawnerCmd extends NorthCommand
 {
-    @InjectComponent("SkyBlock.Shop.Spawner")
+    @Inject
     private SpawnerComponent spawnerComponent;
 
     public SpawnerCmd()

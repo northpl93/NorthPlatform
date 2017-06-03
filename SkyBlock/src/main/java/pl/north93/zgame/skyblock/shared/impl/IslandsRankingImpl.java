@@ -15,7 +15,7 @@ import pl.north93.zgame.skyblock.shared.api.IIslandsRanking;
 
 public final class IslandsRankingImpl implements IIslandsRanking
 {
-    @InjectComponent("API.Database.Redis.Observer")
+    @Inject
     private IObservationManager observationManager;
     private SortedSet<UUID>     ranking;
 

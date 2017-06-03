@@ -9,6 +9,7 @@ import java.util.Set;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.DynamicBean;
 
@@ -19,7 +20,17 @@ class MethodScanningTask extends AbstractScanningTask
     public MethodScanningTask(final ClassloaderScanningTask classloaderScanner, final Class<?> clazz, final AbstractBeanContext beanContext)
     {
         super(classloaderScanner, clazz, beanContext);
-        this.methods = new HashSet<>(Arrays.asList(clazz.getDeclaredMethods()));
+
+        Set<Method> methods;
+        try
+        {
+            methods = new HashSet<>(Arrays.asList(clazz.getDeclaredMethods()));
+        }
+        catch (final Throwable e)
+        {
+            methods = new HashSet<>();
+        }
+        this.methods = methods;
     }
 
     @Override
@@ -39,6 +50,10 @@ class MethodScanningTask extends AbstractScanningTask
                 else if (method.isAnnotationPresent(DynamicBean.class))
                 {
                     BeanFactory.INSTANCE.createDynamicBean(this.beanContext, method);
+                }
+                else if (method.isAnnotationPresent(Aggregator.class))
+                {
+                    ComponentManagerImpl.instance.getAggregationManager().addAggregator(method);
                 }
             }
             catch (final Exception ignored)

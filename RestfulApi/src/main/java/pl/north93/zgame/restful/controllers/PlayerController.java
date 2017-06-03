@@ -6,7 +6,7 @@ import static spark.Spark.halt;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.utils.Wrapper;
 import pl.north93.zgame.restful.models.PlayerModel;
@@ -15,7 +15,7 @@ import spark.Response;
 
 public class PlayerController
 {
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager networkManager;
 
     public Object root(final Request request, final Response response)

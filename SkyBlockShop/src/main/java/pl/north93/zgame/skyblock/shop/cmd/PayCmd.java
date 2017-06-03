@@ -16,9 +16,9 @@ import pl.north93.zgame.skyblock.shop.ShopComponent;
 
 public class PayCmd extends NorthCommand
 {
-    @InjectComponent("SkyBlock.Shop.Server")
+    @Inject
     private ShopComponent shopComponent;
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager networkManager;
 
     public PayCmd()

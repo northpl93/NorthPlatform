@@ -26,11 +26,11 @@ import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 
 public class ServerQuestsManagerImpl implements IServerQuestsManager
 {
-    @InjectComponent("")
+    @Inject
     private StorageConnector       storage;
-    @InjectComponent("")
+    @Inject
     private RedisSubscriber        subscriber;
-    @InjectComponent("")
+    @Inject
     private IServerQuestsComponent component;
     private Map<UUID, IQuest>      quests;
 

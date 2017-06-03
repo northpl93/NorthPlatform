@@ -32,7 +32,7 @@ import pl.north93.zgame.skyblock.shop.api.IShopEntry;
 
 public class CategoryView extends PaginateWindow<IShopEntry>
 {
-    @InjectComponent("SkyBlock.Shop.Server")
+    @Inject
     private       ShopComponent      shopComponent;
     private final ICategory          category;
     private final boolean            showBackToCategories;

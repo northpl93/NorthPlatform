@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.subscriber.SubscriptionHandler;
 import pl.north93.zgame.datashare.server.PlayerDataShareServer;
@@ -18,12 +18,13 @@ import pl.north93.zgame.datashare.sharedimpl.PlayerDataShareComponent;
 
 public class PlayerDataListener implements SubscriptionHandler
 {
+    @Inject
     private BukkitApiCore            apiCore;
-    @InjectComponent("PlayerDataShare.Bukkit")
+    @Inject
     private PlayerDataShareServer    shareServer;
-    @InjectComponent("PlayerDataShare.SharedImpl")
+    @Inject
     private PlayerDataShareComponent playerDataShare;
-    @InjectComponent("API.Database.Redis.MessagePackSerializer")
+    @Inject
     private TemplateManager          msgPack;
 
     @Override

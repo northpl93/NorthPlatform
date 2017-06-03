@@ -1,9 +1,7 @@
 package pl.north93.zgame.api.global.component.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -14,14 +12,14 @@ import pl.north93.zgame.api.global.component.exceptions.BeanNotFoundException;
 
 abstract class AbstractBeanContext implements IBeanContext
 {
-    protected final AbstractBeanContext         parent;
-    protected final String                      name;
-    protected final List<AbstractBeanContainer> registeredBeans;
+    protected final AbstractBeanContext        parent;
+    protected final String                     name;
+    protected final Set<AbstractBeanContainer> registeredBeans;
 
     public AbstractBeanContext(final AbstractBeanContext parent, final String name)
     {
         this.parent = parent;
-        this.registeredBeans = new ArrayList<>();
+        this.registeredBeans = new HashSet<>();
         this.name = name;
     }
 
@@ -65,6 +63,15 @@ abstract class AbstractBeanContext implements IBeanContext
                        .orElseThrow(() -> new BeanNotFoundException(query));
     }
 
+    /*default*/ AbstractBeanContainer getBeanContainer(final IBeanQuery query)
+    {
+        //noinspection unchecked
+        return this.beanStream(true)
+                   .filter((BeanQuery) query)
+                   .reduce((u, v) -> { throw new IllegalStateException("More than one bean found. Use getBeans!"); })
+                   .orElseThrow(() -> new BeanNotFoundException(query));
+    }
+
     @Override
     public <T> Collection<T> getBeans(final IBeanQuery query)
     {
@@ -101,10 +108,6 @@ abstract class AbstractBeanContext implements IBeanContext
 
     protected Stream<AbstractBeanContainer> beanStream(final boolean withParent)
     {
-        if (withParent && this.parent != null)
-        {
-            return Stream.concat(this.registeredBeans.stream(), this.parent.beanStream(true));
-        }
-        return this.registeredBeans.stream();
+        return this.getAll(withParent).stream();
     }
 }

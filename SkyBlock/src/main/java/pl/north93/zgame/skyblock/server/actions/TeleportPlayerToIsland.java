@@ -16,7 +16,7 @@ import pl.north93.zgame.skyblock.server.management.IslandHostManager;
 
 public class TeleportPlayerToIsland implements IServerJoinAction
 {
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     @MsgPackIgnore
     private SkyBlockServer server;
     private UUID           islandId;

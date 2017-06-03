@@ -15,7 +15,7 @@ import pl.north93.zgame.skyplayerexp.server.gui.ServerGuiManager;
 public class ExperienceServer extends Component
 {
     private BukkitApiCore    bukkitApiCore;
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     private SkyBlockServer   server;
     private ServerGuiManager serverGuiManager;
     private CompassManager   compassManager;

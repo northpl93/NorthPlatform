@@ -18,7 +18,7 @@ import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 
 public class MobKillListener implements Listener
 {
-    @InjectComponent("")
+    @Inject
     private IServerQuestsComponent serverQuests;
 
     @EventHandler(ignoreCancelled = true)

@@ -21,11 +21,11 @@ import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ArenaInitListener implements Listener
 {
-    @InjectComponent("MiniGameApi.Server")
+    @Inject
     private MiniGameServer server;
 
     @EventHandler(priority = EventPriority.LOW) // before normal

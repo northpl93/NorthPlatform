@@ -15,7 +15,7 @@ import pl.north93.zgame.skyblock.server.world.Island;
 
 public class DieListener implements Listener
 {
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     private SkyBlockServer server;
 
     @EventHandler

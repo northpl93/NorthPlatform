@@ -23,12 +23,14 @@ import pl.arieals.minigame.elytrarace.arena.ScoreController;
 import pl.arieals.minigame.elytrarace.cfg.Score;
 import pl.arieals.minigame.elytrarace.cfg.ScoreGroup;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
-import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class ScoreListener implements Listener
 {
-    @InjectMessages("ElytraRace")
+    @Inject
+    @Messages("ElytraRace")
     private MessagesBox messages;
 
     @EventHandler(priority = EventPriority.HIGH) // post ArenaStartListener

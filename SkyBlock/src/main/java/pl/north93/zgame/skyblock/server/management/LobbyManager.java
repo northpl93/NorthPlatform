@@ -26,11 +26,11 @@ import pl.north93.zgame.skyblock.server.world.Island;
  */
 public class LobbyManager implements ISkyBlockServerManager
 {
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager     networkManager;
-    @InjectComponent("API.Database.Redis.Observer")
+    @Inject
     private IObservationManager observer;
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     private SkyBlockServer      server;
 
     @Override

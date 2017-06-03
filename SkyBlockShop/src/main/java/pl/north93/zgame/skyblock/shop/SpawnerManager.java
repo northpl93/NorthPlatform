@@ -19,7 +19,7 @@ import pl.north93.zgame.skyblock.shop.gui.MobPicker;
 public class SpawnerManager
 {
     private BukkitApiCore apiCore;
-    @InjectComponent("SkyBlock.Shop.Server")
+    @Inject
     private ShopComponent shopComponent;
     final private List<SpawnerEntryConfig> mobs;
 

@@ -14,9 +14,9 @@ import pl.north93.zgame.skyblock.bungee.SkyBlockBungee;
 
 public final class ContextProvider
 {
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager networkManager;
-    @InjectComponent("SkyBlock.Proxy")
+    @Inject
     private SkyBlockBungee  skyBlock;
 
     public TablistDrawingContext getFor(final ProxiedPlayer player)

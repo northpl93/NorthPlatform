@@ -20,11 +20,11 @@ import pl.north93.zgame.skyplayerexp.server.ExperienceServer;
 public class CompassConnector implements Listener
 {
     private static final MetaKey COMPASS_ENABLED = MetaKey.get("sky:lobbyCompassEnabled");
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager  networkManager;
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     private SkyBlockServer   server;
-    @InjectComponent("SkyBlock.PlayerExperience.Server")
+    @Inject
     private ExperienceServer experience;
 
     @EventHandler

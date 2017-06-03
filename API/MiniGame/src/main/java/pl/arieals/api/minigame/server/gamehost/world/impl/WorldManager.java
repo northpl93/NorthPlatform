@@ -35,9 +35,11 @@ import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.Main;
 import pl.north93.zgame.api.bukkit.utils.region.IRegion;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class WorldManager implements IWorldManager, Listener
 {
+    @Inject
     private BukkitApiCore    apiCore;
     private Logger           logger;
     private NmsWorldHelper   worldHelper;

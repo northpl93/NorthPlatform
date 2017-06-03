@@ -15,7 +15,7 @@ import pl.north93.zgame.lobby.config.LobbyConfig;
 
 public class LobbyDevModeCmd extends NorthCommand
 {
-    @InjectComponent("Lobby.Features")
+    @Inject
     private LobbyFeatures component;
 
     public LobbyDevModeCmd()

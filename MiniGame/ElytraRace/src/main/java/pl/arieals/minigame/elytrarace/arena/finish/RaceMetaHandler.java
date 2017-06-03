@@ -11,12 +11,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
-import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class RaceMetaHandler implements IFinishHandler
 {
-    @InjectMessages("ElytraRace")
+    @Inject
+    @Messages("ElytraRace")
     private MessagesBox messages;
     private int place; // uzywane w RACE_MODE do okreslania miejsca gracza
 

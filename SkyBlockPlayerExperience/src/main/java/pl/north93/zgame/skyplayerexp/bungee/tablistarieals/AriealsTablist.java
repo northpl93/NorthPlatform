@@ -29,15 +29,15 @@ import pl.north93.zgame.skyplayerexp.bungee.tablist.TablistManager;
 
 public class AriealsTablist implements Listener
 {
-    @InjectComponent("API.Economy")
+    @Inject
     private       EconomyComponent    economy;
-    @InjectComponent("SkyBlock.Proxy")
+    @Inject
     private       SkyBlockBungee      skyblock;
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private       INetworkManager     networkManager;
-    @InjectComponent("API.Database.Redis.Subscriber")
+    @Inject
     private       RedisSubscriber     subscriber;
-    @InjectComponent("API.Database.Redis.MessagePackSerializer")
+    @Inject
     private       TemplateManager     msgPackTemplates;
     private final TablistManager      manager;
     private final Map<UUID, UserInfo> userInfos;

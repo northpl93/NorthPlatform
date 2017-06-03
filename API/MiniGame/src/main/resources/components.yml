@@ -1,3 +1,4 @@
+rootPackage: pl.arieals
 components:
   - name: MiniGameApi.Server
     enabled: true

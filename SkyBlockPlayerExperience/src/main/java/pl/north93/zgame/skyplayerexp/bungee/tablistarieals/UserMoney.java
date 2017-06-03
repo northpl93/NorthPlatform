@@ -9,7 +9,7 @@ import pl.north93.zgame.skyplayerexp.bungee.tablist.TablistDrawingContext;
 
 public class UserMoney implements ICellProvider
 {
-    @InjectComponent("API.Economy")
+    @Inject
     private EconomyComponent economy;
 
     @Override

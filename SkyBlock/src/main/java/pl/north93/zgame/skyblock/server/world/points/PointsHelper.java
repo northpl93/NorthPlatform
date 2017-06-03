@@ -19,7 +19,7 @@ import pl.north93.zgame.skyblock.server.world.WorldManager;
 public class PointsHelper
 {
     private ApiCore        apiCore;
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     private SkyBlockServer skyBlockServer;
     private final Map<BlockData, Double> blockMap = new HashMap<>();
     private double defaultPrice;

@@ -27,8 +27,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.auth.api.IAuthManager;
@@ -36,9 +36,9 @@ import pl.north93.zgame.auth.api.player.AuthPlayer;
 
 public class PlayerListeners implements Listener
 {
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager networkManager;
-    @InjectMessages("NoPremiumAuth")
+    @Inject @Messages("NoPremiumAuth")
     private MessagesBox     messages;
     private IAuthManager    authManager;
 

@@ -50,13 +50,13 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
 {
     private static final int POINTS_PERSIST_TICK = 5 * 60 * 20;
     private BukkitApiCore       bukkitApiCore;
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager     networkManager;
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     private SkyBlockServer      skyBlockServer;
-    @InjectComponent("API.Database.Redis.RPC")
+    @Inject
     private IRpcManager         rpcManager;
-    @InjectComponent("API.Database.Redis.Observer")
+    @Inject
     private IObservationManager observer;
     private Logger              logger;
     @InjectNewInstance

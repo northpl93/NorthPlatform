@@ -10,13 +10,15 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.zgame.api.bukkit.utils.AbstractCountdown;
-import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class StartCountdown extends AbstractCountdown
 {
     private final LocalArena arena;
-    @InjectMessages("ElytraRace")
+    @Inject
+    @Messages("ElytraRace")
     private MessagesBox msg;
 
     public StartCountdown(final int time, final LocalArena arena)

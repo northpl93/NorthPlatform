@@ -19,7 +19,7 @@ import pl.north93.zgame.skyblock.shared.api.cfg.SkyBlockConfig;
 @IncludeInScanning("pl.north93.zgame.skyblock.shared")
 public class SkyBlockBungee extends Component
 {
-    @InjectComponent("API.Database.Redis.RPC")
+    @Inject
     private IRpcManager     rpcManager;
     private SkyBlockConfig  config;
     private IIslandsRanking ranking;

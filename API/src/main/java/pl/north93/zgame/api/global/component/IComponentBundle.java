@@ -23,4 +23,6 @@ public interface IComponentBundle
     ClassLoader getClassLoader();
 
     IBeanContext getBeanContext();
+
+    void scanNow();
 }

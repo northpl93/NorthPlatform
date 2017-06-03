@@ -27,9 +27,9 @@ public class ItemRecoveryListener implements Listener
 {
     private static final MetaKey RECOVERY_KEY = MetaKey.get("expRecovered");
     private BukkitApiCore   apiCore;
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager networkManager;
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     private SkyBlockServer  server;
 
     @EventHandler

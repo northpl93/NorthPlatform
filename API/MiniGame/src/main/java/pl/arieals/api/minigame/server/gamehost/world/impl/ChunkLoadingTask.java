@@ -16,10 +16,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.Pair;
 
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+
 class ChunkLoadingTask implements Runnable
 {
     private final Queue<QueuedLoadingTask> tasks = Queues.synchronizedQueue(new ArrayDeque<>());
     private QueuedLoadingTask activeTask;
+    @Inject
     private Logger            logger;
 
     public void queueTask(final World world, final List<Pair<Integer, Integer>> chunks, final LoadingProgressImpl progress)

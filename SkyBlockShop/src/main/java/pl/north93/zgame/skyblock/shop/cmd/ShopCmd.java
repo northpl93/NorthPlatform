@@ -15,7 +15,7 @@ import pl.north93.zgame.skyblock.shop.ShopComponent;
 @IgnoreExtensionPoint // we have custom category picker in SkyBlock.PlayerExperience
 public class ShopCmd extends NorthCommand
 {
-    @InjectComponent("SkyBlock.Shop.Server")
+    @Inject
     private ShopComponent shopComponent;
 
     public ShopCmd()

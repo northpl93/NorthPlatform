@@ -7,14 +7,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import org.bukkit.entity.Player;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.bukkit.entity.Player;
+
 import org.diorite.utils.math.DioriteRandomUtils;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
-import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class MapVote
@@ -25,7 +28,7 @@ public class MapVote
     private final Map<Player, MapTemplate> votes = new WeakHashMap<>();
     private MapTemplate[] options;
     
-    @InjectMessages("MiniGameApi")
+    @Inject @Messages("MiniGameApi")
     private MessagesBox    messages;
 
     public MapVote(GameHostManager gameHostManager, LocalArena arena)

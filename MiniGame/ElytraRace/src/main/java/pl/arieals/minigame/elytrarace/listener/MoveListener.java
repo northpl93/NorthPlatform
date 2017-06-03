@@ -12,11 +12,11 @@ import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class MoveListener implements Listener
 {
-    @InjectComponent("MiniGameApi.Server")
+    @Inject
     private MiniGameServer server;
 
     @EventHandler

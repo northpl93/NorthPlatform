@@ -76,9 +76,10 @@ public abstract class Component implements IBeanContext
     {
         final String prettyPackages = this.componentBundle.getBasePackages().stream().collect(Collectors.joining(", "));
         this.apiCore.getLogger().info("Enabling component " + this.getName() + " (packages used to scan: " + prettyPackages + ")");
-        Injector.inject(this);
         try
         {
+            this.componentBundle.scanNow();
+            Injector.inject(this);
             this.enableComponent();
         }
         catch (final Exception e)

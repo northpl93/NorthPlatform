@@ -1,7 +1,6 @@
 package pl.north93.zgame.api.global.component.impl;
 
 import java.util.Collection;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -25,17 +24,6 @@ class JarBeanContext extends AbstractBeanContext
             all.addAll(jarComponentLoader.getBeanContext().getAll(withParent));
         }
         return all;
-    }
-
-    @Override
-    protected Stream<AbstractBeanContainer> beanStream(final boolean withParent)
-    {
-        Stream<AbstractBeanContainer> stream = super.beanStream(withParent);
-        for (final JarComponentLoader jarComponentLoader : this.loader.getDependencies())
-        {
-            stream = Stream.concat(stream, jarComponentLoader.getBeanContext().beanStream(withParent));
-        }
-        return stream;
     }
 
     @Override

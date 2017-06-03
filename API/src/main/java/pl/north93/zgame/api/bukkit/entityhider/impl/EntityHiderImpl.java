@@ -17,9 +17,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class EntityHiderImpl extends Component implements IEntityHider
 {
+    @Inject
     private BukkitApiCore apiCore;
 
     @Override

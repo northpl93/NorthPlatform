@@ -23,6 +23,7 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
     private final Map<String, SubscriptionHandler> handlerMap = new ConcurrentHashMap<>();
     private StatefulRedisPubSubConnection<String, byte[]> connection;
     private ExecutorService                               executorService = Executors.newCachedThreadPool();
+    @Inject
     private Logger                                        logger;
     @Inject
     private StorageConnector                              storageConnector;

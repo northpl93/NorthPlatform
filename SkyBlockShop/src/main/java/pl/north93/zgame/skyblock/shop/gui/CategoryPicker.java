@@ -21,7 +21,7 @@ import pl.north93.zgame.skyblock.shop.api.ICategory;
 
 public class CategoryPicker extends Window
 {
-    @InjectComponent("SkyBlock.Shop.Server")
+    @Inject
     private ShopComponent shopComponent;
     private final Collection<ICategory> categories;
 

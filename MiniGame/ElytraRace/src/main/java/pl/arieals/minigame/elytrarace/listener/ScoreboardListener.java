@@ -18,11 +18,11 @@ import pl.arieals.minigame.elytrarace.scoreboard.RaceScoreboard;
 import pl.arieals.minigame.elytrarace.scoreboard.ScoreScoreboard;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardLayout;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ScoreboardListener implements Listener
 {
-    @InjectComponent("API.Scoreboard")
+    @Inject
     private IScoreboardManager scoreboardManager;
 
     @EventHandler

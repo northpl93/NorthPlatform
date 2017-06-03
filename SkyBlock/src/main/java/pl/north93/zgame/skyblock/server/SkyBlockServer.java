@@ -26,7 +26,7 @@ import pl.north93.zgame.skyblock.server.world.Island;
 public class SkyBlockServer extends Component
 {
     private BukkitApiCore          bukkitApiCore;
-    @InjectComponent("API.Database.Redis.RPC")
+    @Inject
     private IRpcManager            rpcManager;
     private IslandDao              islandDao;
     private ServerMode             serverMode;

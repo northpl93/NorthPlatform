@@ -2,21 +2,20 @@ package pl.arieals.api.minigame.server.gamehost.arena;
 
 import java.util.concurrent.TimeUnit;
 
-import org.bukkit.Bukkit;
-
 import com.google.common.base.Preconditions;
+
+import org.bukkit.Bukkit;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.event.arena.ArenaStartScheduledEvent;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.north93.zgame.api.bukkit.utils.SimpleCountdown;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ArenaStartScheduler
 {
     private final LocalArena arena;
-    
-    @InjectComponent("MiniGameApi.Server")
+    @Inject
     private MiniGameServer minigameServer;
     
     private int gameStartCooldown = 600;

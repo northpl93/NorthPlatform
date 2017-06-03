@@ -10,7 +10,7 @@ import pl.north93.zgame.skyplayerexp.bungee.tablist.TablistDrawingContext;
 
 public class IslandSizeProvider implements ICellProvider
 {
-    @InjectComponent("SkyBlock.Proxy")
+    @Inject
     private SkyBlockBungee skyblock;
 
     /*@Override

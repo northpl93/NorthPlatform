@@ -1,13 +1,11 @@
 package pl.north93.zgame.api.bukkit.tick.impl;
 
-import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
@@ -16,26 +14,27 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import com.google.common.base.Preconditions;
+
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
-import org.spigotmc.SneakyThrow;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.MapMaker;
+import org.spigotmc.SneakyThrow;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
 import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class TickableManagerImpl extends Component implements ITickableManager
 {
     private final Map<Class<? extends ITickable>, Method[]> registeredTickableClasses = new WeakHashMap<>();
     private final Set<Collection<? extends ITickable>> tickableObjectsCollection = Collections.newSetFromMap(new IdentityHashMap<>());
     private final Set<TickableWeakReference> tickableObjects = new HashSet<>();
-    
+
+    @Inject
     private BukkitApiCore apiCore;
     
     private BukkitTask tickTask;

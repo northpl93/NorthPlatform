@@ -7,14 +7,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.observable.Hash;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 
 public class ArenaManager
 {
-    @InjectComponent("API.Database.Redis.Observer")
+    @Inject
     private IObservationManager observer;
     private Hash<RemoteArena>   arenas;
 

@@ -30,9 +30,9 @@ import pl.north93.zgame.skyblock.shared.api.utils.Coords2D;
 
 public class IslandDao
 {
-    @InjectComponent("API.Database.StorageConnector")
+    @Inject
     private StorageConnector        storage;
-    @InjectComponent("API.Database.Redis.Observer")
+    @Inject
     private IObservationManager     observer;
     private Cache<UUID, IslandData> islandDataCache;
 

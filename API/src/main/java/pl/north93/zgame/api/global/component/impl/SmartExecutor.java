@@ -40,7 +40,7 @@ class SmartExecutor
             }
             catch (final IllegalAccessException | InvocationTargetException e)
             {
-                e.printStackTrace();
+                throw new RuntimeException("Exception occurred in method wrapped by SmartExecutor", e);
             }
         }
         else if (executable instanceof Constructor)
@@ -51,7 +51,7 @@ class SmartExecutor
             }
             catch (final InstantiationException | IllegalAccessException | InvocationTargetException e)
             {
-                e.printStackTrace();
+                throw new RuntimeException("Exception occurred in method wrapped by SmartExecutor", e);
             }
         }
 

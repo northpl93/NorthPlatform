@@ -9,11 +9,11 @@ import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class JoinArenaCmd extends NorthCommand
 {
-    @InjectComponent("MiniGameApi.Server")
+    @Inject
     private MiniGameServer server;
 
     public JoinArenaCmd()

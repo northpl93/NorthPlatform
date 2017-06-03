@@ -120,7 +120,7 @@ Co jest wstrzykiwane
 |-----------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
 | Logger                                                          | Wstrzykuje loggera uzywanego przez plugin API                                                   |
 | ApiCore                                                         | Wstrzykuje instancje ApiCore. Można też użyć BukkitApiCore, BungeeApiCore lub StandaloneApiCore |
-| @InjectComponent("nazwa") zmienna                               | Wstrzykuje klasę główną komponentu o podanej nazwie.                                            |
+| @Inject
 | @InjectResource(bundleName = "SkyBlock") ResourceBundle zmienna | Wstrzykuje ResourceBundle (plik z wiadomościami)                                                |
 | @InjectNewInstance                                              | Wstrzykuje nową instancję obiektu reprezentującego zmienną                                      |
 
@@ -130,9 +130,9 @@ Przykład:
 public class CreateCmd extends NorthCommand
 {
     private BukkitApiCore   apiCore; // wstrzykuje instance ApiCore. Ta komenda znajduje się w Bukkitowej części dlatego nie poleci ClassCastException
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager networkManager; // wstrzykuje klasę główną danego komponentu.
-    @InjectComponent("SkyBlock.Server")
+    @Inject
     private SkyBlockServer  server;
     @InjectResource(bundleName = "SkyBlock")
     private ResourceBundle  messages; // wstrzykuje plik z wiadomościami SkyBlock_pl_PL.properties

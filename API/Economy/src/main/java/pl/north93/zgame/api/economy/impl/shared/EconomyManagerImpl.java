@@ -13,8 +13,8 @@ import pl.north93.zgame.api.economy.IEconomyManager;
 import pl.north93.zgame.api.economy.ITransaction;
 import pl.north93.zgame.api.economy.cfg.CurrencyConfig;
 import pl.north93.zgame.api.economy.cfg.EconomyConfig;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
@@ -23,9 +23,9 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class EconomyManagerImpl implements IEconomyManager
 {
-    @InjectComponent("API.Database.Redis.Observer")
+    @Inject
     private IObservationManager  observation;
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager      networkManager;
     // - - -
     private Value<EconomyConfig> config;

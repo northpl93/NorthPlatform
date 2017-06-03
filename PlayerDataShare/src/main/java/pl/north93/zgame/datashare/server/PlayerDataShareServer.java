@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
@@ -20,10 +20,11 @@ import pl.north93.zgame.datashare.server.listeners.PlayerLeftListener;
 public class PlayerDataShareServer extends Component
 {
     private static final int DATA_PERSIST_TASK = 20 * 60 * 5;
+    @Inject
     private BukkitApiCore      apiCore;
-    @InjectComponent("API.Database.Redis.RPC")
+    @Inject
     private IRpcManager        rpcManager;
-    @InjectComponent("API.Database.Redis.Subscriber")
+    @Inject
     private RedisSubscriber    redisSubscriber;
     private ChatSharingManager chatSharingManager;
     private DataSharingGroup   sharingGroup;

@@ -7,20 +7,16 @@ import net.md_5.bungee.api.ChatColor;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.datashare.api.DataSharingGroup;
 import pl.north93.zgame.datashare.server.PlayerDataShareServer;
 import pl.north93.zgame.datashare.sharedimpl.PlayerDataShareComponent;
 
-/**
- * Created by Konrad on 2017-02-10.
- */
-
 public class AnnCmd extends NorthCommand
 {
-    @InjectComponent("PlayerDataShare.Bukkit")
+    @Inject
     private PlayerDataShareServer dataShareServer;
-    @InjectComponent("PlayerDataShare.SharedImpl")
+    @Inject
     private PlayerDataShareComponent dataShareComponent;
 
     public AnnCmd()

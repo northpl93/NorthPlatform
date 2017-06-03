@@ -12,7 +12,7 @@ import pl.north93.zgame.api.global.component.annotations.InjectComponent;
 
 public class ShopCmd extends NorthCommand
 {
-    @InjectComponent("SkyBlock.PlayerExperience.Server")
+    @Inject
     private ExperienceServer experience;
 
     public ShopCmd()

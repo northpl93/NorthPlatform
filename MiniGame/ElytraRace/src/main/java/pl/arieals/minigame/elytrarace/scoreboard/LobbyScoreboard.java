@@ -15,12 +15,14 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.zgame.api.bukkit.scoreboard.ContentBuilder;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardLayout;
-import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class LobbyScoreboard implements IScoreboardLayout
 {
-    @InjectMessages("ElytraRace")
+    @Inject
+    @Messages("ElytraRace")
     private MessagesBox msg;
 
     @Override
