@@ -9,13 +9,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.player.IBukkitPlayerManager;
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 
 public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayerManager
 {
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager networkManager;
 
     @Override

@@ -15,20 +15,21 @@ import pl.north93.zgame.api.global.component.ComponentStatus;
 import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 
-class ComponentBundle extends AbstractBeanContext implements IComponentBundle
+class ComponentBundle implements IComponentBundle
 {
     private final String               name;
     private final ComponentDescription description;
     private final ClassLoader          classLoader;
+    private final AbstractBeanContext  componentBeanContext;
     private Set<String> basePackages;
     private Component   component;
 
-    public ComponentBundle(final ComponentDescription description, final ClassLoader classLoader, final AbstractBeanContext parentBeanContext)
+    public ComponentBundle(final ComponentDescription description, final ClassLoader classLoader, final AbstractBeanContext componentBeanContext)
     {
-        super(parentBeanContext, "Component-" + description.getName());
         this.name = description.getName();
         this.description = description;
         this.classLoader = classLoader;
+        this.componentBeanContext = componentBeanContext;
         this.basePackages = new ObjectArraySet<>();
     }
 
@@ -107,6 +108,7 @@ class ComponentBundle extends AbstractBeanContext implements IComponentBundle
             throw new IllegalStateException("ComponentBundle already has associated component.");
         }
         this.component = component;
+        this.componentBeanContext.add(new StaticBeanContainer(component.getClass(), this.getName(), component));
     }
 
     public boolean isEnabled()
@@ -127,6 +129,12 @@ class ComponentBundle extends AbstractBeanContext implements IComponentBundle
         }
 
         return true;
+    }
+
+    @Override
+    public AbstractBeanContext getBeanContext()
+    {
+        return this.componentBeanContext;
     }
 
     @Override

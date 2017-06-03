@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 import pl.north93.zgame.api.global.update.api.IUpdateApiRpc;
@@ -23,7 +23,7 @@ import pl.north93.zgame.api.global.update.client.impl.fileopscheduler.FileOpSche
 
 public class UpdateManager extends Component implements IUpdateClient
 {
-    @InjectComponent("API.Database.Redis.RPC")
+    @Inject
     private IRpcManager     rpcManager;
     private Logger          logger;
     private UpdateInfoImpl  updateInfo;

@@ -36,9 +36,9 @@ public class ComponentManagerImpl implements IComponentManager
     private final ApiCore                  apiCore;
     private final List<ComponentBundle>    components = new ArrayList<>();
     private final RootBeanContext          rootBeanCtx = new RootBeanContext();
-    private final ApiBeanContext           apiBeanCtx  = new ApiBeanContext(this.rootBeanCtx);
 
     private boolean autoEnable;
+    private List<ClassLoader> scannedClassloaders = new ArrayList<>();
 
     public ComponentManagerImpl(final ApiCore apiCore)
     {
@@ -63,7 +63,17 @@ public class ComponentManagerImpl implements IComponentManager
         }
         this.apiCore.getLogger().info("Loading component " + componentDescription.getName());
 
-        final ComponentBundle componentBundle = new ComponentBundle(componentDescription, classLoader, this.rootBeanCtx);
+        final AbstractBeanContext componentBeanContext;
+        if (classLoader instanceof JarComponentLoader)
+        {
+            componentBeanContext = new ComponentBeanContext(((JarComponentLoader) classLoader).getBeanContext(), componentDescription.getName());
+        }
+        else
+        {
+            componentBeanContext = this.rootBeanCtx;
+        }
+
+        final ComponentBundle componentBundle = new ComponentBundle(componentDescription, classLoader, componentBeanContext);
         this.components.add(componentBundle);
         if (componentDescription.isAutoInstantiate()) // instantiate component class auto-instantiation is enabled
         {
@@ -132,6 +142,11 @@ public class ComponentManagerImpl implements IComponentManager
 
                 checkedLoader.registerDependency(dependencyLoader);
             }
+            if (componentBundle.getBeanContext() instanceof ComponentBeanContext && dependencyBundle.getBeanContext() instanceof ComponentBeanContext)
+            {
+                ((ComponentBeanContext) componentBundle.getBeanContext()).addDependency(((ComponentBeanContext) dependencyBundle.getBeanContext()));
+            }
+
             if (dependencyBundle.isEnabled()) // if dependencyBundle is already enabled, skip checking
             {
                 continue;
@@ -164,10 +179,29 @@ public class ComponentManagerImpl implements IComponentManager
             this.loadComponent(classLoader, componentDescription);
         }
 
+        this.scanClassloader(classLoader);
+
         for (final String includeConfig : componentsConfig.getInclude())
         {
             this.doComponentScan(includeConfig, classLoader);
         }
+    }
+
+    private void scanClassloader(final ClassLoader classLoader)
+    {
+        if (this.scannedClassloaders.contains(classLoader))
+        {
+            return;
+        }
+        if (classLoader instanceof JarComponentLoader)
+        {
+            new ClassloaderScanningTask(this, classLoader, ((JarComponentLoader) classLoader).getFileUrl()).scan();
+        }
+        else if (classLoader == this.getClass().getClassLoader())
+        {
+            new ClassloaderScanningTask(this, classLoader, this.getClass().getProtectionDomain().getCodeSource().getLocation()).scan();
+        }
+        this.scannedClassloaders.add(classLoader);
     }
 
     @Override
@@ -320,7 +354,7 @@ public class ComponentManagerImpl implements IComponentManager
         final ClassLoader classLoader = clazz.getClassLoader();
         if (classLoader == this.getClass().getClassLoader())
         {
-            return this.apiBeanCtx;
+            return this.rootBeanCtx;
         }
 
         final String packageName = clazz.getPackage().getName();
@@ -335,7 +369,7 @@ public class ComponentManagerImpl implements IComponentManager
             {
                 if (basePackage.startsWith(packageName))
                 {
-                    return component;
+                    return component.getBeanContext();
                 }
             }
         }

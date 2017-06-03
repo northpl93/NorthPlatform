@@ -14,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.data.StringByteRedisCodec;
 
@@ -24,7 +24,7 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
     private StatefulRedisPubSubConnection<String, byte[]> connection;
     private ExecutorService                               executorService = Executors.newCachedThreadPool();
     private Logger                                        logger;
-    @InjectComponent("API.Database.StorageConnector")
+    @Inject
     private StorageConnector                              storageConnector;
 
     @Override

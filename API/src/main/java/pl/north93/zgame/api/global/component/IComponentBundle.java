@@ -2,7 +2,7 @@ package pl.north93.zgame.api.global.component;
 
 import java.util.Set;
 
-public interface IComponentBundle extends IBeanContext
+public interface IComponentBundle
 {
     Set<String> getBasePackages();
 
@@ -21,4 +21,6 @@ public interface IComponentBundle extends IBeanContext
     ComponentDescription getDescription();
 
     ClassLoader getClassLoader();
+
+    IBeanContext getBeanContext();
 }

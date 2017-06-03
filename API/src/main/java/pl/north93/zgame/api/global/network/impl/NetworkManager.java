@@ -20,7 +20,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.deployment.RemoteDaemon;
@@ -43,15 +43,15 @@ import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 
 class NetworkManager extends Component implements INetworkManager
 {
-    @InjectComponent("API.Database.Redis.MessagePackSerializer")
+    @Inject
     private TemplateManager     msgPack;
-    @InjectComponent("API.Database.Redis.Subscriber")
+    @Inject
     private RedisSubscriber     redisSubscriber;
-    @InjectComponent("API.Database.Redis.Observer")
+    @Inject
     private IObservationManager observationManager;
-    @InjectComponent("API.MinecraftNetwork.PlayersStorage")
+    @Inject
     private IPlayersData        playersData;
-    @InjectComponent("API.Database.StorageConnector")
+    @Inject
     private StorageConnector    storage;
     private ServersManagerImpl  serversManager;
     private PlayersManagerImpl  playersManager;

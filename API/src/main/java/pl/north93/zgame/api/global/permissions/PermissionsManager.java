@@ -12,16 +12,16 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 
 public class PermissionsManager extends Component
 {
     private final Set<Group> cachedGroups = new ObjectArraySet<>();
-    @InjectComponent("API.Database.StorageConnector")
+    @Inject
     private StorageConnector  storageConnector;
-    @InjectComponent("API.Database.Redis.MessagePackSerializer")
+    @Inject
     private TemplateManager   msgPack;
     private Group             defaultGroup;
 

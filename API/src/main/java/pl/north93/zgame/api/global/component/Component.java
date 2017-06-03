@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.ApiCore;
+import pl.north93.zgame.api.global.component.impl.Injector;
 
 public abstract class Component implements IBeanContext
 {
@@ -75,6 +76,7 @@ public abstract class Component implements IBeanContext
     {
         final String prettyPackages = this.componentBundle.getBasePackages().stream().collect(Collectors.joining(", "));
         this.apiCore.getLogger().info("Enabling component " + this.getName() + " (packages used to scan: " + prettyPackages + ")");
+        Injector.inject(this);
         try
         {
             this.enableComponent();
@@ -107,37 +109,49 @@ public abstract class Component implements IBeanContext
     @Override
     public String getBeanContextName()
     {
-        return this.componentBundle.getBeanContextName();
+        return this.componentBundle.getBeanContext().getBeanContextName();
     }
 
     @Override
     public IBeanContext getParent()
     {
-        return this.componentBundle.getParent();
+        return this.componentBundle.getBeanContext().getParent();
     }
 
     @Override
     public <T> T getBean(final Class<T> clazz)
     {
-        return this.componentBundle.getBean(clazz);
+        return this.componentBundle.getBeanContext().getBean(clazz);
     }
 
     @Override
     public <T> T getBean(final String beanName)
     {
-        return this.componentBundle.getBean(beanName);
+        return this.componentBundle.getBeanContext().getBean(beanName);
     }
 
     @Override
     public <T> Collection<T> getBeans(final Class<T> clazz)
     {
-        return this.componentBundle.getBeans(clazz);
+        return this.componentBundle.getBeanContext().getBeans(clazz);
     }
 
     @Override
     public <T> Collection<T> getBeans(final String name)
     {
-        return this.componentBundle.getBeans(name);
+        return this.componentBundle.getBeanContext().getBeans(name);
+    }
+
+    @Override
+    public <T> T getBean(final IBeanQuery query)
+    {
+        return this.componentBundle.getBeanContext().getBean(query);
+    }
+
+    @Override
+    public <T> Collection<T> getBeans(final IBeanQuery query)
+    {
+        return this.componentBundle.getBeanContext().getBeans(query);
     }
 
     @Override

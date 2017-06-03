@@ -22,9 +22,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.permissions.PermissionsInjector;
-import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.impl.Injector;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
@@ -36,14 +34,14 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 public class JoinLeftListener implements Listener
 {
     private BukkitApiCore       bukkitApiCore;
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager     networkManager;
-    @InjectComponent("API.Database.Redis.Observer")
+    @Inject
     private IObservationManager observation;
 
     public JoinLeftListener()
     {
-        Injector.inject(API.getApiCore().getComponentManager(), this);
+        //Injector.inject(API.getApiCore().getComponentManager(), this);
     }
 
     @EventHandler

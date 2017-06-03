@@ -14,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.PlatformConnector;
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.observable.Hash;
@@ -32,11 +32,11 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     private final Map<String, WeakReference<Value<?>>> cachedValues = new HashMap<>();
     private final ValueSubscriptionHandler             valueSubHandler;
     private final List<LockImpl>                       waitingLocks = new ArrayList<>();
-    @InjectComponent("API.Database.StorageConnector")
+    @Inject
     private StorageConnector storageConnector;
-    @InjectComponent("API.Database.Redis.MessagePackSerializer")
+    @Inject
     private TemplateManager  msgPack;
-    @InjectComponent("API.Database.Redis.Subscriber")
+    @Inject
     private RedisSubscriber  redisSubscriber;
 
     public ObservationManagerImpl()

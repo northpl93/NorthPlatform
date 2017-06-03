@@ -3,11 +3,11 @@ package pl.north93.zgame.restful.controllers;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.network.NetworkMeta;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.NetworkAction;
+import pl.north93.zgame.api.global.network.NetworkMeta;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.restful.models.NetworkJoinPolicyChanged;
 import pl.north93.zgame.restful.models.NetworkStatus;
@@ -16,7 +16,7 @@ import spark.Response;
 
 public class NetworkController
 {
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager networkManager;
 
     public Object root(final Request request, final Response response)

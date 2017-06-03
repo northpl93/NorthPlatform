@@ -11,9 +11,7 @@ import org.diorite.utils.math.DioriteRandomUtils;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.impl.Injector;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.joinaction.JoinActionsContainer;
@@ -26,14 +24,14 @@ import pl.north93.zgame.api.global.redis.observable.Value;
  */
 public class ConnectionManager
 {
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private INetworkManager     networkManager;
-    @InjectComponent("API.Database.Redis.Observer")
+    @Inject
     private IObservationManager observationManager;
 
     public ConnectionManager()
     {
-        Injector.inject(API.getApiCore().getComponentManager(), this);
+        //Injector.inject(API.getApiCore().getComponentManager(), this);
     }
 
     public void connectPlayerToServer(final ProxiedPlayer player, final String serverName, JoinActionsContainer actions)

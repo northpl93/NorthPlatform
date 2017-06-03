@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
@@ -24,11 +24,11 @@ import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 
 public class RpcManagerImpl extends Component implements IRpcManager
 {
-    @InjectComponent("API.Database.StorageConnector")
+    @Inject
     private StorageConnector                        storageConnector;
-    @InjectComponent("API.Database.Redis.Subscriber")
+    @Inject
     private RedisSubscriber                         redisSubscriber;
-    @InjectComponent("API.Database.Redis.MessagePackSerializer")
+    @Inject
     private TemplateManager                         msgPack;
     private final RpcProxyCache                     rpcProxyCache      = new RpcProxyCache(this);
     private final Int2ObjectMap<RpcResponseHandler> responseHandlerMap = new Int2ObjectArrayMap<>();

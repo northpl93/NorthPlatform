@@ -17,23 +17,23 @@ class JarBeanContext extends AbstractBeanContext
     }
 
     @Override
-    public Collection<AbstractBeanContainer> getAll()
+    public Collection<AbstractBeanContainer> getAll(final boolean withParent)
     {
-        final Collection<AbstractBeanContainer> all = super.getAll();
+        final Collection<AbstractBeanContainer> all = super.getAll(withParent);
         for (final JarComponentLoader jarComponentLoader : this.loader.getDependencies())
         {
-            all.addAll(jarComponentLoader.getBeanContext().getAll());
+            all.addAll(jarComponentLoader.getBeanContext().getAll(withParent));
         }
         return all;
     }
 
     @Override
-    protected Stream<AbstractBeanContainer> beanStream()
+    protected Stream<AbstractBeanContainer> beanStream(final boolean withParent)
     {
-        Stream<AbstractBeanContainer> stream = super.beanStream();
+        Stream<AbstractBeanContainer> stream = super.beanStream(withParent);
         for (final JarComponentLoader jarComponentLoader : this.loader.getDependencies())
         {
-            stream = Stream.concat(stream, jarComponentLoader.getBeanContext().beanStream());
+            stream = Stream.concat(stream, jarComponentLoader.getBeanContext().beanStream(withParent));
         }
         return stream;
     }

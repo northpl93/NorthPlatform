@@ -17,17 +17,17 @@ import com.mongodb.client.model.UpdateOptions;
 import org.bson.Document;
 
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.data.UsernameCache;
 import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.metadata.MetaStore;
+import pl.north93.zgame.api.global.network.impl.OfflinePlayerImpl;
+import pl.north93.zgame.api.global.network.impl.OnlinePlayerImpl;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
-import pl.north93.zgame.api.global.network.impl.OfflinePlayerImpl;
-import pl.north93.zgame.api.global.network.impl.OnlinePlayerImpl;
 import pl.north93.zgame.api.global.permissions.Group;
 import pl.north93.zgame.api.global.permissions.PermissionsManager;
 import pl.north93.zgame.api.global.redis.observable.Cache;
@@ -37,13 +37,13 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class PlayersDataImpl extends Component implements IPlayersData
 {
-    @InjectComponent("API.MinecraftNetwork.UsernameCache")
+    @Inject
     private UsernameCache       usernameCache;
-    @InjectComponent("API.Database.StorageConnector")
+    @Inject
     private StorageConnector    storageConnector;
-    @InjectComponent("API.MinecraftNetwork.PermissionsManager")
+    @Inject
     private PermissionsManager  permissionsManager;
-    @InjectComponent("API.Database.Redis.Observer")
+    @Inject
     private IObservationManager observationManager;
     // // // // // // // // // // // // // // //
     private Cache<UUID, String>         uuid2nick;

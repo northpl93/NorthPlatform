@@ -54,7 +54,7 @@ class BeanQuery implements IBeanQuery, Predicate<AbstractBeanContainer>
             }
             else
             {
-                return beanContainer.getType().isAssignableFrom(this.type);
+                return this.type.isAssignableFrom(beanContainer.getType());
             }
         }
 

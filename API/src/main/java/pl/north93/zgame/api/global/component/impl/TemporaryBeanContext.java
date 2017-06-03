@@ -6,4 +6,14 @@ class TemporaryBeanContext extends AbstractBeanContext
     {
         super(parent, name);
     }
+
+    /*default*/ void put(final Class<?> type, final Object bean)
+    {
+        this.add(new StaticBeanContainer(type, type.getName(), bean));
+    }
+
+    /*default*/ void put(final Class<?> type, final String name, final Object bean)
+    {
+        this.add(new StaticBeanContainer(type, name, bean));
+    }
 }

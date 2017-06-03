@@ -42,12 +42,12 @@ abstract class AbstractBeanContext implements IBeanContext
         return this.name;
     }
 
-    public Collection<AbstractBeanContainer> getAll()
+    public Collection<AbstractBeanContainer> getAll(final boolean withParent)
     {
-        if (this.parent != null)
+        if (withParent && this.parent != null)
         {
             final Set<AbstractBeanContainer> beans = new HashSet<>();
-            beans.addAll(this.parent.getAll());
+            beans.addAll(this.parent.getAll(true));
             beans.addAll(this.registeredBeans);
             return beans;
         }
@@ -58,18 +58,18 @@ abstract class AbstractBeanContext implements IBeanContext
     public <T> T getBean(final IBeanQuery query)
     {
         //noinspection unchecked
-        return (T) this.beanStream()
+        return (T) this.beanStream(true)
                        .filter((BeanQuery) query)
                        .reduce((u, v) -> { throw new IllegalStateException("More than one bean found. Use getBeans!"); })
                        .map(container -> container.getValue(null))
-                       .orElseThrow(BeanNotFoundException::new);
+                       .orElseThrow(() -> new BeanNotFoundException(query));
     }
 
     @Override
     public <T> Collection<T> getBeans(final IBeanQuery query)
     {
         //noinspection unchecked
-        return (Collection<T>) this.beanStream()
+        return (Collection<T>) this.beanStream(true)
                                    .filter((BeanQuery) query)
                                    .map(container -> container.getValue(null))
                                    .collect(Collectors.toSet());
@@ -99,11 +99,11 @@ abstract class AbstractBeanContext implements IBeanContext
         return this.getBean(new BeanQuery().name(beanName));
     }
 
-    protected Stream<AbstractBeanContainer> beanStream()
+    protected Stream<AbstractBeanContainer> beanStream(final boolean withParent)
     {
-        if (this.parent != null)
+        if (withParent && this.parent != null)
         {
-            return Stream.concat(this.registeredBeans.stream(), this.parent.beanStream());
+            return Stream.concat(this.registeredBeans.stream(), this.parent.beanStream(true));
         }
         return this.registeredBeans.stream();
     }

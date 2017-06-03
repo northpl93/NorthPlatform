@@ -27,9 +27,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 import pl.north93.zgame.api.bungee.BungeeApiCore;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectMessages;
-import pl.north93.zgame.api.global.component.impl.Injector;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.data.UsernameCache.UsernameDetails;
 import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.data.players.impl.NameSizeMistakeException;
@@ -46,17 +44,17 @@ public class PlayerListener implements Listener
     private static final MetaKey  BAN_EXPIRE   = MetaKey.get("banExpireAt");
     private static final Pattern  NICK_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{3,16}$");
     private final BungeeApiCore   bungeeApiCore;
-    @InjectMessages("Messages")
+    @Inject
     private       MessagesBox     apiMessages;
-    @InjectComponent("API.MinecraftNetwork.PlayersStorage")
+    @Inject
     private       IPlayersData    playersDao;
-    @InjectComponent("API.MinecraftNetwork.NetworkManager")
+    @Inject
     private       INetworkManager networkManager;
 
     public PlayerListener(final BungeeApiCore bungeeApiCore)
     {
         this.bungeeApiCore = bungeeApiCore;
-        Injector.inject(bungeeApiCore.getComponentManager(), this); // manually perform injections
+        //Injector.inject(bungeeApiCore.getComponentManager(), this); // manually perform injections
     }
 
     @EventHandler

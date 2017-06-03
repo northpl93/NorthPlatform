@@ -18,13 +18,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.deployment.ServerPattern;
 import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
-import pl.north93.zgame.api.global.permissions.GroupsContainer;
-import pl.north93.zgame.api.global.network.NetworkMeta;
 import pl.north93.zgame.api.global.network.NetworkAction;
+import pl.north93.zgame.api.global.network.NetworkMeta;
+import pl.north93.zgame.api.global.permissions.GroupsContainer;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.controller.cfg.ServersGroupsConfig;
 import pl.north93.zgame.controller.cfg.ServersPatternsConfig;
@@ -34,9 +34,9 @@ import pl.north93.zgame.controller.cfg.ServersPatternsConfig;
  */
 public class ConfigBroadcaster extends Component
 {
-    @InjectComponent("API.Database.StorageConnector")
+    @Inject
     private StorageConnector      storage;
-    @InjectComponent("API.Database.Redis.MessagePackSerializer")
+    @Inject
     private TemplateManager       msgPack;
 
     private NetworkMeta           networkMeta;

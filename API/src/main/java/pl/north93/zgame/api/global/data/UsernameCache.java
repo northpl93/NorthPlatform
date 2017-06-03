@@ -27,7 +27,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.Document;
 
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.observable.Cache;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
@@ -35,9 +35,9 @@ import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 public class UsernameCache extends Component
 {
     private final JsonParser               json = new JsonParser();
-    @InjectComponent("API.Database.StorageConnector")
+    @Inject
     private StorageConnector               storage;
-    @InjectComponent("API.Database.Redis.Observer")
+    @Inject
     private IObservationManager            observationManager;
     private Cache<String, UsernameDetails> localCache;
     private MongoCollection<Document>      mongoCache;

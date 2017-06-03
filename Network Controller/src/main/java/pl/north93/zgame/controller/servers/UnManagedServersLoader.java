@@ -5,14 +5,12 @@ import java.util.UUID;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.impl.Injector;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.deployment.serversgroup.UnManagedServer;
 import pl.north93.zgame.api.global.deployment.serversgroup.UnManagedServersGroup;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
-import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.impl.ServerImpl;
+import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.network.server.ServerType;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
@@ -24,15 +22,10 @@ import pl.north93.zgame.controller.configbroadcaster.ConfigBroadcaster;
  */
 public class UnManagedServersLoader
 {
-    @InjectComponent("NetworkController.ConfigBroadcaster")
+    @Inject
     private ConfigBroadcaster   configBroadcaster;
-    @InjectComponent("API.Database.Redis.Observer")
+    @Inject
     private IObservationManager observationManager;
-
-    public UnManagedServersLoader()
-    {
-        Injector.inject(API.getApiCore().getComponentManager(), this);
-    }
 
     public void broadcastServers()
     {

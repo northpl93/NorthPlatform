@@ -11,9 +11,8 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.commands.annotation.QuickCommand;
-import pl.north93.zgame.api.global.component.annotations.IgnoreExtensionPoint;
 
-@IgnoreExtensionPoint // this class shouldn't be registered as extension point
+//@IgnoreExtensionPoint // this class shouldn't be registered as extension point
 class QuickNorthCommand extends NorthCommand
 {
     private final MethodHandle commandBody;

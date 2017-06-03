@@ -6,7 +6,7 @@ import java.util.Set;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.deployment.RemoteDaemon;
 import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.deployment.serversgroup.ManagedServersGroup;
@@ -17,9 +17,9 @@ import pl.north93.zgame.controller.servers.allocators.AllocationProcessor;
 
 public class NetworkServersManager extends Component implements INetworkServersManager, IServerCountManager
 {
-    @InjectComponent("NetworkController.ConfigBroadcaster")
+    @Inject
     private ConfigBroadcaster         configBroadcaster;
-    @InjectComponent("API.Database.Redis.Observer")
+    @Inject
     private IObservationManager       observationManager;
     private UnManagedServersLoader    unManagedServersLoader;
     private boolean                   working;

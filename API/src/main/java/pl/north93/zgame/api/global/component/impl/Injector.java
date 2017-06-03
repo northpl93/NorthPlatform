@@ -2,7 +2,9 @@ package pl.north93.zgame.api.global.component.impl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.logging.Level;
 
+import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
 
@@ -59,8 +61,25 @@ public class Injector
                 query.name(namedAnn.value());
             }
 
-            final Object bean = context.getBean(query);
+            final Object bean;
+            try
+            {
+                bean = context.getBean(query);
+            }
+            catch (final Exception e)
+            {
+                API.getLogger().log(Level.SEVERE, "Failed to resolve bean when processing injection: " + instance.getClass().getName(), e);
+                return;
+            }
 
+            try
+            {
+                field.set(instance, bean);
+            }
+            catch (final IllegalAccessException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 }

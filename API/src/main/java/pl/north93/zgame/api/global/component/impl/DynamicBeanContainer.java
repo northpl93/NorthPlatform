@@ -1,22 +1,48 @@
 package pl.north93.zgame.api.global.component.impl;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 class DynamicBeanContainer extends AbstractBeanContainer
 {
+    private final AbstractBeanContext beanContext;
     private final Method method;
 
-    public DynamicBeanContainer(final Class<?> type, final String name, final Method method)
+    public DynamicBeanContainer(final Class<?> type, final String name, final AbstractBeanContext beanContext, final Method method)
     {
         super(type, name);
+        this.beanContext = beanContext;
         this.method = method;
     }
 
     @Override
     public Object getValue(final AccessibleObject injectionContext)
     {
-        injectionContext.getAnnotations()
-        return null;
+        final TemporaryBeanContext beanContext = new TemporaryBeanContext(this.beanContext, "temp");
+
+        for (final Annotation annotation : injectionContext.getAnnotations())
+        {
+            beanContext.put(annotation.getClass(), annotation);
+        }
+
+        if (Modifier.isStatic(this.method.getModifiers()))
+        {
+            return SmartExecutor.execute(this.method, beanContext, null);
+        }
+        else
+        {
+            return SmartExecutor.execute(this.method, beanContext, this.beanContext.getBean(this.method.getDeclaringClass()));
+        }
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("beanContext", this.beanContext).append("method", this.method).toString();
     }
 }
