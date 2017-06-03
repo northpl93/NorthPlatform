@@ -13,9 +13,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ArenaEndListener implements Listener
 {
+    @Inject
     private BukkitApiCore apiCore;
 
     @EventHandler
