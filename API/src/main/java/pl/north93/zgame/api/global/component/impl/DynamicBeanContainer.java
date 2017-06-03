@@ -2,6 +2,7 @@ package pl.north93.zgame.api.global.component.impl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -25,6 +26,7 @@ class DynamicBeanContainer extends AbstractBeanContainer
     {
         final TemporaryBeanContext beanContext = new TemporaryBeanContext(this.beanContext, "temp");
 
+        beanContext.put(Class.class, "Source", ((Member) injectionContext).getDeclaringClass());
         for (final Annotation annotation : injectionContext.getAnnotations())
         {
             beanContext.put(annotation.getClass(), annotation);

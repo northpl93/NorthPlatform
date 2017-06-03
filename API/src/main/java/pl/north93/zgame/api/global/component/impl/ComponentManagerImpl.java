@@ -17,6 +17,7 @@ import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -44,6 +45,9 @@ public class ComponentManagerImpl implements IComponentManager
     {
         instance = this;
         this.apiCore = apiCore;
+
+        this.rootBeanCtx.add(new StaticBeanContainer(apiCore.getClass(), "ApiCore", apiCore));
+        this.rootBeanCtx.add(new StaticBeanContainer(Logger.class, "ApiLogger", apiCore.getLogger()));
     }
 
     private void initComponent(final ComponentBundle component)
