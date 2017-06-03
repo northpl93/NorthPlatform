@@ -27,12 +27,13 @@ import pl.arieals.minigame.elytrarace.arena.StartCountdown;
 import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
-import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class ArenaStartListener implements Listener
 {
-    @InjectMessages("ElytraRace")
+    @Inject @Messages("ElytraRace")
     private MessagesBox messages;
     private BukkitApiCore apiCore;
 
