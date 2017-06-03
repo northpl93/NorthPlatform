@@ -99,7 +99,7 @@ abstract class AbstractBeanContext implements IBeanContext
         return this.getBean(new BeanQuery().name(beanName));
     }
 
-    private Stream<AbstractBeanContainer> beanStream()
+    protected Stream<AbstractBeanContainer> beanStream()
     {
         if (this.parent != null)
         {

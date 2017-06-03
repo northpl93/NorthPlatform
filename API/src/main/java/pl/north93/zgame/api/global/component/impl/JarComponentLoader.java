@@ -106,6 +106,11 @@ class JarComponentLoader extends URLClassLoader
         return this.classPool.get();
     }
 
+    public Set<JarComponentLoader> getDependencies()
+    {
+        return this.dependencies;
+    }
+
     public JarBeanContext getBeanContext()
     {
         return this.beanContext;
