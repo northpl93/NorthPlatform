@@ -8,6 +8,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.google.common.base.Preconditions;
 
 import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
@@ -19,8 +22,6 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
 import javassist.ClassPool;
-import javassist.LoaderClassPath;
-import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.annotations.SkipInjections;
 
@@ -30,34 +31,39 @@ class ClassloaderScanningTask
     private final ClassLoader                 classLoader;
     private final URL                         loadedFile;
     private final ClassPool                   classPool;
+    private final Reflections                 reflections;
     private final Queue<AbstractScanningTask> pendingTasks;
 
-    public ClassloaderScanningTask(final ComponentManagerImpl manager, final ClassLoader classLoader, final URL loadedFile)
+    public ClassloaderScanningTask(final ComponentManagerImpl manager, final ClassLoader classLoader, final URL loadedFile, final String rootPackage)
     {
         this.manager = manager;
         this.classLoader = classLoader;
         this.loadedFile = loadedFile;
-        this.classPool = this.createClassPool();
+        this.classPool = manager.getClassPool(classLoader);
+        this.reflections = this.createReflections(new FilterBuilder().includePackage(rootPackage));
         this.pendingTasks = new ArrayDeque<>();
     }
 
-    public static ClassloaderScanningTask create(final ComponentManagerImpl manager, final ClassLoader classLoader)
+    public static ClassloaderScanningTask create(final ComponentManagerImpl manager, final ClassLoader classLoader, final String rootPackage)
     {
+        Preconditions.checkNotNull(manager, "Manager can't be null!");
+        Preconditions.checkNotNull(classLoader, "ClassLoader can't be null");
+        Preconditions.checkNotNull(rootPackage, "Root package can't be null!");
+
         if (classLoader instanceof JarComponentLoader)
         {
-            return new ClassloaderScanningTask(manager, classLoader, ((JarComponentLoader) classLoader).getFileUrl());
+            return new ClassloaderScanningTask(manager, classLoader, ((JarComponentLoader) classLoader).getFileUrl(), rootPackage);
         }
         else if (classLoader == ClassloaderScanningTask.class.getClassLoader())
         {
-            return new ClassloaderScanningTask(manager, classLoader, ClassloaderScanningTask.class.getProtectionDomain().getCodeSource().getLocation());
+            return new ClassloaderScanningTask(manager, classLoader, ClassloaderScanningTask.class.getProtectionDomain().getCodeSource().getLocation(), rootPackage);
         }
         throw new IllegalArgumentException();
     }
 
-    public void scanWithoutComponents(final String rootPackage, final List<ComponentDescription> components)
+    public void scanWithoutComponents(final List<ComponentDescription> components)
     {
         final FilterBuilder filter = new FilterBuilder();
-        filter.includePackage(rootPackage);
         for (final ComponentDescription component : components)
         {
             final String pack;
@@ -87,9 +93,7 @@ class ClassloaderScanningTask
 
     /*default*/ void scan(final FilterBuilder filter)
     {
-        final Reflections reflections = this.createReflections(filter);
-
-        final Set<Class<?>> allClasses = this.getAllClasses(reflections);
+        final Set<Class<?>> allClasses = this.getAllClasses(this.reflections, filter);
         for (final Class<?> aClass : allClasses)
         {
             if (aClass.isAnnotationPresent(SkipInjections.class))
@@ -127,9 +131,11 @@ class ClassloaderScanningTask
         }
     }
 
-    /*default*/ Set<Class<?>> getAllClasses(final Reflections reflections)
+    /*default*/ Set<Class<?>> getAllClasses(final Reflections reflections, final FilterBuilder filter)
     {
-        final Collection<String> classes = reflections.getStore().get(SubTypesScanner.class.getSimpleName()).values();
+        final Collection<String> unfilteredClasses = reflections.getStore().get(SubTypesScanner.class.getSimpleName()).values();
+        final Collection<String> classes = unfilteredClasses.stream().filter(filter::apply).collect(Collectors.toSet());
+
         final Set<Class<?>> out = new HashSet<>(classes.size());
         for (final String clazz : classes)
         {
@@ -175,22 +181,6 @@ class ClassloaderScanningTask
     /*default*/ ClassPool getClassPool()
     {
         return this.classPool;
-    }
-
-    private ClassPool createClassPool()
-    {
-        if (this.classLoader instanceof JarComponentLoader)
-        {
-            final JarComponentLoader componentLoader = (JarComponentLoader) this.classLoader;
-            return componentLoader.getClassPool();
-        }
-        else
-        {
-            final ClassPool classPool = new ClassPool();
-            classPool.appendClassPath(new LoaderClassPath(ApiCore.class.getClassLoader()));
-            classPool.appendClassPath(new LoaderClassPath(this.classLoader));
-            return classPool;
-        }
     }
 
     private Reflections createReflections(final FilterBuilder packageFilter)

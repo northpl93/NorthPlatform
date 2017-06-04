@@ -17,8 +17,7 @@ public class PlayerInfoCmd extends NorthCommand
 {
     @Inject
     private INetworkManager networkManager;
-    @Inject
-    @Messages("Commands")
+    @Inject @Messages("Commands")
     private MessagesBox     messages;
 
     public PlayerInfoCmd()

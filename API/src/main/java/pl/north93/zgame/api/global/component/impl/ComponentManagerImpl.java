@@ -25,6 +25,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import org.diorite.cfg.system.TemplateCreator;
 
+import javassist.ClassPool;
+import javassist.LoaderClassPath;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.ComponentDescription;
@@ -36,9 +38,10 @@ public class ComponentManagerImpl implements IComponentManager
     /*default*/ static ComponentManagerImpl instance;
     private final ApiCore                  apiCore;
     private final List<ComponentBundle>    components = new ArrayList<>();
+    private final ClassPool                rootClassPool = new ClassPool();
     private final RootBeanContext          rootBeanCtx = new RootBeanContext();
+    private final ClassloaderScanningTask  rootScanningTask;
     private final AggregationManager       aggregationManager = new AggregationManager();
-
     private boolean autoEnable;
     private List<ClassLoader> scannedClassloaders = new ArrayList<>();
 
@@ -46,6 +49,8 @@ public class ComponentManagerImpl implements IComponentManager
     {
         instance = this;
         this.apiCore = apiCore;
+        this.rootClassPool.appendClassPath(new LoaderClassPath(this.getClass().getClassLoader()));
+        this.rootScanningTask = ClassloaderScanningTask.create(this, this.getClass().getClassLoader(), "pl.north93");
     }
 
     public void initDefaultBeans()
@@ -106,7 +111,6 @@ public class ComponentManagerImpl implements IComponentManager
 
             this.initComponent(componentBundle);
         }
-        return;
     }
 
     private boolean canEnableComponent(final ComponentBundle componentBundle)
@@ -209,7 +213,7 @@ public class ComponentManagerImpl implements IComponentManager
             return;
         }
 
-        ClassloaderScanningTask.create(this, classLoader).scanWithoutComponents(rootPackage, components);
+        this.getScanningTask(classLoader, rootPackage).scanWithoutComponents(components);
         this.scannedClassloaders.add(classLoader);
     }
 
@@ -358,6 +362,11 @@ public class ComponentManagerImpl implements IComponentManager
         return Collections.unmodifiableList(this.components);
     }
 
+    /**
+     * Zwraca kontekst do którego należy dana klasa.
+     * @param clazz klasa dla której sprawdzić kontekst
+     * @return kontekst danej klasy.
+     */
     /*default*/ AbstractBeanContext getOwningContext(final Class<?> clazz)
     {
         final ClassLoader classLoader = clazz.getClassLoader();
@@ -389,6 +398,44 @@ public class ComponentManagerImpl implements IComponentManager
         }
 
         throw new IllegalArgumentException("Not found bean context for class " + clazz.getName());
+    }
+
+    /**
+     * Zwraca javassistowego classpola dla danego ClassLoadera.
+     * @param classLoader classloader z którego utworzyć poola.
+     * @return zcachowany ClassPool.
+     */
+    /*default*/ ClassPool getClassPool(final ClassLoader classLoader)
+    {
+        if (classLoader instanceof JarComponentLoader)
+        {
+            final JarComponentLoader componentLoader = (JarComponentLoader) classLoader;
+            return componentLoader.getClassPool();
+        }
+        else if (classLoader == this.getClass().getClassLoader())
+        {
+            return this.rootClassPool;
+        }
+        throw new IllegalArgumentException("Unknown classloader: " + classLoader);
+    }
+
+    /*default*/ ClassloaderScanningTask getScanningTask(final ClassLoader classLoader, final String rootPackage)
+    {
+        if (classLoader instanceof JarComponentLoader)
+        {
+            final JarComponentLoader componentLoader = (JarComponentLoader) classLoader;
+            if (componentLoader.getScanningTask() == null)
+            {
+                final ClassloaderScanningTask task = ClassloaderScanningTask.create(this, classLoader, rootPackage);
+                componentLoader.setScanningTask(task);
+                return task;
+            }
+            return componentLoader.getScanningTask();
+        }
+        else
+        {
+            return this.rootScanningTask;
+        }
     }
 
     /*default*/ AggregationManager getAggregationManager()

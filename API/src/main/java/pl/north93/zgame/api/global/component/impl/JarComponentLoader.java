@@ -20,6 +20,8 @@ class JarComponentLoader extends URLClassLoader
     private final Map<String, Class<?>>    classCache;
     private final Set<JarComponentLoader>  dependencies;
     private final JarBeanContext           beanContext;
+    private final ClassPool                classPool;
+    private       ClassloaderScanningTask  scanningTask;
 
     public JarComponentLoader(final RootBeanContext rootBeanContext, final URL url, final ClassLoader parent)
     {
@@ -28,6 +30,10 @@ class JarComponentLoader extends URLClassLoader
         this.classCache = new ConcurrentHashMap<>(16);
         this.dependencies = new HashSet<>();
         this.beanContext = new JarBeanContext(rootBeanContext, this);
+
+        this.classPool = new ClassPool();
+        this.classPool.appendClassPath(new LoaderClassPath(ApiCore.class.getClassLoader())); // main API loader
+        this.classPool.appendClassPath(new LoaderClassPath(this));
     }
 
     @Override
@@ -83,18 +89,22 @@ class JarComponentLoader extends URLClassLoader
             return;
         }
         this.dependencies.add(loader);
+        this.classPool.appendClassPath(new LoaderClassPath(loader));
+    }
+
+    public ClassloaderScanningTask getScanningTask()
+    {
+        return this.scanningTask;
+    }
+
+    public void setScanningTask(final ClassloaderScanningTask scanningTask)
+    {
+        this.scanningTask = scanningTask;
     }
 
     public ClassPool getClassPool()
     {
-        final ClassPool classPool = new ClassPool();
-        classPool.appendClassPath(new LoaderClassPath(ApiCore.class.getClassLoader())); // main API loader
-        classPool.appendClassPath(new LoaderClassPath(this));
-        for (final JarComponentLoader dependency : this.dependencies)
-        {
-            classPool.appendClassPath(new LoaderClassPath(dependency));
-        }
-        return classPool;
+        return this.classPool;
     }
 
     public Set<JarComponentLoader> getDependencies()
