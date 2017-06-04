@@ -40,11 +40,6 @@ public class JoinLeftListener implements Listener
     @Inject
     private IObservationManager observation;
 
-    public JoinLeftListener()
-    {
-        //Injector.inject(API.getApiCore().getComponentManager(), this);
-    }
-
     @EventHandler
     public void onJoin(final PlayerJoinEvent event)
     {

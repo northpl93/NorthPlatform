@@ -23,7 +23,7 @@ public class GroupInStringTemplate implements Template<Group>
         final Group group = API.getApiCore().getPermissionsManager().getGroupByName(name);
         if (group == null)
         {
-            API.getLogger().warning("Unknown group name " + name + ". Returning default group.");
+            API.getLogger().severe("[GroupInStringTemplate] Unknown group name " + name + ". Returning default group.");
             return API.getApiCore().getPermissionsManager().getDefaultGroup();
         }
         return group;
