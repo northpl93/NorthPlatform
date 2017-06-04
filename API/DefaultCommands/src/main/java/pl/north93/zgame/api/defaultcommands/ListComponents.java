@@ -8,9 +8,11 @@ import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.component.IComponentManager;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ListComponents extends NorthCommand
 {
+    @Inject
     private ApiCore apiCore;
 
     public ListComponents()

@@ -22,8 +22,7 @@ public class Msg extends NorthCommand
 {
     @Inject
     private INetworkManager networkManager;
-    @Inject
-    @Messages("Commands")
+    @Inject @Messages("Commands")
     private MessagesBox     messages;
 
     private static final MetaKey LAST_SENDER = MetaKey.get("lastMessageSender");

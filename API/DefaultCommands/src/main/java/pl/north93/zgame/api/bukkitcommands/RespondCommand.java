@@ -16,6 +16,7 @@ import pl.north93.zgame.api.global.network.INetworkManager;
  * Created by Konrad on 2017-02-15.
  */
 public class RespondCommand extends NorthCommand {
+    @Inject
     private BukkitApiCore  apiCore;
     @Inject
     private INetworkManager networkManager;

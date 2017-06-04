@@ -12,8 +12,7 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class Heal extends NorthCommand
 {
-    @Inject
-    @Messages("Commands")
+    @Inject @Messages("Commands")
     private MessagesBox messages;
 
     public Heal()

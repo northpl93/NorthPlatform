@@ -18,6 +18,7 @@ import pl.north93.zgame.api.global.network.server.Server;
 
 public class TpCmd extends NorthCommand
 {
+    @Inject
     private ApiCore         apiCore;
     @Inject
     private INetworkManager networkManager;

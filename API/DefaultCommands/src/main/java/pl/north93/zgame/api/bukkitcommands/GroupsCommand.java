@@ -16,13 +16,13 @@ import pl.north93.zgame.api.global.permissions.PermissionsManager;
 
 public class GroupsCommand extends NorthCommand
 {
+    @Inject
     private ApiCore            apiCore;
     @Inject
     private PermissionsManager permissionsManager;
     @Inject
     private INetworkManager    networkManager;
-    @Inject
-    @Messages("Commands")
+    @Inject @Messages("Commands")
     private MessagesBox        messages;
 
     public GroupsCommand()

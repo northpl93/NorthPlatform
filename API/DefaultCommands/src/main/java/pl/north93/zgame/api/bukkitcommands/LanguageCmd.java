@@ -19,8 +19,7 @@ import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 
 public class LanguageCmd extends NorthCommand
 {
-    @Inject
-    @Messages("Commands")
+    @Inject @Messages("Commands")
     private MessagesBox     messages;
     @Inject
     private INetworkManager networkManager;

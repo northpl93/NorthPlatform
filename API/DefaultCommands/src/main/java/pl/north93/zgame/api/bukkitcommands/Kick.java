@@ -17,6 +17,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class Kick extends NorthCommand
 {
+    @Inject
     private ApiCore         apiCore;
     @Inject
     private INetworkManager networkManager;
@@ -27,6 +28,7 @@ public class Kick extends NorthCommand
     {
         super("kick");
         this.setPermission("api.command.kick");
+        this.setAsync(true);
     }
 
     @Override
@@ -38,27 +40,24 @@ public class Kick extends NorthCommand
             return;
         }
 
-        this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
+        final Value<IOnlinePlayer> networkPlayer = this.networkManager.getOnlinePlayer(args.asString(0));
+        if (! networkPlayer.isCached() && ! networkPlayer.isAvailable())
         {
-            final Value<IOnlinePlayer> networkPlayer = this.networkManager.getOnlinePlayer(args.asString(0));
-            if (!networkPlayer.isCached() && !networkPlayer.isAvailable())
-            {
-                sender.sendMessage(this.messages, "command.no_player");
-                return;
-            }
+            sender.sendMessage(this.messages, "command.no_player");
+            return;
+        }
 
-            final String reason = args.asText(1);
-            final String kickMessage;
-            if (StringUtils.isEmpty(reason))
-            {
-                kickMessage = this.messages.getMessage(networkPlayer.get().getLocale(), "kick.by_command.without_reason");
-            }
-            else
-            {
-                kickMessage = MessageFormat.format(this.messages.getMessage(networkPlayer.get().getLocale(), "kick.by_command.with_reason"), reason);
-            }
+        final String reason = args.asText(1);
+        final String kickMessage;
+        if (StringUtils.isEmpty(reason))
+        {
+            kickMessage = this.messages.getMessage(networkPlayer.get().getLocale(), "kick.by_command.without_reason");
+        }
+        else
+        {
+            kickMessage = MessageFormat.format(this.messages.getMessage(networkPlayer.get().getLocale(), "kick.by_command.with_reason"), reason);
+        }
 
-            networkPlayer.get().kick(kickMessage);
-        });
+        networkPlayer.get().kick(kickMessage);
     }
 }
