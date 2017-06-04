@@ -25,6 +25,8 @@ public class GameMapConfig
     private XmlCuboid           arenaRegion;
     @XmlElement
     private Map<String, String> properties = new HashMap<>();
+    @XmlElement
+    private Map<String, String> gameRules = new HashMap<>();
     
     public String getDisplayName()
     {
@@ -61,9 +63,14 @@ public class GameMapConfig
         return this.properties;
     }
 
+    public Map<String, String> getGameRules()
+    {
+        return this.gameRules;
+    }
+
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("displayName", this.displayName).append("enabled", this.enabled).append("arenaRegion", this.arenaRegion).append("properties", this.properties).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("displayName", this.displayName).append("enabled", this.enabled).append("arenaRegion", this.arenaRegion).append("properties", this.properties).append("gameRules", this.gameRules).toString();
     }
 }

@@ -6,6 +6,7 @@ import static pl.arieals.api.minigame.shared.api.utils.InvalidGamePhaseException
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -126,8 +127,12 @@ public class ArenaWorld
         this.progress = progress;
         this.currentWorld = progress.getWorld();
 
+        for (final Map.Entry<String, String> gameRule : template.getMapConfig().getGameRules().entrySet())
+        {
+            this.currentWorld.setGameRuleValue(gameRule.getKey(), gameRule.getValue());
+        }
+
         SimpleSyncCallback callback = new SimpleSyncCallback();
-        
         progress.onComplete(() ->
         {
             Bukkit.getPluginManager().callEvent(new MapSwitchedEvent(this.arena));
