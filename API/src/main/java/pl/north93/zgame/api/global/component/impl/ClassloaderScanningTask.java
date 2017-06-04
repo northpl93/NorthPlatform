@@ -106,14 +106,17 @@ class ClassloaderScanningTask
 
         final Iterator<AbstractScanningTask> iterator = this.pendingTasks.iterator();
         boolean modified = true;
-        while (iterator.hasNext() && modified)
+        while (modified)
         {
             modified = false;
-            final AbstractScanningTask task = iterator.next();
-            if (task.tryComplete())
+            while (iterator.hasNext())
             {
-                modified = true;
-                iterator.remove();
+                final AbstractScanningTask task = iterator.next();
+                if (task.tryComplete())
+                {
+                    modified = true;
+                    iterator.remove();
+                }
             }
         }
 

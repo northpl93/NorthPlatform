@@ -1,16 +1,17 @@
 package pl.north93.zgame.api.bukkit.utils;
 
+import com.google.common.base.Preconditions;
+
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.google.common.base.Preconditions;
-
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class SimpleCountdown
 {
-    private final BukkitApiCore apiCore = (BukkitApiCore) API.getApiCore();
+    @Inject
+    private BukkitApiCore apiCore;
 
     private int ticksLeft;
     private int ticks;

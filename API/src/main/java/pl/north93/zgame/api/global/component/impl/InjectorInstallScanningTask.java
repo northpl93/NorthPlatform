@@ -84,8 +84,7 @@ class InjectorInstallScanningTask extends AbstractScanningTask
 
     private void installInjector(final Collection<Method> postInject) throws Exception
     {
-        final CtClass ctClass = this.classloaderScanner.getClassPool().get(this.clazz.getName());
-
+        final CtClass ctClass = this.getCtClass();
         if (ctClass.isFrozen())
         {
             ctClass.defrost();

@@ -40,11 +40,11 @@ class BeanFactory
             final Object instance;
             if (object instanceof Method && Modifier.isStatic(executable.getModifiers()))
             {
-                instance = beanContext.getBean(executable.getDeclaringClass());
+                instance = null;
             }
             else
             {
-                instance = null;
+                instance = beanContext.getBean(executable.getDeclaringClass());
             }
 
             bean = SmartExecutor.execute(executable, beanContext, instance);

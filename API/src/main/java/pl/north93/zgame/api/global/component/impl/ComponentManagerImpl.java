@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.bukkit.plugin.java.JavaPlugin;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -27,7 +29,9 @@ import org.diorite.cfg.system.TemplateCreator;
 
 import javassist.ClassPool;
 import javassist.LoaderClassPath;
+import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.ApiCore;
+import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.IComponentBundle;
@@ -57,6 +61,10 @@ public class ComponentManagerImpl implements IComponentManager
     {
         this.rootBeanCtx.add(new StaticBeanContainer(this.apiCore.getClass(), "ApiCore", this.apiCore));
         this.rootBeanCtx.add(new StaticBeanContainer(Logger.class, "ApiLogger", this.apiCore.getLogger()));
+        if (this.apiCore.getPlatform() == Platform.BUKKIT)
+        {
+            this.rootBeanCtx.add(new StaticBeanContainer(JavaPlugin.class, "JavaPlugin", ((BukkitApiCore) this.apiCore).getPluginMain()));
+        }
     }
 
     private void initComponent(final ComponentBundle component)

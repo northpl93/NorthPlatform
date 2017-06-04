@@ -58,10 +58,10 @@ class StaticScanningTask extends AbstractScanningTask
             try
             {
                 next.set(null, this.beanContext.getBean(query));
+                iterator.remove();
             }
-            catch (final IllegalAccessException e)
+            catch (final Exception ignored)
             {
-                e.printStackTrace();
             }
         }
         return this.staticFields.isEmpty();

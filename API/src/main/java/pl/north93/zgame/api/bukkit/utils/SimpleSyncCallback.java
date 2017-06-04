@@ -3,13 +3,13 @@ package pl.north93.zgame.api.bukkit.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.utils.SimpleCallback;
 
 public class SimpleSyncCallback extends SimpleCallback implements ISyncCallback
 {
-    private static final Plugin PLUGIN = ((BukkitApiCore) API.getApiCore()).getPluginMain();
+    @Inject
+    private static Plugin PLUGIN;
     
     @Override
     protected void runTask()

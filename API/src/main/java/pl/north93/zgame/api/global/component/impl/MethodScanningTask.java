@@ -1,6 +1,8 @@
 package pl.north93.zgame.api.global.component.impl;
 
-import java.lang.reflect.Method;
+import static pl.north93.zgame.api.global.component.impl.CtUtils.toJavaMethod;
+
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,51 +11,41 @@ import java.util.Set;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javassist.CtMethod;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.DynamicBean;
 
 class MethodScanningTask extends AbstractScanningTask
 {
-    private final Set<Method> methods;
+    private final Set<CtMethod> methods;
 
     public MethodScanningTask(final ClassloaderScanningTask classloaderScanner, final Class<?> clazz, final AbstractBeanContext beanContext)
     {
         super(classloaderScanner, clazz, beanContext);
-
-        Set<Method> methods;
-        try
-        {
-            methods = new HashSet<>(Arrays.asList(clazz.getDeclaredMethods()));
-        }
-        catch (final Throwable e)
-        {
-            methods = new HashSet<>();
-        }
-        this.methods = methods;
+        this.methods = new HashSet<>(Arrays.asList(this.getCtClass().getDeclaredMethods()));
     }
 
     @Override
     boolean tryComplete()
     {
-        final Iterator<Method> iterator = this.methods.iterator();
+        final Iterator<CtMethod> iterator = this.methods.iterator();
         while (iterator.hasNext())
         {
-            final Method method = iterator.next();
-
+            final CtMethod method = iterator.next();
             try
             {
-                if (method.isAnnotationPresent(Bean.class))
+                if (method.hasAnnotation(Bean.class))
                 {
-                    BeanFactory.INSTANCE.createStaticBean(this.beanContext, method);
+                    BeanFactory.INSTANCE.createStaticBean(this.beanContext, toJavaMethod(this.clazz, method));
                 }
-                else if (method.isAnnotationPresent(DynamicBean.class))
+                else if (method.hasAnnotation(DynamicBean.class))
                 {
-                    BeanFactory.INSTANCE.createDynamicBean(this.beanContext, method);
+                    BeanFactory.INSTANCE.createDynamicBean(this.beanContext, toJavaMethod(this.clazz, method));
                 }
-                else if (method.isAnnotationPresent(Aggregator.class))
+                else if (method.hasAnnotation(Aggregator.class))
                 {
-                    ComponentManagerImpl.instance.getAggregationManager().addAggregator(method);
+                    ComponentManagerImpl.instance.getAggregationManager().addAggregator(toJavaMethod(this.clazz, method));
                 }
             }
             catch (final Exception ignored)

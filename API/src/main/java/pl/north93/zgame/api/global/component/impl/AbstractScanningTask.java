@@ -3,6 +3,9 @@ package pl.north93.zgame.api.global.component.impl;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javassist.CtClass;
+import javassist.NotFoundException;
+
 abstract class AbstractScanningTask
 {
     protected final ClassloaderScanningTask classloaderScanner;
@@ -17,6 +20,18 @@ abstract class AbstractScanningTask
     }
 
     /*default*/ abstract boolean tryComplete();
+
+    protected final CtClass getCtClass()
+    {
+        try
+        {
+            return this.classloaderScanner.getClassPool().getCtClass(this.clazz.getName());
+        }
+        catch (final NotFoundException e)
+        {
+            throw new RuntimeException("Failed to convert class " + this.clazz.getName() + " to CtClass", e);
+        }
+    }
 
     @Override
     public String toString()
