@@ -69,6 +69,11 @@ public class WorldManager implements IWorldManager, Listener
         final World world = this.worldHelper.createWorld(creator);
         this.worlds.add(world);
 
+        // ustawia savingDisabled na true
+        // przy profilowaniu wyszlo ze proba unloadowania chunkow zjada sporo czasu ticka
+        // ChunkProviderServer.unloadChunks
+        world.setAutoSave(false);
+
         final LoadingProgressImpl progress = new LoadingProgressImpl(world);
 
         this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
