@@ -12,6 +12,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.region.IRegionManager;
@@ -29,8 +32,7 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class ScoreListener implements Listener
 {
-    @Inject
-    @Messages("ElytraRace")
+    @Inject @Messages("ElytraRace")
     private MessagesBox messages;
 
     @EventHandler(priority = EventPriority.HIGH) // post ArenaStartListener
@@ -113,17 +115,31 @@ public class ScoreListener implements Listener
         final int combo = scorePlayer.checkCombo(scoreGroup);
         int points = scoreGroup.getPoints();
 
-        this.messages.sendMessage(player, "score.points_added", points);
+        this.messages.sendMessage(player, "score.points_added", points, this.pointsForm(player, points));
 
         if (combo >= 3)
         {
             scorePlayer.setCombo(0);
             final int comboPoints = scoreGroup.getComboPoints();
             points += comboPoints;
-            this.messages.sendMessage(player, "score.points_added_combo", comboPoints);
+            this.messages.sendMessage(player, "score.points_added_combo", comboPoints, this.pointsForm(player, comboPoints));
         }
 
         scorePlayer.incrementPoints(points);
+    }
+
+    private String pointsForm(final Player player, final int points)
+    {
+        final String locale = player.spigot().getLocale();
+        if (points == 1)
+        {
+            return this.messages.getMessage(locale, "score.points.one");
+        }
+        else if (points < 5)
+        {
+            return this.messages.getMessage(locale, "score.points.some");
+        }
+        return this.messages.getMessage(locale, "score.points.many");
     }
 
     private void removeScorePoints(final LocalArena arena, final ElytraRaceArena arenaData)
@@ -140,5 +156,11 @@ public class ScoreListener implements Listener
                 block.setType(Material.AIR, false);
             }
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

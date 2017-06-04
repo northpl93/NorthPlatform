@@ -10,10 +10,19 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class ModifyListener implements Listener
 {
+    @Inject @Messages("ElytraRace")
+    private MessagesBox messages;
+
     @EventHandler
     public void placeBlock(final BlockPlaceEvent event)
     {
@@ -22,6 +31,7 @@ public class ModifyListener implements Listener
         {
             return;
         }
+        this.messages.sendMessage(event.getPlayer(), "no_permissions");
         event.setCancelled(true);
     }
 
@@ -33,17 +43,28 @@ public class ModifyListener implements Listener
         {
             return;
         }
+        this.messages.sendMessage(event.getPlayer(), "no_permissions");
         event.setCancelled(true);
     }
 
     @EventHandler
     public void inventoryModify(final InventoryClickEvent event)
     {
-        final ElytraRacePlayer playerData = getPlayerData((Player) event.getWhoClicked(), ElytraRacePlayer.class);
+        final Player player = (Player) event.getWhoClicked();
+
+        final ElytraRacePlayer playerData = getPlayerData(player, ElytraRacePlayer.class);
         if (playerData != null && playerData.isDev())
         {
             return;
         }
+
+        this.messages.sendMessage(player, "no_permissions");
         event.setCancelled(true);
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }
