@@ -48,7 +48,9 @@ public class BoostListener implements Listener
             final Vector playerVector = player.getLocation().getDirection();
             final Double power = boost.getBoostPower();
 
+            playerVector.setX(playerVector.getX() / 2);
             playerVector.setY(power);
+            playerVector.setZ(playerVector.getZ() / 2);
 
             player.setVelocity(playerVector);
         }

@@ -53,6 +53,9 @@ public class LobbyScoreboard implements IScoreboardLayout
         content.add("");
         content.translated("scoreboard.lobby.players", arena.getPlayers().size(), arena.getPlayersManager().getMaxPlayers());
 
+        content.add("");
+        content.translated("scoreboard.ip");
+
         return content.getContent();
     }
 

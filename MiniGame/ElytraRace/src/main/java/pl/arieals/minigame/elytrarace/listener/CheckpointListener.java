@@ -35,8 +35,7 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class CheckpointListener implements Listener
 {
-    @Inject
-    @Messages("ElytraRace")
+    @Inject @Messages("ElytraRace")
     private MessagesBox messages;
 
     @EventHandler(priority = EventPriority.HIGH) // post ArenaStartListener

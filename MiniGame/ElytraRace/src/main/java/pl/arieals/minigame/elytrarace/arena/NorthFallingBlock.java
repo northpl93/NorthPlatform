@@ -16,9 +16,9 @@ public class NorthFallingBlock extends EntityFallingBlock
         final NorthFallingBlock fallingBlock =
                 new NorthFallingBlock(
                         ((CraftWorld) location.getWorld()).getHandle(),
-                        location.getBlockX(),
-                        location.getBlockY(),
-                        location.getBlockZ(),
+                        location.getBlockX() + 0.5,
+                        location.getBlockY(), // poprawiane jest automatycznie
+                        location.getBlockZ() + 0.5,
                         CraftMagicNumbers.getBlock(material).fromLegacyData(data));
         fallingBlock.ticksLived = 1;
 

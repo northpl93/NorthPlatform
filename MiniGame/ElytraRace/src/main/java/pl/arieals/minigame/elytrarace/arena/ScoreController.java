@@ -51,13 +51,14 @@ public class ScoreController
         final CraftWorld world = (CraftWorld) cuboid.getWorld();
         for (final Block block : cuboid)
         {
-            if (block.isEmpty())
+            final Material type = block.getType();
+            if (type == Material.AIR || ! type.isSolid())
             {
-                continue; // air
+                continue; // air or non-solid
             }
 
             {
-                final EntityFallingBlock fallingBlock = NorthFallingBlock.create(block.getLocation(), block.getType(), block.getData());
+                final EntityFallingBlock fallingBlock = NorthFallingBlock.create(block.getLocation(), type, block.getData());
                 world.addEntity(fallingBlock, CreatureSpawnEvent.SpawnReason.CUSTOM);
 
                 this.normalBlocks.add(fallingBlock.getBukkitEntity());
