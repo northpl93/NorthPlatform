@@ -28,7 +28,18 @@ class InjectorInstallScanningTask extends AbstractScanningTask
     {
         final Collection<Method> postInjectMethods = this.postInjectMethods();
 
-        for (final Field field : this.clazz.getDeclaredFields())
+        final Field[] declaredFields;
+
+        try
+        {
+            declaredFields = this.clazz.getDeclaredFields();
+        }
+        catch (final Throwable t)
+        {
+            return true;
+        }
+
+        for (final Field field : declaredFields)
         {
             if (!Modifier.isStatic(field.getModifiers()) && field.isAnnotationPresent(Inject.class))
             {

@@ -20,7 +20,17 @@ class StaticScanningTask extends AbstractScanningTask
     public StaticScanningTask(final ClassloaderScanningTask classloaderScanner, final Class<?> clazz, final AbstractBeanContext beanContext)
     {
         super(classloaderScanner, clazz, beanContext);
-        this.staticFields = Arrays.stream(clazz.getFields()).filter(method -> Modifier.isStatic(method.getModifiers())).collect(Collectors.toSet());
+        Field[] fields;
+        try
+        {
+            fields = clazz.getDeclaredFields();
+        }
+        catch (final Throwable ignored)
+        {
+            fields = new Field[0];
+        }
+
+        this.staticFields = Arrays.stream(fields).filter(method -> Modifier.isStatic(method.getModifiers())).collect(Collectors.toSet());
     }
 
     @Override

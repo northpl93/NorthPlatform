@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.google.common.base.Preconditions;
 
@@ -17,7 +16,6 @@ import org.reflections.Reflections;
 import org.reflections.scanners.FieldAnnotationsScanner;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
@@ -133,45 +131,34 @@ class ClassloaderScanningTask
 
     /*default*/ Set<Class<?>> getAllClasses(final Reflections reflections, final FilterBuilder filter)
     {
-        final Collection<String> unfilteredClasses = reflections.getStore().get(SubTypesScanner.class.getSimpleName()).values();
-        final Collection<String> classes = unfilteredClasses.stream().filter(filter::apply).collect(Collectors.toSet());
-
+        final Collection<String> classes = reflections.getStore().get(SubTypesScanner.class.getSimpleName()).values();
         final Set<Class<?>> out = new HashSet<>(classes.size());
         for (final String clazz : classes)
         {
-            try
+            if (! filter.apply(clazz))
             {
-                final Class<?> outClass = forName(clazz, reflections.getConfiguration().getClassLoaders());
-                if (outClass != null)
-                {
-                    outClass.getDeclaredFields();
-                    out.add(outClass);
-                }
+                continue;
             }
-            catch (final Throwable e)
+
+            final Class<?> outClass = forName(clazz, reflections.getConfiguration().getClassLoaders());
+            if (outClass != null)
             {
-                // ignore class
+                out.add(outClass);
             }
         }
         return out;
     }
 
-    private static Class<?> forName(final String type, ClassLoader... classLoaders)
+    private static Class<?> forName(final String type, final ClassLoader... classLoaders)
     {
-        classLoaders = ClasspathHelper.classLoaders(classLoaders);
-        int var5 = classLoaders.length;
-        int var6 = 0;
-
-        while (var6 < var5)
+        for (final ClassLoader classLoader : classLoaders)
         {
-            final ClassLoader classLoader = classLoaders[var6];
             try
             {
                 return classLoader.loadClass(type);
             }
-            catch (final Throwable var9)
+            catch (final Throwable ignored)
             {
-                ++ var6;
             }
         }
 
