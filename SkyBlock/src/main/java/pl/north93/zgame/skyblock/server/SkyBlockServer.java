@@ -8,23 +8,24 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
-import pl.north93.zgame.skyblock.shared.api.IIslandsRanking;
-import pl.north93.zgame.skyblock.shared.api.ISkyBlockManager;
-import pl.north93.zgame.skyblock.shared.impl.IslandDao;
-import pl.north93.zgame.skyblock.shared.impl.IslandsRankingImpl;
-import pl.north93.zgame.skyblock.shared.api.ServerMode;
-import pl.north93.zgame.skyblock.shared.api.cfg.SkyBlockConfig;
 import pl.north93.zgame.skyblock.server.listeners.SetupListeners;
 import pl.north93.zgame.skyblock.server.management.ISkyBlockServerManager;
 import pl.north93.zgame.skyblock.server.management.ServerManagerFactory;
 import pl.north93.zgame.skyblock.server.world.Island;
+import pl.north93.zgame.skyblock.shared.api.IIslandsRanking;
+import pl.north93.zgame.skyblock.shared.api.ISkyBlockManager;
+import pl.north93.zgame.skyblock.shared.api.ServerMode;
+import pl.north93.zgame.skyblock.shared.api.cfg.SkyBlockConfig;
+import pl.north93.zgame.skyblock.shared.impl.IslandDao;
+import pl.north93.zgame.skyblock.shared.impl.IslandsRankingImpl;
 
 @IncludeInScanning("pl.north93.zgame.skyblock.shared")
 public class SkyBlockServer extends Component
 {
+    @Inject
     private BukkitApiCore          bukkitApiCore;
     @Inject
     private IRpcManager            rpcManager;
@@ -41,7 +42,7 @@ public class SkyBlockServer extends Component
         this.skyBlockManager = this.rpcManager.createRpcProxy(ISkyBlockManager.class, Targets.networkController());
         this.skyBlockConfig = this.skyBlockManager.getConfig();
         this.islandDao = new IslandDao();
-        this.serverMode = this.skyBlockManager.serverJoin(this.bukkitApiCore.getServer().get().getUuid());
+        this.serverMode = this.skyBlockManager.serverJoin(this.bukkitApiCore.getServerId());
         this.getApiCore().getLogger().info("[SkyBlock] Server is running in " + this.serverMode + " mode");
         this.serverManager = ServerManagerFactory.INSTANCE.getServerManager(this.serverMode);
         this.serverManager.start();
@@ -54,7 +55,7 @@ public class SkyBlockServer extends Component
     protected void disableComponent()
     {
         this.serverManager.stop();
-        this.skyBlockManager.serverDisconnect(this.bukkitApiCore.getServer().get().getUuid());
+        this.skyBlockManager.serverDisconnect(this.bukkitApiCore.getServerId());
     }
 
     /**

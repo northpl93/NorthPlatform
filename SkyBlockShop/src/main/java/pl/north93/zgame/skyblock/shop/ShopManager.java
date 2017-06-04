@@ -29,7 +29,7 @@ import pl.north93.zgame.api.economy.ICurrency;
 import pl.north93.zgame.api.economy.IEconomyManager;
 import pl.north93.zgame.api.economy.ITransaction;
 import pl.north93.zgame.api.economy.impl.client.EconomyComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
 import pl.north93.zgame.skyblock.shop.api.ICategory;
 import pl.north93.zgame.skyblock.shop.api.IShopEntry;
@@ -38,6 +38,7 @@ import pl.north93.zgame.skyblock.shop.gui.CategoryView;
 
 public class ShopManager
 {
+    @Inject
     private       BukkitApiCore                   apiCore;
     @Inject
     private       EconomyComponent                economyComponent;

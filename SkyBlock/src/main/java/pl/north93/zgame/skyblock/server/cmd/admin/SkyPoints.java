@@ -1,14 +1,15 @@
 package pl.north93.zgame.skyblock.server.cmd.admin;
 
+import org.bukkit.entity.Player;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.bukkit.entity.Player;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.management.IslandHostManager;
 import pl.north93.zgame.skyblock.server.world.Island;
@@ -16,6 +17,7 @@ import pl.north93.zgame.skyblock.server.world.points.PointsHelper;
 
 public class SkyPoints extends NorthCommand
 {
+    @Inject
     private BukkitApiCore  apiCore;
     @Inject
     private SkyBlockServer server;

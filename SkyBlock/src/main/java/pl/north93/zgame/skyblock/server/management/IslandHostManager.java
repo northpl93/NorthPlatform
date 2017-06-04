@@ -19,21 +19,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectNewInstance;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
-import pl.north93.zgame.skyblock.shared.api.IIslandHostManager;
-import pl.north93.zgame.skyblock.shared.impl.IslandDao;
-import pl.north93.zgame.skyblock.shared.api.IslandData;
-import pl.north93.zgame.skyblock.shared.api.NorthBiome;
-import pl.north93.zgame.skyblock.shared.api.cfg.IslandConfig;
-import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
-import pl.north93.zgame.skyblock.shared.api.utils.Coords2D;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.actions.TeleportPlayerToIsland;
 import pl.north93.zgame.skyblock.server.world.AutoMobNerf;
@@ -42,6 +34,13 @@ import pl.north93.zgame.skyblock.server.world.MobSpawningFix;
 import pl.north93.zgame.skyblock.server.world.WorldManager;
 import pl.north93.zgame.skyblock.server.world.WorldManagerList;
 import pl.north93.zgame.skyblock.server.world.points.PointsHelper;
+import pl.north93.zgame.skyblock.shared.api.IIslandHostManager;
+import pl.north93.zgame.skyblock.shared.api.IslandData;
+import pl.north93.zgame.skyblock.shared.api.NorthBiome;
+import pl.north93.zgame.skyblock.shared.api.cfg.IslandConfig;
+import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
+import pl.north93.zgame.skyblock.shared.api.utils.Coords2D;
+import pl.north93.zgame.skyblock.shared.impl.IslandDao;
 
 /**
  * Klasa zarządzająca serwerem pracującym w trybie hosta wysp.
@@ -49,6 +48,7 @@ import pl.north93.zgame.skyblock.server.world.points.PointsHelper;
 public class IslandHostManager implements ISkyBlockServerManager, IIslandHostManager
 {
     private static final int POINTS_PERSIST_TICK = 5 * 60 * 20;
+    @Inject
     private BukkitApiCore       bukkitApiCore;
     @Inject
     private INetworkManager     networkManager;
@@ -58,11 +58,10 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
     private IRpcManager         rpcManager;
     @Inject
     private IObservationManager observer;
+    @Inject
     private Logger              logger;
-    @InjectNewInstance
-    private WorldManagerList    worldManagers;
-    @InjectNewInstance
-    private PointsHelper        pointsHelper;
+    private WorldManagerList    worldManagers = new WorldManagerList();
+    private PointsHelper        pointsHelper = new PointsHelper();
 
     @Override
     public void start()
@@ -142,14 +141,14 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
     public void tpPlayerToIsland(final Player player, final UUID islandId)
     {
         final IslandData islandData = this.skyBlockServer.getIslandDao().getIsland(islandId);
-        if (this.bukkitApiCore.getServer().get().getUuid().equals(islandData.getServerId()))
+        if (this.bukkitApiCore.getServerId().equals(islandData.getServerId()))
         {
             player.teleport(this.getWorldManager(islandData.getIslandType()).getIslands().getById(islandId).getHomeLocation());
         }
         else
         {
             final Value<IOnlinePlayer> networkPlayer = this.networkManager.getOnlinePlayer(player.getName());
-            networkPlayer.get().connectTo(this.networkManager.getServer(islandData.getServerId()).get(), new TeleportPlayerToIsland(islandId));
+            networkPlayer.get().connectTo(this.networkManager.getServers().withUuid(islandData.getServerId()), new TeleportPlayerToIsland(islandId));
         }
     }
 

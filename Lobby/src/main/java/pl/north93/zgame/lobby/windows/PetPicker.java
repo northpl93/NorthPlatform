@@ -13,9 +13,7 @@ import pl.north93.pets.exceptions.PetNotFoundException;
 import pl.north93.pets.system.support.HeadCreator;
 import pl.north93.zgame.api.bukkit.windows.ClickInfo;
 import pl.north93.zgame.api.bukkit.windows.Window;
-import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.impl.Injector;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.lobby.LobbyFeatures;
 import pl.north93.zgame.lobby.PlayerPetsManager;
 import pl.north93.zgame.lobby.config.LobbyConfig;
@@ -29,7 +27,6 @@ public class PetPicker extends Window
     public PetPicker()
     {
         super("&aWybierz zwierzaka", 54);
-        Injector.inject(API.getApiCore().getComponentManager(), this);
     }
 
     @Override

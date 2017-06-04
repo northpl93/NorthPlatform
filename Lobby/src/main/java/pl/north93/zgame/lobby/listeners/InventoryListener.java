@@ -14,13 +14,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.windows.WindowManager;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.lobby.LobbyFeatures;
 import pl.north93.zgame.lobby.windows.MinigamePicker;
 import pl.north93.zgame.lobby.windows.PetPicker;
 
 public class InventoryListener implements Listener
 {
+    @Inject
     private BukkitApiCore apiCore;
     @Inject
     private LobbyFeatures component;

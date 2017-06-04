@@ -25,7 +25,7 @@ import org.diorite.utils.lazy.LazyValue;
 
 import pl.north93.zgame.api.bukkit.windows.ClickHandler;
 import pl.north93.zgame.api.bukkit.windows.PaginateWindow;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.skyblock.shop.ShopComponent;
 import pl.north93.zgame.skyblock.shop.api.ICategory;
 import pl.north93.zgame.skyblock.shop.api.IShopEntry;

@@ -7,12 +7,12 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackIgnore;
-import pl.north93.zgame.skyblock.shared.api.ServerMode;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.management.IslandHostManager;
+import pl.north93.zgame.skyblock.shared.api.ServerMode;
 
 public class TeleportPlayerToIsland implements IServerJoinAction
 {

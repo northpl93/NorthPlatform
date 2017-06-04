@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.world.Island;
 

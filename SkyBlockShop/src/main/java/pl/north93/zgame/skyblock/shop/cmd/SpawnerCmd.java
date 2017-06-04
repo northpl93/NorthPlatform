@@ -1,17 +1,19 @@
 package pl.north93.zgame.skyblock.shop.cmd;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import java.util.Set;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.skyblock.shop.SpawnerComponent;
-
-import java.util.Set;
 
 public class SpawnerCmd extends NorthCommand
 {

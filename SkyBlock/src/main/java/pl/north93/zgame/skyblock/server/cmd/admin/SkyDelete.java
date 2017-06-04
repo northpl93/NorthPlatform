@@ -6,12 +6,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
-import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
+import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 
 public class SkyDelete extends NorthCommand
 {

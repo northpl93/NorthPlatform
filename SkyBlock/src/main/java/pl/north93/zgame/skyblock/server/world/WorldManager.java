@@ -14,14 +14,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.shared.api.IslandData;
 import pl.north93.zgame.skyblock.shared.api.cfg.IslandConfig;
 import pl.north93.zgame.skyblock.shared.api.utils.Coords2D;
 import pl.north93.zgame.skyblock.shared.api.utils.Coords3D;
 import pl.north93.zgame.skyblock.shared.api.utils.SpiralOut;
-import pl.north93.zgame.skyblock.server.SkyBlockServer;
 
 /**
  * Klasa zarządzająca światem z wyspami.
@@ -30,6 +30,7 @@ import pl.north93.zgame.skyblock.server.SkyBlockServer;
 public class WorldManager
 {
     private static final int WAIT_BEFORE_RECALC = 500;
+    @Inject
     private BukkitApiCore apiCore;
     @Inject
     private SkyBlockServer        skyBlockServer;
@@ -50,7 +51,7 @@ public class WorldManager
     public void init()
     {
         this.logger.info("[SkyBlock] Downloading all islands in this world...");
-        this.skyBlockServer.getIslandDao().getAllIslands(this.apiCore.getServer().get().getUuid(), this.islandConfig.getName())
+        this.skyBlockServer.getIslandDao().getAllIslands(this.apiCore.getServerId(), this.islandConfig.getName())
                            .stream().map(IslandData::getIslandId).map(this::constructIsland).forEach(this.islands::addIsland);
         this.buildAvailableLocations();
         this.logger.info("[SkyBlock] World manager is ready.");

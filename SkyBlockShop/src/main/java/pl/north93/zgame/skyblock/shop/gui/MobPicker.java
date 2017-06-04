@@ -1,15 +1,15 @@
 package pl.north93.zgame.skyblock.shop.gui;
 
+import java.util.List;
+
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import pl.north93.zgame.api.bukkit.windows.Window;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.skyblock.shop.SpawnerComponent;
 import pl.north93.zgame.skyblock.shop.cfg.SpawnerEntryConfig;
-
-import java.util.List;
 
 
 public class MobPicker extends Window

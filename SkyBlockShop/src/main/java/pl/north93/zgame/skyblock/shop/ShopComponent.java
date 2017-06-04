@@ -14,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.economy.ICurrency;
 import pl.north93.zgame.api.economy.impl.client.EconomyComponent;
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.skyblock.shop.api.ICategory;
 import pl.north93.zgame.skyblock.shop.api.IShopEntry;
 import pl.north93.zgame.skyblock.shop.cfg.CategoryConfig;

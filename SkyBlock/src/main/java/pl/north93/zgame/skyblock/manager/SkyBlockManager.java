@@ -10,8 +10,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.cfg.ConfigUtils;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
@@ -121,7 +121,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
         }
         else
         {
-            onlinePlayer.get().connectTo(this.networkManager.getServer(islandServer).get(), new TeleportPlayerToIsland(islandId)); // todo server may be null?
+            onlinePlayer.get().connectTo(this.networkManager.getServers().withUuid(islandServer), new TeleportPlayerToIsland(islandId)); // todo server may be null?
         }
     }
 
@@ -173,7 +173,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
         this.IIslandsRanking.setPoints(islandId, 0); // add island to ranking
 
         networkPlayer.get().sendMessage(this.messages, "info.created_island");
-        networkPlayer.get().connectTo(server.getServerValue().get(), new TeleportPlayerToIsland(islandId));
+        networkPlayer.get().connectTo(server.getServer(), new TeleportPlayerToIsland(islandId));
     }
 
     @Override
@@ -344,7 +344,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
         }
         else
         {
-            visitorCache.connectTo(this.networkManager.getServer(islandServer).get(), new TeleportPlayerToIsland(islandId)); // todo server may be null?
+            visitorCache.connectTo(this.networkManager.getServers().withUuid(islandServer), new TeleportPlayerToIsland(islandId)); // todo server may be null?
         }
     }
 

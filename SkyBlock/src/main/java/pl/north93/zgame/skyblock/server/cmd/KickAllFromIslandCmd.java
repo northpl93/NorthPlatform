@@ -1,17 +1,18 @@
 package pl.north93.zgame.skyblock.server.cmd;
 
 import org.bukkit.entity.Player;
+
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.skyblock.shared.api.IslandRole;
-import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.world.Island;
+import pl.north93.zgame.skyblock.shared.api.IslandRole;
+import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 
 
 public class KickAllFromIslandCmd extends NorthCommand

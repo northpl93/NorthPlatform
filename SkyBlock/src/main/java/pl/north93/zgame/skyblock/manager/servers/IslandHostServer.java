@@ -6,20 +6,19 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.network.server.Server;
-import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.skyblock.shared.api.IIslandHostManager;
 
 public class IslandHostServer
 {
     private final UUID               uuid;
     private final IIslandHostManager islandHostManager;
-    private final Value<Server>      serverValue;
+    private final Server             server;
 
-    /*default*/ IslandHostServer(final UUID uuid, final IIslandHostManager islandHostManager, final Value<Server> serverValue)
+    /*default*/ IslandHostServer(final UUID uuid, final IIslandHostManager islandHostManager, Server server)
     {
         this.uuid = uuid;
         this.islandHostManager = islandHostManager;
-        this.serverValue = serverValue;
+        this.server = server;
     }
 
     public UUID getUuid()
@@ -32,9 +31,9 @@ public class IslandHostServer
         return this.islandHostManager;
     }
 
-    public Value<Server> getServerValue()
+    public Server getServer()
     {
-        return this.serverValue;
+        return this.server;
     }
 
     @Override

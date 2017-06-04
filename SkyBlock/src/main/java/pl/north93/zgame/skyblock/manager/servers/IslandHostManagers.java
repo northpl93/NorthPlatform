@@ -9,10 +9,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.MutablePair;
 
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.server.Server;
-import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 import pl.north93.zgame.skyblock.shared.api.IIslandHostManager;
@@ -34,7 +33,7 @@ public class IslandHostManagers
     public void serverConnect(final UUID serverId)
     {
         final IIslandHostManager rpcProxy = this.rpcManager.createRpcProxy(IIslandHostManager.class, Targets.server(serverId));
-        final Value<Server> server = this.networkManager.getServer(serverId);
+        final Server server = this.networkManager.getServers().withUuid(serverId);
 
         final IslandHostServer islandHost = new IslandHostServer(serverId, rpcProxy, server);
         this.servers.add(islandHost);

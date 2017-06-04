@@ -6,7 +6,7 @@ import com.mongodb.client.MongoCollection;
 
 import org.bson.Document;
 
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.network.INetworkManager;
 

@@ -7,8 +7,8 @@ import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
@@ -19,6 +19,7 @@ import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 
 public class ExpelCmd extends NorthCommand
 {
+    @Inject
     private ApiCore         apiCore;
     @Inject
     private INetworkManager networkManager;

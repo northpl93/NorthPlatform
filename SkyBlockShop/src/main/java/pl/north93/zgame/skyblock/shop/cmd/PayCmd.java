@@ -8,10 +8,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.skyblock.shop.ShopComponent;
 
 public class PayCmd extends NorthCommand

@@ -15,7 +15,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.windows.ClickInfo;
 import pl.north93.zgame.api.bukkit.windows.Window;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.skyblock.shop.ShopComponent;
 import pl.north93.zgame.skyblock.shop.api.ICategory;
 

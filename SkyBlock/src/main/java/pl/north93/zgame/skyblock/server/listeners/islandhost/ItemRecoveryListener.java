@@ -15,17 +15,18 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
+import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 
 public class ItemRecoveryListener implements Listener
 {
     private static final MetaKey RECOVERY_KEY = MetaKey.get("expRecovered");
+    @Inject
     private BukkitApiCore   apiCore;
     @Inject
     private INetworkManager networkManager;

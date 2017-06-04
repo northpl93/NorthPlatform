@@ -13,8 +13,8 @@ import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectMessages;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.utils.DateUtil;
@@ -25,6 +25,7 @@ import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 
 public class CreateCmd extends NorthCommand
 {
+    @Inject
     private BukkitApiCore   apiCore;
     @Inject
     private INetworkManager networkManager;

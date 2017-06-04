@@ -7,17 +7,17 @@ import org.bukkit.entity.Player;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.skyblock.server.SkyBlockServer;
+import pl.north93.zgame.skyblock.server.management.IslandHostManager;
+import pl.north93.zgame.skyblock.server.world.Island;
 import pl.north93.zgame.skyblock.shared.api.IslandData;
 import pl.north93.zgame.skyblock.shared.api.ServerMode;
 import pl.north93.zgame.skyblock.shared.api.cfg.IslandConfig;
 import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
-import pl.north93.zgame.skyblock.server.SkyBlockServer;
-import pl.north93.zgame.skyblock.server.management.IslandHostManager;
-import pl.north93.zgame.skyblock.server.world.Island;
 
 public class WtfIsland extends NorthCommand
 {

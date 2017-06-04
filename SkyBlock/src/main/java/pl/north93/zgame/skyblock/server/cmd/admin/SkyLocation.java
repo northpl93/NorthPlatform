@@ -6,15 +6,15 @@ import org.bukkit.entity.Player;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.skyblock.shared.api.utils.Coords2D;
-import pl.north93.zgame.skyblock.shared.api.utils.Coords3D;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.management.IslandHostManager;
 import pl.north93.zgame.skyblock.server.world.Island;
 import pl.north93.zgame.skyblock.server.world.IslandLocation;
 import pl.north93.zgame.skyblock.server.world.WorldManager;
+import pl.north93.zgame.skyblock.shared.api.utils.Coords2D;
+import pl.north93.zgame.skyblock.shared.api.utils.Coords3D;
 
 public class SkyLocation extends NorthCommand
 {

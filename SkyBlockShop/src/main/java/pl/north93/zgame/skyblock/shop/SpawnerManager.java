@@ -12,12 +12,13 @@ import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.Player;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.skyblock.shop.cfg.SpawnerEntryConfig;
 import pl.north93.zgame.skyblock.shop.gui.MobPicker;
 
 public class SpawnerManager
 {
+    @Inject
     private BukkitApiCore apiCore;
     @Inject
     private ShopComponent shopComponent;
