@@ -48,6 +48,11 @@ public class Boost
         return this.boostPower;
     }
 
+    public void setBoostPower(final Double boostPower)
+    {
+        this.boostPower = boostPower;
+    }
+
     @Override
     public String toString()
     {

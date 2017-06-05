@@ -7,6 +7,7 @@ import javax.xml.bind.JAXB;
 
 import java.util.Iterator;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -73,6 +74,7 @@ public class ArenaStartListener implements Listener
             player.teleport(locations.next().toBukkit(arena.getWorld().getCurrentWorld()));
             player.getInventory().setChestplate(this.createElytra());
 
+            player.setGameMode(GameMode.CREATIVE);
             player.setAllowFlight(true);
             player.setFlying(true);
         }
