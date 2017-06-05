@@ -129,7 +129,7 @@ public class CheckpointListener implements Listener
     private void backToCheckpoint(final Player player)
     {
         final ElytraRacePlayer elytraPlayer = getPlayerData(player, ElytraRacePlayer.class);
-        if (elytraPlayer == null || elytraPlayer.isDev())
+        if (elytraPlayer == null || elytraPlayer.isDev() || elytraPlayer.isFinished())
         {
             return;
         }
