@@ -9,8 +9,7 @@ import java.lang.annotation.Target;
  * Rejestruje nowego beana.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.CONSTRUCTOR, ElementType.METHOD})
+@Target({ElementType.CONSTRUCTOR, ElementType.METHOD})
 public @interface Bean
 {
-    boolean singleInstance() default true;
 }

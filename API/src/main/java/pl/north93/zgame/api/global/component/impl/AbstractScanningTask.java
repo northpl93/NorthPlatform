@@ -4,34 +4,23 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javassist.CtClass;
-import javassist.NotFoundException;
 
 abstract class AbstractScanningTask
 {
     protected final ClassloaderScanningTask classloaderScanner;
     protected final Class<?>                clazz;
     protected final AbstractBeanContext     beanContext;
+    protected final CtClass                 ctClass;
 
-    public AbstractScanningTask(final ClassloaderScanningTask classloaderScanner, final Class<?> clazz, final AbstractBeanContext beanContext)
+    public AbstractScanningTask(final ClassloaderScanningTask classloaderScanner, final Class<?> clazz, final CtClass ctClass, final AbstractBeanContext beanContext)
     {
         this.classloaderScanner = classloaderScanner;
         this.clazz = clazz;
         this.beanContext = beanContext;
+        this.ctClass = ctClass;
     }
 
     /*default*/ abstract boolean tryComplete();
-
-    protected final CtClass getCtClass()
-    {
-        try
-        {
-            return this.classloaderScanner.getClassPool().getCtClass(this.clazz.getName());
-        }
-        catch (final NotFoundException e)
-        {
-            throw new RuntimeException("Failed to convert class " + this.clazz.getName() + " to CtClass", e);
-        }
-    }
 
     @Override
     public String toString()

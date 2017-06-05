@@ -11,6 +11,7 @@ import java.util.Set;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javassist.CtClass;
 import javassist.CtMethod;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
@@ -20,10 +21,10 @@ class MethodScanningTask extends AbstractScanningTask
 {
     private final Set<CtMethod> methods;
 
-    public MethodScanningTask(final ClassloaderScanningTask classloaderScanner, final Class<?> clazz, final AbstractBeanContext beanContext)
+    public MethodScanningTask(final ClassloaderScanningTask classloaderScanner, final Class<?> clazz, final CtClass ctClass, final AbstractBeanContext beanContext)
     {
-        super(classloaderScanner, clazz, beanContext);
-        this.methods = new HashSet<>(Arrays.asList(this.getCtClass().getDeclaredMethods()));
+        super(classloaderScanner, clazz, ctClass, beanContext);
+        this.methods = new HashSet<>(Arrays.asList(this.ctClass.getDeclaredMethods()));
     }
 
     @Override

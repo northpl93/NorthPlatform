@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javassist.CtClass;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
 
@@ -17,9 +18,9 @@ class StaticScanningTask extends AbstractScanningTask
 {
     private final Set<Field> staticFields;
 
-    public StaticScanningTask(final ClassloaderScanningTask classloaderScanner, final Class<?> clazz, final AbstractBeanContext beanContext)
+    public StaticScanningTask(final ClassloaderScanningTask classloaderScanner, final Class<?> clazz, final CtClass ctClass, final AbstractBeanContext beanContext)
     {
-        super(classloaderScanner, clazz, beanContext);
+        super(classloaderScanner, clazz, ctClass, beanContext);
         Field[] fields;
         try
         {

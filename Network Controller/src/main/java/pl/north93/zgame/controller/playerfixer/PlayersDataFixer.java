@@ -26,6 +26,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
  */
 public class PlayersDataFixer extends Component implements Runnable
 {
+    @Inject
     private Logger           logger;
     @Inject
     private StorageConnector storage;

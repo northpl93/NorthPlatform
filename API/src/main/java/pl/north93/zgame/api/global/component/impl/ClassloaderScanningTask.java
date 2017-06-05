@@ -13,13 +13,13 @@ import com.google.common.base.Preconditions;
 
 import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
-import org.reflections.scanners.FieldAnnotationsScanner;
-import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
 import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.NotFoundException;
 import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.annotations.SkipInjections;
 
@@ -98,10 +98,23 @@ class ClassloaderScanningTask
             {
                 continue;
             }
+
             final AbstractBeanContext beanContext = this.manager.getOwningContext(aClass);
-            this.pendingTasks.add(new StaticScanningTask(this, aClass, beanContext));
-            this.pendingTasks.add(new InjectorInstallScanningTask(this, aClass, beanContext));
-            this.pendingTasks.add(new MethodScanningTask(this, aClass, beanContext));
+            final CtClass ctClass;
+            try
+            {
+                ctClass = this.classPool.get(aClass.getName());
+            }
+            catch (final NotFoundException e)
+            {
+                e.printStackTrace();
+                continue;
+            }
+
+            this.pendingTasks.add(new StaticScanningTask(this, aClass, ctClass, beanContext));
+            this.pendingTasks.add(new InjectorInstallScanningTask(this, aClass, ctClass, beanContext));
+            this.pendingTasks.add(new ConstructorScanningTask(this, aClass, ctClass, beanContext));
+            this.pendingTasks.add(new MethodScanningTask(this, aClass, ctClass, beanContext));
         }
 
         final Iterator<AbstractScanningTask> iterator = this.pendingTasks.iterator();
@@ -177,7 +190,7 @@ class ClassloaderScanningTask
     {
         final ConfigurationBuilder configuration = new ConfigurationBuilder();
         configuration.setClassLoaders(new ClassLoader[]{this.classLoader});
-        configuration.setScanners(new SubTypesScanner(false), new MethodAnnotationsScanner(), new FieldAnnotationsScanner());
+        configuration.setScanners(new SubTypesScanner(false));
         configuration.setUrls(this.loadedFile);
         configuration.filterInputsBy(packageFilter);
 

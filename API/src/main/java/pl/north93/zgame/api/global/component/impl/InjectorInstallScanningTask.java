@@ -18,9 +18,9 @@ class InjectorInstallScanningTask extends AbstractScanningTask
 {
     private static final String INJECTOR_NAME = Injector.class.getName();
 
-    public InjectorInstallScanningTask(final ClassloaderScanningTask classloaderScanner, final Class<?> clazz, final AbstractBeanContext beanContext)
+    public InjectorInstallScanningTask(final ClassloaderScanningTask classloaderScanner, final Class<?> clazz, final CtClass ctClass, final AbstractBeanContext beanContext)
     {
-        super(classloaderScanner, clazz, beanContext);
+        super(classloaderScanner, clazz, ctClass, beanContext);
     }
 
     @Override
@@ -84,7 +84,7 @@ class InjectorInstallScanningTask extends AbstractScanningTask
 
     private void installInjector(final Collection<Method> postInject) throws Exception
     {
-        final CtClass ctClass = this.getCtClass();
+        final CtClass ctClass = this.ctClass;
         if (ctClass.isFrozen())
         {
             ctClass.defrost();
