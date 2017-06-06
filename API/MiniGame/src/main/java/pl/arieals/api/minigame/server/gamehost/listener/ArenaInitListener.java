@@ -53,6 +53,9 @@ public class ArenaInitListener implements Listener
         // usuwamy wszystkie regiony pozostale po poprzedniej grze
         hostManager.getRegionManager().getRegions(arena.getWorld().getCurrentWorld()).forEach(ITrackedRegion::unTrack);
 
+        // usuwamy arena data zeby nowa gra miala czyste srodowisko pracy
+        arena.setArenaData(null);
+
         if (arena.getLobbyMode() == LobbyMode.INTEGRATED)
         {
             // jesli lobby jest zintegrowane z mapa to glosowanie na pewno jest wylaczone

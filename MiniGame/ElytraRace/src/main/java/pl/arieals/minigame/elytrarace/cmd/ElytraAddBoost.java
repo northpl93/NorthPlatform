@@ -45,9 +45,9 @@ public class ElytraAddBoost extends NorthCommand
             return;
         }
 
-        if (args.length() != 2)
+        if (args.length() != 3)
         {
-            player.sendMessage(ChatColor.RED + "/elytraaddboost <boosterType> <power>");
+            player.sendMessage(ChatColor.RED + "/elytraaddboost <boosterType> <heightPower> <speedPower>");
             return;
         }
 
@@ -64,13 +64,13 @@ public class ElytraAddBoost extends NorthCommand
         final XmlLocation xmlLoc2 = new XmlLocation(selection.getMaximumPoint());
         final XmlCuboid cuboid = new XmlCuboid(xmlLoc1, xmlLoc2);
 
-        final Boost boost = new Boost(cuboid, args.asEnumValue(BoostType.class, 0), args.asDouble(1));
+        final Boost boost = new Boost(cuboid, args.asEnumValue(BoostType.class, 0), args.asDouble(1), args.asDouble(2));
 
         final LocalArena arena = getArena(player);
         final ElytraRaceArena arenaData = arena.getArenaData();
         arenaData.getArenaConfig().getBoosts().add(boost);
 
-        player.sendMessage(ChatColor.GREEN + "Dodano nowy booster! typ:" + boost.getBoostType() + " moc:" + boost.getBoostPower());
+        player.sendMessage(ChatColor.GREEN + "Dodano nowy booster! typ:" + boost.getBoostType() + " speed:" + boost.getSpeedPower() + " height:" + boost.getHeightPower());
         player.sendMessage(ChatColor.GREEN + "lokacja1: " + xmlLoc1);
         player.sendMessage(ChatColor.GREEN + "lokacja2: " + xmlLoc2);
         player.sendMessage(" ");

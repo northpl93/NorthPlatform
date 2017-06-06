@@ -37,9 +37,9 @@ public class ElytraSetPower extends NorthCommand
             return;
         }
 
-        if (args.length() != 1)
+        if (args.length() != 2)
         {
-            player.sendMessage(ChatColor.RED + "/elytrasetpower <moc> i musisz stac w booscie");
+            player.sendMessage(ChatColor.RED + "/elytrasetpower <heightPower> <speedPower> i musisz stac w booscie");
             return;
         }
 
@@ -47,8 +47,9 @@ public class ElytraSetPower extends NorthCommand
         {
             if (boost.getArea().toCuboid(player.getWorld()).contains(player.getLocation()))
             {
-                boost.setBoostPower(args.asDouble(0));
-                player.sendMessage(ChatColor.GREEN + "Ustawiono moc na " + boost.getBoostPower());
+                boost.setHeightPower(args.asDouble(0));
+                boost.setSpeedPower(args.asDouble(1));
+                player.sendMessage(ChatColor.GREEN + "Ustawiono moc na " + boost.getHeightPower() + "/" + boost.getSpeedPower());
                 return;
             }
         }

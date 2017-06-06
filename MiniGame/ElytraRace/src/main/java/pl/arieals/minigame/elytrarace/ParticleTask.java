@@ -36,7 +36,7 @@ public class ParticleTask implements Runnable
                     for (int i = 0; i < 4; i++)
                     {
                         final Block randomLoc = blocks.randomBlock();
-                        world.spawnParticle(Particle.VILLAGER_HAPPY, randomLoc.getLocation(), 10);
+                        world.spawnParticle(Particle.VILLAGER_HAPPY, randomLoc.getX(), randomLoc.getY(), randomLoc.getZ(), 10);
                     }
                 }
                 else
@@ -45,7 +45,9 @@ public class ParticleTask implements Runnable
                     {
                         final Block randomLoc = blocks.randomBlock();
                         // gdy i=0 i v3!=0 to v/v1/v2 sluza jako rgb podawane jako 0-1. Tutaj zakodowany kolor #F87D23 (248/125/35).
-                        world.spawnParticle(Particle.SPELL_MOB, randomLoc.getLocation(), 0, 248d/255d, 125d/255d, 35d/255d, 1);
+                        world.spawnParticle(Particle.SPELL_MOB,
+                                randomLoc.getX(), randomLoc.getY(), randomLoc.getZ(),
+                                0, 248d/255d, 125d/255d, 35d/255d, 1);
                     }
                 }
             }

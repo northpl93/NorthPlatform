@@ -24,6 +24,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.elytrarace.cfg.Score;
 import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
+import pl.north93.zgame.api.bukkit.utils.FastBlockOp;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -71,7 +72,7 @@ public class ScoreController
                 this.grayedBlocks.add(fallingBlock.getBukkitEntity());
             }
 
-            block.setType(Material.AIR, false);
+            FastBlockOp.setType(block, Material.AIR, (byte)0);
 
             final Chunk chunk = ((CraftChunk) block.getChunk()).getHandle();
             // metoda ustawiajaca oswietlenie. Latwo znalezc bo przyjmuje EnumSkyBlock, lokacje i poziom swiatla
@@ -99,6 +100,14 @@ public class ScoreController
 
             player.spawnParticle(Particle.BLOCK_CRACK, block.getLocation(), 10, block.getMaterial().getNewData(block.getBlockData()));
         }
+    }
+
+    public void cleanup()
+    {
+        this.normalBlocks.forEach(Entity::remove);
+        this.normalBlocks.clear();
+        this.grayedBlocks.forEach(Entity::remove);
+        this.grayedBlocks.clear();
     }
 
     @Override

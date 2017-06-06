@@ -9,7 +9,6 @@ import org.bukkit.util.Vector;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
-import pl.arieals.minigame.elytrarace.BoostType;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.cfg.Boost;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
@@ -33,26 +32,20 @@ public class BoostListener implements Listener
 
     private void boostPlayer(final Player player, final Boost boost)
     {
-        if (boost.getBoostType() == BoostType.SPEED)
+        final Vector playerVector = player.getLocation().getDirection();
+
+        if (boost.getHeightPower() != null)
         {
-            final Vector playerVector = player.getLocation().getDirection();
-            final Double power = boost.getBoostPower();
-
-            playerVector.setX(playerVector.getX() * power);
-            playerVector.setZ(playerVector.getZ() * power);
-
-            player.setVelocity(playerVector);
+            playerVector.setY(boost.getHeightPower());
         }
-        else if (boost.getBoostType() == BoostType.HEIGHT)
+
+        final Double speedPower = boost.getSpeedPower();
+        if (speedPower != null)
         {
-            final Vector playerVector = player.getLocation().getDirection();
-            final Double power = boost.getBoostPower();
-
-            playerVector.setX(playerVector.getX() / 2);
-            playerVector.setY(power);
-            playerVector.setZ(playerVector.getZ() / 2);
-
-            player.setVelocity(playerVector);
+            playerVector.setX(playerVector.getX() * speedPower);
+            playerVector.setZ(playerVector.getZ() * speedPower);
         }
+
+        player.setVelocity(playerVector);
     }
 }

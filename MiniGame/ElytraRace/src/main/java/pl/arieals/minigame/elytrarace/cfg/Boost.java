@@ -19,18 +19,21 @@ public class Boost
     private XmlCuboid area;
     @XmlElement(required = true)
     private BoostType boostType;
-    @XmlElement(required = true)
-    private Double    boostPower;
+    @XmlElement
+    private Double    heightPower;
+    @XmlElement
+    private Double    speedPower;
 
     public Boost()
     {
     }
 
-    public Boost(final XmlCuboid area, final BoostType boostType, final Double boostPower)
+    public Boost(final XmlCuboid area, final BoostType boostType, final Double heightPower, final Double speedPower)
     {
         this.area = area;
         this.boostType = boostType;
-        this.boostPower = boostPower;
+        this.heightPower = heightPower;
+        this.speedPower = speedPower;
     }
 
     public XmlCuboid getArea()
@@ -43,19 +46,29 @@ public class Boost
         return this.boostType;
     }
 
-    public Double getBoostPower()
+    public Double getHeightPower()
     {
-        return this.boostPower;
+        return this.heightPower;
     }
 
-    public void setBoostPower(final Double boostPower)
+    public void setHeightPower(final Double heightPower)
     {
-        this.boostPower = boostPower;
+        this.heightPower = heightPower;
+    }
+
+    public Double getSpeedPower()
+    {
+        return this.speedPower;
+    }
+
+    public void setSpeedPower(final Double speedPower)
+    {
+        this.speedPower = speedPower;
     }
 
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("area", this.area).append("boostType", this.boostType).append("boostPower", this.boostPower).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("area", this.area).append("boostType", this.boostType).append("heightPower", this.heightPower).append("speedPower", this.speedPower).toString();
     }
 }

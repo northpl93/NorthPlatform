@@ -1,6 +1,5 @@
 package pl.arieals.api.minigame.server.gamehost.region.impl;
 
-import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
@@ -10,34 +9,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
-
 class MoveListener implements Listener
 {
-    private BukkitApiCore apiCore;
     private final RegionManagerImpl manager;
 
     public MoveListener(final RegionManagerImpl manager)
     {
         this.manager = manager;
-    }
-
-    private Location getLastPlayerLoc(final Player player)
-    {
-        final List<MetadataValue> meta = player.getMetadata("regionmanager_playerloc");
-        if (meta.isEmpty())
-        {
-            final Location location = player.getLocation();
-            player.setMetadata("regionmanager_playerloc", new FixedMetadataValue(this.apiCore.getPluginMain(), location));
-            return location;
-        }
-        return (Location) meta.get(0).value();
     }
 
     @EventHandler

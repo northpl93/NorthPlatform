@@ -7,7 +7,6 @@ import javax.xml.bind.JAXB;
 
 import java.util.Iterator;
 
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,7 +25,6 @@ import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.arieals.minigame.elytrarace.arena.StartCountdown;
 import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
@@ -36,7 +34,6 @@ public class ArenaStartListener implements Listener
 {
     @Inject @Messages("ElytraRace")
     private MessagesBox messages;
-    private BukkitApiCore apiCore;
 
     @EventHandler
     public void startGame(final GameStartEvent event)
@@ -74,7 +71,6 @@ public class ArenaStartListener implements Listener
             player.teleport(locations.next().toBukkit(arena.getWorld().getCurrentWorld()));
             player.getInventory().setChestplate(this.createElytra());
 
-            player.setGameMode(GameMode.CREATIVE);
             player.setAllowFlight(true);
             player.setFlying(true);
         }
