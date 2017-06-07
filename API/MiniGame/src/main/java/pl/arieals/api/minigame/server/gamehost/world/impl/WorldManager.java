@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -41,7 +40,6 @@ public class WorldManager implements IWorldManager, Listener
 {
     @Inject
     private BukkitApiCore    apiCore;
-    private Logger           logger;
     private NmsWorldHelper   worldHelper;
     private ChunkLoadingTask chunkLoadingTask;
     private final List<World> worlds = new ArrayList<>();
@@ -53,7 +51,7 @@ public class WorldManager implements IWorldManager, Listener
         this.worldHelper = new NmsWorldHelper();
         this.chunkLoadingTask = new ChunkLoadingTask();
         final Main plugin = this.apiCore.getPluginMain();
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this.chunkLoadingTask, 0, 5);
+        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this.chunkLoadingTask, 0, 2);
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 

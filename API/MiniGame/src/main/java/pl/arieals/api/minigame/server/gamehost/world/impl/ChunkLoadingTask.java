@@ -42,7 +42,7 @@ class ChunkLoadingTask implements Runnable
 
         final Queue<Pair<Integer, Integer>> chunks = task.chunks;
 
-        final long stopTime = System.currentTimeMillis() + 10;
+        final long stopTime = System.currentTimeMillis() + 5;
 
         do
         {
