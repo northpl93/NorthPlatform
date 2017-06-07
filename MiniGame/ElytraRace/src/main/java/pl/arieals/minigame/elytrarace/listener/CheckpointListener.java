@@ -17,18 +17,16 @@ import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.math.DioriteRandomUtils;
-
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
+import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.arieals.minigame.elytrarace.cfg.Checkpoint;
 import pl.arieals.minigame.elytrarace.event.PlayerCheckpointEvent;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
-import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -88,7 +86,8 @@ public class CheckpointListener implements Listener
         event.setCancelled(true);
 
         final Player player = (Player) event.getEntity();
-        if (getArena(player).getGamePhase() != GamePhase.STARTED)
+        final LocalArena arena = getArena(player);
+        if (arena.getGamePhase() != GamePhase.STARTED)
         {
             return;
         }
@@ -96,11 +95,11 @@ public class CheckpointListener implements Listener
         final DamageCause cause = event.getCause();
         if (cause == DamageCause.FLY_INTO_WALL || cause == DamageCause.VOID)
         {
-            this.backToCheckpoint(player);
+            this.backToCheckpoint(player, arena);
         }
         else if (cause == DamageCause.FALL && event.getDamage() > 1)
         {
-            this.backToCheckpoint(player);
+            this.backToCheckpoint(player, arena);
         }
     }
 
@@ -113,7 +112,8 @@ public class CheckpointListener implements Listener
         }
 
         final Player player = (Player) event.getEntity();
-        if (getArena(player).getGamePhase() != GamePhase.STARTED)
+        final LocalArena arena = getArena(player);
+        if (arena.getGamePhase() != GamePhase.STARTED)
         {
             return;
         }
@@ -123,15 +123,22 @@ public class CheckpointListener implements Listener
             return;
         }
 
-        this.backToCheckpoint(player);
+        this.backToCheckpoint(player, arena);
     }
 
-    private void backToCheckpoint(final Player player)
+    private void backToCheckpoint(final Player player, final LocalArena arena)
     {
         final ElytraRacePlayer elytraPlayer = getPlayerData(player, ElytraRacePlayer.class);
         if (elytraPlayer == null || elytraPlayer.isDev() || elytraPlayer.isFinished())
         {
             return;
+        }
+
+        final ElytraScorePlayer scorePlayer = getPlayerData(player, ElytraScorePlayer.class);
+        if (scorePlayer != null)
+        {
+            // resetujemy combo gdy teleportujemy do checkpointu
+            scorePlayer.setCombo(0);
         }
 
         this.messages.sendMessage(player, "checkpoint.teleport");
@@ -143,10 +150,8 @@ public class CheckpointListener implements Listener
         }
         else
         {
-            final ElytraRaceArena data = getArena(player).getArenaData();
-            final XmlLocation randomLocation = DioriteRandomUtils.getRandom(data.getArenaConfig().getStartLocations());
-
-            player.teleport(randomLocation.toBukkit(player.getWorld()));
+            final ElytraRaceArena data = arena.getArenaData();
+            player.teleport(data.getArenaConfig().getRestartLocation().toBukkit(player.getWorld()));
         }
     }
 

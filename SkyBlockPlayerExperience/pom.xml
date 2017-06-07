@@ -16,7 +16,7 @@
         <dependency>
             <groupId>pl.north93.zgame</groupId>
             <artifactId>api</artifactId>
-            <version>LATEST</version>
+            <version>1.0-INDEV</version>
         </dependency>
         <dependency>
             <groupId>pl.north93.zgame.skyblock</groupId>

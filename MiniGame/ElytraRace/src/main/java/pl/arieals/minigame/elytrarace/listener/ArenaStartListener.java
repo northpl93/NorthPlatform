@@ -7,6 +7,7 @@ import javax.xml.bind.JAXB;
 
 import java.util.Iterator;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -60,7 +61,9 @@ public class ArenaStartListener implements Listener
 
         for (final Player player : arena.getPlayersManager().getPlayers())
         {
-            setPlayerData(player, new ElytraRacePlayer());
+            final Location startLoc = locations.next().toBukkit(arena.getWorld().getCurrentWorld());
+
+            setPlayerData(player, new ElytraRacePlayer(startLoc));
             if (elytraRaceArena.getGameMode() == ElytraRaceMode.SCORE_MODE)
             {
                 // w trybie score ustawiamy graczowi dodatkowy obiekt
@@ -68,7 +71,7 @@ public class ArenaStartListener implements Listener
                 setPlayerData(player, new ElytraScorePlayer());
             }
 
-            player.teleport(locations.next().toBukkit(arena.getWorld().getCurrentWorld()));
+            player.teleport(startLoc);
             player.getInventory().setChestplate(this.createElytra());
 
             player.setAllowFlight(true);

@@ -1,5 +1,7 @@
 package pl.arieals.minigame.elytrarace.arena;
 
+import org.bukkit.Location;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -7,9 +9,20 @@ import pl.arieals.minigame.elytrarace.cfg.Checkpoint;
 
 public class ElytraRacePlayer
 {
+    private Location   startLocation;
     private boolean    isDev;
     private boolean    finished;
     private Checkpoint checkpoint;
+
+    public ElytraRacePlayer(final Location startLocation)
+    {
+        this.startLocation = startLocation;
+    }
+
+    public Location getStartLocation()
+    {
+        return this.startLocation;
+    }
 
     public boolean isDev()
     {

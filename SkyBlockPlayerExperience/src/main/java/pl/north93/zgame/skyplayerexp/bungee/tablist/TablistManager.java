@@ -17,7 +17,6 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.protocol.packet.PlayerListHeaderFooter;
 import net.md_5.bungee.protocol.packet.PlayerListItem;
-import pl.north93.zgame.api.global.component.annotations.InjectNewInstance;
 
 public class TablistManager implements Listener
 {
@@ -26,8 +25,7 @@ public class TablistManager implements Listener
     private static final char[] ALPHABET  = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'};
     private static final int    TABLIST_SIZE = 80;
     private final Map<Integer, TablistSlot> slots;
-    @InjectNewInstance
-    private ContextProvider contextProvider;
+    private ContextProvider contextProvider = new ContextProvider();
 
     public TablistManager()
     {

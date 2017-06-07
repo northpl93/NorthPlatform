@@ -7,11 +7,12 @@ import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.skyplayerexp.server.ExperienceServer;
 
 public class CompassCmd extends NorthCommand
 {
+    @Inject
     private BukkitApiCore    apiCore;
     @Inject
     private ExperienceServer experience;

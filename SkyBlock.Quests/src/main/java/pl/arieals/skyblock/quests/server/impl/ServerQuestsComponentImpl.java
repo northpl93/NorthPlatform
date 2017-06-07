@@ -4,7 +4,7 @@ import pl.arieals.skyblock.quests.server.api.IServerQuestsComponent;
 import pl.arieals.skyblock.quests.server.api.IServerQuestsManager;
 import pl.arieals.skyblock.quests.shared.api.IQuestsController;
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 

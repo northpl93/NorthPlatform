@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyplayerexp.server.compass.CompassManager;
 import pl.north93.zgame.skyplayerexp.server.compass.ICompassManager;
@@ -14,6 +14,7 @@ import pl.north93.zgame.skyplayerexp.server.gui.ServerGuiManager;
 
 public class ExperienceServer extends Component
 {
+    @Inject
     private BukkitApiCore    bukkitApiCore;
     @Inject
     private SkyBlockServer   server;

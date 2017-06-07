@@ -38,9 +38,8 @@ import pl.north93.zgame.api.bukkit.event.AsyncPacketInEvent;
 import pl.north93.zgame.api.bukkit.event.AsyncPacketOutEvent;
 import pl.north93.zgame.api.bukkit.packets.wrappers.WrapperPlayInClientCommand;
 import pl.north93.zgame.api.bukkit.packets.wrappers.WrapperPlayOutSetSlot;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
-import pl.north93.zgame.api.global.component.annotations.InjectNewInstance;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.skyplayerexp.server.ExperienceServer;
 
 public class CompassManager implements Listener, ICompassManager
@@ -49,8 +48,8 @@ public class CompassManager implements Listener, ICompassManager
     private BukkitApiCore    apiCore;
     @Inject
     private ExperienceServer experience;
-    @InjectNewInstance
-    private CompassConnector compassConnector;
+    @Inject
+    private CompassConnector compassConnector = new CompassConnector();
 
     @PostInject
     private void postInject()

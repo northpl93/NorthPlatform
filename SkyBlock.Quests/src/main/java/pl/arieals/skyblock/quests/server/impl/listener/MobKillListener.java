@@ -14,7 +14,7 @@ import pl.arieals.skyblock.quests.server.api.IServerQuestsComponent;
 import pl.arieals.skyblock.quests.server.api.IServerQuestsManager;
 import pl.arieals.skyblock.quests.shared.api.ITrackedStatistic;
 import pl.arieals.skyblock.quests.shared.impl.statistics.MobKillStatistic;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class MobKillListener implements Listener
 {

@@ -3,6 +3,9 @@ package pl.arieals.minigame.elytrarace.arena;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+
+
 import com.destroystokyo.paper.Title;
 
 import org.bukkit.ChatColor;
@@ -74,6 +77,8 @@ public class StartCountdown extends AbstractCountdown
             player.setFlying(false);
             player.setAllowFlight(false);
             player.setGliding(true);
+            
+            player.teleport(getPlayerData(player, ElytraRacePlayer.class).getStartLocation());
             final Vector direction = player.getLocation().getDirection();
             direction.multiply(0.7);
 

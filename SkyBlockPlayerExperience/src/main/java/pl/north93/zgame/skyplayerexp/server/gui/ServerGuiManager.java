@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.skyblock.shop.ShopComponent;
 import pl.north93.zgame.skyblock.shop.ShopManager;
@@ -21,6 +21,7 @@ public class ServerGuiManager implements IServerGuiManager
     private INetworkManager  networkManager;
     @Inject
     private ShopComponent    shopComponent;
+    @Inject
     private BukkitApiCore    apiCore;
 
     @Override

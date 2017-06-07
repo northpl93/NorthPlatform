@@ -3,7 +3,7 @@ package pl.north93.zgame.skyplayerexp.bungee.tablistarieals;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.component.annotations.InjectComponent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.skyblock.bungee.SkyBlockBungee;
 import pl.north93.zgame.skyplayerexp.bungee.tablist.ICellProvider;
 import pl.north93.zgame.skyplayerexp.bungee.tablist.TablistDrawingContext;
