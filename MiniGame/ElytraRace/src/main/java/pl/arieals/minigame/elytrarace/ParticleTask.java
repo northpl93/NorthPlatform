@@ -3,9 +3,9 @@ package pl.arieals.minigame.elytrarace;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArenas;
 
 
+import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.GamePhase;
@@ -25,6 +25,11 @@ public class ParticleTask implements Runnable
                 continue;
             }
 
+            // twoorzymy tylko jeden obiekt Location dla kazdej areny.
+            // Zapobiega to masowemu tworzeniu gigantycznej ilosci tych obiektów
+            // co zapychało garbage collector.
+            final Location location = new Location(localArena.getWorld().getCurrentWorld(), 0, 0, 0);
+
             final ElytraRaceArena arenaData = localArena.getArenaData();
             for (final Boost boost : arenaData.getArenaConfig().getBoosts())
             {
@@ -35,18 +40,18 @@ public class ParticleTask implements Runnable
                 {
                     for (int i = 0; i < 4; i++)
                     {
-                        final Block randomLoc = blocks.randomBlock();
-                        world.spawnParticle(Particle.VILLAGER_HAPPY, randomLoc.getX(), randomLoc.getY(), randomLoc.getZ(), 10);
+                        blocks.randomLocation(location);
+                        world.spawnParticle(Particle.VILLAGER_HAPPY, location.getX(), location.getY(), location.getZ(), 10);
                     }
                 }
                 else
                 {
                     for (int i = 0; i < 6; i++)
                     {
-                        final Block randomLoc = blocks.randomBlock();
+                        blocks.randomLocation(location);
                         // gdy i=0 i v3!=0 to v/v1/v2 sluza jako rgb podawane jako 0-1. Tutaj zakodowany kolor #F87D23 (248/125/35).
                         world.spawnParticle(Particle.SPELL_MOB,
-                                randomLoc.getX(), randomLoc.getY(), randomLoc.getZ(),
+                                location.getX(), location.getY(), location.getZ(),
                                 0, 248d/255d, 125d/255d, 35d/255d, 1);
                     }
                 }

@@ -653,13 +653,12 @@ public class Cuboid implements IRegion
     }
 
     @Override
-    public Block randomBlock()
+    public Location randomLocation(final Location ref)
     {
-        final int x = DioriteRandomUtils.getRandomInt(this.getLowerX(), this.getUpperX() + 1);
-        final int y = DioriteRandomUtils.getRandomInt(this.getLowerY(), this.getUpperY() + 1);
-        final int z = DioriteRandomUtils.getRandomInt(this.getLowerZ(), this.getUpperZ() + 1);
-
-        return this.getWorld().getBlockAt(x, y, z);
+        ref.setX(DioriteRandomUtils.getRandomInt(this.getLowerX(), this.getUpperX() + 1));
+        ref.setY(DioriteRandomUtils.getRandomInt(this.getLowerY(), this.getUpperY() + 1));
+        ref.setZ(DioriteRandomUtils.getRandomInt(this.getLowerZ(), this.getUpperZ() + 1));
+        return ref;
     }
 
     @Nonnull

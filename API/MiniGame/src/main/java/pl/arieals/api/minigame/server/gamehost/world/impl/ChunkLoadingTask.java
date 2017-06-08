@@ -35,16 +35,16 @@ class ChunkLoadingTask implements Runnable
     @Override
     public void run()
     {
+        final QueuedLoadingTask task = this.getCurrentTask();
+        if (task == null)
+        {
+            return;
+        }
+
         if (! this.checkRamUsage())
         {
             this.logger.warning("Low free memory (under " + MIN_MEMORY + "%). Skipped chunk loading to prevent server crash.");
             System.gc(); // to tylko sugestia, ale probowac warto.
-            return;
-        }
-
-        final QueuedLoadingTask task = this.getCurrentTask();
-        if (task == null)
-        {
             return;
         }
 
@@ -68,7 +68,7 @@ class ChunkLoadingTask implements Runnable
         } while (System.currentTimeMillis() < stopTime);
     }
 
-    // zwraca false jesli jest mniej niz 5% wolnej pamieci
+    // zwraca false jesli jest mniej niz MIN_MEMORY% wolnej pamieci
     private boolean checkRamUsage()
     {
         final double maxMemory = Runtime.getRuntime().maxMemory();

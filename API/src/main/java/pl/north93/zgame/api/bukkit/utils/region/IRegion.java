@@ -27,5 +27,19 @@ public interface IRegion extends Iterable<Block>, Cloneable
 
     List<Chunk> getChunks();
 
-    Block randomBlock();
+    /**
+     * Ustawia losowe koordynaty znajdujące się wewnątrz tego regionu
+     * na podanym w argumencie obiekcie.
+     * Podawanie obiektu jest przydatne w celu zapobiegania
+     * tworzenia gigantycznej ilosci obiektów Location.
+     *
+     * @param ref obiekt Location w którym należy ustawić losowe koordynaty.
+     * @return obiekt location podany w argumencie.
+     */
+    Location randomLocation(Location ref);
+
+    default Location randomLocation()
+    {
+        return this.randomLocation(new Location(this.getWorld(), 0, 0, 0));
+    }
 }
