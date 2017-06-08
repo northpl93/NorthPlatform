@@ -3,10 +3,17 @@ package pl.arieals.api.minigame.server.gamehost.world.impl;
 import static java.text.MessageFormat.format;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.logging.Logger;
+
+import net.minecraft.server.v1_10_R1.RegionFile;
+import net.minecraft.server.v1_10_R1.RegionFileCache;
 
 import com.google.common.collect.Queues;
 
@@ -38,6 +45,7 @@ class ChunkLoadingTask implements Runnable
         final QueuedLoadingTask task = this.getCurrentTask();
         if (task == null)
         {
+            //this.flushRegionCache(); // czyscimy region cache gdy skonczymy wykonywac wszystkie taski. //pomyslec nad dodaniem tego.
             return;
         }
 
@@ -75,6 +83,29 @@ class ChunkLoadingTask implements Runnable
         final double freeMemory = Runtime.getRuntime().freeMemory();
         final double percent = 100;
         return (freeMemory / maxMemory) * percent > MIN_MEMORY;
+    }
+
+    private void flushRegionCache()//pomyslec nad dodaniem tego.
+    {
+        this.logger.info("Flushing region file cache because all chunk loading task are completed.");
+        synchronized (RegionFileCache.class)
+        {
+            final Map<File, RegionFile> cache = RegionFileCache.a;
+            final Iterator<RegionFile> cacheIterator = cache.values().iterator();
+            while (cacheIterator.hasNext())
+            {
+                try
+                {
+                    cacheIterator.next().c();
+                }
+                catch (final IOException e)
+                {
+                    e.printStackTrace();
+                    continue;
+                }
+                cacheIterator.remove();
+            }
+        }
     }
 
     private QueuedLoadingTask getCurrentTask()

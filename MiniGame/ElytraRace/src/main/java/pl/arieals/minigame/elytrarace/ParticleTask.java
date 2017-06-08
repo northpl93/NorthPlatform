@@ -25,7 +25,7 @@ public class ParticleTask implements Runnable
                 continue;
             }
 
-            // twoorzymy tylko jeden obiekt Location dla kazdej areny.
+            // tworzymy tylko jeden obiekt Location dla kazdej areny.
             // Zapobiega to masowemu tworzeniu gigantycznej ilosci tych obiektów
             // co zapychało garbage collector.
             final Location location = new Location(localArena.getWorld().getCurrentWorld(), 0, 0, 0);
