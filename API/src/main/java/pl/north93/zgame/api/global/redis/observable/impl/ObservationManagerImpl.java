@@ -4,8 +4,10 @@ import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.lambdaworks.redis.api.sync.RedisCommands;
 
@@ -151,10 +153,13 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         final String lock = new String(message, StandardCharsets.UTF_8);
         synchronized (this.waitingLocks)
         {
-            for (final LockImpl waitingLock : this.waitingLocks)
+            final Iterator<LockImpl> lockIter = this.waitingLocks.iterator();
+            while (lockIter.hasNext())
             {
+                final LockImpl waitingLock = lockIter.next();
                 if (waitingLock.getName().equals(lock))
                 {
+                    lockIter.remove();
                     waitingLock.remoteUnlock();
                 }
             }
@@ -165,6 +170,7 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     protected void enableComponent()
     {
         this.redisSubscriber.subscribe("unlock", this::unlockNotify);
+        this.redisSubscriber.subscribe("__keyevent@0__:expired", this::unlockNotify); // nasluchujemy na przeterminowanie klucza
         this.redisSubscriber.subscribe(ValueSubscriptionHandler.CHANNEL_PREFIX + "*", this.valueSubHandler, true);
     }
 
@@ -200,6 +206,11 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     /*default*/ ValueSubscriptionHandler getValueSubHandler()
     {
         return this.valueSubHandler;
+    }
+
+    /*default*/ Logger getMyLogger()
+    {
+        return this.getLogger();
     }
 
     @Override
