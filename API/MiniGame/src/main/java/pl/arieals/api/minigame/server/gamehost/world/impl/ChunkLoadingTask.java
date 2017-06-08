@@ -20,6 +20,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 class ChunkLoadingTask implements Runnable
 {
+    private static final int MIN_MEMORY = 15; // ponizej 15% przestajemy doczytywac chunki i czekamy na GC
     private final Queue<QueuedLoadingTask> tasks = Queues.synchronizedQueue(new ArrayDeque<>());
     private QueuedLoadingTask activeTask;
     @Inject
@@ -36,7 +37,7 @@ class ChunkLoadingTask implements Runnable
     {
         if (! this.checkRamUsage())
         {
-            this.logger.warning("Low free memory (under 5%). Skipped chunk loading to prevent server crash.");
+            this.logger.warning("Low free memory (under " + MIN_MEMORY + "%). Skipped chunk loading to prevent server crash.");
             System.gc(); // to tylko sugestia, ale probowac warto.
             return;
         }
@@ -70,9 +71,10 @@ class ChunkLoadingTask implements Runnable
     // zwraca false jesli jest mniej niz 5% wolnej pamieci
     private boolean checkRamUsage()
     {
-        final long maxMemory = Runtime.getRuntime().maxMemory();
-        final long freeMemory = Runtime.getRuntime().freeMemory();
-        return (freeMemory / maxMemory) * 100 > 5;
+        final double maxMemory = Runtime.getRuntime().maxMemory();
+        final double freeMemory = Runtime.getRuntime().freeMemory();
+        final double percent = 100;
+        return (freeMemory / maxMemory) * percent > MIN_MEMORY;
     }
 
     private QueuedLoadingTask getCurrentTask()
