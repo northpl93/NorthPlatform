@@ -1,8 +1,11 @@
 package pl.arieals.minigame.elytrarace.listener;
 
+import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.region.IRegionManager;
@@ -23,6 +26,11 @@ public class FinishLineListener implements Listener
         final IRegionManager regionManager = event.getArena().getRegionManager();
         final ITrackedRegion trackedRegion = regionManager.create(metaCuboid);
 
-        trackedRegion.whenEnter(player -> arenaData.getMetaHandler().handle(event.getArena(), player));
+        trackedRegion.whenEnter(player ->
+        {
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 0);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 2, false, false));
+            arenaData.getMetaHandler().handle(event.getArena(), player);
+        });
     }
 }

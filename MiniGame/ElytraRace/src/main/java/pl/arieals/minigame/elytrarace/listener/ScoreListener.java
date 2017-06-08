@@ -6,6 +6,7 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -111,6 +112,8 @@ public class ScoreListener implements Listener
         final ScoreController scoreController = arena.getScoreController(score);
         scoreController.makeGray(player);
         scoreController.playBreakAnimation(player);
+
+        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 0);
 
         final int combo = scorePlayer.checkCombo(scoreGroup);
         int points = scoreGroup.getPoints();

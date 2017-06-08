@@ -1,5 +1,6 @@
 package pl.arieals.minigame.elytrarace.listener;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -47,5 +48,7 @@ public class BoostListener implements Listener
         }
 
         player.setVelocity(playerVector);
+
+        player.playSound(player.getLocation(), Sound.BLOCK_REDSTONE_TORCH_BURNOUT, 1, 0);
     }
 }

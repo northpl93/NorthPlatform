@@ -5,6 +5,7 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -71,6 +72,7 @@ public class CheckpointListener implements Listener
             return;
         }
 
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_HARP, 1, 0);
         elytraPlayer.setCheckpoint(checkpoint);
         this.messages.sendMessage(player, "checkpoint.taken", elytraPlayer.getCheckpointNumber(), arena.getMaxCheckpoints());
     }
@@ -140,6 +142,8 @@ public class CheckpointListener implements Listener
             // resetujemy combo gdy teleportujemy do checkpointu
             scorePlayer.setCombo(0);
         }
+
+        player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 0);
 
         this.messages.sendMessage(player, "checkpoint.teleport");
 

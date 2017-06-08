@@ -2,13 +2,13 @@ package pl.arieals.minigame.elytrarace.arena;
 
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
-
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import com.destroystokyo.paper.Title;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -59,6 +59,8 @@ public class StartCountdown extends AbstractCountdown
             final Title title = new Title(color + message, "", 0, 21, 0);
 
             player.sendTitle(title);
+
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_HAT, 1, 0);
         }
     }
 
@@ -83,6 +85,8 @@ public class StartCountdown extends AbstractCountdown
             direction.multiply(0.7);
 
             player.setVelocity(direction);
+
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 0);
         }
     }
 
