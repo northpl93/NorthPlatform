@@ -12,19 +12,21 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="API" />
+    <orderEntry type="library" name="Maven: pl.north93:northspigot:1.10-1" level="project" />
+    <orderEntry type="library" name="Maven: com.sk89q.worldedit:worldedit-core:6.1.4-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: de.schlichtherle:truezip:6.8.3" level="project" />
+    <orderEntry type="library" name="Maven: rhino:js:1.7R2" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:1.3.9" level="project" />
+    <orderEntry type="library" name="Maven: com.thoughtworks.paranamer:paranamer:2.6" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.2.4" level="project" />
+    <orderEntry type="library" name="Maven: com.sk89q.lib:jlibnoise:1.0.0" level="project" />
+    <orderEntry type="library" name="Maven: com.sk89q:jchronic:0.2.4a" level="project" />
+    <orderEntry type="library" name="Maven: junit:junit:4.8.1" level="project" />
+    <orderEntry type="library" name="Maven: com.sk89q.worldedit:worldedit-bukkit:6.1.4" level="project" />
+    <orderEntry type="library" name="Maven: com.boydti.fawe:FastAsyncWorldEdit:local" level="project" />
     <orderEntry type="module" module-name="API.InstrumentationAgent" />
-    <orderEntry type="module-library">
-      <library name="Maven: org.spigotmc:spigot:1.10-R1">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../lib/spigot-1.10.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="library" name="Maven: net.md-5:bungeecord-api:1.10-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: net.md-5:bungeecord-chat:1.10-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.3.1" level="project" />
     <orderEntry type="library" name="Maven: net.md-5:bungeecord-config:1.10-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.14" level="project" />
     <orderEntry type="library" name="Maven: net.md-5:bungeecord-event:1.10-SNAPSHOT" level="project" />

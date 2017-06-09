@@ -68,6 +68,12 @@ public class StartCountdown extends AbstractCountdown
     protected void end()
     {
         final ElytraRaceArena data = this.arena.getArenaData();
+        if (data == null)
+        {
+            // dzieje sie tak gdy podczas odliczania przelaczymy na initialising/lobby
+            return;
+        }
+
         data.setStarted(true);
 
         for (final Player player : this.arena.getPlayersManager().getPlayers())

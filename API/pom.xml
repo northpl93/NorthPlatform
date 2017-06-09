@@ -16,18 +16,18 @@
     <version>1.0-INDEV</version>
 
     <dependencies>
+        <!-- Instaluje zaleznosci z katalogu lib. Wiecej info w pom.xml tego modulu -->
+        <dependency>
+            <groupId>pl.north93.zgame</groupId>
+            <artifactId>install-deps</artifactId>
+            <version>1</version>
+            <type>pom</type>
+        </dependency>
+
         <dependency>
             <groupId>pl.north93.zgame.api</groupId>
             <artifactId>instrumentationagent</artifactId>
             <version>1.0-INDEV</version>
-        </dependency>
-
-        <dependency>
-            <artifactId>spigot</artifactId>
-            <groupId>org.spigotmc</groupId>
-            <version>1.10-R1</version>
-            <scope>system</scope>
-            <systemPath>${spigot.location}</systemPath>
         </dependency>
 
         <dependency>

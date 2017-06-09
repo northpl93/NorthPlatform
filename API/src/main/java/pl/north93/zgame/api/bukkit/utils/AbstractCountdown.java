@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.bukkit.utils;
 
+import java.util.logging.Level;
+
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -29,12 +31,26 @@ public abstract class AbstractCountdown extends BukkitRunnable
     {
         if (this.time == 0)
         {
-            this.end();
+            try
+            {
+                this.end();
+            }
+            catch (final Exception e)
+            {
+                PLUGIN.getLogger().log(Level.SEVERE, "An exception has been throw while ending countdown.", e);
+            }
             this.cancel();
         }
         else
         {
-            this.loop(this.time);
+            try
+            {
+                this.loop(this.time);
+            }
+            catch (final Exception e)
+            {
+                PLUGIN.getLogger().log(Level.SEVERE, "An exception has been throw in countdown loop.", e);
+            }
             this.time--;
         }
     }

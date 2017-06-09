@@ -7,22 +7,29 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.logging.Logger;
 
+import net.minecraft.server.v1_10_R1.ChunkProviderServer;
 import net.minecraft.server.v1_10_R1.RegionFile;
 import net.minecraft.server.v1_10_R1.RegionFileCache;
+import net.minecraft.server.v1_10_R1.WorldServer;
 
 import com.google.common.collect.Queues;
 
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.commons.lang3.tuple.Pair;
 
+import org.diorite.utils.reflections.DioriteReflectionUtils;
+import org.diorite.utils.reflections.FieldAccessor;
+
+import pl.arieals.api.minigame.server.gamehost.world.impl.blocker.WrappedChunkProviderServer;
+import pl.north93.zgame.api.bukkit.utils.xml.XmlChunk;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 class ChunkLoadingTask implements Runnable
@@ -33,9 +40,9 @@ class ChunkLoadingTask implements Runnable
     @Inject
     private Logger            logger;
 
-    public void queueTask(final World world, final List<Pair<Integer, Integer>> chunks, final LoadingProgressImpl progress)
+    public void queueTask(final World world, final Set<XmlChunk> chunks, final LoadingProgressImpl progress)
     {
-        this.tasks.add(new QueuedLoadingTask(world, new ArrayDeque<>(chunks), progress, System.currentTimeMillis()));
+        this.tasks.add(new QueuedLoadingTask(world, Queues.newArrayDeque(chunks), progress, System.currentTimeMillis()));
         this.logger.info(format("Queued loading {0} chunks of {1}", chunks.size(), world.getName()));
     }
 
@@ -56,23 +63,24 @@ class ChunkLoadingTask implements Runnable
             return;
         }
 
-        final Queue<Pair<Integer, Integer>> chunks = task.chunks;
+        final Queue<XmlChunk> chunks = task.chunks;
 
         final long stopTime = System.currentTimeMillis() + 5;
 
         do
         {
-            final Pair<Integer, Integer> chunk = chunks.poll();
+            final XmlChunk chunk = chunks.poll();
             if (chunk == null)
             {
                 final long totalTime = System.currentTimeMillis() - task.startTime;
                 this.logger.info(format("Completed loading of world {0} in {1}ms", task.world.getName(), totalTime));
 
+                this.blockNewChunks(task.world);
                 this.activeTask = null;
                 task.progress.setCompleted();
                 break;
             }
-            task.world.loadChunk(chunk.getKey(), chunk.getValue(), false);
+            task.world.loadChunk(chunk.getX(), chunk.getZ(), false);
         } while (System.currentTimeMillis() < stopTime);
     }
 
@@ -108,6 +116,16 @@ class ChunkLoadingTask implements Runnable
         }
     }
 
+    private static FieldAccessor chunkProvider = DioriteReflectionUtils.getField(net.minecraft.server.v1_10_R1.World.class, "chunkProvider");
+    private void blockNewChunks(final World bukkitWorld)
+    {
+        final WorldServer world = ((CraftWorld) bukkitWorld).getHandle();
+        final ChunkProviderServer oldProvider = world.getChunkProviderServer();
+
+        final WrappedChunkProviderServer newProvider = new WrappedChunkProviderServer(oldProvider);
+        chunkProvider.set(world, newProvider);
+    }
+
     private QueuedLoadingTask getCurrentTask()
     {
         if (this.activeTask == null) // no active task
@@ -120,11 +138,11 @@ class ChunkLoadingTask implements Runnable
     private static class QueuedLoadingTask
     {
         private final World world;
-        private final Queue<Pair<Integer, Integer>> chunks;
+        private final Queue<XmlChunk> chunks;
         private final LoadingProgressImpl progress;
         private final long startTime;
 
-        private QueuedLoadingTask(final World world, final Queue<Pair<Integer, Integer>> chunks, final LoadingProgressImpl progress, final long startTime)
+        private QueuedLoadingTask(final World world, final Queue<XmlChunk> chunks, final LoadingProgressImpl progress, final long startTime)
         {
             this.world = world;
             this.chunks = chunks;

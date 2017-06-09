@@ -25,8 +25,6 @@ import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
 import pl.north93.zgame.api.bukkit.utils.ISyncCallback;
 import pl.north93.zgame.api.bukkit.utils.SimpleSyncCallback;
-import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
-import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
 
 public class ArenaWorld
 {
@@ -116,12 +114,9 @@ public class ArenaWorld
         }
 
         final IWorldManager worldManager = this.gameHostManager.getWorldManager();
-        
-        final XmlCuboid arenaRegion = template.getMapConfig().getArenaRegion();
-        final Cuboid gameRegion = arenaRegion.toCuboid(Bukkit.getWorlds().get(0));
 
         final File templateDir = template.getMapDirectory();
-        final ILoadingProgress progress = worldManager.regenWorld(this.getName(), templateDir, gameRegion);
+        final ILoadingProgress progress = worldManager.regenWorld(this.getName(), templateDir, template.getMapConfig().getChunks());
 
         this.currentMapTemplate = template;
         this.progress = progress;
@@ -132,7 +127,7 @@ public class ArenaWorld
             this.currentWorld.setGameRuleValue(gameRule.getKey(), gameRule.getValue());
         }
 
-        SimpleSyncCallback callback = new SimpleSyncCallback();
+        final SimpleSyncCallback callback = new SimpleSyncCallback();
         progress.onComplete(() ->
         {
             Bukkit.getPluginManager().callEvent(new MapSwitchedEvent(this.arena));

@@ -19,26 +19,5 @@
             <artifactId>minigame</artifactId>
             <version>1.0-INDEV</version>
         </dependency>
-
-        <!-- World Edit potrzebny do obslugi zaznaczania -->
-        <!--<dependency>
-            <groupId>com.sk89q.worldedit</groupId>
-            <artifactId>worldedit-core</artifactId>
-            <version>6.1.4-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>-->
-        <dependency>
-            <groupId>com.sk89q.worldedit</groupId>
-            <artifactId>worldedit-bukkit</artifactId>
-            <version>6.1.4</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <artifactId>FastAsyncWorldEdit</artifactId>
-            <groupId>com.boydti</groupId>
-            <version>3.5.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/../../lib/FastAsyncWorldEdit.jar</systemPath>
-        </dependency>
     </dependencies>
 </project>

@@ -26,13 +26,12 @@ import org.bukkit.event.world.WorldInitEvent;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.commons.lang3.tuple.Pair;
 
 import pl.arieals.api.minigame.server.gamehost.world.ILoadingProgress;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.Main;
-import pl.north93.zgame.api.bukkit.utils.region.IRegion;
+import pl.north93.zgame.api.bukkit.utils.xml.XmlChunk;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -56,7 +55,7 @@ public class WorldManager implements IWorldManager, Listener
     }
 
     @Override
-    public LoadingProgressImpl loadWorld(final String name, final File source, final IRegion gameRegion)
+    public LoadingProgressImpl loadWorld(final String name, final File source, final Set<XmlChunk> chunks)
     {
         final WorldCreator creator = new WorldCreator(name);
         creator.generateStructures(false);
@@ -93,7 +92,6 @@ public class WorldManager implements IWorldManager, Listener
             {
                 throw new RuntimeException("Failed to copy files for map " + name, e);
             }
-            final List<Pair<Integer, Integer>> chunks = gameRegion.getChunksCoordinates();
             this.chunkLoadingTask.queueTask(world, chunks, progress);
         });
 
@@ -101,14 +99,14 @@ public class WorldManager implements IWorldManager, Listener
     }
 
     @Override
-    public ILoadingProgress regenWorld(final String name, final File source, final IRegion gameRegion)
+    public ILoadingProgress regenWorld(final String name, final File source, final Set<XmlChunk> chunks)
     {
         final World world = Bukkit.getWorld(name);
         if (world != null && ! this.unloadWorld(name))
         {
             throw new RuntimeException("Can't regenerate world " + name + ". Failed to unload previous world.");
         }
-        return this.loadWorld(name, source, gameRegion);
+        return this.loadWorld(name, source, chunks);
     }
 
     @Override
@@ -128,19 +126,14 @@ public class WorldManager implements IWorldManager, Listener
     @EventHandler
     public void onChunkGenerate(final ChunkLoadEvent event)
     {
-        if (event.isNewChunk() && this.worlds.contains(event.getWorld()))
-        {
-            ((CraftChunk) event.getChunk()).getHandle().mustSave = false; // this can override flag in Chunk#unload(boolean)
-            chunksToUnload.add(event.getChunk());
-            event.getChunk().unload(false); // do not generate new chunks in managed worlds
-        }
+        ((CraftChunk) event.getChunk()).getHandle().mustSave = false; // this can override flag in Chunk#unload(boolean)
     }
 
     @EventHandler
     public void onChunkUnload(final ChunkUnloadEvent event)
     {
-        event.setSaveChunk(false); // do not save anything on gamehost // TODO TEMPORARY
-        if (this.worlds.contains(event.getWorld()) && !chunksToUnload.remove(event.getChunk()))
+        event.setSaveChunk(false); // do not save anything on gamehost
+        if (this.worlds.contains(event.getWorld()))
         {
             event.setCancelled(true); // do not unload chunks from managed worlds
         }
