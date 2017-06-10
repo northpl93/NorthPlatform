@@ -6,13 +6,12 @@ import static java.text.MessageFormat.format;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.WeakHashMap;
+
+import net.minecraft.server.v1_10_R1.Chunk;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
@@ -42,7 +41,6 @@ public class WorldManager implements IWorldManager, Listener
     private NmsWorldHelper   worldHelper;
     private ChunkLoadingTask chunkLoadingTask;
     private final List<World> worlds = new ArrayList<>();
-    private final Set<Chunk> chunksToUnload = Collections.newSetFromMap(new WeakHashMap<>());
 
     @PostInject
     public void postInject()
@@ -115,6 +113,32 @@ public class WorldManager implements IWorldManager, Listener
         final World world = Bukkit.getWorld(name);
         this.worlds.remove(world);
         return Bukkit.unloadWorld(world, false);
+    }
+
+    @Override
+    public void trimWorld(final World source, final String targetName, final Set<XmlChunk> chunks)
+    {
+        final WorldCreator creator = new WorldCreator(targetName);
+        creator.generateStructures(false);
+        creator.generatorSettings("0");
+        creator.type(WorldType.FLAT);
+        creator.environment(World.Environment.NORMAL);
+        final World target = this.worldHelper.createWorld(creator);
+
+        for (final XmlChunk xmlChunk : chunks)
+        {
+            final Chunk sourceChunk = ((CraftChunk) source.getChunkAt(xmlChunk.getX(), xmlChunk.getZ())).getHandle();
+            final Chunk targetChunk = ((CraftChunk) target.getChunkAt(xmlChunk.getX(), xmlChunk.getZ())).getHandle();
+
+            System.arraycopy(sourceChunk.getSections(), 0, targetChunk.getSections(), 0, sourceChunk.getSections().length);
+            System.arraycopy(sourceChunk.heightMap, 0, targetChunk.heightMap, 0, sourceChunk.heightMap.length);
+            System.arraycopy(sourceChunk.entitySlices, 0, targetChunk.entitySlices, 0, sourceChunk.entitySlices.length);
+
+            targetChunk.tileEntities.clear();
+            targetChunk.tileEntities.putAll(sourceChunk.getTileEntities());
+        }
+
+        Bukkit.unloadWorld(target, true);
     }
 
     @EventHandler

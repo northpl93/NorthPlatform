@@ -1,5 +1,7 @@
 package pl.arieals.api.minigame.server.gamehost.world.impl.blocker;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.server.v1_10_R1.Chunk;
 import net.minecraft.server.v1_10_R1.ChunkCoordIntPair;
 import net.minecraft.server.v1_10_R1.ChunkProviderServer;
@@ -32,6 +34,13 @@ public class WrappedChunkProviderServer extends ChunkProviderServer
         chunk.loadNearby(this, this.chunkGenerator, true);
         this.chunks.put(ChunkCoordIntPair.a(x, z), chunk);
         return chunk;
+    }
+
+    @Nullable
+    @Override
+    public Chunk originalGetOrLoadChunkAt(final int i, final int j)
+    {
+        return this.originalGetChunkAt(i, j);
     }
 
     @Override

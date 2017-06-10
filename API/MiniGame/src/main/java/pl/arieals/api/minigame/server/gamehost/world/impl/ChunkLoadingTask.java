@@ -34,6 +34,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 class ChunkLoadingTask implements Runnable
 {
+    private static final FieldAccessor chunkProvider = DioriteReflectionUtils.getField(net.minecraft.server.v1_10_R1.World.class, "chunkProvider");
     private static final int MIN_MEMORY = 15; // ponizej 15% przestajemy doczytywac chunki i czekamy na GC
     private final Queue<QueuedLoadingTask> tasks = Queues.synchronizedQueue(new ArrayDeque<>());
     private QueuedLoadingTask activeTask;
@@ -116,7 +117,6 @@ class ChunkLoadingTask implements Runnable
         }
     }
 
-    private static FieldAccessor chunkProvider = DioriteReflectionUtils.getField(net.minecraft.server.v1_10_R1.World.class, "chunkProvider");
     private void blockNewChunks(final World bukkitWorld)
     {
         final WorldServer world = ((CraftWorld) bukkitWorld).getHandle();

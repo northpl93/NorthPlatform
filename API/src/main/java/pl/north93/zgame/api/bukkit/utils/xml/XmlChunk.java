@@ -2,7 +2,7 @@ package pl.north93.zgame.api.bukkit.utils.xml;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -12,9 +12,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlChunk
 {
-    @XmlElement(required = true)
+    @XmlAttribute(required = true)
     private int x;
-    @XmlElement(required = true)
+    @XmlAttribute(required = true)
     private int z;
 
     public XmlChunk()
