@@ -143,6 +143,11 @@ public class CheckpointListener implements Listener
             scorePlayer.setCombo(0);
         }
 
+        // wylaczamy lot elytra i ustawiamy odleglosc upadku na 0
+        // zeby uniknac zdublowanego komunikatu
+        player.setGliding(false);
+        player.setFallDistance(0);
+
         player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 0);
 
         this.messages.sendMessage(player, "checkpoint.teleport");
