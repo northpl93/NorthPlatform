@@ -4,6 +4,10 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
+import javax.xml.bind.JAXB;
+
+import java.io.File;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -48,17 +52,28 @@ public class ElytraSetPower extends NorthCommand
         {
             if (boost.getArea().toCuboid(player.getWorld()).contains(player.getLocation()))
             {
-                if (! args.asString(0).equalsIgnoreCase("null"))
+                if (args.asString(0).equalsIgnoreCase("null"))
+                {
+                    boost.setHeightPower(null);
+                }
+                else
                 {
                     boost.setHeightPower(args.asDouble(0));
                 }
 
-                if (! args.asString(1).equalsIgnoreCase("null"))
+                if (args.asString(1).equalsIgnoreCase("null"))
+                {
+                    boost.setSpeedPower(null);
+                }
+                else
                 {
                     boost.setSpeedPower(args.asDouble(1));
                 }
 
                 player.sendMessage(ChatColor.GREEN + "Ustawiono moc na " + boost.getHeightPower() + "/" + boost.getSpeedPower());
+
+                JAXB.marshal(arenaData.getArenaConfig(), new File(arena.getWorld().getCurrentMapTemplate().getMapDirectory(), "ElytraRaceArena.xml"));
+
                 return;
             }
         }

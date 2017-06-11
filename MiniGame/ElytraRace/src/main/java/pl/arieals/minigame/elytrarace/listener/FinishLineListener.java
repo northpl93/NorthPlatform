@@ -30,6 +30,7 @@ public class FinishLineListener implements Listener
         {
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 0);
             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 2, false, false));
+            player.getInventory().setChestplate(null);
             arenaData.getMetaHandler().handle(event.getArena(), player);
         });
     }
