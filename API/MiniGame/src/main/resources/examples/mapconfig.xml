@@ -2,10 +2,6 @@
 <gameMap>
     <displayName>Testowa mapa</displayName>
     <enabled>true</enabled>
-    <arenaRegion>
-        <from x="-150" y="0" z="-150"/>
-        <to x="150" y="256" z="150"/>
-    </arenaRegion>
     <properties>
         <entry>
             <key>lobby-x</key>
@@ -20,4 +16,9 @@
             <value>-15</value>
         </entry>
     </properties>
+    <gameRules>
+    </gameRules>
+    <chunks>
+        <chunk x="0" z="0" />
+    </chunks>
 </gameMap>
