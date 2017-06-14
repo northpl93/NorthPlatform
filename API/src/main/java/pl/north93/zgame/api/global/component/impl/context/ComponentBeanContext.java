@@ -1,10 +1,12 @@
-package pl.north93.zgame.api.global.component.impl;
+package pl.north93.zgame.api.global.component.impl.context;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-class ComponentBeanContext extends AbstractBeanContext
+import pl.north93.zgame.api.global.component.impl.container.AbstractBeanContainer;
+
+public class ComponentBeanContext extends AbstractBeanContext
 {
     private final Set<ComponentBeanContext> dependencies = new HashSet<>();
 

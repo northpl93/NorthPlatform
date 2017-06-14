@@ -36,15 +36,20 @@ import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.component.IComponentManager;
+import pl.north93.zgame.api.global.component.impl.container.BeanFactory;
+import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
+import pl.north93.zgame.api.global.component.impl.context.ComponentBeanContext;
+import pl.north93.zgame.api.global.component.impl.context.RootBeanContext;
+import pl.north93.zgame.api.global.component.impl.scanner.ClassloaderScanningTask;
 
 public class ComponentManagerImpl implements IComponentManager
 {
-    /*default*/ static ComponentManagerImpl instance;
+    public static ComponentManagerImpl instance;
     private final ApiCore                  apiCore;
-    private final List<ComponentBundle>    components = new ArrayList<>();
-    private final ClassPool                rootClassPool = new ClassPool();
-    private final RootBeanContext          rootBeanCtx = new RootBeanContext();
-    private final ClassloaderScanningTask  rootScanningTask;
+    private final List<ComponentBundle> components    = new ArrayList<>();
+    private final ClassPool             rootClassPool = new ClassPool();
+    private final RootBeanContext       rootBeanCtx   = new RootBeanContext();
+    private final ClassloaderScanningTask rootScanningTask;
     private final AggregationManager       aggregationManager = new AggregationManager();
     private boolean autoEnable;
     private List<ClassLoader> scannedClassloaders = new ArrayList<>();
@@ -59,11 +64,13 @@ public class ComponentManagerImpl implements IComponentManager
 
     public void initDefaultBeans()
     {
-        this.rootBeanCtx.add(new StaticBeanContainer(this.apiCore.getClass(), "ApiCore", this.apiCore));
-        this.rootBeanCtx.add(new StaticBeanContainer(Logger.class, "ApiLogger", this.apiCore.getLogger()));
+        final BeanFactory factory = BeanFactory.INSTANCE;
+        factory.createStaticBeanManually(this.rootBeanCtx, this.apiCore.getClass(), "ApiCore", this.apiCore);
+        factory.createStaticBeanManually(this.rootBeanCtx, Logger.class, "ApiLogger", this.apiCore.getLogger());
+
         if (this.apiCore.getPlatform() == Platform.BUKKIT)
         {
-            this.rootBeanCtx.add(new StaticBeanContainer(JavaPlugin.class, "JavaPlugin", ((BukkitApiCore) this.apiCore).getPluginMain()));
+            factory.createStaticBeanManually(this.rootBeanCtx, JavaPlugin.class, "JavaPlugin", ((BukkitApiCore) this.apiCore).getPluginMain());
         }
     }
 
@@ -375,7 +382,7 @@ public class ComponentManagerImpl implements IComponentManager
      * @param clazz klasa dla której sprawdzić kontekst
      * @return kontekst danej klasy.
      */
-    /*default*/ AbstractBeanContext getOwningContext(final Class<?> clazz)
+    public AbstractBeanContext getOwningContext(final Class<?> clazz)
     {
         final ClassLoader classLoader = clazz.getClassLoader();
         if (classLoader == this.getClass().getClassLoader())
@@ -413,7 +420,7 @@ public class ComponentManagerImpl implements IComponentManager
      * @param classLoader classloader z którego utworzyć poola.
      * @return zcachowany ClassPool.
      */
-    /*default*/ ClassPool getClassPool(final ClassLoader classLoader)
+    public ClassPool getClassPool(final ClassLoader classLoader)
     {
         if (classLoader instanceof JarComponentLoader)
         {
@@ -427,7 +434,7 @@ public class ComponentManagerImpl implements IComponentManager
         throw new IllegalArgumentException("Unknown classloader: " + classLoader);
     }
 
-    /*default*/ ClassloaderScanningTask getScanningTask(final ClassLoader classLoader, final String rootPackage)
+    public ClassloaderScanningTask getScanningTask(final ClassLoader classLoader, final String rootPackage)
     {
         if (classLoader instanceof JarComponentLoader)
         {
@@ -446,7 +453,7 @@ public class ComponentManagerImpl implements IComponentManager
         }
     }
 
-    /*default*/ AggregationManager getAggregationManager()
+    public AggregationManager getAggregationManager()
     {
         return this.aggregationManager;
     }

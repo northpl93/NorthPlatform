@@ -1,9 +1,10 @@
-package pl.north93.zgame.api.global.component.impl;
+package pl.north93.zgame.api.global.component.impl.scanner;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javassist.CtClass;
+import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 
 abstract class AbstractScanningTask
 {

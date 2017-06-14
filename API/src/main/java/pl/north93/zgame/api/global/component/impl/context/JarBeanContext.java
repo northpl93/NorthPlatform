@@ -1,11 +1,14 @@
-package pl.north93.zgame.api.global.component.impl;
+package pl.north93.zgame.api.global.component.impl.context;
 
 import java.util.Collection;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-class JarBeanContext extends AbstractBeanContext
+import pl.north93.zgame.api.global.component.impl.JarComponentLoader;
+import pl.north93.zgame.api.global.component.impl.container.AbstractBeanContainer;
+
+public class JarBeanContext extends AbstractBeanContext
 {
     private final JarComponentLoader loader;
 

@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.component.impl;
+package pl.north93.zgame.api.global.component.impl.container;
 
 import java.lang.reflect.AccessibleObject;
 

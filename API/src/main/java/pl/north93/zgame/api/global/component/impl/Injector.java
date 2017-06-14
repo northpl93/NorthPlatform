@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
+import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 
 public class Injector
 {

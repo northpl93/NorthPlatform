@@ -7,10 +7,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
+import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 
-class SmartExecutor
+public class SmartExecutor
 {
-    static Object execute(final Executable executable, final AbstractBeanContext beanContext, final Object instance)
+    public static Object execute(final Executable executable, final AbstractBeanContext beanContext, final Object instance)
     {
         final Parameter[] parameters = executable.getParameters();
         final Object[] execArgs = new Object[parameters.length];
@@ -20,7 +21,7 @@ class SmartExecutor
             final Parameter parameter = parameters[i];
 
             final Class<?> type = parameter.getType();
-            final Named namedAnn = type.getAnnotation(Named.class);
+            final Named namedAnn = parameter.getAnnotation(Named.class);
 
             final BeanQuery query = new BeanQuery().type(type);
             if (namedAnn != null)
@@ -32,27 +33,21 @@ class SmartExecutor
             execArgs[i] = bean;
         }
 
-        if (executable instanceof Method)
+        executable.setAccessible(true);
+        try
         {
-            try
+            if (executable instanceof Method)
             {
                 return ((Method) executable).invoke(instance, execArgs);
             }
-            catch (final IllegalAccessException | InvocationTargetException e)
-            {
-                throw new RuntimeException("Exception occurred in method wrapped by SmartExecutor", e);
-            }
-        }
-        else if (executable instanceof Constructor)
-        {
-            try
+            else if (executable instanceof Constructor)
             {
                 return ((Constructor) executable).newInstance(execArgs);
             }
-            catch (final InstantiationException | IllegalAccessException | InvocationTargetException e)
-            {
-                throw new RuntimeException("Exception occurred in method wrapped by SmartExecutor", e);
-            }
+        }
+        catch (final InstantiationException | IllegalAccessException | InvocationTargetException e)
+        {
+            throw new RuntimeException("Exception occurred in method wrapped by SmartExecutor", e);
         }
 
         throw new IllegalArgumentException("Executable must be method or constructor");

@@ -16,8 +16,10 @@ import org.diorite.utils.lazy.LazyValue;
 
 import pl.north93.zgame.api.global.component.annotations.SkipInjections;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
+import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
+import pl.north93.zgame.api.global.component.impl.context.TemporaryBeanContext;
 
-class AggregationManager
+public class AggregationManager
 {
     private Multimap<Class<?>, Method> listeners = ArrayListMultimap.create();
 
@@ -42,7 +44,7 @@ class AggregationManager
             final Collection<Method> methods = this.listeners.get(aClass);
             for (final Method method : methods)
             {
-                final TemporaryBeanContext tempContext = new TemporaryBeanContext(beanContext, "temp");
+                final TemporaryBeanContext tempContext = new TemporaryBeanContext(beanContext);
                 tempContext.put(aClass, object.get());
 
                 if (Modifier.isStatic(method.getModifiers()))

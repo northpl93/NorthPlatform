@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.component.impl;
+package pl.north93.zgame.api.global.component.impl.scanner;
 
 import java.net.URL;
 import java.util.ArrayDeque;
@@ -21,15 +21,21 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
 import pl.north93.zgame.api.global.component.ComponentDescription;
+import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 import pl.north93.zgame.api.global.component.annotations.SkipInjections;
+import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
+import pl.north93.zgame.api.global.component.impl.ComponentBundle;
+import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
+import pl.north93.zgame.api.global.component.impl.JarComponentLoader;
 
-class ClassloaderScanningTask
+public class ClassloaderScanningTask
 {
     private final ComponentManagerImpl        manager;
     private final ClassLoader                 classLoader;
     private final URL                         loadedFile;
     private final ClassPool                   classPool;
     private final Reflections                 reflections;
+    private final InjectorInstaller           injectorInstaller;
     private final Queue<AbstractScanningTask> pendingTasks;
 
     public ClassloaderScanningTask(final ComponentManagerImpl manager, final ClassLoader classLoader, final URL loadedFile, final String rootPackage)
@@ -38,6 +44,7 @@ class ClassloaderScanningTask
         this.classLoader = classLoader;
         this.loadedFile = loadedFile;
         this.classPool = manager.getClassPool(classLoader);
+        this.injectorInstaller = new InjectorInstaller();
         this.reflections = this.createReflections(new FilterBuilder().includePackage(rootPackage));
         this.pendingTasks = new ArrayDeque<>();
     }
@@ -75,6 +82,19 @@ class ClassloaderScanningTask
                 pack = component.getPackageToScan();
             }
             filter.excludePackage(pack);
+
+            try
+            {
+                final Class<?> aClass = Class.forName(component.getMainClass(), true, this.classLoader);
+                final IncludeInScanning annotation = aClass.getAnnotation(IncludeInScanning.class);
+                if (annotation != null)
+                {
+                    filter.excludePackage(annotation.value());
+                }
+            }
+            catch (final ClassNotFoundException | NoClassDefFoundError ignored) // jak sie nie uda zaladowac klasy to trudno, i tak jej nie uzyjemy
+            {
+            }
         }
         this.scan(filter);
     }
@@ -89,7 +109,7 @@ class ClassloaderScanningTask
         this.scan(filter);
     }
 
-    /*default*/ void scan(final FilterBuilder filter)
+    private void scan(final FilterBuilder filter)
     {
         final Set<Class<?>> allClasses = this.getAllClasses(this.reflections, filter);
         for (final Class<?> aClass : allClasses)
@@ -111,8 +131,10 @@ class ClassloaderScanningTask
                 continue;
             }
 
+            this.injectorInstaller.tryInstall(ctClass);
+
+            // dodajemy pozostale zadania do kolejki zeby wykonaly sie w miare mozliwosci
             this.pendingTasks.add(new StaticScanningTask(this, aClass, ctClass, beanContext));
-            this.pendingTasks.add(new InjectorInstallScanningTask(this, aClass, ctClass, beanContext));
             this.pendingTasks.add(new ConstructorScanningTask(this, aClass, ctClass, beanContext));
             this.pendingTasks.add(new MethodScanningTask(this, aClass, ctClass, beanContext));
         }
@@ -171,7 +193,9 @@ class ClassloaderScanningTask
         {
             try
             {
-                return classLoader.loadClass(type);
+                // wymusza zainicjowanie klasy
+                // jak sie nie uda to leci wyjatek ktory ignorujemy
+                return Class.forName(type, true, classLoader);
             }
             catch (final Throwable ignored)
             {
@@ -179,11 +203,6 @@ class ClassloaderScanningTask
         }
 
         return null;
-    }
-
-    /*default*/ ClassPool getClassPool()
-    {
-        return this.classPool;
     }
 
     private Reflections createReflections(final FilterBuilder packageFilter)

@@ -7,8 +7,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.IBeanQuery;
+import pl.north93.zgame.api.global.component.impl.container.AbstractBeanContainer;
 
-class BeanQuery implements IBeanQuery, Predicate<AbstractBeanContainer>
+public class BeanQuery implements IBeanQuery, Predicate<AbstractBeanContainer>
 {
     private String name;
     private Class<?> type;

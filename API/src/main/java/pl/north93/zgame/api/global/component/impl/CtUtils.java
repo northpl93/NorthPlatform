@@ -1,13 +1,32 @@
 package pl.north93.zgame.api.global.component.impl;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import javassist.CtClass;
+import javassist.CtConstructor;
+import javassist.CtField;
 import javassist.CtMethod;
 
-class CtUtils
+/**
+ * Narzędzia do zamieniania obiektów z Javassista na Javowe wersje.
+ */
+public class CtUtils
 {
-    static Method toJavaMethod(final Class<?> clazz, final CtMethod ctMethod)
+    public static Field toJavaField(final Class<?> clazz, final CtField ctField)
+    {
+        try
+        {
+            return clazz.getDeclaredField(ctField.getName());
+        }
+        catch (final Throwable e)
+        {
+            return null;
+        }
+    }
+
+    public static Method toJavaMethod(final Class<?> clazz, final CtMethod ctMethod)
     {
         try
         {
@@ -16,11 +35,24 @@ class CtUtils
         }
         catch (final Throwable e)
         {
-            throw new RuntimeException("Failed to convert CtMethod to java Method", e);
+            return null;
         }
     }
 
-    static Class<?>[] ctTypesToJava(final ClassLoader classLoader, final CtClass[] classes)
+    public static Constructor toJavaConstructor(final Class<?> clazz, final CtConstructor ctConstructor)
+    {
+        try
+        {
+            final Class<?>[] classes = ctTypesToJava(clazz.getClassLoader(), ctConstructor.getParameterTypes());
+            return clazz.getDeclaredConstructor(classes);
+        }
+        catch (final Throwable e)
+        {
+            return null;
+        }
+    }
+
+    public static Class<?>[] ctTypesToJava(final ClassLoader classLoader, final CtClass[] classes)
     {
         final Class<?>[] out = new Class[classes.length];
         for (int i = 0; i < classes.length; i++)

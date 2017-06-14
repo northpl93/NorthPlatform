@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.component.impl;
+package pl.north93.zgame.api.global.component.impl.scanner;
 
 import static pl.north93.zgame.api.global.component.impl.CtUtils.toJavaMethod;
 
@@ -16,6 +16,9 @@ import javassist.CtMethod;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.DynamicBean;
+import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
+import pl.north93.zgame.api.global.component.impl.container.BeanFactory;
+import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
 
 class MethodScanningTask extends AbstractScanningTask
 {

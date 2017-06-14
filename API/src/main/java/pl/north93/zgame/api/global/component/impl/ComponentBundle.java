@@ -14,15 +14,17 @@ import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.ComponentStatus;
 import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
+import pl.north93.zgame.api.global.component.impl.container.BeanFactory;
+import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 
-class ComponentBundle implements IComponentBundle
+public class ComponentBundle implements IComponentBundle
 {
     private final String               name;
     private final ComponentDescription description;
     private final ClassLoader          classLoader;
     private final AbstractBeanContext  componentBeanContext;
-    private Set<String> basePackages;
-    private Component   component;
+    private       Set<String>          basePackages;
+    private       Component            component;
 
     public ComponentBundle(final ComponentDescription description, final ClassLoader classLoader, final AbstractBeanContext componentBeanContext)
     {
@@ -108,7 +110,8 @@ class ComponentBundle implements IComponentBundle
             throw new IllegalStateException("ComponentBundle already has associated component.");
         }
         this.component = component;
-        this.componentBeanContext.add(new StaticBeanContainer(component.getClass(), this.getName(), component));
+        final Class<? extends Component> aClass = component.getClass();
+        BeanFactory.INSTANCE.createStaticBeanManually(this.componentBeanContext, aClass, aClass.getName(), component);
     }
 
     public boolean isEnabled()

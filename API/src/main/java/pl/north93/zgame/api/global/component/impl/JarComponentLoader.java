@@ -13,15 +13,18 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import javassist.ClassPool;
 import javassist.LoaderClassPath;
 import pl.north93.zgame.api.global.ApiCore;
+import pl.north93.zgame.api.global.component.impl.context.JarBeanContext;
+import pl.north93.zgame.api.global.component.impl.context.RootBeanContext;
+import pl.north93.zgame.api.global.component.impl.scanner.ClassloaderScanningTask;
 
-class JarComponentLoader extends URLClassLoader
+public class JarComponentLoader extends URLClassLoader
 {
-    private final URL                      fileUrl;
-    private final Map<String, Class<?>>    classCache;
-    private final Set<JarComponentLoader>  dependencies;
-    private final JarBeanContext           beanContext;
-    private final ClassPool                classPool;
-    private       ClassloaderScanningTask  scanningTask;
+    private final URL                     fileUrl;
+    private final Map<String, Class<?>>   classCache;
+    private final Set<JarComponentLoader> dependencies;
+    private final JarBeanContext          beanContext;
+    private final ClassPool               classPool;
+    private       ClassloaderScanningTask scanningTask;
 
     public JarComponentLoader(final RootBeanContext rootBeanContext, final URL url, final ClassLoader parent)
     {

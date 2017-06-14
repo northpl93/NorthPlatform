@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.component.impl;
+package pl.north93.zgame.api.global.component.impl.container;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
@@ -9,10 +9,14 @@ import java.lang.reflect.Modifier;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.component.impl.SmartExecutor;
+import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
+import pl.north93.zgame.api.global.component.impl.context.TemporaryBeanContext;
+
 class DynamicBeanContainer extends AbstractBeanContainer
 {
     private final AbstractBeanContext beanContext;
-    private final Method method;
+    private final Method              method;
 
     public DynamicBeanContainer(final Class<?> type, final String name, final AbstractBeanContext beanContext, final Method method)
     {
@@ -24,7 +28,7 @@ class DynamicBeanContainer extends AbstractBeanContainer
     @Override
     public Object getValue(final AccessibleObject injectionContext)
     {
-        final TemporaryBeanContext beanContext = new TemporaryBeanContext(this.beanContext, "temp");
+        final TemporaryBeanContext beanContext = new TemporaryBeanContext(this.beanContext);
 
         beanContext.put(Class.class, "Source", ((Member) injectionContext).getDeclaringClass());
         for (final Annotation annotation : injectionContext.getAnnotations())

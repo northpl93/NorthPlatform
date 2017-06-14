@@ -1,4 +1,7 @@
-package pl.north93.zgame.api.global.component.impl;
+package pl.north93.zgame.api.global.component.impl.scanner;
+
+import static pl.north93.zgame.api.global.component.impl.CtUtils.toJavaField;
+
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -11,54 +14,54 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javassist.CtClass;
+import javassist.CtField;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
+import pl.north93.zgame.api.global.component.impl.BeanQuery;
+import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 
 class StaticScanningTask extends AbstractScanningTask
 {
-    private final Set<Field> staticFields;
+    private final Set<CtField> staticFields;
 
     public StaticScanningTask(final ClassloaderScanningTask classloaderScanner, final Class<?> clazz, final CtClass ctClass, final AbstractBeanContext beanContext)
     {
         super(classloaderScanner, clazz, ctClass, beanContext);
-        Field[] fields;
-        try
-        {
-            fields = clazz.getDeclaredFields();
-        }
-        catch (final Throwable ignored)
-        {
-            fields = new Field[0];
-        }
-
-        this.staticFields = Arrays.stream(fields).filter(method -> Modifier.isStatic(method.getModifiers())).collect(Collectors.toSet());
+        this.staticFields = Arrays.stream(ctClass.getDeclaredFields()).filter(method -> Modifier.isStatic(method.getModifiers())).collect(Collectors.toSet());
     }
 
     @Override
     boolean tryComplete()
     {
-        final Iterator<Field> iterator = this.staticFields.iterator();
+        final Iterator<CtField> iterator = this.staticFields.iterator();
         while (iterator.hasNext())
         {
-            final Field next = iterator.next();
-            if (! next.isAnnotationPresent(Inject.class))
+            final CtField next = iterator.next();
+            if (! next.hasAnnotation(Inject.class))
             {
                 iterator.remove();
                 continue;
             }
 
-            final BeanQuery query = new BeanQuery().type(next.getType());
+            final Field field = toJavaField(this.clazz, next);
+            if (field == null)
+            {
+                // gdy field jest nullem to znaczy, ze klasy nie dalo sie zaladowac
+                // wiec ja pomijamy
+                return true;
+            }
+            field.setAccessible(true);
 
-            final Named namedAnn = next.getAnnotation(Named.class);
+            final BeanQuery query = new BeanQuery().type(field.getType());
+            final Named namedAnn = field.getAnnotation(Named.class);
             if (namedAnn != null)
             {
                 query.name(namedAnn.value());
             }
 
-            next.setAccessible(true);
             try
             {
-                next.set(null, this.beanContext.getBean(query));
+                field.set(null, this.beanContext.getBean(query));
                 iterator.remove();
             }
             catch (final Exception ignored)

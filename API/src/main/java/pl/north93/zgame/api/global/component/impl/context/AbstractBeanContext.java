@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.component.impl;
+package pl.north93.zgame.api.global.component.impl.context;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -6,11 +6,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.north93.zgame.api.global.component.IBeanContext;
 import pl.north93.zgame.api.global.component.IBeanQuery;
 import pl.north93.zgame.api.global.component.exceptions.BeanNotFoundException;
+import pl.north93.zgame.api.global.component.impl.BeanQuery;
+import pl.north93.zgame.api.global.component.impl.container.AbstractBeanContainer;
 
-abstract class AbstractBeanContext implements IBeanContext
+public abstract class AbstractBeanContext implements IBeanContext
 {
     protected final AbstractBeanContext        parent;
     protected final String                     name;
@@ -63,7 +68,7 @@ abstract class AbstractBeanContext implements IBeanContext
                        .orElseThrow(() -> new BeanNotFoundException(query));
     }
 
-    /*default*/ AbstractBeanContainer getBeanContainer(final IBeanQuery query)
+    public AbstractBeanContainer getBeanContainer(final IBeanQuery query)
     {
         //noinspection unchecked
         return this.beanStream(true)
@@ -109,5 +114,11 @@ abstract class AbstractBeanContext implements IBeanContext
     protected Stream<AbstractBeanContainer> beanStream(final boolean withParent)
     {
         return this.getAll(withParent).stream();
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("parent", this.parent).append("name", this.name).append("registeredBeans", this.registeredBeans).toString();
     }
 }
