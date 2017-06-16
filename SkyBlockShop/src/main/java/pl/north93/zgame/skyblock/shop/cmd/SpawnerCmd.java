@@ -33,7 +33,7 @@ public class SpawnerCmd extends NorthCommand
         final Block block = unwrapped.getTargetBlock((Set<Material>)null, 10);
         if(block.getType() != Material.MOB_SPAWNER)
         {
-            sender.sendMessage("&f&l> &7Nie znaleziono spawnera, spojrz sie na niego celownikiem.");
+            sender.sendRawMessage("&f&l> &7Nie znaleziono spawnera, spojrz sie na niego celownikiem.");
             return;
         }
 

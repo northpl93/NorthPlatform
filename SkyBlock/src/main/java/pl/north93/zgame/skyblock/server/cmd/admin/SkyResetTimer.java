@@ -32,11 +32,11 @@ public class SkyResetTimer extends NorthCommand
         {
             final SkyPlayer skyPlayer = SkyPlayer.get(t.getPlayer());
             skyPlayer.setIslandCooldown(0);
-            sender.sendMessage("&cResetowanie timera dla " + player);
+            sender.sendRawMessage("&cResetowanie timera dla " + player);
         }
         catch (final Exception e)
         {
-            sender.sendMessage("&cGracz " + player + " musi byc online!");
+            sender.sendRawMessage("&cGracz " + player + " musi byc online!");
         }
     }
 

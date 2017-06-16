@@ -87,7 +87,7 @@ public class BukkitCommandsManager implements ICommandsManager
         }
 
         @Override
-        public void sendMessage(final String message, final boolean colorText)
+        public void sendRawMessage(final String message, final boolean colorText)
         {
             if (colorText)
             {

@@ -38,12 +38,12 @@ public class SkyBypassCmd extends NorthCommand
         if (player.hasMetadata("skyblockbypass"))
         {
             player.removeMetadata("skyblockbypass", pluginMain);
-            sender.sendMessage("&cWylaczono bypass");
+            sender.sendRawMessage("&cWylaczono bypass");
         }
         else
         {
             player.setMetadata("skyblockbypass", new FixedMetadataValue(pluginMain, null));
-            sender.sendMessage("&cWlaczono bypass");
+            sender.sendRawMessage("&cWlaczono bypass");
         }
     }
 

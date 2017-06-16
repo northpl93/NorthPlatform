@@ -27,7 +27,7 @@ public class BanCommand extends NorthCommand
     {
         if (args.length() != 1)
         {
-            sender.sendMessage("&c/ban nick");
+            sender.sendRawMessage("&c/ban nick");
             return;
         }
         this.networkManager.getPlayers().access(args.asString(0), online ->
@@ -39,7 +39,7 @@ public class BanCommand extends NorthCommand
             offline.setBanned(true);
         });
 
-        sender.sendMessage("&cUzytkownik zbanowany");
+        sender.sendRawMessage("&cUzytkownik zbanowany");
     }
 
     @Override

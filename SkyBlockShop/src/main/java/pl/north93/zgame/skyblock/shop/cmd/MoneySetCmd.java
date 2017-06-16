@@ -25,7 +25,7 @@ public class MoneySetCmd extends NorthCommand
     {
         if (args.length() != 2)
         {
-            sender.sendMessage("&f&l> &6/moneyset <nick> <stan>");
+            sender.sendRawMessage("&f&l> &6/moneyset <nick> <stan>");
             return;
         }
 
@@ -33,7 +33,7 @@ public class MoneySetCmd extends NorthCommand
         final Double value = args.asDouble(1);
 
         this.shopComponent.getShopManager().setMoney(nick, value);
-        sender.sendMessage("&f&l> &7Ustawiono stan konta &6" + nick + " &7na &6" + value);
+        sender.sendRawMessage("&f&l> &7Ustawiono stan konta &6" + nick + " &7na &6" + value);
     }
 
     @Override

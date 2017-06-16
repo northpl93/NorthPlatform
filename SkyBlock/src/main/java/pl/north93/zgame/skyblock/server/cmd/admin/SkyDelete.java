@@ -32,7 +32,7 @@ public class SkyDelete extends NorthCommand
     {
         if (args.length() != 1)
         {
-            sender.sendMessage("&cTa komenda USUNIE wyspe podanego gracza. Wpisz /skydelete nick.");
+            sender.sendRawMessage("&cTa komenda USUNIE wyspe podanego gracza. Wpisz /skydelete nick.");
             return;
         }
 
@@ -41,17 +41,17 @@ public class SkyDelete extends NorthCommand
         {
             final SkyPlayer skyPlayer = SkyPlayer.get(t.getPlayer());
             if (!skyPlayer.hasIsland()) {
-                sender.sendMessage("&Gracz " + target + " nie ma wyspy!");
+                sender.sendRawMessage("&Gracz " + target + " nie ma wyspy!");
                 return;
             }
 
 
             this.server.getSkyBlockManager().deleteIsland(skyPlayer.getIslandId());
-            sender.sendMessage("&aUsunieto wyspe gracza " + target);
+            sender.sendRawMessage("&aUsunieto wyspe gracza " + target);
         }
         catch (final PlayerNotFoundException e)
         {
-            sender.sendMessage("&cGracz " + target + " nie istnieje!");
+            sender.sendRawMessage("&cGracz " + target + " nie istnieje!");
         } catch (Exception e) {
             e.printStackTrace();
         }

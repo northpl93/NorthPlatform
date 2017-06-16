@@ -9,5 +9,7 @@ public interface IStatistic<E extends IStatisticEncoder>
 
     boolean isReverseOrder();
 
+    CompletableFuture<IRecord> getGlobalRecord();
+
     CompletableFuture<IRecordResult> record(UUID playerId, E value);
 }

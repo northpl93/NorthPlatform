@@ -28,12 +28,12 @@ public class Network extends NorthCommand
     {
         if (args.length() == 0)
         {
-            sender.sendMessage("/network - pomoc");
-            sender.sendMessage("  proxies - lista połączonych serwerów proxy");
-            sender.sendMessage("  daemons - lista połączonych demonów");
-            sender.sendMessage("  minigames - lista skonfigurowanych minigier");
-            sender.sendMessage("  stopall - wyłącza wszystkie komponenty sieci");
-            sender.sendMessage("  kickall - wyrzuca wszystkich graczy");
+            sender.sendRawMessage("/network - pomoc");
+            sender.sendRawMessage("  proxies - lista połączonych serwerów proxy");
+            sender.sendRawMessage("  daemons - lista połączonych demonów");
+            sender.sendRawMessage("  minigames - lista skonfigurowanych minigier");
+            sender.sendRawMessage("  stopall - wyłącza wszystkie komponenty sieci");
+            sender.sendRawMessage("  kickall - wyrzuca wszystkich graczy");
             return;
         }
 
@@ -41,39 +41,39 @@ public class Network extends NorthCommand
         {
             if ("proxies".equals(args.asString(0)))
             {
-                sender.sendMessage("&cPołączone serwery proxy");
+                sender.sendRawMessage("&cPołączone serwery proxy");
                 for (final ProxyInstanceInfo proxyInstanceInfo : this.networkManager.getProxyServers())
                 {
-                    sender.sendMessage("|- " + proxyInstanceInfo.getId());
-                    sender.sendMessage("  |- Liczba graczy: " + proxyInstanceInfo.getOnlinePlayers());
-                    sender.sendMessage("  |- Nazwa hosta: " + proxyInstanceInfo.getHostname());
+                    sender.sendRawMessage("|- " + proxyInstanceInfo.getId());
+                    sender.sendRawMessage("  |- Liczba graczy: " + proxyInstanceInfo.getOnlinePlayers());
+                    sender.sendRawMessage("  |- Nazwa hosta: " + proxyInstanceInfo.getHostname());
                 }
             }
             else if ("daemons".equals(args.asString(0)))
             {
-                sender.sendMessage("&cPołączone demony");
+                sender.sendRawMessage("&cPołączone demony");
                 for (final RemoteDaemon daemon : this.networkManager.getDaemons())
                 {
-                    sender.sendMessage("|- " + daemon.getName());
-                    sender.sendMessage("  |- Nazwa hosta: " + daemon.getHostName());
-                    sender.sendMessage("  |- Maksymalna ilość ramu: " + daemon.getMaxRam() + "MB");
-                    sender.sendMessage("  |- Użyty ram: " + daemon.getRamUsed() + "MB (" + daemon.getRamUsed() / daemon.getMaxRam() * 100 + "%)");
-                    sender.sendMessage("  |- Ilość serwerów hostowanych: " + daemon.getServerCount());
+                    sender.sendRawMessage("|- " + daemon.getName());
+                    sender.sendRawMessage("  |- Nazwa hosta: " + daemon.getHostName());
+                    sender.sendRawMessage("  |- Maksymalna ilość ramu: " + daemon.getMaxRam() + "MB");
+                    sender.sendRawMessage("  |- Użyty ram: " + daemon.getRamUsed() + "MB (" + daemon.getRamUsed() / daemon.getMaxRam() * 100 + "%)");
+                    sender.sendRawMessage("  |- Ilość serwerów hostowanych: " + daemon.getServerCount());
                 }
             }
             else if ("stopall".equals(args.asString(0)))
             {
-                sender.sendMessage("&cZa chwile wszystkie komponenty sieci zostaną wyłączone...");
+                sender.sendRawMessage("&cZa chwile wszystkie komponenty sieci zostaną wyłączone...");
                 this.networkManager.broadcastNetworkAction(NetworkAction.STOP_ALL);
             }
             else if ("kickall".equals(args.asString(0)))
             {
-                sender.sendMessage("&cZa chwile wszyscy gracze zostaną rozłączeni...");
+                sender.sendRawMessage("&cZa chwile wszyscy gracze zostaną rozłączeni...");
                 this.networkManager.broadcastNetworkAction(NetworkAction.KICK_ALL);
             }
             else
             {
-                sender.sendMessage("&cZly argument!");
+                sender.sendRawMessage("&cZly argument!");
             }
 
         }

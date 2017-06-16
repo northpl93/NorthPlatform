@@ -30,8 +30,8 @@ public class JoiningPolicyCommand extends NorthCommand
         if (args.length() == 0)
         {
             final String values = Arrays.stream(JoiningPolicy.values()).map(Enum::name).collect(Collectors.joining(", "));
-            sender.sendMessage("&eDostępne wartości: " + values);
-            sender.sendMessage("&eAktualnie wybrana opcja: " + this.networkManager.getJoiningPolicy());
+            sender.sendRawMessage("&eDostępne wartości: " + values);
+            sender.sendRawMessage("&eAktualnie wybrana opcja: " + this.networkManager.getJoiningPolicy());
         }
         else if (args.length() == 1)
         {
@@ -42,7 +42,7 @@ public class JoiningPolicyCommand extends NorthCommand
             }
             catch (final IllegalArgumentException e)
             {
-                sender.sendMessage("&cNiepoprawne argumenty");
+                sender.sendRawMessage("&cNiepoprawne argumenty");
                 return;
             }
 
@@ -50,11 +50,11 @@ public class JoiningPolicyCommand extends NorthCommand
             {
                 meta.joiningPolicy = newJoinPolicy;
             });
-            sender.sendMessage("&aJoining policy zmienione na " + newJoinPolicy.name());
+            sender.sendRawMessage("&aJoining policy zmienione na " + newJoinPolicy.name());
         }
         else
         {
-            sender.sendMessage("&cNiepoprawne argumenty");
+            sender.sendRawMessage("&cNiepoprawne argumenty");
         }
     }
 

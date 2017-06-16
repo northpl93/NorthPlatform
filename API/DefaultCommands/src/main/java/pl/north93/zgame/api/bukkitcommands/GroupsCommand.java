@@ -37,8 +37,8 @@ public class GroupsCommand extends NorthCommand
     {
         if (args.length() == 0)
         {
-            sender.sendMessage("&e/" + label + " <gracz> - wyświetla grupę gracza");
-            sender.sendMessage("&e/" + label + " <gracz> <grupa> - zmienia grupę gracza");
+            sender.sendRawMessage("&e/" + label + " <gracz> - wyświetla grupę gracza");
+            sender.sendRawMessage("&e/" + label + " <gracz> <grupa> - zmienia grupę gracza");
         }
         else if (args.length() == 1)
         {
@@ -46,10 +46,10 @@ public class GroupsCommand extends NorthCommand
 
             boolean result = this.networkManager.getPlayers().access(username, online ->
             {
-                sender.sendMessage("&eGrupa " + online.getNick() + " to " + online.getGroup().getName());
+                sender.sendRawMessage("&eGrupa " + online.getNick() + " to " + online.getGroup().getName());
             }, offline ->
             {
-                sender.sendMessage("&eGrupa " + offline.getLatestNick() + " (" + offline.getUuid() + ") to " + offline.getGroup().getName());
+                sender.sendRawMessage("&eGrupa " + offline.getLatestNick() + " (" + offline.getUuid() + ") to " + offline.getGroup().getName());
             });
 
             if (! result)
@@ -63,7 +63,7 @@ public class GroupsCommand extends NorthCommand
             final Group newGroup = this.permissionsManager.getGroupByName(args.asString(1));
             if (newGroup == null)
             {
-                sender.sendMessage("&cNie ma takiej grupy!");
+                sender.sendRawMessage("&cNie ma takiej grupy!");
                 return;
             }
             if (this.networkManager.getPlayers().access(username, player ->
@@ -72,7 +72,7 @@ public class GroupsCommand extends NorthCommand
                 player.setGroupExpireAt(0);
             }))
             {
-                sender.sendMessage("&aPomyślnie zmieniono grupę na " + newGroup.getName());
+                sender.sendRawMessage("&aPomyślnie zmieniono grupę na " + newGroup.getName());
             }
             else
             {
@@ -81,7 +81,7 @@ public class GroupsCommand extends NorthCommand
         }
         else
         {
-            sender.sendMessage("&cZła ilość argumentów!");
+            sender.sendRawMessage("&cZła ilość argumentów!");
         }
     }
 

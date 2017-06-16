@@ -9,6 +9,6 @@ public class TestClass
     @QuickCommand(name = "testujemy", async = true)
     public static void test(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        sender.sendMessage("Testujemy");
+        sender.sendRawMessage("Testujemy");
     }
 }

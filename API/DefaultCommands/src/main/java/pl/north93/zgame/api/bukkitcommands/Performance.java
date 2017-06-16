@@ -29,12 +29,12 @@ public class Performance extends NorthCommand
     {
         final double[] recentTps = ((CraftServer) Bukkit.getServer()).getServer().recentTps;
 
-        sender.sendMessage(ChatColor.YELLOW + "Uptime: " + DateUtil.formatDateDiff(ManagementFactory.getRuntimeMXBean().getStartTime()));
-        sender.sendMessage(ChatColor.YELLOW + "TPS (1m,5m,15m): " + this.formatTps(recentTps[0]) + " " + this.formatTps(recentTps[1]) + " " + this.formatTps(recentTps[2]));
-        sender.sendMessage(ChatColor.YELLOW + "Max memory: " + (Runtime.getRuntime().maxMemory() / 1024 / 1024));
-        sender.sendMessage(ChatColor.YELLOW + "Total memory: " + (Runtime.getRuntime().totalMemory() / 1024 / 1024));
-        sender.sendMessage(ChatColor.YELLOW + "Free memory: " + (Runtime.getRuntime().freeMemory() / 1024 / 1024));
-        sender.sendMessage(ChatColor.YELLOW + "Worlds:");
+        sender.sendRawMessage(ChatColor.YELLOW + "Uptime: " + DateUtil.formatDateDiff(ManagementFactory.getRuntimeMXBean().getStartTime()));
+        sender.sendRawMessage(ChatColor.YELLOW + "TPS (1m,5m,15m): " + this.formatTps(recentTps[0]) + " " + this.formatTps(recentTps[1]) + " " + this.formatTps(recentTps[2]));
+        sender.sendRawMessage(ChatColor.YELLOW + "Max memory: " + (Runtime.getRuntime().maxMemory() / 1024 / 1024));
+        sender.sendRawMessage(ChatColor.YELLOW + "Total memory: " + (Runtime.getRuntime().totalMemory() / 1024 / 1024));
+        sender.sendRawMessage(ChatColor.YELLOW + "Free memory: " + (Runtime.getRuntime().freeMemory() / 1024 / 1024));
+        sender.sendRawMessage(ChatColor.YELLOW + "Worlds:");
 
         final List<World> worlds = Bukkit.getWorlds();
         for (final World w : worlds)
@@ -64,7 +64,7 @@ public class Performance extends NorthCommand
                 ex.printStackTrace();
             }
 
-            sender.sendMessage(ChatColor.YELLOW + " T:" + worldType + " N:" + w.getName() + " LoadedChunks:" + w.getLoadedChunks().length + " Entities:" + w.getEntities().size() + " TileEntities:" + tileEntities);
+            sender.sendRawMessage(ChatColor.YELLOW + " T:" + worldType + " N:" + w.getName() + " LoadedChunks:" + w.getLoadedChunks().length + " Entities:" + w.getEntities().size() + " TileEntities:" + tileEntities);
         }
     }
 

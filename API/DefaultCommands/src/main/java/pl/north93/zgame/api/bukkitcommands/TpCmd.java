@@ -34,7 +34,7 @@ public class TpCmd extends NorthCommand
     {
         if (args.length() > 2 || args.length() < 1)
         {
-            sender.sendMessage("&c/tp [nick] <nick>");
+            sender.sendRawMessage("&c/tp [nick] <nick>");
             return;
         }
 
@@ -69,7 +69,7 @@ public class TpCmd extends NorthCommand
             final IOnlinePlayer player = this.networkManager.getOnlinePlayer(destination).get();
             if (player == null || playerSender == null)
             {
-                sender.sendMessage("&cGracz jest offline");
+                sender.sendRawMessage("&cGracz jest offline");
                 return;
             }
 

@@ -46,6 +46,19 @@ public class StatisticImpl<E extends IStatisticEncoder> implements IStatistic<E>
     }
 
     @Override
+    public CompletableFuture<IRecord> getGlobalRecord()
+    {
+        final CompletableFuture<IRecord> future = new CompletableFuture<>();
+        this.manager.getApiCore().getPlatformConnector().runTaskAsynchronously(() ->
+        {
+            final MongoCollection<Document> globalRecords = this.manager.getStorage().getMainDatabase().getCollection("globalStats");
+            final Document record = globalRecords.find(new Document("statId", this.key)).limit(1).first();
+            future.complete(Optional.ofNullable(record).map(RecordImpl::new).orElse(null));
+        });
+        return future;
+    }
+
+    @Override
     public CompletableFuture<IRecordResult> record(final UUID playerId, final E value)
     {
         final CompletableFuture<IRecordResult> future = new CompletableFuture<>();

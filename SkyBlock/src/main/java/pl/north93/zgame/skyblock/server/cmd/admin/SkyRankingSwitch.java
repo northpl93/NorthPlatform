@@ -32,7 +32,7 @@ public class SkyRankingSwitch extends NorthCommand
     {
         if (args.length() != 1)
         {
-            sender.sendMessage("&c/skyrankingswitch <nick> - wlacza/wylacza ranking dla wyspy danego usera");
+            sender.sendRawMessage("&c/skyrankingswitch <nick> - wlacza/wylacza ranking dla wyspy danego usera");
             return;
         }
         final String target = args.asString(0);
@@ -49,7 +49,7 @@ public class SkyRankingSwitch extends NorthCommand
 
         if (! skyPlayer.hasIsland())
         {
-            sender.sendMessage("&cUzytkownik " + target + " nie ma wyspy!");
+            sender.sendRawMessage("&cUzytkownik " + target + " nie ma wyspy!");
             return;
         }
 
@@ -57,11 +57,11 @@ public class SkyRankingSwitch extends NorthCommand
         this.server.getSkyBlockManager().setShowInRanking(skyPlayer.getIslandId(), newRanking);
         if (newRanking)
         {
-            sender.sendMessage("&cWyspa uzytkownika " + target + " zostala dodana do rankingu.");
+            sender.sendRawMessage("&cWyspa uzytkownika " + target + " zostala dodana do rankingu.");
         }
         else
         {
-            sender.sendMessage("&cWyspa uzytkownika " + target + " zostala usunieta z rankingu.");
+            sender.sendRawMessage("&cWyspa uzytkownika " + target + " zostala usunieta z rankingu.");
         }
     }
 

@@ -5,8 +5,6 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.bukkit.ChatColor;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -61,15 +59,33 @@ public class MessagesBox
         return this.getMessage(Locale.forLanguageTag("pl-PL"), key);
     }
 
+    // = = = WYSYLANIE WIADOMOSCI = = = //
+
+    public void sendMessage(final Messageable messageable, final String key, final MessageLayout layout, final Object... params)
+    {
+        final String message = MessageFormat.format(this.getMessage(messageable.getLocale(), key), (Object[]) params);
+        for (final String line : layout.processMessage(message))
+        {
+            messageable.sendRawMessage(line, true);
+        }
+    }
+
     public void sendMessage(final Messageable messageable, final String key, final Object... params)
     {
-        messageable.sendMessage(this.getMessage(messageable.getLocale(), key), (Object[]) params);
+        this.sendMessage(messageable, key, MessageLayout.DEFAULT, params);
+    }
+
+    // nie powinno jebnac na innych platformach niz Bukkit o ile nie wykonamy tej metody
+    public void sendMessage(final org.bukkit.entity.Player player, final String key, final MessageLayout layout, final Object... params)
+    {
+        final String message = this.getMessage(player.spigot().getLocale(), key, (Object[]) params);
+        player.sendMessage(layout.processMessage(message));
     }
 
     // nie powinno jebnac na innych platformach niz Bukkit o ile nie wykonamy tej metody
     public void sendMessage(final org.bukkit.entity.Player player, final String key, final Object... params)
     {
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getMessage(player.spigot().getLocale(), key, (Object[]) params)));
+        this.sendMessage(player, key, MessageLayout.DEFAULT, params);
     }
 
     @Override

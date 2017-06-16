@@ -35,30 +35,30 @@ public class SkyLocation extends NorthCommand
         final Player player = (Player) sender.unwrapped();
         final IslandHostManager serverManager = this.server.getServerManager();
         final Location loc = player.getLocation();
-        sender.sendMessage("&eworld: " + loc.getWorld().getName() + " x: " + loc.getBlockX() + " y:" + loc.getBlockY() + " z:" + loc.getBlockZ());
+        sender.sendRawMessage("&eworld: " + loc.getWorld().getName() + " x: " + loc.getBlockX() + " y:" + loc.getBlockY() + " z:" + loc.getBlockZ());
 
         final WorldManager worldManager = serverManager.getWorldManager(player.getWorld());
         if (worldManager == null)
         {
-            sender.sendMessage("&cBrak managera swiatow...");
+            sender.sendRawMessage("&cBrak managera swiatow...");
             return;
         }
 
-        sender.sendMessage("&eNazwa typu wysp: " + worldManager.getIslandConfig().getName());
+        sender.sendRawMessage("&eNazwa typu wysp: " + worldManager.getIslandConfig().getName());
         final Island byChunk = worldManager.getIslands().getByChunk(loc.getChunk());
         if (byChunk == null)
         {
-            sender.sendMessage("&cBrak wyspy na tym chunku");
+            sender.sendRawMessage("&cBrak wyspy na tym chunku");
             return;
         }
 
         final IslandLocation isLoc = byChunk.getLocation();
 
         final Coords2D islandCoordinates = byChunk.getIslandCoordinates();
-        sender.sendMessage("&eislandCoords: X:" + islandCoordinates.getX() + " Z:" + islandCoordinates.getZ());
-        sender.sendMessage("&ecenterChunk: X:" + isLoc.getCenterChunkX() + " Z:" + isLoc.getCenterChunkZ());
+        sender.sendRawMessage("&eislandCoords: X:" + islandCoordinates.getX() + " Z:" + islandCoordinates.getZ());
+        sender.sendRawMessage("&ecenterChunk: X:" + isLoc.getCenterChunkX() + " Z:" + isLoc.getCenterChunkZ());
 
         final Coords3D rel = isLoc.toRelative(loc);
-        sender.sendMessage("&erelativeLoc: x:" + rel.getX() + " y:" + rel.getY() + " z:" + rel.getZ());
+        sender.sendRawMessage("&erelativeLoc: x:" + rel.getX() + " y:" + rel.getY() + " z:" + rel.getZ());
     }
 }

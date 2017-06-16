@@ -42,7 +42,7 @@ public class WtfIsland extends NorthCommand
         {
             if (this.server.getServerMode() != ServerMode.ISLAND_HOST)
             {
-                sender.sendMessage("&c$here mozesz uzywac tylko na serwerze z wyspami");
+                sender.sendRawMessage("&c$here mozesz uzywac tylko na serwerze z wyspami");
                 return;
             }
 
@@ -51,7 +51,7 @@ public class WtfIsland extends NorthCommand
             final Island byChunk = manager.getWorldManager(player.getWorld()).getIslands().getByChunk(player.getLocation().getChunk());
             if (byChunk == null)
             {
-                sender.sendMessage("&cNa tym chunku nie ma zadnej wyspy!");
+                sender.sendRawMessage("&cNa tym chunku nie ma zadnej wyspy!");
                 return;
             }
             island = this.server.getIslandDao().getIsland(byChunk.getId());
@@ -75,29 +75,29 @@ public class WtfIsland extends NorthCommand
             }
             else
             {
-                sender.sendMessage("&c" + target + " nie ma wyspy.");
+                sender.sendRawMessage("&c" + target + " nie ma wyspy.");
                 return;
             }
         }
 
-        sender.sendMessage("&eIsland ID: " + island.getIslandId());
-        sender.sendMessage("&eServer: " + island.getServerId());
-        sender.sendMessage("&eOwner: " + island.getOwnerId() + " " + this.networkManager.getNickFromUuid(island.getOwnerId()));
-        sender.sendMessage("&eAccepting visits: " + (island.getAcceptingVisits() ? "&atrue" : "&cfalse"));
+        sender.sendRawMessage("&eIsland ID: " + island.getIslandId());
+        sender.sendRawMessage("&eServer: " + island.getServerId());
+        sender.sendRawMessage("&eOwner: " + island.getOwnerId() + " " + this.networkManager.getNickFromUuid(island.getOwnerId()));
+        sender.sendRawMessage("&eAccepting visits: " + (island.getAcceptingVisits() ? "&atrue" : "&cfalse"));
         final IslandConfig islandType = this.server.getSkyBlockConfig().getIslandType(island.getIslandType());
-        sender.sendMessage("&eType: " + islandType.getName() + " (r= " + islandType.getRadius() + ")");
-        sender.sendMessage("&eName: " + island.getName());
-        sender.sendMessage("&ePoints: " + island.getPoints());
-        sender.sendMessage("&eIs shown in ranking: " + (island.getShowInRanking() ? "&atrue" : "&cfalse"));
-        sender.sendMessage("&eInvites:");
+        sender.sendRawMessage("&eType: " + islandType.getName() + " (r= " + islandType.getRadius() + ")");
+        sender.sendRawMessage("&eName: " + island.getName());
+        sender.sendRawMessage("&ePoints: " + island.getPoints());
+        sender.sendRawMessage("&eIs shown in ranking: " + (island.getShowInRanking() ? "&atrue" : "&cfalse"));
+        sender.sendRawMessage("&eInvites:");
         for (final UUID invite : island.getInvitations())
         {
-            sender.sendMessage("&e * " + invite + " " + this.networkManager.getNickFromUuid(invite));
+            sender.sendRawMessage("&e * " + invite + " " + this.networkManager.getNickFromUuid(invite));
         }
-        sender.sendMessage("&eMembers:");
+        sender.sendRawMessage("&eMembers:");
         for (final UUID member : island.getMembersUuid())
         {
-            sender.sendMessage("&e * " + member + " " + this.networkManager.getNickFromUuid(member));
+            sender.sendRawMessage("&e * " + member + " " + this.networkManager.getNickFromUuid(member));
         }
     }
 }

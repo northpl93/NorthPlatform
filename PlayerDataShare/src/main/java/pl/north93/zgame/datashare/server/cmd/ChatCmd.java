@@ -35,21 +35,21 @@ public class ChatCmd extends NorthCommand
 
         if (args.length() == 0)
         {
-            sender.sendMessage("&eZarządzanie czatem w grupie " + myGroup.getName());
-            sender.sendMessage("&eChatPolicy: " + currentPolicy);
-            sender.sendMessage("&e/chat switch - przełącz stan czatu");
-            sender.sendMessage("&e/gbroadcast - ogłoś wiadomość w tej grupie serwerów");
-            sender.sendMessage("&e/ann - wiadomość na środku ekranu wszystkich graczy");
+            sender.sendRawMessage("&eZarządzanie czatem w grupie " + myGroup.getName());
+            sender.sendRawMessage("&eChatPolicy: " + currentPolicy);
+            sender.sendRawMessage("&e/chat switch - przełącz stan czatu");
+            sender.sendRawMessage("&e/gbroadcast - ogłoś wiadomość w tej grupie serwerów");
+            sender.sendRawMessage("&e/ann - wiadomość na środku ekranu wszystkich graczy");
         }
         else if (args.length() == 1)
         {
             if (args.asString(0).equalsIgnoreCase("switch"))
             {
-                sender.sendMessage("&eUzyj: /chat policy [VIP/ADMIN/EVERYONE]");
+                sender.sendRawMessage("&eUzyj: /chat policy [VIP/ADMIN/EVERYONE]");
             }
             else if (args.asString(0).equalsIgnoreCase("policy"))
             {
-                sender.sendMessage("&eUzyj: /chat policy [VIP/ADMIN/EVERYONE]");
+                sender.sendRawMessage("&eUzyj: /chat policy [VIP/ADMIN/EVERYONE]");
             }
             else if (args.asString(0).equalsIgnoreCase("clear"))
             {
@@ -60,7 +60,7 @@ public class ChatCmd extends NorthCommand
             }
             else
             {
-                sender.sendMessage("&cZłe parametry komendy.");
+                sender.sendRawMessage("&cZłe parametry komendy.");
             }
         }
         else if (args.length() == 2)
@@ -77,16 +77,16 @@ public class ChatCmd extends NorthCommand
                 }
 
                 manager.setChatPolicy(myGroup, newPolicy);
-                sender.sendMessage("&2Ustawiono ChatPolicy na: " + newPolicy);
+                sender.sendRawMessage("&2Ustawiono ChatPolicy na: " + newPolicy);
             }
             else
             {
-                sender.sendMessage("&cZłe parametry komendy.");
+                sender.sendRawMessage("&cZłe parametry komendy.");
             }
         }
         else
         {
-            sender.sendMessage("&cZłe parametry komendy.");
+            sender.sendRawMessage("&cZłe parametry komendy.");
         }
     }
 

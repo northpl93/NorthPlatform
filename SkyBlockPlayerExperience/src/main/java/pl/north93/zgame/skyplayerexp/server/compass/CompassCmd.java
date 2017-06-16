@@ -39,34 +39,34 @@ public class CompassCmd extends NorthCommand
             {
                 if (! player.getGameMode().equals(GameMode.SURVIVAL))
                 {
-                    sender.sendMessage("&f&l> &7Kompas mozna wlaczyc tylko w trybie survival.");
+                    sender.sendRawMessage("&f&l> &7Kompas mozna wlaczyc tylko w trybie survival.");
                     return;
                 }
                 compassManager.getCompassConnector().switchCompassStateInConfig(player.getName(), true);
-                sender.sendMessage("&f&l> &6Wlaczono &7kompas, aby go wylaczyc wpisz &6/kompas wylacz");
+                sender.sendRawMessage("&f&l> &6Wlaczono &7kompas, aby go wylaczyc wpisz &6/kompas wylacz");
                 if (compassManager.getCompassConnector().isLobby())
                 {
                     compassManager.switchCompassState(player, true);
                 }
                 else
                 {
-                    sender.sendMessage("&f&l> &7Pamietaj, ze kompas na pasku przedmiotow dziala tylko na lobby!");
+                    sender.sendRawMessage("&f&l> &7Pamietaj, ze kompas na pasku przedmiotow dziala tylko na lobby!");
                 }
             }
             else if (arg.equalsIgnoreCase("wylacz") || arg.equalsIgnoreCase("off"))
             {
                 compassManager.getCompassConnector().switchCompassStateInConfig(player.getName(), false);
                 compassManager.switchCompassState(player, false);
-                sender.sendMessage("&f&l> &6Wylaczono &7kompas, aby go wlaczyc wpisz &6/kompas wlacz");
+                sender.sendRawMessage("&f&l> &6Wylaczono &7kompas, aby go wlaczyc wpisz &6/kompas wlacz");
             }
             else
             {
-                sender.sendMessage("&f&l> &7Poprawne argumenty komendy to: &6wlacz &7lub &6wylacz");
+                sender.sendRawMessage("&f&l> &7Poprawne argumenty komendy to: &6wlacz &7lub &6wylacz");
             }
         }
         else
         {
-            sender.sendMessage("&f&l> &7Poprawne argumenty komendy to: &6wlacz &7lub &6wylacz");
+            sender.sendRawMessage("&f&l> &7Poprawne argumenty komendy to: &6wlacz &7lub &6wylacz");
         }
     }
 }

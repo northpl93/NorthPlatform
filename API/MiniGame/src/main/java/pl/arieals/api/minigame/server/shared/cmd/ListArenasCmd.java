@@ -26,13 +26,13 @@ public class ListArenasCmd extends NorthCommand
         final Set<RemoteArena> allArenas = this.miniGameServer.getArenaManager().getAllArenas();
         for (final RemoteArena arena : allArenas)
         {
-            sender.sendMessage("&e- " + arena.getId());
-            sender.sendMessage("&e |- serverId:" + arena.getServerId());
-            sender.sendMessage("&e |- gamePhase:" + arena.getGamePhase());
-            sender.sendMessage("&e |- players:");
+            sender.sendRawMessage("&e- " + arena.getId());
+            sender.sendRawMessage("&e |- serverId:" + arena.getServerId());
+            sender.sendRawMessage("&e |- gamePhase:" + arena.getGamePhase());
+            sender.sendRawMessage("&e |- players:");
             for (final UUID uuid : arena.getPlayers())
             {
-                sender.sendMessage("&e   *" + uuid);
+                sender.sendRawMessage("&e   *" + uuid);
             }
         }
     }

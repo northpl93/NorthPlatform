@@ -7,36 +7,52 @@ public interface Messageable
 {
     /**
      * Zwraca język używany przez ten obiekt (np.gracza)
+     *
      * @return język.
      */
     Locale getLocale();
 
-    void sendMessage(String message, boolean colorText);
+    /**
+     * Wysyła surową wiadomość do gracza. Bez tłumaczenia.
+     *
+     * @param message treść wiadomości.
+     * @param colorText czy wiadomość ma być automatycznie pokolorowana.
+     */
+    void sendRawMessage(String message, boolean colorText);
 
-    @Deprecated
-    default void sendMessage(String message)
+    /**
+     * Wysyła surową wiadomość do gracza. Bez tłumaczenia.
+     * Obsługuje parametry według MessageFormat.
+     *
+     * @param message treść wiadomości.
+     * @param params parametry.
+     */
+    default void sendRawMessage(final String message, final Object... params)
     {
-        this.sendMessage(message, true);
+        this.sendRawMessage(MessageFormat.format(message, params), true);
     }
 
-    @Deprecated
-    default void sendMessage(final String message, final Object... params)
-    {
-        this.sendMessage(MessageFormat.format(message, params));
-    }
-
+    /**
+     * Wysyła przetłumaczoną wiadomość do gracza.
+     *
+     * @param messagesBox obiekt przechowujący wiadomości.
+     * @param key nazwa klucza wiadomości.
+     */
     default void sendMessage(final MessagesBox messagesBox, final String key)
     {
-        this.sendMessage(messagesBox.getMessage(this.getLocale(), key));
+        this.sendRawMessage(messagesBox.getMessage(this.getLocale(), key), true);
     }
 
+    /**
+     * Wysyła przetłumaczoną wiadomość do gracza.
+     * Obsługuje parametry według MessageFormat.
+     *
+     * @param messagesBox obiekt przechowujący wiadomości.
+     * @param key nazwa klucza wiadomości.
+     * @param params parametry.
+     */
     default void sendMessage(final MessagesBox messagesBox, final String key, final Object... params)
     {
-        this.sendMessage(messagesBox.getMessage(this.getLocale(), key), params);
-    }
-
-    default void sendMessageColor(final MessagesBox messagesBox, final String key, final boolean colorText, final Object... params)
-    {
-        this.sendMessage(MessageFormat.format(messagesBox.getMessage(this.getLocale(), key), params), colorText);
+        this.sendRawMessage(messagesBox.getMessage(this.getLocale(), key), params);
     }
 }

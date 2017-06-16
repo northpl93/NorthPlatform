@@ -34,7 +34,7 @@ public class SkyAddMember extends NorthCommand
     {
         if (args.length() != 2)
         {
-            sender.sendMessage("&c/skyaddmember czyja_wyspa kogo_dodac");
+            sender.sendRawMessage("&c/skyaddmember czyja_wyspa kogo_dodac");
             return;
         }
 
@@ -42,7 +42,7 @@ public class SkyAddMember extends NorthCommand
         final String nick2 = args.asString(1);
         if (nick1.equalsIgnoreCase(nick2))
         {
-            sender.sendMessage("&cPodales dwa takie same nicki :<");
+            sender.sendRawMessage("&cPodales dwa takie same nicki :<");
             return;
         }
 
@@ -56,7 +56,7 @@ public class SkyAddMember extends NorthCommand
             {
                 if (skyNewMember.getIslandRole().equals(IslandRole.OWNER))
                 {
-                    sender.sendMessage("&c" + newMember.getPlayer().getLatestNick() + " jest wlascicielem innej wyspy!");
+                    sender.sendRawMessage("&c" + newMember.getPlayer().getLatestNick() + " jest wlascicielem innej wyspy!");
                     return;
                 }
 
@@ -64,7 +64,7 @@ public class SkyAddMember extends NorthCommand
                 {
                     islandData.removeMember(newMember.getPlayer().getUuid());
                 });
-                sender.sendMessage("&aUwaga: Gracza " + nick2 + " usunieto z jego poprzedniej wyspy.");
+                sender.sendRawMessage("&aUwaga: Gracza " + nick2 + " usunieto z jego poprzedniej wyspy.");
             }
 
             this.server.getIslandDao().modifyIsland(skyMember.getIslandId(), islandData ->
@@ -74,11 +74,11 @@ public class SkyAddMember extends NorthCommand
 
             skyNewMember.setIsland(skyMember.getIslandId(), IslandRole.MEMBER);
 
-            sender.sendMessage("&aPomyslnie dodano gracza do wyspy.");
+            sender.sendRawMessage("&aPomyslnie dodano gracza do wyspy.");
         }
         catch (PlayerNotFoundException e)
         {
-            sender.sendMessage("&cNie znaleziono gracza o nicku " + e.getPlayerName());
+            sender.sendRawMessage("&cNie znaleziono gracza o nicku " + e.getPlayerName());
         }
         catch (Exception e)
         {

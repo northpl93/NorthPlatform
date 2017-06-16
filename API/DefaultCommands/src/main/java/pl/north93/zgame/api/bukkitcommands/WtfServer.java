@@ -28,13 +28,13 @@ public class WtfServer extends NorthCommand
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
         final Server server = this.serverManager.getServer();
-        sender.sendMessage("ID serwera: " + server.getUuid());
-        sender.sendMessage("Nazwa w proxy: " + server.getProxyName());
-        sender.sendMessage("Typ serwera: " + server.getType());
-        sender.sendMessage("Czy uruchomiony przez demona: " + (server.isLaunchedViaDaemon() ? "tak" : "nie"));
-        sender.sendMessage("Stan serwera: " + server.getServerState());
+        sender.sendRawMessage("ID serwera: " + server.getUuid());
+        sender.sendRawMessage("Nazwa w proxy: " + server.getProxyName());
+        sender.sendRawMessage("Typ serwera: " + server.getType());
+        sender.sendRawMessage("Czy uruchomiony przez demona: " + (server.isLaunchedViaDaemon() ? "tak" : "nie"));
+        sender.sendRawMessage("Stan serwera: " + server.getServerState());
         final Optional<IServersGroup> serversGroup = server.getServersGroup();
-        sender.sendMessage("Grupa serwerów: " + serversGroup.map(IServersGroup::getName).orElse("brak"));
+        sender.sendRawMessage("Grupa serwerów: " + serversGroup.map(IServersGroup::getName).orElse("brak"));
     }
 
     @Override

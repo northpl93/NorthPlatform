@@ -33,7 +33,7 @@ public class TempbanCommand extends NorthCommand {
     {
         if (args.length() != 2 || !StringUtils.isNumeric(args.asString(1)))
         {
-            sender.sendMessage("&c/tban nick czas(w sekundach)");
+            sender.sendRawMessage("&c/tban nick czas(w sekundach)");
             return;
         }
 
@@ -50,7 +50,7 @@ public class TempbanCommand extends NorthCommand {
             offline.getMetaStore().setLong(BAN_EXPIRE, expireAt);
         });
 
-        sender.sendMessage("&cUzytkownik zbanowany na " + args.asString(1) + " sekund.");
+        sender.sendRawMessage("&cUzytkownik zbanowany na " + args.asString(1) + " sekund.");
     }
 
     @Override

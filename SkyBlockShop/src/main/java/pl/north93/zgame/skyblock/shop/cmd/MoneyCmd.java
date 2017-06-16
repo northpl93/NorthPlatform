@@ -32,12 +32,12 @@ public class MoneyCmd extends NorthCommand
         {
             final String otherNick = args.asString(0);
             final double balance = this.shopComponent.getShopManager().getBalance(otherNick);
-            sender.sendMessage("&f&l> &7Aktualny stan konta &6" + otherNick + "&7: &6" + this.format.format(balance));
+            sender.sendRawMessage("&f&l> &7Aktualny stan konta &6" + otherNick + "&7: &6" + this.format.format(balance));
         }
         else
         {
             final double balance = this.shopComponent.getShopManager().getBalance(player.getName());
-            sender.sendMessage("&f&l> &7Aktualny stan konta: &6" + this.format.format(balance));
+            sender.sendRawMessage("&f&l> &7Aktualny stan konta: &6" + this.format.format(balance));
         }
     }
 

@@ -28,25 +28,25 @@ public class SlotsCommand extends NorthCommand
         if (args.length() == 0)
         {
             final NetworkMeta meta = this.networkManager.getNetworkMeta().get();
-            sender.sendMessage("&eAktualne sloty: " + meta.displayMaxPlayers + " Gracze: " + this.networkManager.getPlayers().onlinePlayersCount());
+            sender.sendRawMessage("&eAktualne sloty: " + meta.displayMaxPlayers + " Gracze: " + this.networkManager.getPlayers().onlinePlayersCount());
         }
         else if (args.length() == 1)
         {
             final Integer newSlots = args.asInt(0);
             if (newSlots == null)
             {
-                sender.sendMessage("&cPodaj cyfre.");
+                sender.sendRawMessage("&cPodaj cyfre.");
                 return;
             }
             this.networkManager.getNetworkMeta().update(meta ->
             {
                 meta.displayMaxPlayers = newSlots;
             });
-            sender.sendMessage("&aSloty zmienione na " + newSlots);
+            sender.sendRawMessage("&aSloty zmienione na " + newSlots);
         }
         else
         {
-            sender.sendMessage("&cPodaj jedna cyfre.");
+            sender.sendRawMessage("&cPodaj jedna cyfre.");
         }
     }
 

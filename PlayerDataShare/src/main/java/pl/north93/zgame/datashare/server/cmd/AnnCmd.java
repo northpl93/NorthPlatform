@@ -31,7 +31,7 @@ public class AnnCmd extends NorthCommand
         final DataSharingGroup myGroup = this.dataShareServer.getMyGroup();
         if (args.length() == 0)
         {
-            sender.sendMessage("&cTa komenda pokazuje tekst na środku ekranu graczy w aktualnej grupie serwerów (" + myGroup.getName() + ")");
+            sender.sendRawMessage("&cTa komenda pokazuje tekst na środku ekranu graczy w aktualnej grupie serwerów (" + myGroup.getName() + ")");
         }
         else
         {

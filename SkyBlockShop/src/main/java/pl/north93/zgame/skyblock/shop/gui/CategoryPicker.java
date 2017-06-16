@@ -60,7 +60,7 @@ public class CategoryPicker extends Window
         final String permission = category.getPermission();
         if (! StringUtils.isEmpty(permission) && !player.hasPermission(permission))
         {
-            player.sendMessage("Nie masz uprawnien do tej kategorii.");
+            player.sendRawMessage("Nie masz uprawnien do tej kategorii.");
             return;
         }*/ // permissions are checked in processPayment
         this.close();

@@ -35,9 +35,9 @@ public class SkyPoints extends NorthCommand
 
         if (args.length() == 0)
         {
-            sender.sendMessage("&c/skypoints recalculate - przelicza punkty wyspy, na ktorej sie znajdujesz");
-            sender.sendMessage("&c/skypoints recalculateall - przelicza punkty wszystkich wysp na serwerze");
-            sender.sendMessage("&c/skypoints persist - zapisuje punkty wszystkich wysp do bazy danych");
+            sender.sendRawMessage("&c/skypoints recalculate - przelicza punkty wyspy, na ktorej sie znajdujesz");
+            sender.sendRawMessage("&c/skypoints recalculateall - przelicza punkty wszystkich wysp na serwerze");
+            sender.sendRawMessage("&c/skypoints persist - zapisuje punkty wszystkich wysp do bazy danych");
         }
         else if (args.length() == 1)
         {
@@ -47,27 +47,27 @@ public class SkyPoints extends NorthCommand
                 final Island island = this.server.getServerManager().getIslandAt(((Player) sender.unwrapped()).getLocation());
                 if(island != null)
                 {
-                    sender.sendMessage("&aWyspa zostanie przeliczona.");
+                    sender.sendRawMessage("&aWyspa zostanie przeliczona.");
                     island.getPoints().recalculate();
                 }
                 else
                 {
-                    sender.sendMessage("&cNie znaleziono wyspy w tym miejscu!");
+                    sender.sendRawMessage("&cNie znaleziono wyspy w tym miejscu!");
                 }
             }
             else if (arg0.equalsIgnoreCase("recalculateall"))
             {
                 pointsHelper.recalculateAll();
-                sender.sendMessage("&cRozpoczeto przeliczanie punktow na tym serwerze...");
+                sender.sendRawMessage("&cRozpoczeto przeliczanie punktow na tym serwerze...");
             }
             else if (arg0.equalsIgnoreCase("persist"))
             {
                 this.apiCore.getPlatformConnector().runTaskAsynchronously(pointsHelper::persistAll);
-                sender.sendMessage("&cRozpoczeto zapisywanie danych wszystkich wysp...");
+                sender.sendRawMessage("&cRozpoczeto zapisywanie danych wszystkich wysp...");
             }
             else
             {
-                sender.sendMessage("&cNiepoprawne argumenty");
+                sender.sendRawMessage("&cNiepoprawne argumenty");
             }
         }
     }

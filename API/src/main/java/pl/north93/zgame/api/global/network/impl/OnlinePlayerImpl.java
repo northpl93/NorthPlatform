@@ -199,7 +199,7 @@ public class OnlinePlayerImpl implements IOnlinePlayer
      * @param colorText czy ma kolorować treść
      */
     @Override
-    public void sendMessage(final String message, final boolean colorText)
+    public void sendRawMessage(final String message, final boolean colorText)
     {
         this.getProxyRpc().sendMessage(this.nick, message, colorText);
     }

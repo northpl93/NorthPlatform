@@ -33,7 +33,7 @@ public class KickFromIslandCmd extends NorthCommand
     {
         if (args.length() != 1)
         {
-            sender.sendMessage("&cUzyj: /wykop nick");
+            sender.sendRawMessage("&cUzyj: /wykop nick");
             return;
         }
 
@@ -42,32 +42,32 @@ public class KickFromIslandCmd extends NorthCommand
 
         if (island == null || !this.server.canAccess(senderPlayer, island))
         {
-            sender.sendMessage("&cMusisz znajdowac sie na swojej wyspie aby kogos wykopac!");
+            sender.sendRawMessage("&cMusisz znajdowac sie na swojej wyspie aby kogos wykopac!");
             return;
         }
 
         final IOnlinePlayer kickedPlayer = this.networkManager.getOnlinePlayer(args.asString(0)).get();
         if (kickedPlayer == null)
         {
-            sender.sendMessage("&cPodany gracz nie znajduje sie na tej wyspie!");
+            sender.sendRawMessage("&cPodany gracz nie znajduje sie na tej wyspie!");
             return;
         }
 
         final Player kickedBukkitPlayer = Bukkit.getPlayerExact(kickedPlayer.getNick());
         if (kickedBukkitPlayer == null || !island.getPlayersInIsland().contains(kickedBukkitPlayer))
         {
-            sender.sendMessage("&cPodany gracz nie znajduje sie na tej wyspie!");
+            sender.sendRawMessage("&cPodany gracz nie znajduje sie na tej wyspie!");
             return;
         }
 
         if (kickedBukkitPlayer.hasPermission("skyblock.kick.ignore"))
         {
-            sender.sendMessage("&cNie mozesz wykopac tego gracza!");
+            sender.sendRawMessage("&cNie mozesz wykopac tego gracza!");
             return;
         }
 
-        sender.sendMessage("&f&l> &7Pomyslnie wykopano &6" + kickedPlayer.getNick() + " &7 z wyspy!");
-        kickedPlayer.sendMessage("&f&l> &7Zostales wykopany z wyspy przez &6" + sender.getName() + "&7!");
+        sender.sendRawMessage("&f&l> &7Pomyslnie wykopano &6" + kickedPlayer.getNick() + " &7 z wyspy!");
+        kickedPlayer.sendRawMessage("&f&l> &7Zostales wykopany z wyspy przez &6" + sender.getName() + "&7!");
         this.server.getServerManager().tpPlayerToSpawn(kickedBukkitPlayer);
     }
 

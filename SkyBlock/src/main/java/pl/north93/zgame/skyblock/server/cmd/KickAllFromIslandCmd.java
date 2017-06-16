@@ -33,12 +33,12 @@ public class KickAllFromIslandCmd extends NorthCommand
         final SkyPlayer skyPlayer = SkyPlayer.get(onlineSender);
         if (! skyPlayer.hasIsland())
         {
-            sender.sendMessage("&f&l> &7Musisz miec wyspe, aby uzyc tej komendy!");
+            sender.sendRawMessage("&f&l> &7Musisz miec wyspe, aby uzyc tej komendy!");
             return;
         }
         if (! skyPlayer.getIslandRole().equals(IslandRole.OWNER))
         {
-            sender.sendMessage("&f&l> &7Musisz byc wlascicielem wyspy, aby uzyc tej komendy!");
+            sender.sendRawMessage("&f&l> &7Musisz byc wlascicielem wyspy, aby uzyc tej komendy!");
             return;
         }
 
@@ -46,7 +46,7 @@ public class KickAllFromIslandCmd extends NorthCommand
         final Island island = this.server.getServerManager().getIslandAt(senderPlayer.getLocation());
         if(island == null || ! island.getId().equals(skyPlayer.getIslandId()))
         {
-            sender.sendMessage("&f&l> &7Musisz znajdowac sie na swojej wyspie, aby uzyc tej komendy!");
+            sender.sendRawMessage("&f&l> &7Musisz znajdowac sie na swojej wyspie, aby uzyc tej komendy!");
             return;
         }
 
@@ -62,6 +62,6 @@ public class KickAllFromIslandCmd extends NorthCommand
             kicked++;
         }
 
-        sender.sendMessage("&f&l> &7Wykopano &6" + kicked + " &7graczy z wyspy!");
+        sender.sendRawMessage("&f&l> &7Wykopano &6" + kicked + " &7graczy z wyspy!");
     }
 }

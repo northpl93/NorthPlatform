@@ -53,7 +53,7 @@ public class GamePhaseCmd extends NorthCommand
         final GamePhase gamePhase = args.asEnumValue(GamePhase.class, 0);
         if (gamePhase == null)
         {
-            sender.sendMessage("&cUwazaj co wpisujesz.");
+            sender.sendRawMessage("&cUwazaj co wpisujesz.");
             return;
         }
         arena.setGamePhase(gamePhase);

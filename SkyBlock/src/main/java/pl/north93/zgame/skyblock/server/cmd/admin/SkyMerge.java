@@ -17,8 +17,8 @@ public class SkyMerge extends NorthCommand
     {
         if (args.length() == 0)
         {
-            sender.sendMessage("&c/skymerge export uuid - eksportuje wszystkie wyspy na dany serwer");
-            sender.sendMessage("&c/skymerge import - importuje schematy wysp");
+            sender.sendRawMessage("&c/skymerge export uuid - eksportuje wszystkie wyspy na dany serwer");
+            sender.sendRawMessage("&c/skymerge import - importuje schematy wysp");
             return;
         }
         else if (args.length() == 1)
