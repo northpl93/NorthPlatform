@@ -3,6 +3,8 @@ package pl.north93.zgame.api.bukkit.utils;
 import net.minecraft.server.v1_10_R1.Chunk;
 import net.minecraft.server.v1_10_R1.ChunkSection;
 import net.minecraft.server.v1_10_R1.IBlockData;
+import net.minecraft.server.v1_10_R1.PlayerChunk;
+import net.minecraft.server.v1_10_R1.WorldServer;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -29,5 +31,14 @@ public class FastBlockOp
         final IBlockData newBlockData = CraftMagicNumbers.getBlock(material).fromLegacyData(data);
         // ta metoda ma inne parametry w normalnym spigocie!!! NorthSpigot ma dodatkowy swiat i chunk
         chunksection.setType(nmsChunk.world, nmsChunk, block.getX() & 15, block.getY() & 15, block.getZ() & 15, newBlockData);
+
+        // informujemy o zmianie
+        final PlayerChunk chunk = ((WorldServer) nmsChunk.world).getPlayerChunkMap().getChunk(nmsChunk.locX, nmsChunk.locZ);
+        if (chunk != null)
+        {
+            // wywolanie metody a mozna znalezc w PlayerChunkMap#flagDirty(BlockPosition blockposition)
+            // dodaje ona blok do listy dirty-blockow
+            chunk.a(block.getX() & 15, block.getY(), block.getZ() & 15);
+        }
     }
 }

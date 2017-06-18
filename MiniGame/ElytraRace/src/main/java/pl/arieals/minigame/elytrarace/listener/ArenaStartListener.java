@@ -19,6 +19,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.minigame.elytrarace.ElytraRaceMode;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
@@ -40,14 +41,15 @@ public class ArenaStartListener implements Listener
     @EventHandler
     public void startGame(final GameStartEvent event)
     {
-        final ElytraRaceArena arenaData = new ElytraRaceArena(this.loadConfig(event.getArena()), ElytraRaceMode.SCORE_MODE);
+        final ElytraRaceArena arenaData = new ElytraRaceArena(this.loadConfig(event.getArena()), ElytraRaceMode.RACE_MODE);
         event.getArena().setArenaData(arenaData);
 
         this.setupPlayers(event.getArena(), arenaData);
 
-        event.getArena().getPlayersManager().broadcast(this.messages, "separator");
-        event.getArena().getPlayersManager().broadcast(this.messages, arenaData.getGameMode() == ElytraRaceMode.SCORE_MODE ? "score.welcome" : "race.welcome", MessageLayout.CENTER);
-        event.getArena().getPlayersManager().broadcast(this.messages, "separator");
+        final PlayersManager playersManager = event.getArena().getPlayersManager();
+        playersManager.broadcast(this.messages, "separator");
+        playersManager.broadcast(this.messages, arenaData.getGameMode() == ElytraRaceMode.SCORE_MODE ? "score.welcome" : "race.welcome", MessageLayout.CENTER);
+        playersManager.broadcast(this.messages, "separator");
 
         // task odpalający arenę po 15 sekundach
         new StartCountdown(15, event.getArena()).start(20);

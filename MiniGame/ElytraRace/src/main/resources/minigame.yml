@@ -1,8 +1,0 @@
-lobbyMode: INTERNAL
-mapVoting:
-  enabled: false
-  numberOfMaps: 3
-isDynamic: false
-slots: 16
-vipSlots: 2
-toStart: 1 #testing

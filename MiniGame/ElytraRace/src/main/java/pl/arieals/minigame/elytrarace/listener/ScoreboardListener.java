@@ -12,6 +12,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
+import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
+import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
+import pl.arieals.api.minigame.shared.api.statistics.NumberStatistic;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.scoreboard.LobbyScoreboard;
 import pl.arieals.minigame.elytrarace.scoreboard.RaceScoreboard;
@@ -24,6 +27,8 @@ public class ScoreboardListener implements Listener
 {
     @Inject
     private IScoreboardManager scoreboardManager;
+    @Inject
+    private IStatisticsManager statisticsManager;
 
     @EventHandler
     public void lobbyJoin(final PlayerJoinArenaEvent event)
@@ -37,7 +42,17 @@ public class ScoreboardListener implements Listener
     {
         final ElytraRaceArena arenaData = event.getArena().getArenaData();
 
-        final IScoreboardLayout layout = arenaData.getGameMode() == RACE_MODE ? new RaceScoreboard() : new ScoreScoreboard();
+        final IScoreboardLayout layout;
+        if (arenaData.getGameMode() == RACE_MODE)
+        {
+            final String statKey = "elytra/race/" + event.getArena().getWorld().getCurrentMapTemplate().getName();
+            final IStatistic<NumberStatistic> statistic = this.statisticsManager.getStatistic(NumberStatistic.class, statKey, false);
+            layout = new RaceScoreboard(statistic.getAverageValue());
+        }
+        else
+        {
+            layout = new ScoreScoreboard();
+        }
 
         for (final Player player : event.getArena().getPlayersManager().getPlayers())
         {

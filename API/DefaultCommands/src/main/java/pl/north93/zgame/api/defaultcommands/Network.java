@@ -31,7 +31,6 @@ public class Network extends NorthCommand
             sender.sendRawMessage("/network - pomoc");
             sender.sendRawMessage("  proxies - lista połączonych serwerów proxy");
             sender.sendRawMessage("  daemons - lista połączonych demonów");
-            sender.sendRawMessage("  minigames - lista skonfigurowanych minigier");
             sender.sendRawMessage("  stopall - wyłącza wszystkie komponenty sieci");
             sender.sendRawMessage("  kickall - wyrzuca wszystkich graczy");
             return;

@@ -1,5 +1,7 @@
 package pl.arieals.minigame.elytrarace;
 
+import java.text.SimpleDateFormat;
+
 import org.bukkit.Bukkit;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -18,7 +20,9 @@ import pl.arieals.minigame.elytrarace.listener.ScoreListener;
 import pl.arieals.minigame.elytrarace.listener.ScoreboardListener;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.component.annotations.bean.Named;
 
 public class ElytraRaceComponent extends Component
 {
@@ -56,6 +60,12 @@ public class ElytraRaceComponent extends Component
     @Override
     protected void disableComponent()
     {
+    }
+
+    @Bean @Named("Elytra Race time format")
+    private SimpleDateFormat timeFormat()
+    {
+        return new SimpleDateFormat("mm:ss.SSS");
     }
 
     @Override

@@ -4,7 +4,12 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import org.bukkit.entity.Player;
 
@@ -23,9 +28,15 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class RaceScoreboard implements IScoreboardLayout
 {
-    @Inject
-    @Messages("ElytraRace")
-    private MessagesBox msg;
+    private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("[m:]ss");
+    private final CompletableFuture<Long> avgTime;
+    @Inject @Messages("ElytraRace")
+    private       MessagesBox             msg;
+
+    public RaceScoreboard(final CompletableFuture<Long> avgTime)
+    {
+        this.avgTime = avgTime;
+    }
 
     @Override
     public String getTitle(final IScoreboardContext context)
@@ -47,13 +58,30 @@ public class RaceScoreboard implements IScoreboardLayout
 
         builder.add("");
         builder.translated("scoreboard.race.time", arena.getTimer().humanReadableTimeAfterStart());
-        builder.translated("scoreboard.race.avg_time", arena.getTimer().humanReadableTimeAfterStart());
+        builder.translated("scoreboard.race.avg_time", this.getAvgTime());
         builder.add("");
         builder.translated("scoreboard.race.checkpoint", playerData.getCheckpointNumber(), arenaData.getMaxCheckpoints());
         builder.add("");
         builder.translated("scoreboard.ip");
 
         return builder.getContent();
+    }
+
+    private String getAvgTime()
+    {
+        if (! this.avgTime.isDone())
+        {
+            return "?";
+        }
+
+        try
+        {
+            return FORMAT.format(LocalDateTime.ofEpochSecond(this.avgTime.get(), 0, ZoneOffset.UTC));
+        }
+        catch (final InterruptedException | ExecutionException e)
+        {
+            throw new RuntimeException("", e);
+        }
     }
 
     @Override

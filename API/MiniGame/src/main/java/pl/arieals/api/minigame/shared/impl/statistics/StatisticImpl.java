@@ -69,7 +69,7 @@ public class StatisticImpl<E extends IStatisticEncoder> implements IStatistic<E>
             final Document group = new Document("_id", null);
             group.put("avg", new Document("$avg", "$value"));
             final Document result = personalRecords.aggregate(Collections.singletonList(new Document("$group", group))).first();
-            future.complete(result.getLong("avg"));
+            future.complete(result.getDouble("avg").longValue());
         });
         return future;
     }
