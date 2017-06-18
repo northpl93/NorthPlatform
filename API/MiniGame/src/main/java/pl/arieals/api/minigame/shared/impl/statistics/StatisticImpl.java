@@ -3,6 +3,7 @@ package pl.arieals.api.minigame.shared.impl.statistics;
 import static com.mongodb.client.model.Filters.eq;
 
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -54,6 +55,21 @@ public class StatisticImpl<E extends IStatisticEncoder> implements IStatistic<E>
             final MongoCollection<Document> globalRecords = this.manager.getStorage().getMainDatabase().getCollection("globalStats");
             final Document record = globalRecords.find(new Document("statId", this.key)).limit(1).first();
             future.complete(Optional.ofNullable(record).map(RecordImpl::new).orElse(null));
+        });
+        return future;
+    }
+
+    @Override
+    public CompletableFuture<Long> getAverageValue()
+    {
+        final CompletableFuture<Long> future = new CompletableFuture<>();
+        this.manager.getApiCore().getPlatformConnector().runTaskAsynchronously(() ->
+        {
+            final MongoCollection<Document> personalRecords = this.manager.getStorage().getMainDatabase().getCollection("personalStats");
+            final Document group = new Document("_id", null);
+            group.put("avg", new Document("$avg", "$value"));
+            final Document result = personalRecords.aggregate(Collections.singletonList(new Document("$group", group))).first();
+            future.complete(result.getLong("avg"));
         });
         return future;
     }

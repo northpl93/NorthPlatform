@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 
 public class ChatUtils
 {
-    private final static int CENTER_PX = 154;
+    private final static int CENTER_PX = 140;
 
     public static String translateAlternateColorCodes(final String textToTranslate)
     {

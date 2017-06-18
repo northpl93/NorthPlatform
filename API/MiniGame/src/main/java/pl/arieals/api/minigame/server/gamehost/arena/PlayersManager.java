@@ -1,15 +1,12 @@
 package pl.arieals.api.minigame.server.gamehost.arena;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
@@ -21,6 +18,7 @@ import pl.arieals.api.minigame.shared.api.MiniGameConfig;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
@@ -155,15 +153,20 @@ public class PlayersManager
      *
      * @param messagesBox obiekt przechowujący wiadomości.
      * @param messageKey klucz wiadomości.
+     * @param layout Wyglad tej wiadomości.
      * @param args argumenty.
      */
-    public void broadcast(final MessagesBox messagesBox, final String messageKey, final Object... args)
+    public void broadcast(final MessagesBox messagesBox, final String messageKey, final MessageLayout layout, final Object... args)
     {
         for (final Player player : this.players)
         {
-            final String message = messagesBox.getMessage(Locale.forLanguageTag(player.spigot().getLocale()), messageKey);
-            player.sendMessage(MessageFormat.format(ChatColor.translateAlternateColorCodes('&', message), args));
+            messagesBox.sendMessage(player, messageKey, layout, args);
         }
+    }
+
+    public void broadcast(final MessagesBox messagesBox, final String messageKey, final Object... args)
+    {
+        this.broadcast(messagesBox, messageKey, MessageLayout.DEFAULT, args);
     }
     
     private void announceJoinLeft(final Player player, final String messageKey)

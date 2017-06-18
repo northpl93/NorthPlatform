@@ -28,6 +28,7 @@ import pl.arieals.minigame.elytrarace.arena.StartCountdown;
 import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
@@ -44,7 +45,9 @@ public class ArenaStartListener implements Listener
 
         this.setupPlayers(event.getArena(), arenaData);
 
-        event.getArena().getPlayersManager().broadcast(this.messages, arenaData.getGameMode() == ElytraRaceMode.SCORE_MODE ? "score.welcome" : "race.welcome");
+        event.getArena().getPlayersManager().broadcast(this.messages, "separator");
+        event.getArena().getPlayersManager().broadcast(this.messages, arenaData.getGameMode() == ElytraRaceMode.SCORE_MODE ? "score.welcome" : "race.welcome", MessageLayout.CENTER);
+        event.getArena().getPlayersManager().broadcast(this.messages, "separator");
 
         // task odpalający arenę po 15 sekundach
         new StartCountdown(15, event.getArena()).start(20);

@@ -11,5 +11,7 @@ public interface IStatistic<E extends IStatisticEncoder>
 
     CompletableFuture<IRecord> getGlobalRecord();
 
+    CompletableFuture<Long> getAverageValue();
+
     CompletableFuture<IRecordResult> record(UUID playerId, E value);
 }
