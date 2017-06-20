@@ -7,6 +7,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -36,6 +37,10 @@ class BoardLine
         if (newText.length() <= 16)
         {
             this.team.setPrefix(newText);
+            if (! StringUtils.isEmpty(this.team.getSuffix())) // resetujemy suffix tylko gdy jest taka potrzeba
+            {
+                this.team.setSuffix("");
+            }
             return;
         }
 
