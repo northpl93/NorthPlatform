@@ -80,14 +80,14 @@ public class RaceMetaHandler implements IFinishHandler
             final RaceMessage raceMessage = new RaceMessage(this.finishInfo, result, !isFinished);
             if (isFinished)
             {
-                raceMessage.print(player);
-            }
-            else
-            {
                 for (final Player playerInArena : arena.getPlayersManager().getPlayers())
                 {
                     raceMessage.print(playerInArena);
                 }
+            }
+            else
+            {
+                raceMessage.print(player);
             }
         });
 

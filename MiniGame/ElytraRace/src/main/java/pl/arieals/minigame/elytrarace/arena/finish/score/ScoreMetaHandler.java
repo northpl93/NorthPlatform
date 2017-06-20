@@ -67,14 +67,14 @@ public class ScoreMetaHandler implements IFinishHandler
             final ScoreMessage scoreMessage = new ScoreMessage(this.getTop(), result, !isFinished);
             if (isFinished)
             {
-                scoreMessage.print(player);
-            }
-            else
-            {
                 for (final Player playerInArena : arena.getPlayersManager().getPlayers())
                 {
                     scoreMessage.print(playerInArena);
                 }
+            }
+            else
+            {
+                scoreMessage.print(player);
             }
         });
 
