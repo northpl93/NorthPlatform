@@ -6,5 +6,7 @@ public interface IArenaNetEvent
 {
     UUID getArenaId();
 
+    String getMiniGameId();
+
     ArenaEventType getEventType();
 }

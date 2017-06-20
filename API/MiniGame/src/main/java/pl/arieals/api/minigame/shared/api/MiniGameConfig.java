@@ -13,6 +13,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class MiniGameConfig
 {
     @XmlElement
+    private String          miniGameId; // unikalna nazwa minigry
+    @XmlElement
     private LobbyMode       lobbyMode; // Tryb pracy lobby
     @XmlElement
     private MapVotingConfig mapVoting; // Ustawienia glosowania na mape
@@ -28,6 +30,11 @@ public class MiniGameConfig
     private String          mapsDirectory; // Katalog z konfiguracją map
     @XmlElement
     private Integer         arenas; // Liczba aren uruchamianych na serwerze hostującym minigrę
+
+    public String getMiniGameId()
+    {
+        return this.miniGameId;
+    }
 
     public LobbyMode getLobbyMode()
     {
@@ -72,6 +79,6 @@ public class MiniGameConfig
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("lobbyMode", this.lobbyMode).append("mapVoting", this.mapVoting).append("isDynamic", this.isDynamic).append("slots", this.slots).append("vipSlots", this.vipSlots).append("toStart", this.toStart).append("mapsDirectory", this.mapsDirectory).append("arenas", this.arenas).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("miniGameId", this.miniGameId).append("lobbyMode", this.lobbyMode).append("mapVoting", this.mapVoting).append("isDynamic", this.isDynamic).append("slots", this.slots).append("vipSlots", this.vipSlots).append("toStart", this.toStart).append("mapsDirectory", this.mapsDirectory).append("arenas", this.arenas).toString();
     }
 }

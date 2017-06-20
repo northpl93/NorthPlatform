@@ -20,14 +20,13 @@ public class MiniGameServer extends Component
     private BukkitApiCore        bukkitApiCore;
     @Inject
     private IBukkitServerManager bukkitServer;
+    @Inject
     private ArenaManager         arenaManager;
     private IServerManager       serverManager;
 
     @Override
     protected void enableComponent()
     {
-        this.arenaManager = new ArenaManager();
-
         final Server server = this.bukkitServer.getServer();
         this.serverManager = (server.getType() == NORMAL) ? new LobbyManager() : new GameHostManager();
         this.serverManager.start();

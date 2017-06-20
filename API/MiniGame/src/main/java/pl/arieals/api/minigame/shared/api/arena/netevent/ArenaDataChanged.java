@@ -10,6 +10,8 @@ import pl.arieals.api.minigame.shared.api.GamePhase;
 public class ArenaDataChanged implements IArenaNetEvent
 {
     private UUID      arenaId;
+    private String    miniGameId;
+    private String    worldId;
     private GamePhase gamePhase;
     private Integer   playersCount;
 
@@ -17,9 +19,11 @@ public class ArenaDataChanged implements IArenaNetEvent
     {
     }
 
-    public ArenaDataChanged(final UUID arenaId, final GamePhase gamePhase, final Integer playersCount)
+    public ArenaDataChanged(final UUID arenaId, final String miniGameId, final String worldId, final GamePhase gamePhase, final Integer playersCount)
     {
         this.arenaId = arenaId;
+        this.miniGameId = miniGameId;
+        this.worldId = worldId;
         this.gamePhase = gamePhase;
         this.playersCount = playersCount;
     }
@@ -28,6 +32,17 @@ public class ArenaDataChanged implements IArenaNetEvent
     public UUID getArenaId()
     {
         return this.arenaId;
+    }
+
+    @Override
+    public String getMiniGameId()
+    {
+        return this.miniGameId;
+    }
+
+    public String getWorldId()
+    {
+        return this.worldId;
     }
 
     public GamePhase getGamePhase()
@@ -49,6 +64,6 @@ public class ArenaDataChanged implements IArenaNetEvent
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("arenaId", this.arenaId).append("gamePhase", this.gamePhase).append("playersCount", this.playersCount).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("arenaId", this.arenaId).append("miniGameId", this.miniGameId).append("worldId", this.worldId).append("gamePhase", this.gamePhase).append("playersCount", this.playersCount).toString();
     }
 }

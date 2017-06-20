@@ -66,7 +66,7 @@ public class GameHostManager implements IServerManager
     public void start()
     {
         SpigotConfig.config.set("verbose", false); // disable map-loading spam
-        disableSavePlayerData();
+        this.disableSavePlayerData();
         
         this.loadConfig();
 

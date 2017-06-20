@@ -11,6 +11,10 @@ public interface IArena
 
     UUID getServerId();
 
+    String getMiniGameId();
+
+    String getWorldId();
+
     GamePhase getGamePhase();
 
     List<UUID> getPlayers();

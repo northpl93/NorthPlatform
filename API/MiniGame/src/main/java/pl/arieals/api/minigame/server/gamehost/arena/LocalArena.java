@@ -3,12 +3,13 @@ package pl.arieals.api.minigame.server.gamehost.arena;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import com.google.common.base.Preconditions;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import com.google.common.base.Preconditions;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
@@ -57,6 +58,18 @@ public class LocalArena implements IArena
     }
 
     @Override
+    public String getMiniGameId()
+    {
+        return this.gameHostManager.getMiniGameConfig().getMiniGameId();
+    }
+
+    @Override
+    public String getWorldId()
+    {
+        return this.world.getCurrentMapTemplate().getName();
+    }
+
+    @Override
     public GamePhase getGamePhase()
     {
         return this.data.getGamePhase();
@@ -71,7 +84,7 @@ public class LocalArena implements IArena
         
         this.data.setGamePhase(gamePhase);
         this.arenaManager.setArena(this.data);
-        this.gameHostManager.publishArenaEvent(new ArenaDataChanged(this.data.getId(), gamePhase, this.data.getPlayers().size()));
+        this.gameHostManager.publishArenaEvent(new ArenaDataChanged(this.data.getId(), this.getMiniGameId(), this.getMiniGameId(), gamePhase, this.data.getPlayers().size()));
         
         GamePhaseEventFactory.getInstance().callEvent(this);
     }

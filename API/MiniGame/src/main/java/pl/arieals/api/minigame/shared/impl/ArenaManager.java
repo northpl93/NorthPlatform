@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
+import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.observable.Hash;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
@@ -17,6 +18,11 @@ public class ArenaManager
     @Inject
     private IObservationManager observer;
     private Hash<RemoteArena>   arenas;
+
+    @Bean
+    private ArenaManager()
+    {
+    }
 
     @PostInject
     private void init()

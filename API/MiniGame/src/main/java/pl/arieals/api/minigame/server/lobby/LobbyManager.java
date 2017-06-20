@@ -1,19 +1,14 @@
 package pl.arieals.api.minigame.server.lobby;
 
-import java.util.ArrayList;
-import java.util.UUID;
-
-import org.bukkit.entity.Player;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.IServerManager;
-import pl.arieals.api.minigame.server.shared.api.PlayerJoinInfo;
-import pl.arieals.api.minigame.shared.api.IGameHostRpc;
-import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
-import pl.arieals.api.minigame.shared.impl.ArenaManager;
+import pl.arieals.api.minigame.server.lobby.arenas.IArenaClient;
+import pl.arieals.api.minigame.server.lobby.arenas.impl.ArenaClientImpl;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
-import pl.north93.zgame.api.global.redis.rpc.Targets;
 
 public class LobbyManager implements IServerManager
 {
@@ -21,35 +16,27 @@ public class LobbyManager implements IServerManager
     private INetworkManager networkManager;
     @Inject
     private IRpcManager     rpcManager;
-    private ArenaManager    arenaManager = new ArenaManager();
+    private IArenaClient    arenaClient;
 
     @Override
     public void start()
     {
-
+        this.arenaClient = new ArenaClientImpl();
     }
 
     @Override
     public void stop()
     {
-
     }
 
-    // TODO temporary code.
-    public void tryConnectPlayer(final Player player, final UUID arena)
+    public IArenaClient getArenaClient()
     {
-        final RemoteArena arena1 = this.arenaManager.getArena(arena);
-        final IGameHostRpc rpcProxy = this.rpcManager.createRpcProxy(IGameHostRpc.class, Targets.server(arena1.getServerId()));
-        final ArrayList<PlayerJoinInfo> arrayList = new ArrayList<>();
-        arrayList.add(new PlayerJoinInfo(player.getUniqueId(), false));
-        if (rpcProxy.tryConnectPlayers(arrayList, arena, false))
-        {
-            player.sendMessage("Od serwera przyszlo true, przenosze na gamehosta.");
-            this.networkManager.getOnlinePlayer(player.getUniqueId()).get().connectTo(this.networkManager.getServers().withUuid(arena1.getServerId()));
-        }
-        else
-        {
-            player.sendMessage("Od serwera przyszlo false, nie mozna dolaczyc do areny.");
-        }
+        return this.arenaClient;
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

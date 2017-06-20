@@ -12,9 +12,11 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
+import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
+import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDeletedEvent;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -31,19 +33,22 @@ public class LocalArenaManager
 
     public LocalArena createArena()
     {
+        final GameHostManager serverManager = this.miniGameServer.getServerManager();
         final ArenaManager arenaManager = this.miniGameServer.getArenaManager();
+
         final UUID arenaId = UUID.randomUUID();
         final UUID serverId = this.apiCore.getServerId();
+        final String gameId = serverManager.getMiniGameConfig().getMiniGameId();
 
-        final RemoteArena arenaData = new RemoteArena(arenaId, serverId, GamePhase.INITIALISING, new ArrayList<>());
-        final LocalArena localArena = new LocalArena(this.miniGameServer.getServerManager(), arenaManager, arenaData);
+        final RemoteArena arenaData = new RemoteArena(arenaId, serverId, gameId, "", GamePhase.INITIALISING, new ArrayList<>());
+        final LocalArena localArena = new LocalArena(serverManager, arenaManager, arenaData);
         this.arenas.add(localArena);
         arenaManager.setArena(arenaData);
 
         GamePhaseEventFactory.getInstance().callEvent(localArena); // invoke GameInitEvent
 
-        final String msg = "Added new local arena! Arena ID:{0}, Server ID:{1}, Game Phase:{2}";
-        this.logger.info(format(msg, arenaId, serverId, arenaData.getGamePhase()));
+        final String msg = "Added new local arena! Game ID:{0}, Arena ID:{1}, Server ID:{2}, Game Phase:{3}";
+        this.logger.info(format(msg, gameId, arenaId, serverId, arenaData.getGamePhase()));
 
         return localArena;
     }
@@ -72,10 +77,12 @@ public class LocalArenaManager
 
     public void removeArenas()
     {
+        final GameHostManager serverManager = this.miniGameServer.getServerManager();
         final ArenaManager arenaManager = this.miniGameServer.getArenaManager();
         for (final LocalArena arena : this.arenas)
         {
             arenaManager.removeArena(arena.getId());
+            serverManager.publishArenaEvent(new ArenaDeletedEvent(arena.getId(), this.apiCore.getServerId(), arena.getMiniGameId()));
             if (! arena.getWorld().delete())
             {
                 this.logger.warning("Failed to unload world " + arena.getWorld().getName());

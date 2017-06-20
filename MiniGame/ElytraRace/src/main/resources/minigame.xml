@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <minigame>
+	<miniGameId>elytra_race</miniGameId>
     <lobbyMode>INTEGRATED</lobbyMode>
 	<mapVoting>
 	    <enabled>false</enabled>

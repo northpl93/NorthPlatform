@@ -23,6 +23,7 @@ import pl.arieals.api.minigame.shared.api.GameMapConfig;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
+import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDataChanged;
 import pl.north93.zgame.api.bukkit.utils.ISyncCallback;
 import pl.north93.zgame.api.bukkit.utils.SimpleSyncCallback;
 
@@ -130,6 +131,7 @@ public class ArenaWorld
         final SimpleSyncCallback callback = new SimpleSyncCallback();
         progress.onComplete(() ->
         {
+            this.gameHostManager.publishArenaEvent(new ArenaDataChanged(this.arena.getId(), this.arena.getMiniGameId(), template.getName(), this.arena.getGamePhase(), this.arena.getPlayers().size()));
             Bukkit.getPluginManager().callEvent(new MapSwitchedEvent(this.arena));
             callback.callComplete();
         });
