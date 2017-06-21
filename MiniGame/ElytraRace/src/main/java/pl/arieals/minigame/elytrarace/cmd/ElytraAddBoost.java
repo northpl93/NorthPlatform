@@ -1,7 +1,7 @@
 package pl.arieals.minigame.elytrarace.cmd;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.arieals.minigame.elytrarace.cmd.ElytraDevMode.checkDevMode;
 
 
 import javax.xml.bind.JAXB;
@@ -18,7 +18,6 @@ import org.bukkit.entity.Player;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.elytrarace.BoostType;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
-import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.cfg.Boost;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
@@ -38,10 +37,8 @@ public class ElytraAddBoost extends NorthCommand
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
         final Player player = (Player) sender.unwrapped();
-        final ElytraRacePlayer playerData = getPlayerData(player, ElytraRacePlayer.class);
-        if (playerData == null || ! playerData.isDev())
+        if (! checkDevMode(player))
         {
-            player.sendMessage(ChatColor.RED + "Musisz byc w devmode! Wpisz /elytradevmode");
             return;
         }
 

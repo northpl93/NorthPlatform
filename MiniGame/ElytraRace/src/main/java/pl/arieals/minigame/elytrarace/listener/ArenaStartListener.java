@@ -27,6 +27,7 @@ import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.arieals.minigame.elytrarace.arena.StartCountdown;
 import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
+import pl.arieals.minigame.elytrarace.cfg.ElytraConfig;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
@@ -36,12 +37,14 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 public class ArenaStartListener implements Listener
 {
     @Inject @Messages("ElytraRace")
-    private MessagesBox messages;
+    private MessagesBox  messages;
+    @Inject
+    private ElytraConfig config;
 
     @EventHandler
     public void startGame(final GameStartEvent event)
     {
-        final ElytraRaceArena arenaData = new ElytraRaceArena(this.loadConfig(event.getArena()), ElytraRaceMode.RACE_MODE);
+        final ElytraRaceArena arenaData = new ElytraRaceArena(this.loadConfig(event.getArena()), this.config.getMode());
         event.getArena().setArenaData(arenaData);
 
         this.setupPlayers(event.getArena(), arenaData);

@@ -42,4 +42,15 @@ public class ElytraDevMode extends NorthCommand
             playerData.setDev(true);
         }
     }
+
+    public static boolean checkDevMode(final Player player)
+    {
+        final ElytraRacePlayer playerData = getPlayerData(player, ElytraRacePlayer.class);
+        if (playerData == null || ! playerData.isDev())
+        {
+            player.sendMessage(ChatColor.RED + "Musisz byc w devmode! Wpisz /elytradevmode");
+            return false;
+        }
+        return true;
+    }
 }

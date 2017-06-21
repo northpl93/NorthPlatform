@@ -10,7 +10,7 @@ import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 
 public interface IFinishHandler
 {
-    void handle(LocalArena arena, Player player);
+    void handle(LocalArena arena, Player player, ElytraRacePlayer elytraPlayer);
 
     void gameEnd(LocalArena arena);
 

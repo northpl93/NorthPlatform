@@ -1,5 +1,8 @@
 package pl.arieals.minigame.elytrarace.listener;
 
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+
+
 import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,6 +14,7 @@ import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEv
 import pl.arieals.api.minigame.server.gamehost.region.IRegionManager;
 import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
+import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
 
@@ -28,10 +32,18 @@ public class FinishLineListener implements Listener
 
         trackedRegion.whenEnter(player ->
         {
+            final ElytraRacePlayer playerData = getPlayerData(player, ElytraRacePlayer.class);
+            if (playerData.isFinished())
+            {
+                // gracz juz przekroczyl linie mety, wiecej razy nie mozemy go obslugiwac
+                return;
+            }
+
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 0);
             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 2, false, false));
             player.getInventory().setChestplate(null);
-            arenaData.getMetaHandler().handle(event.getArena(), player);
+
+            arenaData.getMetaHandler().handle(event.getArena(), player, playerData);
         });
     }
 }

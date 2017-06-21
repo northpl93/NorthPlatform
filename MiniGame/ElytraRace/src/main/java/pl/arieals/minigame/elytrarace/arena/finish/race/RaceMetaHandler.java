@@ -1,8 +1,5 @@
 package pl.arieals.minigame.elytrarace.arena.finish.race;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -35,14 +32,8 @@ public class RaceMetaHandler implements IFinishHandler
     private int                  place; // uzywane w RACE_MODE do okreslania miejsca gracza
 
     @Override
-    public void handle(final LocalArena arena, final Player player)
+    public void handle(final LocalArena arena, final Player player, final ElytraRacePlayer playerData)
     {
-        final ElytraRacePlayer playerData = getPlayerData(player, ElytraRacePlayer.class);
-        if (playerData.isFinished())
-        {
-            // gracz juz przekroczyl linie mety, wiecej razy nie mozemy go obslugiwac
-            return;
-        }
         playerData.setFinished(true);
 
         final int playerPlace = this.place + 1;

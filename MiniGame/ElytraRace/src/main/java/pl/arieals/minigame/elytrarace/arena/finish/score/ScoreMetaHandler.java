@@ -38,13 +38,8 @@ public class ScoreMetaHandler implements IFinishHandler
     private final Map<ScoreFinishInfo, Integer> points = new HashMap<>(); // uzywane w SCORE_MODE do wyswietlania wynikow
 
     @Override
-    public void handle(final LocalArena arena, final Player player)
+    public void handle(final LocalArena arena, final Player player, final ElytraRacePlayer playerData)
     {
-        final ElytraRacePlayer playerData = getPlayerData(player, ElytraRacePlayer.class);
-        if (playerData.isFinished())
-        {
-            return;
-        }
         playerData.setFinished(true);
 
         final ElytraScorePlayer scoreData = getPlayerData(player, ElytraScorePlayer.class);
@@ -86,8 +81,7 @@ public class ScoreMetaHandler implements IFinishHandler
 
     private Map<ScoreFinishInfo, Integer> getTop()
     {
-        @SuppressWarnings("unchecked")
-        final Comparator<Map.Entry<ScoreFinishInfo, Integer>> reversed = (Comparator) Map.Entry.comparingByValue().reversed();
+        final Comparator<Map.Entry<ScoreFinishInfo, Integer>> reversed = Map.Entry.<ScoreFinishInfo, Integer>comparingByValue().reversed();
         return this.points.entrySet().stream().sorted(reversed).collect(MapCollector.toMap());
     }
 
