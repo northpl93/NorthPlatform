@@ -22,6 +22,7 @@ import pl.arieals.api.minigame.server.gamehost.region.IRegionManager;
 import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.arieals.minigame.elytrarace.ElytraRaceMode;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
+import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.arieals.minigame.elytrarace.arena.ScoreController;
 import pl.arieals.minigame.elytrarace.cfg.Score;
@@ -76,7 +77,14 @@ public class ScoreListener implements Listener
     private void addPoints(final Player player, final ElytraRaceArena arena, final Score score)
     {
         final ScoreGroup scoreGroup = arena.getScoreGroup(score.getScoreGroup());
+        final ElytraRacePlayer racePlayer = getPlayerData(player, ElytraRacePlayer.class);
         final ElytraScorePlayer scorePlayer = getPlayerData(player, ElytraScorePlayer.class);
+
+        if (racePlayer.isFinished())
+        {
+            // nie naliczamy punktów graczom ktorzy ukonczyli gre
+            return;
+        }
 
         // gracz moze zaliczyc tylko jeden score z danej achieveGroup
         final String achieveGroup = score.getAchieveGroup();

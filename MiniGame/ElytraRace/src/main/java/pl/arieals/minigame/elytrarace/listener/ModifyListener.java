@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -59,6 +60,18 @@ public class ModifyListener implements Listener
         }
 
         this.messages.sendMessage(player, "no_permissions");
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void interact(final PlayerInteractEvent event)
+    {
+        final ElytraRacePlayer playerData = getPlayerData(event.getPlayer(), ElytraRacePlayer.class);
+        if (playerData != null && playerData.isDev())
+        {
+            return;
+        }
+        this.messages.sendMessage(event.getPlayer(), "no_permissions");
         event.setCancelled(true);
     }
 

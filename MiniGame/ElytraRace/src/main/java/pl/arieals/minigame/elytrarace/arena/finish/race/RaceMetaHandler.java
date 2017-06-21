@@ -16,6 +16,8 @@ import pl.arieals.api.minigame.shared.api.statistics.IRecordResult;
 import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
 import pl.arieals.api.minigame.shared.api.statistics.NumberStatistic;
+import pl.arieals.api.minigame.shared.impl.statistics.RecordImpl;
+import pl.arieals.api.minigame.shared.impl.statistics.RecordResultImpl;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.finish.IFinishHandler;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -86,6 +88,27 @@ public class RaceMetaHandler implements IFinishHandler
         {
             arena.setGamePhase(GamePhase.POST_GAME);
         }
+    }
+
+    @Override
+    public void playerQuit(final LocalArena arena, final Player player)
+    {
+        if (! IFinishHandler.checkFinished(arena))
+        {
+            return;
+        }
+
+        this.getRaceStatistic(arena).getGlobalRecord().whenComplete((result, throwable) ->
+        {
+            final RecordResultImpl fakeRecord = new RecordResultImpl(new RecordImpl(null, 0, 0), null, result, true);
+            final RaceMessage raceMessage = new RaceMessage(this.finishInfo, fakeRecord, false);
+            for (final Player playerInArena : arena.getPlayersManager().getPlayers())
+            {
+                raceMessage.print(playerInArena);
+            }
+        });
+
+        arena.setGamePhase(GamePhase.POST_GAME);
     }
 
     private IStatistic<NumberStatistic> getRaceStatistic(final LocalArena arena)

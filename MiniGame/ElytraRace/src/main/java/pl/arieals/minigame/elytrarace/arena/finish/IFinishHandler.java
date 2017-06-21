@@ -12,6 +12,8 @@ public interface IFinishHandler
 {
     void handle(LocalArena arena, Player player, ElytraRacePlayer elytraPlayer);
 
+    void playerQuit(LocalArena arena, Player player);
+
     void gameEnd(LocalArena arena);
 
     static boolean checkFinished(final LocalArena arena)

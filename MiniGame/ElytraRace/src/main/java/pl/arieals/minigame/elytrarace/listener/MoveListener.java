@@ -26,6 +26,12 @@ public class MoveListener implements Listener
         }
 
         final LocalArena arena = getArena(event.getPlayer());
+        if (arena == null)
+        {
+            // arena moze byc nullem gdy gracz tylko oglada itp.
+            return;
+        }
+
         final ElytraRaceArena data = arena.getArenaData();
         if (arena.getGamePhase() == GamePhase.STARTED && ! data.isStarted())
         {

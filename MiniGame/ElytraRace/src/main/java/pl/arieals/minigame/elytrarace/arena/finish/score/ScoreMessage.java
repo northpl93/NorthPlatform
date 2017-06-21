@@ -1,12 +1,19 @@
 package pl.arieals.minigame.elytrarace.arena.finish.score;
 
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+
+
 import java.util.Iterator;
 import java.util.Map;
 
 import org.bukkit.entity.Player;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.api.minigame.shared.api.statistics.IRecord;
 import pl.arieals.api.minigame.shared.api.statistics.IRecordResult;
+import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
@@ -45,6 +52,8 @@ public class ScoreMessage
         }
         this.yourInfo(player);
 
+        player.sendMessage(" ");
+        this.messages.sendMessage(player, "separator");
         this.messages.sendMessage(player, "finish.rewards", MessageLayout.CENTER);
         player.sendMessage(" ");
 
@@ -94,12 +103,18 @@ public class ScoreMessage
     private void yourInfo(final Player player)
     {
         player.sendMessage("");
-        this.messages.sendMessage(player, "finish.score.your_points", MessageLayout.CENTER, this.record.getProcessedRecord().value());
+        this.messages.sendMessage(player, "finish.score.your_points", MessageLayout.CENTER, getPlayerData(player, ElytraScorePlayer.class).getPoints());
         final IRecord previousGlobal = this.record.previousGlobal();
         if (previousGlobal != null)
         {
             final String recordOwner = this.network.getPlayers().getNickFromUuid(previousGlobal.getOwner());
             this.messages.sendMessage(player, "finish.score.record", MessageLayout.CENTER, recordOwner, previousGlobal.value());
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("top", this.top).append("record", this.record).append("isPartial", this.isPartial).toString();
     }
 }

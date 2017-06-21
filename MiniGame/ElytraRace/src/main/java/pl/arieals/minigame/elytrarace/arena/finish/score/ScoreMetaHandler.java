@@ -20,6 +20,8 @@ import pl.arieals.api.minigame.shared.api.statistics.IRecordResult;
 import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
 import pl.arieals.api.minigame.shared.api.statistics.NumberStatistic;
+import pl.arieals.api.minigame.shared.impl.statistics.RecordImpl;
+import pl.arieals.api.minigame.shared.impl.statistics.RecordResultImpl;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.arieals.minigame.elytrarace.arena.finish.IFinishHandler;
@@ -83,6 +85,27 @@ public class ScoreMetaHandler implements IFinishHandler
     {
         final Comparator<Map.Entry<ScoreFinishInfo, Integer>> reversed = Map.Entry.<ScoreFinishInfo, Integer>comparingByValue().reversed();
         return this.points.entrySet().stream().sorted(reversed).collect(MapCollector.toMap());
+    }
+
+    @Override
+    public void playerQuit(final LocalArena arena, final Player player)
+    {
+        if (! IFinishHandler.checkFinished(arena))
+        {
+            return;
+        }
+
+        this.getScoreStatistic(arena).getGlobalRecord().whenComplete((result, throwable) ->
+        {
+            final RecordResultImpl fakeRecord = new RecordResultImpl(new RecordImpl(null, 0, 0), null, result, true);
+            final ScoreMessage raceMessage = new ScoreMessage(this.getTop(), fakeRecord, false);
+            for (final Player playerInArena : arena.getPlayersManager().getPlayers())
+            {
+                raceMessage.print(playerInArena);
+            }
+        });
+
+        arena.setGamePhase(GamePhase.POST_GAME);
     }
 
     @Override

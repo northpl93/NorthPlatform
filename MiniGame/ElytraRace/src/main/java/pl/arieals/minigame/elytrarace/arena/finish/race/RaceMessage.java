@@ -105,7 +105,7 @@ public class RaceMessage
     {
         player.sendMessage("");
 
-        final String formattedTime = this.timeFormat.format(new Date(this.record.getProcessedRecord().value()));
+        final String formattedTime = this.timeFormat.format(new Date(this.getFinishInfo(player).getTime()));
         this.messages.sendMessage(player, "finish.race.your_time", MessageLayout.CENTER, formattedTime);
 
         final IRecord previousGlobal = this.record.previousGlobal();
@@ -115,6 +115,18 @@ public class RaceMessage
             final String formattedRecord = this.timeFormat.format(new Date(previousGlobal.value()));
             this.messages.sendMessage(player, "finish.race.record", MessageLayout.CENTER, recordOwner, formattedRecord);
         }
+    }
+
+    private RaceFinishInfo getFinishInfo(final Player player)
+    {
+        for (final RaceFinishInfo raceFinishInfo : this.finishInfo)
+        {
+            if (raceFinishInfo.getUuid().equals(player.getUniqueId()))
+            {
+                return raceFinishInfo;
+            }
+        }
+        throw new RuntimeException("Not found " + player.getName() + " in finishInfo in RaceMessage");
     }
 
     @Override
