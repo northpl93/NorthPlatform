@@ -28,7 +28,7 @@ class LayoutUpdateTask extends BukkitRunnable
         for (final Player player : Bukkit.getOnlinePlayers())
         {
             final ScoreboardContextImpl context = this.manager.getContext(player);
-            if (context.getLayout() != this.layout)
+            if (context == null || context.getLayout() != this.layout)
             {
                 continue;
             }
