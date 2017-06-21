@@ -14,6 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import javassist.CtClass;
 import javassist.CtConstructor;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
+import pl.north93.zgame.api.global.component.exceptions.BeanCreationException;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.zgame.api.global.component.impl.container.BeanFactory;
 
@@ -40,6 +41,11 @@ class ConstructorScanningTask extends AbstractScanningTask
                 {
                     BeanFactory.INSTANCE.createStaticBean(this.beanContext, toJavaConstructor(this.clazz, constructor));
                 }
+            }
+            catch (final BeanCreationException ex)
+            {
+                ex.printStackTrace();
+                continue;
             }
             catch (final Exception ignored)
             {

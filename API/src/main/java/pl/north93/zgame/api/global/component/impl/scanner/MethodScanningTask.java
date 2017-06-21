@@ -16,6 +16,7 @@ import javassist.CtMethod;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.DynamicBean;
+import pl.north93.zgame.api.global.component.exceptions.BeanCreationException;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.zgame.api.global.component.impl.container.BeanFactory;
 import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
@@ -51,6 +52,11 @@ class MethodScanningTask extends AbstractScanningTask
                 {
                     ComponentManagerImpl.instance.getAggregationManager().addAggregator(toJavaMethod(this.clazz, method));
                 }
+            }
+            catch (final BeanCreationException ex)
+            {
+                ex.printStackTrace();
+                continue;
             }
             catch (final Exception ignored)
             {

@@ -7,6 +7,7 @@ import java.lang.reflect.Modifier;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
+import pl.north93.zgame.api.global.component.exceptions.BeanCreationException;
 import pl.north93.zgame.api.global.component.impl.SmartExecutor;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 
@@ -18,7 +19,7 @@ public class BeanFactory
     {
     }
 
-    public void createStaticBean(final AbstractBeanContext beanContext, final Object object)
+    public void createStaticBean(final AbstractBeanContext beanContext, final Object object) throws BeanCreationException
     {
         //System.out.println("createStaticBean(" + beanContext.getBeanContextName() + ", " + object + "");
         final Class<?> beanType;
@@ -50,7 +51,14 @@ public class BeanFactory
                 instance = beanContext.getBean(executable.getDeclaringClass());
             }
 
-            bean = SmartExecutor.execute(executable, beanContext, instance);
+            try
+            {
+                bean = SmartExecutor.execute(executable, beanContext, instance);
+            }
+            catch (final Exception e)
+            {
+                throw new BeanCreationException(beanType, e);
+            }
         }
         else if (object instanceof Class)
         {
@@ -72,7 +80,14 @@ public class BeanFactory
             }
 
             final Constructor<?> constructor = beanType.getConstructors()[0];
-            bean = SmartExecutor.execute(constructor, beanContext, null);
+            try
+            {
+                bean = SmartExecutor.execute(constructor, beanContext, null);
+            }
+            catch (final Exception e)
+            {
+                throw new BeanCreationException(beanType, e);
+            }
         }
         else
         {
