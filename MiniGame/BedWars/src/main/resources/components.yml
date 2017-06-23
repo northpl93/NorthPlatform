@@ -1,1 +1,10 @@
 rootPackage: pl.arieals
+components:
+  - name: MiniGame.BedWars
+    mainClass: "pl.arieals.minigame.bedwars.BedWarsComponent"
+    description: "Bed Wars plugin."
+    dependencies:
+      - API.EntityHider
+      - MiniGameApi.Server
+    platforms:
+      - BUKKIT

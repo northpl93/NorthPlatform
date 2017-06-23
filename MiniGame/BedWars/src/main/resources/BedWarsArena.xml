@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<arena>
+    <teams>
+        <team color="RED">
+            <teamRegion>
+                <from x="0" y="0" z="0"/>
+                <to x="0" y="0" z="0"/>
+            </teamRegion>
+            <spawnLocation x="0" y="0" z="0"/>
+        </team>
+    </teams>
+
+    <generatorTypes>
+        <generatorType>
+            <name>island</name>
+            <overload>64</overload>
+            <items>
+                <generatorItem material="IRON_INGOT" every="1" startAt="0"/>
+                <generatorItem material="GOLD_INGOT" every="4"/>
+            </items>
+        </generatorType>
+
+        <generatorType>
+            <name>lapis</name>
+            <overload>64</overload>
+            <items>
+                <generatorItem material="INK_SACK" data="12" every="300" startAt="600"/>
+            </items>
+        </generatorType>
+    </generatorTypes>
+
+    <generators>
+        <generator>
+            <type>island</type>
+            <location x="" y="" z="" />
+        </generator>
+    </generators>
+
+    <secureRegions>
+        <secureRegion>
+            <from x="0" y="0" z="0" />
+            <to x="0" y="0" z="0" />
+        </secureRegion>
+    </secureRegions>
+</arena>
