@@ -7,13 +7,13 @@ import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.minigame.bedwars.arena.GeneratorController.GeneratorTask;
 import pl.arieals.minigame.bedwars.listener.ArenaStartListener;
+import pl.arieals.minigame.bedwars.listener.BuildListener;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class BedWarsComponent extends Component
 {
-    private static final int ONE_SECOND = 20;
     @Inject
     private MiniGameServer server;
     @Inject
@@ -26,16 +26,17 @@ public class BedWarsComponent extends Component
         {
             return; // TODO prevent errors in testing environment
         }
-        this.bukkitApi.registerEvents(new ArenaStartListener());
+        this.bukkitApi.registerEvents(
+                new ArenaStartListener(),
+                new BuildListener());
 
-        // uruchamiamy task generatorów
-        new GeneratorTask().runTaskTimer(this.bukkitApi.getPluginMain(), ONE_SECOND, ONE_SECOND);
+        // uruchamiamy task generatorów co 1 tick
+        new GeneratorTask().runTaskTimer(this.bukkitApi.getPluginMain(), 1, 1);
     }
 
     @Override
     protected void disableComponent()
     {
-
     }
 
     @Override

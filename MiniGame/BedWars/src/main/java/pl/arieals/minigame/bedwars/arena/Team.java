@@ -12,6 +12,7 @@ public class Team
     private ChatColor   color;
     private Set<Player> players;
     private Cuboid      teamArena;
+    private boolean     isBedAlive;
 
 
 }

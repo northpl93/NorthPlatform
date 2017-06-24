@@ -3,20 +3,26 @@ package pl.arieals.minigame.bedwars.arena;
 import static pl.north93.zgame.api.global.utils.CollectionUtils.findInCollection;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.bukkit.block.Block;
 
 import pl.arieals.api.minigame.server.gamehost.arena.IArenaData;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.cfg.BedWarsArenaConfig;
 import pl.arieals.minigame.bedwars.cfg.BedWarsGenerator;
 import pl.arieals.minigame.bedwars.cfg.BedWarsGeneratorType;
+import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
+import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
 
 public class BedWarsArena implements IArenaData
 {
     private final BedWarsArenaConfig  config;
-    private List<GeneratorController> generators = new ArrayList<>();
-    private List<Team>                teams      = new ArrayList<>();
+    private Set<GeneratorController> generators    = new HashSet<>();
+    private Set<Team>                teams         = new HashSet<>();
+    private Set<Cuboid>              secureRegions = new HashSet<>();
+    private Set<Block>               playerBlocks  = new HashSet<>();
 
     public BedWarsArena(final LocalArena arena, final BedWarsArenaConfig config)
     {
@@ -24,6 +30,10 @@ public class BedWarsArena implements IArenaData
         for (final BedWarsGenerator generatorConfig : config.getGenerators())
         {
             this.generators.add(new GeneratorController(arena, this, generatorConfig));
+        }
+        for (final XmlCuboid xmlCuboid : config.getSecureRegions())
+        {
+            this.secureRegions.add(xmlCuboid.toCuboid(arena.getWorld().getCurrentWorld()));
         }
     }
 
@@ -37,8 +47,18 @@ public class BedWarsArena implements IArenaData
         return findInCollection(this.config.getGeneratorTypes(), BedWarsGeneratorType::getName, name);
     }
 
-    public List<GeneratorController> getGenerators()
+    public Set<GeneratorController> getGenerators()
     {
         return this.generators;
+    }
+
+    public Set<Cuboid> getSecureRegions()
+    {
+        return this.secureRegions;
+    }
+
+    public Set<Block> getPlayerBlocks()
+    {
+        return this.playerBlocks;
     }
 }
