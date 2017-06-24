@@ -11,6 +11,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import com.google.common.base.Preconditions;
+
+import org.bukkit.World;
+
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
@@ -68,6 +72,19 @@ public class LocalArenaManager
         for (final LocalArena arena : this.arenas)
         {
             if (arena.getId().equals(arenaId))
+            {
+                return arena;
+            }
+        }
+        return null;
+    }
+
+    public LocalArena getArena(final World world)
+    {
+        Preconditions.checkNotNull(world, "world can't be null");
+        for (final LocalArena arena : this.arenas)
+        {
+            if (world.equals(arena.getWorld().getCurrentWorld()))
             {
                 return arena;
             }

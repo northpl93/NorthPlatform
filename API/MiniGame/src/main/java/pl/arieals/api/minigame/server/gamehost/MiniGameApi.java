@@ -5,6 +5,7 @@ import static pl.north93.zgame.api.global.exceptions.SingletonException.checkSin
 
 import java.util.List;
 
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -30,6 +31,12 @@ public final class MiniGameApi
     {
         final GameHostManager manager = INSTANCE.server.getServerManager();
         return manager.getArenaManager().getArenaAssociatedWith(player.getUniqueId()).orElse(null);
+    }
+
+    public static LocalArena getArena(final World world)
+    {
+        final GameHostManager manager = INSTANCE.server.getServerManager();
+        return manager.getArenaManager().getArena(world);
     }
 
     public static List<LocalArena> getArenas()
