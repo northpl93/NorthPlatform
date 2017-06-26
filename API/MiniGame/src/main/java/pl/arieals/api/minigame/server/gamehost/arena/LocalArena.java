@@ -5,9 +5,6 @@ import java.util.UUID;
 
 import com.google.common.base.Preconditions;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -152,17 +149,6 @@ public class LocalArena implements IArena
     public boolean isDynamic()
     {
         return this.gameHostManager.getMiniGameConfig().isDynamic();
-    }
-    
-    public void teleportToLobby(Player player)
-    {
-        if ( getLobbyMode() == LobbyMode.EXTERNAL )
-        {
-            player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
-        }
-        
-        // TODO: rewrite lobby system
-        gameHostManager.getLobbyManager().addPlayer(this, player);
     }
     
     @SuppressWarnings("unchecked")

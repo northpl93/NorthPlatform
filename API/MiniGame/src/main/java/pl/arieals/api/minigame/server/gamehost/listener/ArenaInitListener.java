@@ -37,10 +37,10 @@ public class ArenaInitListener implements Listener
         if (arena.isDynamic())
         {
             // przenosimy wszystkich graczy do lobby areny jesli gra jest dynamiczna
-            for (final Player player : arena.getPlayersManager().getPlayers())
-            {
-                hostManager.getLobbyManager().addPlayer(arena, player);
-            }
+            //for (final Player player : arena.getPlayersManager().getPlayers())
+            //{
+            //    hostManager.getLobbyManager().addPlayer(arena, player);
+            //} Tym powinna zajac sie minigra?
         }
         else
         {
