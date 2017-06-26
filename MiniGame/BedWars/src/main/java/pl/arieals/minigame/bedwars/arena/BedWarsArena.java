@@ -13,6 +13,7 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.cfg.BedWarsArenaConfig;
 import pl.arieals.minigame.bedwars.cfg.BedWarsGenerator;
 import pl.arieals.minigame.bedwars.cfg.BedWarsGeneratorType;
+import pl.arieals.minigame.bedwars.cfg.BedWarsTeamConfig;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
 
@@ -30,6 +31,10 @@ public class BedWarsArena implements IArenaData
         for (final BedWarsGenerator generatorConfig : config.getGenerators())
         {
             this.generators.add(new GeneratorController(arena, this, generatorConfig));
+        }
+        for (final BedWarsTeamConfig teamConfig : config.getTeams())
+        {
+            this.teams.add(new Team(arena, teamConfig));
         }
         for (final XmlCuboid xmlCuboid : config.getSecureRegions())
         {
@@ -50,6 +55,23 @@ public class BedWarsArena implements IArenaData
     public Set<GeneratorController> getGenerators()
     {
         return this.generators;
+    }
+
+    public Set<Team> getTeams()
+    {
+        return this.teams;
+    }
+
+    public Team getTeamAt(final Block block)
+    {
+        for (final Team team : this.teams)
+        {
+            if (team.getTeamArena().contains(block))
+            {
+                return team;
+            }
+        }
+        return null;
     }
 
     public Set<Cuboid> getSecureRegions()

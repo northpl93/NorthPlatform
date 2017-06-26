@@ -8,6 +8,7 @@ import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.minigame.bedwars.arena.GeneratorController.GeneratorTask;
 import pl.arieals.minigame.bedwars.listener.ArenaStartListener;
 import pl.arieals.minigame.bedwars.listener.BuildListener;
+import pl.arieals.minigame.bedwars.listener.PlayerTeamListener;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -28,6 +29,7 @@ public class BedWarsComponent extends Component
         }
         this.bukkitApi.registerEvents(
                 new ArenaStartListener(),
+                new PlayerTeamListener(),
                 new BuildListener());
 
         // uruchamiamy task generatorów co 1 tick
