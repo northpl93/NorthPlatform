@@ -76,7 +76,14 @@ class ChunkLoadingTask implements Runnable
                 final long totalTime = System.currentTimeMillis() - task.startTime;
                 this.logger.info(format("Completed loading of world {0} in {1}ms", task.world.getName(), totalTime));
 
-                this.blockNewChunks(task.world);
+                if (task.isEmpty)
+                {
+                    this.logger.warning(format("World {0} has empty list of chunks. Use WE wand and /mapaddchunks to add chunks. Blocking of new chunks disabled.", task.world.getName()));
+                }
+                else
+                {
+                    this.blockNewChunks(task.world);
+                }
                 this.activeTask = null;
                 task.progress.setCompleted();
                 break;
@@ -139,6 +146,7 @@ class ChunkLoadingTask implements Runnable
     {
         private final World world;
         private final Queue<XmlChunk> chunks;
+        private final boolean isEmpty;
         private final LoadingProgressImpl progress;
         private final long startTime;
 
@@ -146,6 +154,7 @@ class ChunkLoadingTask implements Runnable
         {
             this.world = world;
             this.chunks = chunks;
+            this.isEmpty = chunks.isEmpty();
             this.progress = progress;
             this.startTime = startTime;
         }

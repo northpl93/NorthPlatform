@@ -24,13 +24,13 @@ public class GameMapConfig
     private String              displayName;
     @XmlElement
     private boolean             enabled = true;
-    @XmlElementWrapper(name = "chunks", required = true)
-    @XmlElement(name = "chunk")
-    private Set<XmlChunk>       chunks = new HashSet<>();
     @XmlElement
     private Map<String, String> properties = new HashMap<>();
     @XmlElement
     private Map<String, String> gameRules = new HashMap<>();
+    @XmlElementWrapper(name = "chunks", required = true)
+    @XmlElement(name = "chunk")
+    private Set<XmlChunk>       chunks = new HashSet<>();
     
     public String getDisplayName()
     {
