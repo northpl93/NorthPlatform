@@ -2,6 +2,7 @@ package pl.arieals.api.minigame.server.gamehost.listener;
 
 import java.util.Optional;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,14 +16,11 @@ import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
+import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinWithoutArenaEvent;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class PlayerListener implements Listener
 {
-    @Inject @Messages("MiniGameApi")
-    private MessagesBox    messages;
     @Inject
     private MiniGameServer server;
 
@@ -41,11 +39,7 @@ public class PlayerListener implements Listener
         }
         else
         {
-            // TODO: Jeżeli gracz dołączy do gamehosta, ale nie będzie miał powiązanej areny
-            //       to należy go ukryć przed wszystkimi graczami którzy są na arenach.
-            //       Potrzebne jest to aby moderatorzy mogli nadzorować graczy bez wpływu na rozgrywkę
-            player.sendMessage("Dolaczyles do GameHosta, ale nie znaleziono powiazanej areny"); // debug msg
-            return;
+            Bukkit.getPluginManager().callEvent(new PlayerJoinWithoutArenaEvent(player));
         }
     }
 

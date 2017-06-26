@@ -26,9 +26,7 @@ import pl.arieals.api.minigame.server.gamehost.listener.ArenaEndListener;
 import pl.arieals.api.minigame.server.gamehost.listener.ArenaInitListener;
 import pl.arieals.api.minigame.server.gamehost.listener.GameStartListener;
 import pl.arieals.api.minigame.server.gamehost.listener.PlayerListener;
-import pl.arieals.api.minigame.server.gamehost.lobby.ILobbyManager;
-import pl.arieals.api.minigame.server.gamehost.lobby.external.ExternalLobby;
-import pl.arieals.api.minigame.server.gamehost.lobby.integrated.IntegratedLobby;
+import pl.arieals.api.minigame.server.gamehost.listener.VisibilityListener;
 import pl.arieals.api.minigame.server.gamehost.region.impl.RegionManagerImpl;
 import pl.arieals.api.minigame.server.gamehost.world.IMapTemplateManager;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
@@ -59,7 +57,6 @@ public class GameHostManager implements IServerManager
     private WorldManager      worldManager = new WorldManager();
     private RegionManagerImpl regionManager = new RegionManagerImpl();
     private MapTemplateManager mapTemplateManager = new MapTemplateManager();
-    private ILobbyManager     lobbyManager;
     private MiniGameConfig    miniGameConfig;
 
     @Override
@@ -71,10 +68,10 @@ public class GameHostManager implements IServerManager
         this.loadConfig();
 
         this.rpcManager.addRpcImplementation(IGameHostRpc.class, new GameHostRpcImpl(this));
-        this.lobbyManager = (this.miniGameConfig.getLobbyMode() == LobbyMode.EXTERNAL) ? new ExternalLobby() : new IntegratedLobby();
 
         this.apiCore.registerEvents(
                 new PlayerListener(), // dodaje graczy do aren
+                new VisibilityListener(), // zarzadza widocznoscia graczy i czatu
                 new ArenaInitListener(), // inicjuje arene po dodaniu/zakonczeniu poprzedniej gry
                 new GameStartListener(), // inicjuje gre po starcie
                 new ArenaEndListener()); // pilnuje by arena nie stala pusta i wykonuje czynnosci koncowe
@@ -133,11 +130,6 @@ public class GameHostManager implements IServerManager
     public IWorldManager getWorldManager()
     {
         return this.worldManager;
-    }
-
-    public ILobbyManager getLobbyManager()
-    {
-        return this.lobbyManager;
     }
     
     public IMapTemplateManager getMapTemplateManager()

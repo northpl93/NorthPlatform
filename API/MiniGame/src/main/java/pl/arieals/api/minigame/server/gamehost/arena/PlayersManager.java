@@ -44,14 +44,20 @@ public class PlayersManager
         this.joinInfos = Collections.synchronizedList(new ArrayList<>()); // may be accessed by server thread and rpc method executor in tryAddPlayers
     }
 
+    /**
+     * @return gracze aktualnie znajdujący się na arenie.
+     */
     public List<Player> getPlayers()
     {
         return this.players;
     }
 
+    /**
+     * @return maksymalna ilość graczy na arenie.
+     */
     public int getMaxPlayers()
     {
-        return gameHostManager.getMiniGameConfig().getSlots();
+        return this.gameHostManager.getMiniGameConfig().getSlots();
     }
     
     public int getMinPlayers()
@@ -102,8 +108,7 @@ public class PlayersManager
     public void playerConnected(final Player player)
     {
         this.players.add(player);
-        this.gameHostManager.getLobbyManager().addPlayer(this.arena, player);
-        
+
         PlayerJoinArenaEvent event = new PlayerJoinArenaEvent(player, this.arena, "player.joined_arena");
         Bukkit.getPluginManager().callEvent(event);
         
@@ -164,6 +169,14 @@ public class PlayersManager
         }
     }
 
+    /**
+     * Wysyła przetłumaczoną wiadomość do graczy znajdujących się na tej arenie
+     * z domyślnym layoutem.
+     *
+     * @param messagesBox obiekt przechowujący wiadomości.
+     * @param messageKey klucz wiadomości.
+     * @param args argumenty.
+     */
     public void broadcast(final MessagesBox messagesBox, final String messageKey, final Object... args)
     {
         this.broadcast(messagesBox, messageKey, MessageLayout.DEFAULT, args);
