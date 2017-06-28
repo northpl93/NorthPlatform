@@ -18,7 +18,8 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class BedWarsArenaConfig
 {
-    @XmlElement(required = true, name = "teams")
+    @XmlElementWrapper(name = "teams")
+    @XmlElement(name = "team")
     private List<BedWarsTeamConfig>    teams;
     @XmlElementWrapper(name = "generatorTypes")
     @XmlElement(name = "generatorType")

@@ -1,11 +1,11 @@
-package pl.arieals.minigame.bedwars.arena;
-
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArenas;
+package pl.arieals.minigame.bedwars.arena.generator;
 
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
 import net.minecraft.server.v1_10_R1.AxisAlignedBB;
@@ -15,13 +15,13 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.cfg.BedWarsGenerator;
 import pl.arieals.minigame.bedwars.cfg.BedWarsGeneratorItemConfig;
 import pl.arieals.minigame.bedwars.cfg.BedWarsGeneratorType;
@@ -32,6 +32,7 @@ public class GeneratorController
     private final BedWarsGeneratorType     generatorType;
     private final Location                 location;
     private final List<ItemGeneratorEntry> entries;
+    private final GeneratorHudHandler      hudHandler;
 
     public GeneratorController(final LocalArena arena, final BedWarsArena arenaData, final BedWarsGenerator config)
     {
@@ -40,12 +41,14 @@ public class GeneratorController
         this.location = config.getLocation().toBukkit(arena.getWorld().getCurrentWorld());
         this.entries = new ArrayList<>();
         this.setupEntries();
+        this.hudHandler = new GeneratorHudHandler(this, this.entries.size() == 1); // enable hud if we have only one item
     }
 
     public void tick()
     {
         if (this.countItems(this.location, 1, 1, 1) >= this.generatorType.getOverload())
         {
+            this.hudHandler.markOverload();
             return; // overload
         }
 
@@ -57,26 +60,52 @@ public class GeneratorController
         }
     }
 
+    public Location getLocation()
+    {
+        return this.location;
+    }
+
+    public BedWarsGeneratorType getGeneratorType()
+    {
+        return this.generatorType;
+    }
+
+    public GeneratorHudHandler getHudHandler()
+    {
+        return this.hudHandler;
+    }
+
+    @SuppressWarnings("unchecked")
     private int countItems(final Location loc, final double x, final double y, final double z)
     {
         final AxisAlignedBB bb = new AxisAlignedBB(loc.getX() - x, loc.getY() - y, loc.getZ() - z, loc.getX() + x, loc.getY() + y, loc.getZ() + z);
-        return ((CraftWorld) loc.getWorld()).getHandle().getEntities(null, bb, entity -> entity instanceof EntityItem).size();
+        final List<EntityItem> items = (List) ((CraftWorld) loc.getWorld()).getHandle().getEntities(null, bb, entity -> entity instanceof EntityItem);
+
+        int count = 0;
+        for (final EntityItem entity : items)
+        {
+            count += entity.getItemStack().count;
+        }
+
+        return count;
     }
 
-    private long getGameTime()
+    /*default*/ long getGameTime()
     {
-        return this.arena.getTimer().getCurrentTime(TimeUnit.SECONDS);
+        //noinspection MagicNumber
+        return this.arena.getTimer().getCurrentTime(TimeUnit.SECONDS) * 20;
     }
 
     private void setupEntries()
     {
+        configLoop:
         for (final BedWarsGeneratorItemConfig config : this.generatorType.getItems())
         {
             for (final ItemGeneratorEntry entry : this.entries)
             {
                 if (entry.tryAdd(config))
                 {
-                    break; // idziemy do nastepnego configu
+                    continue configLoop; // idziemy do nastepnego configu
                 }
             }
             this.entries.add(new ItemGeneratorEntry(config));
@@ -85,7 +114,7 @@ public class GeneratorController
 
     private class ItemGeneratorEntry
     {
-        private final List<BedWarsGeneratorItemConfig> items = new ArrayList<>();
+        private final Set<BedWarsGeneratorItemConfig> items = new TreeSet<>(Comparator.comparing(BedWarsGeneratorItemConfig::getStartAt).reversed());
         private int timer;
 
         public ItemGeneratorEntry(final BedWarsGeneratorItemConfig initConfig)
@@ -95,12 +124,7 @@ public class GeneratorController
 
         private boolean tryAdd(final BedWarsGeneratorItemConfig config)
         {
-            if (this.items.isEmpty())
-            {
-                this.items.add(config);
-                return true;
-            }
-            final BedWarsGeneratorItemConfig definition = this.items.get(0);
+            final BedWarsGeneratorItemConfig definition = this.items.iterator().next();
             if (definition.getMaterial() == config.getMaterial() && definition.getData() == config.getData())
             {
                 this.items.add(config);
@@ -113,11 +137,12 @@ public class GeneratorController
         {
             final BedWarsGeneratorItemConfig current = this.items.stream()
                                                                  .filter(config -> config.getStartAt() <= gameTime)
-                                                                 .sorted(Comparator.comparing(BedWarsGeneratorItemConfig::getStartAt))
                                                                  .findFirst().orElse(null);
 
-            if (++this.timer < current.getEvery())
+            GeneratorController.this.hudHandler.tick(current == null ? this.items.iterator().next() : current, this.timer);
+            if (current == null || ++this.timer < current.getEvery())
             {
+                // gdy current == null to znaczy, ze generator jeszcze nie jest wlaczony, nic nie generuje
                 return;
             }
             this.timer = 0;
@@ -131,23 +156,6 @@ public class GeneratorController
         public String toString()
         {
             return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("items", this.items).toString();
-        }
-    }
-
-    public static final class GeneratorTask extends BukkitRunnable
-    {
-        @Override
-        public void run()
-        {
-            for (final LocalArena arena : getArenas())
-            {
-                final BedWarsArena arenaData = arena.getArenaData();
-                if (arenaData == null)
-                {
-                    continue;
-                }
-                arenaData.getGenerators().forEach(GeneratorController::tick);
-            }
         }
     }
 

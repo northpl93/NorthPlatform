@@ -14,6 +14,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class BedWarsGeneratorItemConfig
 {
+    @XmlAttribute
+    private String   name;
     @XmlAttribute(required = true)
     private Material material;
     @XmlAttribute
@@ -29,13 +31,19 @@ public class BedWarsGeneratorItemConfig
     {
     }
 
-    public BedWarsGeneratorItemConfig(final Material material, final byte data, final int amount, final int every, final int startAt)
+    public BedWarsGeneratorItemConfig(final String name, final Material material, final byte data, final int amount, final int every, final int startAt)
     {
+        this.name = name;
         this.material = material;
         this.data = data;
         this.amount = amount;
         this.every = every;
         this.startAt = startAt;
+    }
+
+    public String getName()
+    {
+        return this.name;
     }
 
     public Material getMaterial()
@@ -66,6 +74,6 @@ public class BedWarsGeneratorItemConfig
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("material", this.material).append("data", this.data).append("amount", this.amount).append("every", this.every).append("startAt", this.startAt).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("material", this.material).append("data", this.data).append("amount", this.amount).append("every", this.every).append("startAt", this.startAt).toString();
     }
 }

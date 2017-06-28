@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 
 import pl.arieals.api.minigame.server.gamehost.arena.IArenaData;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.minigame.bedwars.arena.generator.GeneratorController;
 import pl.arieals.minigame.bedwars.cfg.BedWarsArenaConfig;
 import pl.arieals.minigame.bedwars.cfg.BedWarsGenerator;
 import pl.arieals.minigame.bedwars.cfg.BedWarsGeneratorType;

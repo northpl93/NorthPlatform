@@ -5,7 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
-import pl.arieals.minigame.bedwars.arena.GeneratorController.GeneratorTask;
+import pl.arieals.minigame.bedwars.arena.generator.GeneratorTask;
+import pl.arieals.minigame.bedwars.arena.generator.ItemRotator;
 import pl.arieals.minigame.bedwars.listener.ArenaStartListener;
 import pl.arieals.minigame.bedwars.listener.BuildListener;
 import pl.arieals.minigame.bedwars.listener.PlayerTeamListener;
@@ -34,6 +35,7 @@ public class BedWarsComponent extends Component
 
         // uruchamiamy task generatorów co 1 tick
         new GeneratorTask().runTaskTimer(this.bukkitApi.getPluginMain(), 1, 1);
+        new ItemRotator().start(); // uruchamiamy watek obracajacy itemkami
     }
 
     @Override

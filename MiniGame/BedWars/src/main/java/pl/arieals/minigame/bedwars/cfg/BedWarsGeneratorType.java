@@ -8,6 +8,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import java.util.List;
 
+import org.bukkit.Material;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -19,6 +21,8 @@ public class BedWarsGeneratorType
     private String                           name;
     @XmlElement(required = true)
     private int                              overload;
+    @XmlElement
+    private Material                         hudItem; // itemek wyswietlajacy sie nad generatorem
     @XmlElementWrapper(name = "items", required = true)
     @XmlElement(name = "generatorItem")
     private List<BedWarsGeneratorItemConfig> items;
@@ -44,6 +48,11 @@ public class BedWarsGeneratorType
         return this.overload;
     }
 
+    public Material getHudItem()
+    {
+        return this.hudItem;
+    }
+
     public List<BedWarsGeneratorItemConfig> getItems()
     {
         return this.items;
@@ -52,6 +61,6 @@ public class BedWarsGeneratorType
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("overload", this.overload).append("items", this.items).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("overload", this.overload).append("hudItem", this.hudItem).append("items", this.items).toString();
     }
 }
