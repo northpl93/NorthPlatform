@@ -29,6 +29,14 @@ public class EntityTrackerHelper
         }
     }
 
+    /**
+     * Klasa EntityTrackerEntry sluzy do sledzenia danego entity przez liste
+     * graczy bedacych w jego zasiegu. Zarzadza wysylaniem pakietow z
+     * informacjami o danym entity.
+     *
+     * @param entity Entity z ktorego wyciagnac EntityTrackerEntry.
+     * @return EntityTrackerEntry dla danego entity.
+     */
     public static EntityTrackerEntry getTrackerEntry(final Entity entity)
     {
         try
@@ -41,6 +49,15 @@ public class EntityTrackerHelper
         }
     }
 
+    /**
+     * Umozliwia proste sledzenia rozpoczecia i skonczenia trackowania
+     * danego entity przez gracza.
+     * Umozliwia to wykrywanie gdy gracz wchodzi w zasieg widzenia
+     * danego entity.
+     *
+     * @param entity entity z ktorego zrobic obserwowalna mape.
+     * @return Obserwowalna mapa z lista graczy trackujacych dane entity
+     */
     public static ObservableMap<EntityPlayer, Boolean> observeTracker(final Entity entity)
     {
         final EntityTrackerEntry trackerEntry = getTrackerEntry(entity);
