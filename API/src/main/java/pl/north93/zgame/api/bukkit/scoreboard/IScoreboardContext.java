@@ -16,5 +16,10 @@ public interface IScoreboardContext
 
     <T> T get(String key);
 
+    default String getLocale()
+    {
+        return this.getPlayer().spigot().getLocale();
+    }
+
     void update(); // force update
 }

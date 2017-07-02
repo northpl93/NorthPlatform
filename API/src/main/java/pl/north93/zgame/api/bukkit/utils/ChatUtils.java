@@ -1,10 +1,19 @@
 package pl.north93.zgame.api.bukkit.utils;
 
+import java.util.regex.Pattern;
+
 import org.bukkit.ChatColor;
 
 public class ChatUtils
 {
-    private final static int CENTER_PX = 140;
+    public  static final char    COLOR_CHAR          = '§';
+    private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)(" + COLOR_CHAR + "|&)[0-9A-FK-OR]");
+    private final static int     CENTER_PX           = 140;
+
+    public static String stripColor(final String input)
+    {
+        return input == null ? null : STRIP_COLOR_PATTERN.matcher(input).replaceAll("");
+    }
 
     public static String translateAlternateColorCodes(final String textToTranslate)
     {
