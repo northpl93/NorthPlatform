@@ -3,16 +3,21 @@ package pl.arieals.minigame.bedwars.arena;
 import static pl.north93.zgame.api.global.utils.CollectionUtils.findInCollection;
 
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.bukkit.block.Block;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import pl.arieals.api.minigame.server.gamehost.arena.IArenaData;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.generator.GeneratorController;
 import pl.arieals.minigame.bedwars.cfg.BedWarsArenaConfig;
 import pl.arieals.minigame.bedwars.cfg.BedWarsGenerator;
+import pl.arieals.minigame.bedwars.cfg.BedWarsGeneratorItemConfig;
 import pl.arieals.minigame.bedwars.cfg.BedWarsGeneratorType;
 import pl.arieals.minigame.bedwars.cfg.BedWarsTeamConfig;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
@@ -20,6 +25,7 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
 
 public class BedWarsArena implements IArenaData
 {
+    private final LocalArena          arena;
     private final BedWarsArenaConfig  config;
     private Set<GeneratorController> generators    = new HashSet<>();
     private Set<Team>                teams         = new HashSet<>();
@@ -28,6 +34,7 @@ public class BedWarsArena implements IArenaData
 
     public BedWarsArena(final LocalArena arena, final BedWarsArenaConfig config)
     {
+        this.arena = arena;
         this.config = config;
         for (final BedWarsGenerator generatorConfig : config.getGenerators())
         {
@@ -83,5 +90,16 @@ public class BedWarsArena implements IArenaData
     public Set<Block> getPlayerBlocks()
     {
         return this.playerBlocks;
+    }
+
+    public Pair<BedWarsGeneratorType, BedWarsGeneratorItemConfig> nextUpgrade()
+    {
+        final long time = this.arena.getTimer().getCurrentTime(TimeUnit.SECONDS) * 20;
+        return this.config.getGeneratorTypes()
+                          .stream()
+                          .flatMap(type -> type.getItems().stream().map(item -> Pair.of(type, item)))
+                          .filter(pair -> pair.getValue().getStartAt() > time)
+                          .sorted(Comparator.comparingInt(p -> p.getValue().getStartAt()))
+                          .findFirst().orElse(null);
     }
 }

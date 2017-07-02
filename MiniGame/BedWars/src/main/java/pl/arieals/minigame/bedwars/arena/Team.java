@@ -1,7 +1,11 @@
 package pl.arieals.minigame.bedwars.arena;
 
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+
+
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -36,6 +40,11 @@ public class Team
     public Set<Player> getPlayers()
     {
         return this.players;
+    }
+
+    public Set<Player> getAlivePlayers()
+    {
+        return this.players.stream().filter(player -> getPlayerData(player, BedWarsPlayer.class).isAlive()).collect(Collectors.toSet());
     }
 
     public Cuboid getTeamArena()

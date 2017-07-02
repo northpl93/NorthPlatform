@@ -3,7 +3,6 @@ package pl.arieals.minigame.bedwars.listener;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,17 +25,30 @@ public class DeathListener implements Listener
         event.setDeathMessage(null); // my wcale nie umieramy!
         final Player player = event.getEntity();
 
+        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        if (playerData.getTeam() == null)
+        {
+            return;
+        }
+
         player.setHealth(20);
         player.setVisible(false);
         player.setAllowFlight(true);
         player.setFlying(true);
 
-        final Location location = player.getLocation();
-        final Vector direction = location.getDirection();
+        final Vector direction = player.getLocation().getDirection();
         final Vector newVector = direction.multiply(- 1).setY(2);
-
         player.setVelocity(newVector);
 
-        new RevivePlayerCountdown(player, getPlayerData(player, BedWarsPlayer.class)).start(20);
+        playerData.setAlive(false);
+        if (playerData.getTeam().isBedAlive())
+        {
+            new RevivePlayerCountdown(player, playerData).start(20);
+        }
+        else
+        {
+            player.sendMessage("Twoj team nie ma lozka, zdychaj");
+            // todo jakis komunikat o braku lozka
+        }
     }
 }

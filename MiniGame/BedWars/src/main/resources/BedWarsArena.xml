@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <arena>
+    <lobby x="0" y="0" z="0" yaw="0" pitch="0"/>
+
     <teams>
         <team color="RED">
             <teamRegion>
@@ -32,7 +34,7 @@
     <generators>
         <generator>
             <type>island</type>
-            <location x="" y="" z="" />
+            <location x="0" y="0" z="0" />
         </generator>
     </generators>
 

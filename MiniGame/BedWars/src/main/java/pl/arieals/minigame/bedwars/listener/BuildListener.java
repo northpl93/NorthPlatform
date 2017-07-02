@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.GamePhase;
@@ -21,14 +22,28 @@ import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 public class BuildListener implements Listener
 {
     @EventHandler
+    public void onCrafting(final CraftItemEvent event) // blokujemy wszelki crafting zeby sami nie zrobili sobie blokow z irona
+    {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
     public void onBlockPlace(final BlockPlaceEvent event)
     {
         final LocalArena arena = getArena(event.getBlock().getWorld());
         final BedWarsArena arenaData = arena.getArenaData();
+        final BedWarsPlayer playerData = getPlayerData(event.getPlayer(), BedWarsPlayer.class);
 
         if (arena.getGamePhase() != GamePhase.STARTED)
         {
             // gdy gra nie wystartowala to nic nie mozna robic
+            event.setCancelled(true);
+            return;
+        }
+
+        if (playerData == null || ! playerData.isAlive())
+        {
+            // gdy gracz nie zyje lub jest spectatorem/innym intruzem anulujemy
             event.setCancelled(true);
             return;
         }
@@ -49,10 +64,18 @@ public class BuildListener implements Listener
         final Block block = event.getBlock();
         final LocalArena arena = getArena(block.getWorld());
         final BedWarsArena arenaData = arena.getArenaData();
+        final BedWarsPlayer playerData = getPlayerData(event.getPlayer(), BedWarsPlayer.class);
 
         if (arena.getGamePhase() != GamePhase.STARTED)
         {
             // gdy gra nie wystartowala to nic nie mozna robic
+            event.setCancelled(true);
+            return;
+        }
+
+        if (playerData == null || ! playerData.isAlive())
+        {
+            // gdy gracz nie zyje lub jest spectatorem/innym intruzem anulujemy
             event.setCancelled(true);
             return;
         }
@@ -64,7 +87,7 @@ public class BuildListener implements Listener
             return;
         }
 
-        if (this.handleBedBreak(event, arenaData))
+        if (this.handleBedBreak(event, arenaData, playerData))
         {
             return;
         }
@@ -79,7 +102,7 @@ public class BuildListener implements Listener
     }
 
     // zwraca true jesli gracz niszczy lozko - wtedy nie wykonujemy reszty kodu w evencie
-    private boolean handleBedBreak(final BlockBreakEvent event, final BedWarsArena arenaData)
+    private boolean handleBedBreak(final BlockBreakEvent event, final BedWarsArena arenaData, final BedWarsPlayer playerData)
     {
         final Block block = event.getBlock();
         if (block.getType() != Material.BED_BLOCK)
@@ -88,8 +111,6 @@ public class BuildListener implements Listener
         }
 
         final Team teamAt = arenaData.getTeamAt(block);
-        final BedWarsPlayer playerData = getPlayerData(event.getPlayer(), BedWarsPlayer.class);
-
         if (teamAt == playerData.getTeam())
         {
             event.setCancelled(true); // gracz nie moze zniszczyc lozka swojej druzyny

@@ -1,13 +1,21 @@
 package pl.arieals.minigame.bedwars.arena;
 
+import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColorCodes;
+
+
 import com.destroystokyo.paper.Title;
 
 import org.bukkit.entity.Player;
 
 import pl.north93.zgame.api.bukkit.utils.AbstractCountdown;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class RevivePlayerCountdown extends AbstractCountdown
 {
+    @Inject @Messages("BedWars")
+    private MessagesBox messages;
     private final Player        player;
     private final BedWarsPlayer bedWarsPlayer;
 
@@ -21,7 +29,12 @@ public class RevivePlayerCountdown extends AbstractCountdown
     @Override
     protected void loop(final int time)
     {
-        this.player.sendTitle(new Title("Respawn za " + time, "", 0, 20, 0));
+        final String locale = this.player.spigot().getLocale();
+
+        final String title = translateAlternateColorCodes(this.messages.getMessage(locale, "die.title"));
+        final String subtitle = translateAlternateColorCodes(this.messages.getMessage(locale, "die.subtitle", time));
+
+        this.player.sendTitle(new Title(title, subtitle, 0, 20, 0));
     }
 
     @Override
@@ -31,6 +44,8 @@ public class RevivePlayerCountdown extends AbstractCountdown
         {
             return;
         }
+
+        this.bedWarsPlayer.setAlive(true);
 
         this.player.setAllowFlight(false);
         this.player.setVisible(true);
