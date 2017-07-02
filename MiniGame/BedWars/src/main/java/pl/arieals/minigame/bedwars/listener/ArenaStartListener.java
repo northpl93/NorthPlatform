@@ -20,4 +20,5 @@ public class ArenaStartListener implements Listener
         final BedWarsArenaConfig config = JAXB.unmarshal(arena.getWorld().getResource("BedWarsArena.xml"), BedWarsArenaConfig.class);
         arena.setArenaData(new BedWarsArena(arena, config));
     }
+
 }

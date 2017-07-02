@@ -4,6 +4,8 @@ import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.getTrack
 import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.observeTracker;
 
 
+import java.util.ArrayList;
+
 import net.minecraft.server.v1_10_R1.EntityPlayer;
 
 import org.bukkit.Location;
@@ -68,13 +70,13 @@ final class HoloLine
         }
         this.lastLine = line;
 
-        for (final EntityPlayer player : getTrackerEntry(((CraftArmorStand) this.armorStand).getHandle()).trackedPlayers)
+        for (final EntityPlayer player : new ArrayList<>(getTrackerEntry(((CraftArmorStand) this.armorStand).getHandle()).trackedPlayers))
         {
             final String newText = line.render(this.hologram, player.getBukkitEntity());
 
             final EntityMetaPacketHelper packetHelper = new EntityMetaPacketHelper(this.armorStand.getEntityId());
             packetHelper.addMeta(2, EntityMetaPacketHelper.MetaType.STRING, newText); // 2=custom name http://wiki.vg/Entities#Entity
-            player.playerConnection.networkManager.channel.write(packetHelper.complete());
+            player.playerConnection.networkManager.channel.writeAndFlush(packetHelper.complete());
         }
     }
 

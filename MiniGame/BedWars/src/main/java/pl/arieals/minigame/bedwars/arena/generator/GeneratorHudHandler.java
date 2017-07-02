@@ -3,6 +3,8 @@ package pl.arieals.minigame.bedwars.arena.generator;
 import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.getTrackerEntry;
 
 
+import java.util.ArrayList;
+
 import net.minecraft.server.v1_10_R1.EntityPlayer;
 import net.minecraft.server.v1_10_R1.EntityTrackerEntry;
 import net.minecraft.server.v1_10_R1.Vector3f;
@@ -93,7 +95,7 @@ class GeneratorHudHandler
         this.itemPose += 0.5;
 
         final ByteBuf packet = this.createPacket(this.item.getEntityId(), this.itemPose);
-        for (final EntityPlayer trackedPlayer : tracker.trackedPlayers)
+        for (final EntityPlayer trackedPlayer : new ArrayList<>(tracker.trackedPlayers))
         {
             // kopiujemy bufor poniewaz jest on zamykany. (copy)
             trackedPlayer.playerConnection.networkManager.channel.writeAndFlush(packet.copy());

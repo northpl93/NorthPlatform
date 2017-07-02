@@ -24,7 +24,7 @@
     * podbic numer wersji tego modulu (nizej i w pom.xml api)
     -->
     <artifactId>install-deps</artifactId>
-    <version>1</version>
+    <version>2</version>
 	<packaging>pom</packaging>
 
     <dependencies>
@@ -32,7 +32,7 @@
         <dependency>
             <artifactId>northspigot</artifactId>
             <groupId>pl.north93</groupId>
-            <version>1.10-1</version>
+            <version>1.10-2</version>
         </dependency>
 
         <!-- World Edit zawsze moze sie przydac! -->
@@ -93,7 +93,7 @@
                             <file>../../${spigot.location}</file>
                             <groupId>pl.north93</groupId>
                             <artifactId>northspigot</artifactId>
-                            <version>1.10-1</version>
+                            <version>1.10-2</version>
                         </configuration>
                     </execution>
                 </executions>

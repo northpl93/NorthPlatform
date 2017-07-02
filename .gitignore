@@ -4,7 +4,7 @@
 # maven
 target/
 # include libraries
-!lib
+!lib/*
 ### Windows template
 # Windows image file caches
 Thumbs.db
@@ -38,6 +38,7 @@ hs_err_pid*
 ## Plugin-specific files:
 
 # IntelliJ
+*.iml
 /out/
 .idea/*
 
