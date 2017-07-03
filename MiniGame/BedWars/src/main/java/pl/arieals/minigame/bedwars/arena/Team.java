@@ -4,6 +4,7 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,11 @@ public class Team
     public ChatColor getColor()
     {
         return this.color;
+    }
+
+    public String getName()
+    {
+        return this.color.name().toLowerCase(Locale.ENGLISH);
     }
 
     public Set<Player> getPlayers()

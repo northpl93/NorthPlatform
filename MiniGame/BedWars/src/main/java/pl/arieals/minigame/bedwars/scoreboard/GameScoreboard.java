@@ -68,18 +68,19 @@ public class GameScoreboard implements IScoreboardLayout
         builder.add("");
         arenaData.getTeams().stream().sorted(comparing(Team::getColor)).forEach(team ->
         {
+            final String teamName = this.messages.getMessage(context.getLocale(), "team." + team.getName());
             final String status;
 
             if (team.isBedAlive())
             {
-                status = this.messages.getMessage(context.getPlayer().spigot().getLocale(), "scoreboard.tick");
+                status = this.messages.getMessage(context.getLocale(), "scoreboard.tick");
             }
             else
             {
                 final int players = team.getAlivePlayers().size();
                 if (players == 0)
                 {
-                    status = this.messages.getMessage(context.getPlayer().spigot().getLocale(), "scoreboard.cross");
+                    status = this.messages.getMessage(context.getLocale(), "scoreboard.cross");
                 }
                 else
                 {
@@ -87,7 +88,7 @@ public class GameScoreboard implements IScoreboardLayout
                 }
             }
 
-            builder.add(team.getColor() + "■ &f" + team.getColor().name().toLowerCase() + " " + status);
+            builder.translated("scoreboard.team_line", team.getColor().getChar(), teamName, status);
         });
 
         builder.add("");
