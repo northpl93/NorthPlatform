@@ -1,14 +1,18 @@
 package pl.arieals.minigame.bedwars.listener;
 
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.setPlayerData;
 
 
 import java.util.Comparator;
 
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
@@ -69,6 +73,38 @@ public class PlayerTeamListener implements Listener
         if (team != null)
         {
             team.getPlayers().remove(event.getPlayer());
+        }
+    }
+
+    @EventHandler
+    public void chestOpen(final PlayerInteractEvent event)
+    {
+        final Player player = event.getPlayer();
+        final Block block = event.getClickedBlock();
+
+        if (block.getType() != Material.CHEST)
+        {
+            return;
+        }
+
+        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        if (playerData == null || playerData.getTeam() == null)
+        {
+            event.setCancelled(true);
+            return;
+        }
+
+        final BedWarsArena arenaData = getArena(player).getArenaData();
+        final Team teamAt = arenaData.getTeamAt(block);
+        if (teamAt == playerData.getTeam())
+        {
+            return;
+        }
+
+        if (teamAt.isBedAlive() || !teamAt.getAlivePlayers().isEmpty())
+        {
+            // jesli team ma lozko lub zywych graczy to anulujemy otwarcie skrzynki
+            event.setCancelled(true);
         }
     }
 }

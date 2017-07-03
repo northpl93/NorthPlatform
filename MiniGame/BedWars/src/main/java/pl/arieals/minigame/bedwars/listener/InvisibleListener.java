@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 
@@ -36,6 +37,16 @@ public class InvisibleListener implements Listener
         final Player damager = (Player) event.getDamager();
 
         final BedWarsPlayer playerData = getPlayerData(damager, BedWarsPlayer.class);
+        if (playerData == null || ! playerData.isAlive())
+        {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onItemPickup(final PlayerPickupItemEvent event)
+    {
+        final BedWarsPlayer playerData = getPlayerData(event.getPlayer(), BedWarsPlayer.class);
         if (playerData == null || ! playerData.isAlive())
         {
             event.setCancelled(true);
