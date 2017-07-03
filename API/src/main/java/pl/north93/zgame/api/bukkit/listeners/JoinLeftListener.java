@@ -61,6 +61,11 @@ public class JoinLeftListener implements Listener
         final PermissionAttachment attachment = player.addAttachment(this.bukkitApiCore.getPluginMain());
         this.addPermissions(attachment, group);
 
+        if (iplayer.hasDisplayName())
+        {
+            player.setDisplayName(iplayer.getDisplayName());
+        }
+
         this.doOnJoinActions(player);
 
         if (! StringUtils.isEmpty(group.getJoinMessage())) // send message

@@ -19,6 +19,26 @@ public interface IPlayer extends Metadatable
      */
     String getLatestNick();
 
+    /**
+     * Sprawdza czy dany gracz ma ustawiona niestandardowa nazwe
+     * wyswietlana.
+     * @return true jesli gracz ma niestandardowa nazwe wyswietlana.
+     */
+    boolean hasDisplayName();
+
+    /**
+     * Zwraca niestandardowa nazwe wyswietlana ustawiona dla
+     * tego gracza. Jesli brak zwroci nick lub ostatnio znany nick.
+     * @return nazwa wyswietlana gracza.
+     */
+    String getDisplayName();
+
+    /**
+     * Zmienia niestandardowa nazwe wyswietlana danego gracza.
+     * Ustaw tu null jesli chcesz usunac nazwe.
+     */
+    void setDisplayName(String newName);
+
     boolean isBanned();
 
     void setBanned(boolean banned);

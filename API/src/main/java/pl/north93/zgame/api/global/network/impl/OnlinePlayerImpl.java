@@ -6,15 +6,16 @@ import static pl.north93.zgame.api.global.redis.RedisKeys.PLAYERS;
 import java.util.Locale;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.metadata.MetaStore;
-import pl.north93.zgame.api.global.network.proxy.ProxyRpc;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
+import pl.north93.zgame.api.global.network.proxy.ProxyRpc;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.zgame.api.global.network.server.joinaction.JoinActionsContainer;
@@ -30,6 +31,7 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     private UUID      uuid;
     private String    nick;
     private String    latestNick;
+    private String    displayName;
     private UUID      serverId;
     private String    proxyId;
     private Boolean   premium;
@@ -48,6 +50,14 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     public void transferDataFrom(final IOfflinePlayer offlinePlayer)
     {
         this.latestNick = offlinePlayer.getLatestNick();
+        if (offlinePlayer.hasDisplayName())
+        {
+            this.displayName = offlinePlayer.getDisplayName();
+        }
+        else
+        {
+            this.displayName = "";
+        }
         this.isBanned = offlinePlayer.isBanned();
         this.group = offlinePlayer.getGroup();
         this.groupExpireAt = offlinePlayer.getGroupExpireAt();
@@ -69,6 +79,35 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     public String getLatestNick()
     {
         return this.latestNick;
+    }
+
+    @Override
+    public boolean hasDisplayName()
+    {
+        return StringUtils.isNotEmpty(this.displayName);
+    }
+
+    @Override
+    public String getDisplayName()
+    {
+        if (this.hasDisplayName())
+        {
+            return this.displayName;
+        }
+        return this.nick;
+    }
+
+    @Override
+    public void setDisplayName(final String newName)
+    {
+        if (newName != null)
+        {
+            this.displayName = newName;
+        }
+        else
+        {
+            this.displayName = "";
+        }
     }
 
     @Override
@@ -234,6 +273,6 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).append("nick", this.nick).append("latestNick", this.latestNick).append("serverId", this.serverId).append("proxyId", this.proxyId).append("premium", this.premium).append("group", this.group).append("groupExpireAt", this.groupExpireAt).append("meta", this.meta).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).append("nick", this.nick).append("latestNick", this.latestNick).append("displayName", this.displayName).append("serverId", this.serverId).append("proxyId", this.proxyId).append("premium", this.premium).append("isBanned", this.isBanned).append("group", this.group).append("groupExpireAt", this.groupExpireAt).append("meta", this.meta).toString();
     }
 }

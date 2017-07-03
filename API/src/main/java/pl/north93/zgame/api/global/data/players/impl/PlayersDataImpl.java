@@ -128,6 +128,7 @@ public class PlayersDataImpl extends Component implements IPlayersData
         }
         else
         {
+            player.setDisplayName(null);
             player.setLatestNick(name);
             player.setGroupExpireAt(0);
             player.setGroup(this.permissionsManager.getDefaultGroup());
@@ -196,9 +197,10 @@ public class PlayersDataImpl extends Component implements IPlayersData
         }
 
         final String latestKnownUsername = result.getString("latestKnownUsername");
-        final boolean isBanned = result.containsKey("banned") ? result.getBoolean("banned") : false;
+        final String displayName = result.containsKey("displayName") ? result.getString("displayName") : ""; // gdy nie ma niestandardowej nazwy to nie ma fielda
+        final boolean isBanned = result.getBoolean("banned");
         final Group group = this.permissionsManager.getGroupByName(result.getString("group"));
-        final long groupExpireAt = result.containsKey("groupExpireAt") ? result.getLong("groupExpireAt") : 0;
+        final long groupExpireAt = result.getLong("groupExpireAt");
 
         final MetaStore store = new MetaStore();
         final Map<MetaKey, Object> playerMeta = store.getInternalMap();
@@ -208,7 +210,7 @@ public class PlayersDataImpl extends Component implements IPlayersData
             playerMeta.put(MetaKey.get(entry.getKey()), entry.getValue());
         }
 
-        return new OfflinePlayerImpl(result.get("uuid", UUID.class), latestKnownUsername, isBanned, group, groupExpireAt, store);
+        return new OfflinePlayerImpl(result.get("uuid", UUID.class), latestKnownUsername, displayName, isBanned, group, groupExpireAt, store);
     }
 
     @Override
@@ -221,6 +223,11 @@ public class PlayersDataImpl extends Component implements IPlayersData
         playerData.put("banned", player.isBanned());
         playerData.put("group", player.getGroup().getName());
         playerData.put("groupExpireAt", player.getGroupExpireAt());
+
+        if (player.hasDisplayName())
+        {
+            playerData.put("displayName", player.getDisplayName());
+        }
 
         final Document metadata = new Document();
         for (final Map.Entry<MetaKey, Object> entry : player.getMetaStore().getInternalMap().entrySet())

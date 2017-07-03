@@ -2,6 +2,7 @@ package pl.north93.zgame.api.global.network.impl;
 
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -14,6 +15,7 @@ public class OfflinePlayerImpl implements IOfflinePlayer
 {
     private UUID    uuid;
     private String  latestNick;
+    private String  displayName;
     private Boolean isBanned;
     private Group   group;
     private Long    groupExpireAt;
@@ -23,10 +25,11 @@ public class OfflinePlayerImpl implements IOfflinePlayer
     {
     }
 
-    public OfflinePlayerImpl(final UUID uuid, final String latestNick, final Boolean isBanned, final Group group, final Long groupExpireAt, final MetaStore meta)
+    public OfflinePlayerImpl(final UUID uuid, final String latestNick, final String displayName, final Boolean isBanned, final Group group, final Long groupExpireAt, final MetaStore meta)
     {
         this.uuid = uuid;
         this.latestNick = latestNick;
+        this.displayName = displayName;
         this.isBanned = isBanned;
         this.group = group;
         this.groupExpireAt = groupExpireAt;
@@ -37,6 +40,14 @@ public class OfflinePlayerImpl implements IOfflinePlayer
     {
         this.uuid = onlinePlayer.getUuid();
         this.latestNick = onlinePlayer.getLatestNick();
+        if (onlinePlayer.hasDisplayName())
+        {
+            this.displayName = onlinePlayer.getDisplayName();
+        }
+        else
+        {
+            this.displayName = "";
+        }
         this.isBanned = onlinePlayer.isBanned();
         this.group = onlinePlayer.getGroup();
         this.groupExpireAt = onlinePlayer.getGroupExpireAt();
@@ -59,6 +70,35 @@ public class OfflinePlayerImpl implements IOfflinePlayer
     public String getLatestNick()
     {
         return this.latestNick;
+    }
+
+    @Override
+    public boolean hasDisplayName()
+    {
+        return StringUtils.isNotEmpty(this.displayName);
+    }
+
+    @Override
+    public String getDisplayName()
+    {
+        if (this.hasDisplayName())
+        {
+            return this.displayName;
+        }
+        return this.latestNick;
+    }
+
+    @Override
+    public void setDisplayName(final String newName)
+    {
+        if (newName != null)
+        {
+            this.displayName = newName;
+        }
+        else
+        {
+            this.displayName = "";
+        }
     }
 
     @Override
@@ -120,6 +160,6 @@ public class OfflinePlayerImpl implements IOfflinePlayer
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).append("latestNick", this.latestNick).append("group", this.group).append("meta", this.meta).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).append("latestNick", this.latestNick).append("displayName", this.displayName).append("isBanned", this.isBanned).append("group", this.group).append("groupExpireAt", this.groupExpireAt).append("meta", this.meta).toString();
     }
 }
