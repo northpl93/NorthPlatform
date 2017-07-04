@@ -31,8 +31,8 @@ public class RevivePlayerCountdown extends AbstractCountdown
     {
         final String locale = this.player.spigot().getLocale();
 
-        final String title = translateAlternateColorCodes(this.messages.getMessage(locale, "die.title"));
-        final String subtitle = translateAlternateColorCodes(this.messages.getMessage(locale, "die.subtitle", time));
+        final String title = translateAlternateColorCodes(this.messages.getMessage(locale, "die.respawn.title"));
+        final String subtitle = translateAlternateColorCodes(this.messages.getMessage(locale, "die.respawn.subtitle", time));
 
         this.player.sendTitle(new Title(title, subtitle, 0, 20, 0));
     }

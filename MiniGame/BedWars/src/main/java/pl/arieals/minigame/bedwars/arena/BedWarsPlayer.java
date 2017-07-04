@@ -14,6 +14,11 @@ public class BedWarsPlayer
         this.alive = true;
     }
 
+    public Player getBukkitPlayer()
+    {
+        return this.bukkitPlayer;
+    }
+
     public Team getTeam()
     {
         return this.team;

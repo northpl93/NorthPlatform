@@ -50,6 +50,11 @@ public class BedWarsArena implements IArenaData
         }
     }
 
+    public LocalArena getArena()
+    {
+        return this.arena;
+    }
+
     public BedWarsArenaConfig getConfig()
     {
         return this.config;

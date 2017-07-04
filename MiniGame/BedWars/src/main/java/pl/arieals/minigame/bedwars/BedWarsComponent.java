@@ -8,8 +8,10 @@ import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.minigame.bedwars.arena.generator.GeneratorTask;
 import pl.arieals.minigame.bedwars.arena.generator.ItemRotator;
 import pl.arieals.minigame.bedwars.listener.ArenaStartListener;
+import pl.arieals.minigame.bedwars.listener.BedDestroyListener;
 import pl.arieals.minigame.bedwars.listener.BuildListener;
 import pl.arieals.minigame.bedwars.listener.DeathListener;
+import pl.arieals.minigame.bedwars.listener.GameEndListener;
 import pl.arieals.minigame.bedwars.listener.InvisibleListener;
 import pl.arieals.minigame.bedwars.listener.PlayerTeamListener;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
@@ -35,7 +37,9 @@ public class BedWarsComponent extends Component
                 new PlayerTeamListener(), //wejscie,start areny,wyjscie
                 new BuildListener(), // crafting,budowanie,niszczenie
                 new DeathListener(), // smierc gracza
-                new InvisibleListener()); // blokady specjalnie dla graczy niewidzialnych
+                new BedDestroyListener(), // zniszczenie lozka
+                new InvisibleListener(), // blokady specjalnie dla graczy niewidzialnych
+                new GameEndListener()); // eliminacja teamu i koniec gry
 
         // uruchamiamy task generatorów co 1 tick
         new GeneratorTask().runTaskTimer(this.bukkitApi.getPluginMain(), 1, 1);

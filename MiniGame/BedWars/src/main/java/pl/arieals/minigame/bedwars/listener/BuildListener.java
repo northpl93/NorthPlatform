@@ -12,15 +12,28 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
+import pl.arieals.minigame.bedwars.event.BedDestroyedEvent;
+import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class BuildListener implements Listener
 {
+    @Inject
+    private BukkitApiCore apiCore;
+    @Inject @Messages("BedWars")
+    private MessagesBox   messages;
+
     @EventHandler
     public void onCrafting(final CraftItemEvent event) // blokujemy wszelki crafting zeby sami nie zrobili sobie blokow z irona
     {
@@ -116,8 +129,14 @@ public class BuildListener implements Listener
             event.setCancelled(true); // gracz nie moze zniszczyc lozka swojej druzyny
             return true;
         }
-
+        if (! teamAt.isBedAlive())
+        {
+            return true; // lozko mozna zniszczyc tylko raz, zabezpieczenie przed bugami Bukkita
+        }
         teamAt.setBedAlive(false); // oznaczamy, ze lozko druzyny zostalo zniszczone
+
+        // wywolujemy event zniszczenia lozka
+        this.apiCore.callEvent(new BedDestroyedEvent(arenaData.getArena(), playerData.getBukkitPlayer(), block, teamAt));
 
         return true;
     }
@@ -133,5 +152,11 @@ public class BuildListener implements Listener
             }
         }
         return false;
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

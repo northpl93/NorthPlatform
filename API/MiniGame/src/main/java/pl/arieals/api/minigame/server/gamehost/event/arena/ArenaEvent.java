@@ -7,6 +7,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 
+/**
+ * Reprezentuje event dotyczący danej areny minigry.
+ */
 public abstract class ArenaEvent extends Event
 {
     protected final LocalArena arena;
@@ -16,6 +19,10 @@ public abstract class ArenaEvent extends Event
         this.arena = arena;
     }
 
+    /**
+     * Zwraca arene której dotyczy dany event.
+     * @return arena powiązana z eventem.
+     */
     public LocalArena getArena()
     {
         return this.arena;

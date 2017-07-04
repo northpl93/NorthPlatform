@@ -14,6 +14,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
@@ -25,11 +28,15 @@ import pl.arieals.minigame.bedwars.scoreboard.GameScoreboard;
 import pl.arieals.minigame.bedwars.scoreboard.LobbyScoreboard;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class PlayerTeamListener implements Listener
 {
     @Inject
     private IScoreboardManager scoreboardManager;
+    @Inject @Messages("BedWars")
+    private MessagesBox        messages;
 
     @EventHandler
     public void playerJoin(final PlayerJoinArenaEvent event)
@@ -82,7 +89,7 @@ public class PlayerTeamListener implements Listener
         final Player player = event.getPlayer();
         final Block block = event.getClickedBlock();
 
-        if (block.getType() != Material.CHEST)
+        if (block == null || block.getType() != Material.CHEST)
         {
             return;
         }
@@ -105,6 +112,13 @@ public class PlayerTeamListener implements Listener
         {
             // jesli team ma lozko lub zywych graczy to anulujemy otwarcie skrzynki
             event.setCancelled(true);
+            this.messages.sendMessage(player, "chest_blocked", teamAt.getColorChar(), "nazwa druzyny");
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

@@ -7,8 +7,14 @@ import org.apache.commons.lang.StringUtils;
 
 import pl.north93.zgame.api.bukkit.utils.ChatUtils;
 
+/**
+ * Klasa odpowiedzialna za formatowanie wiadomości.
+ */
 public enum MessageLayout
 {
+    /**
+     * Domyślny format, tylko koloruje wiadomość.
+     */
     DEFAULT
             {
                 @Override
@@ -17,6 +23,20 @@ public enum MessageLayout
                     return new String[] { translateAlternateColorCodes(message) };
                 }
             },
+    /**
+     * Wiadomość otaczają spacje linijkę wyżej i niżej.
+     */
+    SEPARATED
+            {
+                @Override
+                public String[] processMessage(final String message)
+                {
+                    return new String[] {"", translateAlternateColorCodes(message), ""};
+                }
+            },
+    /**
+     * Wiadomość jest wyśrodkowana sprytnym algorytmem.
+     */
     CENTER
             {
                 @Override

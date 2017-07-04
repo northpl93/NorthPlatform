@@ -3,7 +3,7 @@
     <lobby x="0" y="0" z="0" yaw="0" pitch="0"/>
 
     <teams>
-        <team color="RED">
+        <team color="RED" scoreboardOrder="0">
             <teamRegion>
                 <from x="0" y="0" z="0"/>
                 <to x="0" y="0" z="0"/>

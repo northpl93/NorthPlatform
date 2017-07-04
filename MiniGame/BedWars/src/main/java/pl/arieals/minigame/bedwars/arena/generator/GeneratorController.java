@@ -60,6 +60,11 @@ public class GeneratorController
         }
     }
 
+    public LocalArena getArena() // zwraca arene do ktorej nalezy generator
+    {
+        return this.arena;
+    }
+
     public Location getLocation()
     {
         return this.location;
@@ -96,6 +101,11 @@ public class GeneratorController
         return this.arena.getTimer().getCurrentTime(TimeUnit.SECONDS) * 20;
     }
 
+    /*default*/ List<ItemGeneratorEntry> getEntries()
+    {
+        return this.entries;
+    }
+
     private void setupEntries()
     {
         configLoop:
@@ -112,7 +122,7 @@ public class GeneratorController
         }
     }
 
-    private class ItemGeneratorEntry
+    /*default*/ class ItemGeneratorEntry
     {
         private final Set<BedWarsGeneratorItemConfig> items = new TreeSet<>(Comparator.comparing(BedWarsGeneratorItemConfig::getStartAt).reversed());
         private int timer;
@@ -131,6 +141,13 @@ public class GeneratorController
                 return true;
             }
             return false;
+        }
+
+        public BedWarsGeneratorItemConfig getCurrent()
+        {
+            return this.items.stream()
+                             .filter(config -> config.getStartAt() <= GeneratorController.this.getGameTime())
+                             .findFirst().orElse(null);
         }
 
         private void tick(final long gameTime)

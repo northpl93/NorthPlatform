@@ -19,11 +19,18 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 public class BedWarsTeamConfig
 {
     @XmlAttribute(required = true)
+    private int         scoreboardOrder;
+    @XmlAttribute(required = true)
     private ChatColor   color;
     @XmlElement(required = true, name = "teamRegion")
     private XmlCuboid   teamRegion;
     @XmlElement(required = true, name = "spawnLocation")
     private XmlLocation spawnLocation;
+
+    public int getScoreboardOrder()
+    {
+        return this.scoreboardOrder;
+    }
 
     public ChatColor getColor()
     {
@@ -43,6 +50,6 @@ public class BedWarsTeamConfig
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("color", this.color).append("teamRegion", this.teamRegion).append("spawnLocation", this.spawnLocation).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("scoreboardOrder", this.scoreboardOrder).append("color", this.color).append("teamRegion", this.teamRegion).append("spawnLocation", this.spawnLocation).toString();
     }
 }

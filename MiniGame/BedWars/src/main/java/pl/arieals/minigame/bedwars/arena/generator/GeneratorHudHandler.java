@@ -13,24 +13,27 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftArmorStand;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import io.netty.buffer.ByteBuf;
+import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
 import pl.arieals.minigame.bedwars.cfg.BedWarsGeneratorItemConfig;
 import pl.north93.zgame.api.bukkit.utils.hologram.IHologram;
 import pl.north93.zgame.api.bukkit.utils.hologram.TranslatedLine;
 import pl.north93.zgame.api.bukkit.utils.nms.EntityMetaPacketHelper;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
 class GeneratorHudHandler
 {
     @Inject @Messages("BedWars")
-    private MessagesBox messages;
+    private MessagesBox               messages;
     private final GeneratorController generator;
     private final boolean             enabled;
     private final IHologram           hologram;
@@ -50,6 +53,15 @@ class GeneratorHudHandler
             this.item.setVisible(false);
             this.item.setGravity(false);
             this.item.setHelmet(new ItemStack(generator.getGeneratorType().getHudItem()));
+            this.item.setCollidable(false);
+
+            final BedWarsGeneratorItemConfig current = this.generator.getEntries().get(0).getCurrent();
+            if (current != null)
+            {
+                // wylaczamy wywalanie powiadomien o  generatorach wlaczonych od
+                // poczatku
+                current.setAnnounced(true);
+            }
         }
         else
         {
@@ -65,9 +77,11 @@ class GeneratorHudHandler
             return;
         }
 
+        this.checkAnnouncement(currentItem);
+
         final MessagesBox messages = this.messages;
         this.hologram.setLine(0, new TranslatedLine(messages, "generator.tier", currentItem.getName()));
-        this.hologram.setLine(1, new TranslatedLine(messages, "generator.type." + this.generator.getGeneratorType().getName()));
+        this.hologram.setLine(1, new TranslatedLine(messages, "generator.type.nominative." + this.generator.getGeneratorType().getName()));
 
         if (currentItem.getStartAt() > this.generator.getGameTime())
         {
@@ -118,6 +132,44 @@ class GeneratorHudHandler
         }
 
         this.hologram.setLine(2, new TranslatedLine(this.messages, "generator.overload"));
+        this.checkAnnouncement(null);
+    }
+
+    // Wysyla komunikaty o nowym itemie w generatorze
+    private void checkAnnouncement(final BedWarsGeneratorItemConfig item)
+    {
+        if (! this.enabled)
+        {
+            return;
+        }
+
+        final BedWarsGeneratorItemConfig current;
+        if (item == null)
+        {
+            final GeneratorController.ItemGeneratorEntry itemGeneratorEntry = this.generator.getEntries().get(0);
+            current = itemGeneratorEntry.getCurrent();
+        }
+        else
+        {
+            current = item;
+        }
+        if (current.getStartAt() > this.generator.getGameTime())
+        {
+            return; // nie wywalamy komunikatu jesli generator w ogole nie wystartowal (lapis)
+        }
+
+        if (current.isAnnounced())
+        {
+            return;
+        }
+        current.setAnnounced(true);
+
+        final PlayersManager playersManager = this.generator.getArena().getPlayersManager();
+        for (final Player player : playersManager.getPlayers())
+        {
+            final String generatorName = this.messages.getMessage(player.spigot().getLocale(), "generator.type.genitive." + this.generator.getGeneratorType().getName());
+            this.messages.sendMessage(player, "generator.upgrade", MessageLayout.SEPARATED, generatorName, current.getName());
+        }
     }
 
     @Override

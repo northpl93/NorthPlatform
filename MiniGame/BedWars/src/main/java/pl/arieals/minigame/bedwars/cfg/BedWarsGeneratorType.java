@@ -31,10 +31,11 @@ public class BedWarsGeneratorType
     {
     }
 
-    public BedWarsGeneratorType(final String name, final int overload, final List<BedWarsGeneratorItemConfig> items)
+    public BedWarsGeneratorType(final String name, final int overload, final Material hudItem, final List<BedWarsGeneratorItemConfig> items)
     {
         this.name = name;
         this.overload = overload;
+        this.hudItem = hudItem;
         this.items = items;
     }
 
