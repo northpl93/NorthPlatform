@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -70,10 +71,14 @@ public class PlayersManager
         // todo implement spectating?
         synchronized (this) // handle only one join request at same time
         {
-            //if (this.gameHostManager.getMiniGameConfig().getLobbyMode() == LobbyMode.INTEGRATED && ! this.arena.getWorld().isReady())
-            if ( this.arena.getGamePhase() == GamePhase.INITIALISING)
+            if (this.arena.getGamePhase() == GamePhase.INITIALISING)
             {
                 // jesli gra uzywa lobby zintegrowanego z mapa to mapa musi byc gotowa/zaladowana
+                return false;
+            }
+            if (!this.gameHostManager.getMiniGameConfig().isDynamic() && this.arena.getGamePhase() != GamePhase.LOBBY)
+            {
+                // jesli gra nie jest dynamiczna to wchodzic na nia mozna tylko podczas LOBBY
                 return false;
             }
             if (! this.canJoin(players))
@@ -109,7 +114,7 @@ public class PlayersManager
     {
         this.players.add(player);
 
-        PlayerJoinArenaEvent event = new PlayerJoinArenaEvent(player, this.arena, "player.joined_arena");
+        final PlayerJoinArenaEvent event = new PlayerJoinArenaEvent(player, this.arena, "player.joined_arena");
         Bukkit.getPluginManager().callEvent(event);
         
         if ( event.getJoinMessage() != null )
@@ -133,7 +138,7 @@ public class PlayersManager
             mapVote.removeVote(player);
         }
 
-        PlayerQuitArenaEvent event = new PlayerQuitArenaEvent(player, this.arena, "player.quit_arena");
+        final PlayerQuitArenaEvent event = new PlayerQuitArenaEvent(player, this.arena, "player.quit_arena");
         Bukkit.getPluginManager().callEvent(event);
         
         if ( event.getQuitMessage() != null )
@@ -151,6 +156,43 @@ public class PlayersManager
     {
         final MiniGameConfig miniGame = this.gameHostManager.getMiniGameConfig();
         return this.players.size() >= miniGame.getToStart();
+    }
+
+    /**
+     * Wysyła przetłumaczoną wiadomość do graczy znajdujących się na tej arenie.
+     * Dodatkowo uwzględnia warunek wysłania wiadomości.
+     *
+     * @param condition warunek który musi spełnić gracz aby otrzymać wiadomość.
+     * @param messagesBox obiekt przechowujący wiadomości.
+     * @param messageKey klucz wiadomości.
+     * @param layout Wyglad tej wiadomości.
+     * @param args argumenty.
+     */
+    public void broadcast(final Predicate<Player> condition, final MessagesBox messagesBox, final String messageKey, final MessageLayout layout, final Object... args)
+    {
+        for (final Player player : this.players)
+        {
+            if (! condition.test(player))
+            {
+                continue;
+            }
+            messagesBox.sendMessage(player, messageKey, layout, args);
+        }
+    }
+
+    /**
+     * Wysyła przetłumaczoną wiadomość do graczy znajdujących się na tej arenie
+     * z domyślnym layoutem.
+     * Dodatkowo uwzględnia warunek wysłania wiadomości.
+     *
+     * @param condition warunek który musi spełnić gracz aby otrzymać wiadomość.
+     * @param messagesBox obiekt przechowujący wiadomości.
+     * @param messageKey klucz wiadomości.
+     * @param args argumenty.
+     */
+    public void broadcast(final Predicate<Player> condition, final MessagesBox messagesBox, final String messageKey, final Object... args)
+    {
+        this.broadcast(condition, messagesBox, messageKey, MessageLayout.DEFAULT, args);
     }
 
     /**

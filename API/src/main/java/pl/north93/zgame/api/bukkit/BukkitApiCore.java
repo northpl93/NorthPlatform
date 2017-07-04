@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 
@@ -149,6 +150,10 @@ public class BukkitApiCore extends ApiCore
         return new File(this.pluginMain.getDataFolder(), name);
     }
 
+    /**
+     * Rejestruje podane listenery w Bukkicie.
+     * @param listeners listenery do zarejestrowania.
+     */
     public void registerEvents(final Listener... listeners)
     {
         final PluginManager pluginManager = this.pluginMain.getServer().getPluginManager();
@@ -156,6 +161,18 @@ public class BukkitApiCore extends ApiCore
         {
             pluginManager.registerEvents(listener, this.pluginMain);
         }
+    }
+
+    /**
+     * Wywołuje dany event a następnie zwraca jego instancję.
+     * @param event event do wywołania.
+     * @param <T> typ eventu.
+     * @return instancja podana jako argument.
+     */
+    public <T extends Event> T callEvent(final T event)
+    {
+        this.pluginMain.getServer().getPluginManager().callEvent(event);
+        return event;
     }
 
     private UUID obtainServerId() throws ConfigurationException
