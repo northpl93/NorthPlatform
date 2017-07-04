@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.server.v1_10_R1.Chunk;
+import net.minecraft.server.v1_10_R1.MinecraftServer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.craftbukkit.v1_10_R1.CraftChunk;
-import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -51,7 +51,11 @@ public class WorldManager implements IWorldManager, Listener
         final Main plugin = this.apiCore.getPluginMain();
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this.chunkLoadingTask, 0, 2);
         Bukkit.getPluginManager().registerEvents(this, plugin);
-        ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().savingDisabled = true; // disable auto-saving in world 0
+        Bukkit.getWorlds().get(0).setAutoSave(false); // disable auto-saving in world 0
+        if (MinecraftServer.getServer().autosavePeriod > 0)
+        {
+            System.err.println("Game host is configured to autosave worlds. This may affect performance. Set ticks-per.autosave in bukkit.yml to 0");
+        }
     }
 
     @Override

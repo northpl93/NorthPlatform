@@ -24,8 +24,10 @@ import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
+import pl.arieals.minigame.bedwars.event.TeamEliminatedEvent;
 import pl.arieals.minigame.bedwars.scoreboard.GameScoreboard;
 import pl.arieals.minigame.bedwars.scoreboard.LobbyScoreboard;
+import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
@@ -33,6 +35,8 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class PlayerTeamListener implements Listener
 {
+    @Inject
+    private BukkitApiCore      apiCore;
     @Inject
     private IScoreboardManager scoreboardManager;
     @Inject @Messages("BedWars")
@@ -80,6 +84,12 @@ public class PlayerTeamListener implements Listener
         if (team != null)
         {
             team.getPlayers().remove(event.getPlayer());
+            if (! team.isTeamAlive())
+            {
+                // jesli gracz byl ostatni zyjacy w teamie i team nie mial lozka
+                // to go eliminujemy
+                this.apiCore.callEvent(new TeamEliminatedEvent(event.getArena(), team));
+            }
         }
     }
 
