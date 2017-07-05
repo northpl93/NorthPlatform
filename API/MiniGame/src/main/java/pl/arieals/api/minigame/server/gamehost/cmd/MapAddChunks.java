@@ -21,7 +21,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
-import pl.arieals.api.minigame.shared.api.GameMapConfig;
+import pl.arieals.api.minigame.shared.api.cfg.GameMapConfig;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlChunk;
 import pl.north93.zgame.api.global.commands.Arguments;

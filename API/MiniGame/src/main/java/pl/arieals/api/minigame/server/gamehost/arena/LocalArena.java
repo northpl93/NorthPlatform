@@ -27,6 +27,7 @@ public class LocalArena implements IArena
     private final ArenaWorld          world;
     private final PlayersManager      playersManager;
     private final StaticTimer         timer;
+    private final DeathMatch          deathMatch;
     private       IArenaData          arenaData;
     private       MapVote             mapVote;
     private final ArenaStartScheduler startScheduler;
@@ -39,6 +40,7 @@ public class LocalArena implements IArena
         this.world = new ArenaWorld(gameHostManager, this);
         this.playersManager = new PlayersManager(gameHostManager, arenaManager, this);
         this.timer = new StaticTimer();
+        this.deathMatch = new DeathMatch(gameHostManager, this);
         this.startScheduler = new ArenaStartScheduler(this);
     }
 
@@ -106,7 +108,12 @@ public class LocalArena implements IArena
     {
         return this.startScheduler;
     }
-    
+
+    public DeathMatch getDeathMatch()
+    {
+        return this.deathMatch;
+    }
+
     public MapVote getMapVote()
     {
         return this.mapVote;

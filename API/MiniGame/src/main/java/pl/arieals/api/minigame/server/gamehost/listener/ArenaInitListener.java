@@ -1,6 +1,7 @@
 package pl.arieals.api.minigame.server.gamehost.listener;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -27,12 +28,16 @@ public class ArenaInitListener implements Listener
 {
     @Inject
     private MiniGameServer server;
+    @Inject
+    private Logger         logger;
 
     @EventHandler(priority = EventPriority.LOW) // before normal
     public void onArenaInit(final GameInitEvent event)
     {
         final GameHostManager hostManager = this.server.getServerManager();
         final LocalArena arena = event.getArena();
+
+        this.logger.info("Minigames API is initialising arena " + arena.getId());
 
         if (arena.isDynamic())
         {
@@ -55,6 +60,9 @@ public class ArenaInitListener implements Listener
 
         // usuwamy arena data zeby nowa gra miala czyste srodowisko pracy
         arena.setArenaData(null);
+
+        // resetujemy stan death matchu.
+        arena.getDeathMatch().resetState();
 
         if (arena.getLobbyMode() == LobbyMode.INTEGRATED)
         {

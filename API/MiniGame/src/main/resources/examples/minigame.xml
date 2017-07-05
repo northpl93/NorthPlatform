@@ -5,10 +5,15 @@
         <enabled>false</enabled>
         <numberOfMaps>3</numberOfMaps>
     </mapVoting>
+    <deathMatch>
+        <enabled>true</enabled>
+        <templateName>DeathMatch</templateName>
+    </deathMatch>
     <isDynamic>false</isDynamic>
     <slots>12</slots>
     <vipSlots>2</vipSlots>
     <toStart>1</toStart>
+    <startCooldown>600</startCooldown>
     <mapsDirectory>game_worlds</mapsDirectory>
     <arenas>2</arenas>
 </minigame>

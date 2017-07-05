@@ -24,6 +24,7 @@ import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.arieals.api.minigame.server.gamehost.listener.ArenaEndListener;
 import pl.arieals.api.minigame.server.gamehost.listener.ArenaInitListener;
+import pl.arieals.api.minigame.server.gamehost.listener.DeathMatchStartListener;
 import pl.arieals.api.minigame.server.gamehost.listener.GameStartListener;
 import pl.arieals.api.minigame.server.gamehost.listener.PlayerListener;
 import pl.arieals.api.minigame.server.gamehost.listener.VisibilityListener;
@@ -34,7 +35,7 @@ import pl.arieals.api.minigame.server.gamehost.world.impl.MapTemplateManager;
 import pl.arieals.api.minigame.server.gamehost.world.impl.WorldManager;
 import pl.arieals.api.minigame.shared.api.IGameHostRpc;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
-import pl.arieals.api.minigame.shared.api.MiniGameConfig;
+import pl.arieals.api.minigame.shared.api.cfg.MiniGameConfig;
 import pl.arieals.api.minigame.shared.api.arena.netevent.IArenaNetEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -74,6 +75,7 @@ public class GameHostManager implements IServerManager
                 new VisibilityListener(), // zarzadza widocznoscia graczy i czatu
                 new ArenaInitListener(), // inicjuje arene po dodaniu/zakonczeniu poprzedniej gry
                 new GameStartListener(), // inicjuje gre po starcie
+                new DeathMatchStartListener(), // pilnuje starty death matchu
                 new ArenaEndListener()); // pilnuje by arena nie stala pusta i wykonuje czynnosci koncowe
         
         this.loadMapTemplates();

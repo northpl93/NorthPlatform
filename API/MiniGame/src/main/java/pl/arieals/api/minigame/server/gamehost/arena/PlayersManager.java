@@ -15,7 +15,7 @@ import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.server.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.GamePhase;
-import pl.arieals.api.minigame.shared.api.MiniGameConfig;
+import pl.arieals.api.minigame.shared.api.cfg.MiniGameConfig;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;

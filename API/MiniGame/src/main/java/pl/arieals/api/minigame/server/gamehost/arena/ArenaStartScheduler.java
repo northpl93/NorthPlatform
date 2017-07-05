@@ -7,6 +7,7 @@ import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
+import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.ArenaStartScheduledEvent;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.north93.zgame.api.bukkit.utils.SimpleCountdown;
@@ -16,13 +17,10 @@ public class ArenaStartScheduler
 {
     private final LocalArena arena;
     @Inject
-    private MiniGameServer minigameServer;
-    
-    private int gameStartCooldown = 600;
-    
+    private MiniGameServer  minigameServer;
     private SimpleCountdown startCountdown;
     
-    public ArenaStartScheduler(LocalArena arena)
+    public ArenaStartScheduler(final LocalArena arena)
     {
         this.arena = arena;
     }
@@ -34,12 +32,8 @@ public class ArenaStartScheduler
     
     public int getGameStartCooldown()
     {
-        return this.gameStartCooldown;
-    }
-    
-    public void setGameStartCooldown(int gameStartCooldown)
-    {
-        this.gameStartCooldown = gameStartCooldown;
+        final GameHostManager serverManager = this.minigameServer.getServerManager();
+        return serverManager.getMiniGameConfig().getStartCooldown();
     }
     
     public boolean isStartScheduled()
@@ -53,7 +47,7 @@ public class ArenaStartScheduler
         Preconditions.checkState(this.arena.getGamePhase() == GamePhase.LOBBY, "Invalid arena game phase");
         Preconditions.checkState(! this.isStartScheduled(), "Game start is already scheduled");
         
-        ArenaStartScheduledEvent event = new ArenaStartScheduledEvent(arena, gameStartCooldown);
+        ArenaStartScheduledEvent event = new ArenaStartScheduledEvent(this.arena, this.getGameStartCooldown());
         Bukkit.getPluginManager().callEvent(event);
         if ( event.isCancelled() )
         {

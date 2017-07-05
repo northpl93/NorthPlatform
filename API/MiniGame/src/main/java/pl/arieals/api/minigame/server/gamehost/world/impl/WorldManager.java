@@ -122,6 +122,28 @@ public class WorldManager implements IWorldManager, Listener
     }
 
     @Override
+    public boolean clearWorld(final String name)
+    {
+        if (Bukkit.getWorld(name) != null)
+        {
+            if (! this.unloadWorld(name))
+            {
+                return false;
+            }
+        }
+        try
+        {
+            FileUtils.deleteDirectory(new File(Bukkit.getWorldContainer(), name));
+            return true;
+        }
+        catch (final IOException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
     public void trimWorld(final World source, final String targetName, final Set<XmlChunk> chunks)
     {
         final WorldCreator creator = new WorldCreator(targetName);

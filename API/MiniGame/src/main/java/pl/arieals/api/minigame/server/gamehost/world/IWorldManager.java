@@ -15,5 +15,7 @@ public interface IWorldManager
 
     boolean unloadWorld(String name);
 
+    boolean clearWorld(String name);
+
     void trimWorld(World source, String targetName, Set<XmlChunk> chunks);
 }

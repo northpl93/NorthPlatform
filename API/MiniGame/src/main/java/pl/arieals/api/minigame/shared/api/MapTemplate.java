@@ -2,6 +2,8 @@ package pl.arieals.api.minigame.shared.api;
 
 import java.io.File;
 
+import pl.arieals.api.minigame.shared.api.cfg.GameMapConfig;
+
 public class MapTemplate
 {
     private final String name;

@@ -7,14 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-
-import org.spigotmc.SneakyThrow;
 
 import com.google.common.base.Preconditions;
 
 import pl.arieals.api.minigame.server.gamehost.world.IMapTemplateManager;
-import pl.arieals.api.minigame.shared.api.GameMapConfig;
+import pl.arieals.api.minigame.shared.api.cfg.GameMapConfig;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
 
 public class MapTemplateManager implements IMapTemplateManager

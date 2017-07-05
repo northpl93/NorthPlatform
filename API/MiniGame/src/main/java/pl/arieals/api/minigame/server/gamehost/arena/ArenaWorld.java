@@ -17,9 +17,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.MapSwitchedEvent;
+import pl.arieals.api.minigame.server.gamehost.event.arena.MapSwitchedEvent.MapSwitchReason;
 import pl.arieals.api.minigame.server.gamehost.world.ILoadingProgress;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
-import pl.arieals.api.minigame.shared.api.GameMapConfig;
+import pl.arieals.api.minigame.shared.api.cfg.GameMapConfig;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
@@ -132,11 +133,18 @@ public class ArenaWorld
         progress.onComplete(() ->
         {
             this.gameHostManager.publishArenaEvent(new ArenaDataChanged(this.arena.getId(), this.arena.getMiniGameId(), template.getName(), this.arena.getGamePhase(), this.arena.getPlayers().size()));
-            Bukkit.getPluginManager().callEvent(new MapSwitchedEvent(this.arena));
+            Bukkit.getPluginManager().callEvent(new MapSwitchedEvent(this.arena, MapSwitchReason.ARENA_INITIALISE));
             callback.callComplete();
         });
-        
+
         return callback;
+    }
+
+    /*default*/ void switchMap(final MapTemplate newMapTemplate, final World newWorld, final ILoadingProgress progress)
+    {
+        this.currentMapTemplate = newMapTemplate;
+        this.currentWorld = newWorld;
+        this.progress = progress;
     }
 
     public boolean delete()
