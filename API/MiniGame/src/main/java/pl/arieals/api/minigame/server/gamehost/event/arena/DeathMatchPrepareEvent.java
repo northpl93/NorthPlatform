@@ -8,6 +8,19 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 
+/**
+ * Event wywołuje się gdy arena do deathmatchu jest już załadowana i
+ * jest ustawiona jako główna mapa areny.
+ *
+ * {@code LocalArena#getWorld()} w tym evencie zwraca już informacje
+ * o nowej mapie do death matchu.
+ *
+ * Plugin powinien przeteleportować graczy na arenę i anulować
+ * wszystkie swoje zadania związane z starą mapą, aby mogła
+ * być bezpiecznie usunięta.
+ *
+ * Natychmiastowo po tym evencie stara mapa zostanie usunięta.
+ */
 public class DeathMatchPrepareEvent extends ArenaEvent
 {
     private static final HandlerList handlers = new HandlerList();

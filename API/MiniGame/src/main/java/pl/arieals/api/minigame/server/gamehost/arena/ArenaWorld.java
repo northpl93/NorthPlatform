@@ -20,6 +20,7 @@ import pl.arieals.api.minigame.server.gamehost.event.arena.MapSwitchedEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.MapSwitchedEvent.MapSwitchReason;
 import pl.arieals.api.minigame.server.gamehost.world.ILoadingProgress;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
+import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
 import pl.arieals.api.minigame.shared.api.cfg.GameMapConfig;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
@@ -150,21 +151,14 @@ public class ArenaWorld
     public boolean delete()
     {
         final IWorldManager worldManager = this.gameHostManager.getWorldManager();
-        if (! worldManager.unloadWorld(this.getName()))
+        if (this.arena.getDeathMatch().getState() == DeathMatchState.STARTED)
         {
-            return false;
+            return worldManager.clearWorld(this.arena.getDeathMatch().getDeathMathWorldName());
         }
-
-        try
+        else
         {
-            FileUtils.deleteDirectory(this.getWorldDirectory());
+            return worldManager.clearWorld(this.getName());
         }
-        catch (final IOException e)
-        {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
     }
 
     @Override

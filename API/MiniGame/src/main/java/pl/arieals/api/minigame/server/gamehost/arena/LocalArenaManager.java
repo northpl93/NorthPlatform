@@ -102,7 +102,7 @@ public class LocalArenaManager
             serverManager.publishArenaEvent(new ArenaDeletedEvent(arena.getId(), this.apiCore.getServerId(), arena.getMiniGameId()));
             if (! arena.getWorld().delete())
             {
-                this.logger.warning("Failed to unload world " + arena.getWorld().getName());
+                this.logger.warning("Failed to unload world of arena " + arena.getId());
             }
         }
     }
