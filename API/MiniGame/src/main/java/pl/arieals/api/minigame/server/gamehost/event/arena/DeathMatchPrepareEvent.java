@@ -15,9 +15,8 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
  * {@code LocalArena#getWorld()} w tym evencie zwraca już informacje
  * o nowej mapie do death matchu.
  *
- * Plugin powinien przeteleportować graczy na arenę i anulować
- * wszystkie swoje zadania związane z starą mapą, aby mogła
- * być bezpiecznie usunięta.
+ * Plugin powinien anulować wszystkie swoje zadania związane z
+ * starą mapą, aby mogła być bezpiecznie usunięta.
  *
  * Natychmiastowo po tym evencie stara mapa zostanie usunięta.
  */

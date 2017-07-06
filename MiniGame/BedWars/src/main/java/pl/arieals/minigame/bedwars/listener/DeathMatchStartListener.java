@@ -1,8 +1,6 @@
 package pl.arieals.minigame.bedwars.listener;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -22,10 +20,5 @@ public class DeathMatchStartListener implements Listener
         arenaData.getGenerators().clear(); // usuwamy generatory by je wylaczyc
         arenaData.getPlayerBlocks().clear(); // usuwamy bloki by nie trzymac referencji na swiat
         arenaData.getSecureRegions().clear(); // usuwamy bo niepotrzebne
-
-        for (final Player player : arena.getPlayersManager().getPlayers())
-        {
-            player.teleport(new Location(event.getNewWorld(), -241, 130, 303));
-        }
     }
 }

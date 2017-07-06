@@ -121,14 +121,7 @@ public class ArenaWorld
         final File templateDir = template.getMapDirectory();
         final ILoadingProgress progress = worldManager.regenWorld(this.getName(), templateDir, template.getMapConfig().getChunks());
 
-        this.currentMapTemplate = template;
-        this.progress = progress;
-        this.currentWorld = progress.getWorld();
-
-        for (final Map.Entry<String, String> gameRule : template.getMapConfig().getGameRules().entrySet())
-        {
-            this.currentWorld.setGameRuleValue(gameRule.getKey(), gameRule.getValue());
-        }
+        this.switchMap(template, progress.getWorld(), progress);
 
         final SimpleSyncCallback callback = new SimpleSyncCallback();
         progress.onComplete(() ->
@@ -146,6 +139,11 @@ public class ArenaWorld
         this.currentMapTemplate = newMapTemplate;
         this.currentWorld = newWorld;
         this.progress = progress;
+
+        for (final Map.Entry<String, String> gameRule : newMapTemplate.getMapConfig().getGameRules().entrySet())
+        {
+            newWorld.setGameRuleValue(gameRule.getKey(), gameRule.getValue());
+        }
     }
 
     public boolean delete()

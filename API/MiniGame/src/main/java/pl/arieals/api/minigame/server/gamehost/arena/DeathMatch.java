@@ -3,6 +3,8 @@ package pl.arieals.api.minigame.server.gamehost.arena;
 import static com.google.common.base.Preconditions.checkState;
 
 
+import javax.xml.bind.JAXB;
+
 import java.io.File;
 import java.util.logging.Logger;
 
@@ -20,6 +22,7 @@ import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
 import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
 import pl.arieals.api.minigame.shared.api.cfg.DeathMatchConfig;
+import pl.arieals.api.minigame.shared.api.cfg.GameMapConfig;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -62,7 +65,8 @@ public class DeathMatch
         checkState(this.arena.getGamePhase() == GamePhase.STARTED, "Arena must be in STARTED gamephase");
 
         this.state = DeathMatchState.LOADING;
-        final MapTemplate template = this.manager.getMapTemplateManager().getMapTemplate(this.getConfig().getTemplateName());
+        final File templateFile = new File(this.manager.getMapTemplateManager().getTemplatesDirectory(), this.getConfig().getTemplateName());
+        final MapTemplate template = this.loadTemplate(templateFile);
 
         final ArenaWorld arenaWorld = this.arena.getWorld();
         final IWorldManager worldManager = this.manager.getWorldManager();
@@ -112,6 +116,11 @@ public class DeathMatch
             }
         }
         this.state = DeathMatchState.NOT_STARTED;
+    }
+
+    private MapTemplate loadTemplate(final File dir)
+    {
+        return new MapTemplate(dir.getName(), dir, JAXB.unmarshal(new File(dir, "mapconfig.xml"), GameMapConfig.class));
     }
 
     @Override
