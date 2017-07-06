@@ -15,6 +15,11 @@ import pl.arieals.minigame.bedwars.arena.BedWarsArena;
  */
 public final class ItemRotator extends Thread
 {
+    public ItemRotator()
+    {
+        super("BedWars-ItemRotator");
+    }
+
     @Override
     public synchronized void run() // mark everything as synchronized
     {
