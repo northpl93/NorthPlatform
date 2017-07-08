@@ -10,7 +10,6 @@ import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.skyblock.shop.ShopComponent;
 
 public class PayCmd extends NorthCommand
@@ -61,11 +60,10 @@ public class PayCmd extends NorthCommand
         {
             sender.sendRawMessage("&f&l> &7Pomyslnie przelano &6" + value + " &7do &6" + nick + "&7!");
 
-            final IOnlinePlayer receiver = this.networkManager.getOnlinePlayer(nick).get();
-            if (receiver != null)
+            this.networkManager.getPlayers().ifOnline(nick, iOnlinePlayer ->
             {
-                receiver.sendRawMessage("&f&l> &7Otrzymales wlasnie &6" + value + " &7od &6" + sender.getName() + "&7!");
-            }
+                iOnlinePlayer.sendRawMessage("&f&l> &7Otrzymales wlasnie &6" + value + " &7od &6" + sender.getName() + "&7!");
+            });
         }
         else
         {
