@@ -25,6 +25,7 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.elytrarace.cfg.Score;
 import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
 import pl.north93.zgame.api.bukkit.utils.FastBlockOp;
+import pl.north93.zgame.api.bukkit.utils.nms.NorthFallingBlock;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -59,14 +60,14 @@ public class ScoreController
             }
 
             {
-                final EntityFallingBlock fallingBlock = NorthFallingBlock.create(block.getLocation(), type, block.getData());
+                final EntityFallingBlock fallingBlock = NorthFallingBlock.createDerped(block.getLocation(), type, block.getData());
                 world.addEntity(fallingBlock, CreatureSpawnEvent.SpawnReason.CUSTOM);
 
                 this.normalBlocks.add(fallingBlock.getBukkitEntity());
             }
 
             {
-                final EntityFallingBlock fallingBlock = NorthFallingBlock.create(block.getLocation(), Material.WOOL, (byte) 7);
+                final EntityFallingBlock fallingBlock = NorthFallingBlock.createDerped(block.getLocation(), Material.WOOL, (byte) 7);
                 world.addEntity(fallingBlock, CreatureSpawnEvent.SpawnReason.CUSTOM);
 
                 this.grayedBlocks.add(fallingBlock.getBukkitEntity());

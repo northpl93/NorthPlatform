@@ -28,9 +28,24 @@ public class FastBlockOp
 
         final ChunkSection chunksection = sections[block.getY() >> 4];
 
+        final int relX = block.getX() & 15;
+        final int relY = block.getY() & 15;
+        final int relZ = block.getZ() & 15;
+
         final IBlockData newBlockData = CraftMagicNumbers.getBlock(material).fromLegacyData(data);
         // ta metoda ma inne parametry w normalnym spigocie!!! NorthSpigot ma dodatkowy swiat i chunk
-        chunksection.setType(nmsChunk.world, nmsChunk, block.getX() & 15, block.getY() & 15, block.getZ() & 15, newBlockData);
+        chunksection.setType(nmsChunk.world, nmsChunk, relX, relY, relZ, newBlockData);
+
+        final int mapIndex = relZ << 4 | relX;
+        final int actual = nmsChunk.heightMap[mapIndex];
+        if (block.getY() >= actual && material == Material.AIR)
+        {
+            fixHeightMap(block, nmsChunk, mapIndex);
+        }
+        else if (block.getY() > actual && material != Material.AIR)
+        {
+            nmsChunk.heightMap[mapIndex] = block.getY(); // todo check is it works
+        }
 
         // informujemy o zmianie
         final PlayerChunk chunk = ((WorldServer) nmsChunk.world).getPlayerChunkMap().getChunk(nmsChunk.locX, nmsChunk.locZ);
@@ -38,7 +53,20 @@ public class FastBlockOp
         {
             // wywolanie metody a mozna znalezc w PlayerChunkMap#flagDirty(BlockPosition blockposition)
             // dodaje ona blok do listy dirty-blockow
-            chunk.a(block.getX() & 15, block.getY(), block.getZ() & 15);
+            chunk.a(relX, block.getY(), relZ);
         }
+    }
+
+    private static void fixHeightMap(final Block block, final Chunk nmsChunk, final int mapIndex)
+    {
+        for (int i = block.getY(); i >= 0; i--)
+        {
+            if (! block.getChunk().getBlock(block.getX(), i, block.getZ()).isEmpty())
+            {
+                nmsChunk.heightMap[mapIndex] = i;
+                return;
+            }
+        }
+        nmsChunk.heightMap[mapIndex] = 0;
     }
 }
