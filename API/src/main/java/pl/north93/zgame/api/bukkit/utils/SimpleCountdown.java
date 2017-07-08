@@ -135,14 +135,27 @@ public class SimpleCountdown
             this.ticksLeft--;
             if ( this.tickCallback != null )
             {
-                this.tickCallback.run();
+                callCallback(tickCallback);
             }
             
             if ( this.ticksLeft == 0 && this.endCallback != null )
             {   
                 this.stop();
-                this.endCallback.run();
+                callCallback(endCallback);
             }
+        }
+    }
+    
+    private void callCallback(Runnable callback)
+    {
+        try
+        {
+            callback.run();
+        }
+        catch ( Throwable e )
+        {
+            System.err.println("An exception was throw in simple callback:");
+            e.printStackTrace();
         }
     }
 }
