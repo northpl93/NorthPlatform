@@ -29,8 +29,12 @@ public class MessagesBox
         catch (final MissingResourceException e)
         {
             e.printStackTrace();
-            return this.getBundle(Locale.forLanguageTag("pl-PL"));
+            if (! locale.toLanguageTag().equals("pl-PL")) // zapobiegamy Stackoverflow gdy faktycznie takiego bundla nie ma
+            {
+                return this.getBundle(Locale.forLanguageTag("pl-PL"));
+            }
         }
+        return null;
     }
 
     public String getMessage(final Locale locale, final String key)

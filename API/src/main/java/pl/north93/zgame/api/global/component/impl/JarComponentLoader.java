@@ -40,9 +40,25 @@ public class JarComponentLoader extends URLClassLoader
     }
 
     @Override
-    public URL getResource(final String name) // modified to search resources only in this jar
+    public URL getResource(final String name)
     {
-        return this.findResource(name);
+        URL resource = this.findResource(name);
+        if (resource != null)
+        {
+            return resource;
+        }
+
+        // u nas nie ma, sprawdzamy w naszych zaleznosciach
+        for (final JarComponentLoader dependency : this.dependencies)
+        {
+            if ((resource = dependency.getResource(name)) != null)
+            {
+                // udalo sie znalezc w ClassLoaderze zaleznosci
+                return resource;
+            }
+        }
+
+        return null;
     }
 
     @Override
