@@ -2,6 +2,7 @@ package pl.arieals.api.minigame.server.gamehost.arena;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Preconditions;
 
@@ -11,6 +12,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
 import pl.arieals.api.minigame.server.gamehost.region.IRegionManager;
+import pl.arieals.api.minigame.server.gamehost.scheduler.ArenaScheduler;
+import pl.arieals.api.minigame.server.gamehost.scheduler.IArenaScheduler;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
@@ -27,6 +30,7 @@ public class LocalArena implements IArena
     private final ArenaWorld          world;
     private final PlayersManager      playersManager;
     private final StaticTimer         timer;
+    private final ArenaScheduler      scheduler;
     private final DeathMatch          deathMatch;
     private       IArenaData          arenaData;
     private       MapVote             mapVote;
@@ -40,6 +44,7 @@ public class LocalArena implements IArena
         this.world = new ArenaWorld(gameHostManager, this);
         this.playersManager = new PlayersManager(gameHostManager, arenaManager, this);
         this.timer = new StaticTimer();
+        this.scheduler = new ArenaScheduler(this);
         this.deathMatch = new DeathMatch(gameHostManager, this);
         this.startScheduler = new ArenaStartScheduler(this);
     }
@@ -80,12 +85,33 @@ public class LocalArena implements IArena
         {
             return; // nic nie rób, jeżeli nie następuje zmiana fazy gry
         }
-        
+
+        this.scheduler.cancelAndClear();
         this.data.setGamePhase(gamePhase);
         this.arenaManager.setArena(this.data);
         this.gameHostManager.publishArenaEvent(new ArenaDataChanged(this.data.getId(), this.getMiniGameId(), this.getMiniGameId(), gamePhase, this.data.getPlayers().size()));
         
         GamePhaseEventFactory.getInstance().callEvent(this);
+    }
+
+    /**
+     * Przesuwa czas na arenie o podana wartosc w podanej jednostce.
+     * Ustawia nowy czas w timerze i przyspiesza wykonywanie zadan
+     * w ArenaSchedulerze. Dziala tylko w trybie STARTED.
+     *
+     * @param time wartosc przesuniecia czasu do przodu.
+     * @param timeUnit jednostka.
+     */
+    public void forwardTime(final long time, final TimeUnit timeUnit)
+    {
+        Preconditions.checkState(this.getGamePhase() == GamePhase.STARTED);
+
+        final long timeMilis = timeUnit.toMillis(time);
+        final long currentTime = this.timer.getCurrentTime(TimeUnit.MILLISECONDS);
+
+        final long newTime = currentTime + timeMilis;
+        this.timer.start(newTime, TimeUnit.MILLISECONDS, true);
+        this.scheduler.moveTimeForward(timeMilis / 50);
     }
 
     @Override
@@ -97,6 +123,11 @@ public class LocalArena implements IArena
     public StaticTimer getTimer()
     {
         return this.timer;
+    }
+
+    public IArenaScheduler getScheduler()
+    {
+        return this.scheduler;
     }
 
     public ArenaWorld getWorld()
