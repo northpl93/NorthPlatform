@@ -38,6 +38,7 @@ final class HoloLine
         this.armorStand.setGravity(false);
         this.armorStand.setVisible(false);
         this.armorStand.setCustomNameVisible(true);
+        this.armorStand.setMarker(true);
 
         // Musimy sledzic aktualizacje w trackerze zeby wysylac nowa nazwe
         final ObservableMap<EntityPlayer, Boolean> observableTrackerList = observeTracker(((CraftArmorStand) this.armorStand).getHandle());

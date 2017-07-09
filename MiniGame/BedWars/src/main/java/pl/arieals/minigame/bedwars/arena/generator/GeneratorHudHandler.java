@@ -48,12 +48,12 @@ class GeneratorHudHandler
         {
             final Location location = generator.getLocation();
 
-            this.hologram = IHologram.create(location.clone().add(0, 3, 0));
+            this.hologram = IHologram.create(location.clone().add(0, 4, 0));
             this.item = (ArmorStand) location.getWorld().spawnEntity(location.clone().add(0, 1.3, 0), EntityType.ARMOR_STAND);
             this.item.setVisible(false);
             this.item.setGravity(false);
             this.item.setHelmet(new ItemStack(generator.getGeneratorType().getHudItem()));
-            this.item.setCollidable(false);
+            this.item.setMarker(true);
 
             final BedWarsGeneratorItemConfig current = this.generator.getEntries().get(0).getCurrent();
             if (current != null)

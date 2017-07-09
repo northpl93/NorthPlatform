@@ -17,7 +17,7 @@ final class HologramImpl implements IHologram
 
     public HologramImpl(final Location location)
     {
-        this.location = location.clone().add(0, -1, 0);
+        this.location = location;
         this.lines = new LinkedList<>();
     }
 
