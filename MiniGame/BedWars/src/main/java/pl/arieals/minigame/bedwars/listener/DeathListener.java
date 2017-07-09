@@ -3,6 +3,7 @@ package pl.arieals.minigame.bedwars.listener;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColorCodes;
+import static pl.north93.zgame.api.global.utils.JavaUtils.instanceOf;
 
 
 import com.destroystokyo.paper.Title;
@@ -10,6 +11,7 @@ import com.destroystokyo.paper.Title;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.util.Vector;
 
@@ -31,6 +33,25 @@ public class DeathListener implements Listener
     private BukkitApiCore apiCore;
     @Inject @Messages("BedWars")
     private MessagesBox   messages;
+
+    @EventHandler
+    public void onPlayerHitPlayer(final EntityDamageByEntityEvent event)
+    {
+        final Player player = instanceOf(event.getEntity(), Player.class);
+        final Player damager = instanceOf(event.getDamager(), Player.class);
+        if (player == null || damager == null)
+        {
+            return;
+        }
+
+        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        final BedWarsPlayer damagerData = getPlayerData(damager, BedWarsPlayer.class);
+
+        if (playerData.getTeam() == damagerData.getTeam())
+        {
+            event.setCancelled(true);
+        }
+    }
 
     @EventHandler
     public void onPlayerDeath(final PlayerDeathEvent event)

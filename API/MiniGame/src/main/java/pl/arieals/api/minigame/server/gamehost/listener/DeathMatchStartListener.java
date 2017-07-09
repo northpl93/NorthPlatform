@@ -46,7 +46,9 @@ public class DeathMatchStartListener implements Listener
 
         for (final Player player : event.getArena().getPlayersManager().getPlayers())
         {
+            this.messages.sendMessage(player, "separator");
             this.messages.sendMessage(player, "deathmatch.welcome", MessageLayout.CENTER);
+            this.messages.sendMessage(player, "separator");
             player.teleport(location);
         }
 

@@ -30,6 +30,7 @@ import pl.arieals.minigame.bedwars.scoreboard.LobbyScoreboard;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
@@ -68,6 +69,11 @@ public class PlayerTeamListener implements Listener
             getPlayerData(player, BedWarsPlayer.class).switchTeam(smallestTeam);
 
             this.scoreboardManager.setLayout(player, new GameScoreboard());
+
+            final String teamNameDative = this.messages.getMessage(player.spigot().getLocale(), "team.dative." + smallestTeam.getName());
+            this.messages.sendMessage(player, "separator");
+            this.messages.sendMessage(player, "welcome", MessageLayout.CENTER, smallestTeam.getColorChar(), teamNameDative);
+            this.messages.sendMessage(player, "separator");
         }
     }
 
