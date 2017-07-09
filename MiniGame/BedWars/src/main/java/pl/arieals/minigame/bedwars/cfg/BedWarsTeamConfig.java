@@ -26,6 +26,8 @@ public class BedWarsTeamConfig
     private XmlCuboid   teamRegion;
     @XmlElement(required = true, name = "spawnLocation")
     private XmlLocation spawnLocation;
+    @XmlElement(required = true, name = "bedLocation")
+    private XmlLocation bedLocation;
 
     public int getScoreboardOrder()
     {
@@ -47,9 +49,14 @@ public class BedWarsTeamConfig
         return this.spawnLocation;
     }
 
+    public XmlLocation getBedLocation()
+    {
+        return this.bedLocation;
+    }
+
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("scoreboardOrder", this.scoreboardOrder).append("color", this.color).append("teamRegion", this.teamRegion).append("spawnLocation", this.spawnLocation).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("scoreboardOrder", this.scoreboardOrder).append("color", this.color).append("teamRegion", this.teamRegion).append("spawnLocation", this.spawnLocation).append("bedLocation", this.bedLocation).toString();
     }
 }

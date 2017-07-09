@@ -1,12 +1,14 @@
 package pl.arieals.minigame.bedwars;
 
+import javax.xml.bind.JAXB;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
-import pl.arieals.minigame.bedwars.arena.generator.GeneratorTask;
 import pl.arieals.minigame.bedwars.arena.generator.ItemRotator;
+import pl.arieals.minigame.bedwars.cfg.BedWarsConfig;
 import pl.arieals.minigame.bedwars.listener.ArenaStartListener;
 import pl.arieals.minigame.bedwars.listener.BedDestroyListener;
 import pl.arieals.minigame.bedwars.listener.BuildListener;
@@ -16,7 +18,9 @@ import pl.arieals.minigame.bedwars.listener.GameEndListener;
 import pl.arieals.minigame.bedwars.listener.InvisibleListener;
 import pl.arieals.minigame.bedwars.listener.PlayerTeamListener;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class BedWarsComponent extends Component
@@ -43,14 +47,18 @@ public class BedWarsComponent extends Component
                 new InvisibleListener(), // blokady specjalnie dla graczy niewidzialnych
                 new GameEndListener()); // eliminacja teamu i koniec gry
 
-        // uruchamiamy task generatorów co 1 tick
-        new GeneratorTask().runTaskTimer(this.bukkitApi.getPluginMain(), 1, 1);
         new ItemRotator().start(); // uruchamiamy watek obracajacy itemkami
     }
 
     @Override
     protected void disableComponent()
     {
+    }
+
+    @Bean
+    private BedWarsConfig bedWarsConfig(final ApiCore api)
+    {
+        return JAXB.unmarshal(api.getFile("MiniGame.BedWars.xml"), BedWarsConfig.class);
     }
 
     @Override

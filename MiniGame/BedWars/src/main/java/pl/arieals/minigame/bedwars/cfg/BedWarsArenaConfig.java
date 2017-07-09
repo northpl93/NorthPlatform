@@ -1,6 +1,5 @@
 package pl.arieals.minigame.bedwars.cfg;
 
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -33,19 +32,6 @@ public class BedWarsArenaConfig
     @XmlElementWrapper(name = "secureRegions")
     @XmlElement(name = "secureRegion")
     private List<XmlCuboid>            secureRegions;
-
-    public BedWarsArenaConfig()
-    {
-    }
-
-    public BedWarsArenaConfig(final XmlLocation lobby, final List<BedWarsTeamConfig> teams, final List<BedWarsGeneratorType> generatorTypes, final List<BedWarsGenerator> generators, final List<XmlCuboid> secureRegions)
-    {
-        this.lobby = lobby;
-        this.teams = teams;
-        this.generatorTypes = generatorTypes;
-        this.generators = generators;
-        this.secureRegions = secureRegions;
-    }
 
     public XmlLocation getLobby()
     {

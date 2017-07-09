@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
@@ -23,15 +24,19 @@ public class Team
     private Set<Player> players;
     private Cuboid      teamArena;
     private Location    spawn;
+    private Location    bedLocation;
     private boolean     isBedAlive;
 
     public Team(final LocalArena arena, final BedWarsTeamConfig config)
     {
+        final World currentWorld = arena.getWorld().getCurrentWorld();
+
         this.scoreboardOrder = config.getScoreboardOrder();
         this.color = config.getColor();
         this.players = new HashSet<>();
-        this.teamArena = config.getTeamRegion().toCuboid(arena.getWorld().getCurrentWorld());
-        this.spawn = config.getSpawnLocation().toBukkit(arena.getWorld().getCurrentWorld());
+        this.teamArena = config.getTeamRegion().toCuboid(currentWorld);
+        this.spawn = config.getSpawnLocation().toBukkit(currentWorld);
+        this.bedLocation = config.getBedLocation().toBukkit(currentWorld);
         this.isBedAlive = true;
     }
 
@@ -94,6 +99,11 @@ public class Team
     public Location getSpawn()
     {
         return this.spawn;
+    }
+
+    public Location getBedLocation()
+    {
+        return this.bedLocation;
     }
 
     /**

@@ -1,9 +1,9 @@
 package pl.arieals.minigame.bedwars.arena.generator;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArenas;
-
-
 import org.bukkit.scheduler.BukkitRunnable;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.GamePhase;
@@ -11,17 +11,28 @@ import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 
 public final class GeneratorTask extends BukkitRunnable
 {
+    private final LocalArena arena;
+
+    public GeneratorTask(final LocalArena arena)
+    {
+        this.arena = arena;
+    }
+
     @Override
     public void run()
     {
-        for (final LocalArena arena : getArenas())
+        final BedWarsArena arenaData = this.arena.getArenaData();
+        if (this.arena.getGamePhase() != GamePhase.STARTED || arenaData == null)
         {
-            final BedWarsArena arenaData = arena.getArenaData();
-            if (arena.getGamePhase() != GamePhase.STARTED || arenaData == null)
-            {
-                continue; // arena nie jest teraz uruchomiona wiec nic nie spawnimy
-            }
-            arenaData.getGenerators().forEach(GeneratorController::tick);
+            this.cancel(); // arena nie jest teraz uruchomiona wiec nic nie spawnimy i konczymy taska
+            return;
         }
+        arenaData.getGenerators().forEach(GeneratorController::tick);
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("arena", this.arena).toString();
     }
 }
