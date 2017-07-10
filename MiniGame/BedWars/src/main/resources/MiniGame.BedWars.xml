@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bedwars>
+    <destroyBedsAt>12000</destroyBedsAt> <!-- 10 minut -->
+    <startDeathMatchAt>24000</startDeathMatchAt> <!-- 20 minut? -->
+    <teamSize>1</teamSize>
+</bedwars>

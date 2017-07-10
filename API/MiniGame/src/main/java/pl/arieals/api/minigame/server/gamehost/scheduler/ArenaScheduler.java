@@ -81,10 +81,14 @@ public class ArenaScheduler implements IArenaScheduler
             }
             else
             {
-                if (wrapper.getNextRun() >= time)
+                if (time >= wrapper.getNextRun())
                 {
                     wrapper.run();
                     wrapper.cancel();
+                }
+                else
+                {
+                    wrapper.setNextRun(wrapper.getNextRun() - tickDiff);
                 }
             }
         }
