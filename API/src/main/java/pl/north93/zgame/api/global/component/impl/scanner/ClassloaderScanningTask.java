@@ -12,6 +12,7 @@ import java.util.Set;
 import com.google.common.base.Preconditions;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.StrBuilder;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ConfigurationBuilder;
@@ -157,6 +158,7 @@ public class ClassloaderScanningTask
 
         if (! this.pendingTasks.isEmpty())
         {
+            this.generateScanningError();
             throw new RuntimeException("There're uncompletable class processing tasks."); // todo other exception
         }
 
@@ -164,6 +166,26 @@ public class ClassloaderScanningTask
         {
             final AbstractBeanContext beanContext = this.manager.getOwningContext(aClass);
             this.manager.getAggregationManager().call(beanContext, aClass);
+        }
+    }
+
+    private void generateScanningError()
+    {
+        final StrBuilder sb = new StrBuilder(512);
+        sb.append("They're ").append(this.pendingTasks.size()).append(" uncompleted tasks! Below you will se trace of these tasks.").appendNewLine();
+        for (final AbstractScanningTask task : this.pendingTasks)
+        {
+            sb.append("> > > TASK BEGIN > > >").appendNewLine();
+            sb.append("Task type: ").append(task.getClass().getSimpleName()).appendNewLine();
+            sb.append("Processed class: ").append(task.clazz.getName()).appendNewLine();
+            sb.append("Bean context: ").append(task.beanContext.getBeanContextName()).appendNewLine();
+            if (task.lastCause != null)
+            {
+                task.lastCause.printStackTrace();// todo
+                //task.lastCause.printStackTrace(sb);
+                //sb.appendNewLine("");
+            }
+            sb.appendln("< < < TASK END < < <");
         }
     }
 

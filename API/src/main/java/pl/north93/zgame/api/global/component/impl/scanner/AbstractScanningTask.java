@@ -12,6 +12,7 @@ abstract class AbstractScanningTask
     protected final Class<?>                clazz;
     protected final AbstractBeanContext     beanContext;
     protected final CtClass                 ctClass;
+    protected       Throwable               lastCause;
 
     public AbstractScanningTask(final ClassloaderScanningTask classloaderScanner, final Class<?> clazz, final CtClass ctClass, final AbstractBeanContext beanContext)
     {
@@ -22,6 +23,11 @@ abstract class AbstractScanningTask
     }
 
     /*default*/ abstract boolean tryComplete();
+
+    public final Throwable getLastCause()
+    {
+        return this.lastCause;
+    }
 
     @Override
     public String toString()

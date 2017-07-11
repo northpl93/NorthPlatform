@@ -64,8 +64,9 @@ class StaticScanningTask extends AbstractScanningTask
                 field.set(null, this.beanContext.getBean(query));
                 iterator.remove();
             }
-            catch (final Exception ignored)
+            catch (final Exception exception)
             {
+                this.lastCause = exception;
             }
         }
         return this.staticFields.isEmpty();

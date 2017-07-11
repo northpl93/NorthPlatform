@@ -47,8 +47,9 @@ class ConstructorScanningTask extends AbstractScanningTask
                 ex.printStackTrace();
                 continue;
             }
-            catch (final Exception ignored)
+            catch (final Exception exception)
             {
+                this.lastCause = exception;
                 continue;
             }
             iterator.remove();
