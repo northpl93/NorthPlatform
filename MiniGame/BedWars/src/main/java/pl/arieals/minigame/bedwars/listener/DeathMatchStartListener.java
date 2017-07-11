@@ -5,13 +5,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.event.arena.DeathMatchPrepareEvent;
+import pl.arieals.api.minigame.server.gamehost.event.arena.deathmatch.DeathMatchLoadedEvent;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 
 public class DeathMatchStartListener implements Listener
 {
     @EventHandler
-    public void onDeathMatchStart(final DeathMatchPrepareEvent event)
+    public void onDeathMatchStart(final DeathMatchLoadedEvent event)
     {
         final LocalArena arena = event.getArena();
         Bukkit.broadcastMessage("Bedwars is preparing deathmatch on " + arena.getId());

@@ -22,9 +22,10 @@ import org.spigotmc.SpigotConfig;
 
 import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
+import pl.arieals.api.minigame.server.gamehost.deathmatch.DeathMatchFightListener;
 import pl.arieals.api.minigame.server.gamehost.listener.ArenaEndListener;
 import pl.arieals.api.minigame.server.gamehost.listener.ArenaInitListener;
-import pl.arieals.api.minigame.server.gamehost.listener.DeathMatchStartListener;
+import pl.arieals.api.minigame.server.gamehost.deathmatch.DeathMatchStartListener;
 import pl.arieals.api.minigame.server.gamehost.listener.GameStartListener;
 import pl.arieals.api.minigame.server.gamehost.listener.PlayerListener;
 import pl.arieals.api.minigame.server.gamehost.listener.VisibilityListener;
@@ -76,6 +77,7 @@ public class GameHostManager implements IServerManager
                 new ArenaInitListener(), // inicjuje arene po dodaniu/zakonczeniu poprzedniej gry
                 new GameStartListener(), // inicjuje gre po starcie
                 new DeathMatchStartListener(), // pilnuje starty death matchu
+                new DeathMatchFightListener(), // pilnuje walki na deathmatchu
                 new ArenaEndListener()); // pilnuje by arena nie stala pusta i wykonuje czynnosci koncowe
         
         this.loadMapTemplates();

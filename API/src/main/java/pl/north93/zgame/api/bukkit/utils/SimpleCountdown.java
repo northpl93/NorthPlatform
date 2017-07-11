@@ -127,7 +127,12 @@ public class SimpleCountdown
         result.append(sec);
         return result.toString();
     }
-    
+
+    public BukkitTask getTask()
+    {
+        return this.task;
+    }
+
     private void tick()
     {
         if ( this.ticksLeft > 0 )

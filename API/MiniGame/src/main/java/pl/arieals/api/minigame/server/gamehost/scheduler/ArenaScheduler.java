@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_10_R1.scheduler.CraftScheduler;
+import org.bukkit.scheduler.BukkitTask;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -18,6 +19,8 @@ import org.diorite.utils.reflections.MethodInvoker;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.Main;
+import pl.north93.zgame.api.bukkit.utils.AbstractCountdown;
+import pl.north93.zgame.api.bukkit.utils.SimpleCountdown;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ArenaScheduler implements IArenaScheduler
@@ -52,6 +55,22 @@ public class ArenaScheduler implements IArenaScheduler
     {
         final Main pluginMain = this.apiCore.getPluginMain();
         this.wrappers.add(new WrappedBukkitTask(Bukkit.getScheduler().runTaskTimer(pluginMain, task, delay, every)));
+    }
+
+    @Override
+    public void runAbstractCountdown(final AbstractCountdown countdown, final long every)
+    {
+        final Main pluginMain = this.apiCore.getPluginMain();
+        this.wrappers.add(new WrappedBukkitTask(countdown.runTaskTimer(pluginMain, 0, every)));
+    }
+
+    @Override
+    public void runSimpleCountdown(final SimpleCountdown countdown)
+    {
+        countdown.start();
+        final BukkitTask task = countdown.getTask();
+
+        this.wrappers.add(new WrappedBukkitTask(task));
     }
 
     @Override

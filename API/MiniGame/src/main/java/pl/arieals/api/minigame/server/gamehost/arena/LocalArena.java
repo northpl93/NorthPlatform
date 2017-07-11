@@ -95,9 +95,9 @@ public class LocalArena implements IArena
     }
 
     /**
-     * Przesuwa czas na arenie o podana wartosc w podanej jednostce.
+     * Przesuwa czas na arenie o podana wartosc w podanej jednostce. <br>
      * Ustawia nowy czas w timerze i przyspiesza wykonywanie zadan
-     * w ArenaSchedulerze. Dziala tylko w trybie STARTED.
+     * w ArenaSchedulerze. Dziala tylko w trybie {@link GamePhase#STARTED}.
      *
      * @param time wartosc przesuniecia czasu do przodu.
      * @param timeUnit jednostka.

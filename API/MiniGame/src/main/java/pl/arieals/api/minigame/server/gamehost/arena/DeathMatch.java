@@ -8,14 +8,18 @@ import javax.xml.bind.JAXB;
 import java.io.File;
 import java.util.logging.Logger;
 
+import org.bukkit.Location;
 import org.bukkit.World;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
-import pl.arieals.api.minigame.server.gamehost.event.arena.DeathMatchPrepareEvent;
+import pl.arieals.api.minigame.server.gamehost.deathmatch.FightStartCountdown;
+import pl.arieals.api.minigame.server.gamehost.deathmatch.IFightManager;
+import pl.arieals.api.minigame.server.gamehost.event.arena.deathmatch.DeathMatchLoadedEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.MapSwitchedEvent;
+import pl.arieals.api.minigame.server.gamehost.event.arena.deathmatch.DeathMatchPrepareEvent;
 import pl.arieals.api.minigame.server.gamehost.world.ILoadingProgress;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
 import pl.arieals.api.minigame.shared.api.GamePhase;
@@ -30,7 +34,8 @@ public class DeathMatch
 {
     private final GameHostManager manager;
     private final LocalArena      arena;
-    private DeathMatchState state;
+    private DeathMatchState       state; // stan deathmatchu
+    private FightStartCountdown   fightStart; // task startujacy walke
     @Inject
     private BukkitApiCore   apiCore;
     @Inject
@@ -58,11 +63,61 @@ public class DeathMatch
         return this.manager.getMiniGameConfig().getDeathMatch();
     }
 
+    /**
+     * Zwraca lokalizacje startowa na arenie do deathmatchu
+     * gdzie beda teleportowani gracze po zaladowaniu areny.
+     * @return spawn areny do deathmatchu.
+     */
+    public Location getArenaSpawn()
+    {
+        final ArenaWorld world = this.arena.getWorld();
+
+        final double x = Double.valueOf(world.getProperty("loc-x"));
+        final double y = Double.valueOf(world.getProperty("loc-y"));
+        final double z = Double.valueOf(world.getProperty("loc-z"));
+        return new Location(world.getCurrentWorld(), x, y, z);
+    }
+
+    /**
+     * Zwraca prawde jesli arena deathmatchu jest aktywna i PvP zostalo
+     * na niej wlaczone.
+     * @return czy walka na arenie wystartowala.
+     */
+    public boolean isFightActive()
+    {
+        return this.state.isActive() && this.fightStart != null && this.fightStart.isFightStarted();
+    }
+
+    /**
+     * Zwraca klase zarządzająca startem walki.
+     * @return klasa zarządzająca stanem walki.
+     */
+    public IFightManager getFightManager()
+    {
+        return this.fightStart;
+    }
+
+    /**
+     * Aktywuje deathmatch na tej arenie.
+     * <p>
+     * Aby mozna bylo uruchomic deathmatch musza zostac spelnione
+     * nastepujace warunki:
+     * <ul>
+     *     <li>Deathmatch musi byc wlaczony w configu minigry.
+     *     <li>Arena musi byc w etapie gry {@link GamePhase#STARTED}.
+     *     <li>Deathmatch nie mogl byc wczesniej uruchomiony.
+     */
     public void activateDeathMatch()
     {
         checkState(this.getConfig().getEnabled(), "Death match is disabled in this minigame!");
         checkState(this.state == DeathMatchState.NOT_STARTED, "Death match already started!");
         checkState(this.arena.getGamePhase() == GamePhase.STARTED, "Arena must be in STARTED gamephase");
+
+        final DeathMatchPrepareEvent event = this.apiCore.callEvent(new DeathMatchPrepareEvent(this.arena));
+        if (event.isCancelled())
+        {
+            return;
+        }
 
         this.state = DeathMatchState.LOADING;
         final File templateFile = new File(this.manager.getMapTemplateManager().getTemplatesDirectory(), this.getConfig().getTemplateName());
@@ -85,22 +140,28 @@ public class DeathMatch
                 return;
             }
 
-            this.apiCore.callEvent(new MapSwitchedEvent(this.arena, MapSwitchedEvent.MapSwitchReason.DEATH_MATCH));
-
             final World oldWorld = arenaWorld.getCurrentWorld();
 
             this.logger.info("Death match arena loaded successfully");
             this.state = DeathMatchState.STARTED;
 
             arenaWorld.switchMap(template, progress.getWorld(), progress);
-            this.apiCore.callEvent(new DeathMatchPrepareEvent(this.arena, oldWorld, progress.getWorld()));
+            this.apiCore.callEvent(new MapSwitchedEvent(this.arena, MapSwitchedEvent.MapSwitchReason.DEATH_MATCH));
+            this.apiCore.callEvent(new DeathMatchLoadedEvent(this.arena, oldWorld, progress.getWorld()));
             if (! worldManager.clearWorld(arenaWorld.getName()))
             {
                 this.logger.severe("Failed to remove regular world of arena " + this.arena.getId());
             }
+
+            this.fightStart = new FightStartCountdown(this.arena);
+            // task zostanie automatycznie anulowany/usuniety gdy arena sie skonczy
+            this.arena.getScheduler().runAbstractCountdown(this.fightStart, 20);
         });
     }
 
+    /**
+     * Resetuje stan deathmatchu po zakonczeniu areny i usuwa swiat deathmatchu.
+     */
     public void resetState()
     {
         if (this.state == DeathMatchState.LOADING)
@@ -116,6 +177,7 @@ public class DeathMatch
             }
         }
         this.state = DeathMatchState.NOT_STARTED;
+        this.fightStart = null;
     }
 
     private MapTemplate loadTemplate(final File dir)

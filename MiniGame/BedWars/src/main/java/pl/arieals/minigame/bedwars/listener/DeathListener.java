@@ -12,12 +12,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.util.Vector;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.RevivePlayerCountdown;
 import pl.arieals.minigame.bedwars.arena.Team;
@@ -54,12 +57,30 @@ public class DeathListener implements Listener
     }
 
     @EventHandler
+    public void onAnyDamage(final EntityDamageEvent event)
+    {
+        final Player player = instanceOf(event.getEntity(), Player.class);
+        if (player == null)
+        {
+            return;
+        }
+
+        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        if (! playerData.isAlive())
+        {
+            // wylaczamy damage jesli gracz nie zyje, zeby uniknac bugów itd
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
     public void onPlayerDeath(final PlayerDeathEvent event)
     {
         event.setDeathMessage(null); // my wcale nie umieramy!
         final Player player = event.getEntity();
 
         final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        final LocalArena arena = getArena(player);
         final Team team = playerData.getTeam();
         if (team == null)
         {
@@ -84,7 +105,7 @@ public class DeathListener implements Listener
         {
             if (! team.isTeamAlive())
             {
-                this.apiCore.callEvent(new TeamEliminatedEvent(getArena(player), team));
+                this.apiCore.callEvent(new TeamEliminatedEvent(arena, team));
             }
 
             final String locale = player.spigot().getLocale();
@@ -92,6 +113,21 @@ public class DeathListener implements Listener
             final String subtitle = translateAlternateColorCodes(this.messages.getMessage(locale, "die.norespawn.subtitle"));
 
             player.sendTitle(new Title(title, subtitle, 20, 20, 20));
+        }
+
+        final EntityDamageEvent lastDamageCause = event.getEntity().getLastDamageCause();
+        if (lastDamageCause != null && lastDamageCause.getCause() == EntityDamageEvent.DamageCause.VOID)
+        {
+            // jesli gracz umarl w voidzie to teleportujemy go na spawn
+            final DeathMatchState deathmatchState = arena.getDeathMatch().getState();
+            if (deathmatchState.isStarted())
+            {
+                player.teleport(arena.getDeathMatch().getArenaSpawn());
+            }
+            else
+            {
+                player.teleport(team.getSpawn());
+            }
         }
     }
 

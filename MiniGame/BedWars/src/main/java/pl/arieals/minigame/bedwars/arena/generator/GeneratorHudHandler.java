@@ -21,7 +21,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import io.netty.buffer.ByteBuf;
 import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
+import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.cfg.BedWarsGeneratorItemConfig;
+import pl.arieals.minigame.bedwars.cfg.BedWarsGeneratorType;
 import pl.north93.zgame.api.bukkit.utils.hologram.IHologram;
 import pl.north93.zgame.api.bukkit.utils.hologram.TranslatedLine;
 import pl.north93.zgame.api.bukkit.utils.nms.EntityMetaPacketHelper;
@@ -167,9 +169,21 @@ class GeneratorHudHandler
         final PlayersManager playersManager = this.generator.getArena().getPlayersManager();
         for (final Player player : playersManager.getPlayers())
         {
-            final String generatorName = this.messages.getMessage(player.spigot().getLocale(), "generator.type.genitive." + this.generator.getGeneratorType().getName());
-            this.messages.sendMessage(player, "generator.upgrade", MessageLayout.SEPARATED, generatorName, current.getName());
+            final BedWarsGeneratorType type = this.generator.getGeneratorType();
+            final String generatorName = this.messages.getMessage(player.spigot().getLocale(), "generator.type.genitive." + type.getName());
+
+            final long generatorsCount = this.countSameGenerators();
+            final String msgName = generatorsCount == 1 ? "generator.upgrade.singular" : "generator.upgrade.plural";
+
+            this.messages.sendMessage(player, msgName, MessageLayout.SEPARATED, generatorName, current.getName());
         }
+    }
+
+    private long countSameGenerators()
+    {
+        final BedWarsGeneratorType type = this.generator.getGeneratorType();
+        final BedWarsArena arenaData = this.generator.getArena().getArenaData();
+        return arenaData.getGenerators().stream().filter(gen -> gen.getGeneratorType().equals(type)).count();
     }
 
     @Override
