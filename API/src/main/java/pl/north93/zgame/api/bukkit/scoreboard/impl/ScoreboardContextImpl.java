@@ -27,12 +27,12 @@ import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardLayout;
 
 class ScoreboardContextImpl implements IScoreboardContext
 {
-    private final Player              player;
-    private final IScoreboardLayout   layout;
-    private final Map<String, Object> data;
+    private final Player                player;
+    private final IScoreboardLayout     layout;
+    private final Map<String, Object>   data;
     // scoreboard logic
-    private final String              boardId;
-    private final List<BoardLine>     boardLines;
+    private final String                boardId;
+    private final LinkedList<BoardLine> boardLines;
 
     public ScoreboardContextImpl(final Player player, final IScoreboardLayout layout)
     {
@@ -131,9 +131,9 @@ class ScoreboardContextImpl implements IScoreboardContext
         {
             final int diff = required - actual;
 
-            for (int i = diff; i != 0; i--)
+            for (int i = 0; i < diff; i++)
             {
-                this.boardLines.add(newBoardLine(objective, this.boardId, actual + i));
+                this.boardLines.addFirst(newBoardLine(objective, this.boardId, actual + i));
             }
         }
     }
