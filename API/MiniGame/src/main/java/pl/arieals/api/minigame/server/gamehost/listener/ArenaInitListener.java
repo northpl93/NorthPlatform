@@ -55,6 +55,9 @@ public class ArenaInitListener implements Listener
             // todo kick all players to server lobby
         }
 
+        // resetujemy licznik, aby przy kazdej inicjalizacji wskazywal 0
+        arena.getTimer().reset();
+
         // usuwamy wszystkie regiony pozostale po poprzedniej grze
         hostManager.getRegionManager().getRegions(arena.getWorld().getCurrentWorld()).forEach(ITrackedRegion::unTrack);
 

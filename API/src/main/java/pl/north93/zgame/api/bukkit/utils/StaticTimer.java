@@ -34,6 +34,13 @@ public class StaticTimer
         this.stoppedTime = this.getCurrentTime(TimeUnit.MILLISECONDS);
     }
 
+    public void reset()
+    {
+        this.startTime = 0;
+        this.baseTime = 0;
+        this.stoppedTime = - 1;
+    }
+
     public boolean isStarted()
     {
         return this.stoppedTime == 0;
