@@ -37,7 +37,6 @@ public class ArenaListener implements Listener
         if ( localArena.getArenaData() == null )
         {
             localArena.setArenaData(new GoldHunterArena(localArena));
-            System.out.println("GH: " + goldHunter);
             System.out.println("TM: " + tickableManager);
             tickableManager.addTickableObject((ITickable) localArena.getArenaData());
             logger.info("Add GoldHunter arena with uuid: {}", localArena.getId());
