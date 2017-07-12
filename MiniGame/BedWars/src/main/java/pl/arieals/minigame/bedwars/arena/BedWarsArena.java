@@ -25,12 +25,12 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
 
 public class BedWarsArena implements IArenaData
 {
-    private final LocalArena          arena;
-    private final BedWarsArenaConfig  config;
-    private Set<GeneratorController> generators    = new HashSet<>();
-    private Set<Team>                teams         = new HashSet<>();
-    private Set<Cuboid>              secureRegions = new HashSet<>();
-    private Set<Block>               playerBlocks  = new HashSet<>();
+    private final LocalArena         arena;
+    private final BedWarsArenaConfig config;
+    private final Set<GeneratorController> generators    = new HashSet<>();
+    private final Set<Team>                teams         = new HashSet<>();
+    private final Set<Cuboid>              secureRegions = new HashSet<>();
+    private final Set<Block>               playerBlocks  = new HashSet<>();
 
     public BedWarsArena(final LocalArena arena, final BedWarsArenaConfig config)
     {

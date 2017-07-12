@@ -1,12 +1,12 @@
 package pl.arieals.minigame.bedwars.arena.generator;
 
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 import net.minecraft.server.v1_10_R1.AxisAlignedBB;
 import net.minecraft.server.v1_10_R1.EntityItem;
@@ -101,7 +101,7 @@ public class GeneratorController
         return this.arena.getTimer().getCurrentTime(TimeUnit.SECONDS) * 20;
     }
 
-    /*default*/ List<ItemGeneratorEntry> getEntries()
+    public List<ItemGeneratorEntry> getEntries() // potrzebne przy apgrejdach itp itd
     {
         return this.entries;
     }
@@ -122,7 +122,7 @@ public class GeneratorController
         }
     }
 
-    /*default*/ class ItemGeneratorEntry
+    public final class ItemGeneratorEntry
     {
         private final Set<BedWarsGeneratorItemConfig> items = new TreeSet<>(Comparator.comparing(BedWarsGeneratorItemConfig::getStartAt).reversed());
         private int timer;
@@ -141,6 +141,15 @@ public class GeneratorController
                 return true;
             }
             return false;
+        }
+
+        public void speedup(final Function<Integer, Integer> modifier)
+        {
+            final BedWarsGeneratorItemConfig current = this.getCurrent();
+            final BedWarsGeneratorItemConfig newConfig = new BedWarsGeneratorItemConfig(current.getName(), current.getMaterial(), current.getData(), current.getAmount(), modifier.apply(current.getEvery()), current.getStartAt() + 1);
+            newConfig.setAnnounced(true);
+
+            this.items.add(newConfig);
         }
 
         public BedWarsGeneratorItemConfig getCurrent()
