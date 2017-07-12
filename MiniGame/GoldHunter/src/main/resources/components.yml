@@ -1,3 +1,4 @@
+rootPackage: 'pl.arieals'
 components:
   - name: MiniGame.GoldHunter
     enabled: true
@@ -5,5 +6,6 @@ components:
     description: "Gold Hunter plugin."
     dependencies:
       - MiniGameApi.Server
+      - API.TickableManager
     platforms:
       - BUKKIT
