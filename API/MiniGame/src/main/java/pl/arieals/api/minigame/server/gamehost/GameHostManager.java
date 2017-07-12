@@ -82,10 +82,7 @@ public class GameHostManager implements IServerManager
         
         new MiniGameApi(); // inicjuje zmienne w klasie i statyczną INSTANCE
 
-        for (int i = 0; i < this.miniGameConfig.getArenas(); i++) // create arenas.
-        {
-            this.arenaManager.createArena();
-        }
+        Bukkit.getScheduler().runTask(apiCore.getPluginMain(), this::createArenas);
 
         /*final GameMapConfig config = new GameMapConfig();
         config.setDisplayName("test");
@@ -95,6 +92,14 @@ public class GameHostManager implements IServerManager
         JAXB.marshal(config, new File("testy.xml"));*/
     }
 
+    private void createArenas()
+    {
+        for (int i = 0; i < this.miniGameConfig.getArenas(); i++) // create arenas.
+        {
+            this.arenaManager.createArena();
+        }
+    }
+    
     @Override
     public void stop()
     {

@@ -58,14 +58,14 @@ public class ArenaInitListener implements Listener
         // usuwamy wszystkie regiony pozostale po poprzedniej grze
         hostManager.getRegionManager().getRegions(arena.getWorld().getCurrentWorld()).forEach(ITrackedRegion::unTrack);
 
-        // usuwamy arena data zeby nowa gra miala czyste srodowisko pracy
-        arena.setArenaData(null);
-
         // resetujemy stan death matchu.
         arena.getDeathMatch().resetState();
 
         if (arena.getLobbyMode() == LobbyMode.INTEGRATED)
         {
+            // usuwamy arena data zeby nowa gra miala czyste srodowisko pracy
+            arena.setArenaData(null);
+            
             // jesli lobby jest zintegrowane z mapa to glosowanie na pewno jest wylaczone
             // i musimy juz teraz zaladowac nowa losowa mape.
             // Po zakonczeniu arena bedzie przelaczona w LOBBY.
