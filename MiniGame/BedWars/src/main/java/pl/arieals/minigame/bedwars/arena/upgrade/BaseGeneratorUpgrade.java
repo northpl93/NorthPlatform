@@ -4,20 +4,28 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.arena.generator.GeneratorController;
+import pl.arieals.minigame.bedwars.cfg.BedWarsConfig;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class BaseGeneratorUpgrade implements IUpgrade
 {
-    public static final BaseGeneratorUpgrade INSTANCE = new BaseGeneratorUpgrade();
+    @Inject
+    private BedWarsConfig config;
 
     @Override
-    public void apply(final LocalArena arena, final Team team)
+    public void apply(final LocalArena arena, final Team team, final int level)
     {
         final BedWarsArena arenaData = arena.getArenaData();
         final GeneratorController generator = this.findGenerator(arenaData, team);
 
         for (final GeneratorController.ItemGeneratorEntry entry : generator.getEntries())
         {
-            entry.speedup(from -> from / 2);
+            entry.speedup(from -> from + 1);
+        }
+
+        if (this.config.getTeamSize() == 4)
+        {
+            // todo squad - emeraldy
         }
     }
 

@@ -26,6 +26,7 @@ public class Team
     private Location    spawn;
     private Location    bedLocation;
     private boolean     isBedAlive;
+    private Upgrades    upgrades;
 
     public Team(final LocalArena arena, final BedWarsTeamConfig config)
     {
@@ -38,6 +39,7 @@ public class Team
         this.spawn = config.getSpawnLocation().toBukkit(currentWorld);
         this.bedLocation = config.getBedLocation().toBukkit(currentWorld);
         this.isBedAlive = true;
+        this.upgrades = new Upgrades(arena, this);
     }
 
     /**
@@ -128,5 +130,10 @@ public class Team
     public boolean isTeamAlive()
     {
         return this.isBedAlive || ! this.getAlivePlayers().isEmpty();
+    }
+
+    public Upgrades getUpgrades()
+    {
+        return this.upgrades;
     }
 }

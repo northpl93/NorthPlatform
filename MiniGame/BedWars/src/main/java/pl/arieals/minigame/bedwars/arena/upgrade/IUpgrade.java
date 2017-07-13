@@ -5,7 +5,12 @@ import pl.arieals.minigame.bedwars.arena.Team;
 
 public interface IUpgrade
 {
-    void apply(LocalArena arena, Team team);
+    default String getName()
+    {
+        return this.getClass().getSimpleName();
+    }
+
+    void apply(LocalArena arena, Team team, int level);
 
     int maxLevel();
 }

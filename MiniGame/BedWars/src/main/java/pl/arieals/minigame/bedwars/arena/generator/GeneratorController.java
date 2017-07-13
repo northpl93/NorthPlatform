@@ -146,7 +146,7 @@ public class GeneratorController
         public void speedup(final Function<Integer, Integer> modifier)
         {
             final BedWarsGeneratorItemConfig current = this.getCurrent();
-            final BedWarsGeneratorItemConfig newConfig = new BedWarsGeneratorItemConfig(current.getName(), current.getMaterial(), current.getData(), current.getAmount(), modifier.apply(current.getEvery()), current.getStartAt() + 1);
+            final BedWarsGeneratorItemConfig newConfig = new BedWarsGeneratorItemConfig(current.getName(), current.getMaterial(), current.getData(), modifier.apply(current.getAmount()), current.getEvery(), current.getStartAt() + 1);
             newConfig.setAnnounced(true);
 
             this.items.add(newConfig);

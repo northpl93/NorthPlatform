@@ -5,6 +5,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import java.util.Map;
+
 /**
  * Globalna konfiguracja rozgrywki BedWars.
  */
@@ -13,11 +15,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class BedWarsConfig
 {
     @XmlElement
-    private Integer destroyBedsAt;
+    private Integer              destroyBedsAt;
     @XmlElement
-    private Integer startDeathMatchAt;
+    private Integer              startDeathMatchAt;
     @XmlElement
-    private Integer teamSize;
+    private Integer              teamSize;
+    @XmlElement
+    private Map<String, Integer> upgrades;
 
     public Integer getDestroyBedsAt()
     {
@@ -32,5 +36,10 @@ public class BedWarsConfig
     public Integer getTeamSize()
     {
         return this.teamSize;
+    }
+
+    public Map<String, Integer> getUpgrades()
+    {
+        return this.upgrades;
     }
 }
