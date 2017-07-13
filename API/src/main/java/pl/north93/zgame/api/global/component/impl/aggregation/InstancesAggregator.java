@@ -21,9 +21,9 @@ import pl.north93.zgame.api.global.component.impl.context.TemporaryBeanContext;
 
 public class InstancesAggregator implements IAggregator
 {
-    private final Class<?> clazz;
+    private final CtClass clazz;
 
-    public InstancesAggregator(final Class<?> clazz)
+    public InstancesAggregator(final CtClass clazz)
     {
         this.clazz = clazz;
     }
@@ -31,8 +31,14 @@ public class InstancesAggregator implements IAggregator
     @Override
     public boolean isSuitableFor(final CtClass clazz)
     {
-        final CtClass ctClass = hideException(() -> clazz.getClassPool().get(this.clazz.getName()));
-        return this.getPossibleAggregationPoints(clazz).contains(ctClass);
+        for (final CtClass ctClass : this.getPossibleAggregationPoints(clazz))
+        {
+            if (ctClass.getName().equals(this.clazz.getName()))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

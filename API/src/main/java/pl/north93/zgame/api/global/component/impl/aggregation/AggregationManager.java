@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.global.component.impl.aggregation;
 
+import static pl.north93.zgame.api.global.utils.JavaUtils.hideException;
+
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -12,9 +15,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import org.diorite.utils.lazy.LazyValue;
 
+import javassist.ClassPool;
 import javassist.CtClass;
 import pl.north93.zgame.api.global.component.annotations.SkipInjections;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
+import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 
 public class AggregationManager
@@ -33,7 +38,10 @@ public class AggregationManager
         }
         else
         {
-            this.listeners.put(new InstancesAggregator(clazz), method);
+            final ClassPool classPool = ComponentManagerImpl.instance.getClassPool(method.getDeclaringClass().getClassLoader());
+            final CtClass ctClass = hideException(() -> classPool.getCtClass(clazz.getName()));
+
+            this.listeners.put(new InstancesAggregator(ctClass), method);
         }
     }
 
