@@ -36,6 +36,7 @@ import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.component.IComponentManager;
+import pl.north93.zgame.api.global.component.impl.aggregation.AggregationManager;
 import pl.north93.zgame.api.global.component.impl.container.BeanFactory;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.zgame.api.global.component.impl.context.ComponentBeanContext;
@@ -50,7 +51,7 @@ public class ComponentManagerImpl implements IComponentManager
     private final ClassPool             rootClassPool = new ClassPool();
     private final RootBeanContext       rootBeanCtx   = new RootBeanContext();
     private final ClassloaderScanningTask rootScanningTask;
-    private final AggregationManager       aggregationManager = new AggregationManager();
+    private final AggregationManager aggregationManager = new AggregationManager();
     private boolean autoEnable;
     private List<ClassLoader> scannedClassloaders = new ArrayList<>();
 

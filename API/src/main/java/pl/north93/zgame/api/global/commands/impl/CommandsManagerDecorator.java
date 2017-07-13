@@ -1,5 +1,6 @@
 package pl.north93.zgame.api.global.commands.impl;
 
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,7 +11,9 @@ import pl.north93.zgame.api.bukkit.BukkitCommandsManager;
 import pl.north93.zgame.api.bungee.BungeeCommandsManager;
 import pl.north93.zgame.api.global.commands.ICommandsManager;
 import pl.north93.zgame.api.global.commands.NorthCommand;
+import pl.north93.zgame.api.global.commands.annotation.QuickCommand;
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.IBeanContext;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.standalone.commands.StandaloneCommandsManager;
 
@@ -50,7 +53,7 @@ public class CommandsManagerDecorator extends Component implements ICommandsMana
     {
         if (this.commandsManager != null)
         {
-            this.commandsManager.registerCommand(northCommand);
+            this.registerCommand(northCommand);
         }
         else
         {
@@ -58,17 +61,19 @@ public class CommandsManagerDecorator extends Component implements ICommandsMana
         }
     }
 
-    /*private void handleQuickCommandAnnotation(final IAnnotated annotated)
+    @Aggregator(QuickCommand.class)
+    public void handleQuickCommand(final IBeanContext context, final QuickCommand annotation, final Method target)
     {
-        if (! annotated.isMethod())
+        final QuickNorthCommand command = new QuickNorthCommand(target, annotation);
+        if (this.commandsManager != null)
         {
-            return;
+            this.registerCommand(command);
         }
-        final QuickCommand annotation = annotated.getAnnotation();
-        final Method method = (Method) annotated.getElement();
-
-        this.registerCommand(new QuickNorthCommand(method, annotation));
-    }*/
+        else
+        {
+            this.northCommands.add(command);
+        }
+    }
 
     @Override
     protected void disableComponent()

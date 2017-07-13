@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.global.component.impl.scanner;
 
+import static pl.north93.zgame.api.global.utils.JavaUtils.hideException;
+
+
 import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -13,6 +16,7 @@ import com.google.common.base.Preconditions;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrBuilder;
+import org.apache.commons.lang3.tuple.Pair;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ConfigurationBuilder;
@@ -20,14 +24,13 @@ import org.reflections.util.FilterBuilder;
 
 import javassist.ClassPool;
 import javassist.CtClass;
-import javassist.NotFoundException;
 import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 import pl.north93.zgame.api.global.component.annotations.SkipInjections;
-import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.zgame.api.global.component.impl.ComponentBundle;
 import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
 import pl.north93.zgame.api.global.component.impl.JarComponentLoader;
+import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 
 public class ClassloaderScanningTask
 {
@@ -112,32 +115,23 @@ public class ClassloaderScanningTask
 
     private void scan(final FilterBuilder filter)
     {
-        final Set<Class<?>> allClasses = this.getAllClasses(this.reflections, filter);
-        for (final Class<?> aClass : allClasses)
+        final Set<Pair<Class<?>, CtClass>> allClasses = this.getAllClasses(this.reflections, filter);
+        for (final Pair<Class<?>, CtClass> entry : allClasses)
         {
-            if (aClass.isAnnotationPresent(SkipInjections.class))
+            final Class<?> clazz = entry.getKey();
+            final CtClass ctClass = entry.getValue();
+            if (clazz.isAnnotationPresent(SkipInjections.class))
             {
                 continue;
             }
 
-            final AbstractBeanContext beanContext = this.manager.getOwningContext(aClass);
-            final CtClass ctClass;
-            try
-            {
-                ctClass = this.classPool.get(aClass.getName());
-            }
-            catch (final NotFoundException e)
-            {
-                e.printStackTrace();
-                continue;
-            }
-
+            final AbstractBeanContext beanContext = this.manager.getOwningContext(clazz);
             this.injectorInstaller.tryInstall(ctClass);
 
             // dodajemy pozostale zadania do kolejki zeby wykonaly sie w miare mozliwosci
-            this.pendingTasks.add(new StaticScanningTask(this, aClass, ctClass, beanContext));
-            this.pendingTasks.add(new ConstructorScanningTask(this, aClass, ctClass, beanContext));
-            this.pendingTasks.add(new MethodScanningTask(this, aClass, ctClass, beanContext));
+            this.pendingTasks.add(new StaticScanningTask(this, clazz, ctClass, beanContext));
+            this.pendingTasks.add(new ConstructorScanningTask(this, clazz, ctClass, beanContext));
+            this.pendingTasks.add(new MethodScanningTask(this, clazz, ctClass, beanContext));
         }
 
         final Iterator<AbstractScanningTask> iterator = this.pendingTasks.iterator();
@@ -162,10 +156,10 @@ public class ClassloaderScanningTask
             throw new RuntimeException("There're uncompletable class processing tasks."); // todo other exception
         }
 
-        for (final Class<?> aClass : allClasses)
+        for (final Pair<Class<?>, CtClass> entry : allClasses)
         {
-            final AbstractBeanContext beanContext = this.manager.getOwningContext(aClass);
-            this.manager.getAggregationManager().call(beanContext, aClass);
+            final AbstractBeanContext beanContext = this.manager.getOwningContext(entry.getKey());
+            this.manager.getAggregationManager().call(beanContext, entry.getValue(), entry.getKey());
         }
     }
 
@@ -189,10 +183,10 @@ public class ClassloaderScanningTask
         }
     }
 
-    /*default*/ Set<Class<?>> getAllClasses(final Reflections reflections, final FilterBuilder filter)
+    /*default*/ Set<Pair<Class<?>, CtClass>> getAllClasses(final Reflections reflections, final FilterBuilder filter)
     {
         final Collection<String> classes = reflections.getStore().get(SubTypesScanner.class.getSimpleName()).values();
-        final Set<Class<?>> out = new HashSet<>(classes.size());
+        final Set<Pair<Class<?>, CtClass>> out = new HashSet<>(classes.size());
         for (final String clazz : classes)
         {
             if (! filter.apply(clazz))
@@ -203,7 +197,7 @@ public class ClassloaderScanningTask
             final Class<?> outClass = forName(clazz, reflections.getConfiguration().getClassLoaders());
             if (outClass != null)
             {
-                out.add(outClass);
+                out.add(Pair.of(outClass, hideException(() -> this.classPool.getCtClass(clazz))));
             }
         }
         return out;

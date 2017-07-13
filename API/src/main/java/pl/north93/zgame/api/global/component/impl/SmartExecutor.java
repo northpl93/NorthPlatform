@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
+import pl.north93.zgame.api.global.component.IBeanContext;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 
@@ -22,6 +23,13 @@ public class SmartExecutor
 
             final Class<?> type = parameter.getType();
             final Named namedAnn = parameter.getAnnotation(Named.class);
+
+            // wstrzykujemy uzywany BeanContext
+            if (type.isAssignableFrom(IBeanContext.class))
+            {
+                execArgs[i] = beanContext;
+                continue;
+            }
 
             final BeanQuery query = new BeanQuery().type(type);
             if (namedAnn != null)
