@@ -173,11 +173,13 @@ public class ClassloaderScanningTask
             sb.append("Task type: ").append(task.getClass().getSimpleName()).appendNewLine();
             sb.append("Processed class: ").append(task.clazz.getName()).appendNewLine();
             sb.append("Bean context: ").append(task.beanContext.getBeanContextName()).appendNewLine();
-            if (task.lastCause != null)
+            final Throwable lastCause = task.lastCause;
+            if (lastCause != null)
             {
-                task.lastCause.printStackTrace();// todo
-                //task.lastCause.printStackTrace(sb);
-                //sb.appendNewLine("");
+                sb.append("Last recorded exception: ")
+                  .append(lastCause.getClass().getName())
+                  .append(": ")
+                  .appendln(lastCause.getMessage());
             }
             sb.appendln("< < < TASK END < < <");
         }

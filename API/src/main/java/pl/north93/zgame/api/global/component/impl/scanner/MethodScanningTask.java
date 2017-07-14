@@ -53,11 +53,6 @@ class MethodScanningTask extends AbstractScanningTask
                     ComponentManagerImpl.instance.getAggregationManager().addAggregator(toJavaMethod(this.clazz, method));
                 }
             }
-            catch (final BeanCreationException ex)
-            {
-                ex.printStackTrace();
-                continue;
-            }
             catch (final Exception exception)
             {
                 this.lastCause = exception;
