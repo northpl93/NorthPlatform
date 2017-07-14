@@ -4,13 +4,13 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.arena.generator.GeneratorController;
-import pl.arieals.minigame.bedwars.cfg.BedWarsConfig;
+import pl.arieals.minigame.bedwars.cfg.BwConfig;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class BaseGeneratorUpgrade implements IUpgrade
 {
     @Inject
-    private BedWarsConfig config;
+    private BwConfig config;
 
     @Override
     public void apply(final LocalArena arena, final Team team, final int level)

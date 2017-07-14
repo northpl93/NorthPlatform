@@ -6,15 +6,18 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.minigame.bedwars.arena.upgrade.IUpgrade;
-import pl.arieals.minigame.bedwars.cfg.BedWarsConfig;
+import pl.arieals.minigame.bedwars.cfg.BwConfig;
 import pl.arieals.minigame.bedwars.event.UpgradeInstallEvent;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class UpgradeInstallListener implements Listener
 {
     @Inject
-    private BedWarsConfig config;
+    private BwConfig config;
 
     @EventHandler
     public void onUpgradeInstall(final UpgradeInstallEvent event)
@@ -31,5 +34,11 @@ public class UpgradeInstallListener implements Listener
         {
             event.setCancelled(true);
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

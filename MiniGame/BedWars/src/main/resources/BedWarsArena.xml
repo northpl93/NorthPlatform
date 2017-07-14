@@ -13,25 +13,6 @@
         </team>
     </teams>
 
-    <generatorTypes>
-        <generatorType>
-            <name>island</name>
-            <overload>64</overload>
-            <items>
-                <generatorItem material="IRON_INGOT" every="20" startAt="0"/>
-                <generatorItem material="GOLD_INGOT" every="80"/>
-            </items>
-        </generatorType>
-
-        <generatorType>
-            <name>lapis</name>
-            <overload>64</overload>
-            <items>
-                <generatorItem material="INK_SACK" data="12" every="6000" startAt="12000"/>
-            </items>
-        </generatorType>
-    </generatorTypes>
-
     <generators>
         <generator>
             <type>island</type>

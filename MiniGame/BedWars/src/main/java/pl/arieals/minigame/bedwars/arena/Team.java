@@ -14,7 +14,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.minigame.bedwars.cfg.BedWarsTeamConfig;
+import pl.arieals.minigame.bedwars.cfg.BwTeamConfig;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 
 public class Team
@@ -28,7 +28,7 @@ public class Team
     private boolean     isBedAlive;
     private Upgrades    upgrades;
 
-    public Team(final LocalArena arena, final BedWarsTeamConfig config)
+    public Team(final LocalArena arena, final BwTeamConfig config)
     {
         final World currentWorld = arena.getWorld().getCurrentWorld();
 

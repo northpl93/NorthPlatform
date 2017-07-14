@@ -12,18 +12,18 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 
 @XmlRootElement(name = "generator")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BedWarsGenerator
+public class BwGenerator
 {
     @XmlElement(required = true)
     private String      type;
     @XmlElement(required = true)
     private XmlLocation location;
 
-    public BedWarsGenerator()
+    public BwGenerator()
     {
     }
 
-    public BedWarsGenerator(final String type, final XmlLocation location)
+    public BwGenerator(final String type, final XmlLocation location)
     {
         this.type = type;
         this.location = location;

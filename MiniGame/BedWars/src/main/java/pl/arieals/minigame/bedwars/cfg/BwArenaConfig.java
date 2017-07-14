@@ -16,39 +16,31 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 
 @XmlRootElement(name = "arena")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BedWarsArenaConfig
+public class BwArenaConfig
 {
     @XmlElement(name = "lobby", required = true)
-    private XmlLocation                lobby;
+    private XmlLocation        lobby;
     @XmlElementWrapper(name = "teams")
     @XmlElement(name = "team")
-    private List<BedWarsTeamConfig>    teams;
-    @XmlElementWrapper(name = "generatorTypes")
-    @XmlElement(name = "generatorType")
-    private List<BedWarsGeneratorType> generatorTypes;
+    private List<BwTeamConfig> teams;
     @XmlElementWrapper(name = "generators")
     @XmlElement(name = "generator")
-    private List<BedWarsGenerator>     generators;
+    private List<BwGenerator>  generators;
     @XmlElementWrapper(name = "secureRegions")
     @XmlElement(name = "secureRegion")
-    private List<XmlCuboid>            secureRegions;
+    private List<XmlCuboid>    secureRegions;
 
     public XmlLocation getLobby()
     {
         return this.lobby;
     }
 
-    public List<BedWarsTeamConfig> getTeams()
+    public List<BwTeamConfig> getTeams()
     {
         return this.teams;
     }
 
-    public List<BedWarsGeneratorType> getGeneratorTypes()
-    {
-        return this.generatorTypes;
-    }
-
-    public List<BedWarsGenerator> getGenerators()
+    public List<BwGenerator> getGenerators()
     {
         return this.generators;
     }
@@ -61,6 +53,6 @@ public class BedWarsArenaConfig
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("lobby", this.lobby).append("teams", this.teams).append("generatorTypes", this.generatorTypes).append("generators", this.generators).append("secureRegions", this.secureRegions).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("lobby", this.lobby).append("teams", this.teams).append("generators", this.generators).append("secureRegions", this.secureRegions).toString();
     }
 }

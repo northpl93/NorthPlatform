@@ -4,7 +4,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.bukkit.Material;
 
@@ -13,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 @XmlRootElement(name = "generatorItem")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BedWarsGeneratorItemConfig
+public class BwGeneratorItemConfig
 {
     @XmlAttribute
     private String   name;
@@ -27,19 +26,12 @@ public class BedWarsGeneratorItemConfig
     private int      every;
     @XmlAttribute
     private int      startAt = 0;
-    /**
-     * Ten field sluzy do sprawdzania czy wyslalismy juz komunikat o tym upgradzie.
-     * Uzywane tylko w generatorach diamentu/emeraldów/lapisu.
-     * Mozemy to tak zrobic bo kazda arena ma nowe instancje configów areny.
-     */
-    @XmlTransient
-    private boolean  announced = false;
 
-    public BedWarsGeneratorItemConfig()
+    public BwGeneratorItemConfig()
     {
     }
 
-    public BedWarsGeneratorItemConfig(final String name, final Material material, final byte data, final int amount, final int every, final int startAt)
+    public BwGeneratorItemConfig(final String name, final Material material, final byte data, final int amount, final int every, final int startAt)
     {
         this.name = name;
         this.material = material;
@@ -77,16 +69,6 @@ public class BedWarsGeneratorItemConfig
     public int getStartAt()
     {
         return this.startAt;
-    }
-
-    public boolean isAnnounced()
-    {
-        return this.announced;
-    }
-
-    public void setAnnounced(final boolean announced)
-    {
-        this.announced = announced;
     }
 
     @Override

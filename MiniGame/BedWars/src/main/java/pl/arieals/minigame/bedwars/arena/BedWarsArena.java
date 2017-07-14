@@ -1,8 +1,5 @@
 package pl.arieals.minigame.bedwars.arena;
 
-import static pl.north93.zgame.api.global.utils.CollectionUtils.findInCollection;
-
-
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,32 +12,36 @@ import org.apache.commons.lang3.tuple.Pair;
 import pl.arieals.api.minigame.server.gamehost.arena.IArenaData;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.generator.GeneratorController;
-import pl.arieals.minigame.bedwars.cfg.BedWarsArenaConfig;
-import pl.arieals.minigame.bedwars.cfg.BedWarsGenerator;
-import pl.arieals.minigame.bedwars.cfg.BedWarsGeneratorItemConfig;
-import pl.arieals.minigame.bedwars.cfg.BedWarsGeneratorType;
-import pl.arieals.minigame.bedwars.cfg.BedWarsTeamConfig;
+import pl.arieals.minigame.bedwars.cfg.BwArenaConfig;
+import pl.arieals.minigame.bedwars.cfg.BwConfig;
+import pl.arieals.minigame.bedwars.cfg.BwGenerator;
+import pl.arieals.minigame.bedwars.cfg.BwGeneratorItemConfig;
+import pl.arieals.minigame.bedwars.cfg.BwGeneratorType;
+import pl.arieals.minigame.bedwars.cfg.BwTeamConfig;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
 
 public class BedWarsArena implements IArenaData
 {
-    private final LocalArena         arena;
-    private final BedWarsArenaConfig config;
-    private final Set<GeneratorController> generators    = new HashSet<>();
-    private final Set<Team>                teams         = new HashSet<>();
-    private final Set<Cuboid>              secureRegions = new HashSet<>();
-    private final Set<Block>               playerBlocks  = new HashSet<>();
+    private final LocalArena    arena;
+    private final BwConfig      bedWarsConfig;
+    private final BwArenaConfig config;
+    private final Set<BwGeneratorItemConfig> announcedItems = new HashSet<>();
+    private final Set<GeneratorController>   generators     = new HashSet<>();
+    private final Set<Team>                  teams          = new HashSet<>();
+    private final Set<Cuboid>                secureRegions  = new HashSet<>();
+    private final Set<Block>                 playerBlocks   = new HashSet<>();
 
-    public BedWarsArena(final LocalArena arena, final BedWarsArenaConfig config)
+    public BedWarsArena(final LocalArena arena, final BwConfig bedWarsConfig, final BwArenaConfig config)
     {
         this.arena = arena;
+        this.bedWarsConfig = bedWarsConfig;
         this.config = config;
-        for (final BedWarsGenerator generatorConfig : config.getGenerators())
+        for (final BwGenerator generatorConfig : config.getGenerators())
         {
-            this.generators.add(new GeneratorController(arena, this, generatorConfig));
+            this.generators.add(new GeneratorController(arena, bedWarsConfig, this, generatorConfig));
         }
-        for (final BedWarsTeamConfig teamConfig : config.getTeams())
+        for (final BwTeamConfig teamConfig : config.getTeams())
         {
             this.teams.add(new Team(arena, teamConfig));
         }
@@ -55,14 +56,14 @@ public class BedWarsArena implements IArenaData
         return this.arena;
     }
 
-    public BedWarsArenaConfig getConfig()
+    public BwArenaConfig getConfig()
     {
         return this.config;
     }
 
-    public BedWarsGeneratorType getGeneratorType(final String name)
+    public Set<BwGeneratorItemConfig> getAnnouncedItems()
     {
-        return findInCollection(this.config.getGeneratorTypes(), BedWarsGeneratorType::getName, name);
+        return this.announcedItems;
     }
 
     public Set<GeneratorController> getGenerators()
@@ -97,14 +98,14 @@ public class BedWarsArena implements IArenaData
         return this.playerBlocks;
     }
 
-    public Pair<BedWarsGeneratorType, BedWarsGeneratorItemConfig> nextUpgrade()
+    public Pair<BwGeneratorType, BwGeneratorItemConfig> nextUpgrade()
     {
         final long time = this.arena.getTimer().getCurrentTime(TimeUnit.SECONDS) * 20;
-        return this.config.getGeneratorTypes()
-                          .stream()
-                          .flatMap(type -> type.getItems().stream().map(item -> Pair.of(type, item)))
-                          .filter(pair -> pair.getValue().getStartAt() > time)
-                          .sorted(Comparator.comparingInt(p -> p.getValue().getStartAt()))
-                          .findFirst().orElse(null);
+        return this.bedWarsConfig.getGeneratorTypes()
+                                 .stream()
+                                 .flatMap(type -> type.getItems().stream().map(item -> Pair.of(type, item)))
+                                 .filter(pair -> pair.getValue().getStartAt() > time)
+                                 .sorted(Comparator.comparingInt(p -> p.getValue().getStartAt()))
+                                 .findFirst().orElse(null);
     }
 }

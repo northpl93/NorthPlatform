@@ -41,12 +41,6 @@ public class UpgradeInstallEvent extends ArenaEvent implements Cancellable
     }
 
     @Override
-    public HandlerList getHandlers()
-    {
-        return handlers;
-    }
-
-    @Override
     public boolean isCancelled()
     {
         return this.cancelled;
@@ -56,5 +50,16 @@ public class UpgradeInstallEvent extends ArenaEvent implements Cancellable
     public void setCancelled(final boolean b)
     {
         this.cancelled = b;
+    }
+
+    @Override
+    public HandlerList getHandlers()
+    {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList()
+    {
+        return handlers;
     }
 }

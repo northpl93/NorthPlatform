@@ -13,11 +13,14 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.arena.upgrade.IUpgrade;
-import pl.arieals.minigame.bedwars.cfg.BedWarsConfig;
+import pl.arieals.minigame.bedwars.cfg.BwConfig;
 import pl.arieals.minigame.bedwars.event.UpgradeInstallEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
@@ -32,7 +35,7 @@ public class UpgradeManager
     @Inject
     private BukkitApiCore apiCore;
     @Inject
-    private BedWarsConfig config;
+    private BwConfig      config;
     private Map<String, IUpgrade> upgrades = new HashMap<>();
 
     @Bean
@@ -69,5 +72,11 @@ public class UpgradeManager
 
         this.logger.log(Level.INFO, "Installing upgrade {0} for team {1} in arena {2}", new Object[]{upgrade.getName(), team.getName(), arena.getId()});
         return team.getUpgrades().installUpgrade(upgrade);
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("upgrades", this.upgrades).toString();
     }
 }

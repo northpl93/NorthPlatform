@@ -128,7 +128,9 @@ public class PlayerTeamListener implements Listener
         {
             // jesli team ma lozko lub zywych graczy to anulujemy otwarcie skrzynki
             event.setCancelled(true);
-            this.messages.sendMessage(player, "chest_blocked", teamAt.getColorChar(), "nazwa druzyny");
+
+            final String teamName = this.messages.getMessage(player.spigot().getLocale(), "team.nominative." + teamAt.getName());
+            this.messages.sendMessage(player, "chest_blocked", teamAt.getColorChar(), teamName);
         }
     }
 

@@ -67,11 +67,14 @@ public class ArenaDestroyerTask extends BukkitRunnable
     {
         final World world = block.getWorld();
 
-        final NorthFallingBlock northFallingBlock = NorthFallingBlock.createNormal(block.getLocation(), block.getType(), block.getData());
+        final Location location = block.getLocation();
+        final NorthFallingBlock northFallingBlock = NorthFallingBlock.createNormal(location, block.getType(), block.getData());
         final Vector vel = this.calcVector(this.arenaCenter, block).normalize().multiply(DioriteRandomUtils.nextDouble());
 
         northFallingBlock.getBukkitEntity().setVelocity(vel);
         ((CraftWorld) world).addEntity(northFallingBlock, CreatureSpawnEvent.SpawnReason.CUSTOM);
+
+        //world.spawnParticle(Particle.BLOCK_CRACK, location, 1, block.getType().getNewData(block.getData()));
 
         FastBlockOp.setType(block, Material.AIR, (byte) 0);
     }

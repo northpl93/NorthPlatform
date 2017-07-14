@@ -22,8 +22,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import io.netty.buffer.ByteBuf;
 import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
-import pl.arieals.minigame.bedwars.cfg.BedWarsGeneratorItemConfig;
-import pl.arieals.minigame.bedwars.cfg.BedWarsGeneratorType;
+import pl.arieals.minigame.bedwars.cfg.BwGeneratorItemConfig;
+import pl.arieals.minigame.bedwars.cfg.BwGeneratorType;
 import pl.north93.zgame.api.bukkit.utils.hologram.IHologram;
 import pl.north93.zgame.api.bukkit.utils.hologram.TranslatedLine;
 import pl.north93.zgame.api.bukkit.utils.nms.EntityMetaPacketHelper;
@@ -57,12 +57,12 @@ class GeneratorHudHandler
             this.item.setHelmet(new ItemStack(generator.getGeneratorType().getHudItem()));
             this.item.setMarker(true);
 
-            final BedWarsGeneratorItemConfig current = this.generator.getEntries().get(0).getCurrent();
+            final BwGeneratorItemConfig current = this.generator.getEntries().get(0).getCurrent();
             if (current != null)
             {
                 // wylaczamy wywalanie powiadomien o  generatorach wlaczonych od
                 // poczatku
-                current.setAnnounced(true);
+                this.generator.getArenaData().getAnnouncedItems().add(current);
             }
         }
         else
@@ -72,7 +72,7 @@ class GeneratorHudHandler
         }
     }
 
-    public void tick(final BedWarsGeneratorItemConfig currentItem, final int timer)
+    public void tick(final BwGeneratorItemConfig currentItem, final int timer)
     {
         if (! this.enabled)
         {
@@ -138,14 +138,14 @@ class GeneratorHudHandler
     }
 
     // Wysyla komunikaty o nowym itemie w generatorze
-    private void checkAnnouncement(final BedWarsGeneratorItemConfig item)
+    private void checkAnnouncement(final BwGeneratorItemConfig item)
     {
         if (! this.enabled)
         {
             return;
         }
 
-        final BedWarsGeneratorItemConfig current;
+        final BwGeneratorItemConfig current;
         if (item == null)
         {
             final GeneratorController.ItemGeneratorEntry itemGeneratorEntry = this.generator.getEntries().get(0);
@@ -160,16 +160,17 @@ class GeneratorHudHandler
             return; // nie wywalamy komunikatu jesli generator w ogole nie wystartowal (lapis)
         }
 
-        if (current.isAnnounced())
+        final BedWarsArena arenaData = this.generator.getArenaData();
+        if (arenaData.getAnnouncedItems().contains(current))
         {
             return;
         }
-        current.setAnnounced(true);
+        arenaData.getAnnouncedItems().add(current);
 
         final PlayersManager playersManager = this.generator.getArena().getPlayersManager();
         for (final Player player : playersManager.getPlayers())
         {
-            final BedWarsGeneratorType type = this.generator.getGeneratorType();
+            final BwGeneratorType type = this.generator.getGeneratorType();
             final String generatorName = this.messages.getMessage(player.spigot().getLocale(), "generator.type.genitive." + type.getName());
 
             final long generatorsCount = this.countSameGenerators();
@@ -181,7 +182,7 @@ class GeneratorHudHandler
 
     private long countSameGenerators()
     {
-        final BedWarsGeneratorType type = this.generator.getGeneratorType();
+        final BwGeneratorType type = this.generator.getGeneratorType();
         final BedWarsArena arenaData = this.generator.getArena().getArenaData();
         return arenaData.getGenerators().stream().filter(gen -> gen.getGeneratorType().equals(type)).count();
     }

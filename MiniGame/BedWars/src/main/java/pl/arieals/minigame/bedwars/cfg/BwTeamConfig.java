@@ -16,7 +16,7 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 
 @XmlRootElement(name = "team")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BedWarsTeamConfig
+public class BwTeamConfig
 {
     @XmlAttribute(required = true)
     private int         scoreboardOrder;

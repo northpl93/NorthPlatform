@@ -15,23 +15,23 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 @XmlRootElement(name = "generatorType")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BedWarsGeneratorType
+public class BwGeneratorType
 {
     @XmlElement(required = true)
-    private String                           name;
+    private String                      name;
     @XmlElement(required = true)
-    private int                              overload;
+    private int                         overload;
     @XmlElement
-    private Material                         hudItem; // itemek wyswietlajacy sie nad generatorem
+    private Material                    hudItem; // itemek wyswietlajacy sie nad generatorem
     @XmlElementWrapper(name = "items", required = true)
     @XmlElement(name = "generatorItem")
-    private List<BedWarsGeneratorItemConfig> items;
+    private List<BwGeneratorItemConfig> items;
 
-    public BedWarsGeneratorType()
+    public BwGeneratorType()
     {
     }
 
-    public BedWarsGeneratorType(final String name, final int overload, final Material hudItem, final List<BedWarsGeneratorItemConfig> items)
+    public BwGeneratorType(final String name, final int overload, final Material hudItem, final List<BwGeneratorItemConfig> items)
     {
         this.name = name;
         this.overload = overload;
@@ -54,7 +54,7 @@ public class BedWarsGeneratorType
         return this.hudItem;
     }
 
-    public List<BedWarsGeneratorItemConfig> getItems()
+    public List<BwGeneratorItemConfig> getItems()
     {
         return this.items;
     }

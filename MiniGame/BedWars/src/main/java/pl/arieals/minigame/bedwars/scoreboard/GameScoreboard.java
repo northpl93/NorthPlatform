@@ -21,9 +21,9 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.Team;
-import pl.arieals.minigame.bedwars.cfg.BedWarsConfig;
-import pl.arieals.minigame.bedwars.cfg.BedWarsGeneratorItemConfig;
-import pl.arieals.minigame.bedwars.cfg.BedWarsGeneratorType;
+import pl.arieals.minigame.bedwars.cfg.BwConfig;
+import pl.arieals.minigame.bedwars.cfg.BwGeneratorItemConfig;
+import pl.arieals.minigame.bedwars.cfg.BwGeneratorType;
 import pl.north93.zgame.api.bukkit.scoreboard.ContentBuilder;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardLayout;
@@ -35,7 +35,7 @@ public class GameScoreboard implements IScoreboardLayout
 {
     private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("[mm:]ss");
     @Inject
-    private BedWarsConfig config;
+    private BwConfig    config;
     @Inject @Messages("BedWars")
     private MessagesBox messages;
 
@@ -55,7 +55,7 @@ public class GameScoreboard implements IScoreboardLayout
         final LocalArena arena = getArena(context.getPlayer());
         final BedWarsArena arenaData = arena.getArenaData();
 
-        final Pair<BedWarsGeneratorType, BedWarsGeneratorItemConfig> nextUpgrade = arenaData.nextUpgrade();
+        final Pair<BwGeneratorType, BwGeneratorItemConfig> nextUpgrade = arenaData.nextUpgrade();
         if (nextUpgrade == null)
         {
             this.buildDeathMatchStatus(builder, arena);
@@ -98,7 +98,7 @@ public class GameScoreboard implements IScoreboardLayout
         }
     }
 
-    private void buildGeneratorUpgrade(final ContentBuilder builder, final Pair<BedWarsGeneratorType, BedWarsGeneratorItemConfig> nextUpgrade, final LocalArena arena, final String locale)
+    private void buildGeneratorUpgrade(final ContentBuilder builder, final Pair<BwGeneratorType, BwGeneratorItemConfig> nextUpgrade, final LocalArena arena, final String locale)
     {
         final String generatorName = this.messages.getMessage(locale, "generator.type.nominative." + nextUpgrade.getKey().getName());
         final long timeTo = (nextUpgrade.getValue().getStartAt() / 20) - arena.getTimer().getCurrentTime(TimeUnit.SECONDS);
