@@ -30,6 +30,11 @@ public class LocalAgentClient implements IAgentClient
     @Override
     public void redefineClass(final String className, final byte[] newBytes)
     {
+        if (this.agentServiceName == null)
+        {
+            return; // unconnected
+        }
+
         try
         {
             final MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();

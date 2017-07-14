@@ -111,7 +111,7 @@ public abstract class ApiCore
         this.debug("Debug mode is enabled");
     }
 
-    private void setupInstrumentation()
+    protected void setupInstrumentation()
     {
         final File extractedAgent = this.getFile("NorthPlatformInstrumentation.jar");
         if (!extractedAgent.exists())

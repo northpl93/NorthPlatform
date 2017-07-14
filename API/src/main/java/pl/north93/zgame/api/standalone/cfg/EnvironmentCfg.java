@@ -12,6 +12,15 @@ public class EnvironmentCfg
     @CfgStringDefault("unknown")
     private String id;
 
+    public EnvironmentCfg()
+    {
+    }
+
+    public EnvironmentCfg(final String id)
+    {
+        this.id = id;
+    }
+
     public String getId()
     {
         return this.id;

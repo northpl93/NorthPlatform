@@ -18,7 +18,7 @@ import pl.north93.zgame.api.standalone.cfg.EnvironmentCfg;
 public class StandaloneApiCore extends ApiCore
 {
     private final Logger logger = Logger.getLogger("North API");
-    private EnvironmentCfg environmentCfg;
+    protected EnvironmentCfg environmentCfg;
 
     public static void main(final String... args)
     {
