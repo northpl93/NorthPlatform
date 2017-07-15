@@ -15,6 +15,7 @@ import java.util.Set;
 import com.google.common.base.Preconditions;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.text.StrBuilder;
 import org.apache.commons.lang3.tuple.Pair;
 import org.reflections.Reflections;
@@ -152,8 +153,7 @@ public class ClassloaderScanningTask
 
         if (! this.pendingTasks.isEmpty())
         {
-            this.generateScanningError();
-            throw new RuntimeException("There're uncompletable class processing tasks."); // todo other exception
+            throw new RuntimeException(this.generateScanningError()); // todo other exception
         }
 
         for (final Pair<Class<?>, CtClass> entry : allClasses)
@@ -163,26 +163,27 @@ public class ClassloaderScanningTask
         }
     }
 
-    private void generateScanningError()
+    private String generateScanningError()
     {
         final StrBuilder sb = new StrBuilder(512);
         sb.append("They're ").append(this.pendingTasks.size()).append(" uncompleted tasks! Below you will se trace of these tasks.").appendNewLine();
         for (final AbstractScanningTask task : this.pendingTasks)
         {
             sb.append("> > > TASK BEGIN > > >").appendNewLine();
-            sb.append("Task type: ").append(task.getClass().getSimpleName()).appendNewLine();
-            sb.append("Processed class: ").append(task.clazz.getName()).appendNewLine();
-            sb.append("Bean context: ").append(task.beanContext.getBeanContextName()).appendNewLine();
+            sb.append("|- Task type: ").append(task.getClass().getSimpleName()).appendNewLine();
+            sb.append("|- Processed class: ").append(task.clazz.getName()).appendNewLine();
+            sb.append("|- Bean context: ").append(task.beanContext.getBeanContextName()).appendNewLine();
             final Throwable lastCause = task.lastCause;
             if (lastCause != null)
             {
-                sb.append("Last recorded exception: ")
-                  .append(lastCause.getClass().getName())
-                  .append(": ")
-                  .appendln(lastCause.getMessage());
+                sb.appendln("|- Last recorded exception: ");
+                final String stack = StringUtils.leftPad(ExceptionUtils.getStackTrace(lastCause), 4);
+                sb.appendln(stack);
             }
             sb.appendln("< < < TASK END < < <");
         }
+        sb.append("End of uncompleted tasks list");
+        return sb.toString();
     }
 
     /*default*/ Set<Pair<Class<?>, CtClass>> getAllClasses(final Reflections reflections, final FilterBuilder filter)

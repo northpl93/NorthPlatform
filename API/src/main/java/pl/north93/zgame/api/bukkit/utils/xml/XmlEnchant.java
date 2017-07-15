@@ -18,9 +18,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class XmlEnchant
 {
     @XmlAttribute(required = true)
-    private Enchantment enchantment;
+    private String enchantment;
     @XmlAttribute
-    private int         level = 1;
+    private int    level = 1;
     
     public XmlEnchant()
     {
@@ -28,25 +28,24 @@ public class XmlEnchant
 
     public XmlEnchant(final Enchantment enchantment, final int level)
     {
-        Preconditions.checkNotNull(enchantment);
-        this.enchantment = enchantment;
+        this.setEnchantment(enchantment);
         this.level = level;
     }
 
     public XmlEnchant(final Enchantment enchantment)
     {
-        Preconditions.checkNotNull(enchantment);
-        this.enchantment = enchantment;
+        this.setEnchantment(enchantment);
     }
 
     public Enchantment getEnchantment()
     {
-        return this.enchantment;
+        return Enchantment.getByName(this.enchantment);
     }
 
     public void setEnchantment(final Enchantment enchantment)
     {
-        this.enchantment = enchantment;
+        Preconditions.checkNotNull(enchantment);
+        this.enchantment = enchantment.getName();
     }
 
     public int getLevel()
@@ -61,7 +60,7 @@ public class XmlEnchant
 
     public void apply(final ItemStack itemStack)
     {
-        itemStack.addEnchantment(this.enchantment, this.level);
+        itemStack.addEnchantment(this.getEnchantment(), this.level);
     }
 
     @Override
