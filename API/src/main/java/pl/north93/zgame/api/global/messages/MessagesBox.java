@@ -3,6 +3,7 @@ package pl.north93.zgame.api.global.messages;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -96,6 +97,28 @@ public class MessagesBox
     public String toString()
     {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("fileName", this.fileName).toString();
+    }
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(loader, fileName);
+    }
+    
+    @Override
+    public boolean equals(Object obj)
+    {
+         if ( this == obj )
+         {
+             return true;
+         }
+         if ( obj == null || obj.getClass() != this.getClass() )
+         {
+             return false;
+         }
+         
+         MessagesBox other = (MessagesBox) obj;
+         return Objects.equals(other.loader, this.loader) && Objects.equals(other.fileName, this.fileName);
     }
 
     @Deprecated // weird utility, uniemozliwa tlumaczenie wiadomosci per gracz
