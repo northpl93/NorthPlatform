@@ -1,7 +1,5 @@
 package pl.north93.zgame.api.bukkit.utils.xml;
 
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -9,10 +7,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import pl.north93.zgame.api.bukkit.utils.ItemStackBuilder;
+import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
 
 @XmlRootElement(name = "item")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -117,8 +117,9 @@ public class XmlItemStack
     
     @SuppressWarnings("deprecation")
     public ItemStack createItemStack() {
-        
-        // TODO: enchants
-        return new ItemStackBuilder().material(Material.getMaterial(id)).data(data).amount(count).name(name).lore(lore).build();
+
+        final ItemStackBuilder builder = new ItemStackBuilder().material(Material.getMaterial(id)).data(data).amount(count).name(name).lore(this.lore);
+        this.enchants.forEach(builder::enchant);
+        return builder.build();
     }
 }

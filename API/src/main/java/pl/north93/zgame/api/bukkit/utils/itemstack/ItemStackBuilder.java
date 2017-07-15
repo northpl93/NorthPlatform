@@ -1,24 +1,29 @@
-package pl.north93.zgame.api.bukkit.utils;
+package pl.north93.zgame.api.bukkit.utils.itemstack;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.bukkit.utils.xml.XmlEnchant;
+
 public class ItemStackBuilder
 {
-    private Material     material;
-    private int          amount   = 1;
-    private short        data     = 0;
-    private String       name;
-    private List<String> lore;
+    private Material         material;
+    private int              amount   = 1;
+    private short            data     = 0;
+    private String           name;
+    private List<String>     lore;
+    private List<XmlEnchant> enchantments;
 
     public ItemStackBuilder material(final Material material)
     {
@@ -62,6 +67,21 @@ public class ItemStackBuilder
         return this;
     }
 
+    public ItemStackBuilder enchant(final XmlEnchant enchantment)
+    {
+        if (this.enchantments == null)
+        {
+            this.enchantments = new ArrayList<>();
+        }
+        this.enchantments.add(enchantment);
+        return this;
+    }
+
+    public ItemStackBuilder enchant(final Enchantment enchantment, final int level)
+    {
+        return this.enchant(new XmlEnchant(enchantment, level));
+    }
+
     public ItemStack build()
     {
         final ItemStack itemStack = new ItemStack(this.material, this.amount, this.data);
@@ -69,6 +89,10 @@ public class ItemStackBuilder
         itemMeta.setDisplayName(this.name);
         itemMeta.setLore(this.lore);
         itemStack.setItemMeta(itemMeta);
+        if (this.enchantments != null)
+        {
+            this.enchantments.forEach(enchantment -> enchantment.apply(itemStack));
+        }
         return itemStack;
     }
 
