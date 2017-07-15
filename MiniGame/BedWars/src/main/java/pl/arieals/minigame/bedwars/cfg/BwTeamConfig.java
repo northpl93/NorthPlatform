@@ -24,6 +24,8 @@ public class BwTeamConfig
     private ChatColor   color;
     @XmlElement(required = true, name = "teamRegion")
     private XmlCuboid   teamRegion;
+    @XmlElement(required = true, name = "healRegion")
+    private XmlCuboid   healRegion;
     @XmlElement(required = true, name = "spawnLocation")
     private XmlLocation spawnLocation;
     @XmlElement(required = true, name = "bedLocation")
@@ -44,6 +46,11 @@ public class BwTeamConfig
         return this.teamRegion;
     }
 
+    public XmlCuboid getHealRegion()
+    {
+        return this.healRegion;
+    }
+
     public XmlLocation getSpawnLocation()
     {
         return this.spawnLocation;
@@ -57,6 +64,6 @@ public class BwTeamConfig
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("scoreboardOrder", this.scoreboardOrder).append("color", this.color).append("teamRegion", this.teamRegion).append("spawnLocation", this.spawnLocation).append("bedLocation", this.bedLocation).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("scoreboardOrder", this.scoreboardOrder).append("color", this.color).append("teamRegion", this.teamRegion).append("healRegion", this.healRegion).append("spawnLocation", this.spawnLocation).append("bedLocation", this.bedLocation).toString();
     }
 }

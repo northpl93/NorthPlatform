@@ -31,6 +31,9 @@ public class BwConfig
     @XmlElementWrapper(name = "generatorTypes")
     @XmlElement(name = "generatorType")
     private List<BwGeneratorType> generatorTypes;
+    @XmlElementWrapper(name = "shopEntries")
+    @XmlElement(name = "shopEntry")
+    private List<BwShopEntry>     shopEntries;
     @XmlElement
     private Map<String, Integer>  upgrades;
 
@@ -59,6 +62,11 @@ public class BwConfig
         return findInCollection(this.generatorTypes, BwGeneratorType::getName, name);
     }
 
+    public List<BwShopEntry> getShopEntries()
+    {
+        return this.shopEntries;
+    }
+
     public Map<String, Integer> getUpgrades()
     {
         return this.upgrades;
@@ -67,6 +75,6 @@ public class BwConfig
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("destroyBedsAt", this.destroyBedsAt).append("startDeathMatchAt", this.startDeathMatchAt).append("teamSize", this.teamSize).append("generatorTypes", this.generatorTypes).append("upgrades", this.upgrades).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("destroyBedsAt", this.destroyBedsAt).append("startDeathMatchAt", this.startDeathMatchAt).append("teamSize", this.teamSize).append("generatorTypes", this.generatorTypes).append("shopEntries", this.shopEntries).append("upgrades", this.upgrades).toString();
     }
 }

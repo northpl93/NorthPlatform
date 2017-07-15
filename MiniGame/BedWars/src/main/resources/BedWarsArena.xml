@@ -8,6 +8,10 @@
                 <from x="0" y="0" z="0"/>
                 <to x="0" y="0" z="0"/>
             </teamRegion>
+            <healRegion>
+                <from x="0" y="0" z="0"/>
+                <to x="0" y="0" z="0"/>
+            </healRegion>
             <spawnLocation x="0" y="0" z="0"/>
             <bedLocation x="0" y="0" z="0"/>
         </team>

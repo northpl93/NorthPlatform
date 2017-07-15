@@ -7,7 +7,7 @@ import org.bukkit.event.HandlerList;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.ArenaEvent;
 import pl.arieals.minigame.bedwars.arena.Team;
-import pl.arieals.minigame.bedwars.arena.upgrade.IUpgrade;
+import pl.arieals.minigame.bedwars.shop.upgrade.IUpgrade;
 
 public class UpgradeInstallEvent extends ArenaEvent implements Cancellable
 {

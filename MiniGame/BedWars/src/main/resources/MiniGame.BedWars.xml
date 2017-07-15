@@ -23,10 +23,32 @@
         </generatorType>
     </generatorTypes>
 
+    <shopEntries>
+        <shopEntry>
+            <internalName>item1</internalName>
+            <items>
+                <item id="307" data="0" count="1">
+                    <enchants>
+                        <enchant enchantment="THORNS" level="1" />
+                    </enchants>
+                    <lore>
+                        <line>&amp;aLinijka 1</line>
+                    </lore>
+                </item>
+            </items>
+            <price id="307" data="0" count="1" />
+            <isPersistent>true</isPersistent>
+        </shopEntry>
+    </shopEntries>
+
     <upgrades>
         <entry>
-            <key>BaseGeneratorUpgrade</key>
+            <key>BaseGeneratorUpgrade_1</key>
             <value>2</value>
+        </entry>
+        <entry>
+            <key>BaseGeneratorUpgrade_2</key>
+            <value>4</value>
         </entry>
         <entry>
             <key>IslandTrapUpdate</key>

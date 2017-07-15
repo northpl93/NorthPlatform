@@ -1,4 +1,4 @@
-package pl.arieals.minigame.bedwars.arena.upgrade;
+package pl.arieals.minigame.bedwars.shop.upgrade;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 

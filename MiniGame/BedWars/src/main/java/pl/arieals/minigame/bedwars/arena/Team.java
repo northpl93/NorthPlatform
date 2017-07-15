@@ -23,6 +23,7 @@ public class Team
     private ChatColor   color;
     private Set<Player> players;
     private Cuboid      teamArena;
+    private Cuboid      healArena;
     private Location    spawn;
     private Location    bedLocation;
     private boolean     isBedAlive;
@@ -36,6 +37,7 @@ public class Team
         this.color = config.getColor();
         this.players = new HashSet<>();
         this.teamArena = config.getTeamRegion().toCuboid(currentWorld);
+        this.healArena = config.getHealRegion().toCuboid(currentWorld);
         this.spawn = config.getSpawnLocation().toBukkit(currentWorld);
         this.bedLocation = config.getBedLocation().toBukkit(currentWorld);
         this.isBedAlive = true;
@@ -96,6 +98,11 @@ public class Team
     public Cuboid getTeamArena()
     {
         return this.teamArena;
+    }
+
+    public Cuboid getHealArena()
+    {
+        return this.healArena;
     }
 
     public Location getSpawn()

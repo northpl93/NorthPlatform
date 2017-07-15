@@ -1,4 +1,4 @@
-package pl.arieals.minigame.bedwars;
+package pl.arieals.minigame.bedwars.shop;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
@@ -19,7 +19,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
-import pl.arieals.minigame.bedwars.arena.upgrade.IUpgrade;
+import pl.arieals.minigame.bedwars.shop.upgrade.IUpgrade;
 import pl.arieals.minigame.bedwars.cfg.BwConfig;
 import pl.arieals.minigame.bedwars.event.UpgradeInstallEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;

@@ -16,8 +16,21 @@ public final class ItemStackHelper
     {
     }
 
+    public static org.bukkit.inventory.ItemStack ensureCraftItemStack(final org.bukkit.inventory.ItemStack itemStack)
+    {
+        if (itemStack instanceof CraftItemStack)
+        {
+            return itemStack;
+        }
+        return CraftItemStack.asCraftCopy(itemStack);
+    }
+
     public static ItemStack getHandle(final org.bukkit.inventory.ItemStack bukkitStack)
     {
+        if (! (bukkitStack instanceof CraftItemStack))
+        {
+            throw new IllegalArgumentException("NMS ItemStack can be only obtained from CraftItemStack. Use ensureCraftItemStack or CraftItemStack#asCraftCopy");
+        }
         return craftItemStack_handle.get(bukkitStack);
     }
 
