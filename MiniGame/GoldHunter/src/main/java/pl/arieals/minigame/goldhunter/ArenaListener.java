@@ -16,7 +16,6 @@ import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.component.annotations.bean.Named;
 
 public class ArenaListener implements Listener
 {
@@ -37,7 +36,6 @@ public class ArenaListener implements Listener
         if ( localArena.getArenaData() == null )
         {
             localArena.setArenaData(new GoldHunterArena(localArena));
-            System.out.println("TM: " + tickableManager);
             tickableManager.addTickableObject((ITickable) localArena.getArenaData());
             logger.info("Add GoldHunter arena with uuid: {}", localArena.getId());
             //goldHunter.prepareGoldHunterArena(localArena);

@@ -19,7 +19,7 @@ import pl.north93.zgame.api.bukkit.tick.ITickableManager;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
-public class GoldHunterComponent extends Component implements Listener
+public class GoldHunterComponent extends Component
 {
     private final Logger logger = LogManager.getLogger("GoldHunter");
     
@@ -33,13 +33,7 @@ public class GoldHunterComponent extends Component implements Listener
     @Override
     protected void enableComponent()
     {
-        System.out.println("##################");
-        logger.info("SDdasdasasdsdasdasdsasdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         apiCore.registerEvents(new ArenaListener());
-        apiCore.registerEvents(this);
-        
-        System.out.println("@@@@@@ " + tickableManager);
-        //IArenaData.class.getName();
     }
 
     @Override
@@ -51,12 +45,5 @@ public class GoldHunterComponent extends Component implements Listener
     public void prepareGoldHunterArena(LocalArena localArena)
     {
         
-    }
-    
-    @EventHandler
-    public void onInit(GameInitEvent event)
-    {
-        System.out.println("GameInit: " + event.getArena());
-        logger.debug("CHUJ INIT GAME");
     }
 }

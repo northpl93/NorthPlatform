@@ -33,7 +33,7 @@ public class GoldHunterArena implements IArenaData, ITickable
         this.logger = LogManager.getLogger("Arena " + localArena.getId());
         this.localArena = localArena;
         
-        
+        setDefaultScoreboardProperties();
     }
     
     private void setDefaultScoreboardProperties()
