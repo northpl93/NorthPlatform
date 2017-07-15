@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -29,10 +30,11 @@ public class XmlItemStack
     private String name;
     @XmlElementWrapper(name = "lore")
     @XmlElement(name = "line")
-    private List<String> lore;
+    private List<String> lore = new ArrayList<>();
     
-    @XmlElementWrapper(name = "ench")
-    private List<XmlEnchant> enchants;
+    @XmlElementWrapper(name = "enchants")
+    @XmlElement(name = "enchant")
+    private List<XmlEnchant> enchants = new ArrayList<>();
     
     public XmlItemStack()
     {

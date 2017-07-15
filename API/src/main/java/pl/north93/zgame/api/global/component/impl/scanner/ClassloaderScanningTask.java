@@ -135,11 +135,26 @@ public class ClassloaderScanningTask
             this.pendingTasks.add(new MethodScanningTask(this, clazz, ctClass, beanContext));
         }
 
-        final Iterator<AbstractScanningTask> iterator = this.pendingTasks.iterator();
+        this.processQueue();
+        if (! this.pendingTasks.isEmpty())
+        {
+            throw new RuntimeException(this.generateScanningError());
+        }
+
+        for (final Pair<Class<?>, CtClass> entry : allClasses)
+        {
+            final AbstractBeanContext beanContext = this.manager.getOwningContext(entry.getKey());
+            this.manager.getAggregationManager().call(beanContext, entry.getValue(), entry.getKey());
+        }
+    }
+
+    private void processQueue()
+    {
         boolean modified = true;
         while (modified)
         {
             modified = false;
+            final Iterator<AbstractScanningTask> iterator = this.pendingTasks.iterator();
             while (iterator.hasNext())
             {
                 final AbstractScanningTask task = iterator.next();
@@ -149,17 +164,6 @@ public class ClassloaderScanningTask
                     iterator.remove();
                 }
             }
-        }
-
-        if (! this.pendingTasks.isEmpty())
-        {
-            throw new RuntimeException(this.generateScanningError()); // todo other exception
-        }
-
-        for (final Pair<Class<?>, CtClass> entry : allClasses)
-        {
-            final AbstractBeanContext beanContext = this.manager.getOwningContext(entry.getKey());
-            this.manager.getAggregationManager().call(beanContext, entry.getValue(), entry.getKey());
         }
     }
 

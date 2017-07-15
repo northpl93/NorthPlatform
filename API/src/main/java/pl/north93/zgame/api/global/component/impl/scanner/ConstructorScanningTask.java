@@ -48,7 +48,7 @@ class ConstructorScanningTask extends AbstractScanningTask
             }
             iterator.remove();
         }
-        return true;
+        return this.constructors.isEmpty();
     }
 
     @Override

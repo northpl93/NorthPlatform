@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.global.component.impl.context;
 
+import static java.util.Collections.synchronizedSet;
+
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +27,7 @@ public abstract class AbstractBeanContext implements IBeanContext
     public AbstractBeanContext(final AbstractBeanContext parent, final String name)
     {
         this.parent = parent;
-        this.registeredBeans = new HashSet<>();
+        this.registeredBeans = synchronizedSet(new HashSet<>()); // ensure safety in multithreaded environment
         this.name = name;
     }
 

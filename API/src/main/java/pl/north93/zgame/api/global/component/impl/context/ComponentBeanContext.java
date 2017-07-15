@@ -4,6 +4,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.north93.zgame.api.global.component.impl.container.AbstractBeanContainer;
 
 public class ComponentBeanContext extends AbstractBeanContext
@@ -33,5 +36,11 @@ public class ComponentBeanContext extends AbstractBeanContext
             all.addAll(dependency.getAll(false));
         }
         return all;
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("dependencies", this.dependencies).toString();
     }
 }
