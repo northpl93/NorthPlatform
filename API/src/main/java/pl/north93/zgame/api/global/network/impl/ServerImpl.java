@@ -32,6 +32,7 @@ public class ServerImpl implements Server, ServerProxyData
     private Boolean       isLaunchedViaDaemon;
     private ServerType    serverType;
     private ServerState   serverState;
+    private Boolean       shutdown;
     private JoiningPolicy joiningPolicy;
     @MsgPackNullable
     @MsgPackCustomTemplate(ServersGroupInStringTemplate.class)
@@ -53,6 +54,7 @@ public class ServerImpl implements Server, ServerProxyData
         this.serverType = serverType;
         this.serverState = serverState;
         this.joiningPolicy = joiningPolicy;
+        this.shutdown = false;
     }
 
     public ServerImpl(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy, final String connectIp, final Integer connectPort, final IServersGroup serversGroup, final ServerPattern serverPattern)
@@ -90,6 +92,12 @@ public class ServerImpl implements Server, ServerProxyData
     public ServerState getServerState()
     {
         return this.serverState;
+    }
+
+    @Override
+    public boolean isShutdownScheduled()
+    {
+        return this.shutdown;
     }
 
     @Override
@@ -137,6 +145,11 @@ public class ServerImpl implements Server, ServerProxyData
     public void setServerState(final ServerState serverState)
     {
         this.serverState = serverState;
+    }
+
+    public void setShutdownScheduled(final Boolean shutdown)
+    {
+        this.shutdown = shutdown;
     }
 
     public void setJoiningPolicy(final JoiningPolicy joiningPolicy)

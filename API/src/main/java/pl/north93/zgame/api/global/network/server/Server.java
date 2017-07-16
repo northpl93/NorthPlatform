@@ -45,6 +45,13 @@ public interface Server extends ServerProxyData, ProvidingRedisKey
     ServerState getServerState();
 
     /**
+     * Sprawdza czy ten serwer jest zaplanowany do wylaczenia.
+     *
+     * @return czy serwer zaplanowany do wylaczenia.
+     */
+    boolean isShutdownScheduled();
+
+    /**
      * Zwraca aktualną politykę wchodzenia na serwer.
      *
      * @return aktualna polityka wchodzenia na serwer.

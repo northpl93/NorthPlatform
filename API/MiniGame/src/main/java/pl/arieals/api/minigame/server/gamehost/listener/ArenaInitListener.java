@@ -1,6 +1,7 @@
 package pl.arieals.api.minigame.server.gamehost.listener;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -22,22 +23,22 @@ import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
+import pl.north93.zgame.api.bukkit.server.IBukkitServerManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ArenaInitListener implements Listener
 {
     @Inject
-    private MiniGameServer server;
+    private MiniGameServer       server;
     @Inject
-    private Logger         logger;
+    private IBukkitServerManager bukkitServerManager;
+    @Inject
+    private Logger               logger;
 
-    @EventHandler(priority = EventPriority.LOW) // before normal
-    public void onArenaInit(final GameInitEvent event)
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void beforeInit(final GameInitEvent event)
     {
-        final GameHostManager hostManager = this.server.getServerManager();
         final LocalArena arena = event.getArena();
-
-        this.logger.info("Minigames API is initialising arena " + arena.getId());
 
         if (arena.isDynamic())
         {
@@ -54,6 +55,24 @@ public class ArenaInitListener implements Listener
             Bukkit.broadcastMessage("Now kick all players to server lobby");
             // todo kick all players to server lobby
         }
+
+        if (! this.bukkitServerManager.isShutdownScheduled())
+        {
+            return;
+        }
+
+        this.logger.log(Level.INFO, "Removing arena {0} because shutdown is scheduled.", arena.getId());
+        event.setCancelled(true);
+        arena.delete();
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) // before normal
+    public void onArenaInit(final GameInitEvent event)
+    {
+        final GameHostManager hostManager = this.server.getServerManager();
+        final LocalArena arena = event.getArena();
+
+        this.logger.info("Minigames API is initialising arena " + arena.getId());
 
         // resetujemy licznik, aby przy kazdej inicjalizacji wskazywal 0
         arena.getTimer().reset();
@@ -77,7 +96,7 @@ public class ArenaInitListener implements Listener
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR) // wykonuje sie na samym koncu
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true) // wykonuje sie na samym koncu
     public void postArenaInit(final GameInitEvent event)
     {
         final LocalArena arena = event.getArena();

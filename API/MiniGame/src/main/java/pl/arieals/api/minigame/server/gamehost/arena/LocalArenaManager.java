@@ -20,7 +20,6 @@ import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
-import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDeletedEvent;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -94,16 +93,9 @@ public class LocalArenaManager
 
     public void removeArenas()
     {
-        final GameHostManager serverManager = this.miniGameServer.getServerManager();
-        final ArenaManager arenaManager = this.miniGameServer.getArenaManager();
-        for (final LocalArena arena : this.arenas)
+        for (final LocalArena arena : new ArrayList<>(this.arenas)) // unikamy ConcurrentModificationException
         {
-            arenaManager.removeArena(arena.getId());
-            serverManager.publishArenaEvent(new ArenaDeletedEvent(arena.getId(), this.apiCore.getServerId(), arena.getMiniGameId()));
-            if (! arena.getWorld().delete())
-            {
-                this.logger.warning("Failed to unload world of arena " + arena.getId());
-            }
+            arena.delete();
         }
     }
 }

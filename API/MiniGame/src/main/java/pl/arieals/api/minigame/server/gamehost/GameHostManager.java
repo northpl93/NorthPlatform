@@ -28,6 +28,7 @@ import pl.arieals.api.minigame.server.gamehost.listener.ArenaInitListener;
 import pl.arieals.api.minigame.server.gamehost.deathmatch.DeathMatchStartListener;
 import pl.arieals.api.minigame.server.gamehost.listener.GameStartListener;
 import pl.arieals.api.minigame.server.gamehost.listener.PlayerListener;
+import pl.arieals.api.minigame.server.gamehost.listener.ServerShutdownListener;
 import pl.arieals.api.minigame.server.gamehost.listener.VisibilityListener;
 import pl.arieals.api.minigame.server.gamehost.region.impl.RegionManagerImpl;
 import pl.arieals.api.minigame.server.gamehost.world.IMapTemplateManager;
@@ -72,6 +73,7 @@ public class GameHostManager implements IServerManager
         this.rpcManager.addRpcImplementation(IGameHostRpc.class, new GameHostRpcImpl(this));
 
         this.apiCore.registerEvents(
+                new ServerShutdownListener(), // zezwala na wylaczenie serwera
                 new PlayerListener(), // dodaje graczy do aren
                 new VisibilityListener(), // zarzadza widocznoscia graczy i czatu
                 new ArenaInitListener(), // inicjuje arene po dodaniu/zakonczeniu poprzedniej gry
@@ -84,14 +86,7 @@ public class GameHostManager implements IServerManager
         
         new MiniGameApi(); // inicjuje zmienne w klasie i statyczną INSTANCE
 
-        Bukkit.getScheduler().runTask(apiCore.getPluginMain(), this::createArenas);
-
-        /*final GameMapConfig config = new GameMapConfig();
-        config.setDisplayName("test");
-        config.setEnabled(true);
-        config.getProperties().put("klucz1", "wartosc1");
-        config.getProperties().put("klucz2", "wartosc2");
-        JAXB.marshal(config, new File("testy.xml"));*/
+        Bukkit.getScheduler().runTask(this.apiCore.getPluginMain(), this::createArenas);
     }
 
     private void createArenas()
@@ -116,6 +111,11 @@ public class GameHostManager implements IServerManager
     public JavaPlugin getPlugin()
     {
         return this.apiCore.getPluginMain();
+    }
+
+    public BukkitApiCore getApiCore()
+    {
+        return this.apiCore;
     }
 
     /**

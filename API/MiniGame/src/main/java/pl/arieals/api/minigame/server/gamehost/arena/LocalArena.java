@@ -3,6 +3,7 @@ package pl.arieals.api.minigame.server.gamehost.arena;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 import com.google.common.base.Preconditions;
 
@@ -19,7 +20,9 @@ import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDataChanged;
+import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDeletedEvent;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
+import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.StaticTimer;
 
 public class LocalArena implements IArena
@@ -200,6 +203,31 @@ public class LocalArena implements IArena
     {
         Preconditions.checkState(this.getGamePhase() == GamePhase.POST_GAME); // arena moze byc zresetowana tylko po grze
         this.setGamePhase(GamePhase.INITIALISING);
+    }
+
+    /**
+     * Usuwa dana arene z listy aren i wysyla ArenaDeletedEvent do Redisa.
+     * <for>
+     * Uwaga! Modyfikuje liste aren z {@link ArenaManager} wiec trzeba
+     * uwazac z petlami.
+     */
+    public void delete()
+    {
+        final BukkitApiCore apiCore = this.gameHostManager.getApiCore();
+        apiCore.getLogger().log(Level.INFO, "Removing arena {0}", this.getId());
+
+        this.arenaManager.removeArena(this.getId());
+
+        final UUID serverId = apiCore.getServerId();
+        final String miniGameId = this.gameHostManager.getMiniGameConfig().getMiniGameId();
+        this.gameHostManager.publishArenaEvent(new ArenaDeletedEvent(this.getId(), serverId, miniGameId));
+
+        this.gameHostManager.getArenaManager().getArenas().remove(this);
+
+        if (! this.world.delete())
+        {
+            apiCore.getLogger().log(Level.WARNING, "Failed to unload world of arena {0}", this.getId());
+        }
     }
 
     public void startVoting()
