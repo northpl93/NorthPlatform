@@ -4,6 +4,7 @@ import static pl.north93.zgame.api.global.utils.JavaUtils.hideException;
 
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Collection;
 
@@ -20,6 +21,7 @@ import javassist.CtClass;
 import pl.north93.zgame.api.global.component.annotations.SkipInjections;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
+import pl.north93.zgame.api.global.component.impl.SmartExecutor;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 
 public class AggregationManager
@@ -71,24 +73,15 @@ public class AggregationManager
 
     private Object getInstance(final AbstractBeanContext beanContext, final Class<?> clazz)
     {
-        Object bean = null;
         try
         {
-            bean = beanContext.getBean(clazz);
+            return beanContext.getBean(clazz);
         }
         catch (final Exception e)
         {
-            try
-            {
-                bean = clazz.newInstance();
-            }
-            catch (final InstantiationException | IllegalAccessException e1)
-            {
-                e1.printStackTrace();
-            }
+            final Constructor<?> firstConstructor = clazz.getDeclaredConstructors()[0];
+            return SmartExecutor.execute(firstConstructor, beanContext, null);
         }
-
-        return bean;
     }
 
     @Override
