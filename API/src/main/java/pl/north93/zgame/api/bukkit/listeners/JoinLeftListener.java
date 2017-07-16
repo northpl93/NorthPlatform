@@ -6,6 +6,7 @@ import static pl.north93.zgame.api.bukkit.listeners.LanguageKeeper.updateLocale;
 
 
 import java.text.MessageFormat;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -49,11 +50,18 @@ public class JoinLeftListener implements Listener
         final IOnlinePlayer iplayer = this.networkManager.getOnlinePlayer(player.getName()).get();
         if (iplayer == null)
         {
-            this.bukkitApiCore.getLogger().warning("Player " + player.getName() + " (" + player.getUniqueId() + ") joined, but iplayer is null in onJoin");
-            player.kickPlayer(RED + "Połącz się z serwerem ponownie (iplayer==null in onJoin)");
+            this.bukkitApiCore.getLogger().log(Level.SEVERE, "Player {0} ({1}) joined, but iplayer is null in onJoin", new Object[]{player.getName(), player.getUniqueId()});
+            player.kickPlayer(RED + "Połącz się z serwerem ponownie (iplayer==null in JoinLeftListener#onJoin)");
             return;
         }
+
         final Group group = iplayer.getGroup();
+        if (group == null)
+        {
+            this.bukkitApiCore.getLogger().log(Level.SEVERE, "Group is null in JoinLeftListener. player:{0}", player.getName());
+            player.kickPlayer(RED + "Połącz się z serwerem ponownie (group==null in JoinLeftListener#onJoin)");
+            return;
+        }
 
         updateLocale(player, iplayer.getLocale());
 
