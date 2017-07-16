@@ -1,39 +1,55 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import net.minecraft.server.v1_10_R1.CombatEntry;
-import net.minecraft.server.v1_10_R1.CombatTracker;
-import net.minecraft.server.v1_10_R1.Entity;
-
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.reflections.DioriteReflectionUtils;
-import org.diorite.utils.reflections.MethodInvoker;
-
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import pl.arieals.minigame.bedwars.shop.ShopManager;
+import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageEntry;
+import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageTracker;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class PlayerItemsListener implements Listener
 {
     @Inject
     private ShopManager shopManager;
+    @Inject @Messages("BedWars")
+    private MessagesBox messages;
 
     @EventHandler
-    public void onModifyArmor(final InventoryClickEvent event)
+    public void onInventoryClick(final InventoryClickEvent event)
     {
-        if (event.getSlotType() == InventoryType.SlotType.ARMOR)
+        final InventoryType.SlotType slotType = event.getSlotType();
+        if (slotType == InventoryType.SlotType.ARMOR || slotType == InventoryType.SlotType.CRAFTING)
         {
             event.setCancelled(true);
+            return;
+        }
+
+        final Inventory clickedInventory = event.getClickedInventory();
+        if (clickedInventory != null && clickedInventory.getType() == InventoryType.CHEST)
+        {
+            final ItemStack cursor = event.getCursor();
+            if (cursor != null && this.shopManager.isItemPermanent(cursor))
+            {
+                // blokujemy wywalanie itemow stalych do skrzynki.
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -43,6 +59,7 @@ public class PlayerItemsListener implements Listener
         final ItemStack itemStack = event.getItemDrop().getItemStack();
         if (this.shopManager.isItemPermanent(itemStack))
         {
+            // blokujemy wywalanie itemow stalych z ekwipunku
             event.setCancelled(true);
         }
     }
@@ -60,20 +77,60 @@ public class PlayerItemsListener implements Listener
         final Player player = event.getEntity();
         final ItemStack[] storageContents = player.getInventory().getStorageContents();
 
-        final MethodInvoker combatTracker_j = DioriteReflectionUtils.getMethod(CombatTracker.class, "j");
-        final CombatEntry lastPlayerDamage = (CombatEntry) combatTracker_j.invoke(((CraftPlayer) player).getHandle().combatTracker);
-        final Entity entity = lastPlayerDamage.a().getEntity();
-        System.out.println(entity);
-
+        final Object2IntMap<Material> trackedMaterials = new Object2IntOpenHashMap<>(5, 0.01f);
         for (int i = 0; i < storageContents.length; i++)
         {
             final ItemStack item = storageContents[i];
+            if (item == null || item.getType() == Material.AIR)
+            {
+                continue;
+            }
             if (this.shopManager.isItemPermanent(item))
             {
                 continue;
             }
 
+            this.addTrackedMaterial(trackedMaterials, item);
             player.getInventory().setItem(i, null);
+        }
+        this.giveItemsToKiller(trackedMaterials, player);
+    }
+
+    // dodaje sledzony material do mapy
+    private void addTrackedMaterial(final Object2IntMap<Material> map, final ItemStack itemStack)
+    {
+        final Material type = itemStack.getType();
+        if (type != Material.IRON_INGOT && type != Material.GOLD_INGOT && type != Material.DIAMOND && type != Material.EMERALD && !(type == Material.INK_SACK && itemStack.getDurability() == 4))
+        {
+            return;
+        }
+
+        final int anInt = map.getInt(type);
+        map.put(type, anInt + itemStack.getAmount());
+    }
+
+    // daje przedmioty z mapy zabojcy danego gracza
+    private void giveItemsToKiller(final Object2IntMap<Material> items, final Player death)
+    {
+        final DamageEntry lastDamageByPlayer = DamageTracker.get().getContainer(death).getLastDamageByPlayer();
+        if (lastDamageByPlayer == null)
+        {
+            return;
+        }
+        final Player lastDamager = (Player) ((EntityDamageByEntityEvent) lastDamageByPlayer.getCause()).getDamager();
+
+        for (final Object2IntMap.Entry<Material> entry : items.object2IntEntrySet())
+        {
+            final Material type = entry.getKey();
+            int amount = entry.getIntValue();
+            while (amount > 0)
+            {
+                final ItemStack itemStack = new ItemStack(type, Math.min(amount, 64), (byte)(type == Material.INK_SACK ? 4 : 0));
+                lastDamager.getInventory().addItem(itemStack);
+                amount -= 64;
+            }
+
+            this.messages.sendMessage(lastDamager, "die.received_items." + type, entry.getIntValue());
         }
     }
 

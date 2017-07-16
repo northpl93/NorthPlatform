@@ -55,6 +55,12 @@ public class UpgradeManager
         final IUpgrade upgrade = this.upgrades.get(parameters.get("name"));
         final Player player = Bukkit.getPlayer(UUID.fromString(parameters.get("playerId")));
 
+        if (upgrade == null)
+        {
+            this.logger.log(Level.SEVERE, "Not found upgrade with name {0}", parameters.get("name"));
+            return false;
+        }
+
         final LocalArena arena = getArena(player);
         final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
         if (playerData == null || playerData.getTeam() == null)
@@ -63,8 +69,9 @@ public class UpgradeManager
             return false;
         }
         final Team team = playerData.getTeam();
+        final int actualLevel = team.getUpgrades().getUpgradeLevel(upgrade);
 
-        final UpgradeInstallEvent event = this.apiCore.callEvent(new UpgradeInstallEvent(arena, team, player, upgrade));
+        final UpgradeInstallEvent event = this.apiCore.callEvent(new UpgradeInstallEvent(arena, team, player, upgrade, actualLevel + 1));
         if (event.isCancelled())
         {
             return false;

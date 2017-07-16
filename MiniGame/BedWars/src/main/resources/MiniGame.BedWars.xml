@@ -24,8 +24,7 @@
     </generatorTypes>
 
     <shopEntries>
-        <shopEntry>
-            <internalName>item1</internalName>
+        <shopEntry internalName="item1" specialHandler="ArmorEntry" isPersistent="true">
             <items>
                 <item id="307" data="0" count="1">
                     <enchants>
@@ -37,7 +36,6 @@
                 </item>
             </items>
             <price id="307" data="0" count="1" />
-            <isPersistent>true</isPersistent>
         </shopEntry>
     </shopEntries>
 

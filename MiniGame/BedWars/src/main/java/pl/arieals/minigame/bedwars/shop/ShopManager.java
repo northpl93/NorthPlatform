@@ -2,6 +2,7 @@ package pl.arieals.minigame.bedwars.shop;
 
 import static java.text.MessageFormat.format;
 
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.north93.zgame.api.bukkit.utils.nms.ItemStackHelper.ensureCraftItemStack;
 import static pl.north93.zgame.api.bukkit.utils.nms.ItemStackHelper.getPersistentStorage;
 import static pl.north93.zgame.api.global.utils.CollectionUtils.findInCollection;
@@ -25,7 +26,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.minigame.bedwars.cfg.BwConfig;
 import pl.arieals.minigame.bedwars.cfg.BwShopEntry;
+import pl.arieals.minigame.bedwars.event.ItemBuyEvent;
 import pl.arieals.minigame.bedwars.shop.specialentry.IShopSpecialEntry;
+import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.itemstack.ItemTransaction;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlItemStack;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
@@ -33,10 +36,18 @@ import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.uri.UriHandler;
 
+/**
+ * Klasa zarzadzajaca sklepem bedwarsów.
+ * Zbiera specjalne handlery dodawania itemow,
+ * obsluguje sprawdzanie czy item jest permamentny,
+ * wystawia API dla gui.
+ */
 public class ShopManager
 {
     @Inject
-    private BwConfig config;
+    private BukkitApiCore apiCore;
+    @Inject
+    private BwConfig      config;
     private Map<String, IShopSpecialEntry> specialEntryMap = new HashMap<>();
 
     @Bean
@@ -58,7 +69,7 @@ public class ShopManager
      */
     public boolean isItemPermanent(final ItemStack itemStack)
     {
-        final NBTTagCompound itemNbt = getPersistentStorage(itemStack, "bedWars", false);
+        final NBTTagCompound itemNbt = getPersistentStorage(ensureCraftItemStack(itemStack), "bedWars", false);
         return itemNbt != null && itemNbt.getBoolean("permanent");
     }
 
@@ -90,6 +101,12 @@ public class ShopManager
         return this.buy(player, name);
     }
 
+    /**
+     * Uruchamia proces zakupu przedmiotu, lacznie z sprawdzaniem zaplaty.
+     * @param player gracz ktoremu kupic przedmiot
+     * @param name nazwa wewnetrzna shop entry.
+     * @return czy sie udalo kupic i dodac przedmioty do ekwipunku.
+     */
     public boolean buy(final Player player, final String name)
     {
         final BwShopEntry entry = findInCollection(this.config.getShopEntries(), BwShopEntry::getInternalName, name);
@@ -99,11 +116,12 @@ public class ShopManager
         }
 
         final ItemStack price = entry.getPrice().createItemStack();
-        if (! player.getInventory().contains(price))
+        if (! player.getInventory().containsAtLeast(price, price.getAmount()))
         {
             return false; // gracz nie ma wymaganej ilosci kasy.
         }
 
+        // tworzymy interesujace nas itemstacki
         Stream<ItemStack> itemStream = entry.getItems().stream().map(XmlItemStack::createItemStack);
         if (entry.isPersistent())
         {
@@ -111,6 +129,14 @@ public class ShopManager
         }
         final List<ItemStack> items = itemStream.collect(Collectors.toList());
 
+        // wywolujemy event kupowania przedmiotow
+        final ItemBuyEvent itemBuyEvent = this.apiCore.callEvent(new ItemBuyEvent(getArena(player), player, entry, items));
+        if (itemBuyEvent.isCancelled())
+        {
+            return false;
+        }
+
+        // obslugujemy dodanie itemów, przez specjalnego handlera lub normalnie przez ItemTransaction
         final IShopSpecialEntry specialEntry = this.specialEntryMap.get(entry.getSpecialHandler());
         final boolean success;
         if (specialEntry == null)

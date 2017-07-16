@@ -2,6 +2,7 @@ package pl.arieals.minigame.bedwars.cfg;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -17,17 +18,17 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlItemStack;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class BwShopEntry
 {
-    @XmlElement(required = true)
+    @XmlAttribute(required = true)
     private String             internalName;
-    @XmlElement
+    @XmlAttribute
     private String             specialHandler;
     @XmlElementWrapper(name = "items")
     @XmlElement(name = "item")
     private List<XmlItemStack> items;
     @XmlElement(required = true)
     private XmlItemStack       price;
-    @XmlElement(required = true)
-    private boolean            isPersistent;
+    @XmlAttribute
+    private boolean            isPersistent = false;
 
     public String getInternalName()
     {

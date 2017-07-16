@@ -2,6 +2,8 @@ package pl.arieals.minigame.bedwars.arena;
 
 import org.bukkit.entity.Player;
 
+import pl.arieals.minigame.bedwars.utils.TeamArmorUtils;
+
 public class BedWarsPlayer
 {
     private final Player bukkitPlayer;
@@ -33,7 +35,8 @@ public class BedWarsPlayer
         this.team = team;
         team.getPlayers().add(this.bukkitPlayer);
         this.bukkitPlayer.teleport(team.getSpawn());
-        this.bukkitPlayer.sendMessage("Dolaczono do zespolu " + team.getColor() + team.getColor().name());
+        TeamArmorUtils.updateArmor(this.bukkitPlayer, team);
+        //this.bukkitPlayer.sendMessage("Dolaczono do zespolu " + team.getColor() + team.getColor().name());
     }
 
     public boolean isAlive()
