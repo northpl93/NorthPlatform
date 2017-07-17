@@ -63,7 +63,7 @@ public class BuildListener implements Listener
 
         if (this.checkSecureRegion(arenaData, event.getBlock()))
         {
-            event.getPlayer().sendMessage("Nie mozesz tu budowac");
+            this.messages.sendMessage(event.getPlayer(), "no_permissions");
             event.setCancelled(true);
             return;
         }
@@ -95,7 +95,7 @@ public class BuildListener implements Listener
 
         if (this.checkSecureRegion(arenaData, block))
         {
-            event.getPlayer().sendMessage("Nie mozesz tu niszczyc");
+            this.messages.sendMessage(event.getPlayer(), "no_permissions");
             event.setCancelled(true);
             return;
         }
@@ -111,7 +111,7 @@ public class BuildListener implements Listener
         }
 
         event.setCancelled(true);
-        event.getPlayer().sendMessage("Mozesz niszczyc tylko bloki ktore postawiles!");
+        this.messages.sendMessage(event.getPlayer(), "no_permissions");
     }
 
     // zwraca true jesli gracz niszczy lozko - wtedy nie wykonujemy reszty kodu w evencie
