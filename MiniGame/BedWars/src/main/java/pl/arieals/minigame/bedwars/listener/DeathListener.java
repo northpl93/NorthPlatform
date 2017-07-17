@@ -2,6 +2,7 @@ package pl.arieals.minigame.bedwars.listener;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.setPlayerStatus;
 import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColorCodes;
 import static pl.north93.zgame.api.global.utils.JavaUtils.instanceOf;
 
@@ -20,6 +21,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.RevivePlayerCountdown;
@@ -57,23 +59,6 @@ public class DeathListener implements Listener
     }
 
     @EventHandler
-    public void onAnyDamage(final EntityDamageEvent event)
-    {
-        final Player player = instanceOf(event.getEntity(), Player.class);
-        if (player == null)
-        {
-            return;
-        }
-
-        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
-        if (! playerData.isAlive())
-        {
-            // wylaczamy damage jesli gracz nie zyje, zeby uniknac bugów itd
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
     public void onPlayerDeath(final PlayerDeathEvent event)
     {
         event.setDeathMessage(null); // my wcale nie umieramy!
@@ -88,9 +73,7 @@ public class DeathListener implements Listener
         }
 
         player.setHealth(20);
-        player.setVisible(false);
-        player.setAllowFlight(true);
-        player.setFlying(true);
+        setPlayerStatus(player, PlayerStatus.PLAYING_SPECTATOR);
 
         final Vector direction = player.getLocation().getDirection();
         final Vector newVector = direction.multiply(- 1).setY(2);

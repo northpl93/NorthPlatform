@@ -9,15 +9,17 @@ public class PlayerJoinInfo
 {
     private UUID    uuid;
     private Boolean isVip;
+    private Boolean spectator;
 
     public PlayerJoinInfo() // serialization
     {
     }
 
-    public PlayerJoinInfo(final UUID uuid, final Boolean isVip)
+    public PlayerJoinInfo(final UUID uuid, final Boolean isVip, final Boolean spectator)
     {
         this.uuid = uuid;
         this.isVip = isVip;
+        this.spectator = spectator;
     }
 
     public UUID getUuid()
@@ -30,9 +32,14 @@ public class PlayerJoinInfo
         return this.isVip;
     }
 
+    public Boolean isSpectator()
+    {
+        return this.spectator;
+    }
+
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).append("isVip", this.isVip).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).append("isVip", this.isVip).append("spectator", this.spectator).toString();
     }
 }

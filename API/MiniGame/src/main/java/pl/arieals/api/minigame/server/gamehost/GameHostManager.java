@@ -29,6 +29,7 @@ import pl.arieals.api.minigame.server.gamehost.deathmatch.DeathMatchStartListene
 import pl.arieals.api.minigame.server.gamehost.listener.GameStartListener;
 import pl.arieals.api.minigame.server.gamehost.listener.PlayerListener;
 import pl.arieals.api.minigame.server.gamehost.listener.ServerShutdownListener;
+import pl.arieals.api.minigame.server.gamehost.listener.SpectatorListener;
 import pl.arieals.api.minigame.server.gamehost.listener.VisibilityListener;
 import pl.arieals.api.minigame.server.gamehost.region.impl.RegionManagerImpl;
 import pl.arieals.api.minigame.server.gamehost.world.IMapTemplateManager;
@@ -75,6 +76,7 @@ public class GameHostManager implements IServerManager
         this.apiCore.registerEvents(
                 new ServerShutdownListener(), // zezwala na wylaczenie serwera
                 new PlayerListener(), // dodaje graczy do aren
+                new SpectatorListener(), // pilnuje trybu spectatora
                 new VisibilityListener(), // zarzadza widocznoscia graczy i czatu
                 new ArenaInitListener(), // inicjuje arene po dodaniu/zakonczeniu poprzedniej gry
                 new GameStartListener(), // inicjuje gre po starcie

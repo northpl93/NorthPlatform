@@ -2,9 +2,6 @@ package pl.arieals.api.minigame.server.gamehost.arena;
 
 import static java.text.MessageFormat.format;
 
-import static pl.arieals.api.minigame.shared.api.utils.ArenaStreamUtils.containsPlayer;
-
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -63,7 +60,7 @@ public class LocalArenaManager
 
     public Optional<LocalArena> getArenaAssociatedWith(final UUID player)
     {
-        return this.arenas.stream().filter(containsPlayer(player)).findFirst();
+        return this.arenas.stream().filter(arena -> arena.getPlayersManager().containsPlayer(player)).findFirst();
     }
 
     public LocalArena getArena(final UUID arenaId)

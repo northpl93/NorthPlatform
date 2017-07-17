@@ -40,7 +40,7 @@ public class BuildListener implements Listener
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(final BlockPlaceEvent event)
     {
         final LocalArena arena = getArena(event.getBlock().getWorld());
@@ -71,7 +71,7 @@ public class BuildListener implements Listener
         arenaData.getPlayerBlocks().add(event.getBlock());
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     private void onBlockDestroy(final BlockBreakEvent event)
     {
         final Block block = event.getBlock();
