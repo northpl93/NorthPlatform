@@ -36,7 +36,9 @@ public enum PluralForm
         {
             return ONE;
         }
-        else if (num < 5)
+
+        final int last = num > 20 ? num % 10 : num;
+        if (last == 2 || last == 3 || last == 4)
         {
             return SOME;
         }
