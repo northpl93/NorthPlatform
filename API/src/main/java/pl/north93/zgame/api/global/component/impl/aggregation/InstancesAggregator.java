@@ -19,7 +19,7 @@ import pl.north93.zgame.api.global.component.impl.SmartExecutor;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.zgame.api.global.component.impl.context.TemporaryBeanContext;
 
-public class InstancesAggregator implements IAggregator
+class InstancesAggregator implements IAggregator
 {
     private final CtClass clazz;
 

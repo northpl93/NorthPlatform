@@ -7,7 +7,7 @@ import org.diorite.utils.lazy.LazyValue;
 import javassist.CtClass;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 
-public interface IAggregator
+interface IAggregator
 {
     boolean isSuitableFor(CtClass clazz);
 

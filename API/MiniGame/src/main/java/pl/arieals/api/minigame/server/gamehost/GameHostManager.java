@@ -23,9 +23,9 @@ import org.spigotmc.SpigotConfig;
 import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.arieals.api.minigame.server.gamehost.deathmatch.DeathMatchFightListener;
+import pl.arieals.api.minigame.server.gamehost.deathmatch.DeathMatchStartListener;
 import pl.arieals.api.minigame.server.gamehost.listener.ArenaEndListener;
 import pl.arieals.api.minigame.server.gamehost.listener.ArenaInitListener;
-import pl.arieals.api.minigame.server.gamehost.deathmatch.DeathMatchStartListener;
 import pl.arieals.api.minigame.server.gamehost.listener.GameStartListener;
 import pl.arieals.api.minigame.server.gamehost.listener.PlayerListener;
 import pl.arieals.api.minigame.server.gamehost.listener.ServerShutdownListener;
@@ -38,25 +38,22 @@ import pl.arieals.api.minigame.server.gamehost.world.impl.MapTemplateManager;
 import pl.arieals.api.minigame.server.gamehost.world.impl.WorldManager;
 import pl.arieals.api.minigame.shared.api.IGameHostRpc;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
-import pl.arieals.api.minigame.shared.api.cfg.MiniGameConfig;
 import pl.arieals.api.minigame.shared.api.arena.netevent.IArenaNetEvent;
+import pl.arieals.api.minigame.shared.api.cfg.MiniGameConfig;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.exceptions.ConfigurationException;
-import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
+import pl.north93.zgame.api.global.redis.event.IEventManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
-import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 
 public class GameHostManager implements IServerManager
 {
     @Inject
     private BukkitApiCore     apiCore;
     @Inject
-    private TemplateManager   msgPack;
-    @Inject
     private IRpcManager       rpcManager;
     @Inject
-    private RedisSubscriber   subscriber;
+    private IEventManager     eventManager;
     private LocalArenaManager arenaManager = new LocalArenaManager();
     private WorldManager      worldManager = new WorldManager();
     private RegionManagerImpl regionManager = new RegionManagerImpl();
@@ -176,8 +173,7 @@ public class GameHostManager implements IServerManager
 
     public void publishArenaEvent(final IArenaNetEvent event)
     {
-        final byte[] bytes = this.msgPack.serialize(IArenaNetEvent.class, event);
-        this.subscriber.publish("minigames:arena_event", bytes);
+        this.eventManager.callEvent(event);
     }
 
     private void loadConfig()

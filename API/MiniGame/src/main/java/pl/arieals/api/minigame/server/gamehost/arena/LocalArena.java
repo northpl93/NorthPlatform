@@ -19,8 +19,8 @@ import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
-import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDataChanged;
-import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDeletedEvent;
+import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDataChangedNetEvent;
+import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDeletedNetEvent;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.StaticTimer;
@@ -92,7 +92,7 @@ public class LocalArena implements IArena
         this.scheduler.cancelAndClear();
         this.data.setGamePhase(gamePhase);
         this.arenaManager.setArena(this.data);
-        this.gameHostManager.publishArenaEvent(new ArenaDataChanged(this.data.getId(), this.getMiniGameId(), this.getMiniGameId(), gamePhase, this.data.getPlayers().size()));
+        this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.data.getId(), this.getMiniGameId(), this.getMiniGameId(), gamePhase, this.data.getPlayers().size()));
         
         GamePhaseEventFactory.getInstance().callEvent(this);
     }
@@ -220,7 +220,7 @@ public class LocalArena implements IArena
 
         final UUID serverId = apiCore.getServerId();
         final String miniGameId = this.gameHostManager.getMiniGameConfig().getMiniGameId();
-        this.gameHostManager.publishArenaEvent(new ArenaDeletedEvent(this.getId(), serverId, miniGameId));
+        this.gameHostManager.publishArenaEvent(new ArenaDeletedNetEvent(this.getId(), serverId, miniGameId));
 
         this.gameHostManager.getArenaManager().getArenas().remove(this);
 

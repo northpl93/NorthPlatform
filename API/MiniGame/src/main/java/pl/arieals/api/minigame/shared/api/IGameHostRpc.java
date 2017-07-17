@@ -3,7 +3,6 @@ package pl.arieals.api.minigame.shared.api;
 import java.util.List;
 import java.util.UUID;
 
-import pl.arieals.api.minigame.server.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 
 /**

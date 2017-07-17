@@ -5,6 +5,8 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import org.diorite.utils.lazy.LazyValue;
+
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
 import pl.north93.zgame.api.global.component.exceptions.BeanCreationException;
@@ -141,6 +143,12 @@ public class BeanFactory
         {
             throw new IllegalArgumentException("Object must be Method");
         }
+    }
+
+    public void createLazyBean(final AbstractBeanContext beanContext, final Class<?> type, final String name, final LazyValue object)
+    {
+        final LazyBeanContainer lazyBeanContainer = new LazyBeanContainer(type, name, object);
+        beanContext.add(lazyBeanContainer);
     }
 
     private Class<?> getReturnType(final Executable executable)

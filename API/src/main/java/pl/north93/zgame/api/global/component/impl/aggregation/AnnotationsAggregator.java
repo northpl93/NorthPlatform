@@ -15,10 +15,11 @@ import org.diorite.utils.lazy.LazyValue;
 import javassist.CtClass;
 import javassist.CtMethod;
 import pl.north93.zgame.api.global.component.impl.SmartExecutor;
+import pl.north93.zgame.api.global.component.impl.container.BeanFactory;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.zgame.api.global.component.impl.context.TemporaryBeanContext;
 
-public class AnnotationsAggregator implements IAggregator
+class AnnotationsAggregator implements IAggregator
 {
     private final Class<? extends Annotation> annotation;
 
@@ -49,15 +50,17 @@ public class AnnotationsAggregator implements IAggregator
             {
                 continue;
             }
-            this.callMethod(beanContext, toJavaMethod(javaClass, method), listener);
+            // metoda ma sledzona przez nas adnotacja; wywolujemy listenera.
+            this.callMethod(beanContext, instance, toJavaMethod(javaClass, method), listener);
         }
     }
 
-    private void callMethod(final AbstractBeanContext beanContext, final Method method, final Method listener)
+    private void callMethod(final AbstractBeanContext beanContext, final LazyValue<Object> instance, final Method method, final Method listener)
     {
         final TemporaryBeanContext tempContext = new TemporaryBeanContext(beanContext);
         tempContext.put(this.annotation, method.getAnnotation(this.annotation));
-        tempContext.put(Method.class, "target", method);
+        tempContext.put(Method.class, "Target", method);
+        BeanFactory.INSTANCE.createLazyBean(tempContext, method.getDeclaringClass(), "MethodOwner", instance);
 
         if (Modifier.isStatic(listener.getModifiers()))
         {

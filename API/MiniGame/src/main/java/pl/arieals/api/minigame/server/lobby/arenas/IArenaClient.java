@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
 
-import pl.arieals.api.minigame.server.shared.api.PlayerJoinInfo;
+import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.IGameHostRpc;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
 

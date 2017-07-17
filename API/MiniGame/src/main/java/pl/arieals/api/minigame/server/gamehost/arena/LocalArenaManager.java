@@ -17,6 +17,7 @@ import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
+import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaCreatedNetEvent;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -46,6 +47,7 @@ public class LocalArenaManager
         arenaManager.setArena(arenaData);
 
         GamePhaseEventFactory.getInstance().callEvent(localArena); // invoke GameInitEvent
+        serverManager.publishArenaEvent(new ArenaCreatedNetEvent(arenaId, gameId));
 
         final String msg = "Added new local arena! Game ID:{0}, Arena ID:{1}, Server ID:{2}, Game Phase:{3}";
         this.logger.info(format(msg, gameId, arenaId, serverId, arenaData.getGamePhase()));

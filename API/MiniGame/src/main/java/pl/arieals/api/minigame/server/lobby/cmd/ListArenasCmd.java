@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.server.shared.cmd;
+package pl.arieals.api.minigame.server.lobby.cmd;
 
 import java.util.UUID;
 

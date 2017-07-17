@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.shared.api.PlayerJoinInfo;
+import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.IGameHostRpc;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 

@@ -22,8 +22,6 @@ public class ComponentDescription
     private String       description;
     @CfgDelegateDefault("{ArrayList}")
     private List<String> dependencies;
-    @CfgDelegateDefault("{ArrayList}")
-    private List<String> extensionPoints;
     @CfgDelegateDefault("defaultPlatforms")
     private Platform[]   platforms;
 
@@ -62,11 +60,6 @@ public class ComponentDescription
         return this.dependencies;
     }
 
-    public List<String> getExtensionPoints()
-    {
-        return this.extensionPoints;
-    }
-
     public Platform[] getPlatforms()
     {
         return this.platforms;
@@ -75,7 +68,7 @@ public class ComponentDescription
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("mainClass", this.mainClass).append("packageToScan", this.packageToScan).append("autoInstantiate", this.autoInstantiate).append("name", this.name).append("enabled", this.enabled).append("description", this.description).append("dependencies", this.dependencies).append("extensionPoints", this.extensionPoints).append("platforms", this.platforms).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("mainClass", this.mainClass).append("packageToScan", this.packageToScan).append("autoInstantiate", this.autoInstantiate).append("name", this.name).append("enabled", this.enabled).append("description", this.description).append("dependencies", this.dependencies).append("platforms", this.platforms).toString();
     }
 
     private static Platform[] defaultPlatforms()

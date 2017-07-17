@@ -5,16 +5,16 @@ import java.util.UUID;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class ArenaCreatedEvent implements IArenaNetEvent
+public class ArenaCreatedNetEvent implements IArenaNetEvent
 {
     private UUID   uuid;
     private String miniGameId;
 
-    public ArenaCreatedEvent()
+    public ArenaCreatedNetEvent()
     {
     }
 
-    public ArenaCreatedEvent(final UUID uuid, final String miniGameId)
+    public ArenaCreatedNetEvent(final UUID uuid, final String miniGameId)
     {
         this.uuid = uuid;
         this.miniGameId = miniGameId;
@@ -30,12 +30,6 @@ public class ArenaCreatedEvent implements IArenaNetEvent
     public String getMiniGameId()
     {
         return this.miniGameId;
-    }
-
-    @Override
-    public ArenaEventType getEventType()
-    {
-        return ArenaEventType.CREATED;
     }
 
     @Override

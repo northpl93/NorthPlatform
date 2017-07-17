@@ -25,7 +25,7 @@ public class SmartExecutor
             final Named namedAnn = parameter.getAnnotation(Named.class);
 
             // wstrzykujemy uzywany BeanContext
-            if (type.isAssignableFrom(IBeanContext.class))
+            if (IBeanContext.class.isAssignableFrom(type))
             {
                 execArgs[i] = beanContext;
                 continue;

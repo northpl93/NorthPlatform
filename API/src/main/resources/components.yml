@@ -13,38 +13,29 @@ components:
       - API.Database.Redis.RPC
 
   - name: API.Commands
-    enabled: true
     mainClass: "pl.north93.zgame.api.global.commands.impl.CommandsManagerDecorator"
     description: "Provides unified commands API."
-    extensionPoints:
-      - "pl.north93.zgame.api.global.commands.NorthCommand"
-      - "pl.north93.zgame.api.global.commands.annotation.QuickCommand"
 
   - name: API.URI
-    enabled: true
     mainClass: "pl.north93.zgame.api.global.uri.impl.UriManagerImpl"
     description: "Unified system for inter-component communication."
 
   - name: API.Database.StorageConnector
-    enabled: true
     mainClass: "pl.north93.zgame.api.global.data.StorageConnector"
     description: "Provides connection with Redis and MongoDB databases."
 
   - name: API.Database.Redis.MessagePackSerializer
-    enabled: true
     mainClass: "pl.north93.zgame.api.global.redis.messaging.impl.TemplateManagerImpl"
     autoInstantiate: false
     description: "Provides serialization to Message Pack format."
 
   - name: API.Database.Redis.Subscriber
-    enabled: true
     mainClass: "pl.north93.zgame.api.global.redis.subscriber.RedisSubscriberImpl"
     description: "Provides subscription API for redis database."
     dependencies:
       - API.Database.StorageConnector
 
   - name: API.Database.Redis.Observer
-    enabled: true
     mainClass: "pl.north93.zgame.api.global.redis.observable.impl.ObservationManagerImpl"
     description: "Provides value observation API for redis database."
     dependencies:
@@ -53,7 +44,6 @@ components:
       - API.Database.Redis.Subscriber
 
   - name: API.Database.Redis.RPC
-    enabled: true
     mainClass: "pl.north93.zgame.api.global.redis.rpc.impl.RpcManagerImpl"
     autoInstantiate: false
     description: "Provides remote procedure call infrastructure."
@@ -62,8 +52,15 @@ components:
       - API.Database.Redis.MessagePackSerializer
       - API.Database.Redis.Subscriber
 
+  - name: API.Database.Redis.Event
+    mainClass: "pl.north93.zgame.api.global.redis.event.impl.EventManagerImpl"
+    description: "Simple redis-driven events framework."
+    dependencies:
+      - API.Database.StorageConnector
+      - API.Database.Redis.MessagePackSerializer
+      - API.Database.Redis.Subscriber
+
   - name: API.MinecraftNetwork.UsernameCache
-    enabled: true
     mainClass: "pl.north93.zgame.api.global.data.UsernameCache"
     description: "Caches Mojang's API data."
     dependencies:
@@ -71,7 +68,6 @@ components:
       - API.Database.Redis.Observer
 
   - name: API.MinecraftNetwork.NetworkManager
-    enabled: true
     mainClass: "pl.north93.zgame.api.global.network.impl.NetworkManager"
     description: "Provides core functions to manage Minecraft's network."
     dependencies:
@@ -83,7 +79,6 @@ components:
       - API.MinecraftNetwork.PlayersStorage
 
   - name: API.MinecraftNetwork.PermissionsManager
-    enabled: true
     mainClass: "pl.north93.zgame.api.global.permissions.PermissionsManager"
     description: "Manages player's permissions."
     dependencies:
@@ -91,7 +86,6 @@ components:
       - API.Database.Redis.MessagePackSerializer
 
   - name: API.MinecraftNetwork.PlayersStorage
-    enabled: true
     mainClass: "pl.north93.zgame.api.global.data.players.impl.PlayersDataImpl"
     description: "Manages player's data and provides api for loading it."
     dependencies:

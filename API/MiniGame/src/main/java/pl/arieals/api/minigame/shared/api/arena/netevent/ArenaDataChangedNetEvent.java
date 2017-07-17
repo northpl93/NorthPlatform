@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.shared.api.GamePhase;
 
-public class ArenaDataChanged implements IArenaNetEvent
+public class ArenaDataChangedNetEvent implements IArenaNetEvent
 {
     private UUID      arenaId;
     private String    miniGameId;
@@ -15,11 +15,11 @@ public class ArenaDataChanged implements IArenaNetEvent
     private GamePhase gamePhase;
     private Integer   playersCount;
 
-    public ArenaDataChanged() // serialization
+    public ArenaDataChangedNetEvent() // serialization
     {
     }
 
-    public ArenaDataChanged(final UUID arenaId, final String miniGameId, final String worldId, final GamePhase gamePhase, final Integer playersCount)
+    public ArenaDataChangedNetEvent(final UUID arenaId, final String miniGameId, final String worldId, final GamePhase gamePhase, final Integer playersCount)
     {
         this.arenaId = arenaId;
         this.miniGameId = miniGameId;
@@ -53,12 +53,6 @@ public class ArenaDataChanged implements IArenaNetEvent
     public Integer getPlayersCount()
     {
         return this.playersCount;
-    }
-
-    @Override
-    public ArenaEventType getEventType()
-    {
-        return ArenaEventType.DATA_CHANGED;
     }
 
     @Override

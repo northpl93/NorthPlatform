@@ -7,13 +7,17 @@ import java.util.UUID;
 import pl.arieals.api.minigame.server.lobby.arenas.ArenaQuery;
 import pl.arieals.api.minigame.server.lobby.arenas.IArenaClient;
 import pl.arieals.api.minigame.server.lobby.arenas.IArenaObserver;
-import pl.arieals.api.minigame.server.shared.api.PlayerJoinInfo;
+import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.IGameHostRpc;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
+import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaCreatedNetEvent;
+import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDataChangedNetEvent;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
+import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.server.Server;
+import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 
@@ -25,6 +29,11 @@ public class ArenaClientImpl implements IArenaClient
     private IRpcManager     rpcManager;
     @Inject
     private INetworkManager networkManager;
+
+    @Bean
+    private ArenaClientImpl()
+    {
+    }
 
     @Override
     public Collection<IArena> get(final ArenaQuery query)
@@ -66,5 +75,17 @@ public class ArenaClientImpl implements IArenaClient
     public IGameHostRpc getGameHostRpc(final UUID serverId)
     {
         return this.rpcManager.createRpcProxy(IGameHostRpc.class, Targets.server(serverId));
+    }
+
+    @NetEventSubscriber(ArenaCreatedNetEvent.class)
+    private void onArenaCreate(final ArenaCreatedNetEvent event)
+    {
+        System.out.println("Arena created: " + event);
+    }
+
+    @NetEventSubscriber(ArenaDataChangedNetEvent.class)
+    public void onArenaUpdate(final ArenaDataChangedNetEvent event)
+    {
+        System.out.println("Arena data changed: " + event);
     }
 }
