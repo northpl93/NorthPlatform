@@ -23,6 +23,7 @@ import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageTracker;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.zgame.api.global.messages.PluralForm;
 
 public class PlayerItemsListener implements Listener
 {
@@ -130,7 +131,8 @@ public class PlayerItemsListener implements Listener
                 amount -= 64;
             }
 
-            this.messages.sendMessage(lastDamager, "die.received_items." + type, entry.getIntValue());
+            final String messageKey = PluralForm.transformKey("die.received_items." + type, entry.getIntValue());
+            this.messages.sendMessage(lastDamager, messageKey, entry.getIntValue());
         }
     }
 

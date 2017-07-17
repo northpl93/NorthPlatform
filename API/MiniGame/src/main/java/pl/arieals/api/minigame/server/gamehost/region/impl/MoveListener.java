@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -20,6 +21,15 @@ class MoveListener implements Listener
     public MoveListener(final RegionManagerImpl manager)
     {
         this.manager = manager;
+    }
+
+    @EventHandler
+    public void onTeleport(final PlayerTeleportEvent event)
+    {
+        final Location from = event.getFrom();
+        final Location to = event.getTo();
+
+        this.handleRegionDiff(event.getPlayer(), from, to);
     }
 
     @EventHandler
@@ -36,7 +46,6 @@ class MoveListener implements Listener
         this.handleMovement(event.getPlayer(), from, to);
     }
 
-    @SuppressWarnings("unchecked")
     private void handleMovement(final Player player, final Location from, final Location to)
     {
         if (this.isMoreThanBlock(from, to))
@@ -47,6 +56,12 @@ class MoveListener implements Listener
             return;
         }
 
+        this.handleRegionDiff(player, from, to);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void handleRegionDiff(final Player player, final Location from, final Location to)
+    {
         final Set<TrackedRegionImpl> regionsFrom = (Set) this.manager.getRegions(from);
         final Set<TrackedRegionImpl> regionsTo = (Set) this.manager.getRegions(to);
 
