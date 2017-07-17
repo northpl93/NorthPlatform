@@ -18,11 +18,13 @@ import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.impl.ServerImpl;
+import pl.north93.zgame.api.global.network.server.IServerRpc;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.network.server.ServerType;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 
 public class BukkitServerManagerImpl extends Component implements IBukkitServerManager
 {
@@ -31,6 +33,8 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
     private BukkitApiCore       apiCore;
     @Inject
     private IObservationManager observer;
+    @Inject
+    private IRpcManager         rpcManager;
     // - - - - - - -
     private Value<ServerImpl>   serverValue;
     private SimpleCountdown     countdown;
@@ -38,6 +42,7 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
     @Override
     protected void enableComponent()
     {
+        this.rpcManager.addRpcImplementation(IServerRpc.class, new ServerRpcImpl());
         this.countdown = new SimpleCountdown(TIME_TO_NEXT_TRY).endCallback(this::tryShutdown);
         this.serverValue = this.observer.get(ServerImpl.class, this.apiCore.getId());
         if (! this.serverValue.isAvailable())

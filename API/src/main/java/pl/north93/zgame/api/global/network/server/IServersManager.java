@@ -7,6 +7,10 @@ import java.util.UUID;
 import pl.north93.zgame.api.global.deployment.ServerPattern;
 import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 
+/**
+ * Definiuje podstawowe metody sluzace do pobierania informacji
+ * o serwerach uruchomionych w sieci.
+ */
 public interface IServersManager
 {
     /**
@@ -16,6 +20,12 @@ public interface IServersManager
      */
     Server withUuid(UUID uuid);
 
+    /**
+     * Zwraca interfejs zdalnego wywolywania procedur dla serwera
+     * o podanym unikalnym identyfikatorze.
+     * @param uuid uuid serwera ktorego zwrocic interfejs RPC.
+     * @return interfejs RPC serwera o podanym uuid.
+     */
     IServerRpc getServerRpc(UUID uuid);
 
     default IServerRpc getServerRpc(final Server server)
