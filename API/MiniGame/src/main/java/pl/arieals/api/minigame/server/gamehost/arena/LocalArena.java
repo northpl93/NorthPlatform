@@ -92,7 +92,7 @@ public class LocalArena implements IArena
         this.scheduler.cancelAndClear();
         this.data.setGamePhase(gamePhase);
         this.arenaManager.setArena(this.data);
-        this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.data.getId(), this.getMiniGameId(), this.getMiniGameId(), gamePhase, this.data.getPlayers().size()));
+        this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.data.getId(), this.getMiniGameId(), this.world.getCurrentMapTemplate().getName(), gamePhase, this.data.getPlayers().size()));
         
         GamePhaseEventFactory.getInstance().callEvent(this);
     }
