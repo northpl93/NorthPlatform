@@ -36,7 +36,7 @@ public class JoinArenaCmd extends NorthCommand
         final LobbyManager serverManager = this.server.getServerManager(); // will throw exception on GameHost.
 
         final RemoteArena arena = this.arenaManager.getArena(UUID.fromString(args.asString(0)));
-        serverManager.getArenaClient().connect(arena, new PlayerJoinInfo(player.getUniqueId(), false));
+        serverManager.getArenaClient().connect(arena, new PlayerJoinInfo(player.getUniqueId(), false, false));
     }
 
     @Override
