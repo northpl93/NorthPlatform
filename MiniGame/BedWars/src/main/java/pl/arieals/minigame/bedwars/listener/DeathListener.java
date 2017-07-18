@@ -150,8 +150,8 @@ public class DeathListener implements Listener
                     "die.broadcast.eliminated_by",
                     team.getColorChar(),
                     player.getDisplayName(),
-                    damager,
-                    damagerData.getTeam().getColorChar());
+                    damagerData.getTeam().getColorChar(),
+                    damager.getDisplayName());
         }
         else
         {
@@ -159,8 +159,8 @@ public class DeathListener implements Listener
                     "die.broadcast.killed_by",
                     team.getColorChar(),
                     player.getDisplayName(),
-                    damager,
-                    damagerData.getTeam().getColorChar());
+                    damagerData.getTeam().getColorChar(),
+                    damager.getDisplayName());
         }
     }
 

@@ -4,10 +4,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayDeque;
+import java.util.Iterator;
 import java.util.Queue;
-
-import com.google.common.collect.EvictingQueue;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -24,13 +24,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class DamageContainer
 {
-    private final Player player;
-    private final Queue<DamageEntry> entries;
+    private final Player                     player;
+    private final EvictingDeque<DamageEntry> entries;
 
     public DamageContainer(final Player player)
     {
         this.player = player;
-        this.entries = EvictingQueue.create(10);
+        this.entries = new EvictingDeque<>(10);
     }
 
     /**
@@ -49,7 +49,7 @@ public class DamageContainer
      */
     public void handleDamage(final EntityDamageEvent event)
     {
-        this.entries.add(new DamageEntry(event));
+        this.entries.add(new DamageEntry(event, Instant.now()));
     }
 
     /**
@@ -73,8 +73,11 @@ public class DamageContainer
     public @Nonnull Queue<DamageEntry> getEntriesNotOlder(final Duration duration)
     {
         final Queue<DamageEntry> queue = new ArrayDeque<>(10);
-        for (final DamageEntry entry : this.entries)
+
+        final Iterator<DamageEntry> iterator = this.entries.descendingIterator();
+        while (iterator.hasNext())
         {
+            final DamageEntry entry = iterator.next();
             if (entry.isNotOlder(duration))
             {
                 queue.add(entry);
@@ -82,6 +85,7 @@ public class DamageContainer
             }
             break;
         }
+
         return queue;
     }
 

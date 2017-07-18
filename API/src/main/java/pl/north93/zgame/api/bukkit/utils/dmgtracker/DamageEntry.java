@@ -8,6 +8,9 @@ import com.google.common.base.Preconditions;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  * Obiekt reprezentujacy otrzymane obrazenia.
  */
@@ -16,10 +19,10 @@ public class DamageEntry
     private final Instant           time;
     private final EntityDamageEvent cause;
 
-    public DamageEntry(final EntityDamageEvent cause)
+    public DamageEntry(final EntityDamageEvent cause, final Instant time)
     {
         this.cause = cause;
-        this.time = Instant.now();
+        this.time = time;
     }
 
     /**
@@ -98,5 +101,11 @@ public class DamageEntry
         }
 
         return true;
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("time", this.time).append("cause", this.cause).toString();
     }
 }
