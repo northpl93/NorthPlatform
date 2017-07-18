@@ -3,7 +3,9 @@ components:
   - name: API.BukkitServerManager
     mainClass: "pl.north93.zgame.api.bukkit.server.impl.BukkitServerManagerImpl"
     description: "Core component that manages the server instance."
-    dependencies: []
+    dependencies:
+      - API.Database.Redis.Observer
+      - API.Database.Redis.RPC
     platforms:
       - BUKKIT
 

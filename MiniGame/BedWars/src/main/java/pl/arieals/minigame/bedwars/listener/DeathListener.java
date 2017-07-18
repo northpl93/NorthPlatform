@@ -7,6 +7,8 @@ import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColo
 import static pl.north93.zgame.api.global.utils.JavaUtils.instanceOf;
 
 
+import java.time.Duration;
+
 import com.destroystokyo.paper.Title;
 
 import org.bukkit.entity.Player;
@@ -28,6 +30,9 @@ import pl.arieals.minigame.bedwars.arena.RevivePlayerCountdown;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.event.TeamEliminatedEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageContainer;
+import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageEntry;
+import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageTracker;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -61,7 +66,6 @@ public class DeathListener implements Listener
     @EventHandler
     public void onPlayerDeath(final PlayerDeathEvent event)
     {
-        event.setDeathMessage(null); // my wcale nie umieramy!
         final Player player = event.getEntity();
 
         final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
@@ -79,6 +83,13 @@ public class DeathListener implements Listener
         final Vector newVector = direction.multiply(- 1).setY(2);
         player.setVelocity(newVector);
 
+        this.handleRespawn(player, playerData, arena, team);
+        this.safePlaceTeleport(player, team, arena);
+        this.updateDeathMessage(event, arena, team);
+    }
+
+    private void handleRespawn(final Player player, final BedWarsPlayer playerData, final LocalArena arena, final Team team)
+    {
         playerData.setAlive(false);
         if (team.isBedAlive())
         {
@@ -97,8 +108,11 @@ public class DeathListener implements Listener
 
             player.sendTitle(new Title(title, subtitle, 20, 20, 20));
         }
+    }
 
-        final EntityDamageEvent lastDamageCause = event.getEntity().getLastDamageCause();
+    private void safePlaceTeleport(final Player player, final Team team, final LocalArena arena)
+    {
+        final EntityDamageEvent lastDamageCause = player.getLastDamageCause();
         if (lastDamageCause != null && lastDamageCause.getCause() == EntityDamageEvent.DamageCause.VOID)
         {
             // jesli gracz umarl w voidzie to teleportujemy go na spawn
@@ -111,6 +125,42 @@ public class DeathListener implements Listener
             {
                 player.teleport(team.getSpawn());
             }
+        }
+    }
+
+    private void updateDeathMessage(final PlayerDeathEvent event, final LocalArena arena, final Team team)
+    {
+        event.setDeathMessage(null);
+        final Player player = event.getEntity();
+        final boolean elimination = ! team.isBedAlive();
+
+        final DamageContainer dmgContainer = DamageTracker.get().getContainer(player);
+        final DamageEntry lastDmg = dmgContainer.getLastDamageByPlayer(Duration.ofSeconds(10));
+
+        if (lastDmg == null)
+        {
+            return;
+        }
+
+        final Player damager = (Player) lastDmg.getCauseByEntity().getDamager();
+        final BedWarsPlayer damagerData = getPlayerData(damager, BedWarsPlayer.class);
+        if (elimination)
+        {
+            arena.getPlayersManager().broadcast(this.messages,
+                    "die.broadcast.eliminated_by",
+                    team.getColorChar(),
+                    player.getDisplayName(),
+                    damager,
+                    damagerData.getTeam().getColorChar());
+        }
+        else
+        {
+            arena.getPlayersManager().broadcast(this.messages,
+                    "die.broadcast.killed_by",
+                    team.getColorChar(),
+                    player.getDisplayName(),
+                    damager,
+                    damagerData.getTeam().getColorChar());
         }
     }
 

@@ -1,5 +1,6 @@
 package pl.north93.zgame.api.bukkit.utils.dmgtracker;
 
+import java.time.Duration;
 import java.time.Instant;
 
 import com.google.common.base.Preconditions;
@@ -31,12 +32,36 @@ public class DamageEntry
     }
 
     /**
+     * Sprawdza czy dane obrazenia nie sa starsze niz dane Duration.
+     * <p>
+     * np. {@code Duration.ofSeconds(10)} zwroci true w przypadku
+     * gdy obrazenia zostaly otrzymane w ciagu ostatnich 10 sekund.
+     * @param duration okres do porownania.
+     * @return true jesli obrazenia NIE sa starsze niz duration.
+     */
+    public boolean isNotOlder(final Duration duration)
+    {
+        final Duration between = Duration.between(this.time, Instant.now());
+        return duration.compareTo(between) > 0;
+    }
+
+    /**
      * Zwraca obiekt eventu reprezentujacy te obrazenia.
      * @return event obrazen.
      */
     public EntityDamageEvent getCause()
     {
         return this.cause;
+    }
+
+    /**
+     * Zwraca obiekt eventu reprezentujący obrażenia zcastowany na
+     * {@link EntityDamageByEntityEvent}.
+     * @return event obrazen.
+     */
+    public EntityDamageByEntityEvent getCauseByEntity()
+    {
+        return (EntityDamageByEntityEvent) this.cause;
     }
 
     /**

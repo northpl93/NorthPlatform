@@ -11,6 +11,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="API" />
     <orderEntry type="module" module-name="API.MiniGame" />
     <orderEntry type="module" module-name="API" />
     <orderEntry type="library" name="Maven: pl.north93:northspigot:1.10-2" level="project" />

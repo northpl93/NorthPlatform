@@ -14,6 +14,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="scala-sdk-2.12.1" level="application" />
     <orderEntry type="module" module-name="API" />
+    <orderEntry type="module" module-name="API" />
     <orderEntry type="library" name="Maven: pl.north93:northspigot:1.10-2" level="project" />
     <orderEntry type="library" name="Maven: com.sk89q.worldedit:worldedit-core:6.1.4-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: de.schlichtherle:truezip:6.8.3" level="project" />

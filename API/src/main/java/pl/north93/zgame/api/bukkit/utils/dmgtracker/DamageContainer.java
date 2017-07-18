@@ -3,6 +3,8 @@ package pl.north93.zgame.api.bukkit.utils.dmgtracker;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.time.Duration;
+import java.util.ArrayDeque;
 import java.util.Queue;
 
 import com.google.common.collect.EvictingQueue;
@@ -62,12 +64,50 @@ public class DamageContainer
     }
 
     /**
+     * Zwraca zarejestrowane obrazenia nie starsze niz
+     * podany duration. Ta metoda zwraca skopiowana
+     * kolejke.
+     * @param duration limit czasu.
+     * @return kolejka z obrazeniami nie starszymi niz duration.
+     */
+    public @Nonnull Queue<DamageEntry> getEntriesNotOlder(final Duration duration)
+    {
+        final Queue<DamageEntry> queue = new ArrayDeque<>(10);
+        for (final DamageEntry entry : this.entries)
+        {
+            if (entry.isNotOlder(duration))
+            {
+                queue.add(entry);
+                continue;
+            }
+            break;
+        }
+        return queue;
+    }
+
+    /**
      * Zwraca ostatnie obrazenia otrzymane przez gracza.
      * @return ostatnie obrazenia otrzymane od gracza.
      */
     public @Nullable DamageEntry getLastDamageByPlayer()
     {
-        for (final DamageEntry next : this.entries)
+        return this.getLastDamageByPlayer0(this.entries);
+    }
+
+    /**
+     * Zwraca ostatnie obrazenia otrzymane przez gracza
+     * nie starsze niz podany limit czasowy.
+     * @param duration limit czasu.
+     * @return ostatnie obrazenia od gracza.
+     */
+    public @Nullable DamageEntry getLastDamageByPlayer(final Duration duration)
+    {
+        return this.getLastDamageByPlayer0(this.getEntriesNotOlder(duration));
+    }
+
+    private @Nullable DamageEntry getLastDamageByPlayer0(final Queue<DamageEntry> entries)
+    {
+        for (final DamageEntry next : entries)
         {
             final EntityDamageEvent cause = next.getCause();
             if (cause.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK)
