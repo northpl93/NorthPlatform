@@ -196,8 +196,7 @@ public class ComponentBundle implements IComponentBundle
         newComponent.init(this, ComponentManagerImpl.instance, API.getApiCore());
     }
 
-    @Override
-    public void scanNow()
+    private void scanNow()
     {
         // rootPackage moze byc nullem bo na pewno juz mamy utworzony ScanningTask.
         ComponentManagerImpl.instance.getScanningTask(this.classLoader, null).scanComponent(this);
