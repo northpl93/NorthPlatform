@@ -14,8 +14,6 @@ public class ComponentDescription
 {
     private String       mainClass;
     private String       packageToScan;
-    @CfgBooleanDefault(true)
-    private boolean      autoInstantiate;
     private String       name;
     @CfgBooleanDefault(true)
     private boolean      enabled;
@@ -33,11 +31,6 @@ public class ComponentDescription
     public String getPackageToScan()
     {
         return this.packageToScan;
-    }
-
-    public boolean isAutoInstantiate()
-    {
-        return this.autoInstantiate;
     }
 
     public String getName()
@@ -68,7 +61,7 @@ public class ComponentDescription
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("mainClass", this.mainClass).append("packageToScan", this.packageToScan).append("autoInstantiate", this.autoInstantiate).append("name", this.name).append("enabled", this.enabled).append("description", this.description).append("dependencies", this.dependencies).append("platforms", this.platforms).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("mainClass", this.mainClass).append("packageToScan", this.packageToScan).append("name", this.name).append("enabled", this.enabled).append("description", this.description).append("dependencies", this.dependencies).append("platforms", this.platforms).toString();
     }
 
     private static Platform[] defaultPlatforms()

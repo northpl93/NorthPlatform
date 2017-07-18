@@ -7,8 +7,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -75,14 +73,14 @@ public class ComponentManagerImpl implements IComponentManager
         }
     }
 
-    private void initComponent(final ComponentBundle component)
+    /*private void initComponent(final ComponentBundle component)
     {
         component.getComponent().init(component, this, this.apiCore);
         if (this.autoEnable && this.checkAndEnableDependencies(component))
         {
             component.getComponent().enable();
         }
-    }
+    }*/
 
     private boolean canLoad(final ComponentDescription componentDescription)
     {
@@ -109,24 +107,6 @@ public class ComponentManagerImpl implements IComponentManager
 
         final ComponentBundle componentBundle = new ComponentBundle(componentDescription, classLoader, componentBeanContext);
         this.components.add(componentBundle);
-        if (componentDescription.isAutoInstantiate()) // instantiate component class auto-instantiation is enabled
-        {
-            try
-            {
-                final Class<?> clazz = Class.forName(componentDescription.getMainClass(), true, classLoader);
-                final Constructor<?> constructor = clazz.getDeclaredConstructor();
-                constructor.setAccessible(true);
-
-                final Component newComponent = (Component) constructor.newInstance();
-                componentBundle.setComponent(newComponent);
-            }
-            catch (final ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e)
-            {
-                throw new RuntimeException("Failed to instantiate main class of " + componentDescription.getName(), e);
-            }
-
-            this.initComponent(componentBundle);
-        }
     }
 
     private boolean canEnableComponent(final ComponentBundle componentBundle)
@@ -193,7 +173,7 @@ public class ComponentManagerImpl implements IComponentManager
             {
                 return false;
             }
-            dependencyBundle.getComponent().enable();
+            dependencyBundle.enable();
         }
         return true;
     }
@@ -277,26 +257,6 @@ public class ComponentManagerImpl implements IComponentManager
     }
 
     @Override
-    public void injectComponent(final Object object)
-    {
-        final Component component = (Component) object; // todo pretty warning if this fails
-        final String className = component.getClass().getName();
-        for (final ComponentBundle componentBundle : this.components)
-        {
-            if (componentBundle.canStart())
-            {
-                continue;
-            }
-            if (componentBundle.getDescription().getMainClass().equals(className))
-            {
-                componentBundle.setComponent(component);
-                this.initComponent(componentBundle);
-                return;
-            }
-        }
-    }
-
-    @Override
     public void enableAllComponents()
     {
         for (final ComponentBundle component : this.components)
@@ -307,7 +267,7 @@ public class ComponentManagerImpl implements IComponentManager
             }
             if (this.checkAndEnableDependencies(component))
             {
-                component.getComponent().enable();
+                component.enable();
             }
             else
             {
@@ -349,7 +309,7 @@ public class ComponentManagerImpl implements IComponentManager
                 final Map.Entry<ComponentBundle, Boolean> entry = iterator.next();
                 if (entry.getValue()) // canDisable
                 {
-                    entry.getKey().getComponent().disable();
+                    entry.getKey().disable();
                     iterator.remove();
                 }
                 else

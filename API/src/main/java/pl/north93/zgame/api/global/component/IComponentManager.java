@@ -21,16 +21,6 @@ public interface IComponentManager
 
     void setAutoEnable(boolean autoEnable);
 
-    void injectComponent(Object component); // component must be registered in manifest
-
-    default void injectComponents(Object... components)
-    {
-        for (final Object component : components)
-        {
-            this.injectComponent(component);
-        }
-    }
-
     void enableAllComponents();
 
     void disableAllComponents();

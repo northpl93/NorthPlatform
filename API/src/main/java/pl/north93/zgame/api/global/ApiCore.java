@@ -25,9 +25,7 @@ import pl.north93.zgame.api.global.data.UsernameCache;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.permissions.PermissionsManager;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
-import pl.north93.zgame.api.global.redis.messaging.impl.TemplateManagerImpl;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
-import pl.north93.zgame.api.global.redis.rpc.impl.RpcManagerImpl;
 
 public abstract class ApiCore
 {
@@ -37,8 +35,6 @@ public abstract class ApiCore
     private final Platform           platform;
     private final PlatformConnector  connector;
     //private final UpdateManager      updateManager;
-    private final TemplateManager    messagePackTemplates;
-    private final IRpcManager        rpcManager;
     private       ApiState           apiState;
 
     public ApiCore(final Platform platform, final PlatformConnector platformConnector)
@@ -49,8 +45,6 @@ public abstract class ApiCore
         this.instrumentationClient = new LocalAgentClient();
         this.componentManager = new ComponentManagerImpl(this);
         //this.updateManager = new UpdateManager();
-        this.messagePackTemplates = new TemplateManagerImpl();
-        this.rpcManager = new RpcManagerImpl();
         API.setApiCore(this);
         this.setApiState(ApiState.CONSTRUCTED);
     }
@@ -84,7 +78,6 @@ public abstract class ApiCore
 
         ((ComponentManagerImpl) this.componentManager).initDefaultBeans();
         this.componentManager.doComponentScan(this.getClass().getClassLoader()); // scan for builtin API components
-        this.componentManager.injectComponents(/*this.updateManager,*/ this.messagePackTemplates, this.rpcManager); // inject base API components
         final File components = this.getFile("components");
         DioriteUtils.createDirectory(components);
         this.componentManager.doComponentScan(components); // Scan components directory
@@ -168,13 +161,14 @@ public abstract class ApiCore
     @Deprecated
     public TemplateManager getMessagePackTemplates()
     {
-        return this.messagePackTemplates;
+        return this.componentManager.getComponent("API.Database.Redis.MessagePackSerializer");
     }
 
     @ProvidesComponent
+    @Deprecated
     public IRpcManager getRpcManager()
     {
-        return this.rpcManager;
+        return this.componentManager.getComponent("API.Database.Redis.RPC");
     }
 
     public IAgentClient getInstrumentationClient()

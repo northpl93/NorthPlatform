@@ -1,15 +1,12 @@
 package pl.north93.zgame.api.global.component;
 
 import java.util.Collection;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.ApiCore;
-import pl.north93.zgame.api.global.component.impl.Injector;
 
 public abstract class Component implements IBeanContext
 {
@@ -17,7 +14,6 @@ public abstract class Component implements IBeanContext
     private IComponentManager manager;
     private IComponentBundle  componentBundle;
     private String            name;
-    private ComponentStatus   status;
     private boolean           isInitialised;
 
     protected Component()
@@ -30,7 +26,7 @@ public abstract class Component implements IBeanContext
 
     public final ComponentStatus getStatus()
     {
-        return this.status;
+        return this.componentBundle.getStatus();
     }
 
     public final String getName()
@@ -56,55 +52,6 @@ public abstract class Component implements IBeanContext
     protected final <T extends Component> T getComponent(final String name)
     {
         return this.manager.getComponent(name);
-    }
-
-    public final void init(final IComponentBundle componentBundle, final IComponentManager componentManager, final ApiCore apiCore)
-    {
-        if (this.isInitialised)
-        {
-            throw new IllegalStateException("Component already initialised!");
-        }
-        this.isInitialised = true;
-        this.componentBundle = componentBundle;
-        this.name = componentBundle.getName();
-        this.manager = componentManager;
-        this.apiCore = apiCore;
-        this.status = ComponentStatus.DISABLED;
-    }
-
-    public final void enable()
-    {
-        final String prettyPackages = this.componentBundle.getBasePackages().stream().collect(Collectors.joining(", "));
-        this.apiCore.getLogger().info("Enabling component " + this.getName() + " (packages used to scan: " + prettyPackages + ")");
-        try
-        {
-            this.componentBundle.scanNow();
-            Injector.inject(this);
-            this.enableComponent();
-        }
-        catch (final Exception e)
-        {
-            this.status = ComponentStatus.ERROR;
-            this.apiCore.getLogger().log(Level.SEVERE, "An exception has been thrown while enabling component " + this.getName(), e);
-            return;
-        }
-        this.status = ComponentStatus.ENABLED;
-    }
-
-    public final void disable()
-    {
-        this.apiCore.getLogger().info("Disabling component " + this.getName());
-        try
-        {
-            this.disableComponent();
-        }
-        catch (final Exception e)
-        {
-            this.status = ComponentStatus.ERROR;
-            this.apiCore.getLogger().log(Level.SEVERE, "An exception has been thrown while disabling component " + this.getName(), e);
-            return;
-        }
-        this.status = ComponentStatus.DISABLED;
     }
 
     @Override
@@ -155,9 +102,36 @@ public abstract class Component implements IBeanContext
         return this.componentBundle.getBeanContext().getBeans(query);
     }
 
+    // = = = INTERNAL IMPLEMENTATION METHODS = = = //
+
+    public final void init(final IComponentBundle componentBundle, final IComponentManager componentManager, final ApiCore apiCore)
+    {
+        if (this.isInitialised)
+        {
+            throw new IllegalStateException("Component already initialised!");
+        }
+        this.isInitialised = true;
+        this.componentBundle = componentBundle;
+        this.name = componentBundle.getName();
+        this.manager = componentManager;
+        this.apiCore = apiCore;
+    }
+
+    public final void callStartMethod(final boolean isEnabling)
+    {
+        if (isEnabling)
+        {
+            this.enableComponent();
+        }
+        else
+        {
+            this.disableComponent();
+        }
+    }
+
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("apiCore", this.apiCore).append("manager", this.manager).append("name", this.name).append("status", this.status).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("apiCore", this.apiCore).append("manager", this.manager).append("name", this.name).toString();
     }
 }

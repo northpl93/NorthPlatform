@@ -1,6 +1,10 @@
 package pl.north93.zgame.api.global.component.impl;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
 
@@ -9,6 +13,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
+import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.ComponentStatus;
@@ -25,6 +30,7 @@ public class ComponentBundle implements IComponentBundle
     private final AbstractBeanContext  componentBeanContext;
     private       Set<String>          basePackages;
     private       Component            component;
+    private       ComponentStatus      status;
 
     public ComponentBundle(final ComponentDescription description, final ClassLoader classLoader, final AbstractBeanContext componentBeanContext)
     {
@@ -77,7 +83,7 @@ public class ComponentBundle implements IComponentBundle
     @Override
     public ComponentStatus getStatus()
     {
-        return this.component.getStatus();
+        return this.status;
     }
 
     @Override
@@ -98,6 +104,42 @@ public class ComponentBundle implements IComponentBundle
         return this.classLoader;
     }
 
+    public final void enable()
+    {
+        final String prettyPackages = this.getBasePackages().stream().collect(Collectors.joining(", "));
+        API.getLogger().info("Enabling component " + this.getName() + " (packages used to scan: " + prettyPackages + ")");
+        try
+        {
+            this.instantiateClass(); // tworzymy klase glowna
+            this.scanNow(); // wykonujemy wszystkie skanowania
+            Injector.inject(this.component); // wstrzykujemy klase glowna
+            this.getComponent().callStartMethod(true); // wywolujemy enableComponent
+        }
+        catch (final Exception e)
+        {
+            this.status = ComponentStatus.ERROR;
+            API.getLogger().log(Level.SEVERE, "An exception has been thrown while enabling component " + this.getName(), e);
+            return;
+        }
+        this.status = ComponentStatus.ENABLED;
+    }
+
+    public final void disable()
+    {
+        API.getLogger().info("Disabling component " + this.getName());
+        try
+        {
+            this.getComponent().callStartMethod(false);
+        }
+        catch (final Exception e)
+        {
+            this.status = ComponentStatus.ERROR;
+            API.getLogger().log(Level.SEVERE, "An exception has been thrown while disabling component " + this.getName(), e);
+            return;
+        }
+        this.status = ComponentStatus.DISABLED;
+    }
+
     public Component getComponent()
     {
         return this.component;
@@ -116,28 +158,42 @@ public class ComponentBundle implements IComponentBundle
 
     public boolean isEnabled()
     {
-        return this.component != null && this.component.getStatus().isEnabled();
+        return this.component != null && this.status.isEnabled();
     }
 
     public boolean canStart()
     {
         if (this.component == null)
         {
-            return false;
+            // komponent nie zostal jeszcze utworzony, zezwalamy na start.
+            return true;
         }
-
-        if (! this.component.getStatus().equals(ComponentStatus.DISABLED))
-        {
-            return false;
-        }
-
-        return true;
+        return this.component.getStatus().equals(ComponentStatus.DISABLED);
     }
 
     @Override
     public AbstractBeanContext getBeanContext()
     {
         return this.componentBeanContext;
+    }
+
+    private void instantiateClass()
+    {
+        final Component newComponent;
+        try
+        {
+            final Class<?> clazz = Class.forName(this.description.getMainClass(), true, this.classLoader);
+            final Constructor<?> constructor = clazz.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            newComponent = (Component) constructor.newInstance();
+        }
+        catch (final ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e)
+        {
+            throw new RuntimeException("Failed to instantiate main class of " + this.description.getName(), e);
+        }
+
+        this.setComponent(newComponent);
+        newComponent.init(this, ComponentManagerImpl.instance, API.getApiCore());
     }
 
     @Override

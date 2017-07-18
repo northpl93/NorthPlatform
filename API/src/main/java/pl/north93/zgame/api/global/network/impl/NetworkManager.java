@@ -38,6 +38,7 @@ import pl.north93.zgame.api.global.network.server.IServersManager;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 
@@ -49,6 +50,8 @@ class NetworkManager extends Component implements INetworkManager
     private RedisSubscriber     redisSubscriber;
     @Inject
     private IObservationManager observationManager;
+    @Inject
+    private IRpcManager         rpcManager;
     @Inject
     private IPlayersData        playersData;
     @Inject
@@ -186,8 +189,7 @@ class NetworkManager extends Component implements INetworkManager
     @Override
     public NetworkControllerRpc getNetworkController()
     {
-        // todo add local RpcManager module
-        return this.getApiCore().getRpcManager().createRpcProxy(NetworkControllerRpc.class, Targets.networkController());
+        return this.rpcManager.createRpcProxy(NetworkControllerRpc.class, Targets.networkController());
     }
 
     @Override

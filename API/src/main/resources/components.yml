@@ -8,7 +8,6 @@ components:
     enabled: false #replaced by docker-powered deployment
     mainClass: "pl.north93.zgame.api.global.update.client.impl.UpdateManager"
     description: "North Platform updating client."
-    autoInstantiate: false
     dependencies:
       - API.Database.Redis.RPC
 
@@ -26,7 +25,6 @@ components:
 
   - name: API.Database.Redis.MessagePackSerializer
     mainClass: "pl.north93.zgame.api.global.redis.messaging.impl.TemplateManagerImpl"
-    autoInstantiate: false
     description: "Provides serialization to Message Pack format."
 
   - name: API.Database.Redis.Subscriber
@@ -45,7 +43,6 @@ components:
 
   - name: API.Database.Redis.RPC
     mainClass: "pl.north93.zgame.api.global.redis.rpc.impl.RpcManagerImpl"
-    autoInstantiate: false
     description: "Provides remote procedure call infrastructure."
     dependencies:
       - API.Database.StorageConnector

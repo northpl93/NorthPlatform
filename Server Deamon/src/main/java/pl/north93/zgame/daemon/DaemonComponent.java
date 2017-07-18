@@ -8,15 +8,19 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.deployment.DaemonRpc;
 import pl.north93.zgame.api.global.deployment.RemoteDaemon;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.daemon.cfg.DaemonConfig;
 import pl.north93.zgame.daemon.servers.ServersManager;
 
 public class DaemonComponent extends Component
 {
+    @Inject
+    private IRpcManager         rpcManager;
     private DaemonConfig        config;
     private Value<RemoteDaemon> daemonInfo;
     private ServersManager      serversManager;
@@ -36,7 +40,7 @@ public class DaemonComponent extends Component
         final IObservationManager observation = this.getApiCore().getComponentManager().getComponent("API.Database.Redis.Observer");
         this.daemonInfo = observation.of(daemon);
 
-        this.getApiCore().getRpcManager().addRpcImplementation(DaemonRpc.class, new DaemonRpcImpl(this));
+        this.rpcManager.addRpcImplementation(DaemonRpc.class, new DaemonRpcImpl(this));
         this.serversManager = new ServersManager();
         this.serversManager.startServerManager();
     }
