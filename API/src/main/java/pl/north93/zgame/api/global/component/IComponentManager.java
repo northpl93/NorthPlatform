@@ -3,6 +3,8 @@ package pl.north93.zgame.api.global.component;
 import java.io.File;
 import java.util.Collection;
 
+import org.reflections.Reflections;
+
 public interface IComponentManager
 {
     void doComponentScan(String componentsYml, ClassLoader classLoader);
@@ -28,4 +30,10 @@ public interface IComponentManager
     <T extends Component> T getComponent(String name);
 
     Collection<? extends IComponentBundle> getComponents();
+
+    /**
+     * Wystawia dostep do wewnetrznej instancji Reflections dla danego classloadera.
+     * @return instancja Reflections dla danego classloadera.
+     */
+    Reflections accessReflections(ClassLoader classLoader);
 }

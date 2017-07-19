@@ -15,6 +15,7 @@ import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,6 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.reflections.Reflections;
 
 import org.diorite.cfg.system.TemplateCreator;
 
@@ -73,15 +75,6 @@ public class ComponentManagerImpl implements IComponentManager
             factory.createStaticBeanManually(this.rootBeanCtx, JavaPlugin.class, "JavaPlugin", ((BukkitApiCore) this.apiCore).getPluginMain());
         }
     }
-
-    /*private void initComponent(final ComponentBundle component)
-    {
-        component.getComponent().init(component, this, this.apiCore);
-        if (this.autoEnable && this.checkAndEnableDependencies(component))
-        {
-            component.getComponent().enable();
-        }
-    }*/
 
     private boolean canLoad(final ComponentDescription componentDescription)
     {
@@ -245,7 +238,7 @@ public class ComponentManagerImpl implements IComponentManager
         }
         catch (final MalformedURLException e)
         {
-            e.printStackTrace();
+            this.apiCore.getLogger().log(Level.SEVERE, "Failed to load components from file", e);
             return;
         }
 
@@ -338,6 +331,20 @@ public class ComponentManagerImpl implements IComponentManager
     public Collection<? extends IComponentBundle> getComponents()
     {
         return Collections.unmodifiableList(this.components);
+    }
+
+    @Override
+    public Reflections accessReflections(final ClassLoader classLoader)
+    {
+        if (classLoader.equals(this.getClass().getClassLoader()))
+        {
+            return this.rootScanningTask.getReflections();
+        }
+        else if (classLoader instanceof JarComponentLoader)
+        {
+            return ((JarComponentLoader) classLoader).getScanningTask().getReflections();
+        }
+        throw new IllegalArgumentException("Invalid classloader");
     }
 
     /**

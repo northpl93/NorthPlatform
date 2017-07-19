@@ -1,21 +1,19 @@
 package pl.north93.zgame.api.bukkit.gui.impl;
 
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import javax.xml.bind.JAXB;
 
-import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
+
+import org.reflections.Reflections;
 
 import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlGuiLayout;
-import pl.north93.zgame.api.global.component.impl.JarComponentLoader;
+import pl.north93.zgame.api.global.API;
 
 public class XmlGuiLayoutRegistry
 {
@@ -28,30 +26,13 @@ public class XmlGuiLayoutRegistry
     }
     
     public static void loadGuiLayouts(ClassLoader cl)
-    {        
-        URL jarURL;
-        if ( cl instanceof JarComponentLoader )
-        {
-            jarURL = ((JarComponentLoader) cl).getFileUrl();
-        }
-        else
-        {
-            jarURL = XmlGuiLayoutRegistry.class.getProtectionDomain().getCodeSource().getLocation();
-        }
-        
-        ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setUrls(jarURL);
-        cb.setClassLoaders(new ClassLoader[] {cl});
-        cb.setScanners(new ResourcesScanner());
-        
-        FilterBuilder fb = new FilterBuilder();
-        fb.include(FilterBuilder.prefix("gui"));
-        cb.filterInputsBy(fb);
-        
-        Reflections reflections = new Reflections(cb);
-        Set<String> resources = reflections.getResources(name -> name.endsWith(".xml"));
-        
-        for ( String resource : resources )
+    {
+        final Reflections reflections = API.getApiCore().getComponentManager().accessReflections(cl);
+
+        final Collection<String> values = reflections.getStore().get("ResourcesScanner").values();
+        final Iterable<String> result = values.stream().filter(name -> name.startsWith("gui") && name.endsWith(".xml")).collect(Collectors.toList());
+
+        for ( String resource : Sets.newHashSet(result) )
         {
             loadGuiLayout(cl, resource);
         }

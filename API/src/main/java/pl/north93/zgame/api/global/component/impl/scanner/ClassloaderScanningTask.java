@@ -19,6 +19,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.text.StrBuilder;
 import org.apache.commons.lang3.tuple.Pair;
 import org.reflections.Reflections;
+import org.reflections.scanners.ResourcesScanner;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
@@ -50,7 +51,7 @@ public class ClassloaderScanningTask
         this.loadedFile = loadedFile;
         this.classPool = manager.getClassPool(classLoader);
         this.injectorInstaller = new InjectorInstaller();
-        this.reflections = this.createReflections(new FilterBuilder().includePackage(rootPackage));
+        this.reflections = this.createReflections(new FilterBuilder().includePackage(rootPackage).includePackage("gui")); // todo allow to register own packages
         this.pendingTasks = new ArrayDeque<>();
     }
 
@@ -97,8 +98,9 @@ public class ClassloaderScanningTask
                     filter.excludePackage(annotation.value());
                 }
             }
-            catch (final ClassNotFoundException | NoClassDefFoundError ignored) // jak sie nie uda zaladowac klasy to trudno, i tak jej nie uzyjemy
+            catch (final ClassNotFoundException | NoClassDefFoundError ignored)
             {
+                // jak sie nie uda zaladowac klasy to trudno, i tak jej nie uzyjemy
             }
         }
         this.scan(filter);
@@ -228,11 +230,16 @@ public class ClassloaderScanningTask
         return null;
     }
 
+    public Reflections getReflections()
+    {
+        return this.reflections;
+    }
+
     private Reflections createReflections(final FilterBuilder packageFilter)
     {
         final ConfigurationBuilder configuration = new ConfigurationBuilder();
         configuration.setClassLoaders(new ClassLoader[]{this.classLoader});
-        configuration.setScanners(new SubTypesScanner(false));
+        configuration.setScanners(new SubTypesScanner(false), new ResourcesScanner());
         configuration.setUrls(this.loadedFile);
         configuration.filterInputsBy(packageFilter);
 

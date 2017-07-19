@@ -23,6 +23,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
@@ -36,6 +37,7 @@ import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageTracker;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.zgame.api.global.network.players.Identity;
 
 public class DeathListener implements Listener
 {
@@ -143,6 +145,7 @@ public class DeathListener implements Listener
         final Player damager = (Player) lastDmg.getCauseByEntity().getDamager();
         final BedWarsPlayer damagerData = getPlayerData(damager, BedWarsPlayer.class);
         damagerData.incrementKills(); // dodajemy zabojcy killa
+        arena.getRewards().addReward(Identity.of(damager), new CurrencyReward("elimination", "minigame", 100));
 
         if (elimination)
         {
