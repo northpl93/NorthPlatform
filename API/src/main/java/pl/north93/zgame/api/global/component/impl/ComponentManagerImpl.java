@@ -28,6 +28,7 @@ import org.diorite.cfg.system.TemplateCreator;
 import javassist.ClassPool;
 import javassist.LoaderClassPath;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.gui.impl.XmlGuiLayoutRegistry;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.component.Component;
@@ -195,7 +196,8 @@ public class ComponentManagerImpl implements IComponentManager
         }
 
         this.scanClassloader(classLoader, componentsConfig.getRootPackage(), componentsConfig.getComponents());
-
+        XmlGuiLayoutRegistry.loadGuiLayouts(classLoader);
+        
         for (final String includeConfig : componentsConfig.getInclude())
         {
             this.doComponentScan(includeConfig, classLoader);

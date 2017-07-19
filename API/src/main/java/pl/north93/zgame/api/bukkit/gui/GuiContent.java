@@ -10,78 +10,75 @@ import com.google.common.base.Preconditions;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 import pl.north93.zgame.api.global.utils.Vars;
 
-public class GuiContent
+public class GuiContent extends GuiContainerElement
 {
-    private GuiContentEntry[][] content;
+    private final Gui gui;
     
-    private TranslatableString title;
+    private TranslatableString title = TranslatableString.of("");
     
-    private GuiContentEntry getGuiContentEntry(int slotX, int slotY)
+    private GuiCanvas renderedCanvas;
+    
+    public GuiContent(Gui gui, int height)
     {
-        if ( slotX >= content.length || slotY >= content[0].length )
-        {
-            return null;
-        }
+        super(9, height);
+        this.gui = gui;
+        this.renderedCanvas = new GuiCanvas(9, height);
+    }
+    
+    public GuiCanvas getRenderedCanvas()
+    {
+        return renderedCanvas;
+    }
+    
+    public TranslatableString getTitle()
+    {
+        return title;
+    }
+    
+    public void setTitle(TranslatableString title)
+    {
+        Preconditions.checkArgument(title != null, "Title cannot be null");
         
-        return content[slotX][slotY];
+        this.title = title;
+        markDirty();
     }
     
-    public GuiElement getGuiElementInSlot(int slotX, int slotY)
+    public void setHeight(int height)
     {
-        GuiContentEntry entry = getGuiContentEntry(slotX, slotY);
-        return entry != null ? entry.element : null;
+        setSize(9, height);
+        renderedCanvas.resize(9, height);
     }
     
-    public GuiIcon getGuiIconInSlot(int slotX, int slotY)
+    public void renderContent()
     {
-        GuiContentEntry entry = getGuiContentEntry(slotX, slotY);
-        return entry != null ? entry.icon : null;
+        renderedCanvas.clear();
+        render(renderedCanvas);
     }
     
-    public void setEntry(int x, int y, GuiIcon icon, GuiElement element)
+    public void renderToInventory(Player player, Inventory inv)
     {
-        Preconditions.checkArgument(icon != null);
-        Preconditions.checkArgument(element != null);
-        
-        if ( x < 0 || x >= content.length || y < 0 || y >= content[0].length )
-        {
-            return;
-        }
-        
-        content[x][y] = new GuiContentEntry(icon, element);
-    }
-    
-    public void renderToInventory(Player player, Vars<String> parameters)
-    {
-        Inventory inv = player.getOpenInventory().getTopInventory();
         Preconditions.checkState(inv.getType() == InventoryType.CHEST);
-        
-        if ( inv.getSize() != content.length * 9 )
-        {
-            inv = Bukkit.createInventory(null, content.length * 9, title.getValue(player.spigot().getLocale()));
-            player.openInventory(inv);
-        }
         
         inv.clear();
         
-        for ( int i = 0; i < content.length; i++ )
+        for ( int i = 0; i < renderedCanvas.getWidth(); i++ )
         {
-            for ( int j = 0; j < content[i].length; j++ )
+            for ( int j = 0; j < renderedCanvas.getHeight(); j++ )
             {
-                inv.setItem(i * 9 + j, content[i][j].icon.toItemStack(player, parameters));
+                GuiIcon icon = renderedCanvas.getGuiIconInSlot(i, j);
+                if ( icon != null )
+                {
+                    inv.setItem(j * 9 + i, icon.toItemStack(player, gui.getVariables()));
+                }
             }
         }
     }
-}
-
-class GuiContentEntry
-{
-    final GuiIcon icon;
-    final GuiElement element;
     
-    GuiContentEntry(GuiIcon icon, GuiElement element)
+    @Override
+    public void setSize(int width, int height)
     {
-        this.icon = icon;
-        this.element = element;
+        Preconditions.checkArgument(width == 9, "Content width must be equal 9");
+        
+        super.setSize(width, height);
     }
 }

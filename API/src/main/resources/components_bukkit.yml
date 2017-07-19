@@ -34,3 +34,11 @@ components:
     description: "Allows hide or show entities to specified players."
     platforms:
       - BUKKIT
+      
+  - name: API.GuiManager
+    mainClass: "pl.north93.zgame.api.bukkit.gui.impl.GuiTracker"
+    description: "GUI api."
+    dependencies:
+      - API.TickableManager
+    platforms:
+      - BUKKIT

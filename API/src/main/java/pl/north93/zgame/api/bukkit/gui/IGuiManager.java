@@ -6,7 +6,10 @@ public interface IGuiManager
 {
     void openGui(Player player, Gui gui);
     
-    void closeGui(Player player);
+    default void closeGui(Player player)
+    {
+        player.closeInventory();
+    }
     
     <T extends Gui> T getCurrentGui(Player player);
     

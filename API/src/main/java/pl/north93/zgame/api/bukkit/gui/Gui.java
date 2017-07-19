@@ -2,83 +2,137 @@ package pl.north93.zgame.api.bukkit.gui;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
 
+import com.google.common.base.Preconditions;
+
+import pl.north93.zgame.api.bukkit.gui.impl.GuiTracker;
+import pl.north93.zgame.api.bukkit.gui.impl.XmlGuiLayoutRegistry;
+import pl.north93.zgame.api.global.utils.Vars;
+
 public class Gui
 {
-    private final List<GuiTrackerEntry> viewers = new ArrayList<>();
-    private final List<GuiElement> elements = new ArrayList<>();
+    private static GuiTracker guiTracker;
+    
+    private final GuiContent content;
+    
+    private Vars<Object> variables;
+    
+    protected Gui(String layout)
+    {
+        if ( layout != null && !layout.isEmpty() )
+        {
+            content = XmlGuiLayoutRegistry.getLayout(layout).createGuiContent(this);
+        }
+        else
+        {
+            content = new GuiContent(this, 6);
+        }
+        
+        callOnInit();
+    }
     
     public final void open(Player player)
     {
-        // TODO
+        guiTracker.openGui(player, this);
     }
     
     public final boolean close(Player player)
     {
+        if ( guiTracker.getCurrentGui(player) == this )
+        {
+            guiTracker.closeGui(player);
+            return true;
+        }
+        
         return false;
-        // TODO:
     }
     
     public final void closeAll()
     {
-        viewers.stream().map(viewer -> viewer.getPlayer()).forEach(player -> close(player));
+        guiTracker.getEntries(this).forEach(entry -> close(entry.getPlayer()));
+    }
+    
+    public final void click(Player player, GuiElement element, ClickType type)
+    {
+        ClickEvent event = new ClickEvent(player, type);
+        
+        for ( String clickHandler : new ArrayList<>(element.getClickHandlers()) )
+        {
+            guiTracker.getClickHandlerManager().callClickEvent(this, clickHandler, event);
+        }
     }
     
     public final Collection<Player> getViewers()
     {
-        return viewers.stream().map(viewer -> viewer.getPlayer()).collect(Collectors.toCollection(ArrayList::new));
-    }
-    
-    public final List<GuiElement> getElements()
-    {
-        return elements;
-    }
-    
-    @SuppressWarnings("unchecked")
-    public final <T extends GuiElement> List<T> getElementsByClass(Class<T> clazz)
-    {
-        return (List<T>) elements.stream().filter(element -> clazz.isInstance(element))
+        return guiTracker.getEntries(this).stream().map(entry -> entry.getPlayer())
                 .collect(Collectors.toCollection(ArrayList::new));
     }
     
-    // TODO: get element in slot
-    
-    public final void addElement(GuiElement element)
+    public final GuiContent getContent()
     {
-        element.onElementAdd(this);
-        elements.add(element);
-        markDirty();
+        return content;
     }
     
-    public final void removeElement(GuiElement element)
+    public final Vars<Object> getVariables()
     {
-        if ( elements.remove(element) )
-        {
-            element.onElementRemove(this);
-        }
+        return variables;
     }
     
-    public final void clearElements()
+    public final void setVariables(Vars<Object> variables)
     {
-        Iterator<GuiElement> it = elements.iterator();
-        while ( it.hasNext() )
-        {
-            GuiElement element = it.next();
-            it.remove();
-            element.onElementRemove(this);
-        }
+        this.variables = variables;
+    }
+    
+    public final void addVariables(Vars<Object> variables)
+    {
+        this.variables = this.variables.and(variables);
+    }
+    
+    public final boolean isDirty()
+    {
+        return content.isDirty();
     }
     
     public final void markDirty()
     {
-        
+        content.markDirty();
+    }
+    
+    public final void callOnInit()
+    {
+        catchException("onInit", () -> onInit());
+    }
+    
+    public final void callOnOpen(Player player)
+    {
+        catchException("onOpen", () -> onOpen(player));
+    }
+    
+    public final void callOnClose(Player player)
+    {
+        catchException("onClose", () -> onClose(player));
+    }
+    
+    private void catchException(String method, Runnable runnable)
+    {
+        try
+        {
+            runnable.run();
+        }
+        catch ( Throwable e )
+        {
+            System.err.println(method + "() in " + getClass().getName() + " throws an exception:");
+            e.printStackTrace();
+        }
     }
 
+    protected void onInit()
+    {
+    }
+    
     protected void onOpen(Player player)
     {
     }
@@ -87,8 +141,14 @@ public class Gui
     {
     }
     
+    public static void setGuiTracker(GuiTracker guiTracker)
+    {
+        Preconditions.checkState(Gui.guiTracker == null);
+        Gui.guiTracker = guiTracker;
+    }
+    
     @ClickHandler
-    public void closeInventory(ClickEvent event)
+    public final void closeGui(ClickEvent event)
     {
         close(event.getWhoClicked());
     }

@@ -17,17 +17,17 @@ public class GuiIcon
     private final int data;
     private final int count;
     
-    private final TranslatableString label;
+    private final TranslatableString name;
     private final TranslatableString lore;
     
     private final boolean glowing;
     
-    private GuiIcon(Material type, int data, int count, TranslatableString label, TranslatableString lore, boolean glow)
+    private GuiIcon(Material type, int data, int count, TranslatableString name, TranslatableString lore, boolean glow)
     {
         this.type = type;
         this.data = data;
         this.count = count;
-        this.label = label;
+        this.name = name;
         this.lore = lore;
         this.glowing = glow;
     }
@@ -47,9 +47,9 @@ public class GuiIcon
         return count;
     }
     
-    public TranslatableString getLabel()
+    public TranslatableString getName()
     {
-        return label;
+        return name;
     }
     
     public TranslatableString getLore()
@@ -62,10 +62,12 @@ public class GuiIcon
         return glowing;
     }
     
-    public ItemStack toItemStack(Player player, Vars<String> parameters)
+    public ItemStack toItemStack(Player player, Vars<Object> parameters)
     {
-        List<String> lore = Arrays.asList(this.lore.getValue(player.spigot().getLocale(), parameters).split("\n"));
-        return new ItemStackBuilder().material(type).data(data).amount(count).name(label.getValue(player.spigot().getLocale(), parameters))
+        List<String> lore = this.lore != null ? Arrays.asList(this.lore.getValue(player.spigot().getLocale(), parameters).split("\n")) : Arrays.asList();
+        String name = this.name.getValue(player.spigot().getLocale(), parameters);
+        
+        return new ItemStackBuilder().material(type).data(data).amount(count).name(!name.isEmpty() ? name : "§0")
                 .lore(lore).build();
     }
     
@@ -80,8 +82,8 @@ public class GuiIcon
         private int data = 0;
         private int count = 1;
         
-        private TranslatableString label = TranslatableString.of("");
-        private TranslatableString lore = TranslatableString.of("");
+        private TranslatableString name = TranslatableString.of("");
+        private TranslatableString lore;
         
         private boolean glowing;
         
@@ -107,9 +109,9 @@ public class GuiIcon
             return this;
         }
         
-        public Builder label(TranslatableString label)
+        public Builder name(TranslatableString name)
         {
-            this.label = label;
+            this.name = name != null ? name : TranslatableString.of("");
             return this;
         }
         
@@ -127,7 +129,7 @@ public class GuiIcon
         
         public GuiIcon build()
         {
-            return new GuiIcon(type, data, count, label, lore, glowing);
+            return new GuiIcon(type, data, count, name, lore, glowing);
         }
     }
 }

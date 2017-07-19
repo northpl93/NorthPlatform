@@ -47,6 +47,15 @@ public final class Vars <T>
         return new Vars<T>(newMap);
     }
     
+    public Vars<T> and(Vars<T> vars)
+    {
+        Preconditions.checkArgument(vars != null);
+        
+        Map<String, T> newMap = new HashMap<>(vars.size());
+        newMap.putAll(vars.vars);
+        return new Vars<T>(newMap);
+    }
+    
     public Vars<T> withoutKey(String key)
     {
         Preconditions.checkArgument(key != null, "key cannot be null");

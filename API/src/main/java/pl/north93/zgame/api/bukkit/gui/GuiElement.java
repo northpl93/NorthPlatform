@@ -1,55 +1,119 @@
 package pl.north93.zgame.api.bukkit.gui;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import org.bukkit.entity.Player;
+import java.util.stream.Collectors;
 
 import com.google.common.base.Preconditions;
 
 public abstract class GuiElement
 {
-    private WeakReference<Gui> gui = new WeakReference<>(null);
-    private final List<String> onClickHandlers = new ArrayList<>();
+    private GuiElement parent;
+    private final List<GuiElement> children;
     
-    final void onElementAdd(Gui gui)
+    private final List<String> clickHandlers = new ArrayList<>();
+    
+    private int posX;
+    private int posY;
+    
+    private boolean isDirty = true;
+    
+    protected GuiElement(boolean canHasChildren)
     {
-        Preconditions.checkArgument(gui != null);
-        Preconditions.checkState(this.gui.get() == null, "Cannot add this element: this element is attached to other gui.");
-        this.gui = new WeakReference<>(gui);
+        children = canHasChildren ? new ArrayList<>() : Arrays.asList();
     }
     
-    final void onElementRemove(Gui gui)
+    public final void addChild(GuiElement child)
     {
-        Preconditions.checkState(this.gui.get() == gui);
-        this.gui.clear();
+        Preconditions.checkState(child.parent == null);
+        
+        child.parent = this;
+        children.add(child);
+        onElementAdd(child);
+        markDirty();
     }
     
-    final void markDirty()
+    public final void removeChild(GuiElement child)
     {
-        Gui gui = this.gui.get();
-        if ( gui != null )
+        Preconditions.checkState(child.parent == this);
+        
+        child.parent = null;
+        children.remove(child);
+        onElementRemove(child);
+        markDirty();
+    }
+    
+    public int getPosX()
+    {
+        return posX;
+    }
+    
+    public int getPosY()
+    {
+        return posY;
+    }
+    
+    public void setPosition(int x, int y)
+    {
+        this.posX = x;
+        this.posY = y;
+        markDirty();
+    }
+    
+    public final GuiElement getParent()
+    {
+        return parent;
+    }
+    
+    public final List<String> getClickHandlers()
+    {
+        return clickHandlers;
+    }
+    
+    public final List<GuiElement> getChildren()
+    {
+        return new ArrayList<>(children);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public final <T extends GuiElement> List<T> getChildrenByClass(Class<T> clazz)
+    {
+        return (List<T>) children.stream().filter(child -> clazz.isInstance(child))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+    
+    public boolean isDirty()
+    {
+        return isDirty;
+    }
+    
+    public void markDirty()
+    {
+        GuiElement parent = this.parent;
+        while ( parent != null )
         {
-            gui.markDirty();
+            parent.markDirty();
+            parent = parent.parent;
         }
+        
+        isDirty = true;
     }
     
-    public abstract void render(GuiContent content);
-    
-    public List<String> getOnClickHandlers()
+    public void resetDirty()
     {
-        return onClickHandlers;
+        isDirty = false;
     }
     
-    public final void onClick(Player player)
+    protected void onElementAdd(GuiElement element)
     {
-        for ( String onClickHandler : onClickHandlers )
-        {
-            
-            // TODO: call click event
-        }
     }
+    
+    protected void onElementRemove(GuiElement element)
+    {
+    }
+    
+    public abstract void render(GuiCanvas canvas);
     
     @Override
     public final boolean equals(Object obj)
