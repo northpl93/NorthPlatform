@@ -15,7 +15,7 @@ class ConstantTranslatableString extends TranslatableString
     }
     
     @Override
-    public String getValue(Locale locale, Vars<String> params)
+    public String getValue(Locale locale, Vars<Object> params)
     {
         return fixedValue;
     }

@@ -24,10 +24,10 @@ class MessagesBoxTranslatableString extends TranslatableString
     }
     
     @Override
-    public String getValue(Locale locale, Vars<String> params)
+    public String getValue(Locale locale, Vars<Object> params)
     {
         String[] args = new String[messageArgs.length];
-        IntStream.range(0, args.length).forEach( (i) -> args[i] = params.getValue(messageArgs[i]) );
+        IntStream.range(0, args.length).forEach( (i) -> args[i] = String.valueOf(params.getValue(messageArgs[i])) );
         return messagesBox.getMessage(locale, messageKey, args);
     }
     

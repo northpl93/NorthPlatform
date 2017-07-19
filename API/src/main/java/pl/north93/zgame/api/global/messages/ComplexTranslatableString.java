@@ -19,7 +19,7 @@ class ComplexTranslatableString extends TranslatableString
     }
     
     @Override
-    public String getValue(Locale locale, Vars<String> params)
+    public String getValue(Locale locale, Vars<Object> params)
     {
         return inOrder().stream().map(translatableString -> translatableString.getValue(locale, params)).collect(Collectors.joining());
     }

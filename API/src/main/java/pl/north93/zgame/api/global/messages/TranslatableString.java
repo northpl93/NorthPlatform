@@ -28,7 +28,7 @@ public abstract class TranslatableString
         return getValue(messageable, Vars.empty());
     }
     
-    public String getValue(Messageable messageable, Vars<String> params)
+    public String getValue(Messageable messageable, Vars<Object> params)
     {
         return getValue(messageable.getLocale(), params);
     }
@@ -38,7 +38,7 @@ public abstract class TranslatableString
         return getValue(player, Vars.empty());
     }
     
-    public String getValue(Player player, Vars<String> params)
+    public String getValue(Player player, Vars<Object> params)
     {
         return getValue(player.spigot().getLocale(), params);
     }
@@ -48,7 +48,7 @@ public abstract class TranslatableString
         return getValue(locale, Vars.empty());
     }
     
-    public String getValue(String locale, Vars<String> params)
+    public String getValue(String locale, Vars<Object> params)
     {
         return getValue(Locale.forLanguageTag(locale), params);
     }
@@ -63,7 +63,7 @@ public abstract class TranslatableString
         sendMessage(messageable, MessageLayout.DEFAULT, Vars.empty());
     }
     
-    public void sendMessage(Messageable messageable, Vars<String> params)
+    public void sendMessage(Messageable messageable, Vars<Object> params)
     {
         sendMessage(messageable, MessageLayout.DEFAULT, params);
     }
@@ -73,7 +73,7 @@ public abstract class TranslatableString
         sendMessage(messageable, messageLayout, Vars.empty());
     }
     
-    public void sendMessage(Messageable messageable, MessageLayout messageLayout, Vars<String> params)
+    public void sendMessage(Messageable messageable, MessageLayout messageLayout, Vars<Object> params)
     {
         String message = getValue(messageable, params);
         for ( String line : messageLayout.processMessage(message) )
@@ -87,7 +87,7 @@ public abstract class TranslatableString
         sendMessage(player, MessageLayout.DEFAULT, Vars.empty());
     }
     
-    public void sendMessage(Player player, Vars<String> params)
+    public void sendMessage(Player player, Vars<Object> params)
     {
         sendMessage(player, MessageLayout.DEFAULT, params);
     }
@@ -97,13 +97,13 @@ public abstract class TranslatableString
         sendMessage(player, messageLayout, Vars.empty());
     }
     
-    public void sendMessage(Player player, MessageLayout messageLayout, Vars<String> params)
+    public void sendMessage(Player player, MessageLayout messageLayout, Vars<Object> params)
     {
         String message = getValue(player, params);
         player.sendMessage(messageLayout.processMessage(message));
     }
     
-    public abstract String getValue(Locale locale, Vars<String> params);
+    public abstract String getValue(Locale locale, Vars<Object> params);
     
     public abstract boolean equals(Object object);
     
@@ -113,6 +113,11 @@ public abstract class TranslatableString
     
     public static TranslatableString of(String string)
     {
+        if ( string == null )
+        {
+            return null;
+        }
+        
         if ( string.length() < 4 || string.charAt(0) != '@' )
         {
             return new ConstantTranslatableString(string);

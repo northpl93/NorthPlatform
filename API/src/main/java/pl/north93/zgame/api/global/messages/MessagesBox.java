@@ -40,7 +40,15 @@ public class MessagesBox
 
     public String getMessage(final Locale locale, final String key)
     {
-        return this.getBundle(locale).getString(key);
+        ResourceBundle bundle = this.getBundle(locale);
+        if ( bundle.containsKey(key) )
+        {
+            return bundle.getString(key).replace('&', '§');
+        }
+        else
+        {
+            return "[" + locale.getLanguage() + ": " + fileName + "." + key + "]";
+        }
     }
 
     public String getMessage(final String locale, final String key)
@@ -50,11 +58,13 @@ public class MessagesBox
 
     public String getMessage(final Locale locale, final String key, final Object... params)
     {
+        evalTranslatableString(locale, params);
         return MessageFormat.format(this.getMessage(locale, key), (Object[]) params);
     }
 
     public String getMessage(final String locale, final String key, final Object... params)
     {
+        evalTranslatableString(Locale.forLanguageTag(locale), params);
         return MessageFormat.format(this.getMessage(locale, key), (Object[]) params);
     }
 
@@ -68,7 +78,7 @@ public class MessagesBox
 
     public void sendMessage(final Messageable messageable, final String key, final MessageLayout layout, final Object... params)
     {
-        final String message = MessageFormat.format(this.getMessage(messageable.getLocale(), key), (Object[]) params);
+        final String message = this.getMessage(messageable.getLocale(), key, (Object[]) params);
         for (final String line : layout.processMessage(message))
         {
             messageable.sendRawMessage(line, true);
@@ -93,6 +103,17 @@ public class MessagesBox
         this.sendMessage(player, key, MessageLayout.DEFAULT, params);
     }
 
+    private void evalTranslatableString(Locale locale, Object[] args)
+    {
+        for ( int i = 0; i < args.length; i++ )
+        {
+            if ( args[i] instanceof TranslatableString )
+            {
+                args[i] = ((TranslatableString) args[i]).getValue(locale);
+            }
+        }
+    }
+    
     @Override
     public String toString()
     {
