@@ -31,6 +31,11 @@ class InstancesAggregator implements IAggregator
     @Override
     public boolean isSuitableFor(final CtClass clazz)
     {
+        if (Modifier.isAbstract(clazz.getModifiers()) || clazz.isInterface())
+        {
+            return false;
+        }
+
         for (final CtClass ctClass : this.getPossibleAggregationPoints(clazz))
         {
             if (ctClass.getName().equals(this.clazz.getName()))

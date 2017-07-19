@@ -14,6 +14,7 @@ import pl.north93.zgame.api.economy.ITransaction;
 import pl.north93.zgame.api.economy.cfg.CurrencyConfig;
 import pl.north93.zgame.api.economy.cfg.EconomyConfig;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
+import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.INetworkManager;
@@ -29,6 +30,11 @@ public class EconomyManagerImpl implements IEconomyManager
     private INetworkManager      networkManager;
     // - - -
     private Value<EconomyConfig> config;
+
+    @Bean
+    private EconomyManagerImpl()
+    {
+    }
 
     @PostInject
     private void init()

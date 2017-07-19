@@ -20,6 +20,17 @@ public interface IPlayer extends Metadatable
     String getLatestNick();
 
     /**
+     * Identity jest lekkim obiektem umozliwiajacym identyfikowanie
+     * gracza w sieci. Ma zaimplementowane equals i hashCode
+     * porownujace po UUID.
+     * @return identity gracza.
+     */
+    default Identity getIdentity()
+    {
+        return new Identity(this.getUuid(), this.getDisplayName());
+    }
+
+    /**
      * Sprawdza czy dany gracz ma ustawiona niestandardowa nazwe
      * wyswietlana.
      * @return true jesli gracz ma niestandardowa nazwe wyswietlana.

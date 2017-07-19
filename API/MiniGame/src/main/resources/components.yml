@@ -7,5 +7,6 @@ components:
     dependencies:
       - API.Database.Redis.RPC
       - API.Database.Redis.Event
+      - API.Economy
     platforms:
       - BUKKIT

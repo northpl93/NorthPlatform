@@ -16,19 +16,20 @@ import pl.north93.zgame.api.economy.impl.netcontroller.rest.OperationInfo;
 import pl.north93.zgame.api.economy.impl.shared.EconomyManagerImpl;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 @IncludeInScanning("pl.north93.zgame.api.economy.impl.shared")
 public class EconomyControllerComponent extends Component
 {
     private final Gson gson = new Gson();
     private EconomyConfig      config;
+    @Inject
     private EconomyManagerImpl economyManager;
 
     @Override
     protected void enableComponent()
     {
         this.config = loadConfigFile(EconomyConfig.class, this.getApiCore().getFile("economy.yml"));
-        this.economyManager = new EconomyManagerImpl();
         this.economyManager.setConfig(this.config);
 
         get("player/:nick/money/:currency/add/:amount", (request, response) ->

@@ -12,11 +12,17 @@
 
     <groupId>pl.north93.zgame.api</groupId>
     <artifactId>minigame</artifactId>
+    <name>API.MiniGame</name>
 
     <dependencies>
         <dependency>
             <groupId>pl.north93.zgame</groupId>
             <artifactId>api</artifactId>
+            <version>1.0-INDEV</version>
+        </dependency>
+        <dependency>
+            <groupId>pl.north93.zgame.api</groupId>
+            <artifactId>economy</artifactId>
             <version>1.0-INDEV</version>
         </dependency>
     </dependencies>

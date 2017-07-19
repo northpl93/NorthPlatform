@@ -7,16 +7,17 @@ import pl.north93.zgame.api.economy.IEconomyManager;
 import pl.north93.zgame.api.economy.impl.shared.EconomyManagerImpl;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 @IncludeInScanning("pl.north93.zgame.api.economy.impl.shared")
 public class EconomyComponent extends Component
 {
+    @Inject
     private EconomyManagerImpl economyManager;
 
     @Override
     protected void enableComponent()
     {
-        this.economyManager = new EconomyManagerImpl();
     }
 
     @Override

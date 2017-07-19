@@ -66,7 +66,10 @@ public class PlayerTeamListener implements Listener
         for (final Player player : arena.getPlayersManager().getPlayers())
         {
             final Team smallestTeam = arenaData.getTeams().stream().sorted(Comparator.comparing(team -> team.getPlayers().size())).findFirst().orElse(null);
-            getPlayerData(player, BedWarsPlayer.class).switchTeam(smallestTeam);
+            final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+
+            playerData.switchTeam(smallestTeam);
+            arenaData.getPlayers().add(playerData);
 
             this.scoreboardManager.setLayout(player, new GameScoreboard());
 

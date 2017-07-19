@@ -31,6 +31,7 @@ public class BedWarsArena implements IArenaData
     private final Set<Team>                  teams          = new HashSet<>();
     private final Set<Cuboid>                secureRegions  = new HashSet<>();
     private final Set<Block>                 playerBlocks   = new HashSet<>();
+    private final Set<BedWarsPlayer>         players        = new HashSet<>();
 
     public BedWarsArena(final LocalArena arena, final BwConfig bedWarsConfig, final BwArenaConfig config)
     {
@@ -86,6 +87,11 @@ public class BedWarsArena implements IArenaData
             }
         }
         return null;
+    }
+
+    public Set<BedWarsPlayer> getPlayers()
+    {
+        return this.players;
     }
 
     public Set<Cuboid> getSecureRegions()

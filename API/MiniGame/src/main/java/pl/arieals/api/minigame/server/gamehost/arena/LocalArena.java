@@ -13,6 +13,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
 import pl.arieals.api.minigame.server.gamehost.region.IRegionManager;
+import pl.arieals.api.minigame.server.gamehost.reward.IArenaRewards;
+import pl.arieals.api.minigame.server.gamehost.reward.impl.ArenaRewardsImpl;
 import pl.arieals.api.minigame.server.gamehost.scheduler.ArenaScheduler;
 import pl.arieals.api.minigame.server.gamehost.scheduler.IArenaScheduler;
 import pl.arieals.api.minigame.shared.api.GamePhase;
@@ -35,6 +37,7 @@ public class LocalArena implements IArena
     private final StaticTimer         timer;
     private final ArenaScheduler      scheduler;
     private final DeathMatch          deathMatch;
+    private final IArenaRewards       rewards;
     private       IArenaData          arenaData;
     private       MapVote             mapVote;
     private final ArenaStartScheduler startScheduler;
@@ -49,6 +52,7 @@ public class LocalArena implements IArena
         this.timer = new StaticTimer();
         this.scheduler = new ArenaScheduler(this);
         this.deathMatch = new DeathMatch(gameHostManager, this);
+        this.rewards = new ArenaRewardsImpl(this);
         this.startScheduler = new ArenaStartScheduler(this);
     }
 
@@ -146,6 +150,15 @@ public class LocalArena implements IArena
     public DeathMatch getDeathMatch()
     {
         return this.deathMatch;
+    }
+
+    /**
+     * Zwraca system nagrod powiazany z ta arena.
+     * @return system nagrod tej areny.
+     */
+    public IArenaRewards getRewards()
+    {
+        return this.rewards;
     }
 
     public MapVote getMapVote()

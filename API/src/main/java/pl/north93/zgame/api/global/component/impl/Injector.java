@@ -61,23 +61,18 @@ public class Injector
                 query.name(namedAnn.value());
             }
 
-            final Object bean;
             try
             {
-                bean = context.getBeanContainer(query).getValue(field);
+                final Object bean = context.getBeanContainer(query).getValue(field);
+                field.set(instance, bean);
             }
             catch (final Exception e)
             {
+                if (injectAnn.silentFail())
+                {
+                    return;
+                }
                 throw new InjectionException(instance.getClass(), e);
-            }
-
-            try
-            {
-                field.set(instance, bean);
-            }
-            catch (final IllegalAccessException e)
-            {
-                e.printStackTrace();
             }
         }
     }

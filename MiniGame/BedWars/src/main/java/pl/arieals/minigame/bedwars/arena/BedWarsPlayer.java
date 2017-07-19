@@ -2,6 +2,9 @@ package pl.arieals.minigame.bedwars.arena;
 
 import org.bukkit.entity.Player;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.minigame.bedwars.utils.TeamArmorUtils;
 
 public class BedWarsPlayer
@@ -9,6 +12,7 @@ public class BedWarsPlayer
     private final Player bukkitPlayer;
     private Team    team;
     private boolean alive;
+    private int     kills;
 
     public BedWarsPlayer(final Player bukkitPlayer)
     {
@@ -47,5 +51,21 @@ public class BedWarsPlayer
     public void setAlive(final boolean alive)
     {
         this.alive = alive;
+    }
+
+    public int getKills()
+    {
+        return this.kills;
+    }
+
+    public void incrementKills()
+    {
+        this.kills++;
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("bukkitPlayer", this.bukkitPlayer).append("team", this.team).append("alive", this.alive).append("kills", this.kills).toString();
     }
 }

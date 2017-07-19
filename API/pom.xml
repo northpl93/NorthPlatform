@@ -14,6 +14,7 @@
 
     <artifactId>api</artifactId>
     <version>1.0-INDEV</version>
+    <name>API</name>
 
     <dependencies>
         <!-- Instaluje zaleznosci z katalogu lib. Wiecej info w pom.xml tego modulu -->

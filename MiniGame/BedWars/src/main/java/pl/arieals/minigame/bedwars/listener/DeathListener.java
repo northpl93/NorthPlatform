@@ -85,7 +85,7 @@ public class DeathListener implements Listener
 
         this.handleRespawn(player, playerData, arena, team);
         this.safePlaceTeleport(player, team, arena);
-        this.updateDeathMessage(event, arena, team);
+        this.updateDeathMessage(event, arena, team); // podbija licznik zabojstw i wysyla wiadomosc
     }
 
     private void handleRespawn(final Player player, final BedWarsPlayer playerData, final LocalArena arena, final Team team)
@@ -94,19 +94,17 @@ public class DeathListener implements Listener
         if (team.isBedAlive())
         {
             new RevivePlayerCountdown(player, playerData).start(20);
+            return;
         }
-        else
+
+        final String locale = player.spigot().getLocale();
+        final String title = translateAlternateColorCodes(this.messages.getMessage(locale, "die.norespawn.title"));
+        final String subtitle = translateAlternateColorCodes(this.messages.getMessage(locale, "die.norespawn.subtitle"));
+        player.sendTitle(new Title(title, subtitle, 20, 20, 20));
+
+        if (! team.isTeamAlive())
         {
-            if (! team.isTeamAlive())
-            {
-                this.apiCore.callEvent(new TeamEliminatedEvent(arena, team));
-            }
-
-            final String locale = player.spigot().getLocale();
-            final String title = translateAlternateColorCodes(this.messages.getMessage(locale, "die.norespawn.title"));
-            final String subtitle = translateAlternateColorCodes(this.messages.getMessage(locale, "die.norespawn.subtitle"));
-
-            player.sendTitle(new Title(title, subtitle, 20, 20, 20));
+            this.apiCore.callEvent(new TeamEliminatedEvent(arena, team));
         }
     }
 
@@ -144,6 +142,8 @@ public class DeathListener implements Listener
 
         final Player damager = (Player) lastDmg.getCauseByEntity().getDamager();
         final BedWarsPlayer damagerData = getPlayerData(damager, BedWarsPlayer.class);
+        damagerData.incrementKills(); // dodajemy zabojcy killa
+
         if (elimination)
         {
             arena.getPlayersManager().broadcast(this.messages,
