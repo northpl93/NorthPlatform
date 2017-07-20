@@ -9,7 +9,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -21,8 +20,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
-import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
-import pl.arieals.api.minigame.server.gamehost.reward.IReward;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
@@ -32,6 +29,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public class GameEndListener implements Listener
 {
@@ -68,12 +66,12 @@ public class GameEndListener implements Listener
 
         for (final Team team : arenaData.getTeams())
         {
-            final String teamNameKey = "team.scoreboard." + team.getName();
+            final TranslatableString teamNameKey = TranslatableString.of("@BedWars.team.scoreboard." + team.getName());
             final List<String> nicks = this.playersList(team);
 
             for (final Player player : team.getPlayers())
             {
-                this.messages.sendMessage(player, teamNameKey, MessageLayout.CENTER);
+                this.messages.sendMessage(player, "end.team_name", MessageLayout.CENTER, team.getColorChar(), teamNameKey);
                 for (final String nick : nicks)
                 {
                     player.sendMessage(nick);
@@ -96,14 +94,7 @@ public class GameEndListener implements Listener
         players.broadcast(this.messages, "end.rewards", MessageLayout.CENTER);
         for (final Player player : players.getPlayers())
         {
-            final Map<String, List<IReward>> rewards = event.getArena().getRewards().groupRewardsOf(player);
-            for (final Map.Entry<String, List<IReward>> entry : rewards.entrySet())
-            {
-                final String name = "reward." + entry.getKey();
-                final double sum = entry.getValue().stream().map(ireward -> ((CurrencyReward) ireward)).mapToDouble(CurrencyReward::getAmount).sum();
-
-                player.sendMessage(name + " " + sum);
-            }
+            event.getArena().getRewards().renderRewards(this.messages, player);
         }
 
         players.broadcast(this.messages, "separator");

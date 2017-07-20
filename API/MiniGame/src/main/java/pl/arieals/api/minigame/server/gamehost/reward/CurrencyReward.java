@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.bukkit.utils.ChatUtils;
 import pl.north93.zgame.api.economy.ICurrency;
 import pl.north93.zgame.api.economy.IEconomyManager;
 import pl.north93.zgame.api.economy.ITransaction;
@@ -57,6 +58,18 @@ public class CurrencyReward implements IReward
         {
             logger.log(Level.SEVERE, "CurrencyReward can't add money to user's account.", e);
         }
+    }
+
+    @Override
+    public RewardMessageRenderer getRenderer()
+    {
+        return (messagesBox, locale, allRewardsOfType) ->
+        {
+            final double totalAmount = allRewardsOfType.stream().map(reward -> ((CurrencyReward) reward)).mapToDouble(CurrencyReward::getAmount).sum();
+            final String msgKey = "rewards." + this.rewardId;
+
+            return new String[] { ChatUtils.centerMessage(messagesBox.getMessage(locale, msgKey, totalAmount)) };
+        };
     }
 
     @Override

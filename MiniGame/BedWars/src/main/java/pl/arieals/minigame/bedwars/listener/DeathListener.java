@@ -85,12 +85,18 @@ public class DeathListener implements Listener
         final Vector newVector = direction.multiply(- 1).setY(2);
         player.setVelocity(newVector);
 
-        this.handleRespawn(player, playerData, arena, team);
+        this.handleKiller(event, arena, team); // podbija licznik zabojstw, wysyla wiadomosc i daje nagrode zabojcy
+        this.handleRespawn(player, playerData, team);
         this.safePlaceTeleport(player, team, arena);
-        this.updateDeathMessage(event, arena, team); // podbija licznik zabojstw i wysyla wiadomosc
+
+        if (! team.isTeamAlive())
+        {
+            // team wyeliminowany tym zabojstwem, wywolujemy event
+            this.apiCore.callEvent(new TeamEliminatedEvent(arena, team));
+        }
     }
 
-    private void handleRespawn(final Player player, final BedWarsPlayer playerData, final LocalArena arena, final Team team)
+    private void handleRespawn(final Player player, final BedWarsPlayer playerData, final Team team)
     {
         playerData.setAlive(false);
         if (team.isBedAlive())
@@ -103,11 +109,6 @@ public class DeathListener implements Listener
         final String title = translateAlternateColorCodes(this.messages.getMessage(locale, "die.norespawn.title"));
         final String subtitle = translateAlternateColorCodes(this.messages.getMessage(locale, "die.norespawn.subtitle"));
         player.sendTitle(new Title(title, subtitle, 20, 20, 20));
-
-        if (! team.isTeamAlive())
-        {
-            this.apiCore.callEvent(new TeamEliminatedEvent(arena, team));
-        }
     }
 
     private void safePlaceTeleport(final Player player, final Team team, final LocalArena arena)
@@ -128,7 +129,7 @@ public class DeathListener implements Listener
         }
     }
 
-    private void updateDeathMessage(final PlayerDeathEvent event, final LocalArena arena, final Team team)
+    private void handleKiller(final PlayerDeathEvent event, final LocalArena arena, final Team team)
     {
         event.setDeathMessage(null);
         final Player player = event.getEntity();

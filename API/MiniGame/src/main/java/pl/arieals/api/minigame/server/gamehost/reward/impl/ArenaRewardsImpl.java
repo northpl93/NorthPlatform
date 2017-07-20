@@ -2,6 +2,7 @@ package pl.arieals.api.minigame.server.gamehost.reward.impl;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,7 @@ import org.bukkit.entity.Player;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.reward.IArenaRewards;
 import pl.arieals.api.minigame.server.gamehost.reward.IReward;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.players.Identity;
 
 public class ArenaRewardsImpl implements IArenaRewards
@@ -40,14 +42,31 @@ public class ArenaRewardsImpl implements IArenaRewards
     }
 
     @Override
-    public Collection<IReward> getRewardsOf(final Player player)
+    public Collection<IReward> getRewardsOf(final Identity player)
     {
-        return this.rewards.get(Identity.of(player));
+        return this.rewards.get(player);
     }
 
     @Override
-    public Map<String, List<IReward>> groupRewardsOf(final Player player)
+    public Map<String, List<IReward>> groupRewardsOf(final Identity player)
     {
         return this.getRewardsOf(player).stream().collect(Collectors.groupingBy(IReward::getId));
+    }
+
+    @Override
+    public void renderRewards(final MessagesBox messagesBox, final Player player)
+    {
+        final Map<String, List<IReward>> groupedRewards = this.groupRewardsOf(Identity.of(player));
+        for (final Map.Entry<String, List<IReward>> entry : groupedRewards.entrySet())
+        {
+            final List<IReward> values = entry.getValue();
+            final IReward.RewardMessageRenderer renderer = values.get(0).getRenderer();
+
+            final String[] message = renderer.composeMessage(messagesBox, Locale.forLanguageTag(player.spigot().getLocale()), values);
+            for (final String msg : message)
+            {
+                player.sendMessage(msg);
+            }
+        }
     }
 }
