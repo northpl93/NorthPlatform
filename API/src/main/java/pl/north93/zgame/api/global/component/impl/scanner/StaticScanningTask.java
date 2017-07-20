@@ -18,6 +18,7 @@ import javassist.CtField;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
 import pl.north93.zgame.api.global.component.impl.BeanQuery;
+import pl.north93.zgame.api.global.component.impl.container.AbstractBeanContainer;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 
 class StaticScanningTask extends AbstractScanningTask
@@ -61,7 +62,8 @@ class StaticScanningTask extends AbstractScanningTask
 
             try
             {
-                field.set(null, this.beanContext.getBean(query));
+                final AbstractBeanContainer beanContainer = this.beanContext.getBeanContainer(query);
+                field.set(null, beanContainer.getValue(field));
                 iterator.remove();
             }
             catch (final Exception exception)

@@ -1,9 +1,10 @@
 package pl.north93.zgame.api.global.uri.impl;
 
-import java.lang.reflect.InvocationTargetException;
+import static java.text.MessageFormat.format;
+
+
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.text.MessageFormat;
 import java.util.logging.Level;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -35,7 +36,7 @@ public class UriManagerImpl extends Component implements IUriManager
         String calledUri = uri.getHost() + uri.getPath();
         if (parameter.length != 0)
         {
-            calledUri = MessageFormat.format(calledUri, parameter);
+            calledUri = format(calledUri, parameter);
         }
 
         final Routed routed = this.router.route(calledUri);
@@ -57,7 +58,7 @@ public class UriManagerImpl extends Component implements IUriManager
         }
         else
         {
-            calledUri = MessageFormat.format(uri, parameter);
+            calledUri = format(uri, parameter);
         }
 
         final Routed routed = this.router.route(calledUri);
@@ -78,9 +79,9 @@ public class UriManagerImpl extends Component implements IUriManager
             {
                 return method.invoke(context.getBean(method.getDeclaringClass()), a1, a2);
             }
-            catch (final IllegalAccessException | InvocationTargetException e)
+            catch (final Exception e)
             {
-                e.printStackTrace();
+                this.getLogger().log(Level.SEVERE, format("Cant execute {0} for uri {1}", method, handler.value()), e);
                 return null;
             }
         });
