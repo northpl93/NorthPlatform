@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.minigame.bedwars.shop.gui.UpgradesGui;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
@@ -29,8 +30,14 @@ public class BedWarsUpgrade extends NorthCommand
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
         final Player player = (Player) sender.unwrapped();
-        final String call = format("/minigame/bedwars/upgrade/{0}/{1}", args.asString(0), player.getUniqueId());
 
+        if (args.asString(0).equalsIgnoreCase("gui"))
+        {
+            final UpgradesGui upgradesGui = new UpgradesGui();
+            upgradesGui.open(player);
+        }
+
+        final String call = format("/minigame/bedwars/upgrade/{0}/{1}", args.asString(0), player.getUniqueId());
         sender.sendRawMessage("&aInvoking {0}...", call);
         this.uriManager.call(call);
     }

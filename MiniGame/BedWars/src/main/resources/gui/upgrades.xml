@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="5" title="@BedWarsShop.gui.upgrades_title">
+	<container pos="1,1" size="7,3">
+		<border id="160" data="10" />
+		<background id="160" data="3" />
+		<content>
+			<button pos="0,0">
+				<icon id="61" data="0" name="@BedWarsShop.upgrades.BaseGeneratorUpgrade" />
+				<onClick>northplatform://minigame/bedwars/upgrade/BaseGeneratorUpgrade/$playerId</onClick>
+			</button>
+			<button pos="1,0">
+				<icon id="285" data="0" name="@BedWarsShop.upgrades.ToolsHaste" />
+				<onClick>northplatform://minigame/bedwars/upgrade/ToolsHaste/$playerId</onClick>
+			</button>
+		</content>
+	</container>
+</gui>

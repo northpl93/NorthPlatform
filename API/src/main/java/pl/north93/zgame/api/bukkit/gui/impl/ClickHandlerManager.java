@@ -4,19 +4,25 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.spigotmc.SneakyThrow;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
+import org.apache.commons.lang3.StringUtils;
+import org.spigotmc.SneakyThrow;
+
 import pl.north93.zgame.api.bukkit.gui.ClickEvent;
 import pl.north93.zgame.api.bukkit.gui.ClickHandler;
 import pl.north93.zgame.api.bukkit.gui.Gui;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.uri.IUriManager;
+import pl.north93.zgame.api.global.utils.Vars;
 
 public class ClickHandlerManager
 {
     private final Map<Class<?>, Multimap<String, Method>> resolvedGuiClasses = new WeakHashMap<>();
+    @Inject
+    private IUriManager uriManager;
     
     private Multimap<String, Method> resolveClass(Class<?> classToResolve)
     {
@@ -54,7 +60,19 @@ public class ClickHandlerManager
     {
         Preconditions.checkArgument(gui != null);
         Preconditions.checkArgument(event != null);
-        
+
+        if (clickHandlerName.startsWith("northplatform://"))
+        {
+            this.callNorthUriClickEvent(gui, clickHandlerName, event);
+        }
+        else
+        {
+            this.callMethodClickEvent(gui, clickHandlerName, event);
+        }
+    }
+
+    private void callMethodClickEvent(Gui gui, String clickHandlerName, ClickEvent event)
+    {
         Multimap<String, Method> methods = resolvedGuiClasses.computeIfAbsent(gui.getClass(), this::resolveClass);
         for ( Method method : methods.get(clickHandlerName) )
         {
@@ -67,5 +85,20 @@ public class ClickHandlerManager
                 SneakyThrow.sneaky(e);
             }
         }
+    }
+
+    private void callNorthUriClickEvent(final Gui gui, final String clickHandlerName, final ClickEvent event)
+    {
+        final Vars<Object> context = Vars.of("$playerId", (Object) event.getWhoClicked().getUniqueId())
+                                         .and("$playerName", event.getWhoClicked().getName())
+                                         .and(gui.getVariables());
+
+        String finalUri = clickHandlerName;
+        for (final Map.Entry<String, Object> stringObjectEntry : context.asMap().entrySet())
+        {
+            finalUri = StringUtils.replace(clickHandlerName, stringObjectEntry.getKey(), stringObjectEntry.getValue().toString());
+        }
+
+        this.uriManager.call(finalUri);
     }
 }

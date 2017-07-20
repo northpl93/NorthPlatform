@@ -78,7 +78,8 @@ public class UpgradeManager
         }
 
         this.logger.log(Level.INFO, "Installing upgrade {0} for team {1} in arena {2}", new Object[]{upgrade.getName(), team.getName(), arena.getId()});
-        return team.getUpgrades().installUpgrade(upgrade);
+        team.getUpgrades().installUpgrade(upgrade);
+        return true;
     }
 
     @Override

@@ -114,6 +114,18 @@ public class GeneratorController
         return this.entries;
     }
 
+    public void addNewEntry(final BwGeneratorItemConfig config)
+    {
+        for (final ItemGeneratorEntry entry : this.entries)
+        {
+            if (entry.tryAdd(config))
+            {
+                return;
+            }
+        }
+        this.entries.add(new ItemGeneratorEntry(config));
+    }
+
     private void setupEntries()
     {
         configLoop:

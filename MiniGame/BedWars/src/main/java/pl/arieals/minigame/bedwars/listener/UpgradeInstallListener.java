@@ -34,6 +34,15 @@ public class UpgradeInstallListener implements Listener
     public void onUpgradeInstall(final UpgradeInstallEvent event)
     {
         final IUpgrade upgrade = event.getUpgrade();
+
+        final int currentLevel = event.getTeam().getUpgrades().getUpgradeLevel(upgrade);
+        if (currentLevel >= upgrade.maxLevel())
+        {
+            // jesli mamy juz maksymalny level to anulujemy zakup
+            event.setCancelled(true);
+            return;
+        }
+
         final Integer upgradePrice = this.getPrice(event.getTeam(), upgrade);
         if (upgradePrice == null)
         {

@@ -1,7 +1,9 @@
 package pl.north93.zgame.api.global.messages;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -11,6 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class MessagesBox
 {
+    private static final Map<String, MessagesBox> CACHE = new HashMap<>();
     private static final UTF8Control CONTROL = new UTF8Control();
     private final ClassLoader loader;
     private final String      fileName;
