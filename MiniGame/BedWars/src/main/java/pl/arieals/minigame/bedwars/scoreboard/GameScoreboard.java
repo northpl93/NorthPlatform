@@ -78,7 +78,7 @@ public class GameScoreboard implements IScoreboardLayout
         final DeathMatch deathMatch = arena.getDeathMatch();
         if (deathMatch.getState() == DeathMatchState.NOT_STARTED)
         {
-            final long timeTo = arena.getTimer().calcTimeTo(this.config.getStartDeathMatchAt() * 50, TimeUnit.MILLISECONDS, TimeUnit.SECONDS);
+            final long timeTo = arena.getTimer().calcTimeTo(this.config.getStartDeathMatchAt() * 50L, TimeUnit.MILLISECONDS, TimeUnit.SECONDS);
             final String humanTime = FORMAT.format(LocalDateTime.ofEpochSecond(timeTo, 0, ZoneOffset.UTC));
 
             builder.translated("scoreboard.deathmatch.countdown", humanTime);

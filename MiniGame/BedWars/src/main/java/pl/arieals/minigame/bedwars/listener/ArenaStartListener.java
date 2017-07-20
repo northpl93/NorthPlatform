@@ -11,6 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
+import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
 import pl.arieals.minigame.bedwars.arena.BedDestroyTask;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.generator.GeneratorTask;
@@ -28,8 +29,8 @@ public class ArenaStartListener implements Listener
     {
         final LocalArena arena = event.getArena();
 
-        final BwArenaConfig config = JAXB.unmarshal(arena.getWorld().getResource("BedWarsArena.xml"), BwArenaConfig.class);
-        arena.setArenaData(new BedWarsArena(arena, this.config, config));
+        final BwArenaConfig arenaConfig = JAXB.unmarshal(arena.getWorld().getResource("BedWarsArena.xml"), BwArenaConfig.class);
+        arena.setArenaData(new BedWarsArena(arena, this.config, arenaConfig));
     }
 
     @EventHandler
@@ -42,6 +43,15 @@ public class ArenaStartListener implements Listener
 
         // planujemy task usuwajacy lozka
         arena.getScheduler().runTaskLater(new BedDestroyTask(arena), this.config.getDestroyBedsAt());
+
+        // planujemy uruchomienie deathmatchu
+        arena.getScheduler().runTaskLater(() ->
+        {
+            if (arena.getDeathMatch().getState() == DeathMatchState.NOT_STARTED)
+            {
+                arena.getDeathMatch().activateDeathMatch();
+            }
+        }, this.config.getStartDeathMatchAt());
     }
 
     @Override
