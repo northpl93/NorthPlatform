@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -82,14 +81,16 @@ public class GameEndListener implements Listener
         players.broadcast(this.messages, "end.top_kills", MessageLayout.CENTER);
 
         final ArrayList<BedWarsPlayer> ranking = new ArrayList<>(arenaData.getPlayers());
-        ranking.sort(Comparator.comparing(BedWarsPlayer::getKills));
+        ranking.sort(Comparator.comparing(BedWarsPlayer::getKills).reversed());
         final Iterator<BedWarsPlayer> iterator = ranking.iterator();
         for (int i = 0; i < 3 && iterator.hasNext(); i++)
         {
             final BedWarsPlayer next = iterator.next();
-            Bukkit.broadcastMessage((i + 1) + ". " + next.getBukkitPlayer().getDisplayName());
+            final int place = i + 1;
+            players.broadcast(this.messages, "end.place." + place, MessageLayout.CENTER, next.getBukkitPlayer().getDisplayName(), next.getKills());
         }
 
+        players.broadcast(this.messages, "empty_line");
         players.broadcast(this.messages, "separator");
         players.broadcast(this.messages, "end.rewards", MessageLayout.CENTER);
         for (final Player player : players.getPlayers())
