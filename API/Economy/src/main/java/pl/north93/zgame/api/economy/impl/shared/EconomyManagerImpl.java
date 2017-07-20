@@ -5,6 +5,8 @@ import static pl.north93.zgame.api.global.utils.CollectionUtils.findInCollection
 
 import java.util.UUID;
 
+import com.google.common.base.Preconditions;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -45,12 +47,14 @@ public class EconomyManagerImpl implements IEconomyManager
     @Override
     public CurrencyConfig getCurrency(final String name)
     {
+        Preconditions.checkNotNull(name);
         return findInCollection(this.config.get().getCurrencies(), CurrencyConfig::getName, name);
     }
 
     @Override
     public CurrencyRankingImpl getRanking(final ICurrency currency)
     {
+        Preconditions.checkNotNull(currency);
         return new CurrencyRankingImpl(currency.getName());
     }
 

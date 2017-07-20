@@ -38,6 +38,13 @@ public class GameEndListener implements Listener
     @EventHandler
     public void onTeamEliminate(final TeamEliminatedEvent event)
     {
+        if (event.getArena().getGamePhase() != GamePhase.STARTED)
+        {
+            // sprawdzamy czy mamy dobry gamephase, bo mozemy tu spowodowac przelaczenie areny
+            // z trybu initialising spowrotem do post_game i spowodowac tym samym wyjatek.
+            return;
+        }
+
         final Team team = event.getEliminatedTeam();
 
         for (final Player player : event.getArena().getPlayersManager().getPlayers())

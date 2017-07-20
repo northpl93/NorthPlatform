@@ -1,7 +1,6 @@
 package pl.arieals.api.minigame.server.gamehost.listener;
 
-import static java.text.MessageFormat.format;
-
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -33,12 +32,12 @@ public class ArenaEndListener implements Listener
             return;
         }
         
-        if (event.getArena().getPlayersManager().getPlayers().size() > 0)
+        if (! event.getArena().getPlayersManager().getPlayers().isEmpty())
         {
             return;
         }
 
-        this.apiCore.getLogger().info(format("Arena {0} jest pusta, przelaczanie do INITIALISING...", event.getArena().getId()));
+        this.apiCore.getLogger().log(Level.INFO, "Arena {0} jest pusta, przelaczanie do INITIALISING...", event.getArena().getId());
         Bukkit.getScheduler().runTaskLater(this.apiCore.getPluginMain(), () ->
         {
             event.getArena().setGamePhase(GamePhase.INITIALISING);
