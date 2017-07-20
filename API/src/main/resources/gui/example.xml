@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<gui height="5" title="@Messages.example_gui.title">
+<gui height="5" title="@example_gui.title">
 	<container pos="1,1" size="7,3">
 		<border id="160" data="10" />
 		<background id="160" data="3" />
 		<content>
 			<button pos="0,0">
-				<icon id="35" data="5" name="@Messages.example_gui.ok" />
+				<icon id="35" data="5" name="@example_gui.ok" />
 				<onClick>Accept</onClick>
 			</button>
 			<button pos="1,0">
-				<icon id="35" data="14" name="@Messages.example_gui.exit" />
+				<icon id="35" data="14" name="@example_gui.exit" />
 				<onClick>closeGui</onClick>
 			</button>
 		</content>

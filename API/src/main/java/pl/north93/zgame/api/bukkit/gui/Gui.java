@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import org.bukkit.entity.Player;
-
 import com.google.common.base.Preconditions;
+
+import org.bukkit.entity.Player;
 
 import pl.north93.zgame.api.bukkit.gui.impl.GuiTracker;
 import pl.north93.zgame.api.bukkit.gui.impl.XmlGuiLayoutRegistry;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.utils.Vars;
 
 public class Gui
@@ -19,9 +20,12 @@ public class Gui
     private final GuiContent content;
     
     private Vars<Object> variables;
+
+    private MessagesBox messagesBox;
     
-    protected Gui(String layout)
+    protected Gui(MessagesBox messagesBox, String layout)
     {
+        this.messagesBox = messagesBox;
         if ( layout != null && !layout.isEmpty() )
         {
             content = XmlGuiLayoutRegistry.getLayout(layout).createGuiContent(this);
@@ -30,7 +34,7 @@ public class Gui
         {
             content = new GuiContent(this, 6);
         }
-        
+
         callOnInit();
     }
     
@@ -70,7 +74,12 @@ public class Gui
         return guiTracker.getEntries(this).stream().map(entry -> entry.getPlayer())
                 .collect(Collectors.toCollection(ArrayList::new));
     }
-    
+
+    public final MessagesBox getMessagesBox()
+    {
+        return messagesBox;
+    }
+
     public final GuiContent getContent()
     {
         return content;

@@ -4,11 +4,12 @@ import java.util.Locale;
 
 import org.bukkit.entity.Player;
 
-import pl.north93.zgame.api.global.utils.ClassUtils;
 import pl.north93.zgame.api.global.utils.Vars;
 
 public abstract class TranslatableString
 {
+    public static final TranslatableString EMPTY = new ConstantTranslatableString("");
+
     TranslatableString()
     {
     }
@@ -111,7 +112,7 @@ public abstract class TranslatableString
     
     public abstract String toString();
     
-    public static TranslatableString of(String string)
+    public static TranslatableString of(MessagesBox messagesBox, String string)
     {
         if ( string == null )
         {
@@ -130,7 +131,7 @@ public abstract class TranslatableString
         
         try
         {
-            return MessagesBoxTranslatableString.parse(string, ClassUtils.getCallerClass());
+            return MessagesBoxTranslatableString.parse(string, messagesBox);
         }
         catch ( IllegalArgumentException e )
         {

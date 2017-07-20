@@ -82,7 +82,7 @@ public class GuiIcon
         private int data = 0;
         private int count = 1;
         
-        private TranslatableString name = TranslatableString.of("");
+        private TranslatableString name = TranslatableString.EMPTY;
         private TranslatableString lore;
         
         private boolean glowing;
@@ -111,7 +111,7 @@ public class GuiIcon
         
         public Builder name(TranslatableString name)
         {
-            this.name = name != null ? name : TranslatableString.of("");
+            this.name = name != null ? name : TranslatableString.EMPTY;
             return this;
         }
         

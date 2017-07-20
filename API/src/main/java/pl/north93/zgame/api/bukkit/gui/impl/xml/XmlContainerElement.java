@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import pl.north93.zgame.api.bukkit.gui.GuiContainerElement;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 @XmlRootElement(name = "container")
 public class XmlContainerElement extends XmlGuiElement
@@ -35,13 +36,13 @@ public class XmlContainerElement extends XmlGuiElement
     }
     
     @Override
-    protected GuiContainerElement toGuiElement0()
+    protected GuiContainerElement toGuiElement0(MessagesBox messagesBox)
     {
         String[] split = size.split(",");
         
         GuiContainerElement result = new GuiContainerElement(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
-        result.setBackground(background.toGuiIcon());
-        result.setBorder(border.toGuiIcon());
+        result.setBackground(background.toGuiIcon(messagesBox));
+        result.setBorder(border.toGuiIcon(messagesBox));
         
         return result;
     }

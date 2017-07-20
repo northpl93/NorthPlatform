@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.bukkit.Material;
 
 import pl.north93.zgame.api.bukkit.gui.GuiIcon;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
 @XmlRootElement(name = "icon")
@@ -89,9 +90,9 @@ public class XmlGuiIcon
         this.glowing = glowing;
     }
     
-    public GuiIcon toGuiIcon()
+    public GuiIcon toGuiIcon(MessagesBox messagesBox)
     {
         return GuiIcon.builder().type(Material.getMaterial(id)).data(data).count(count)
-                .name(TranslatableString.of(name)).lore(TranslatableString.of(lore)).glowing(glowing).build();
+                .name(TranslatableString.of(messagesBox, name)).lore(TranslatableString.of(messagesBox, lore)).glowing(glowing).build();
     }
 }

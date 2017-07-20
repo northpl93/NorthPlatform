@@ -1,14 +1,14 @@
 package pl.north93.zgame.api.bukkit.gui.impl.xml;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.GuiContent;
@@ -60,11 +60,11 @@ public class XmlGuiLayout
     public GuiContent createGuiContent(Gui gui)
     {
         GuiContent content = new GuiContent(gui, height);
-        content.setTitle(TranslatableString.of(title));
+        content.setTitle(TranslatableString.of(gui.getMessagesBox(), title));
         
         for ( XmlGuiElement element : this.content )
         {
-            content.addChild(element.toGuiElement());
+            content.addChild(element.toGuiElement(gui.getMessagesBox()));
         }
         
         return content;

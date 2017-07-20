@@ -3,6 +3,7 @@ package pl.north93.zgame.api.bukkit.gui.impl.xml;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import pl.north93.zgame.api.bukkit.gui.GuiButtonElement;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 @XmlRootElement(name = "button")
 public class XmlButtonElement extends XmlGuiElement
@@ -20,8 +21,8 @@ public class XmlButtonElement extends XmlGuiElement
     }
 
     @Override
-    protected GuiButtonElement toGuiElement0()
+    protected GuiButtonElement toGuiElement0(MessagesBox messagesBox)
     {
-        return new GuiButtonElement(icon.toGuiIcon());
+        return new GuiButtonElement(icon.toGuiIcon(messagesBox));
     }
 }
