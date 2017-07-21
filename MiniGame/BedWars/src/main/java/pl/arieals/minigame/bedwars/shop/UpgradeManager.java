@@ -51,7 +51,7 @@ public class UpgradeManager
         this.upgrades.put(upgrade.getClass().getSimpleName(), upgrade);
     }
 
-    @UriHandler("/minigame/bedwars/upgrade/:name/:playerId")
+    @UriHandler("/minigame/bedwars/upgrade/:name/:playerId/buy")
     public boolean upgradeUri(final String calledUri, final Map<String, String> parameters)
     {
         final IUpgrade upgrade = this.upgrades.get(parameters.get("name"));
@@ -73,7 +73,7 @@ public class UpgradeManager
         final Team team = playerData.getTeam();
         final int actualLevel = team.getUpgrades().getUpgradeLevel(upgrade);
 
-        final UpgradeInstallEvent event = this.apiCore.callEvent(new UpgradeInstallEvent(arena, team, player, upgrade, actualLevel + 1));
+        final UpgradeInstallEvent event = this.apiCore.callEvent(new UpgradeInstallEvent(arena, team, player, upgrade, actualLevel + 1, true));
         if (event.isCancelled())
         {
             this.logger.log(INFO, "Upgrade {0} installing cancelled for team {1} on arena {2}", new Object[]{upgrade.getName(), team.getName(), arena.getId()});
@@ -85,9 +85,66 @@ public class UpgradeManager
         return true;
     }
 
+    @UriHandler("/minigame/bedwars/upgrade/:name/:playerId/getNameColor")
+    public String getNameColor(final String calledUri, final Map<String, String> parameters)
+    {
+        final IUpgrade upgrade = this.upgrades.get(parameters.get("name"));
+        final Player player = Bukkit.getPlayer(UUID.fromString(parameters.get("playerId")));
+
+        if (upgrade == null)
+        {
+            this.logger.log(SEVERE, "Not found upgrade with name {0}", parameters.get("name"));
+            return "c";
+        }
+
+        final LocalArena arena = getArena(player);
+        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        if (playerData == null || playerData.getTeam() == null)
+        {
+            this.logger.log(SEVERE, "PlayerData or team is null in getNameColor {0} on arena {1}", new Object[]{playerData, arena.getId()});
+            return "c";
+        }
+        final Team team = playerData.getTeam();
+        final int actualLevel = team.getUpgrades().getUpgradeLevel(upgrade);
+
+        final UpgradeInstallEvent event = this.apiCore.callEvent(new UpgradeInstallEvent(arena, team, player, upgrade, actualLevel + 1, true));
+        if (event.isCancelled())
+        {
+            return "c";
+        }
+
+        return "a";
+    }
+
+    @UriHandler("/minigame/bedwars/upgrade/:name/:playerId/composeLore")
+    public String composeLore(final String calledUri, final Map<String, String> parameters)
+    {
+        final IUpgrade upgrade = this.upgrades.get(parameters.get("name"));
+        final Player player = Bukkit.getPlayer(UUID.fromString(parameters.get("playerId")));
+
+        if (upgrade == null)
+        {
+            this.logger.log(SEVERE, "Not found upgrade with name {0}", parameters.get("name"));
+            return "c";
+        }
+
+        final LocalArena arena = getArena(player);
+        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        if (playerData == null || playerData.getTeam() == null)
+        {
+            this.logger.log(SEVERE, "PlayerData or team is null in getNameColor {0} on arena {1}", new Object[]{playerData, arena.getId()});
+            return "c";
+        }
+        final Team team = playerData.getTeam();
+        final int actualLevel = team.getUpgrades().getUpgradeLevel(upgrade);
+
+        return "chuj kurwa jebac to gui";
+    }
+
     @Override
     public String toString()
     {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("upgrades", this.upgrades).toString();
     }
 }
+

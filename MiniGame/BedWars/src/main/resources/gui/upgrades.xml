@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<gui height="5" title="@gui.upgrades_title">
-	<container pos="1,1" size="7,3">
-		<border id="160" data="10" />
-		<background id="160" data="3" />
+<gui height="3" title="@gui.upgrades_title">
+	<container pos="1,1" size="7,1">
+        <border id="0" data="0" />
+        <background id="0" data="0" />
 		<content>
-			<button pos="0,0">
-				<icon id="61" data="0" name="@upgrade.BaseGeneratorUpgrade" />
-				<onClick>northplatform://minigame/bedwars/upgrade/BaseGeneratorUpgrade/$playerId</onClick>
-			</button>
+            <button pos="0,0">
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/upgrade/BaseGeneratorUpgrade/$playerId/getNameColor"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/upgrade/BaseGeneratorUpgrade/$playerId/composeLore"/>
+                <icon id="61" data="0" name="@upgrade_gui.BaseGeneratorUpgrade.name$itemNameColor" lore="@gui.upgrade_lore$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/upgrade/BaseGeneratorUpgrade/$playerId/buy</onClick>
+            </button>
+
 			<button pos="1,0">
-				<icon id="285" data="0" name="@upgrade.ToolsHaste" />
-				<onClick>northplatform://minigame/bedwars/upgrade/ToolsHaste/$playerId</onClick>
+				<variable name="itemNameColor" value="northplatform://minigame/bedwars/upgrade/ToolsHaste/$playerId/getNameColor"/>
+				<variable name="itemLore" value="northplatform://minigame/bedwars/upgrade/ToolsHaste/$playerId/composeLore"/>
+				<icon id="285" data="0" name="@upgrade_gui.ToolsHaste.name$itemNameColor" lore="@gui.upgrade_lore$itemLore"/>
+				<onClick>northplatform://minigame/bedwars/upgrade/ToolsHaste/$playerId/buy</onClick>
 			</button>
+
+            <button pos="2,0">
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/upgrade/RoadOfWarrior/$playerId/getNameColor"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/upgrade/RoadOfWarrior/$playerId/composeLore"/>
+                <icon id="267" data="0" name="@upgrade_gui.RoadOfWarrior.name$itemNameColor" lore="@gui.upgrade_lore$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/upgrade/ToolsHaste/$playerId/buy</onClick>
+            </button>
+
+
 		</content>
 	</container>
 </gui>

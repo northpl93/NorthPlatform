@@ -19,15 +19,17 @@ public class UpgradeInstallEvent extends ArenaEvent implements Cancellable
     private final Player   issuer;
     private final IUpgrade upgrade;
     private final int      level;
+    private final boolean  isInstalling;
     private       boolean  cancelled;
 
-    public UpgradeInstallEvent(final LocalArena arena, final Team team, final Player issuer, final IUpgrade upgrade, final int level)
+    public UpgradeInstallEvent(final LocalArena arena, final Team team, final Player issuer, final IUpgrade upgrade, final int level, final boolean isInstalling)
     {
         super(arena);
         this.team = team;
         this.issuer = issuer;
         this.upgrade = upgrade;
         this.level = level;
+        this.isInstalling = isInstalling;
     }
 
     public Team getTeam()
@@ -48,6 +50,11 @@ public class UpgradeInstallEvent extends ArenaEvent implements Cancellable
     public int getLevel()
     {
         return this.level;
+    }
+
+    public boolean isInstalling()
+    {
+        return this.isInstalling;
     }
 
     @Override
@@ -76,6 +83,6 @@ public class UpgradeInstallEvent extends ArenaEvent implements Cancellable
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("team", this.team).append("issuer", this.issuer).append("upgrade", this.upgrade).append("level", this.level).append("cancelled", this.cancelled).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("team", this.team).append("issuer", this.issuer).append("upgrade", this.upgrade).append("level", this.level).append("isInstalling", this.isInstalling).append("cancelled", this.cancelled).toString();
     }
 }

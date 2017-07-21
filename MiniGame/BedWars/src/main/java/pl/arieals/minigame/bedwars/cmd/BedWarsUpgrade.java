@@ -33,11 +33,11 @@ public class BedWarsUpgrade extends NorthCommand
 
         if (args.asString(0).equalsIgnoreCase("gui"))
         {
-            final UpgradesGui upgradesGui = new UpgradesGui();
+            final UpgradesGui upgradesGui = new UpgradesGui(player);
             upgradesGui.open(player);
         }
 
-        final String call = format("/minigame/bedwars/upgrade/{0}/{1}", args.asString(0), player.getUniqueId());
+        final String call = format("/minigame/bedwars/upgrade/{0}/{1}/buy", args.asString(0), player.getUniqueId());
         sender.sendRawMessage("&aInvoking {0}...", call);
         this.uriManager.call(call);
     }

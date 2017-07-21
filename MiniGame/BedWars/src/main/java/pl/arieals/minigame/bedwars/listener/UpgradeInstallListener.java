@@ -53,7 +53,10 @@ public class UpgradeInstallListener implements Listener
         final PlayerInventory inventory = event.getIssuer().getInventory();
         if (inventory.contains(Material.DIAMOND, upgradePrice))
         {
-            inventory.removeItem(new ItemStack(Material.DIAMOND, upgradePrice));
+            if (event.isInstalling())
+            {
+                inventory.removeItem(new ItemStack(Material.DIAMOND, upgradePrice));
+            }
         }
         else
         {
@@ -77,8 +80,12 @@ public class UpgradeInstallListener implements Listener
     @EventHandler(priority = MONITOR, ignoreCancelled = true)
     public void announceUpgrade(final UpgradeInstallEvent event)
     {
-        final Player issuer = event.getIssuer();
+        if (! event.isInstalling())
+        {
+            return;
+        }
 
+        final Player issuer = event.getIssuer();
         for (final Player player : event.getTeam().getPlayers())
         {
             final String messageKey = "upgrade." + event.getUpgrade().getName();
