@@ -5,9 +5,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import java.util.List;
+
 import org.bukkit.Material;
 
 import pl.north93.zgame.api.bukkit.gui.GuiIcon;
+import pl.north93.zgame.api.bukkit.gui.impl.RenderContext;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
@@ -90,9 +93,11 @@ public class XmlGuiIcon
         this.glowing = glowing;
     }
     
-    public GuiIcon toGuiIcon(MessagesBox messagesBox)
+    public GuiIcon toGuiIcon(RenderContext renderContext, List<XmlVariable> variables)
     {
+        final MessagesBox messages = renderContext.getMessagesBox();
         return GuiIcon.builder().type(Material.getMaterial(id)).data(data).count(count)
-                .name(TranslatableString.of(messagesBox, name)).lore(TranslatableString.of(messagesBox, lore)).glowing(glowing).build();
+                .name(TranslatableString.of(messages, name)).lore(TranslatableString.of(messages, lore))
+                      .glowing(glowing).variables(variables).build();
     }
 }

@@ -1,26 +1,18 @@
 package pl.north93.zgame.api.bukkit.gui.impl;
 
-import static java.text.MessageFormat.format;
-
-
 import java.lang.reflect.Method;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.logging.Level;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
-import org.apache.commons.lang3.StringUtils;
 import org.spigotmc.SneakyThrow;
 
 import pl.north93.zgame.api.bukkit.gui.ClickEvent;
 import pl.north93.zgame.api.bukkit.gui.ClickHandler;
 import pl.north93.zgame.api.bukkit.gui.Gui;
-import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.uri.IUriManager;
 import pl.north93.zgame.api.global.utils.Vars;
@@ -100,19 +92,6 @@ public class ClickHandlerManager
                                          .and("$playerName", event.getWhoClicked().getName())
                                          .and(gui.getVariables());
 
-        String finalUri = clickHandlerName;
-        for (final Map.Entry<String, Object> stringObjectEntry : context.asMap().entrySet())
-        {
-            finalUri = StringUtils.replace(clickHandlerName, stringObjectEntry.getKey(), stringObjectEntry.getValue().toString());
-        }
-
-        try
-        {
-            this.uriManager.call(new URI(finalUri));
-        }
-        catch (final URISyntaxException e)
-        {
-            API.getLogger().log(Level.SEVERE, format("Failed to create a uri {0}", finalUri), e);
-        }
+        NorthUriUtils.getInstance().call(clickHandlerName, context);
     }
 }

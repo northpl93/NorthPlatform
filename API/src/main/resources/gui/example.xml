@@ -5,6 +5,7 @@
 		<background id="160" data="3" />
 		<content>
 			<button pos="0,0">
+				<variable name="example2" value="@test.message.key"/>
 				<icon id="35" data="5" name="@example_gui.ok" />
 				<onClick>Accept</onClick>
 			</button>

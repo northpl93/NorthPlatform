@@ -12,11 +12,12 @@ import java.util.List;
 
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.GuiContent;
+import pl.north93.zgame.api.bukkit.gui.impl.RenderContext;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
 @XmlRootElement(name = "gui")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({XmlContainerElement.class, XmlButtonElement.class})
+@XmlSeeAlso({XmlContainerElement.class, XmlButtonElement.class, XmlConditionalGuiElement.class})
 public class XmlGuiLayout
 {
     @XmlAttribute
@@ -61,10 +62,12 @@ public class XmlGuiLayout
     {
         GuiContent content = new GuiContent(gui, height);
         content.setTitle(TranslatableString.of(gui.getMessagesBox(), title));
+
+        final RenderContext context = new RenderContext(gui.getMessagesBox(), gui.getVariables());
         
         for ( XmlGuiElement element : this.content )
         {
-            content.addChild(element.toGuiElement(gui.getMessagesBox()));
+            content.addChild(element.toGuiElement(context));
         }
         
         return content;

@@ -3,10 +3,10 @@ package pl.north93.zgame.api.bukkit.gui.impl.xml;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import pl.north93.zgame.api.bukkit.gui.GuiButtonElement;
-import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.zgame.api.bukkit.gui.impl.RenderContext;
 
 @XmlRootElement(name = "button")
-public class XmlButtonElement extends XmlGuiElement
+public class XmlButtonElement extends XmlConditionalGuiElement
 {
     private XmlGuiIcon icon;
     
@@ -21,8 +21,12 @@ public class XmlButtonElement extends XmlGuiElement
     }
 
     @Override
-    protected GuiButtonElement toGuiElement0(MessagesBox messagesBox)
+    protected GuiButtonElement toGuiElement0(RenderContext context)
     {
-        return new GuiButtonElement(icon.toGuiIcon(messagesBox));
+        if (! this.shouldShow(context))
+        {
+            return null;
+        }
+        return new GuiButtonElement(icon.toGuiIcon(context, this.getVariables()));
     }
 }

@@ -85,6 +85,12 @@ public class ItemStackBuilder
     public ItemStack build()
     {
         final ItemStack itemStack = new ItemStack(this.material, this.amount, this.data);
+        if (this.material == Material.AIR)
+        {
+            // w powietrzu nic wiecej nie ustawimy...
+            return itemStack;
+        }
+
         final ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(this.name);
         itemMeta.setLore(this.lore);

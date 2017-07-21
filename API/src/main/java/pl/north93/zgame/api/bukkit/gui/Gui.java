@@ -8,6 +8,8 @@ import com.google.common.base.Preconditions;
 
 import org.bukkit.entity.Player;
 
+import org.apache.commons.lang3.StringUtils;
+
 import pl.north93.zgame.api.bukkit.gui.impl.GuiTracker;
 import pl.north93.zgame.api.bukkit.gui.impl.XmlGuiLayoutRegistry;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -27,7 +29,7 @@ public class Gui
     {
         this.variables = Vars.empty();
         this.messagesBox = messagesBox;
-        if ( layout != null && !layout.isEmpty() )
+        if ( StringUtils.isNotEmpty(layout) )
         {
             content = XmlGuiLayoutRegistry.getLayout(layout).createGuiContent(this);
         }

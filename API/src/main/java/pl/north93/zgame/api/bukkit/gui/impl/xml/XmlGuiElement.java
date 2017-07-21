@@ -11,14 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.north93.zgame.api.bukkit.gui.GuiElement;
-import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.zgame.api.bukkit.gui.impl.RenderContext;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class XmlGuiElement
 {
     @XmlAttribute(name = "pos")
     private String position = "0,0";
-    
+
+    @XmlElement(name = "variable")
+    private List<XmlVariable> variables = new ArrayList<>();
+
     @XmlElement
     private List<String> onClick = new ArrayList<>();
     
@@ -26,9 +29,9 @@ public abstract class XmlGuiElement
     @XmlAnyElement(lax = true)
     private List<XmlGuiElement> content = new ArrayList<>();
     
-    public GuiElement toGuiElement(MessagesBox messagesBox)
+    public GuiElement toGuiElement(final RenderContext context)
     {
-        GuiElement element = toGuiElement0(messagesBox);
+        GuiElement element = toGuiElement0(context);
         
         String[] split = position.split(",");
         element.setPosition(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
@@ -37,14 +40,24 @@ public abstract class XmlGuiElement
         {
             element.getClickHandlers().add(clickHandler);
         }
-        
+
         for ( XmlGuiElement child : content )
         {
-            element.addChild(child.toGuiElement(messagesBox));
+            final GuiElement convertedChild = child.toGuiElement(context);
+            if ( convertedChild == null )
+            {
+                continue;
+            }
+            element.addChild(convertedChild);
         }
         
         return element;
     }
-    
-    protected abstract GuiElement toGuiElement0(MessagesBox messagesBox);
+
+    public List<XmlVariable> getVariables()
+    {
+        return this.variables;
+    }
+
+    protected abstract GuiElement toGuiElement0(RenderContext context);
 }

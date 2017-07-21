@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlVariable;
 import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 import pl.north93.zgame.api.global.utils.Vars;
@@ -19,16 +20,19 @@ public class GuiIcon
     
     private final TranslatableString name;
     private final TranslatableString lore;
-    
+
+    private final List<XmlVariable> variables;
+
     private final boolean glowing;
-    
-    private GuiIcon(Material type, int data, int count, TranslatableString name, TranslatableString lore, boolean glow)
+
+    private GuiIcon(Material type, int data, int count, TranslatableString name, TranslatableString lore, final List<XmlVariable> variables, boolean glow)
     {
         this.type = type;
         this.data = data;
         this.count = count;
         this.name = name;
         this.lore = lore;
+        this.variables = variables;
         this.glowing = glow;
     }
     
@@ -56,14 +60,25 @@ public class GuiIcon
     {
         return lore;
     }
-    
+
+    public List<XmlVariable> getVariables()
+    {
+        return this.variables;
+    }
+
     public boolean isGlowing()
     {
         return glowing;
     }
     
-    public ItemStack toItemStack(Player player, Vars<Object> parameters)
+    public ItemStack toItemStack(Gui gui, Player player, Vars<Object> parameters)
     {
+        // przetwarzamy dodane zmienne z xmla
+        for (final XmlVariable xmlVariable : this.variables)
+        {
+            parameters = parameters.and(xmlVariable.process(gui, parameters));
+        }
+
         List<String> lore = this.lore != null ? Arrays.asList(this.lore.getValue(player.spigot().getLocale(), parameters).split("\n")) : Arrays.asList();
         String name = this.name.getValue(player.spigot().getLocale(), parameters);
         
@@ -84,6 +99,8 @@ public class GuiIcon
         
         private TranslatableString name = TranslatableString.EMPTY;
         private TranslatableString lore;
+
+        private List<XmlVariable> variables;
         
         private boolean glowing;
         
@@ -126,10 +143,16 @@ public class GuiIcon
             this.glowing = glowing;
             return this;
         }
-        
+
+        public Builder variables(final List<XmlVariable> variables)
+        {
+            this.variables = variables;
+            return this;
+        }
+
         public GuiIcon build()
         {
-            return new GuiIcon(type, data, count, name, lore, glowing);
+            return new GuiIcon(type, data, count, name, lore, variables, glowing);
         }
     }
 }
