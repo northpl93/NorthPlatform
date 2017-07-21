@@ -72,7 +72,7 @@ public class GameEndListener implements Listener
 
         for (final Team team : arenaData.getTeams())
         {
-            final TranslatableString teamNameKey = TranslatableString.of("@BedWars.team.scoreboard." + team.getName());
+            final TranslatableString teamNameKey = TranslatableString.of(this.messages, "@team.scoreboard." + team.getName());
             final List<String> nicks = this.playersList(team);
 
             for (final Player player : team.getPlayers())

@@ -3,6 +3,7 @@ package pl.arieals.minigame.bedwars.listener;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -32,7 +33,7 @@ public class PlayerItemsListener implements Listener
     @Inject @Messages("BedWars")
     private MessagesBox messages;
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onInventoryClick(final InventoryClickEvent event)
     {
         final InventoryType.SlotType slotType = event.getSlotType();

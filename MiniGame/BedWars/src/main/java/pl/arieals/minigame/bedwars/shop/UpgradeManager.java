@@ -1,5 +1,8 @@
 package pl.arieals.minigame.bedwars.shop;
 
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
@@ -7,7 +10,6 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -19,9 +21,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
-import pl.arieals.minigame.bedwars.shop.upgrade.IUpgrade;
 import pl.arieals.minigame.bedwars.cfg.BwConfig;
 import pl.arieals.minigame.bedwars.event.UpgradeInstallEvent;
+import pl.arieals.minigame.bedwars.shop.upgrade.IUpgrade;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
@@ -57,7 +59,7 @@ public class UpgradeManager
 
         if (upgrade == null)
         {
-            this.logger.log(Level.SEVERE, "Not found upgrade with name {0}", parameters.get("name"));
+            this.logger.log(SEVERE, "Not found upgrade with name {0}", parameters.get("name"));
             return false;
         }
 
@@ -65,7 +67,7 @@ public class UpgradeManager
         final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
         if (playerData == null || playerData.getTeam() == null)
         {
-            this.logger.log(Level.WARNING, "PlayerData or team is null in upgradeUri {0}", playerData);
+            this.logger.log(SEVERE, "PlayerData or team is null in upgradeUri {0} on arena {1}", new Object[]{playerData, arena.getId()});
             return false;
         }
         final Team team = playerData.getTeam();
@@ -74,10 +76,11 @@ public class UpgradeManager
         final UpgradeInstallEvent event = this.apiCore.callEvent(new UpgradeInstallEvent(arena, team, player, upgrade, actualLevel + 1));
         if (event.isCancelled())
         {
+            this.logger.log(INFO, "Upgrade {0} installing cancelled for team {1} on arena {2}", new Object[]{upgrade.getName(), team.getName(), arena.getId()});
             return false;
         }
 
-        this.logger.log(Level.INFO, "Installing upgrade {0} for team {1} in arena {2}", new Object[]{upgrade.getName(), team.getName(), arena.getId()});
+        this.logger.log(INFO, "Installing upgrade {0} for team {1} in arena {2}", new Object[]{upgrade.getName(), team.getName(), arena.getId()});
         team.getUpgrades().installUpgrade(upgrade);
         return true;
     }
