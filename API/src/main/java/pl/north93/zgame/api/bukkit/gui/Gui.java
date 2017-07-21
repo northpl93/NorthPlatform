@@ -25,6 +25,7 @@ public class Gui
     
     protected Gui(MessagesBox messagesBox, String layout)
     {
+        this.variables = Vars.empty();
         this.messagesBox = messagesBox;
         if ( layout != null && !layout.isEmpty() )
         {

@@ -11,8 +11,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.IBeanContext;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
+import pl.north93.zgame.api.global.component.annotations.bean.Named;
 import pl.north93.zgame.api.global.uri.IUriCallHandler;
 import pl.north93.zgame.api.global.uri.IUriManager;
 import pl.north93.zgame.api.global.uri.UriHandler;
@@ -26,7 +26,7 @@ public class UriManagerImpl extends Component implements IUriManager
     @Override
     public void register(final String pattern, final IUriCallHandler handler)
     {
-        this.getLogger().log(Level.INFO, "Registering new URI pattern. ({0})", pattern);
+        this.getLogger().log(Level.INFO, "[UriManagerImpl] Registering new URI pattern. ({0})", pattern);
         this.router.pattern(pattern, handler);
     }
 
@@ -42,6 +42,7 @@ public class UriManagerImpl extends Component implements IUriManager
         final Routed routed = this.router.route(calledUri);
         if (routed == null)
         {
+            this.getLogger().log(Level.WARNING, "[UriManagerImpl] Not found route for {0}", uri);
             return null;
         }
 
@@ -64,6 +65,7 @@ public class UriManagerImpl extends Component implements IUriManager
         final Routed routed = this.router.route(calledUri);
         if (routed == null)
         {
+            this.getLogger().log(Level.WARNING, "[UriManagerImpl] Not found route for {0}", uri);
             return null;
         }
 
@@ -71,17 +73,17 @@ public class UriManagerImpl extends Component implements IUriManager
     }
 
     @Aggregator(UriHandler.class)
-    private void handleAnnotation(final IBeanContext context, final Method method, final UriHandler handler)
+    private void handleAnnotation(final @Named("MethodOwner") Object methodOwner, final Method method, final UriHandler handler)
     {
         this.register(handler.value(), (a1, a2) ->
         {
             try
             {
-                return method.invoke(context.getBean(method.getDeclaringClass()), a1, a2);
+                return method.invoke(methodOwner, a1, a2);
             }
             catch (final Exception e)
             {
-                this.getLogger().log(Level.SEVERE, format("Cant execute {0} for uri {1}", method, handler.value()), e);
+                this.getLogger().log(Level.SEVERE, format("[UriManagerImpl] Cant execute {0} for uri {1}", method, handler.value()), e);
                 return null;
             }
         });

@@ -1,8 +1,14 @@
 package pl.north93.zgame.api.bukkit.gui.impl;
 
+import static java.text.MessageFormat.format;
+
+
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.logging.Level;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
@@ -14,6 +20,7 @@ import org.spigotmc.SneakyThrow;
 import pl.north93.zgame.api.bukkit.gui.ClickEvent;
 import pl.north93.zgame.api.bukkit.gui.ClickHandler;
 import pl.north93.zgame.api.bukkit.gui.Gui;
+import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.uri.IUriManager;
 import pl.north93.zgame.api.global.utils.Vars;
@@ -99,6 +106,13 @@ public class ClickHandlerManager
             finalUri = StringUtils.replace(clickHandlerName, stringObjectEntry.getKey(), stringObjectEntry.getValue().toString());
         }
 
-        this.uriManager.call(finalUri);
+        try
+        {
+            this.uriManager.call(new URI(finalUri));
+        }
+        catch (final URISyntaxException e)
+        {
+            API.getLogger().log(Level.SEVERE, format("Failed to create a uri {0}", finalUri), e);
+        }
     }
 }

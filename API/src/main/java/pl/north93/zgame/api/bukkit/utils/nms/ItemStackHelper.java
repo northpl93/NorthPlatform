@@ -37,6 +37,10 @@ public final class ItemStackHelper
     public static NBTTagCompound getPersistentStorage(final org.bukkit.inventory.ItemStack bukkitStack, final String storageName, final boolean create)
     {
         final ItemStack handle = getHandle(bukkitStack);
+        if (handle == null)
+        {
+            return null;
+        }
         return handle.a(storageName, create); // if(this.tag != null && this.tag.hasKeyOfType(s, 10)) {
     }
 }

@@ -42,7 +42,7 @@ public final class Vars <T>
         Preconditions.checkArgument(key != null, "key cannot be null");
         Preconditions.checkArgument(value != null, "value cannot be null");
         
-        Map<String, T> newMap = new HashMap<>(vars.size());
+        Map<String, T> newMap = new HashMap<>(this.vars);
         newMap.put(key, value);
         return new Vars<T>(newMap);
     }
@@ -51,7 +51,7 @@ public final class Vars <T>
     {
         Preconditions.checkArgument(vars != null);
         
-        Map<String, T> newMap = new HashMap<>(vars.size());
+        Map<String, T> newMap = new HashMap<>(this.vars);
         newMap.putAll(vars.vars);
         return new Vars<T>(newMap);
     }
@@ -60,7 +60,7 @@ public final class Vars <T>
     {
         Preconditions.checkArgument(key != null, "key cannot be null");
         
-        Map<String, T> newMap = new HashMap<>(vars.size());
+        Map<String, T> newMap = new HashMap<>(this.vars);
         newMap.remove(key);
         return new Vars<T>(newMap);
     }
@@ -69,7 +69,7 @@ public final class Vars <T>
     {
         Preconditions.checkArgument(value != null, "value cannot be null");
         
-        Map<String, T> newMap = new HashMap<>(vars.size());
+        Map<String, T> newMap = new HashMap<>(this.vars);
         newMap.values().removeIf(v -> v.equals(value));
         return new Vars<T>(newMap);
     }
