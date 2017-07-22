@@ -83,7 +83,7 @@ public class GuiIcon
         String name = this.name.getValue(player.spigot().getLocale(), parameters);
         
         return new ItemStackBuilder().material(type).data(data).amount(count).name(!name.isEmpty() ? name : "§0")
-                .lore(lore).build();
+                .lore(lore).hideAttributes().build();
     }
     
     public static Builder builder()

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -24,6 +25,7 @@ public class ItemStackBuilder
     private String           name;
     private List<String>     lore;
     private List<XmlEnchant> enchantments;
+    private boolean          hideAttributes;
 
     public ItemStackBuilder material(final Material material)
     {
@@ -82,6 +84,12 @@ public class ItemStackBuilder
         return this.enchant(new XmlEnchant(enchantment, level));
     }
 
+    public ItemStackBuilder hideAttributes()
+    {
+        this.hideAttributes = true;
+        return this;
+    }
+
     public ItemStack build()
     {
         final ItemStack itemStack = new ItemStack(this.material, this.amount, this.data);
@@ -94,6 +102,10 @@ public class ItemStackBuilder
         final ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(this.name);
         itemMeta.setLore(this.lore);
+        if (this.hideAttributes)
+        {
+            itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        }
         itemStack.setItemMeta(itemMeta);
         if (this.enchantments != null)
         {
