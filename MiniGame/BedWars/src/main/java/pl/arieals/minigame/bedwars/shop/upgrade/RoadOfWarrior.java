@@ -10,12 +10,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
+import org.diorite.utils.math.DioriteMathUtils;
+
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.cfg.BwConfig;
 import pl.arieals.minigame.bedwars.event.ItemBuyEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class RoadOfWarrior implements IUpgrade, Listener
 {
@@ -42,6 +45,13 @@ public class RoadOfWarrior implements IUpgrade, Listener
                 this.apply(itemStack, level);
             }
         }
+    }
+
+    @Override
+    public String getLoreDescription(final MessagesBox messagesBox, final Team team, final Player player)
+    {
+        final String sharpnessLevel = DioriteMathUtils.toRoman(Math.min(team.getUpgrades().getUpgradeLevel(this) + 1, this.maxLevel()));
+        return messagesBox.getMessage(player.spigot().getLocale(), "upgrade_gui.RoadOfWarrior.lore", sharpnessLevel);
     }
 
     @EventHandler
@@ -73,8 +83,7 @@ public class RoadOfWarrior implements IUpgrade, Listener
 
     private void apply(final ItemStack itemStack, final int level)
     {
-        final int enchantLevel = this.bwConfig.getTeamSize() == 4 ? 3 : level;
-        itemStack.addEnchantment(Enchantment.DAMAGE_ALL, enchantLevel);
+        itemStack.addEnchantment(Enchantment.DAMAGE_ALL, level);
     }
 
     @Override
@@ -82,7 +91,7 @@ public class RoadOfWarrior implements IUpgrade, Listener
     {
         if (this.bwConfig.getTeamSize() == 4)
         {
-            return 1;
+            return 3;
         }
         return 2;
     }

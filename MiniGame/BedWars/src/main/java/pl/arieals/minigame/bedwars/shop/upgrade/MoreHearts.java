@@ -30,16 +30,16 @@ public class MoreHearts implements IUpgrade
 
     private double calculateMaxHp(final int level)
     {
-        if (this.bwConfig.getTeamSize() == 4)
-        {
-            return BASE_PLAYER_HEALTH + 4 + (level * 2);
-        }
         return BASE_PLAYER_HEALTH + (level * 2);
     }
 
     @Override
     public int maxLevel()
     {
+        if (this.bwConfig.getTeamSize() == 4)
+        {
+            return 4;
+        }
         return 2;
     }
 

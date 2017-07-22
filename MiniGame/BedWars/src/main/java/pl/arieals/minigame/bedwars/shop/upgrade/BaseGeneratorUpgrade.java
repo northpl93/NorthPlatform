@@ -3,6 +3,8 @@ package pl.arieals.minigame.bedwars.shop.upgrade;
 import static org.bukkit.Material.EMERALD;
 
 
+import org.bukkit.entity.Player;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,6 +15,7 @@ import pl.arieals.minigame.bedwars.arena.generator.GeneratorController;
 import pl.arieals.minigame.bedwars.cfg.BwConfig;
 import pl.arieals.minigame.bedwars.cfg.BwGeneratorItemConfig;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class BaseGeneratorUpgrade implements IUpgrade
 {
@@ -27,10 +30,17 @@ public class BaseGeneratorUpgrade implements IUpgrade
         final BedWarsArena arenaData = arena.getArenaData();
         final GeneratorController generator = this.findGenerator(arenaData, team);
 
-        if (this.config.getTeamSize() == 4)
+        if (level == 1 || level == 2)
         {
-            // ulepszenia dla squad
-            if (level == 1)
+            // ulepszenia normalne
+            for (final GeneratorController.ItemGeneratorEntry entry : generator.getEntries())
+            {
+                entry.speedup(from -> from + 1);
+            }
+        }
+        else
+        {
+            if (level == 3)
             {
                 generator.addNewEntry(emeralds1);
             }
@@ -38,19 +48,31 @@ public class BaseGeneratorUpgrade implements IUpgrade
             {
                 generator.addNewEntry(emeralds2);
             }
-            return;
         }
+    }
 
-        // ulepszenia normalne
-        for (final GeneratorController.ItemGeneratorEntry entry : generator.getEntries())
+    @Override
+    public String getLoreDescription(final MessagesBox messagesBox, final Team team, final Player player)
+    {
+        final int nextLevel = team.getUpgrades().getUpgradeLevel(this) + 1;
+        if (nextLevel < 3)
         {
-            entry.speedup(from -> from + 1);
+            return messagesBox.getMessage(player.spigot().getLocale(), "upgrade_gui.BaseGeneratorUpgrade.lore");
         }
+        else if (nextLevel == 3)
+        {
+            return messagesBox.getMessage(player.spigot().getLocale(), "upgrade_gui.BaseGeneratorUpgrade.lore3");
+        }
+        return messagesBox.getMessage(player.spigot().getLocale(), "upgrade_gui.BaseGeneratorUpgrade.lore4");
     }
 
     @Override
     public int maxLevel()
     {
+        if (this.config.getTeamSize() == 4)
+        {
+            return 4;
+        }
         return 2;
     }
 

@@ -3,8 +3,6 @@ package pl.arieals.minigame.bedwars.listener;
 import static org.bukkit.event.EventPriority.MONITOR;
 
 
-import java.util.Map;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,7 +13,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.cfg.BwConfig;
 import pl.arieals.minigame.bedwars.event.UpgradeInstallEvent;
 import pl.arieals.minigame.bedwars.shop.upgrade.IUpgrade;
@@ -43,7 +40,7 @@ public class UpgradeInstallListener implements Listener
             return;
         }
 
-        final Integer upgradePrice = this.getPrice(event.getTeam(), upgrade);
+        final Integer upgradePrice = upgrade.getPrice(this.config, event.getTeam());
         if (upgradePrice == null)
         {
             event.setCancelled(true);
@@ -62,19 +59,6 @@ public class UpgradeInstallListener implements Listener
         {
             event.setCancelled(true);
         }
-    }
-
-    private Integer getPrice(final Team team, final IUpgrade upgrade)
-    {
-        final Map<String, Integer> upgrades = this.config.getUpgrades();
-
-        if (upgrades.containsKey(upgrade.getName()))
-        {
-            return upgrades.get(upgrade.getName());
-        }
-
-        final int nextLevel = team.getUpgrades().getUpgradeLevel(upgrade) + 1;
-        return upgrades.get(upgrade.getName() + "_" + nextLevel);
     }
 
     @EventHandler(priority = MONITOR, ignoreCancelled = true)

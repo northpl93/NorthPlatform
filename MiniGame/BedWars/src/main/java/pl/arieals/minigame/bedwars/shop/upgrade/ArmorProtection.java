@@ -6,16 +6,23 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
+import org.diorite.utils.math.DioriteMathUtils;
+
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.Team;
+import pl.arieals.minigame.bedwars.cfg.BwConfig;
 import pl.arieals.minigame.bedwars.event.ItemBuyEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class ArmorProtection implements IUpgrade, Listener
 {
+    private final BwConfig bwConfig;
+
     // system agregacji wspiera SmartExecutora, wiec ten konstruktor zadziala
-    private ArmorProtection(final BukkitApiCore apiCore)
+    private ArmorProtection(final BukkitApiCore apiCore, final BwConfig bwConfig)
     {
+        this.bwConfig = bwConfig;
         apiCore.registerEvents(this);
     }
 
@@ -34,6 +41,13 @@ public class ArmorProtection implements IUpgrade, Listener
                 itemStack.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, level);
             }
         }
+    }
+
+    @Override
+    public String getLoreDescription(final MessagesBox messagesBox, final Team team, final Player player)
+    {
+        final String sharpnessLevel = DioriteMathUtils.toRoman(Math.min(team.getUpgrades().getUpgradeLevel(this) + 1, this.maxLevel()));
+        return messagesBox.getMessage(player.spigot().getLocale(), "upgrade_gui.ArmorProtection.lore", sharpnessLevel);
     }
 
     @EventHandler
@@ -66,6 +80,10 @@ public class ArmorProtection implements IUpgrade, Listener
     @Override
     public int maxLevel()
     {
+        if (this.bwConfig.getTeamSize() == 4)
+        {
+            return 4;
+        }
         return 2;
     }
 }

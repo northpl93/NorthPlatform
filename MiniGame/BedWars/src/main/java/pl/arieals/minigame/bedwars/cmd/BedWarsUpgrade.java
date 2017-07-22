@@ -35,6 +35,7 @@ public class BedWarsUpgrade extends NorthCommand
         {
             final UpgradesGui upgradesGui = new UpgradesGui(player);
             upgradesGui.open(player);
+            return;
         }
 
         final String call = format("/minigame/bedwars/upgrade/{0}/{1}/buy", args.asString(0), player.getUniqueId());
