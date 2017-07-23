@@ -3,14 +3,7 @@ package pl.north93.zgame.api.bukkit.gui;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
-
 import com.google.common.base.Preconditions;
-
-import pl.north93.zgame.api.global.utils.Vars;
 
 public class GuiCanvas
 {
