@@ -176,7 +176,6 @@ public class UpgradeManager
         if (currentGui instanceof UpgradesGui)
         {
             currentGui.markDirty();
-            this.guiTracker.updateDirtyGuis();
         }
     }
 

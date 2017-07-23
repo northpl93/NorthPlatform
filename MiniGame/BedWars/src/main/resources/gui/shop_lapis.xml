@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="3" title="@gui.shop_main_title">
+    <container pos="1,1" size="7,1">
+        <border id="0" data="0" />
+        <background id="0" data="0" />
+        <content>
+
+        </content>
+    </container>
+</gui>

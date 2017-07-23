@@ -92,13 +92,23 @@ public class ShopManager
         return craftItemStack;
     }
 
-    @UriHandler("/minigame/bedwars/shop/:name/:playerId")
+    @UriHandler("/minigame/bedwars/shop/buy/:name/:playerId")
     public boolean restHandler(final String calledUri, final Map<String, String> parameters)
     {
         final String name = parameters.get("name");
         final Player player = Bukkit.getPlayer(UUID.fromString(parameters.get("playerId")));
 
         return this.buy(player, name);
+    }
+
+    public BwShopEntry getShopEntry(final String name)
+    {
+        final BwShopEntry entry = findInCollection(this.config.getShopEntries(), BwShopEntry::getInternalName, name);
+        if (entry == null)
+        {
+            throw new IllegalArgumentException(format("Shop entry with specified name {0} doesn't exists", name));
+        }
+        return entry;
     }
 
     /**
@@ -109,12 +119,7 @@ public class ShopManager
      */
     public boolean buy(final Player player, final String name)
     {
-        final BwShopEntry entry = findInCollection(this.config.getShopEntries(), BwShopEntry::getInternalName, name);
-        if (entry == null)
-        {
-            throw new IllegalArgumentException(format("Shop entry with specified name {0} doesn't exists", name));
-        }
-
+        final BwShopEntry entry = this.getShopEntry(name);
         final ItemStack price = entry.getPrice().createItemStack();
         if (! player.getInventory().containsAtLeast(price, price.getAmount()))
         {

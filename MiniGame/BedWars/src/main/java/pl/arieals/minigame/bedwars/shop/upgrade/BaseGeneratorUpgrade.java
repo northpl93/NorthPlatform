@@ -54,7 +54,7 @@ public class BaseGeneratorUpgrade implements IUpgrade
     @Override
     public String getLoreDescription(final MessagesBox messagesBox, final Team team, final Player player)
     {
-        final int nextLevel = team.getUpgrades().getUpgradeLevel(this) + 1;
+        final int nextLevel = Math.min(team.getUpgrades().getUpgradeLevel(this) + 1, this.maxLevel());
         if (nextLevel < 3)
         {
             return messagesBox.getMessage(player.spigot().getLocale(), "upgrade_gui.BaseGeneratorUpgrade.lore");

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="3" title="@item.swords.window_title">
+    <container pos="0,0" size="9,3">
+        <border id="AIR" data="0" />
+        <background id="AIR" data="0" />
+        <content>
+            <!-- drewniany miecz -->
+            <button pos="2,1">
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/swords.wood_sword/$playerId"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/swords.wood_sword/$playerId"/>
+                <icon id="WOOD_SWORD" data="0" name="@item.swords.wood_sword$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/shop/buy/swords.wood_sword/$playerId</onClick>
+            </button>
+
+            <!-- kamienny miecz -->
+            <button pos="3,1">
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/swords.stone_sword/$playerId"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/swords.stone_sword/$playerId"/>
+                <icon id="STONE_SWORD" data="0" name="@item.swords.stone_sword$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/shop/buy/swords.stone_sword/$playerId</onClick>
+            </button>
+
+            <!-- zelazny miecz -->
+            <button pos="4,1">
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/swords.iron_sword/$playerId"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/swords.iron_sword/$playerId"/>
+                <icon id="IRON_SWORD" data="0" name="@item.swords.iron_sword$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/shop/buy/swords.iron_sword/$playerId</onClick>
+            </button>
+
+            <!-- diamentowy miecz -->
+            <button pos="5,1">
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/swords.diamond_sword/$playerId"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/swords.diamond_sword/$playerId"/>
+                <icon id="DIAMOND_SWORD" data="0" name="@item.swords.diamond_sword$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/shop/buy/swords.diamond_sword/$playerId</onClick>
+            </button>
+
+            <!-- blaze rod / knockback -->
+            <button pos="6,1">
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/swords.knockback/$playerId"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/swords.knockback/$playerId"/>
+                <icon id="BLAZE_ROD" data="0" name="@item.swords.knockback$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/shop/buy/swords.knockback/$playerId</onClick>
+            </button>
+
+            <!-- back button -->
+            <button pos="8,2">
+                <icon id="ARROW" data="0" name="@gui.shop.back_button_name"/>
+                <onClick>northplatform://minigame/bedwars/shopCategory/main/$playerId</onClick>
+            </button>
+        </content>
+    </container>
+</gui>

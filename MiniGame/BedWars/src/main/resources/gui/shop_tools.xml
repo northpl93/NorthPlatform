@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="3" title="@item.tools.window_title">
+    <container pos="0,0" size="9,3">
+        <border id="AIR" data="0" />
+        <background id="AIR" data="0" />
+        <content>
+            <!-- nozyce -->
+            <button pos="1,1">
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/tools.shears/$playerId"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/tools.shears/$playerId"/>
+                <icon id="SHEARS" data="0" name="@item.tools.shears$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/shop/buy/tools.shears/$playerId</onClick>
+            </button>
+
+            <!-- drewniany kilof -->
+            <button pos="2,1">
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/tools.wood_pickaxe/$playerId"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/tools.wood_pickaxe/$playerId"/>
+                <icon id="WOOD_PICKAXE" data="0" name="@item.tools.wood_pickaxe$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/shop/buy/tools.wood_pickaxe/$playerId</onClick>
+            </button>
+
+            <!-- kamienny kilof -->
+            <button pos="3,1">
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/tools.stone_pickaxe/$playerId"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/tools.stone_pickaxe/$playerId"/>
+                <icon id="STONE_PICKAXE" data="0" name="@item.tools.stone_pickaxe$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/shop/buy/tools.stone_pickaxe/$playerId</onClick>
+            </button>
+
+            <!-- zelazny kilof -->
+            <button pos="4,1">
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/tools.iron_pickaxe/$playerId"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/tools.iron_pickaxe/$playerId"/>
+                <icon id="IRON_PICKAXE" data="0" name="@item.tools.iron_pickaxe$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/shop/buy/tools.iron_pickaxe/$playerId</onClick>
+            </button>
+
+            <!-- diamentowy kilof -->
+            <button pos="5,1">
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/tools.diamond_pickaxe/$playerId"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/tools.diamond_pickaxe/$playerId"/>
+                <icon id="DIAMOND_PICKAXE" data="0" name="@item.tools.diamond_pickaxe$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/shop/buy/tools.diamond_pickaxe/$playerId</onClick>
+            </button>
+
+            <!-- kamienna siekiera -->
+            <button pos="6,1">
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/tools.stone_axe/$playerId"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/tools.stone_axe/$playerId"/>
+                <icon id="STONE_AXE" data="0" name="@item.tools.stone_axe$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/shop/buy/tools.stone_axe/$playerId</onClick>
+            </button>
+
+            <!-- diamentowa siekiera -->
+            <button pos="7,1">
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/tools.diamond_axe/$playerId"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/tools.diamond_axe/$playerId"/>
+                <icon id="DIAMOND_AXE" data="0" name="@item.tools.diamond_axe$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/shop/buy/tools.diamond_axe/$playerId</onClick>
+            </button>
+
+            <!-- back button -->
+            <button pos="8,2">
+                <icon id="ARROW" data="0" name="@gui.shop.back_button_name"/>
+                <onClick>northplatform://minigame/bedwars/shopCategory/main/$playerId</onClick>
+            </button>
+        </content>
+    </container>
+</gui>

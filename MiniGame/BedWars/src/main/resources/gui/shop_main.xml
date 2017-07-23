@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="3" title="@gui.shop.main_title">
+    <container pos="1,1" size="7,1">
+        <border id="AIR" data="0" />
+        <background id="AIR" data="0" />
+        <content>
+            <!-- Materialy -->
+            <button pos="0,0">
+                <variable name="itemList" value="@item.materials.category_description"/>
+                <icon id="WOOD" data="0" name="@item.materials.category_name" lore="@gui.shop.category_pattern$itemList"/>
+                <onClick>northplatform://minigame/bedwars/shopCategory/materials/$playerId</onClick>
+            </button>
+
+            <!-- Narzedzia -->
+            <button pos="1,0">
+                <variable name="itemList" value="@item.tools.category_description"/>
+                <icon id="STONE_PICKAXE" data="0" name="@item.tools.category_name" lore="@gui.shop.category_pattern$itemList"/>
+                <onClick>northplatform://minigame/bedwars/shopCategory/tools/$playerId</onClick>
+            </button>
+
+            <!-- Miecze -->
+            <button pos="2,0">
+                <variable name="itemList" value="@item.swords.category_description"/>
+                <icon id="IRON_SWORD" data="0" name="@item.swords.category_name" lore="@gui.shop.category_pattern$itemList"/>
+                <onClick>northplatform://minigame/bedwars/shopCategory/swords/$playerId</onClick>
+            </button>
+
+            <!-- Luki -->
+            <button pos="3,0">
+                <variable name="itemList" value="@item.bows.category_description"/>
+                <icon id="BOW" data="0" name="@item.bows.category_name" lore="@gui.shop.category_pattern$itemList"/>
+                <onClick>northplatform://minigame/bedwars/shopCategory/bows/$playerId</onClick>
+            </button>
+
+            <!-- Armor -->
+            <button pos="4,0">
+                <variable name="itemList" value="@item.armor.category_description"/>
+                <icon id="IRON_BOOTS" data="0" name="@item.armor.category_name" lore="@gui.shop.category_pattern$itemList"/>
+                <onClick>northplatform://minigame/bedwars/shopCategory/armor/$playerId</onClick>
+            </button>
+
+            <!-- Specjalne -->
+            <button pos="5,0">
+                <variable name="itemList" value="@item.extras.category_description"/>
+                <icon id="GOLDEN_APPLE" data="0" name="@item.extras.category_name" lore="@gui.shop.category_pattern$itemList"/>
+                <onClick>northplatform://minigame/bedwars/shopCategory/extras/$playerId</onClick>
+            </button>
+
+            <!-- Lapis -->
+            <button pos="6,0">
+                <variable name="itemList" value="@item.lapis.category_description"/>
+                <icon id="INK_SACK" data="4" name="@item.lapis.category_name" lore="@gui.shop.category_pattern$itemList"/>
+                <onClick>northplatform://minigame/bedwars/shopCategory/lapis/$playerId</onClick>
+            </button>
+        </content>
+    </container>
+</gui>

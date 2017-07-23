@@ -13,6 +13,8 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import org.diorite.utils.math.DioriteMathUtils;
+
 import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
 
 @XmlRootElement(name = "item")
@@ -20,11 +22,11 @@ import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
 public class XmlItemStack
 {
     @XmlAttribute(required = true)
-    private int id;
+    private String id;
     @XmlAttribute
-    private int data;
+    private int    data;
     @XmlAttribute
-    private int count;
+    private int    count;
     
     @XmlElement
     private String name;
@@ -40,29 +42,29 @@ public class XmlItemStack
     {
     }
     
-    public XmlItemStack(int id)
+    public XmlItemStack(String id)
     {
         this(id, 0, 1);
     }
     
-    public XmlItemStack(int id, int data)
+    public XmlItemStack(String id, int data)
     {
         this(id, data, 1);
     }
     
-    public XmlItemStack(int id, int data, int count)
+    public XmlItemStack(String id, int data, int count)
     {
         this.id = id;
         this.data = data;
         this.count = count;
     }
     
-    public int getId()
+    public String getId()
     {
         return id;
     }
     
-    public void setId(int id)
+    public void setId(String id)
     {
         this.id = id;
     }
@@ -118,9 +120,12 @@ public class XmlItemStack
     }
     
     @SuppressWarnings("deprecation")
-    public ItemStack createItemStack() {
+    public ItemStack createItemStack()
+    {
+        final Integer numberId = DioriteMathUtils.asInt(this.id);
+        final Material material = numberId == null ? Material.getMaterial(this.id) : Material.getMaterial(numberId);
 
-        final ItemStackBuilder builder = new ItemStackBuilder().material(Material.getMaterial(id)).data(data).amount(count).name(name).lore(this.lore);
+        final ItemStackBuilder builder = new ItemStackBuilder().material(material).data(data).amount(count).name(name).lore(this.lore);
         this.enchants.forEach(builder::enchant);
         return builder.build();
     }

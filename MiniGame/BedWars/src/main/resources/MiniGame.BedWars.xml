@@ -9,37 +9,180 @@
             <name>island</name>
             <overload>64</overload>
             <items>
-                <generatorItem material="IRON_INGOT" every="20" startAt="0"/>
+                <generatorItem material="IRON_INGOT" every="40" startAt="0"/>
                 <generatorItem material="GOLD_INGOT" every="80"/>
+            </items>
+        </generatorType>
+
+        <generatorType>
+            <name>diamond</name>
+            <overload>5</overload>
+            <hudItem>DIAMOND_BLOCK</hudItem>
+            <items>
+                <generatorItem material="DIAMOND" name="I" every="600"/> <!-- start co 30 sekund -->
+                <generatorItem material="DIAMOND" name="II" every="500" startAt="4200"/> <!-- Po 4 minutach co 25 sekund -->
+                <generatorItem material="DIAMOND" name="III" every="400" startAt="9000"/> <!-- Po 9 minutach co 20 sekund -->
+            </items>
+        </generatorType>
+
+        <generatorType>
+            <name>emerald</name>
+            <overload>4</overload>
+            <hudItem>EMERALD_BLOCK</hudItem>
+            <items>
+                <generatorItem material="EMERALD" name="I" every="1200" startAt="0"/> <!-- start co 60 sekund -->
+                <generatorItem material="EMERALD" name="II" every="1000" startAt="12000"/> <!-- po 5 minutach co 50 sekund -->
             </items>
         </generatorType>
 
         <generatorType>
             <name>lapis</name>
             <overload>64</overload>
+            <hudItem>LAPIS_BLOCK</hudItem>
             <items>
-                <generatorItem material="INK_SACK" data="12" every="6000" startAt="12000"/>
+                <generatorItem material="INK_SACK" data="4" name="I" every="6000" startAt="12000"/>
             </items>
         </generatorType>
     </generatorTypes>
 
     <shopEntries>
-        <shopEntry internalName="item1" specialHandler="ArmorEntry" isPersistent="true">
+        <shopEntry internalName="materials.wool"> <!-- welna -->
             <items>
-                <item id="307" data="0" count="1">
-                    <enchants>
-                        <enchant enchantment="THORNS" level="1" />
-                    </enchants>
-                    <lore>
-                        <line>&amp;aLinijka 1</line>
-                    </lore>
-                </item>
+                <item id="WOOL" data="0" count="16" />
             </items>
-            <price id="307" data="0" count="1" />
+            <price id="IRON_INGOT" count="4" />
+        </shopEntry>
+        <shopEntry internalName="materials.sandstone"> <!-- sandstone -->
+            <items>
+                <item id="SANDSTONE" data="0" count="16" />
+            </items>
+            <price id="IRON_INGOT" count="10" />
+        </shopEntry>
+        <shopEntry internalName="materials.endstone"> <!-- endstone -->
+            <items>
+                <item id="ENDER_STONE" count="16" />
+            </items>
+            <price id="IRON_INGOT" count="22" />
+        </shopEntry>
+        <shopEntry internalName="materials.wood"> <!-- deski -->
+            <items>
+                <item id="WOOD" count="16" />
+            </items>
+            <price id="GOLD_INGOT" count="4" />
+        </shopEntry>
+        <shopEntry internalName="materials.obsidian"> <!-- obsidian -->
+            <items>
+                <item id="OBSIDIAN" count="4" />
+            </items>
+            <price id="EMERALD" count="3" />
+        </shopEntry>
+
+        <shopEntry internalName="tools.shears"> <!-- nozyce -->
+            <items>
+                <item id="SHEARS" count="1" />
+            </items>
+            <price id="IRON_INGOT" count="10" />
+        </shopEntry>
+        <shopEntry internalName="tools.wood_pickaxe"> <!-- drewniany kilof -->
+            <items>
+                <item id="WOOD_PICKAXE" count="1" />
+            </items>
+            <price id="IRON_INGOT" count="8" />
+        </shopEntry>
+        <shopEntry internalName="tools.stone_pickaxe"> <!-- kamienny kilof -->
+            <items>
+                <item id="STONE_PICKAXE" count="1" />
+            </items>
+            <price id="IRON_INGOT" count="18" />
+        </shopEntry>
+        <shopEntry internalName="tools.iron_pickaxe"> <!-- zelazny kilof -->
+            <items>
+                <item id="IRON_PICKAXE" count="1" />
+            </items>
+            <price id="GOLD_INGOT" count="8" />
+        </shopEntry>
+        <shopEntry internalName="tools.diamond_pickaxe"> <!-- diamentowy kilof -->
+            <items>
+                <item id="DIAMOND_PICKAXE" count="1" />
+            </items>
+            <price id="GOLD_INGOT" count="13" />
+        </shopEntry>
+        <shopEntry internalName="tools.stone_axe"> <!-- kamienna siekiera -->
+            <items>
+                <item id="STONE_AXE" count="1" />
+            </items>
+            <price id="IRON_INGOT" count="20" />
+        </shopEntry>
+        <shopEntry internalName="tools.diamond_axe"> <!-- diamentowa siekiera -->
+            <items>
+                <item id="DIAMOND_AXE" count="1" />
+            </items>
+            <price id="GOLD_INGOT" count="13" />
+        </shopEntry>
+
+        <shopEntry internalName="swords.wood_sword"> <!-- drewniany miecz -->
+            <items>
+                <item id="WOOD_SWORD" count="1" />
+            </items>
+            <price id="IRON_INGOT" count="6" />
+        </shopEntry>
+        <shopEntry internalName="swords.stone_sword"> <!-- kamienny miecz -->
+            <items>
+                <item id="STONE_SWORD" count="1" />
+            </items>
+            <price id="IRON_INGOT" count="12" />
+        </shopEntry>
+        <shopEntry internalName="swords.iron_sword"> <!-- zelazny miecz -->
+            <items>
+                <item id="IRON_SWORD" count="1" />
+            </items>
+            <price id="GOLD_INGOT" count="8" />
+        </shopEntry>
+        <shopEntry internalName="swords.diamond_sword"> <!-- drewniany miecz -->
+            <items>
+                <item id="DIAMOND_SWORD" count="1" />
+            </items>
+            <price id="EMERALD" count="4" />
+        </shopEntry>
+        <shopEntry internalName="swords.knockback"> <!-- drewniany miecz -->
+            <items>
+                <item id="BLAZE_ROD" count="1" />
+            </items>
+            <price id="GOLD_INGOT" count="14" />
+        </shopEntry>
+
+        <shopEntry internalName="armor.chainmal" specialHandler="ArmorEntry" isPersistent="true">
+            <items>
+                <item id="304" data="0" count="1" />
+                <item id="305" data="0" count="1" />
+            </items>
+            <price id="265" data="0" count="45" />
+        </shopEntry>
+        <shopEntry internalName="armor.iron" specialHandler="ArmorEntry" isPersistent="true"> <!-- zelazne spodnie+buty za 18 golda -->
+            <items>
+                <item id="308" data="0" count="1" />
+                <item id="309" data="0" count="1" />
+            </items>
+            <price id="266" data="0" count="18" />
+        </shopEntry>
+        <shopEntry internalName="armor.diamond" specialHandler="ArmorEntry" isPersistent="true"> <!-- diamontowe spodnie+buty za 6 emeraldów -->
+            <items>
+                <item id="312" data="0" count="1" />
+                <item id="313" data="0" count="1" />
+            </items>
+            <price id="388" data="0" count="6" />
         </shopEntry>
     </shopEntries>
 
     <upgrades>
+        <entry>
+            <key>ArmorProtection_1</key>
+            <value>3</value>
+        </entry>
+        <entry>
+            <key>ArmorProtection_2</key>
+            <value>5</value>
+        </entry>
         <entry>
             <key>BaseGeneratorUpgrade_1</key>
             <value>2</value>
@@ -49,8 +192,36 @@
             <value>4</value>
         </entry>
         <entry>
-            <key>IslandTrapUpdate</key>
+            <key>Healbot</key>
             <value>2</value>
+        </entry>
+        <entry>
+            <key>IslandTrapUpgrade</key>
+            <value>2</value>
+        </entry>
+        <entry>
+            <key>MoreHearts_1</key>
+            <value>2</value>
+        </entry>
+        <entry>
+            <key>MoreHearts_2</key>
+            <value>6</value>
+        </entry>
+        <entry>
+            <key>RoadOfWarrior_1</key>
+            <value>2</value>
+        </entry>
+        <entry>
+            <key>RoadOfWarrior_2</key>
+            <value>8</value>
+        </entry>
+        <entry>
+            <key>ToolsHaste_1</key>
+            <value>2</value>
+        </entry>
+        <entry>
+            <key>ToolsHaste_2</key>
+            <value>6</value>
         </entry>
     </upgrades>
 </bedwars>
