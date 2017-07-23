@@ -189,7 +189,10 @@ public class ComponentManagerImpl implements IComponentManager
         }
 
         this.scanClassloader(classLoader, componentsConfig.getRootPackage(), componentsConfig.getComponents());
-        XmlGuiLayoutRegistry.loadGuiLayouts(classLoader);
+        if (this.apiCore.getPlatform() == Platform.BUKKIT)
+        {
+            XmlGuiLayoutRegistry.loadGuiLayouts(classLoader);
+        }
         
         for (final String includeConfig : componentsConfig.getInclude())
         {
