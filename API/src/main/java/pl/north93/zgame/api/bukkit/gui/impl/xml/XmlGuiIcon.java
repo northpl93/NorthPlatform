@@ -9,6 +9,8 @@ import java.util.List;
 
 import org.bukkit.Material;
 
+import org.diorite.utils.math.DioriteMathUtils;
+
 import pl.north93.zgame.api.bukkit.gui.GuiIcon;
 import pl.north93.zgame.api.bukkit.gui.impl.RenderContext;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -19,11 +21,11 @@ import pl.north93.zgame.api.global.messages.TranslatableString;
 public class XmlGuiIcon
 {
     @XmlAttribute
-    private int id;
+    private String id;
     @XmlAttribute
-    private int data;
+    private int    data;
     @XmlAttribute
-    private int count = 1;
+    private int    count = 1;
     
     @XmlAttribute
     private String name;
@@ -33,12 +35,12 @@ public class XmlGuiIcon
     @XmlAttribute
     private boolean glowing;
     
-    public int getId()
+    public String getId()
     {
         return id;
     }
     
-    public void setId(int id)
+    public void setId(String id)
     {
         this.id = id;
     }
@@ -92,11 +94,21 @@ public class XmlGuiIcon
     {
         this.glowing = glowing;
     }
+
+    private Material toMaterial()
+    {
+        final Integer asInteger = DioriteMathUtils.asInt(this.id); // will return null if it isn't number
+        if (asInteger == null)
+        {
+            return Material.getMaterial(this.id);
+        }
+        return Material.getMaterial(asInteger);
+    }
     
     public GuiIcon toGuiIcon(RenderContext renderContext, List<XmlVariable> variables)
     {
         final MessagesBox messages = renderContext.getMessagesBox();
-        return GuiIcon.builder().type(Material.getMaterial(id)).data(data).count(count)
+        return GuiIcon.builder().type(this.toMaterial()).data(data).count(count)
                 .name(TranslatableString.of(messages, name)).lore(TranslatableString.of(messages, lore))
                       .glowing(glowing).variables(variables).build();
     }
