@@ -26,7 +26,18 @@ class MessagesBoxTranslatableString extends TranslatableString
     public String getValue(Locale locale, Vars<Object> params)
     {
         String[] args = new String[messageArgs.length];
-        IntStream.range(0, args.length).forEach( (i) -> args[i] = String.valueOf(params.getValue(messageArgs[i])) );
+        IntStream.range(0, args.length).forEach(i ->
+        {
+            final Object value = params.getValue(messageArgs[i]);
+            if (value instanceof TranslatableString)
+            {
+                args[i] = ((TranslatableString) value).getValue(locale, params);
+            }
+            else
+            {
+                args[i] = String.valueOf(value);
+            }
+        });
         return messagesBox.getMessage(locale, messageKey, args);
     }
     
