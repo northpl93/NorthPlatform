@@ -8,7 +8,7 @@
             <button pos="3,1">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/lapis.life/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/lapis.life/$playerId"/>
-                <icon id="INK_SACK" data="1" name="@item.extras.lapis.life.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="INK_SACK" data="1" name="@item.lapis.life.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/shop/buy/lapis.life/$playerId</onClick>
             </button>
 
@@ -16,7 +16,7 @@
             <button pos="4,1">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/lapis.permanent_sword/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/lapis.permanent_sword/$playerId"/>
-                <icon id="DIAMOND_SWORD" name="@item.extras.lapis.permanent_sword.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="DIAMOND_SWORD" name="@item.lapis.permanent_sword.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/shop/buy/lapis.permanent_sword/$playerId</onClick>
             </button>
 
@@ -24,7 +24,7 @@
             <button pos="5,1">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/lapis.shield/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/lapis.shield/$playerId"/>
-                <icon id="SHIELD" name="@item.extras.lapis.shield.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="SHIELD" name="@item.lapis.shield.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/shop/buy/lapis.shield/$playerId</onClick>
             </button>
 

@@ -8,7 +8,7 @@
             <button pos="2,1">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/bows.arrow/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/bows.arrow/$playerId"/>
-                <icon id="ARROW" data="0" amount="8" name="@item.bows.arrow.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="ARROW" data="0" count="8" name="@item.bows.arrow.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/shop/buy/bows.arrow/$playerId</onClick>
             </button>
 
@@ -40,7 +40,7 @@
             <button pos="6,1">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/bows.snowball/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/bows.snowball/$playerId"/>
-                <icon id="SNOW_BALL" data="0" amount="4" name="@item.bows.snowball.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="SNOW_BALL" data="0" count="4" name="@item.bows.snowball.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/shop/buy/bows.snowball/$playerId</onClick>
             </button>
 

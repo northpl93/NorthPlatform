@@ -1,5 +1,6 @@
 package pl.arieals.minigame.bedwars.shop;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -20,17 +21,23 @@ import pl.arieals.minigame.bedwars.shop.gui.ShopMain;
 import pl.arieals.minigame.bedwars.shop.gui.ShopMaterials;
 import pl.arieals.minigame.bedwars.shop.gui.ShopSwords;
 import pl.arieals.minigame.bedwars.shop.gui.ShopTools;
+import pl.north93.zgame.api.bukkit.utils.ChatUtils;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
+import pl.north93.zgame.api.global.messages.Messages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.zgame.api.global.messages.PluralForm;
 import pl.north93.zgame.api.global.uri.UriHandler;
 
 public final class ShopGuiManager
 {
     private final ShopManager shopManager;
+    private final MessagesBox shopMessages;
 
     @Bean
-    private ShopGuiManager(final ShopManager shopManager)
+    private ShopGuiManager(final ShopManager shopManager, final @Messages("BedWarsShop") MessagesBox shopMessages)
     {
         this.shopManager = shopManager;
+        this.shopMessages = shopMessages;
     }
 
     @UriHandler("/minigame/bedwars/shopCategory/:name/:playerId")
@@ -94,10 +101,33 @@ public final class ShopGuiManager
     {
         final Player player = Bukkit.getPlayer(UUID.fromString(parameters.get("playerId")));
         final String name = parameters.get("name");
+        final String locale = player.spigot().getLocale();
 
         final BwShopEntry shopEntry = this.shopManager.getShopEntry(name);
+        final ItemStack priceItem = shopEntry.getPrice().createItemStack();
 
-        return "dupa, dokonczyc lore";
+        final String currencyKey = "currency." + priceItem.getType().name().toLowerCase(Locale.ENGLISH);
+        final String priceMsgKey = PluralForm.transformKey(currencyKey, priceItem.getAmount());
+        final String price = this.shopMessages.getMessage(locale, priceMsgKey, priceItem.getAmount());
+
+        final String description = this.shopMessages.getMessage(locale, "item." + name + ".lore");
+
+        if (player.getInventory().containsAtLeast(priceItem, priceItem.getAmount()))
+        {
+            return this.shopMessages.getMessage(locale,
+                    "gui.shop.item_lore.available",
+                    description,
+                    price);
+        }
+        else
+        {
+            final String currencyName = ChatUtils.stripColor(this.shopMessages.getMessage(locale, currencyKey + ".many", ""));
+            return this.shopMessages.getMessage(locale,
+                    "gui.shop.item_lore.no_money",
+                    description,
+                    price,
+                    currencyName);
+        }
     }
 
     @Override

@@ -8,7 +8,7 @@
             <button pos="2,1">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/materials.wool/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/materials.wool/$playerId"/>
-                <icon id="WOOL" data="0" name="@item.materials.wool.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="WOOL" data="0" count="16" name="@item.materials.wool.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/shop/buy/materials.wool/$playerId</onClick>
             </button>
 
@@ -16,7 +16,7 @@
             <button pos="3,1">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/materials.sandstone/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/materials.sandstone/$playerId"/>
-                <icon id="SANDSTONE" data="0" name="@item.materials.sandstone.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="SANDSTONE" data="0" count="16" name="@item.materials.sandstone.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/shop/buy/materials.sandstone/$playerId</onClick>
             </button>
 
@@ -24,7 +24,7 @@
             <button pos="4,1">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/materials.endstone/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/materials.endstone/$playerId"/>
-                <icon id="ENDER_STONE" data="0" name="@item.materials.endstone.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="ENDER_STONE" data="0" count="16" name="@item.materials.endstone.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/shop/buy/materials.endstone/$playerId</onClick>
             </button>
 
@@ -32,7 +32,7 @@
             <button pos="5,1">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/materials.wood/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/materials.wood/$playerId"/>
-                <icon id="WOOD" data="0" name="@item.materials.wood.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="WOOD" data="0" count="16" name="@item.materials.wood.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/shop/buy/materials.wood/$playerId</onClick>
             </button>
 
@@ -40,7 +40,7 @@
             <button pos="6,1">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/materials.obsidian/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/materials.obsidian/$playerId"/>
-                <icon id="OBSIDIAN" data="0" name="@item.materials.obsidian.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="OBSIDIAN" data="0" count="4" name="@item.materials.obsidian.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/shop/buy/materials.obsidian/$playerId</onClick>
             </button>
 
