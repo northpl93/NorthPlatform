@@ -163,7 +163,7 @@
             </items>
             <price id="GOLD_INGOT" count="12" />
         </shopEntry>
-        <shopEntry internalName="bows.simple_bow"> <!-- dlugi luk -->
+        <shopEntry internalName="bows.long_bow"> <!-- dlugi luk -->
             <items>
                 <item id="BOW" count="1">
                     <enchants>
@@ -173,7 +173,7 @@
             </items>
             <price id="GOLD_INGOT" count="24" />
         </shopEntry>
-        <shopEntry internalName="bows.simple_bow"> <!-- elfi luk -->
+        <shopEntry internalName="bows.elvish_bow"> <!-- elfi luk -->
             <items>
                 <item id="BOW" count="1">
                     <enchants>
@@ -257,19 +257,19 @@
         </shopEntry>
 
         <shopEntry internalName="lapis.life"> <!-- dodatkowe zycie -->
-            <price id="INK_SAC" data="4" count="1" />
+            <price id="INK_SACK" data="4" count="1" />
         </shopEntry>
         <shopEntry internalName="lapis.permanent_sword"> <!-- pernamentny diamentowy miecz -->
             <items>
                 <item id="DIAMOND_SWORD" count="1" />
             </items>
-            <price id="INK_SAC" data="4" count="1" />
+            <price id="INK_SACK" data="4" count="1" />
         </shopEntry>
         <shopEntry internalName="lapis.shield"> <!-- tarcza -->
             <items>
                 <item id="SHIELD" count="1" />
             </items>
-            <price id="INK_SAC" data="4" count="1" />
+            <price id="INK_SACK" data="4" count="1" />
         </shopEntry>
     </shopEntries>
 

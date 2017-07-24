@@ -8,7 +8,7 @@
             <button pos="1,1">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/extras.water_bucket/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/extras.water_bucket/$playerId"/>
-                <icon id="WATER_BUCKET" data="0" name="@item.extras.water_bucket$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="WATER_BUCKET" data="0" name="@item.extras.water_bucket.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/shop/buy/extras.water_bucket/$playerId</onClick>
             </button>
 
@@ -16,7 +16,7 @@
             <button pos="2,1">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/extras.tnt/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/extras.tnt/$playerId"/>
-                <icon id="TNT" data="0" name="@item.extras.tnt$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="TNT" data="0" name="@item.extras.tnt.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/shop/buy/extras.tnt/$playerId</onClick>
             </button>
 
@@ -24,7 +24,7 @@
             <button pos="3,1">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/extras.fireball/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/extras.fireball/$playerId"/>
-                <icon id="FIREBALL" data="0" name="@item.extras.fireball$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="FIREBALL" data="0" name="@item.extras.fireball.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/shop/buy/extras.fireball/$playerId</onClick>
             </button>
 
@@ -32,7 +32,7 @@
             <button pos="4,1">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/extras.skeleton/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/extras.skeleton/$playerId"/>
-                <icon id="MONSTER_EGGS" data="0" name="@item.extras.skeleton$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="MONSTER_EGGS" data="51" name="@item.extras.skeleton.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/shop/buy/extras.skeleton/$playerId</onClick>
             </button>
 
@@ -40,7 +40,7 @@
             <button pos="5,1">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/extras.exhaust_arrow/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/extras.exhaust_arrow/$playerId"/>
-                <icon id="ARROW" data="0" amount="2" name="@item.extras.exhaust_arrow$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="ARROW" data="0" amount="2" name="@item.extras.exhaust_arrow.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/shop/buy/extras.exhaust_arrow/$playerId</onClick>
             </button>
 
@@ -48,7 +48,7 @@
             <button pos="6,1">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/extras.golden_apple/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/extras.golden_apple/$playerId"/>
-                <icon id="GOLDEN_APPLE" data="0" name="@item.extras.golden_apple$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="GOLDEN_APPLE" data="0" name="@item.extras.golden_apple.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/shop/buy/extras.golden_apple/$playerId</onClick>
             </button>
 
@@ -56,7 +56,7 @@
             <button pos="7,1">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/extras.ender_pearl/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/extras.ender_pearl/$playerId"/>
-                <icon id="ENDER_PEARL" data="0" name="@item.extras.ender_pearl$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="ENDER_PEARL" data="0" name="@item.extras.ender_pearl.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/shop/buy/extras.ender_pearl/$playerId</onClick>
             </button>
 
