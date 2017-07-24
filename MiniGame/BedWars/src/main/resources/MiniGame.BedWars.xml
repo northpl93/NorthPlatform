@@ -48,13 +48,13 @@
     <shopEntries>
         <shopEntry internalName="materials.wool"> <!-- welna -->
             <items>
-                <item id="WOOL" data="0" count="16" />
+                <item id="WOOL" count="16" />
             </items>
             <price id="IRON_INGOT" count="4" />
         </shopEntry>
         <shopEntry internalName="materials.sandstone"> <!-- sandstone -->
             <items>
-                <item id="SANDSTONE" data="0" count="16" />
+                <item id="SANDSTONE" count="16" />
             </items>
             <price id="IRON_INGOT" count="10" />
         </shopEntry>
@@ -151,6 +151,46 @@
             <price id="GOLD_INGOT" count="14" />
         </shopEntry>
 
+        <shopEntry internalName="bows.arrow"> <!-- strzaly -->
+            <items>
+                <item id="ARROW" count="8" />
+            </items>
+            <price id="IRON_INGOT" count="9" />
+        </shopEntry>
+        <shopEntry internalName="bows.simple_bow"> <!-- prosty luk -->
+            <items>
+                <item id="BOW" count="1" />
+            </items>
+            <price id="GOLD_INGOT" count="12" />
+        </shopEntry>
+        <shopEntry internalName="bows.simple_bow"> <!-- dlugi luk -->
+            <items>
+                <item id="BOW" count="1">
+                    <enchants>
+                        <enchant enchantment="ARROW_DAMAGE" level="1"/>
+                    </enchants>
+                </item>
+            </items>
+            <price id="GOLD_INGOT" count="24" />
+        </shopEntry>
+        <shopEntry internalName="bows.simple_bow"> <!-- elfi luk -->
+            <items>
+                <item id="BOW" count="1">
+                    <enchants>
+                        <enchant enchantment="ARROW_DAMAGE" level="1"/>
+                        <enchant enchantment="ARROW_KNOCKBACK" level="1"/>
+                    </enchants>
+                </item>
+            </items>
+            <price id="EMERALD" count="6" />
+        </shopEntry>
+        <shopEntry internalName="bows.snowball"> <!-- sniezki -->
+            <items>
+                <item id="SNOWBALL" count="4" />
+            </items>
+            <price id="IRON_INGOT" count="32" />
+        </shopEntry>
+
         <shopEntry internalName="armor.chainmal" specialHandler="ArmorEntry" isPersistent="true">
             <items>
                 <item id="304" data="0" count="1" />
@@ -171,6 +211,65 @@
                 <item id="313" data="0" count="1" />
             </items>
             <price id="388" data="0" count="6" />
+        </shopEntry>
+
+        <shopEntry internalName="extras.water_bucket"> <!-- wiadro z woda -->
+            <items>
+                <item id="WATER_BUCKET" count="1" />
+            </items>
+            <price id="EMERALD" count="1" />
+        </shopEntry>
+        <shopEntry internalName="extras.tnt"> <!-- TNT -->
+            <items>
+                <item id="TNT" count="1" />
+            </items>
+            <price id="GOLD_INGOT" count="6" />
+        </shopEntry>
+        <shopEntry internalName="extras.fireball"> <!-- fireball/kula ghasta -->
+            <items>
+                <item id="FIREBALL" count="1" />
+            </items>
+            <price id="IRON_INGOT" count="30" />
+        </shopEntry>
+        <shopEntry internalName="extras.skeleton"> <!-- szkielet atakujacy wrogow -->
+            <items>
+                <item id="WATER_BUCKET" count="1" />
+            </items>
+            <price id="IRON_INGOT" count="100" />
+        </shopEntry>
+        <shopEntry internalName="extras.exhaust_arrow"> <!-- strzala oslabiajaca -->
+            <items>
+                <item id="WATER_BUCKET" data="0" count="2" />
+            </items>
+            <price id="GOLD_INGOT" count="18" />
+        </shopEntry>
+        <shopEntry internalName="extras.golden_apple"> <!-- zlote jablko -->
+            <items>
+                <item id="GOLDEN_APPLE" count="1" />
+            </items>
+            <price id="GOLD_INGOT" count="4" />
+        </shopEntry>
+        <shopEntry internalName="extras.ender_pearl"> <!-- perla endermana -->
+            <items>
+                <item id="ENDER_PEARL" count="1" />
+            </items>
+            <price id="EMERALD" count="4" />
+        </shopEntry>
+
+        <shopEntry internalName="lapis.life"> <!-- dodatkowe zycie -->
+            <price id="INK_SAC" data="4" count="1" />
+        </shopEntry>
+        <shopEntry internalName="lapis.permanent_sword"> <!-- pernamentny diamentowy miecz -->
+            <items>
+                <item id="DIAMOND_SWORD" count="1" />
+            </items>
+            <price id="INK_SAC" data="4" count="1" />
+        </shopEntry>
+        <shopEntry internalName="lapis.shield"> <!-- tarcza -->
+            <items>
+                <item id="SHIELD" count="1" />
+            </items>
+            <price id="INK_SAC" data="4" count="1" />
         </shopEntry>
     </shopEntries>
 

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <gui height="3" title="@gui.upgrades_title">
 	<container pos="1,1" size="7,1">
-        <border id="0" data="0" />
-        <background id="0" data="0" />
+        <border id="AIR" data="0" />
+        <background id="AIR" data="0" />
 		<content>
             <!-- Nowy piec -->
             <button pos="0,0">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/upgrade/BaseGeneratorUpgrade/$playerId/getNameColor"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/upgrade/BaseGeneratorUpgrade/$playerId/composeLore"/>
-                <icon id="61" data="0" name="@upgrade_gui.BaseGeneratorUpgrade.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="FURNACE" data="0" name="@upgrade_gui.BaseGeneratorUpgrade.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/upgrade/BaseGeneratorUpgrade/$playerId/buy</onClick>
             </button>
 
@@ -16,7 +16,7 @@
 			<button pos="1,0">
 				<variable name="itemNameColor" value="northplatform://minigame/bedwars/upgrade/ToolsHaste/$playerId/getNameColor"/>
 				<variable name="itemLore" value="northplatform://minigame/bedwars/upgrade/ToolsHaste/$playerId/composeLore"/>
-				<icon id="285" data="0" name="@upgrade_gui.ToolsHaste.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+				<icon id="GOLD_PICKAXE" data="0" name="@upgrade_gui.ToolsHaste.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
 				<onClick>northplatform://minigame/bedwars/upgrade/ToolsHaste/$playerId/buy</onClick>
 			</button>
 
@@ -24,7 +24,7 @@
             <button pos="2,0">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/upgrade/RoadOfWarrior/$playerId/getNameColor"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/upgrade/RoadOfWarrior/$playerId/composeLore"/>
-                <icon id="267" data="0" name="@upgrade_gui.RoadOfWarrior.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="IRON_SWORD" data="0" name="@upgrade_gui.RoadOfWarrior.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/upgrade/RoadOfWarrior/$playerId/buy</onClick>
             </button>
 
@@ -32,7 +32,7 @@
             <button pos="3,0">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/upgrade/ArmorProtection/$playerId/getNameColor"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/upgrade/ArmorProtection/$playerId/composeLore"/>
-                <icon id="307" data="0" name="@upgrade_gui.ArmorProtection.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="IRON_CHESTPLATE" data="0" name="@upgrade_gui.ArmorProtection.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/upgrade/ArmorProtection/$playerId/buy</onClick>
             </button>
 
@@ -40,7 +40,7 @@
             <button pos="4,0">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/upgrade/IslandTrapUpgrade/$playerId/getNameColor"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/upgrade/IslandTrapUpgrade/$playerId/composeLore"/>
-                <icon id="54" data="0" name="@upgrade_gui.IslandTrapUpgrade.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="CHEST" data="0" name="@upgrade_gui.IslandTrapUpgrade.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/upgrade/IslandTrapUpgrade/$playerId/buy</onClick>
             </button>
 
@@ -48,7 +48,7 @@
             <button pos="5,0">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/upgrade/Healbot/$playerId/getNameColor"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/upgrade/Healbot/$playerId/composeLore"/>
-                <icon id="152" data="0" name="@upgrade_gui.Healbot.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="REDSTONE_BLOCK" data="0" name="@upgrade_gui.Healbot.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/upgrade/Healbot/$playerId/buy</onClick>
             </button>
 
@@ -56,7 +56,7 @@
             <button pos="6,0">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/upgrade/MoreHearts/$playerId/getNameColor"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/upgrade/MoreHearts/$playerId/composeLore"/>
-                <icon id="351" data="1" name="@upgrade_gui.MoreHearts.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <icon id="INK_SACK" data="1" name="@upgrade_gui.MoreHearts.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/upgrade/MoreHearts/$playerId/buy</onClick>
             </button>
 		</content>

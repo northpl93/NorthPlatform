@@ -1,10 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<gui height="3" title="@gui.shop_main_title">
-    <container pos="1,1" size="7,1">
-        <border id="0" data="0" />
-        <background id="0" data="0" />
+<gui height="3" title="@item.lapis.window_title">
+    <container pos="0,0" size="9,3">
+        <border id="AIR" data="0" />
+        <background id="AIR" data="0" />
         <content>
+            <!-- dodatkowe zycie -->
+            <button pos="3,1">
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/lapis.life/$playerId"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/lapis.life/$playerId"/>
+                <icon id="INK_SAC" data="1" name="@item.extras.lapis.life$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/shop/buy/lapis.life/$playerId</onClick>
+            </button>
 
+            <!-- miecz pernamentny -->
+            <button pos="3,1">
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/lapis.permanent_sword/$playerId"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/lapis.permanent_sword/$playerId"/>
+                <icon id="DIAMOND_SWORD" name="@item.extras.lapis.permanent_sword$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/shop/buy/lapis.permanent_sword/$playerId</onClick>
+            </button>
+
+            <!-- tarcza -->
+            <button pos="3,1">
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/lapis.shield/$playerId"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/lapis.shield/$playerId"/>
+                <icon id="SHIELD" name="@item.extras.lapis.shield$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/shop/buy/lapis.shield/$playerId</onClick>
+            </button>
+
+            <!-- back button -->
+            <button pos="8,2">
+                <icon id="ARROW" name="@gui.shop.back_button_name"/>
+                <onClick>northplatform://minigame/bedwars/shopCategory/main/$playerId</onClick>
+            </button>
         </content>
     </container>
 </gui>
