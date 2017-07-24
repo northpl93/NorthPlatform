@@ -1,9 +1,9 @@
 package pl.north93.zgame.api.global.component.impl.container;
 
-import java.lang.reflect.AccessibleObject;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import pl.north93.zgame.api.global.component.impl.injection.IInjectionContext;
 
 public abstract class AbstractBeanContainer
 {
@@ -26,7 +26,7 @@ public abstract class AbstractBeanContainer
         return this.name;
     }
 
-    public abstract Object getValue(AccessibleObject injectionContext);
+    public abstract Object getValue(IInjectionContext injectionContext);
 
     @Override
     public final boolean equals(final Object o)

@@ -13,7 +13,7 @@ import javassist.CtMethod;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.component.impl.Injector;
+import pl.north93.zgame.api.global.component.impl.injection.Injector;
 
 class InjectorInstaller
 {

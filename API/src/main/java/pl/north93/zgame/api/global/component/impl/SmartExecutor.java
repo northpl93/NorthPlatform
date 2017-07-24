@@ -8,7 +8,9 @@ import java.lang.reflect.Parameter;
 
 import pl.north93.zgame.api.global.component.IBeanContext;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
+import pl.north93.zgame.api.global.component.impl.container.AbstractBeanContainer;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
+import pl.north93.zgame.api.global.component.impl.injection.MethodParameterInjectionContext;
 
 public class SmartExecutor
 {
@@ -37,7 +39,8 @@ public class SmartExecutor
                 query.name(namedAnn.value());
             }
 
-            final Object bean = beanContext.getBean(query);
+            final AbstractBeanContainer beanContainer = beanContext.getBeanContainer(query);
+            final Object bean = beanContainer.getValue(new MethodParameterInjectionContext(parameter));
             execArgs[i] = bean;
         }
 

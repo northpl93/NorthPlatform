@@ -21,6 +21,7 @@ import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 import pl.north93.zgame.api.global.component.impl.container.BeanFactory;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
+import pl.north93.zgame.api.global.component.impl.injection.Injector;
 
 public class ComponentBundle implements IComponentBundle
 {

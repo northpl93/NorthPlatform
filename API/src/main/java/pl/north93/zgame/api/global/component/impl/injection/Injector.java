@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.component.impl;
+package pl.north93.zgame.api.global.component.impl.injection;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -6,6 +6,8 @@ import java.lang.reflect.Modifier;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
 import pl.north93.zgame.api.global.component.exceptions.InjectionException;
+import pl.north93.zgame.api.global.component.impl.BeanQuery;
+import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 
 public class Injector
@@ -63,7 +65,8 @@ public class Injector
 
             try
             {
-                final Object bean = context.getBeanContainer(query).getValue(field);
+                final FieldInjectionContext injectionContext = new FieldInjectionContext(field);
+                final Object bean = context.getBeanContainer(query).getValue(injectionContext);
                 field.set(instance, bean);
             }
             catch (final Exception e)

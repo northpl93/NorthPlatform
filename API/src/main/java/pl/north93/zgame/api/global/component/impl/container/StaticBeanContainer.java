@@ -1,9 +1,9 @@
 package pl.north93.zgame.api.global.component.impl.container;
 
-import java.lang.reflect.AccessibleObject;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import pl.north93.zgame.api.global.component.impl.injection.IInjectionContext;
 
 class StaticBeanContainer extends AbstractBeanContainer
 {
@@ -16,7 +16,7 @@ class StaticBeanContainer extends AbstractBeanContainer
     }
 
     @Override
-    public Object getValue(final AccessibleObject injectionContext)
+    public Object getValue(final IInjectionContext injectionContext)
     {
         return this.value;
     }

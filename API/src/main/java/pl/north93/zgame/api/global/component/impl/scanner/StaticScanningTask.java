@@ -20,6 +20,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Named;
 import pl.north93.zgame.api.global.component.impl.BeanQuery;
 import pl.north93.zgame.api.global.component.impl.container.AbstractBeanContainer;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
+import pl.north93.zgame.api.global.component.impl.injection.FieldInjectionContext;
 
 class StaticScanningTask extends AbstractScanningTask
 {
@@ -63,7 +64,7 @@ class StaticScanningTask extends AbstractScanningTask
             try
             {
                 final AbstractBeanContainer beanContainer = this.beanContext.getBeanContainer(query);
-                field.set(null, beanContainer.getValue(field));
+                field.set(null, beanContainer.getValue(new FieldInjectionContext(field)));
                 iterator.remove();
             }
             catch (final Exception exception)
