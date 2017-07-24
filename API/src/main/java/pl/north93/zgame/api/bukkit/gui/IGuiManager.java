@@ -17,4 +17,15 @@ public interface IGuiManager
     {
         return getCurrentGui(player) != null;
     }
+    
+    void displayHotbarMenu(Player player, HotbarMenu hotbarMenu);
+    
+    void closeHotbarMenu(Player player);
+    
+    <T extends HotbarMenu> T getCurrentHotbarMenu(Player player);
+    
+    default boolean hasHotbarMenu(Player player)
+    {
+        return getCurrentHotbarMenu(player) != null;
+    }
 }

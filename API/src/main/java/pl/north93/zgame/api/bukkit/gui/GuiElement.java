@@ -2,17 +2,22 @@ package pl.north93.zgame.api.bukkit.gui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.google.common.base.Preconditions;
 
-public abstract class GuiElement
+import pl.north93.zgame.api.bukkit.gui.impl.IClickable;
+
+public abstract class GuiElement implements IClickable
 {
     private GuiElement parent;
     private final List<GuiElement> children;
     
     private final List<String> clickHandlers = new ArrayList<>();
+    private final Map<String, String> metadata = new HashMap<>();
     
     private int posX;
     private int posY;
@@ -64,6 +69,11 @@ public abstract class GuiElement
     public final GuiElement getParent()
     {
         return parent;
+    }
+    
+    public Map<String, String> getMetadata()
+    {
+        return metadata;
     }
     
     public final List<String> getClickHandlers()

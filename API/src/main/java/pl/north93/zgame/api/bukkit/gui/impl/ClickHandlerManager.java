@@ -4,24 +4,28 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import org.spigotmc.SneakyThrow;
+
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
-import org.spigotmc.SneakyThrow;
-
-import pl.north93.zgame.api.bukkit.gui.ClickEvent;
 import pl.north93.zgame.api.bukkit.gui.ClickHandler;
-import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.uri.IUriManager;
 import pl.north93.zgame.api.global.utils.Vars;
 
-public class ClickHandlerManager
+public class ClickHandlerManager<T extends ClickEvent>
 {
-    private final Map<Class<?>, Multimap<String, Method>> resolvedGuiClasses = new WeakHashMap<>();
+    private final Class<T> clickEventClass;
+    private final Map<Class<?>, Multimap<String, Method>> resolvedClasses = new WeakHashMap<>();
     @Inject
     private IUriManager uriManager;
+    
+    public ClickHandlerManager(Class<T> clickEventClass)
+    {
+        this.clickEventClass = clickEventClass;
+    }
     
     private Multimap<String, Method> resolveClass(Class<?> classToResolve)
     {
@@ -52,32 +56,45 @@ public class ClickHandlerManager
     
     private boolean checkMethodSignature(Method method)
     {
-        return method.getReturnType() == Void.TYPE && method.getParameters().length == 1 && method.getParameterTypes()[0] == ClickEvent.class;
+        return method.getReturnType() == Void.TYPE && method.getParameters().length == 1 && method.getParameterTypes()[0] == clickEventClass;
     }
     
-    public void callClickEvent(Gui gui, String clickHandlerName, ClickEvent event)
+    public void callClickEvent(IClickHandler handler, IClickable clickedElement, T event)
     {
-        Preconditions.checkArgument(gui != null);
+        Preconditions.checkArgument(handler != null);
+        Preconditions.checkArgument(clickedElement != null);
+        Preconditions.checkArgument(event != null);
+        
+        for ( String handlerName : clickedElement.getClickHandlers() )
+        {
+            callClickEvent(handler, handlerName, event);
+        }
+    }
+    
+    public void callClickEvent(IClickHandler handler, String clickHandlerName, T event)
+    {
+        Preconditions.checkArgument(handler != null);
+        Preconditions.checkArgument(clickHandlerName != null);
         Preconditions.checkArgument(event != null);
 
         if (clickHandlerName.startsWith("northplatform://"))
         {
-            this.callNorthUriClickEvent(gui, clickHandlerName, event);
+            this.callNorthUriClickEvent(handler.getVariables(), clickHandlerName, event);
         }
         else
         {
-            this.callMethodClickEvent(gui, clickHandlerName, event);
+            this.callMethodClickEvent(handler, clickHandlerName, event);
         }
     }
 
-    private void callMethodClickEvent(Gui gui, String clickHandlerName, ClickEvent event)
+    private void callMethodClickEvent(IClickHandler handler, String clickHandlerName, T event)
     {
-        Multimap<String, Method> methods = resolvedGuiClasses.computeIfAbsent(gui.getClass(), this::resolveClass);
+        Multimap<String, Method> methods = resolvedClasses.computeIfAbsent(handler.getClass(), this::resolveClass);
         for ( Method method : methods.get(clickHandlerName) )
         {
             try
             {
-                method.invoke(gui, event);
+                method.invoke(handler, event);
             }
             catch ( Throwable e )
             {
@@ -86,11 +103,11 @@ public class ClickHandlerManager
         }
     }
 
-    private void callNorthUriClickEvent(final Gui gui, final String clickHandlerName, final ClickEvent event)
+    private void callNorthUriClickEvent(final Vars<Object> vars, final String clickHandlerName, final T event)
     {
         final Vars<Object> context = Vars.of("$playerId", (Object) event.getWhoClicked().getUniqueId())
                                          .and("$playerName", event.getWhoClicked().getName())
-                                         .and(gui.getVariables());
+                                         .and(vars);
 
         NorthUriUtils.getInstance().call(clickHandlerName, context);
     }

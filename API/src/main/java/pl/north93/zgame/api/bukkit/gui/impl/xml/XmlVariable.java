@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.impl.NorthUriUtils;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 import pl.north93.zgame.api.global.utils.Vars;
 
@@ -20,7 +21,7 @@ public class XmlVariable
     @XmlAttribute
     private String value;
 
-    public Vars<Object> process(final Gui gui, final Vars<Object> vars)
+    public Vars<Object> process(final MessagesBox messages, final Vars<Object> vars)
     {
         if (this.value.startsWith("northplatform:"))
         {
@@ -28,7 +29,7 @@ public class XmlVariable
         }
         else if (this.value.startsWith("@"))
         {
-            return Vars.of(this.name, TranslatableString.of(gui.getMessagesBox(), this.value));
+            return Vars.of(this.name, TranslatableString.of(messages, this.value));
         }
         return Vars.of(this.name, this.value);
     }

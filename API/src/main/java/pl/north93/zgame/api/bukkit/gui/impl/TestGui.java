@@ -1,6 +1,6 @@
 package pl.north93.zgame.api.bukkit.gui.impl;
 
-import pl.north93.zgame.api.bukkit.gui.ClickEvent;
+import pl.north93.zgame.api.bukkit.gui.GuiClickEvent;
 import pl.north93.zgame.api.bukkit.gui.ClickHandler;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -15,7 +15,7 @@ public class TestGui extends Gui
     }
     
     @ClickHandler("Accept")
-    public void accept(ClickEvent event)
+    public void accept(GuiClickEvent event)
     {
         event.getWhoClicked().sendMessage("Clicked");
     }

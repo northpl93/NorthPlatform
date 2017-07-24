@@ -25,6 +25,9 @@ public abstract class XmlGuiElement
     @XmlElement
     private List<String> onClick = new ArrayList<>();
     
+    @XmlElement
+    private List<XmlMetadataEntry> metadata = new ArrayList<>();
+    
     @XmlElementWrapper(name = "content")
     @XmlAnyElement(lax = true)
     private List<XmlGuiElement> content = new ArrayList<>();
@@ -39,6 +42,11 @@ public abstract class XmlGuiElement
         for ( String clickHandler : onClick )
         {
             element.getClickHandlers().add(clickHandler);
+        }
+        
+        for ( XmlMetadataEntry entry : metadata )
+        {
+            element.getMetadata().put(entry.getKey(), entry.getValue());
         }
 
         for ( XmlGuiElement child : content )

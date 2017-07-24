@@ -51,7 +51,7 @@ public class ClassloaderScanningTask
         this.loadedFile = loadedFile;
         this.classPool = manager.getClassPool(classLoader);
         this.injectorInstaller = new InjectorInstaller();
-        this.reflections = this.createReflections(new FilterBuilder().includePackage(rootPackage).includePackage("gui")); // todo allow to register own packages
+        this.reflections = this.createReflections(new FilterBuilder().includePackage(rootPackage).includePackage("gui").includePackage("hotbar")); // todo allow to register own packages
         this.pendingTasks = new ArrayDeque<>();
     }
 

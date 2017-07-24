@@ -8,12 +8,15 @@ import java.util.WeakHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -24,7 +27,10 @@ import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.gui.ClickType;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.GuiCanvas;
+import pl.north93.zgame.api.bukkit.gui.GuiClickEvent;
 import pl.north93.zgame.api.bukkit.gui.GuiElement;
+import pl.north93.zgame.api.bukkit.gui.HotbarEntry;
+import pl.north93.zgame.api.bukkit.gui.HotbarMenu;
 import pl.north93.zgame.api.bukkit.gui.IGuiManager;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
@@ -34,10 +40,12 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class GuiTracker extends Component implements IGuiManager, ITickable, Listener
 {
-    private final ClickHandlerManager clickHandlerManager = new ClickHandlerManager();
+    private final ClickHandlerManager<GuiClickEvent> guiClickHandlerManager = new ClickHandlerManager<>(GuiClickEvent.class);
+    private final ClickHandlerManager<HotbarClickEvent> hotbarClickHandlerManager = new ClickHandlerManager<>(HotbarClickEvent.class);
     
     private final Map<Player, GuiTrackerEntry> entriesByPlayer = new WeakHashMap<>();
     private final Multimap<Gui, GuiTrackerEntry> entriesByGui = ArrayListMultimap.create();
+    private final Multimap<HotbarMenu, GuiTrackerEntry> entriesByHotbar = ArrayListMultimap.create();
     
     @Inject
     private BukkitApiCore apiCore;
@@ -52,6 +60,7 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
         
         // Statyczny @Inject nie dziala prawidlowo, wiec trzeba tak wstrzyknac instancje :(
         Gui.setGuiTracker(this);
+        HotbarMenu.setGuiTracker(this);
     }
 
     @Override
@@ -60,9 +69,14 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
 
     }
     
-    public ClickHandlerManager getClickHandlerManager()
+    public ClickHandlerManager<GuiClickEvent> getGuiClickHandlerManager()
     {
-        return clickHandlerManager;
+        return guiClickHandlerManager;
+    }
+    
+    public ClickHandlerManager<HotbarClickEvent> getHotbarClickHandlerManager()
+    {
+        return hotbarClickHandlerManager;
     }
     
     @Override
@@ -84,11 +98,43 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
         entriesByGui.put(gui, viewer);
     }
     
+    void addHotbarViewer(HotbarMenu hotbar, GuiTrackerEntry viewer)
+    {
+        entriesByHotbar.put(hotbar, viewer);
+    }
+    
+    void removeHotbarViewer(HotbarMenu hotbar, GuiTrackerEntry viewer)
+    {
+        entriesByHotbar.remove(hotbar, viewer);
+    }
+    
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Gui> T getCurrentGui(Player player)
     {
         return (T) Optional.ofNullable(getEntry(player)).map(entry -> entry.getCurrentGui()).orElse(null);
+    }
+    
+    @Override
+    public void displayHotbarMenu(Player player, HotbarMenu hotbarMenu)
+    {
+        GuiTrackerEntry entry = getEntry(player);
+        entry.openNewHotbarMenu(hotbarMenu);
+    }
+    
+    @Override
+    public void closeHotbarMenu(Player player)
+    {
+        GuiTrackerEntry entry = getEntry(player);
+        entry.closeHotbarMenu();
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T extends HotbarMenu> T getCurrentHotbarMenu(Player player)
+    {
+        GuiTrackerEntry entry = getEntry(player);
+        return (T) entry.getCurrentHotbarMenu();
     }
     
     public GuiTrackerEntry getEntry(Player player)
@@ -101,6 +147,11 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
         return entriesByGui.get(gui);
     }
     
+    public Collection<GuiTrackerEntry> getEntries(HotbarMenu hotbarMenu)
+    {
+        return entriesByHotbar.get(hotbarMenu);
+    }
+    
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event)
     {
@@ -110,15 +161,17 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event)
     {
-        System.out.println("Quit event");
-        entriesByPlayer.remove(event.getPlayer());
+        GuiTrackerEntry entry = entriesByPlayer.remove(event.getPlayer());
+        
+        if ( entry.getCurrentHotbarMenu() != null )
+        {
+            entry.closeHotbarMenu();
+        }
     }
     
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event)
     {
-        System.out.println("Inventory close");
-        
         GuiTrackerEntry entry = getEntry((Player) event.getPlayer());
         if ( entry.getCurrentGui() == null )
         {
@@ -159,19 +212,26 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
         }
     }
     
-    
     @EventHandler
-    public void onChat(PlayerCommandPreprocessEvent event)
+    public void onInteract(PlayerInteractEvent event)
     {
-        if ( event.getMessage().equals("/examplegui") )
+        if ( event.getAction() == Action.PHYSICAL )
         {
-            event.setCancelled(true);
-            
-            final TestGui test = new TestGui();
-            
-            test.open(event.getPlayer());
-            event.getPlayer().sendMessage("Gui should open now");
+            return;
         }
+        
+        GuiTrackerEntry entry = getEntry(event.getPlayer());
+        if ( entry.getCurrentHotbarMenu() == null )
+        {
+            return;
+        }
+        
+        event.setUseItemInHand(Result.DENY);
+        
+        int slot = event.getPlayer().getInventory().getHeldItemSlot();
+        
+        HotbarEntry clickedEntry = entry.getCurrentHotbarMenu().getEntry(slot);
+        entry.getCurrentHotbarMenu().click(event.getPlayer(), clickedEntry, ClickType.fromBukkitAction(event.getAction()));
     }
     
     @Tick
@@ -190,6 +250,25 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
             for ( GuiTrackerEntry entry : new ArrayList<>(entriesByGui.get(gui)) )
             {
                 entry.refreshInventory();
+            }
+        }
+    }
+    
+    @Tick
+    public void updateDirtyHotbars()
+    {
+        for ( HotbarMenu hotbar : entriesByHotbar.keySet() )
+        {
+            if ( !hotbar.isDirty() )
+            {
+                continue;
+            }
+            
+            hotbar.resetDirty();
+            
+            for ( GuiTrackerEntry entry : entriesByHotbar.get(hotbar) )
+            {
+                entry.refreshHotbarMenu();
             }
         }
     }

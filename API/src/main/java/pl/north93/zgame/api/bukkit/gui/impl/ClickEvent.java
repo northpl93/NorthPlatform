@@ -1,16 +1,18 @@
-package pl.north93.zgame.api.bukkit.gui;
+package pl.north93.zgame.api.bukkit.gui.impl;
 
 import org.bukkit.entity.Player;
+
+import pl.north93.zgame.api.bukkit.gui.ClickType;
 
 public class ClickEvent
 {
     private final Player whoClicked;
     private final ClickType clickType;
     
-    public ClickEvent(Player player, ClickType type)
+    public ClickEvent(Player whoClicked, ClickType clickType)
     {
-        this.whoClicked = player;
-        this.clickType = type;
+        this.whoClicked = whoClicked;
+        this.clickType = clickType;
     }
     
     public Player getWhoClicked()

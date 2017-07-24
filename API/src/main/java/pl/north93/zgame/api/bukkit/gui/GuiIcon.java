@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlVariable;
 import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 import pl.north93.zgame.api.global.utils.Vars;
 
@@ -71,12 +72,12 @@ public class GuiIcon
         return glowing;
     }
     
-    public ItemStack toItemStack(Gui gui, Player player, Vars<Object> parameters)
+    public ItemStack toItemStack(MessagesBox messages, Player player, Vars<Object> parameters)
     {
         // przetwarzamy dodane zmienne z xmla
         for (final XmlVariable xmlVariable : this.variables)
         {
-            parameters = parameters.and(xmlVariable.process(gui, parameters));
+            parameters = parameters.and(xmlVariable.process(messages, parameters));
         }
 
         List<String> lore = this.lore != null ? Arrays.asList(this.lore.getValue(player.spigot().getLocale(), parameters).split("\n")) : Arrays.asList();

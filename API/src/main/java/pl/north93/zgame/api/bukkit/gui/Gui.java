@@ -11,11 +11,12 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.StringUtils;
 
 import pl.north93.zgame.api.bukkit.gui.impl.GuiTracker;
-import pl.north93.zgame.api.bukkit.gui.impl.XmlGuiLayoutRegistry;
+import pl.north93.zgame.api.bukkit.gui.impl.IClickHandler;
+import pl.north93.zgame.api.bukkit.gui.impl.XmlLayoutRegistry;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.utils.Vars;
 
-public class Gui
+public class Gui implements IClickHandler
 {
     private static GuiTracker guiTracker;
     
@@ -31,7 +32,7 @@ public class Gui
         this.messagesBox = messagesBox;
         if ( StringUtils.isNotEmpty(layout) )
         {
-            content = XmlGuiLayoutRegistry.getLayout(layout).createGuiContent(this);
+            content = XmlLayoutRegistry.getGuiLayout(layout).createGuiContent(this);
         }
         else
         {
@@ -64,12 +65,8 @@ public class Gui
     
     public final void click(Player player, GuiElement element, ClickType type)
     {
-        ClickEvent event = new ClickEvent(player, type);
-        
-        for ( String clickHandler : new ArrayList<>(element.getClickHandlers()) )
-        {
-            guiTracker.getClickHandlerManager().callClickEvent(this, clickHandler, event);
-        }
+        GuiClickEvent event = new GuiClickEvent(player, type, element);
+        guiTracker.getGuiClickHandlerManager().callClickEvent(this, element, event);
     }
     
     public final Collection<Player> getViewers()
@@ -160,7 +157,7 @@ public class Gui
     }
     
     @ClickHandler
-    public final void closeGui(ClickEvent event)
+    public final void closeGui(GuiClickEvent event)
     {
         close(event.getWhoClicked());
     }
