@@ -57,6 +57,11 @@ public class SpectatorListener implements Listener
 
     private void cancelIfNecessary(final Cancellable cancellable, final Player player)
     {
+        if (player == null)
+        {
+            return;
+        }
+
         final PlayerStatus playerStatus = getPlayerStatus(player);
         if (playerStatus == null)
         {

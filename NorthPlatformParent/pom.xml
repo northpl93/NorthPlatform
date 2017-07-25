@@ -53,6 +53,10 @@
             <id>sk89q</id>
             <url>https://maven.sk89q.com/repo</url>
         </repository>
+        <repository>
+            <id>citizens jenkins</id>
+            <url>http://ci.citizensnpcs.co/plugin/repository/everything</url>
+        </repository>
     </repositories>
 
     <groupId>pl.north93.zgame</groupId>

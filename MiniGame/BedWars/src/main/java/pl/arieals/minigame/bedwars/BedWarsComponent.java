@@ -17,6 +17,7 @@ import pl.arieals.minigame.bedwars.listener.DeathMatchStartListener;
 import pl.arieals.minigame.bedwars.listener.GameEndListener;
 import pl.arieals.minigame.bedwars.listener.InvisibleListener;
 import pl.arieals.minigame.bedwars.listener.ItemBuyListener;
+import pl.arieals.minigame.bedwars.listener.NpcCreator;
 import pl.arieals.minigame.bedwars.listener.PlayerItemsListener;
 import pl.arieals.minigame.bedwars.listener.PlayerTeamListener;
 import pl.arieals.minigame.bedwars.listener.UpgradeInstallListener;
@@ -43,6 +44,7 @@ public class BedWarsComponent extends Component
         }
         this.bukkitApi.registerEvents(
                 new ArenaStartListener(),
+                new NpcCreator(), // zarzadza tworzeniem NPC w bazie
                 new PlayerTeamListener(), //wejscie,start areny,wyjscie
                 new BuildListener(), // crafting,budowanie,niszczenie
                 new DeathListener(), // smierc gracza

@@ -30,6 +30,8 @@ public class BwTeamConfig
     private XmlLocation spawnLocation;
     @XmlElement(required = true, name = "bedLocation")
     private XmlLocation bedLocation;
+    @XmlElement(required = true, name = "upgradesNpc")
+    private XmlLocation upgradesNpc;
 
     public int getScoreboardOrder()
     {
@@ -59,6 +61,11 @@ public class BwTeamConfig
     public XmlLocation getBedLocation()
     {
         return this.bedLocation;
+    }
+
+    public XmlLocation getUpgradesNpc()
+    {
+        return this.upgradesNpc;
     }
 
     @Override
