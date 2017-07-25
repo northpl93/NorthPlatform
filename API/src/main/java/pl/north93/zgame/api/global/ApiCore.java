@@ -34,7 +34,6 @@ public abstract class ApiCore
     private final IComponentManager  componentManager;
     private final Platform           platform;
     private final PlatformConnector  connector;
-    //private final UpdateManager      updateManager;
     private       ApiState           apiState;
 
     public ApiCore(final Platform platform, final PlatformConnector platformConnector)
@@ -44,7 +43,6 @@ public abstract class ApiCore
         this.isDebug = System.getProperties().containsKey("debug");
         this.instrumentationClient = new LocalAgentClient();
         this.componentManager = new ComponentManagerImpl(this);
-        //this.updateManager = new UpdateManager();
         API.setApiCore(this);
         this.setApiState(ApiState.CONSTRUCTED);
     }
