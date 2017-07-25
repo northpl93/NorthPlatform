@@ -3,6 +3,9 @@ package pl.north93.zgame.api.bukkit.server.event;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+/**
+ * Event wykonuje sie gdy wylaczenie serwera zostalo anulowane.
+ */
 public class ShutdownCancelledEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();

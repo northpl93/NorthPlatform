@@ -9,8 +9,12 @@ import com.google.common.base.Preconditions;
 
 import org.bukkit.Bukkit;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.server.IBukkitServerManager;
+import pl.north93.zgame.api.bukkit.server.event.ServerStartedEvent;
 import pl.north93.zgame.api.bukkit.server.event.ShutdownCancelledEvent;
 import pl.north93.zgame.api.bukkit.server.event.ShutdownScheduledEvent;
 import pl.north93.zgame.api.bukkit.utils.SimpleCountdown;
@@ -42,6 +46,7 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
     @Override
     protected void enableComponent()
     {
+        Bukkit.getScheduler().runTask(this.apiCore.getPluginMain(), () -> Bukkit.getPluginManager().callEvent(new ServerStartedEvent()));
         this.rpcManager.addRpcImplementation(IServerRpc.class, new ServerRpcImpl());
         this.countdown = new SimpleCountdown(TIME_TO_NEXT_TRY).endCallback(this::tryShutdown);
         this.serverValue = this.observer.get(ServerImpl.class, this.apiCore.getId());
@@ -118,5 +123,11 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
     {
         final Properties properties = System.getProperties();
         return new ServerImpl(this.apiCore.getServerId(), false, ServerType.valueOf(properties.getProperty("northplatform.servertype")), ServerState.STARTING, JoiningPolicy.EVERYONE, Bukkit.getIp(), Bukkit.getPort());
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("serverValue", this.serverValue).append("countdown", this.countdown).toString();
     }
 }
