@@ -30,9 +30,9 @@ public class WrappedChunkProviderServer extends ChunkProviderServer
         }
 
         final DummyChunk chunk = new DummyChunk(this.world, x, z);
+        this.chunks.put(ChunkCoordIntPair.a(x, z), chunk);
         chunk.addEntities();
         chunk.loadNearby(this, this.chunkGenerator, true);
-        this.chunks.put(ChunkCoordIntPair.a(x, z), chunk);
         return chunk;
     }
 
