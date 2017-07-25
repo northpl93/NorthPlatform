@@ -38,7 +38,6 @@
         <module>../ItemShop</module>
         <module>../SkyBlockPlayerExperience</module>
         <module>../SkyBlock.Quests</module>
-        <module>../Punishments</module>
         <module>../API/MiniGame</module>
         <module>../MiniGame/GoldHunter</module>
         <module>../MiniGame/ElytraRace</module>
