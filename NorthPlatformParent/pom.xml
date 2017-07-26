@@ -42,6 +42,7 @@
         <module>../MiniGame/GoldHunter</module>
         <module>../MiniGame/ElytraRace</module>
         <module>../MiniGame/BedWars</module>
+        <module>../GlobalShops</module>
     </modules>
 
     <repositories>

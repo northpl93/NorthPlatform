@@ -1,0 +1,5 @@
+rootPackage: pl.arieals
+components:
+  - name: API.Commands
+    mainClass: "pl.north93.zgame.api.global.commands.impl.CommandsManagerDecorator"
+    description: "Provides unified commands API."
