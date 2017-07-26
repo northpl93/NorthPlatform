@@ -1,12 +1,9 @@
 package pl.north93.zgame.api.global.component.impl.context;
 
-import java.util.Collection;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.impl.JarComponentLoader;
-import pl.north93.zgame.api.global.component.impl.container.AbstractBeanContainer;
 
 public class JarBeanContext extends AbstractBeanContext
 {
@@ -18,7 +15,7 @@ public class JarBeanContext extends AbstractBeanContext
         this.loader = loader;
     }
 
-    @Override
+    /*@Override
     public Collection<AbstractBeanContainer> getAll(final boolean withParent)
     {
         final Collection<AbstractBeanContainer> all = super.getAll(withParent);
@@ -27,7 +24,7 @@ public class JarBeanContext extends AbstractBeanContext
             all.addAll(jarComponentLoader.getBeanContext().getAll(withParent));
         }
         return all;
-    }
+    }*/
 
     @Override
     public String toString()

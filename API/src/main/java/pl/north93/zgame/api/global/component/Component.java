@@ -1,6 +1,5 @@
 package pl.north93.zgame.api.global.component;
 
-import java.util.Collection;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -79,27 +78,9 @@ public abstract class Component implements IBeanContext
     }
 
     @Override
-    public <T> Collection<T> getBeans(final Class<T> clazz)
-    {
-        return this.componentBundle.getBeanContext().getBeans(clazz);
-    }
-
-    @Override
-    public <T> Collection<T> getBeans(final String name)
-    {
-        return this.componentBundle.getBeanContext().getBeans(name);
-    }
-
-    @Override
     public <T> T getBean(final IBeanQuery query)
     {
         return this.componentBundle.getBeanContext().getBean(query);
-    }
-
-    @Override
-    public <T> Collection<T> getBeans(final IBeanQuery query)
-    {
-        return this.componentBundle.getBeanContext().getBeans(query);
     }
 
     // = = = INTERNAL IMPLEMENTATION METHODS = = = //

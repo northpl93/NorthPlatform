@@ -3,17 +3,15 @@ package pl.north93.zgame.api.global.component.impl.context;
 import static java.util.Collections.synchronizedSet;
 
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.IBeanContext;
 import pl.north93.zgame.api.global.component.IBeanQuery;
+import pl.north93.zgame.api.global.component.exceptions.BeanCollisionException;
 import pl.north93.zgame.api.global.component.exceptions.BeanNotFoundException;
 import pl.north93.zgame.api.global.component.impl.BeanQuery;
 import pl.north93.zgame.api.global.component.impl.container.AbstractBeanContainer;
@@ -33,6 +31,11 @@ public abstract class AbstractBeanContext implements IBeanContext
 
     public void add(final AbstractBeanContainer bean)
     {
+        final Object result = this.getBeanContainer0(new BeanQuery().type(bean.getType()).name(bean.getName()));
+        if (result != null)
+        {
+            throw new BeanCollisionException(bean);
+        }
         this.registeredBeans.add(bean);
     }
 
@@ -48,58 +51,40 @@ public abstract class AbstractBeanContext implements IBeanContext
         return this.name;
     }
 
-    public Collection<AbstractBeanContainer> getAll(final boolean withParent)
-    {
-        if (withParent && this.parent != null)
-        {
-            final Set<AbstractBeanContainer> beans = new HashSet<>();
-            beans.addAll(this.parent.getAll(true));
-            beans.addAll(this.registeredBeans);
-            return beans;
-        }
-        return this.registeredBeans;
-    }
-
     @Override
     public <T> T getBean(final IBeanQuery query)
     {
         //noinspection unchecked
-        return (T) this.beanStream(true)
-                       .filter((BeanQuery) query)
-                       .reduce((u, v) -> { throw new IllegalStateException("More than one bean found. Use getBeans!"); })
-                       .map(container -> container.getValue(null))
-                       .orElseThrow(() -> new BeanNotFoundException(query));
+        return (T) this.getBeanContainer(query).getValue(null);
     }
 
-    public AbstractBeanContainer getBeanContainer(final IBeanQuery query)
+    public final AbstractBeanContainer getBeanContainer(final IBeanQuery query)
     {
-        //noinspection unchecked
-        return this.beanStream(true)
-                   .filter((BeanQuery) query)
-                   .reduce((u, v) -> { throw new IllegalStateException("More than one bean found. Use getBeans!"); })
-                   .orElseThrow(() -> new BeanNotFoundException(query));
+        final AbstractBeanContainer result = this.getBeanContainer0(query);
+        if (result == null)
+        {
+            throw new BeanNotFoundException(query);
+        }
+        return result;
     }
 
-    @Override
-    public <T> Collection<T> getBeans(final IBeanQuery query)
+    protected AbstractBeanContainer getBeanContainer0(final IBeanQuery query)
     {
-        //noinspection unchecked
-        return (Collection<T>) this.beanStream(true)
-                                   .filter((BeanQuery) query)
-                                   .map(container -> container.getValue(null))
-                                   .collect(Collectors.toSet());
-    }
+        final BeanQuery queryImpl = (BeanQuery) query;
+        for (final AbstractBeanContainer registeredBean : this.registeredBeans)
+        {
+            if (! queryImpl.test(registeredBean))
+            {
+                continue;
+            }
 
-    @Override
-    public <T> Collection<T> getBeans(final Class<T> clazz)
-    {
-        return this.getBeans(new BeanQuery());
-    }
-
-    @Override
-    public <T> Collection<T> getBeans(final String name)
-    {
-        return this.getBeans(new BeanQuery());
+            return registeredBean;
+        }
+        if (this.parent == null)
+        {
+            return null;
+        }
+        return this.parent.getBeanContainer0(query);
     }
 
     @Override
@@ -112,11 +97,6 @@ public abstract class AbstractBeanContext implements IBeanContext
     public <T> T getBean(final String beanName)
     {
         return this.getBean(new BeanQuery().name(beanName));
-    }
-
-    protected Stream<AbstractBeanContainer> beanStream(final boolean withParent)
-    {
-        return this.getAll(withParent).stream();
     }
 
     @Override

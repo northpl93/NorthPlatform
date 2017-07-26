@@ -1,12 +1,12 @@
 package pl.north93.zgame.api.global.component.impl.context;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.component.IBeanQuery;
 import pl.north93.zgame.api.global.component.impl.container.AbstractBeanContainer;
 
 public class ComponentBeanContext extends AbstractBeanContext
@@ -28,14 +28,21 @@ public class ComponentBeanContext extends AbstractBeanContext
     }
 
     @Override
-    public Collection<AbstractBeanContainer> getAll(final boolean withParent)
+    protected AbstractBeanContainer getBeanContainer0(final IBeanQuery query)
     {
-        final Collection<AbstractBeanContainer> all = super.getAll(withParent);
-        for (final ComponentBeanContext dependency : this.dependencies)
+        AbstractBeanContainer result = super.getBeanContainer0(query);
+        if (result == null)
         {
-            all.addAll(dependency.getAll(false));
+            for (final ComponentBeanContext dependency : this.dependencies)
+            {
+                result = dependency.getBeanContainer0(query);
+                if (result != null)
+                {
+                    break;
+                }
+            }
         }
-        return all;
+        return result;
     }
 
     @Override
