@@ -62,8 +62,6 @@ public class EventManagerImpl extends Component implements IEventManager
     {
         synchronized (this.handlers)
         {
-            System.out.println(target);
-            System.out.println(targetInstance);
             this.handlers.put(annotation.value(), new MethodInvocationHandler(targetInstance, target));
         }
     }

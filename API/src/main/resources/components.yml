@@ -4,13 +4,6 @@ include:
 
 # Lista komponentów dla platformy STANDALONE
 components:
-  - name: API.UpdateClient
-    enabled: false #replaced by docker-powered deployment
-    mainClass: "pl.north93.zgame.api.global.update.client.impl.UpdateManager"
-    description: "North Platform updating client."
-    dependencies:
-      - API.Database.Redis.RPC
-
   - name: API.Commands
     mainClass: "pl.north93.zgame.api.global.commands.impl.CommandsManagerDecorator"
     description: "Provides unified commands API."
@@ -57,6 +50,13 @@ components:
       - API.Database.Redis.MessagePackSerializer
       - API.Database.Redis.Subscriber
 
+  - name: API.Config.Client
+    mainClass: "pl.north93.zgame.api.global.config.client.ConfigClientImpl"
+    description: "Configuration system client."
+    dependencies:
+      - API.Database.Redis.Observer
+      - API.Database.Redis.RPC
+
   - name: API.MinecraftNetwork.UsernameCache
     mainClass: "pl.north93.zgame.api.global.data.UsernameCache"
     description: "Caches Mojang's API data."
@@ -79,8 +79,7 @@ components:
     mainClass: "pl.north93.zgame.api.global.permissions.PermissionsManager"
     description: "Manages player's permissions."
     dependencies:
-      - API.Database.StorageConnector
-      - API.Database.Redis.MessagePackSerializer
+      - API.Config.Client
 
   - name: API.MinecraftNetwork.PlayersStorage
     mainClass: "pl.north93.zgame.api.global.data.players.impl.PlayersDataImpl"

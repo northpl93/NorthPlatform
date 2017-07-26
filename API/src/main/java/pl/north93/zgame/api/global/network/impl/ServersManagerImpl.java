@@ -1,22 +1,25 @@
 package pl.north93.zgame.api.global.network.impl;
 
 import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_PATTERNS;
-import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_SERVER_GROUPS;
 import static pl.north93.zgame.api.global.redis.RedisKeys.SERVER;
 
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Sets;
 import com.lambdaworks.redis.api.sync.RedisCommands;
 
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.config.IConfig;
+import pl.north93.zgame.api.global.config.NetConfig;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.deployment.ServerPattern;
 import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
+import pl.north93.zgame.api.global.deployment.serversgroup.ServersGroupsContainer;
 import pl.north93.zgame.api.global.network.server.IServerRpc;
 import pl.north93.zgame.api.global.network.server.IServersManager;
 import pl.north93.zgame.api.global.network.server.Server;
@@ -29,6 +32,8 @@ class ServersManagerImpl implements IServersManager
     private NetworkManager      networkManager;
     private TemplateManager     msgPack;
     private IObservationManager observationManager;
+    @Inject @NetConfig(type = ServersGroupsContainer.class, id = "serversGroups")
+    private IConfig<ServersGroupsContainer> serversGroups;
 
     public ServersManagerImpl(final StorageConnector storage, final NetworkManager networkManager, final TemplateManager msgPack, final IObservationManager observationManager)
     {
@@ -73,10 +78,7 @@ class ServersManagerImpl implements IServersManager
     @Override
     public Set<IServersGroup> getServersGroups()
     {
-        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
-        {
-            return Sets.newCopyOnWriteArraySet(this.msgPack.deserializeList(IServersGroup.class, redis.get(NETWORK_SERVER_GROUPS)));
-        }
+        return new HashSet<>(this.serversGroups.get().getServersGroups());
     }
 
     @Override

@@ -1,48 +1,31 @@
 package pl.north93.zgame.controller.configbroadcaster;
 
-import static pl.north93.zgame.api.global.cfg.ConfigUtils.loadConfigFile;
-import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_ACTION;
-import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_META;
-import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_MINIGAMES;
-import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_PATTERNS;
-import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_SERVER_GROUPS;
-import static pl.north93.zgame.api.global.redis.RedisKeys.PERMISSIONS_GROUPS;
-import static pl.north93.zgame.api.global.utils.StringUtils.toBytes;
-
-
-import java.util.ArrayList;
-
-import com.lambdaworks.redis.api.sync.RedisCommands;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.data.StorageConnector;
-import pl.north93.zgame.api.global.deployment.ServerPattern;
-import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
-import pl.north93.zgame.api.global.network.NetworkAction;
+import pl.north93.zgame.api.global.config.IConfig;
+import pl.north93.zgame.api.global.deployment.serversgroup.ServersGroupsContainer;
 import pl.north93.zgame.api.global.network.NetworkMeta;
 import pl.north93.zgame.api.global.permissions.GroupsContainer;
-import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.controller.cfg.ServersGroupsConfig;
 import pl.north93.zgame.controller.cfg.ServersPatternsConfig;
+import pl.north93.zgame.controller.configserver.IConfigServer;
+import pl.north93.zgame.controller.configserver.source.IConfigSource;
+import pl.north93.zgame.controller.configserver.source.TransformedConfigSource;
+import pl.north93.zgame.controller.configserver.source.YamlConfigSource;
 
 /**
- * Klasa zarządzająca wczytywaniem konfiguracji sieci i wysyłaniem jej do Redisa.
+ * Komponent legacy rejestrujacy podstawowe configi API w
+ * systemie konfiguracji.
  */
 public class ConfigBroadcaster extends Component
 {
     @Inject
-    private StorageConnector      storage;
-    @Inject
-    private TemplateManager       msgPack;
-
-    private NetworkMeta           networkMeta;
-    private GroupsContainer       groups;
-    private ServersPatternsConfig patternsConfig;
-    private ServersGroupsConfig   serversGroups;
+    private IConfigServer                   configServer;
+    private IConfig<ServersGroupsContainer> serversGroups;
 
     @Override
     protected void enableComponent()
@@ -53,57 +36,29 @@ public class ConfigBroadcaster extends Component
     @Override
     protected void disableComponent()
     {
-        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
-        {
-            redis.del(NETWORK_META, PERMISSIONS_GROUPS, NETWORK_MINIGAMES, NETWORK_SERVER_GROUPS, NETWORK_PATTERNS);
-        }
     }
 
-    public NetworkMeta getNetworkMeta()
+    public ServersGroupsContainer getServersGroups()
     {
-        return this.networkMeta;
-    }
-
-    public ServersGroupsConfig getServersGroups()
-    {
-        return this.serversGroups;
-    }
-
-    public ServersPatternsConfig getPatternsConfig()
-    {
-        return this.patternsConfig;
+        return this.serversGroups.get();
     }
 
     public void loadAndBroadcastConfigs()
     {
-        this.networkMeta = loadConfigFile(NetworkMeta.class, this.getApiCore().getFile("network.yml"));
-        this.groups = loadConfigFile(GroupsContainer.class, this.getApiCore().getFile("permissions.yml"));
-        this.patternsConfig = loadConfigFile(ServersPatternsConfig.class, this.getApiCore().getFile("instancepatterns.yml"));
-        this.serversGroups = loadConfigFile(ServersGroupsConfig.class, this.getApiCore().getFile("serversgroups.yml"));
-        this.broadcastNetworkConfigs();
-    }
+        final ApiCore api = this.getApiCore();
 
-    private void broadcastNetworkConfigs()
-    {
-        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
-        {
-            redis.set(NETWORK_META, this.msgPack.serialize(this.networkMeta));
-            redis.set(PERMISSIONS_GROUPS, this.msgPack.serialize(this.groups));
+        final IConfigSource<ServersGroupsConfig> untransformedGroups = new YamlConfigSource<>(ServersGroupsConfig.class, api.getFile("serversgroups.yml"));
+        final IConfigSource<ServersGroupsContainer> transformedGroups = new TransformedConfigSource<>(untransformedGroups, ServersGroupsContainer.class, ServersGroupsConfig::toContainer);
+        this.serversGroups = this.configServer.addConfig("serversGroups", transformedGroups);
 
-            final ArrayList<IServersGroup> serversGroups = new ArrayList<>();
-            serversGroups.addAll(this.serversGroups.getManagedGroups());
-            serversGroups.addAll(this.serversGroups.getUnManagedGroups());
-            redis.set(NETWORK_SERVER_GROUPS, this.msgPack.serializeList(IServersGroup.class, serversGroups));
-
-            redis.set(NETWORK_PATTERNS, this.msgPack.serializeList(ServerPattern.class, this.patternsConfig.getPatterns()));
-
-            redis.publish(NETWORK_ACTION, toBytes(NetworkAction.UPDATE_NETWORK_CONFIGS.toString()));
-        }
+        this.configServer.addConfig("networkMeta", new YamlConfigSource<>(NetworkMeta.class, api.getFile("network.yml")));
+        this.configServer.addConfig("groups", new YamlConfigSource<>(GroupsContainer.class, api.getFile("permissions.yml")));
+        this.configServer.addConfig("patternsConfig", new YamlConfigSource<>(ServersPatternsConfig.class, api.getFile("instancepatterns.yml")));
     }
 
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("networkMeta", this.networkMeta).append("groups", this.groups).append("patternsConfig", this.patternsConfig).append("serversGroups", this.serversGroups).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("serversGroups", this.serversGroups).toString();
     }
 }

@@ -3,6 +3,7 @@ package pl.north93.zgame.controller.servers;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.Component;
@@ -10,6 +11,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.deployment.RemoteDaemon;
 import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.deployment.serversgroup.ManagedServersGroup;
+import pl.north93.zgame.api.global.deployment.serversgroup.ServersGroupType;
 import pl.north93.zgame.api.global.network.impl.ServerImpl;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.controller.configbroadcaster.ConfigBroadcaster;
@@ -50,7 +52,12 @@ public class NetworkServersManager extends Component implements INetworkServersM
     {
         while (this.working)
         {
-            final List<ManagedServersGroup> serversGroups = this.configBroadcaster.getServersGroups().getManagedGroups();
+            final List<ManagedServersGroup> serversGroups = this.configBroadcaster.getServersGroups()
+                                                                                  .getServersGroups()
+                                                                                  .stream()
+                                                                                  .filter(group -> group.getType() == ServersGroupType.MANAGED)
+                                                                                  .map(group -> ((ManagedServersGroup) group))
+                                                                                  .collect(Collectors.toList());
             final Set<RemoteDaemon> daemons = API.getNetworkManager().getDaemons();
 
             this.allocationProcessor.processTasks(daemons, serversGroups);

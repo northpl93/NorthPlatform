@@ -215,9 +215,6 @@ class NetworkManager extends Component implements INetworkManager
             case KICK_ALL:
                 API.getPlatformConnector().kickAll();
                 break;
-            case UPDATE_NETWORK_CONFIGS:
-                this.getApiCore().getPermissionsManager().synchronizeGroups();
-                break;
         }
     }
 

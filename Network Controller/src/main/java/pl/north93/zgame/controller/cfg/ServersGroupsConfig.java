@@ -15,7 +15,9 @@ import org.diorite.cfg.system.TemplateCreator;
 
 import pl.north93.zgame.api.global.deployment.AllocationConfiguration;
 import pl.north93.zgame.api.global.deployment.ServersAllocatorType;
+import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.deployment.serversgroup.ManagedServersGroup;
+import pl.north93.zgame.api.global.deployment.serversgroup.ServersGroupsContainer;
 import pl.north93.zgame.api.global.deployment.serversgroup.UnManagedServer;
 import pl.north93.zgame.api.global.deployment.serversgroup.UnManagedServersGroup;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
@@ -80,6 +82,14 @@ public class ServersGroupsConfig
     public List<UnManagedServersGroup> getUnManagedGroups()
     {
         return this.unManagedGroups;
+    }
+
+    public ServersGroupsContainer toContainer()
+    {
+        final List<IServersGroup> groups = new ArrayList<>();
+        groups.addAll(this.managedGroups);
+        groups.addAll(this.unManagedGroups);
+        return new ServersGroupsContainer(groups);
     }
 
     @Override

@@ -1,11 +1,6 @@
 package pl.north93.zgame.api.global.permissions;
 
-import static pl.north93.zgame.api.global.redis.RedisKeys.PERMISSIONS_GROUPS;
-
-
 import java.util.Set;
-
-import com.lambdaworks.redis.api.sync.RedisCommands;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -13,22 +8,28 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.data.StorageConnector;
-import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
+import pl.north93.zgame.api.global.config.ConfigUpdatedNetEvent;
+import pl.north93.zgame.api.global.config.IConfig;
+import pl.north93.zgame.api.global.config.NetConfig;
+import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 
 public class PermissionsManager extends Component
 {
+    @Inject @NetConfig(type = GroupsContainer.class, id = "groups")
+    private IConfig<GroupsContainer> groups;
     private final Set<Group> cachedGroups = new ObjectArraySet<>();
-    @Inject
-    private StorageConnector  storageConnector;
-    @Inject
-    private TemplateManager   msgPack;
-    private Group             defaultGroup;
+    private Group            defaultGroup;
 
     @Override
     protected void enableComponent()
     {
-        this.synchronizeGroups();
+        final GroupsContainer groupsContainer = this.groups.get();
+        if (groupsContainer == null)
+        {
+            this.getLogger().info("Skipped groups synchronization because config isn't loaded yet.");
+            return;
+        }
+        this.synchronizeGroups(groupsContainer);
     }
 
     @Override
@@ -53,24 +54,23 @@ public class PermissionsManager extends Component
         return this.defaultGroup;
     }
 
+    @NetEventSubscriber(ConfigUpdatedNetEvent.class)
+    public void onConfigUpdated(final ConfigUpdatedNetEvent event)
+    {
+        if (! event.getConfigName().equals("groups"))
+        {
+            return;
+        }
+
+        this.synchronizeGroups(this.groups.get());
+    }
+
     /**
      * Pobiera z Redisa listę grup i zapisuje ją w liście
      */
-    public void synchronizeGroups()
+    private void synchronizeGroups(final GroupsContainer groupsContainer)
     {
-        this.getApiCore().getLogger().info("Synchronizing groups...");
-        final GroupsContainer groupsContainer;
-        try (final RedisCommands<String, byte[]> redis = this.storageConnector.getRedis())
-        {
-            if (! redis.exists(PERMISSIONS_GROUPS))
-            {
-                this.getApiCore().getLogger().warning("Key " + PERMISSIONS_GROUPS + " doesn't exist! Synchronization skipped...");
-                return;
-            }
-
-            final byte[] msgPackGroups = redis.get(PERMISSIONS_GROUPS);
-            groupsContainer = this.msgPack.deserialize(GroupsContainer.class, msgPackGroups);
-        }
+        this.getLogger().info("Updating groups...");
         // Fetched from redis. Now load it into List
         this.cachedGroups.clear();
         for (final GroupsContainer.GroupEntry groupEntry : groupsContainer.groups)
@@ -94,7 +94,7 @@ public class PermissionsManager extends Component
             }
         }
         this.defaultGroup = this.getGroupByName(groupsContainer.defaultGroup);
-        this.getApiCore().getLogger().info("Loaded " + this.cachedGroups.size() + " groups!");
+        this.getLogger().info("Loaded " + this.cachedGroups.size() + " groups!");
     }
 
     @Override

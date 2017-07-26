@@ -1,11 +1,14 @@
 package pl.north93.zgame.controller.servers;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.deployment.serversgroup.ServersGroupType;
 import pl.north93.zgame.api.global.deployment.serversgroup.UnManagedServer;
 import pl.north93.zgame.api.global.deployment.serversgroup.UnManagedServersGroup;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
@@ -29,7 +32,14 @@ public class UnManagedServersLoader
 
     public void broadcastServers()
     {
-        for (final UnManagedServersGroup serversGroup : this.configBroadcaster.getServersGroups().getUnManagedGroups())
+        final List<UnManagedServersGroup> serversGroups = this.configBroadcaster.getServersGroups()
+                                                                               .getServersGroups()
+                                                                               .stream()
+                                                                               .filter(group -> group.getType() == ServersGroupType.UN_MANAGED)
+                                                                               .map(group -> ((UnManagedServersGroup) group))
+                                                                               .collect(Collectors.toList());
+
+        for (final UnManagedServersGroup serversGroup : serversGroups)
         {
             final ServerType serverType = serversGroup.getServersType();
             final JoiningPolicy joiningPolicy = serversGroup.getJoiningPolicy();

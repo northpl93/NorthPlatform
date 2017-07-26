@@ -6,7 +6,6 @@ package pl.north93.zgame.api.global.network;
 public enum NetworkAction
 {
     STOP_ALL,
-    UPDATE_NETWORK_CONFIGS,
 
     KICK_ALL
 }
