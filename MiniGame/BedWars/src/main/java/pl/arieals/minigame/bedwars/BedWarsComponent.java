@@ -20,6 +20,7 @@ import pl.arieals.minigame.bedwars.listener.ItemBuyListener;
 import pl.arieals.minigame.bedwars.listener.NpcCreator;
 import pl.arieals.minigame.bedwars.listener.PlayerItemsListener;
 import pl.arieals.minigame.bedwars.listener.PlayerTeamListener;
+import pl.arieals.minigame.bedwars.listener.SpecialItems;
 import pl.arieals.minigame.bedwars.listener.UpgradeInstallListener;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageTracker;
@@ -52,6 +53,7 @@ public class BedWarsComponent extends Component
                 new PlayerItemsListener(), // pilnuje ekwipunku, dropu po śmierci
                 new ItemBuyListener(), // zakup itemów,wysyłanie komunikatu zakupu
                 new UpgradeInstallListener(), // instalowanie apgrejdów,wysyłanie komunikatu u upgrade
+                new SpecialItems(), // obsluga itemow specjalnych
                 new DeathMatchStartListener(), // przygotowujemy deathmatcha
                 new InvisibleListener(), // blokady specjalnie dla graczy niewidzialnych
                 new GameEndListener()); // eliminacja teamu i koniec gry
