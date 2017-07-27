@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -25,7 +24,6 @@ import pl.north93.zgame.api.global.component.impl.injection.Injector;
 
 public class ComponentBundle implements IComponentBundle
 {
-    private final String               name;
     private final ComponentDescription description;
     private final ClassLoader          classLoader;
     private final AbstractBeanContext  componentBeanContext;
@@ -35,7 +33,6 @@ public class ComponentBundle implements IComponentBundle
 
     public ComponentBundle(final ComponentDescription description, final ClassLoader classLoader, final AbstractBeanContext componentBeanContext)
     {
-        this.name = description.getName();
         this.description = description;
         this.classLoader = classLoader;
         this.componentBeanContext = componentBeanContext;
@@ -49,14 +46,14 @@ public class ComponentBundle implements IComponentBundle
         {
             final String mainClass = this.description.getMainClass();
 
-            if (StringUtils.isEmpty(this.description.getPackageToScan()))
+            if (this.description.getPackages().isEmpty())
             {
                 final int lastIndexOfDot = mainClass.lastIndexOf(".");
                 this.basePackages.add(mainClass.substring(0, lastIndexOfDot));
             }
             else
             {
-                this.basePackages.add(this.description.getPackageToScan());
+                this.basePackages.addAll(this.description.getPackages());
             }
 
             try
@@ -64,10 +61,11 @@ public class ComponentBundle implements IComponentBundle
                 final Class<?> clazz = Class.forName(mainClass, true, this.classLoader);
                 for (final IncludeInScanning includeInScanning : clazz.getAnnotationsByType(IncludeInScanning.class))
                 {
+                    API.getLogger().log(Level.WARNING, "Component {0} uses deprecated IncludeInScanning annotation.", this.getName());
                     this.basePackages.add(includeInScanning.value());
                 }
             }
-            catch (final Exception ignored)
+            catch (final Throwable ignored)
             {
             }
         }
@@ -78,7 +76,7 @@ public class ComponentBundle implements IComponentBundle
     @Override
     public String getName()
     {
-        return this.name;
+        return this.description.getName();
     }
 
     @Override
@@ -206,6 +204,6 @@ public class ComponentBundle implements IComponentBundle
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("description", this.description).append("classLoader", this.classLoader).append("component", this.component).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("description", this.description).append("classLoader", this.classLoader).append("component", this.component).toString();
     }
 }

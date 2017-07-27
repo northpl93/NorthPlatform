@@ -77,17 +77,18 @@ public class ClassloaderScanningTask
         final FilterBuilder filter = new FilterBuilder();
         for (final ComponentDescription component : components)
         {
-            final String pack;
-            if (StringUtils.isEmpty(component.getPackageToScan()))
+            if (component.getPackages().isEmpty())
             {
                 final int lastDot = component.getMainClass().lastIndexOf('.');
-                pack = component.getMainClass().substring(0, lastDot);
+                filter.excludePackage(component.getMainClass().substring(0, lastDot));
             }
             else
             {
-                pack = component.getPackageToScan();
+                for (final String pack : component.getPackages())
+                {
+                    filter.excludePackage(pack);
+                }
             }
-            filter.excludePackage(pack);
 
             try
             {

@@ -13,7 +13,8 @@ import pl.north93.zgame.api.global.Platform;
 public class ComponentDescription
 {
     private String       mainClass;
-    private String       packageToScan;
+    @CfgDelegateDefault("{ArrayList}")
+    private List<String> packages;
     private String       name;
     @CfgBooleanDefault(true)
     private boolean      enabled;
@@ -28,9 +29,9 @@ public class ComponentDescription
         return this.mainClass;
     }
 
-    public String getPackageToScan()
+    public List<String> getPackages()
     {
-        return this.packageToScan;
+        return this.packages;
     }
 
     public String getName()
@@ -61,7 +62,7 @@ public class ComponentDescription
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("mainClass", this.mainClass).append("packageToScan", this.packageToScan).append("name", this.name).append("enabled", this.enabled).append("description", this.description).append("dependencies", this.dependencies).append("platforms", this.platforms).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("mainClass", this.mainClass).append("packages", this.packages).append("name", this.name).append("enabled", this.enabled).append("description", this.description).append("dependencies", this.dependencies).append("platforms", this.platforms).toString();
     }
 
     private static Platform[] defaultPlatforms()
