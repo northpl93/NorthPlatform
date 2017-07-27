@@ -1,5 +1,23 @@
 rootPackage: pl.arieals
 components:
-  - name: API.Commands
-    mainClass: "pl.north93.zgame.api.global.commands.impl.CommandsManagerDecorator"
-    description: "Provides unified commands API."
+  - name: GlobalShops.Controller
+    mainClass: "pl.arieals.globalshops.controller.GlobalShopsController"
+    description: "Controller part of global shops system. Publishes data to redis."
+    packages:
+      - pl.arieals.globalshops.shared
+      - pl.arieals.globalshops.controller
+    dependencies:
+      - NetworkController.ConfigServer
+    platforms:
+      - STANDALONE
+
+  - name: GlobalShops.Server
+    mainClass: "pl.arieals.globalshops.server.impl.GlobalShopsServer"
+    description: "Bukkit part of GlobalShops API."
+    packages:
+      - pl.arieals.globalshops.shared
+      - pl.arieals.globalshops.server
+    dependencies:
+      - API.Config.Client
+    platforms:
+      - BUKKIT

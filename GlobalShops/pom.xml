@@ -20,5 +20,10 @@
             <artifactId>minigame</artifactId>
             <version>1.0-INDEV</version>
         </dependency>
+        <dependency>
+            <groupId>pl.north93.zgame</groupId>
+            <artifactId>controller</artifactId>
+            <version>1.0-INDEV</version>
+        </dependency>
     </dependencies>
 </project>

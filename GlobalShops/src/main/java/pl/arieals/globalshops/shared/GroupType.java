@@ -10,5 +10,9 @@ public enum GroupType
      * ale musi wybrac tylko jeden aktywny.
      */
     SINGLE_PICK,
-    
+    /**
+     * W tym trybie gracz moze kupic dowolna liczbe przedmiotow,
+     * i wszystkie sa zawsze wlaczone.
+     */
+    MULTI_BUY
 }
