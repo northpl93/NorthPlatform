@@ -7,11 +7,11 @@
     <properties>
         <spigot.location>lib/spigot-1.10.2.jar</spigot.location>
 
-        <bungee-api.version>1.10-SNAPSHOT</bungee-api.version>
+        <bungee-api.version>1.12-SNAPSHOT</bungee-api.version>
 
         <mongodb.version>3.4.2</mongodb.version>
 
-        <spark.version>2.5.5</spark.version>
+        <spark.version>2.6.0</spark.version>
 
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>

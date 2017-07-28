@@ -2,7 +2,6 @@ package pl.north93.zgame.restful;
 
 import static spark.Spark.get;
 import static spark.Spark.stop;
-import static spark.route.RouteOverview.enableRouteOverview;
 
 
 import com.google.gson.Gson;
@@ -38,8 +37,6 @@ public class RestfulComponent extends Component
 
         final ApiSecurity apiSecurity = new ApiSecurity();
         apiSecurity.setupSecurity();
-
-        enableRouteOverview("help");
     }
 
     @Override
