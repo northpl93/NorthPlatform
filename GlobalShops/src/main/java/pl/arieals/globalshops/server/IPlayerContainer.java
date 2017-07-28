@@ -45,6 +45,7 @@ public interface IPlayerContainer
      * w przeciwnym wypadku zostanie rzucony wyjatek.
      *
      * @throws IllegalArgumentException Gdy przedmiot nalezy do grupy MULTI_BUY.
+     * @throws IllegalStateException Gdy gracz nie ma kupionego danego przedmiotu.
      * @param item przedmiot ktory oznaczyc jako aktywny w grupie.
      */
     void markAsActive(Item item);

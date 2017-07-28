@@ -33,7 +33,7 @@ public class GlobalShopsDev extends NorthCommand
     {
         if (args.length() == 0)
         {
-            sender.sendRawMessage("&cUsage: buy <itemId>/myitems <groupId>/item <id>/group <id>");
+            sender.sendRawMessage("&cUsage: buy <itemId>/myitems <groupId>/item <id>/group <id>/activate <itemId>");
             sender.sendRawMessage("&ceg /globalshopsdev myitems testGroup");
         }
         else if (args.length() == 2)
@@ -92,6 +92,21 @@ public class GlobalShopsDev extends NorthCommand
                 final IPlayerContainer container = this.globalShops.getPlayer(player);
 
                 container.addItem(item);
+                sender.sendRawMessage("&aok");
+            }
+            else if (arg0.equalsIgnoreCase("activate"))
+            {
+                final Item item = this.globalShops.getItem(args.asString(1));
+                if (item == null)
+                {
+                    sender.sendRawMessage("&cno item");
+                    return;
+                }
+
+                final Player player = (Player) sender.unwrapped();
+                final IPlayerContainer container = this.globalShops.getPlayer(player);
+
+                container.markAsActive(item);
                 sender.sendRawMessage("&aok");
             }
         }

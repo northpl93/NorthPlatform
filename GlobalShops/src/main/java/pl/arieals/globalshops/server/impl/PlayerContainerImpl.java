@@ -1,5 +1,8 @@
 package pl.arieals.globalshops.server.impl;
 
+import static java.text.MessageFormat.format;
+
+
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -68,6 +71,11 @@ class PlayerContainerImpl implements IPlayerContainer
         if (group.getGroupType() == GroupType.MULTI_BUY)
         {
             throw new IllegalArgumentException();
+        }
+
+        if (! this.hasBoughtItem(item))
+        {
+            throw new IllegalStateException(format("Item {0} isn't bought.", item.getId()));
         }
 
         this.service.setActiveItem(this.player, group.getId(), item.getId());

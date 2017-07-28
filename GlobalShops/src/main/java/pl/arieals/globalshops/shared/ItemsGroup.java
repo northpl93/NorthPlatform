@@ -2,11 +2,14 @@ package pl.arieals.globalshops.shared;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.globalshops.controller.cfg.ItemCfg;
+import pl.arieals.globalshops.controller.cfg.ItemDataCfg;
 import pl.arieals.globalshops.controller.cfg.ItemsGroupCfg;
 
 /**
@@ -29,7 +32,8 @@ public final class ItemsGroup
         this.items = new ArrayList<>();
         for (final ItemCfg itemCfg : cfg.getItems())
         {
-            this.items.add(new Item(this, itemCfg.getId()));
+            final Map<String, String> itemData = itemCfg.getItemData().stream().collect(Collectors.toMap(ItemDataCfg::getName, ItemDataCfg::getValue));
+            this.items.add(new Item(this, itemCfg.getId(), itemData));
         }
     }
 

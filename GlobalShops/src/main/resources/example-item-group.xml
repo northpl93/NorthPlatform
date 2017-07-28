@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<itemGroup>
+    <!-- Unikalna nazwa grupy -->
+    <id>example-item-group</id>
+    <!-- Typ grupy. W tym przypadku gracz wybiera sobie jeden przedmiot sposrod kupionych -->
+    <groupType>SINGLE_PICK</groupType>
+    <items>
+        <!-- Konfiguracja 'przedmiotow' w tej grupie -->
+        <item>
+            <id>test_item</id>
+            <itemData name="priority" value="1" />
+            <itemData name="type" value="PLAYER" />
+        </item>
+        <item>
+            <id>npc_skin_1</id>
+            <itemData name="priority" value="1" />
+            <itemData name="type" value="PLAYER" />
+        </item>
+    </items>
+</itemGroup>
