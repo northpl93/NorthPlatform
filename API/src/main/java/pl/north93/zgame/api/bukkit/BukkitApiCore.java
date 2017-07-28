@@ -13,10 +13,13 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
 import org.spigotmc.SpigotConfig;
 
+import javassist.ClassPool;
+import javassist.LoaderClassPath;
 import pl.north93.zgame.api.bukkit.listeners.ChatListener;
 import pl.north93.zgame.api.bukkit.listeners.JoinLeftListener;
 import pl.north93.zgame.api.bukkit.listeners.LanguageKeeper;
@@ -25,6 +28,7 @@ import pl.north93.zgame.api.bukkit.packets.PacketsHandler;
 import pl.north93.zgame.api.bukkit.windows.WindowManager;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
+import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
 import pl.north93.zgame.api.global.exceptions.ConfigurationException;
 
 public class BukkitApiCore extends ApiCore
@@ -116,6 +120,7 @@ public class BukkitApiCore extends ApiCore
     @Override
     protected void init() throws Exception
     {
+        this.registerPluginsPaths();
         try
         {
             this.serverId = this.obtainServerId();
@@ -191,6 +196,25 @@ public class BukkitApiCore extends ApiCore
         else
         {
             throw new ConfigurationException("Invalid startup parameters. Please specify northplatform.serverid or northplatform.servertype");
+        }
+    }
+
+    /**
+     * Rejestruje classloadery wszystkich pluginow w glownym ClassPoolu
+     * systemu wstrzykiwania zaleznosci.
+     * Potrzebne bo jesli uzyjemy klasy jakiegos innego pluginu to
+     * wtedy wstrzykiwanie zaleznosci moze wywalac bledy.
+     */
+    private void registerPluginsPaths()
+    {
+        final ClassPool classPool = ComponentManagerImpl.instance.getClassPool(this.getClass().getClassLoader());
+        for (final Plugin plugin : Bukkit.getPluginManager().getPlugins())
+        {
+            if (plugin == this.pluginMain)
+            {
+                continue;
+            }
+            classPool.appendClassPath(new LoaderClassPath(plugin.getClass().getClassLoader()));
         }
     }
 }

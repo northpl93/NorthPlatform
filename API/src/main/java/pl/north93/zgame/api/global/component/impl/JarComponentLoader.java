@@ -34,8 +34,8 @@ public class JarComponentLoader extends URLClassLoader
         this.dependencies = new HashSet<>();
         this.beanContext = new JarBeanContext(rootBeanContext, this);
 
-        this.classPool = new ClassPool();
-        this.classPool.appendClassPath(new LoaderClassPath(ApiCore.class.getClassLoader())); // main API loader
+        final ClassPool apiPool = ComponentManagerImpl.instance.getClassPool(ApiCore.class.getClassLoader());
+        this.classPool = new ClassPool(apiPool);
         this.classPool.appendClassPath(new LoaderClassPath(this));
     }
 
