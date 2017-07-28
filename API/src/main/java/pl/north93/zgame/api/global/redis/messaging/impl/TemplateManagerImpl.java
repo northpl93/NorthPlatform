@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import com.google.common.base.Preconditions;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.msgpack.core.MessageBufferPacker;
@@ -80,6 +82,8 @@ public class TemplateManagerImpl extends Component implements TemplateManager
     @Override
     public void registerTemplate(final Class<?> clazz, final Template template)
     {
+        Preconditions.checkNotNull(clazz);
+        Preconditions.checkNotNull(template);
         if (clazz.isInterface())
         {
             throw new IllegalArgumentException("Can't register template for interface.");
@@ -93,6 +97,7 @@ public class TemplateManagerImpl extends Component implements TemplateManager
     @Override
     public <T> Template<T> getTemplate(final Class<T> clazz)
     {
+        Preconditions.checkNotNull(clazz);
         try
         {
             this.cacheLock.readLock().lock();
@@ -144,6 +149,7 @@ public class TemplateManagerImpl extends Component implements TemplateManager
     @Override
     public <T> Template<?> getTemplate(final Class<T> clazz, final ParameterizedType genericType)
     {
+        Preconditions.checkNotNull(genericType);
         final TemplateGeneric template = (TemplateGeneric) this.getTemplate(clazz);
         return template.setGenericType(genericType);
     }
@@ -152,6 +158,7 @@ public class TemplateManagerImpl extends Component implements TemplateManager
     @Override
     public <T> Template<?> getTemplate(final Class<T> clazz, final Class<?> genericType)
     {
+        Preconditions.checkNotNull(genericType);
         final TemplateGeneric template = (TemplateGeneric) this.getTemplate(clazz);
         return template.setGenericType(genericType);
     }
