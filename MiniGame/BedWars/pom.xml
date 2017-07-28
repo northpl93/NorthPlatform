@@ -26,5 +26,10 @@
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>pl.arieals</groupId>
+            <artifactId>globalshops</artifactId>
+            <version>1.0-INDEV</version>
+        </dependency>
     </dependencies>
 </project>

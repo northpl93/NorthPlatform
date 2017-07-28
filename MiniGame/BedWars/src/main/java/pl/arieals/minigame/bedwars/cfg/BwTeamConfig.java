@@ -30,6 +30,8 @@ public class BwTeamConfig
     private XmlLocation spawnLocation;
     @XmlElement(required = true, name = "bedLocation")
     private XmlLocation bedLocation;
+    @XmlElement(required = true, name = "shopNpc")
+    private XmlLocation shopNpc;
     @XmlElement(required = true, name = "upgradesNpc")
     private XmlLocation upgradesNpc;
 
@@ -63,6 +65,11 @@ public class BwTeamConfig
         return this.bedLocation;
     }
 
+    public XmlLocation getShopNpc()
+    {
+        return this.shopNpc;
+    }
+
     public XmlLocation getUpgradesNpc()
     {
         return this.upgradesNpc;
@@ -71,6 +78,6 @@ public class BwTeamConfig
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("scoreboardOrder", this.scoreboardOrder).append("color", this.color).append("teamRegion", this.teamRegion).append("healRegion", this.healRegion).append("spawnLocation", this.spawnLocation).append("bedLocation", this.bedLocation).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("scoreboardOrder", this.scoreboardOrder).append("color", this.color).append("teamRegion", this.teamRegion).append("healRegion", this.healRegion).append("spawnLocation", this.spawnLocation).append("bedLocation", this.bedLocation).append("shopNpc", this.shopNpc).append("upgradesNpc", this.upgradesNpc).toString();
     }
 }

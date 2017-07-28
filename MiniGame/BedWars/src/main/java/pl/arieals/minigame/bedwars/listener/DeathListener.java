@@ -59,7 +59,7 @@ public class DeathListener implements Listener
         final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
         final BedWarsPlayer damagerData = getPlayerData(damager, BedWarsPlayer.class);
 
-        if (playerData.getTeam() == damagerData.getTeam())
+        if (playerData == null || damagerData == null || playerData.getTeam() == damagerData.getTeam())
         {
             event.setCancelled(true);
         }

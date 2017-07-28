@@ -19,8 +19,7 @@ import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 
 public class Team
 {
-    private int         scoreboardOrder;
-    private ChatColor   color;
+    private final BwTeamConfig config;
     private Set<Player> players;
     private Cuboid      teamArena;
     private Cuboid      healArena;
@@ -31,10 +30,9 @@ public class Team
 
     public Team(final LocalArena arena, final BwTeamConfig config)
     {
-        final World currentWorld = arena.getWorld().getCurrentWorld();
+        this.config = config;
 
-        this.scoreboardOrder = config.getScoreboardOrder();
-        this.color = config.getColor();
+        final World currentWorld = arena.getWorld().getCurrentWorld();
         this.players = new HashSet<>();
         this.teamArena = config.getTeamRegion().toCuboid(currentWorld);
         this.healArena = config.getHealRegion().toCuboid(currentWorld);
@@ -44,6 +42,11 @@ public class Team
         this.upgrades = new Upgrades(arena, this);
     }
 
+    public BwTeamConfig getConfig()
+    {
+        return this.config;
+    }
+
     /**
      * Ta cyfra jest uzywana do sortowania scoreboardu
      * wedlug configu.
@@ -51,7 +54,7 @@ public class Team
      */
     public int getScoreboardOrder()
     {
-        return this.scoreboardOrder;
+        return this.config.getScoreboardOrder();
     }
 
     /**
@@ -60,7 +63,7 @@ public class Team
      */
     public ChatColor getColor()
     {
-        return this.color;
+        return this.config.getColor();
     }
 
     /**
@@ -71,7 +74,7 @@ public class Team
      */
     public String getName()
     {
-        return this.color.name().toLowerCase(Locale.ENGLISH);
+        return this.getColor().name().toLowerCase(Locale.ENGLISH);
     }
 
     /**
@@ -82,7 +85,7 @@ public class Team
      */
     public char getColorChar()
     {
-        return this.color.getChar();
+        return this.getColor().getChar();
     }
 
     public Set<Player> getPlayers()

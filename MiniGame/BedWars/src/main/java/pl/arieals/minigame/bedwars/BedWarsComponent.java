@@ -5,6 +5,9 @@ import javax.xml.bind.JAXB;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.MemoryNPCDataStore;
+import net.citizensnpcs.api.npc.NPCRegistry;
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.minigame.bedwars.arena.generator.ItemRotator;
@@ -17,7 +20,7 @@ import pl.arieals.minigame.bedwars.listener.DeathMatchStartListener;
 import pl.arieals.minigame.bedwars.listener.GameEndListener;
 import pl.arieals.minigame.bedwars.listener.InvisibleListener;
 import pl.arieals.minigame.bedwars.listener.ItemBuyListener;
-import pl.arieals.minigame.bedwars.listener.NpcCreator;
+import pl.arieals.minigame.bedwars.npc.NpcCreator;
 import pl.arieals.minigame.bedwars.listener.PlayerItemsListener;
 import pl.arieals.minigame.bedwars.listener.PlayerTeamListener;
 import pl.arieals.minigame.bedwars.listener.SpecialItems;
@@ -28,6 +31,7 @@ import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.component.annotations.bean.Named;
 
 public class BedWarsComponent extends Component
 {
@@ -71,6 +75,12 @@ public class BedWarsComponent extends Component
     private BwConfig bedWarsConfig(final ApiCore api)
     {
         return JAXB.unmarshal(api.getFile("MiniGame.BedWars.xml"), BwConfig.class);
+    }
+
+    @Bean @Named("BedWarsNpcRegistry")
+    private NPCRegistry bedWarsNpcRegistry()
+    {
+        return CitizensAPI.createNamedNPCRegistry("bedwars", new MemoryNPCDataStore());
     }
 
     @Override

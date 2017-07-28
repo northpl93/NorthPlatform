@@ -6,5 +6,6 @@ components:
     dependencies:
       - API.EntityHider
       - MiniGameApi.Server
+      - GlobalShops.Server
     platforms:
       - BUKKIT
