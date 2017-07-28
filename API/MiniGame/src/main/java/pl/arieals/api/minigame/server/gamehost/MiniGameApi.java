@@ -3,6 +3,9 @@ package pl.arieals.api.minigame.server.gamehost;
 import static pl.north93.zgame.api.global.exceptions.SingletonException.checkSingleton;
 
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -29,24 +32,28 @@ public final class MiniGameApi
         INSTANCE = this;
     }
 
+    @Nullable
     public static LocalArena getArena(final Player player)
     {
         final GameHostManager manager = INSTANCE.server.getServerManager();
         return manager.getArenaManager().getArenaAssociatedWith(player.getUniqueId()).orElse(null);
     }
 
+    @Nullable
     public static LocalArena getArena(final World world)
     {
         final GameHostManager manager = INSTANCE.server.getServerManager();
         return manager.getArenaManager().getArena(world);
     }
 
+    @Nonnull
     public static List<LocalArena> getArenas()
     {
         final GameHostManager manager = INSTANCE.server.getServerManager();
         return manager.getArenaManager().getArenas();
     }
 
+    @Nullable
     public static <T> T getPlayerData(final Player player, final Class<T> clazz)
     {
         final GameHostManager manager = INSTANCE.server.getServerManager();
@@ -59,6 +66,7 @@ public final class MiniGameApi
         manager.setPlayerData(player, data);
     }
 
+    @Nullable
     public static PlayerStatus getPlayerStatus(final Player player)
     {
         final GameHostManager manager = INSTANCE.server.getServerManager();
