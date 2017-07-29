@@ -31,101 +31,81 @@ class SortedSetImpl<K> implements SortedSet<K>
     @Override
     public void add(final K key, final double rank)
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
-        {
-            redis.zadd(this.prefix, rank, toBytes(key.toString()));
-        }
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        redis.zadd(this.prefix, rank, toBytes(key.toString()));
     }
 
     @Override
     public void remove(final K key)
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
-        {
-            redis.zrem(this.prefix, toBytes(key.toString()));
-        }
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        redis.zrem(this.prefix, toBytes(key.toString()));
     }
 
     @Override
     public double get(final K key)
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
-        {
-            return redis.zscore(this.prefix, toBytes(key.toString()));
-        }
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        return redis.zscore(this.prefix, toBytes(key.toString()));
     }
 
     @Override
     public long getRank(final K key)
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        final Long zrank = redis.zrank(this.prefix, toBytes(key.toString()));
+        if (zrank == null)
         {
-            final Long zrank = redis.zrank(this.prefix, toBytes(key.toString()));
-            if (zrank == null)
-            {
-                return 0;
-            }
-            return zrank;
+            return 0;
         }
+        return zrank;
     }
 
     @Override
     public long getRevRank(final K key)
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        final Long zrevrank = redis.zrevrank(this.prefix, toBytes(key.toString()));
+        if (zrevrank == null)
         {
-            final Long zrevrank = redis.zrevrank(this.prefix, toBytes(key.toString()));
-            if (zrevrank == null)
-            {
-                return 0;
-            }
-            return zrevrank;
+            return 0;
         }
+        return zrevrank;
     }
 
     @Override
     public long count(final double from, final double to)
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
-        {
-            return redis.zcount(this.prefix, from, to);
-        }
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        return redis.zcount(this.prefix, from, to);
     }
 
     @Override
     public Set<String> getRange(final long from, final long to)
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
-        {
-            return redis.zrange(this.prefix, from, to).stream().map(StringUtils::asString).collect(Collectors.toSet());
-        }
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        return redis.zrange(this.prefix, from, to).stream().map(StringUtils::asString).collect(Collectors.toSet());
     }
 
     @Override
     public Set<String> getRevRange(final long from, final long to)
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
-        {
-            return redis.zrevrange(this.prefix, from, to).stream().map(StringUtils::asString).collect(Collectors.toSet());
-        }
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        return redis.zrevrange(this.prefix, from, to).stream().map(StringUtils::asString).collect(Collectors.toSet());
     }
 
     @Override
     public Set<Pair<String, Long>> getRangeWithScores(final long from, final long to)
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
-        {
-            return redis.zrangeWithScores(this.prefix, from, to).stream().map(this::tupleToPair).collect(Collectors.toSet());
-        }
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        return redis.zrangeWithScores(this.prefix, from, to).stream().map(this::tupleToPair).collect(Collectors.toSet());
     }
 
     @Override
     public Set<Pair<String, Long>> getRevRangeWithScores(final long from, final long to)
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
-        {
-            return redis.zrevrangeWithScores(this.prefix, from, to).stream().map(this::tupleToPair).collect(Collectors.toSet());
-        }
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        return redis.zrevrangeWithScores(this.prefix, from, to).stream().map(this::tupleToPair).collect(Collectors.toSet());
     }
 
     private Pair<String, Long> tupleToPair(final ScoredValue<byte[]> value) // used by *WithScore
@@ -136,10 +116,8 @@ class SortedSetImpl<K> implements SortedSet<K>
     @Override
     public void clear()
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
-        {
-            redis.del(this.prefix);
-        }
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        redis.del(this.prefix);
     }
 
     @Override

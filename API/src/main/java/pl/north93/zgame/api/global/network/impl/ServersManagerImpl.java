@@ -59,10 +59,8 @@ class ServersManagerImpl implements IServersManager
     @Override
     public Set<Server> all()
     {
-        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
-        {
-            return redis.keys(SERVER + "*").stream().map(id -> this.msgPack.deserialize(ServerImpl.class, redis.get(id))).collect(Collectors.toSet());
-        }
+        final RedisCommands<String, byte[]> redis = this.storage.getRedis();
+        return redis.keys(SERVER + "*").stream().map(id -> this.msgPack.deserialize(ServerImpl.class, redis.get(id))).collect(Collectors.toSet());
     }
 
     @Override
@@ -90,10 +88,7 @@ class ServersManagerImpl implements IServersManager
     @Override
     public List<ServerPattern> getServerPatterns()
     {
-        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
-        {
-            return this.msgPack.deserializeList(ServerPattern.class, redis.get(NETWORK_PATTERNS));
-        }
+        return this.msgPack.deserializeList(ServerPattern.class, this.storage.getRedis().get(NETWORK_PATTERNS));
     }
 
     @Override

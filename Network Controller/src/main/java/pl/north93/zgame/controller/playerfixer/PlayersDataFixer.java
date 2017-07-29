@@ -50,12 +50,9 @@ public class PlayersDataFixer extends Component implements Runnable
     @Override
     public void run()
     {
-        final List<String> keys;
-        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
-        {
-            keys = redis.keys("players:*");
-        }
+        final RedisCommands<String, byte[]> redis = this.storage.getRedis();
 
+        final List<String> keys = redis.keys("players:*");
         keys.stream().map(s -> StringUtils.replace(s, "players:", "")).forEach(this::checkPlayer);
     }
 

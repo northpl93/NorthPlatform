@@ -76,15 +76,13 @@ class LockImpl implements Lock
 
     private synchronized boolean tryLock0()
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
-        {
-            return ((long) redis.eval("if (redis.call('exists', KEYS[1]) == 1) then\n" +
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        return ((long) redis.eval("if (redis.call('exists', KEYS[1]) == 1) then\n" +
                                "return 0\n" +
                                "else\n" +
                                "redis.call('setex', KEYS[1], 30, 1)\n" +
                                "return 1\n" +
                                "end\n", ScriptOutputType.INTEGER, this.name)) == 1;
-        }
     }
 
     @Override
@@ -102,15 +100,14 @@ class LockImpl implements Lock
 
     private boolean tryUnlock()
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
-        {
-            return ((long) redis.eval("if (redis.call('del', KEYS[1]) == 1) then\n" +
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        return ((long) redis.eval("if (redis.call('del', KEYS[1]) == 1) then\n" +
                                              "redis.call('publish', \"unlock\", KEYS[1])\n" +
                                              "return 1\n" +
                                              "else\n" +
                                              "return 0\n" +
                                              "end", ScriptOutputType.INTEGER, this.name)) == 1;
-        }
+
     }
 
     /*default*/ void remoteUnlock()

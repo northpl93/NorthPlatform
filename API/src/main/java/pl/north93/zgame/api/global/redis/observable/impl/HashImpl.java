@@ -4,7 +4,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
-import com.lambdaworks.redis.api.sync.RedisCommands;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -34,27 +33,18 @@ class HashImpl<V> implements Hash<V>
     @Override
     public void put(final String key, final V value)
     {
-        try (final RedisCommands<String, byte[]> redis = this.observer.getJedis())
-        {
-            redis.hset(this.name, key, this.observer.getMsgPack().serialize(this.valueClass, value));
-        }
+        this.observer.getRedis().hset(this.name, key, this.observer.getMsgPack().serialize(this.valueClass, value));
     }
 
     /*default*/ void put(final String key, final byte[] bytes)
     {
-        try (final RedisCommands<String, byte[]> redis = this.observer.getJedis())
-        {
-            redis.hset(this.name, key, bytes);
-        }
+        this.observer.getRedis().hset(this.name, key, bytes);
     }
 
     @Override
     public V get(final String key)
     {
-        try (final RedisCommands<String, byte[]> redis = this.observer.getJedis())
-        {
-            return this.deserialize(redis.hget(this.name, key));
-        }
+        return this.deserialize(this.observer.getRedis().hget(this.name, key));
     }
 
     @Override
@@ -66,55 +56,37 @@ class HashImpl<V> implements Hash<V>
     @Override
     public Set<String> keys()
     {
-        try (final RedisCommands<String, byte[]> redis = this.observer.getJedis())
-        {
-            return Sets.newHashSet(redis.hkeys(this.name));
-        }
+        return Sets.newHashSet(this.observer.getRedis().hkeys(this.name));
     }
 
     @Override
     public Set<V> values()
     {
-        try (final RedisCommands<String, byte[]> redis = this.observer.getJedis())
-        {
-            return redis.hvals(this.name).stream().map(this::deserialize).collect(Collectors.toSet());
-        }
+        return this.observer.getRedis().hvals(this.name).stream().map(this::deserialize).collect(Collectors.toSet());
     }
 
     @Override
     public void delete(final String key)
     {
-        try (final RedisCommands<String, byte[]> redis = this.observer.getJedis())
-        {
-            redis.hdel(this.name, key);
-        }
+        this.observer.getRedis().hdel(this.name, key);
     }
 
     @Override
     public boolean exists(final String key)
     {
-        try (final RedisCommands<String, byte[]> redis = this.observer.getJedis())
-        {
-            return redis.hexists(this.name, key);
-        }
+        return this.observer.getRedis().hexists(this.name, key);
     }
 
     @Override
     public long size()
     {
-        try (final RedisCommands<String, byte[]> redis = this.observer.getJedis())
-        {
-            return redis.hlen(this.name);
-        }
+        return this.observer.getRedis().hlen(this.name);
     }
 
     @Override
     public void clear()
     {
-        try (final RedisCommands<String, byte[]> redis = this.observer.getJedis())
-        {
-            redis.del(this.name);
-        }
+        this.observer.getRedis().del(this.name);
     }
 
     private V deserialize(final byte[] bytes)

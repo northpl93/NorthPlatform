@@ -6,7 +6,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
-import com.lambdaworks.redis.api.sync.RedisCommands;
 import com.lambdaworks.redis.pubsub.RedisPubSubAdapter;
 import com.lambdaworks.redis.pubsub.StatefulRedisPubSubConnection;
 
@@ -46,10 +45,7 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
     @Override
     public void publish(final String channel, final byte[] message)
     {
-        try (final RedisCommands<String, byte[]> redis = this.storageConnector.getRedis())
-        {
-            redis.publish(channel, message);
-        }
+        this.storageConnector.getRedis().publish(channel, message);
     }
 
     @Override

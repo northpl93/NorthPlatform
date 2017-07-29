@@ -121,11 +121,8 @@ public class RpcManagerImpl extends Component implements IRpcManager
 
     /*default*/ void sendResponse(final String target, final Integer requestId, final Object response)
     {
-        try (final RedisCommands<String, byte[]> redis = this.storageConnector.getRedis())
-        {
-            final RpcResponseMessage responseMessage = new RpcResponseMessage(requestId, response);
-            redis.publish("rpc:" + target + ":response", this.msgPack.serialize(RpcResponseMessage.class, responseMessage));
-        }
+        final RpcResponseMessage responseMessage = new RpcResponseMessage(requestId, response);
+        this.storageConnector.getRedis().publish("rpc:" + target + ":response", this.msgPack.serialize(RpcResponseMessage.class, responseMessage));
     }
 
     private void handleMethodInvocation(final String channel, final byte[] bytes)

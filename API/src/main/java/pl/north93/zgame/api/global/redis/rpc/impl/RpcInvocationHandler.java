@@ -4,8 +4,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.lambdaworks.redis.api.sync.RedisCommands;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -43,10 +41,7 @@ class RpcInvocationHandler implements InvocationHandler
         final RpcResponseLock lock = needsWaitForResponse ? this.rpcManager.createFor(requestId) : null;
 
         final RpcInvokeMessage rpcInvokeMessage = new RpcInvokeMessage(API.getApiCore().getId(), this.objectDescription.getClassId(), requestId, methodId, args == null ? EMPTY_ARRAY : args);
-        try (final RedisCommands<String, byte[]> redis = this.rpcManager.getJedisPool())
-        {
-            redis.publish(this.invokeChannel, this.rpcManager.getMsgPack().serialize(RpcInvokeMessage.class, rpcInvokeMessage));
-        }
+        this.rpcManager.getJedisPool().publish(this.invokeChannel, this.rpcManager.getMsgPack().serialize(RpcInvokeMessage.class, rpcInvokeMessage));
 
         if (! needsWaitForResponse)
         {

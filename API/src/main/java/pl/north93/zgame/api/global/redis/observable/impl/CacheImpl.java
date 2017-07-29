@@ -4,7 +4,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import com.lambdaworks.redis.ScriptOutputType;
-import com.lambdaworks.redis.api.sync.RedisCommands;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -37,10 +36,7 @@ class CacheImpl<K, V> implements Cache<K, V>
     @Override
     public int size()
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
-        {
-            return (int) redis.eval("return #redis.call('keys', '" + this.prefix + "*')", ScriptOutputType.INTEGER);
-        }
+        return (int) this.observationManager.getRedis().eval("return #redis.call('keys', '" + this.prefix + "*')", ScriptOutputType.INTEGER);
     }
 
     @Override
@@ -86,10 +82,7 @@ class CacheImpl<K, V> implements Cache<K, V>
     @Override
     public void clear()
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
-        {
-            redis.eval("local k=redis.call('keys',KEYS[1])for i=1,#k,5000 do redis.call('del',unpack(k,i,math.min(i+4999,#k)))end", ScriptOutputType.INTEGER, this.prefix);
-        }
+        this.observationManager.getRedis().eval("local k=redis.call('keys',KEYS[1])for i=1,#k,5000 do redis.call('del',unpack(k,i,math.min(i+4999,#k)))end", ScriptOutputType.INTEGER, this.prefix);
     }
 
     @Override

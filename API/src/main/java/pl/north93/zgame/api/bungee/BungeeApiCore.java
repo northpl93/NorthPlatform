@@ -97,10 +97,8 @@ public class BungeeApiCore extends ApiCore
     protected void stop()
     {
         final StorageConnector storageConnector = this.getComponentManager().getComponent("API.Database.StorageConnector"); // TODO
-        try (final RedisCommands<String, byte[]> redis = storageConnector.getRedis())
-        {
-            redis.del(this.getId());
-        }
+        final RedisCommands<String, byte[]> redis = storageConnector.getRedis();
+        redis.del(this.getId());
     }
 
     @Override
@@ -132,15 +130,13 @@ public class BungeeApiCore extends ApiCore
     private void sendProxyInfo()
     {
         final StorageConnector storageConnector = API.getApiCore().getComponentManager().getComponent("API.Database.StorageConnector"); // TODO
-        try (final RedisCommands<String, byte[]> redis = storageConnector.getRedis())
-        {
-            final ProxyInstanceInfo proxyInstanceInfo = new ProxyInstanceInfo();
+        final ProxyInstanceInfo proxyInstanceInfo = new ProxyInstanceInfo();
 
-            proxyInstanceInfo.setId(this.config.getUniqueName());
-            proxyInstanceInfo.setHostname(this.getHostName());
-            proxyInstanceInfo.setOnlinePlayers(this.bungeePlugin.getProxy().getOnlineCount());
+        proxyInstanceInfo.setId(this.config.getUniqueName());
+        proxyInstanceInfo.setHostname(this.getHostName());
+        proxyInstanceInfo.setOnlinePlayers(this.bungeePlugin.getProxy().getOnlineCount());
 
-            redis.set(this.getId(), this.getMessagePackTemplates().serialize(proxyInstanceInfo));
-        }
+        final RedisCommands<String, byte[]> redis = storageConnector.getRedis();
+        redis.set(this.getId(), this.getMessagePackTemplates().serialize(proxyInstanceInfo));
     }
 }

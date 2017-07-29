@@ -188,7 +188,7 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         return this.getApiCore().getPlatformConnector();
     }
 
-    /*default*/ RedisCommands<String, byte[]> getJedis()
+    /*default*/ RedisCommands<String, byte[]> getRedis()
     {
         return this.storageConnector.getRedis();
     }

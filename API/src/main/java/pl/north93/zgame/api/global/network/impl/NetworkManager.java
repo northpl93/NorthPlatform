@@ -89,19 +89,15 @@ class NetworkManager extends Component implements INetworkManager
     @Override
     public Set<ProxyInstanceInfo> getProxyServers()
     {
-        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
-        {
-            return redis.keys(PROXY_INSTANCE + "*").stream().map(id -> this.msgPack.deserialize(ProxyInstanceInfo.class, redis.get(id))).collect(Collectors.toSet());
-        }
+        final RedisCommands<String, byte[]> redis = this.storage.getRedis();
+        return redis.keys(PROXY_INSTANCE + "*").stream().map(id -> this.msgPack.deserialize(ProxyInstanceInfo.class, redis.get(id))).collect(Collectors.toSet());
     }
 
     @Override
     public Set<RemoteDaemon> getDaemons()
     {
-        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
-        {
-            return redis.keys(DAEMON + "*").stream().map(id -> this.msgPack.deserialize(RemoteDaemon.class, redis.get(id))).collect(Collectors.toSet());
-        }
+        final RedisCommands<String, byte[]> redis = this.storage.getRedis();
+        return redis.keys(DAEMON + "*").stream().map(id -> this.msgPack.deserialize(RemoteDaemon.class, redis.get(id))).collect(Collectors.toSet());
     }
 
     @Override
@@ -175,10 +171,7 @@ class NetworkManager extends Component implements INetworkManager
     @Override
     public void broadcastNetworkAction(final NetworkAction networkAction)
     {
-        try (final RedisCommands<String, byte[]> redis = this.storage.getRedis())
-        {
-            redis.publish(NETWORK_ACTION, toBytes(networkAction.toString()));
-        }
+        this.storage.getRedis().publish(NETWORK_ACTION, toBytes(networkAction.toString()));
     }
 
     /**

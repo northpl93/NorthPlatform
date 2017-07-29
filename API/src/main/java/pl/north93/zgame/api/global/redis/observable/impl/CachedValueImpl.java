@@ -88,19 +88,17 @@ class CachedValueImpl<T> extends CachedValue<T>
     {
         final String key = this.objectKey.getKey();
 
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
-        {
-            redis.multi();
-            redis.get(key);
-            redis.del(key);
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        redis.multi();
+        redis.get(key);
+        redis.del(key);
 
-            final byte[] getResult = (byte[]) redis.exec().get(0);
-            if (getResult == null)
-            {
-                return null;
-            }
-            return this.observationManager.getMsgPack().deserialize(this.clazz, getResult);
+        final byte[] getResult = (byte[]) redis.exec().get(0);
+        if (getResult == null)
+        {
+            return null;
         }
+        return this.observationManager.getMsgPack().deserialize(this.clazz, getResult);
     }
 
     @Override
@@ -149,22 +147,16 @@ class CachedValueImpl<T> extends CachedValue<T>
 
     private synchronized T getFromRedis()
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        final byte[] bytes = redis.get(this.objectKey.getKey());
+        if (bytes == null)
         {
-            final byte[] bytes = redis.get(this.objectKey.getKey());
-            if (bytes == null)
-            {
-                this.cache = null;
-                return null;
-            }
-            final T fromRedis = this.observationManager.getMsgPack().deserialize(this.clazz, bytes);
-            this.cache = fromRedis;
-            return fromRedis;
+            this.cache = null;
+            return null;
         }
-        catch (final Exception e)
-        {
-            throw new RuntimeException(e);
-        }
+        final T fromRedis = this.observationManager.getMsgPack().deserialize(this.clazz, bytes);
+        this.cache = fromRedis;
+        return fromRedis;
     }
 
     @Override
@@ -199,18 +191,16 @@ class CachedValueImpl<T> extends CachedValue<T>
     {
         final byte[] serialized = this.observationManager.getMsgPack().serialize(this.clazz, this.cache);
 
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        if (time == -1)
         {
-            if (time == -1)
-            {
-                redis.set(this.objectKey.getKey(), serialized);
-            }
-            else
-            {
-                redis.psetex(this.objectKey.getKey(), time, serialized);
-            }
-            this.observationManager.getValueSubHandler().update(this, serialized);
+            redis.set(this.objectKey.getKey(), serialized);
         }
+        else
+        {
+            redis.psetex(this.objectKey.getKey(), time, serialized);
+        }
+        this.observationManager.getValueSubHandler().update(this, serialized);
     }
 
     @Override
@@ -227,22 +217,17 @@ class CachedValueImpl<T> extends CachedValue<T>
     public boolean delete()
     {
         this.cache = null;
-        final boolean success;
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
-        {
-            success = redis.del(this.objectKey.getKey()) != 0L;
-            this.observationManager.getValueSubHandler().update(this, new byte[0]);
-        }
+
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        final boolean success = redis.del(this.objectKey.getKey()) != 0L;
+        this.observationManager.getValueSubHandler().update(this, new byte[0]);
         return success;
     }
 
     @Override
     public boolean isAvailable()
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
-        {
-            return redis.exists(this.objectKey.getKey());
-        }
+        return this.observationManager.getRedis().exists(this.objectKey.getKey());
     }
 
     @Override
@@ -254,26 +239,21 @@ class CachedValueImpl<T> extends CachedValue<T>
     @Override
     public void expire(final int seconds)
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        if (seconds == -1)
         {
-            if (seconds == -1)
-            {
-                redis.persist(this.objectKey.getKey());
-            }
-            else
-            {
-                redis.expire(this.objectKey.getKey(), seconds);
-            }
+            redis.persist(this.objectKey.getKey());
+        }
+        else
+        {
+            redis.expire(this.objectKey.getKey(), seconds);
         }
     }
 
     @Override
     public long getTimeToLive()
     {
-        try (final RedisCommands<String, byte[]> redis = this.observationManager.getJedis())
-        {
-            return redis.ttl(this.objectKey.getKey());
-        }
+        return this.observationManager.getRedis().ttl(this.objectKey.getKey());
     }
 
     @Override
