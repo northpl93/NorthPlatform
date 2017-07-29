@@ -54,7 +54,12 @@ class PlayerContainerImpl implements IPlayerContainer
         }
 
         final PlayerData data = this.playerData.get();
-        return this.shopsServer.getItem(data.getActiveItems().get(group.getId()));
+        final String activeItemId = data.getActiveItems().get(group.getId());
+        if (activeItemId == null)
+        {
+            return null;
+        }
+        return this.shopsServer.getItem(activeItemId);
     }
 
     @Override

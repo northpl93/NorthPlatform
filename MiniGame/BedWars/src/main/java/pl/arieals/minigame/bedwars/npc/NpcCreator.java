@@ -2,6 +2,7 @@ package pl.arieals.minigame.bedwars.npc;
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.bukkit.entity.Entity;
@@ -51,10 +52,12 @@ public class NpcCreator implements Listener
             {
                 final NPC shopper = this.createNpc(npc.getKey());
                 shopper.addTrait(new ShopTrait(ShopTrait.NpcType.SHOP));
+                shopper.setName("Sklep");
                 shopper.spawn(team.getConfig().getShopNpc().toBukkit(event.getArena().getWorld().getCurrentWorld()));
 
                 final NPC upgrader = this.createNpc(npc.getValue());
                 upgrader.addTrait(new ShopTrait(ShopTrait.NpcType.UPGRADES));
+                upgrader.setName("Ulepszenia");
                 upgrader.spawn(team.getConfig().getUpgradesNpc().toBukkit(event.getArena().getWorld().getCurrentWorld()));
             });
         }
@@ -95,6 +98,7 @@ public class NpcCreator implements Listener
         final Iterator<NpcItem> skins = team.getPlayers()
                                             .stream()
                                             .map(player -> this.globalShops.getPlayer(player).getActiveItem(group))
+                                            .filter(Objects::nonNull)
                                             .map(NpcItem::new)
                                             .sorted(Comparator.comparing(NpcItem::getPriority)).iterator();
 

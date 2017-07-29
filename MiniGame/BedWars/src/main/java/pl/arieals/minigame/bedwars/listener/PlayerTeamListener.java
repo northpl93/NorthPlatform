@@ -6,7 +6,9 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.setPlayerData;
 
 
 import java.util.Comparator;
+import java.util.logging.Level;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -24,6 +26,7 @@ import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
+import pl.arieals.minigame.bedwars.cfg.BwConfig;
 import pl.arieals.minigame.bedwars.event.TeamEliminatedEvent;
 import pl.arieals.minigame.bedwars.scoreboard.GameScoreboard;
 import pl.arieals.minigame.bedwars.scoreboard.LobbyScoreboard;
@@ -38,6 +41,8 @@ public class PlayerTeamListener implements Listener
 {
     @Inject
     private BukkitApiCore      apiCore;
+    @Inject
+    private BwConfig           config;
     @Inject
     private IScoreboardManager scoreboardManager;
     @Inject @Messages("BedWars")
@@ -65,8 +70,25 @@ public class PlayerTeamListener implements Listener
 
         for (final Player player : arena.getPlayersManager().getPlayers())
         {
-            final Team smallestTeam = arenaData.getTeams().stream().sorted(Comparator.comparing(team -> team.getPlayers().size())).findFirst().orElse(null);
+            final Team smallestTeam = arenaData.getTeams()
+                                               .stream()
+                                               .filter(team -> team.getPlayers().size() < this.config.getTeamSize())
+                                               .sorted(Comparator.comparing(team -> team.getPlayers().size()))
+                                               .findFirst().orElse(null);
             final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+
+            if (smallestTeam == null)
+            {
+                this.apiCore.getLogger().log(Level.SEVERE, "smallestTeam is null in gameStart on arena {0} player {1}", new Object[] {arena.getId(), player.getName()});
+                player.sendMessage(ChatColor.RED + "Blad krytyczny; brak wolnego teamu (niepoprawna konfiguracja areny?)");
+                return;
+            }
+
+            if (playerData == null)
+            {
+                // todo log it
+                continue;
+            }
 
             playerData.switchTeam(smallestTeam);
             arenaData.getPlayers().add(playerData);

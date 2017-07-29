@@ -17,7 +17,7 @@
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/armor.iron/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/armor.iron/$playerId"/>
                 <icon id="IRON_BOOTS" data="0" name="@item.armor.iron.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
-                <onClick>northplatform://minigame/bedwars/buy/armor.iron/$playerId</onClick>
+                <onClick>northplatform://minigame/bedwars/shop/buy/armor.iron/$playerId</onClick>
             </button>
 
             <!-- Diamond -->
@@ -25,7 +25,7 @@
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/armor.diamond/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/armor.diamond/$playerId"/>
                 <icon id="DIAMOND_BOOTS" data="0" name="@item.armor.diamond.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
-                <onClick>northplatform://minigame/bedwars/buy/armor.diamond/$playerId</onClick>
+                <onClick>northplatform://minigame/bedwars/shop/buy/armor.diamond/$playerId</onClick>
             </button>
 
             <!-- back button -->

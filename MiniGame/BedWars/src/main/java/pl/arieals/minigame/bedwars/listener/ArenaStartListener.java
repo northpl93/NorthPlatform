@@ -4,6 +4,7 @@ import javax.xml.bind.JAXB;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -52,6 +53,13 @@ public class ArenaStartListener implements Listener
                 arena.getDeathMatch().activateDeathMatch();
             }
         }, this.config.getStartDeathMatchAt());
+    }
+
+    @EventHandler
+    public void onHungerLoss(final FoodLevelChangeEvent event)
+    {
+        // disable hunger loss
+        event.setCancelled(true);
     }
 
     @Override

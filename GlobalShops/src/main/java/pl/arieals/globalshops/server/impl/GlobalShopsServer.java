@@ -3,6 +3,8 @@ package pl.arieals.globalshops.server.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.common.base.Preconditions;
+
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -70,12 +72,14 @@ public class GlobalShopsServer extends Component implements IGlobalShops
     @Override
     public synchronized ItemsGroup getGroup(final String id)
     {
+        Preconditions.checkNotNull(id);
         return this.groups.get(id);
     }
 
     @Override
     public synchronized Item getItem(final String id)
     {
+        Preconditions.checkNotNull(id);
         for (final ItemsGroup itemsGroup : this.groups.values())
         {
             final Item result = CollectionUtils.findInCollection(itemsGroup.getItems(), Item::getId, id);
@@ -90,6 +94,7 @@ public class GlobalShopsServer extends Component implements IGlobalShops
     @Override
     public IPlayerContainer getPlayer(final Player player)
     {
+        Preconditions.checkNotNull(player);
         return new PlayerContainerImpl(player);
     }
 

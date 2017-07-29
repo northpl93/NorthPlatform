@@ -1,5 +1,7 @@
 package pl.arieals.globalshops.server;
 
+import javax.annotation.Nullable;
+
 import java.util.Collection;
 
 import pl.arieals.globalshops.shared.Item;
@@ -30,7 +32,7 @@ public interface IPlayerContainer
      * @throws IllegalArgumentException gdy grupa jest typu MULTI_BUY.
      * @return wybrany item z danej grupy.
      */
-    Item getActiveItem(ItemsGroup group);
+    @Nullable Item getActiveItem(ItemsGroup group);
 
     /**
      * Oznacza dany przedmiot jako kupiony.
