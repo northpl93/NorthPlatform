@@ -19,7 +19,7 @@ import org.diorite.cfg.annotations.defaults.CfgLongDefault;
 import org.diorite.cfg.annotations.defaults.CfgStringDefault;
 
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
-import pl.north93.zgame.api.global.redis.messaging.templates.HashMapTemplate;
+import pl.north93.zgame.api.global.redis.messaging.templates.MapTemplate;
 import pl.north93.zgame.skyblock.shared.api.HomeLocation;
 
 @CfgComment("Konfiguracja SkyBlocka")
@@ -47,7 +47,7 @@ public class SkyBlockConfig
 
     @CfgComment("Punkty naliczane za bloki. Jako nazwe bloku podawac ta z Material.java")
     @CfgDelegateDefault("getDefaultBlockValues")
-    @MsgPackCustomTemplate(HashMapTemplate.class)
+    @MsgPackCustomTemplate(MapTemplate.class)
     private Map<String, Double> blockValues;
 
     private static List<IslandConfig> getDefaultIslandTypes()

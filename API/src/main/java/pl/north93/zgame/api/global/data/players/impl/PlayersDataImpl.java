@@ -4,6 +4,7 @@ import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
 
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -207,7 +208,16 @@ public class PlayersDataImpl extends Component implements IPlayersData
         final Document metadata = (Document) result.getOrDefault("metadata", new Document());
         for (final Map.Entry<String, Object> entry : metadata.entrySet())
         {
-            playerMeta.put(MetaKey.get(entry.getKey()), entry.getValue());
+            final Object value;
+            if (entry.getValue() instanceof Document)
+            {
+                value = new HashMap<>((Document) entry.getValue());
+            }
+            else
+            {
+                value = entry.getValue();
+            }
+            playerMeta.put(MetaKey.get(entry.getKey()), value);
         }
 
         return new OfflinePlayerImpl(result.get("uuid", UUID.class), latestKnownUsername, displayName, isBanned, group, groupExpireAt, store);

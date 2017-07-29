@@ -31,9 +31,9 @@ import pl.north93.zgame.api.global.redis.messaging.templates.ByteArrayTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.DateTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.DoubleTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.FloatTemplate;
-import pl.north93.zgame.api.global.redis.messaging.templates.HashMapTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.IntegerTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.LongTemplate;
+import pl.north93.zgame.api.global.redis.messaging.templates.MapTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.ShortTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.StringTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.UuidTemplate;
@@ -56,7 +56,7 @@ public class TemplateManagerImpl extends Component implements TemplateManager
         this.templateCache = new IdentityHashMap<>();
 
         this.registerTemplate(ArrayList.class, new ArrayListTemplate());
-        this.registerTemplate(HashMap.class, new HashMapTemplate());
+        this.registerTemplate(HashMap.class, new MapTemplate());
         this.registerTemplate(Boolean.class, new BooleanTemplate());
         this.registerTemplate(Integer.class, new IntegerTemplate());
         this.registerTemplate(Short.class, new ShortTemplate());

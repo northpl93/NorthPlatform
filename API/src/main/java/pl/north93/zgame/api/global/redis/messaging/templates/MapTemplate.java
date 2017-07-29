@@ -15,18 +15,18 @@ import pl.north93.zgame.api.global.redis.messaging.Template;
 import pl.north93.zgame.api.global.redis.messaging.TemplateGeneric;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 
-public class HashMapTemplate implements TemplateGeneric<HashMap<Object, Object>>
+public class MapTemplate implements TemplateGeneric<HashMap<Object, Object>>
 {
     private final Class<Object> keyType;
     private final Class<Object> valueType;
 
-    public HashMapTemplate(final Class<Object> keyType, final Class<Object> valueType)
+    public MapTemplate(final Class<Object> keyType, final Class<Object> valueType)
     {
         this.keyType = keyType;
         this.valueType = valueType;
     }
 
-    public HashMapTemplate()
+    public MapTemplate()
     {
         this(null, null);
     }
@@ -78,7 +78,7 @@ public class HashMapTemplate implements TemplateGeneric<HashMap<Object, Object>>
     @Override
     public Template<HashMap<Object, Object>> setGenericType(final Class<?>... genericTypes)
     {
-        return new HashMapTemplate((Class) genericTypes[0], (Class) genericTypes[1]);
+        return new MapTemplate((Class) genericTypes[0], (Class) genericTypes[1]);
     }
 
     private Pair<Template<Object>, Template<Object>> getTemplates(final TemplateManager templates)
