@@ -2,6 +2,8 @@ package pl.north93.zgame.api.global.redis.observable.impl;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.lambdaworks.redis.ScriptOutputType;
 import com.lambdaworks.redis.api.sync.RedisCommands;
@@ -35,13 +37,16 @@ class LockImpl implements Lock
     @Override
     public void lock()
     {
+        final Logger logger = this.observationManager.getMyLogger();
         if (this.tryLock0())
         {
             this.isLockedLocally.compareAndSet(false, true);
+            logger.log(Level.FINE, "[Lock] Successfully acquired lock {0}", this.name);
         }
         else
         {
             this.observationManager.addWaitingLock(this);
+            logger.log(Level.FINE, "[Lock] Lock {0} is waiting...", this.name);
             while (! this.tryLock0())
             {
                 try
@@ -57,18 +62,21 @@ class LockImpl implements Lock
                 }
             }
             this.isLockedLocally.compareAndSet(false, true);
+            logger.log(Level.FINE, "[Lock] Successfully acquired lock {0}", this.name);
         }
     }
 
     @Override
     public boolean tryLock()
     {
+        final Logger logger = this.observationManager.getMyLogger();
         if (this.tryLock0())
         {
             if (! this.isLockedLocally.compareAndSet(false, true))
             {
                 throw new RuntimeException("Failed to lock " + this.name + ". It's already locked locally.");
             }
+            logger.log(Level.FINE, "[Lock] Successfully acquired lock {0}", this.name);
             return true;
         }
         return false;
@@ -88,6 +96,7 @@ class LockImpl implements Lock
     @Override
     public synchronized void unlock()
     {
+        final Logger logger = this.observationManager.getMyLogger();
         if (! this.isLockedLocally.compareAndSet(true, false))
         {
             throw new IllegalStateException("Lock " + this.name + " isn't already locked locally! Lock may be expired or you didn't call Lock#lock()");
@@ -96,6 +105,7 @@ class LockImpl implements Lock
         {
             throw new RuntimeException("Failed to unlock " + this.name);
         }
+        logger.log(Level.FINE, "[Lock] Successfully unlocked {0}", this.name);
     }
 
     private boolean tryUnlock()
@@ -112,10 +122,12 @@ class LockImpl implements Lock
 
     /*default*/ void remoteUnlock()
     {
+        final Logger logger = this.observationManager.getMyLogger();
         if (this.isLockedLocally.compareAndSet(true, false))
         {
-            this.observationManager.getMyLogger().warning("Lock " + this.name + " is unlocked while it's locked locally. It will cause further issues.");
+            logger.log(Level.WARNING, "[Lock] Lock {0} has been unlocked while it's locked locally. It will cause further issues.", this.name);
         }
+        logger.log(Level.FINE, "[Lock] Remote unlock {0}", this.name);
         synchronized (this.waiter)
         {
             this.waiter.notifyAll();

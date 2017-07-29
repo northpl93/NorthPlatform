@@ -31,6 +31,8 @@ public interface IObservationManager
 
     Lock getMultiLock(String... names);
 
+    Lock getMultiLock(Lock... locks);
+
     <K> SortedSet<K> getSortedSet(String name);
 
     <V> Hash<V> getHash(Class<V> valueClass, String name);

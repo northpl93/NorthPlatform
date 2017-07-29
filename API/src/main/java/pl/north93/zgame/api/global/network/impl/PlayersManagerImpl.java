@@ -159,10 +159,13 @@ class PlayersManagerImpl implements IPlayersManager
         {
             throw new PlayerNotFoundException(playerId);
         }
-        final Lock lock = this.getMultiLock(playerName, playerId);
-        lock.lock();
 
         final Value<IOnlinePlayer> onlinePlayer = this.onlinePlayerValue(playerName);
+        final Value<IOfflinePlayer> offlinePlayer = this.playersData.getOfflinePlayerValue(playerId);
+
+        final Lock lock = this.getMultiLock(onlinePlayer, offlinePlayer);
+        lock.lock();
+
         if (onlinePlayer.isAvailable())
         {
             return new PlayerTransactionImpl(onlinePlayer, lock, player ->
@@ -170,8 +173,6 @@ class PlayersManagerImpl implements IPlayersManager
                 onlinePlayer.set((IOnlinePlayer) player);
             });
         }
-
-        final Value<IOfflinePlayer> offlinePlayer = this.playersData.getOfflinePlayerValue(playerId);
         if (offlinePlayer.isAvailable())
         {
             return new PlayerTransactionImpl(offlinePlayer, lock, this.playersData::savePlayer);
@@ -189,10 +190,13 @@ class PlayersManagerImpl implements IPlayersManager
         {
             throw new PlayerNotFoundException(playerName);
         }
-        final Lock lock = this.getMultiLock(playerName, playerId);
-        lock.lock();
 
         final Value<IOnlinePlayer> onlinePlayer = this.onlinePlayerValue(playerName);
+        final Value<IOfflinePlayer> offlinePlayer = this.playersData.getOfflinePlayerValue(playerId);
+
+        final Lock lock = this.getMultiLock(onlinePlayer, offlinePlayer);
+        lock.lock();
+
         if (onlinePlayer.isAvailable())
         {
             return new PlayerTransactionImpl(onlinePlayer, lock, player ->
@@ -200,8 +204,6 @@ class PlayersManagerImpl implements IPlayersManager
                 onlinePlayer.set((IOnlinePlayer) player);
             });
         }
-
-        final Value<IOfflinePlayer> offlinePlayer = this.playersData.getOfflinePlayerValue(playerId);
         if (offlinePlayer.isAvailable())
         {
             return new PlayerTransactionImpl(offlinePlayer, lock, this.playersData::savePlayer);
@@ -277,9 +279,9 @@ class PlayersManagerImpl implements IPlayersManager
         return (Value) this.observer.get(OnlinePlayerImpl.class, PLAYERS + nick.toLowerCase(Locale.ROOT));
     }
 
-    private Lock getMultiLock(final String nick, final UUID uuid)
+    private Lock getMultiLock(final Value<IOnlinePlayer> onlineData, final Value<IOfflinePlayer> offlineData)
     {
-        return this.observer.getMultiLock("caval_lock:key:players:" + nick.toLowerCase(Locale.ENGLISH), "caval_lock:key:offlineplayers:" + uuid);
+        return this.observer.getMultiLock(onlineData.getLock(), offlineData.getLock());
     }
 
     @Override

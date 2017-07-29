@@ -129,6 +129,12 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     }
 
     @Override
+    public Lock getMultiLock(final Lock... locks)
+    {
+        return new MultiLockImpl(locks);
+    }
+
+    @Override
     public <K> SortedSet<K> getSortedSet(final String name)
     {
         return new SortedSetImpl<>(this, name);
