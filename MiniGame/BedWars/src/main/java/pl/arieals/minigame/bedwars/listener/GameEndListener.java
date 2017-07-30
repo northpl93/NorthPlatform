@@ -1,14 +1,9 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import static pl.north93.zgame.api.bukkit.utils.ChatUtils.centerMessage;
-import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColorCodes;
-
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Optional;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -70,19 +65,13 @@ public class GameEndListener implements Listener
         players.broadcast(this.messages, "separator");
         players.broadcast(this.messages, "end.header", MessageLayout.CENTER);
 
-        for (final Team team : arenaData.getTeams())
+        final Optional<Team> winner = arenaData.getTeams().stream().filter(Team::isTeamAlive).findAny();
+        if (winner.isPresent())
         {
-            final TranslatableString teamNameKey = TranslatableString.of(this.messages, "@team.scoreboard." + team.getName());
-            final List<String> nicks = this.playersList(team);
+            final TranslatableString teamNameKey = TranslatableString.of(this.messages, "@team.scoreboard." + winner.get().getName());
+            final String nicks = this.playersList(winner.get());
 
-            for (final Player player : team.getPlayers())
-            {
-                this.messages.sendMessage(player, "end.team_name", MessageLayout.CENTER, team.getColorChar(), teamNameKey);
-                for (final String nick : nicks)
-                {
-                    player.sendMessage(nick);
-                }
-            }
+            players.broadcast(this.messages, "end.winner_list", MessageLayout.CENTER, winner.get().getColorChar(), teamNameKey, nicks);
         }
 
         players.broadcast(this.messages, "end.top_kills", MessageLayout.CENTER);
@@ -108,26 +97,27 @@ public class GameEndListener implements Listener
         players.broadcast(this.messages, "separator");
     }
 
-    private List<String> playersList(final Team team)
+    private String playersList(final Team team)
     {
-        final List<String> nicks = new LinkedList<>();
+        final StringBuilder nicks = new StringBuilder();
         final Iterator<Player> playersIterator = team.getPlayers().iterator();
         while (playersIterator.hasNext())
         {
-            final StringBuilder line = new StringBuilder();
-
-            line.append("&7");
-            line.append(playersIterator.next().getDisplayName());
+            nicks.append("&7");
+            nicks.append(playersIterator.next().getDisplayName());
             if (playersIterator.hasNext())
             {
-                line.append(' ');
-                line.append("&7");
-                line.append(playersIterator.next().getDisplayName());
+                nicks.append(' ');
+                nicks.append("&7");
+                nicks.append(playersIterator.next().getDisplayName());
             }
 
-            nicks.add(centerMessage(translateAlternateColorCodes(line.toString())));
+            if (playersIterator.hasNext())
+            {
+                nicks.append("\n");
+            }
         }
-        return nicks;
+        return nicks.toString();
     }
 
     @Override

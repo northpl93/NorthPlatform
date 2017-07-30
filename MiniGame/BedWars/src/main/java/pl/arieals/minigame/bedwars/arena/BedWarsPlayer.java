@@ -39,8 +39,8 @@ public class BedWarsPlayer
         this.team = team;
         team.getPlayers().add(this.bukkitPlayer);
         this.bukkitPlayer.teleport(team.getSpawn());
+        this.bukkitPlayer.setPlayerListName(team.getColor() + this.bukkitPlayer.getPlayerListName());
         TeamArmorUtils.updateArmor(this.bukkitPlayer, team);
-        //this.bukkitPlayer.sendMessage("Dolaczono do zespolu " + team.getColor() + team.getColor().name());
     }
 
     public boolean isAlive()
