@@ -11,6 +11,9 @@ import com.google.common.collect.Multimap;
 
 import org.bukkit.entity.Player;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.reward.IArenaRewards;
 import pl.arieals.api.minigame.server.gamehost.reward.IReward;
@@ -68,5 +71,17 @@ public class ArenaRewardsImpl implements IArenaRewards
                 player.sendMessage(msg);
             }
         }
+    }
+
+    @Override
+    public void reset()
+    {
+        this.rewards.clear();
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("rewards", this.rewards).toString();
     }
 }

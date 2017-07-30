@@ -83,6 +83,9 @@ public class ArenaInitListener implements Listener
         // resetujemy stan death matchu.
         arena.getDeathMatch().resetState();
 
+        // resetuje liste nagrod
+        arena.getRewards().reset();
+
         if (arena.getLobbyMode() == LobbyMode.INTEGRATED)
         {
             // usuwamy arena data zeby nowa gra miala czyste srodowisko pracy

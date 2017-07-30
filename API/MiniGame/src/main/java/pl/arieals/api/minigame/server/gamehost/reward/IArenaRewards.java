@@ -59,4 +59,10 @@ public interface IArenaRewards
      * @param player gracz dla ktorego tworzymy liste nagrod.
      */
     void renderRewards(MessagesBox messagesBox, Player player);
+
+    /**
+     * Resetuje liste nagrod.
+     * Uzywane do przygotowania areny do kolejnego cyklu.
+     */
+    void reset();
 }
