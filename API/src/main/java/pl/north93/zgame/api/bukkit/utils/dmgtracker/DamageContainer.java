@@ -9,11 +9,7 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.Queue;
 
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -119,16 +115,9 @@ public class DamageContainer
     {
         for (final DamageEntry next : entries)
         {
-            final EntityDamageEvent cause = next.getCause();
-            if (cause.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK)
+            final Player playerDamager = next.getPlayerDamager();
+            if (playerDamager != null)
             {
-                final EntityDamageByEntityEvent byEntity = (EntityDamageByEntityEvent) cause;
-                final Entity damager = byEntity.getDamager();
-                if (damager.getType() != EntityType.PLAYER)
-                {
-                    continue;
-                }
-
                 return next;
             }
         }

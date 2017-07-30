@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.material.Bed;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -123,12 +124,24 @@ public class BuildListener implements Listener
             return false; // nie lozko - nie returnujemy reszty kodu w evencie
         }
 
+        // anulujemy event, blok zniszczymy recznie pozniej
+        event.setCancelled(true);
         final Team teamAt = arenaData.getTeamAt(block);
         if (teamAt == playerData.getTeam())
         {
-            event.setCancelled(true); // gracz nie moze zniszczyc lozka swojej druzyny
-            return true;
+            return true; // gracz nie moze zniszczyc lozka swojej druzyny
         }
+
+        // usuwamy lozko. Gdy gracz zniszczy gorna czesc lozka to dolna dropnie item
+        // dlatego sprawdzamy to i najpierw recznie usuwamy dolna czesc
+        final Bed bedData = (Bed) block.getState().getData();
+        if (bedData.isHeadOfBed())
+        {
+            final Block lowerPart = block.getRelative(bedData.getFacing().getOppositeFace());
+            lowerPart.setType(Material.AIR);
+        }
+        block.setType(Material.AIR);
+
         if (! teamAt.isBedAlive())
         {
             return true; // lozko mozna zniszczyc tylko raz, zabezpieczenie przed bugami Bukkita

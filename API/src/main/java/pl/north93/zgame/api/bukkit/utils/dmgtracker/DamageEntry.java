@@ -1,10 +1,16 @@
 package pl.north93.zgame.api.bukkit.utils.dmgtracker;
 
+import javax.annotation.Nullable;
+
 import java.time.Duration;
 import java.time.Instant;
 
 import com.google.common.base.Preconditions;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -101,6 +107,38 @@ public class DamageEntry
         }
 
         return true;
+    }
+
+    /**
+     * Jesli gracz zadal te obrazenia to zostanie tu zwrocona jego instancja.
+     * W przeciwnym wypadku tu bedzie null.
+     *
+     * @return Gracz ktory zadal te obrazenia lub null jesli nie pochodza od gracza.
+     */
+    public @Nullable Player getPlayerDamager()
+    {
+        final EntityDamageEvent.DamageCause cause = this.cause.getCause();
+        if (cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK)
+        {
+            final EntityDamageByEntityEvent byEntity = (EntityDamageByEntityEvent) this.cause;
+            final Entity damager = byEntity.getDamager();
+            if (damager.getType() == EntityType.PLAYER)
+            {
+                return (Player) damager;
+            }
+        }
+        else if (cause == EntityDamageEvent.DamageCause.PROJECTILE)
+        {
+            final EntityDamageByEntityEvent byEntity = (EntityDamageByEntityEvent) this.cause;
+            final Projectile projectileDamager = (Projectile) byEntity.getDamager();
+
+            if (projectileDamager.getShooter() instanceof Player)
+            {
+                return (Player) projectileDamager.getShooter();
+            }
+        }
+
+        return null;
     }
 
     @Override

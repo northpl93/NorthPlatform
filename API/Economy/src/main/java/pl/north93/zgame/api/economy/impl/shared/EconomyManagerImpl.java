@@ -47,20 +47,22 @@ public class EconomyManagerImpl implements IEconomyManager
     @Override
     public CurrencyConfig getCurrency(final String name)
     {
-        Preconditions.checkNotNull(name);
+        Preconditions.checkNotNull(name, "Currency name can't be null");
         return findInCollection(this.config.get().getCurrencies(), CurrencyConfig::getName, name);
     }
 
     @Override
     public CurrencyRankingImpl getRanking(final ICurrency currency)
     {
-        Preconditions.checkNotNull(currency);
+        Preconditions.checkNotNull(currency, "Currency can't be null");
         return new CurrencyRankingImpl(currency.getName());
     }
 
     @Override
     public ITransaction openTransaction(final ICurrency currency, final UUID playerId) throws PlayerNotFoundException
     {
+        Preconditions.checkNotNull(currency, "Currency can't be null");
+        Preconditions.checkNotNull(playerId, "Player UUID can't be null");
         final IPlayerTransaction transaction = this.networkManager.getPlayers().transaction(playerId);
         return new TransactionImpl(currency, transaction, this.getRanking(currency));
     }
@@ -68,6 +70,8 @@ public class EconomyManagerImpl implements IEconomyManager
     @Override
     public ITransaction openTransaction(final ICurrency currency, final String playerName) throws PlayerNotFoundException
     {
+        Preconditions.checkNotNull(currency, "Currency can't be null");
+        Preconditions.checkNotNull(playerName, "Player name can't be null");
         final IPlayerTransaction transaction = this.networkManager.getPlayers().transaction(playerName);
         return new TransactionImpl(currency, transaction, this.getRanking(currency));
     }

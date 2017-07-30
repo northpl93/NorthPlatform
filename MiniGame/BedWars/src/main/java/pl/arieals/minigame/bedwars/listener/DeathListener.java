@@ -2,6 +2,7 @@ package pl.arieals.minigame.bedwars.listener;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.setPlayerStatus;
 import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColorCodes;
 import static pl.north93.zgame.api.global.utils.JavaUtils.instanceOf;
@@ -45,6 +46,27 @@ public class DeathListener implements Listener
     private BukkitApiCore apiCore;
     @Inject @Messages("BedWars")
     private MessagesBox   messages;
+
+    @EventHandler
+    public void onVoidDamage(final EntityDamageEvent event)
+    {
+        final Player player = instanceOf(event.getEntity(), Player.class);
+        if (player == null)
+        {
+            return;
+        }
+
+        if (event.getCause() != EntityDamageEvent.DamageCause.VOID)
+        {
+            return;
+        }
+
+        final PlayerStatus playerStatus = getPlayerStatus(player);
+        if (playerStatus == PlayerStatus.PLAYING)
+        {
+            event.setDamage(Integer.MAX_VALUE);
+        }
+    }
 
     @EventHandler
     public void onPlayerHitPlayer(final EntityDamageByEntityEvent event)
@@ -143,7 +165,9 @@ public class DeathListener implements Listener
             return;
         }
 
-        final Player damager = (Player) lastDmg.getCauseByEntity().getDamager();
+        final Player damager = lastDmg.getPlayerDamager();
+        assert damager != null; // damager nie moze byc tu nullem bo uzywamy getLastDamageByPlayer
+
         final BedWarsPlayer damagerData = getPlayerData(damager, BedWarsPlayer.class);
         damagerData.incrementKills(); // dodajemy zabojcy killa
         arena.getRewards().addReward(Identity.of(damager), new CurrencyReward("elimination", "minigame", 100));

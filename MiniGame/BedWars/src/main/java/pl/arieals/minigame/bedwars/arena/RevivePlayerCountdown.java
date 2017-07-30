@@ -52,6 +52,7 @@ public class RevivePlayerCountdown extends AbstractCountdown
 
         this.bedWarsPlayer.setAlive(true);
         this.player.teleport(this.bedWarsPlayer.getTeam().getSpawn());
+        this.player.setFallDistance(0); // disable fall damage
 
         setPlayerStatus(this.player, PlayerStatus.PLAYING);
     }
