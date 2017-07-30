@@ -4,8 +4,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.Queue;
 
@@ -45,22 +45,28 @@ public class DamageContainer
     /**
      * Dodaje nowa pozycje z obrazeniem otrzymanym przez gracza.
      * Metoda nie jest thread-safe.
-     * @param event element do dodania do kolejki.
+     * @param damageEntry element do dodania do kolejki.
      */
-    public void handleDamage(final EntityDamageEvent event)
+    public void handleDamage(final DamageEntry damageEntry)
     {
-        this.entries.add(new DamageEntry(event, Instant.now()));
+        this.entries.add(damageEntry);
     }
 
     /**
      * Zwraca wszystkie ostatnio zarejestrowane obrazenia.
-     * Ta metoda zwraca mutowalna kolejke z wnetrza klasy.
-     * Kolejka NIE jest thread-safe.
-     * @return mutowalna kolejka przechowujaca obrazenia.
+     * Pierwszym elementem jest najnowsze otrzymane obrazenie.
+     * @return kopia kolejki z otrzymanymi obrazeniami.
      */
-    public @Nonnull Queue<DamageEntry> getEntries()
+    public @Nonnull Deque<DamageEntry> getEntries()
     {
-        return this.entries;
+        final Deque<DamageEntry> queue = new ArrayDeque<>(10);
+        final Iterator<DamageEntry> iterator = this.entries.descendingIterator();
+        while (iterator.hasNext())
+        {
+            queue.add(iterator.next());
+        }
+
+        return queue;
     }
 
     /**
@@ -70,9 +76,9 @@ public class DamageContainer
      * @param duration limit czasu.
      * @return kolejka z obrazeniami nie starszymi niz duration.
      */
-    public @Nonnull Queue<DamageEntry> getEntriesNotOlder(final Duration duration)
+    public @Nonnull Deque<DamageEntry> getEntriesNotOlder(final Duration duration)
     {
-        final Queue<DamageEntry> queue = new ArrayDeque<>(10);
+        final Deque<DamageEntry> queue = new ArrayDeque<>(10);
 
         final Iterator<DamageEntry> iterator = this.entries.descendingIterator();
         while (iterator.hasNext())
@@ -95,7 +101,7 @@ public class DamageContainer
      */
     public @Nullable DamageEntry getLastDamageByPlayer()
     {
-        return this.getLastDamageByPlayer0(this.entries);
+        return this.getLastDamageByPlayer0(this.getEntries());
     }
 
     /**

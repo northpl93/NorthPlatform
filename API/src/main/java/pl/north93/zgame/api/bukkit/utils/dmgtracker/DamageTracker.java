@@ -2,6 +2,8 @@ package pl.north93.zgame.api.bukkit.utils.dmgtracker;
 
 import javax.annotation.Nonnull;
 
+import java.time.Instant;
+
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,7 +48,7 @@ public class DamageTracker implements Listener
 
         final Player player = (Player) event.getEntity();
         final DamageContainer container = this.getContainer(player);
-        container.handleDamage(event);
+        container.handleDamage(new DamageEntry(event, Instant.now()));
     }
 
     public @Nonnull DamageContainer getContainer(final Player player)
