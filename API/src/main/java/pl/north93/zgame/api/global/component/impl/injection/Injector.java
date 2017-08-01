@@ -73,7 +73,8 @@ public class Injector
             {
                 if (injectAnn.silentFail())
                 {
-                    return;
+                    // kontynuujemy reszte pol
+                    continue;
                 }
                 throw new InjectionException(instance.getClass(), e);
             }

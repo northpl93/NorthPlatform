@@ -1,6 +1,7 @@
 package pl.arieals.minigame.bedwars.shop.upgrade;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
 
 
 import org.bukkit.entity.Player;
@@ -9,6 +10,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
+import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
 
@@ -23,13 +25,15 @@ public class IslandTrapUpgrade implements IUpgrade
 
     private void onEnter(final Team owningTeam, final Player player)
     {
-        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
-        if (playerData == null)
+        final PlayerStatus playerStatus = getPlayerStatus(player);
+        if (playerStatus != null && playerStatus.isSpectator())
         {
+            // nic nie robimy spectatorom
             return;
         }
 
-        if (! playerData.isAlive())
+        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        if (playerData == null)
         {
             return;
         }

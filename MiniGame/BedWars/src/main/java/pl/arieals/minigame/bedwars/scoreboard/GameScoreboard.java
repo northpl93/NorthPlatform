@@ -78,10 +78,20 @@ public class GameScoreboard implements IScoreboardLayout
         final DeathMatch deathMatch = arena.getDeathMatch();
         if (deathMatch.getState() == DeathMatchState.NOT_STARTED)
         {
-            final long timeTo = arena.getTimer().calcTimeTo(this.config.getStartDeathMatchAt() * 50L, TimeUnit.MILLISECONDS, TimeUnit.SECONDS);
-            final String humanTime = FORMAT.format(LocalDateTime.ofEpochSecond(timeTo, 0, ZoneOffset.UTC));
+            // przed deathmatchem jest jeszcze niszczenie lozek
+            final long timeToDestroyBeds = arena.getTimer().calcTimeTo(this.config.getDestroyBedsAt()* 50L, TimeUnit.MILLISECONDS, TimeUnit.SECONDS);
+            if (timeToDestroyBeds >= 0)
+            {
+                final String humanTime = FORMAT.format(LocalDateTime.ofEpochSecond(timeToDestroyBeds, 0, ZoneOffset.UTC));
+                builder.translated("scoreboard.beds_destroy", humanTime);
+            }
+            else
+            {
+                final long timeTo = arena.getTimer().calcTimeTo(this.config.getStartDeathMatchAt() * 50L, TimeUnit.MILLISECONDS, TimeUnit.SECONDS);
+                final String humanTime = FORMAT.format(LocalDateTime.ofEpochSecond(timeTo, 0, ZoneOffset.UTC));
 
-            builder.translated("scoreboard.deathmatch.countdown", humanTime);
+                builder.translated("scoreboard.deathmatch.countdown", humanTime);
+            }
         }
         else if (deathMatch.getState().isActive())
         {

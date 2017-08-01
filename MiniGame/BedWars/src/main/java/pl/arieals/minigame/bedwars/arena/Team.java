@@ -1,6 +1,7 @@
 package pl.arieals.minigame.bedwars.arena;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
 
 
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.minigame.bedwars.cfg.BwTeamConfig;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 
@@ -95,7 +97,7 @@ public class Team
 
     public Set<Player> getAlivePlayers()
     {
-        return this.players.stream().filter(player -> getPlayerData(player, BedWarsPlayer.class).isAlive()).collect(Collectors.toSet());
+        return this.players.stream().filter(player -> getPlayerStatus(player) == PlayerStatus.PLAYING).collect(Collectors.toSet());
     }
 
     public Cuboid getTeamArena()
@@ -134,12 +136,24 @@ public class Team
 
     /**
      * Sprawdza czy dany team jest zywy, tzn.
-     * czy ma lozku lub przynajmniej jednego zywego gracza
+     * czy ma lozku lub przynajmniej jednego zywego/respawnujacego sie gracza
      * @return czy team jest zywy.
      */
     public boolean isTeamAlive()
     {
-        return this.isBedAlive || ! this.getAlivePlayers().isEmpty();
+        if (this.isBedAlive)
+        {
+            return true;
+        }
+        for (final Player player : this.players)
+        {
+            final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+            if (playerData != null && ! playerData.isEliminated())
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Upgrades getUpgrades()

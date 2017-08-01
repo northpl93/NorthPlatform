@@ -54,7 +54,7 @@ public class RoadOfWarrior implements IUpgrade, Listener
         return messagesBox.getMessage(player.spigot().getLocale(), "upgrade_gui.RoadOfWarrior.lore", sharpnessLevel);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onItemBuy(final ItemBuyEvent event)
     {
         final BedWarsPlayer playerData = getPlayerData(event.getPlayer(), BedWarsPlayer.class);

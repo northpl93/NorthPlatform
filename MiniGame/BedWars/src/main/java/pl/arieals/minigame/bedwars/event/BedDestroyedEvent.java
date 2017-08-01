@@ -1,5 +1,7 @@
 package pl.arieals.minigame.bedwars.event;
 
+import javax.annotation.Nullable;
+
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -31,10 +33,11 @@ public class BedDestroyedEvent extends ArenaEvent
 
     /**
      * Zwraca gracza który zniszczył łóżko.
+     * W przypadku zniszczenia lozka przez automat, tu bedzie null.
      *
      * @return gracz który zniszczył łóżko.
      */
-    public Player getDestroyer()
+    public @Nullable Player getDestroyer()
     {
         return this.destroyer;
     }

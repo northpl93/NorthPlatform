@@ -60,7 +60,7 @@ public class XmlEnchant
 
     public void apply(final ItemStack itemStack)
     {
-        itemStack.addEnchantment(this.getEnchantment(), this.level);
+        itemStack.addUnsafeEnchantment(this.getEnchantment(), this.level);
     }
 
     @Override

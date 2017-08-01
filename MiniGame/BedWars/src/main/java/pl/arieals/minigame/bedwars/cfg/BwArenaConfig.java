@@ -20,6 +20,8 @@ public class BwArenaConfig
 {
     @XmlElement(name = "lobby", required = true)
     private XmlLocation        lobby;
+    @XmlElement(name = "lobbyRegion", required = true)
+    private XmlCuboid          lobbyCuboid;
     @XmlElementWrapper(name = "teams")
     @XmlElement(name = "team")
     private List<BwTeamConfig> teams;
@@ -33,6 +35,11 @@ public class BwArenaConfig
     public XmlLocation getLobby()
     {
         return this.lobby;
+    }
+
+    public XmlCuboid getLobbyCuboid()
+    {
+        return this.lobbyCuboid;
     }
 
     public List<BwTeamConfig> getTeams()
@@ -53,6 +60,6 @@ public class BwArenaConfig
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("lobby", this.lobby).append("teams", this.teams).append("generators", this.generators).append("secureRegions", this.secureRegions).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("lobby", this.lobby).append("lobbyCuboid", this.lobbyCuboid).append("teams", this.teams).append("generators", this.generators).append("secureRegions", this.secureRegions).toString();
     }
 }

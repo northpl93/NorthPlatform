@@ -50,7 +50,7 @@ public class ArmorProtection implements IUpgrade, Listener
         return messagesBox.getMessage(player.spigot().getLocale(), "upgrade_gui.ArmorProtection.lore", sharpnessLevel);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void newArmorHandler(final ItemBuyEvent event)
     {
         final String specialHandler = event.getShopEntry().getSpecialHandler();

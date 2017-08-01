@@ -115,7 +115,7 @@ public class PlayerTeamListener implements Listener
         if (team != null)
         {
             team.getPlayers().remove(event.getPlayer());
-            if (! team.isTeamAlive())
+            if (! playerData.isEliminated() && ! team.isTeamAlive())
             {
                 // jesli gracz byl ostatni zyjacy w teamie i team nie mial lozka
                 // to go eliminujemy

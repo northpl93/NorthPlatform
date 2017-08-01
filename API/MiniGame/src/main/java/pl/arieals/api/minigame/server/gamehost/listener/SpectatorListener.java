@@ -7,11 +7,16 @@ import static pl.north93.zgame.api.global.utils.JavaUtils.instanceOf;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorModeChangeEvent;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
@@ -73,31 +78,64 @@ public class SpectatorListener implements Listener
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void disableInteract(final PlayerInteractEvent event)
     {
         final Player player = event.getPlayer();
         this.cancelIfNecessary(event, player);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void disableDamage(final EntityDamageEvent event)
+    {
+        if (event instanceof EntityDamageByEntityEvent)
+        {
+            final EntityDamageByEntityEvent byEntity = (EntityDamageByEntityEvent) event;
+            final Player attacker = instanceOf(byEntity.getDamager(), Player.class);
+            final Player receiver = instanceOf(byEntity.getDamager(), Player.class);
+
+            this.cancelIfNecessary(event, attacker);
+            this.cancelIfNecessary(event, receiver);
+        }
+        else
+        {
+            final Player player = instanceOf(event.getEntity(), Player.class);
+            this.cancelIfNecessary(event, player);
+        }
+    }
+
+    @EventHandler
+    public void disableBowShoot(final EntityShootBowEvent event)
     {
         final Player player = instanceOf(event.getEntity(), Player.class);
         this.cancelIfNecessary(event, player);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void blockBreak(final BlockBreakEvent event)
     {
         final Player player = instanceOf(event.getPlayer(), Player.class);
         this.cancelIfNecessary(event, player);
     }
 
-    @EventHandler
-    public void blockBreak(final BlockPlaceEvent event)
+    @EventHandler(priority = EventPriority.LOW)
+    public void blockPlace(final BlockPlaceEvent event)
     {
         final Player player = instanceOf(event.getPlayer(), Player.class);
+        this.cancelIfNecessary(event, player);
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void disableItemPickup(final PlayerPickupItemEvent event)
+    {
+        final Player player = event.getPlayer();
+        this.cancelIfNecessary(event, player);
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void disableItemDrop(final PlayerDropItemEvent event)
+    {
+        final Player player = event.getPlayer();
         this.cancelIfNecessary(event, player);
     }
 }

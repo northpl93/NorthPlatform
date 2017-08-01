@@ -2,6 +2,11 @@
 <arena>
     <lobby x="0" y="0" z="0" yaw="0" pitch="0"/>
 
+    <lobbyRegion>
+        <from x="-332" y="156" z="334"/>
+        <to x="-302" y="182" z="304"/>
+    </lobbyRegion>
+
     <teams>
         <team color="RED" scoreboardOrder="0">
             <teamRegion>
@@ -14,6 +19,8 @@
             </healRegion>
             <spawnLocation x="0" y="0" z="0"/>
             <bedLocation x="0" y="0" z="0"/>
+            <shopNpc x="0" y="0" z="0" yaw="0"/>
+            <upgradesNpc x="0" y="0" z="0" yaw="0"/>
         </team>
     </teams>
 

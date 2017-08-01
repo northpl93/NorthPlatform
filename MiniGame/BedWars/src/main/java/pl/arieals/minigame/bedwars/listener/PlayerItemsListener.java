@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -119,7 +118,8 @@ public class PlayerItemsListener implements Listener
         {
             return;
         }
-        final Player lastDamager = (Player) ((EntityDamageByEntityEvent) lastDamageByPlayer.getCause()).getDamager();
+        final Player lastDamager = lastDamageByPlayer.getPlayerDamager();
+        assert lastDamager != null;
 
         for (final Object2IntMap.Entry<Material> entry : items.object2IntEntrySet())
         {

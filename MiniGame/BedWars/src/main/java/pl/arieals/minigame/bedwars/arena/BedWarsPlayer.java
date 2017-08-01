@@ -11,13 +11,13 @@ public class BedWarsPlayer
 {
     private final Player bukkitPlayer;
     private Team    team;
-    private boolean alive;
+    private boolean eliminated;
     private int     kills;
+    private int     lives; // ilosc dodatkowych zyc
 
     public BedWarsPlayer(final Player bukkitPlayer)
     {
         this.bukkitPlayer = bukkitPlayer;
-        this.alive = true;
     }
 
     public Player getBukkitPlayer()
@@ -43,14 +43,14 @@ public class BedWarsPlayer
         TeamArmorUtils.updateArmor(this.bukkitPlayer, team);
     }
 
-    public boolean isAlive()
+    public boolean isEliminated()
     {
-        return this.alive;
+        return this.eliminated;
     }
 
-    public void setAlive(final boolean alive)
+    public void setEliminated(final boolean eliminated)
     {
-        this.alive = alive;
+        this.eliminated = eliminated;
     }
 
     public int getKills()
@@ -63,9 +63,24 @@ public class BedWarsPlayer
         this.kills++;
     }
 
+    public int getLives()
+    {
+        return this.lives;
+    }
+
+    public void addLive()
+    {
+        this.lives++;
+    }
+
+    public void removeLife()
+    {
+        this.lives--;
+    }
+
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("bukkitPlayer", this.bukkitPlayer).append("team", this.team).append("alive", this.alive).append("kills", this.kills).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("bukkitPlayer", this.bukkitPlayer).append("team", this.team).append("eliminated", this.eliminated).append("kills", this.kills).append("lives", this.lives).toString();
     }
 }

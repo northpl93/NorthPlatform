@@ -108,7 +108,7 @@ public class DeathListener implements Listener
         player.setVelocity(newVector);
 
         this.handleKiller(event, arena, team); // podbija licznik zabojstw, wysyla wiadomosc i daje nagrode zabojcy
-        this.handleRespawn(player, playerData, team);
+        this.handleRespawn(player, arena, playerData, team);
         this.safePlaceTeleport(player, team, arena);
 
         if (! team.isTeamAlive())
@@ -118,15 +118,22 @@ public class DeathListener implements Listener
         }
     }
 
-    private void handleRespawn(final Player player, final BedWarsPlayer playerData, final Team team)
+    private void handleRespawn(final Player player, final LocalArena arena, final BedWarsPlayer playerData, final Team team)
     {
-        playerData.setAlive(false);
         if (team.isBedAlive())
         {
             new RevivePlayerCountdown(player, playerData).start(20);
             return;
         }
+        // gdy gracz ma zycie i deathmatch nie jest wlaczony to zabieramy zycie i normalnie respawnimy
+        else if (playerData.getLives() > 0 && arena.getDeathMatch().getState() == DeathMatchState.NOT_STARTED)
+        {
+            playerData.removeLife();
+            new RevivePlayerCountdown(player, playerData).start(20);
+            return;
+        }
 
+        playerData.setEliminated(true);
         final String locale = player.spigot().getLocale();
         final String title = translateAlternateColorCodes(this.messages.getMessage(locale, "die.norespawn.title"));
         final String subtitle = translateAlternateColorCodes(this.messages.getMessage(locale, "die.norespawn.subtitle"));

@@ -55,13 +55,6 @@ public class BuildListener implements Listener
             return;
         }
 
-        if (playerData == null || ! playerData.isAlive())
-        {
-            // gdy gracz nie zyje lub jest spectatorem/innym intruzem anulujemy
-            event.setCancelled(true);
-            return;
-        }
-
         if (this.checkSecureRegion(arenaData, event.getBlock()))
         {
             this.messages.sendMessage(event.getPlayer(), "no_permissions");
@@ -83,13 +76,6 @@ public class BuildListener implements Listener
         if (arena.getGamePhase() != GamePhase.STARTED)
         {
             // gdy gra nie wystartowala to nic nie mozna robic
-            event.setCancelled(true);
-            return;
-        }
-
-        if (playerData == null || ! playerData.isAlive())
-        {
-            // gdy gracz nie zyje lub jest spectatorem/innym intruzem anulujemy
             event.setCancelled(true);
             return;
         }

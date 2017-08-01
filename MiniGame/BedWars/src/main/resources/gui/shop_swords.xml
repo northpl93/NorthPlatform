@@ -4,12 +4,12 @@
         <border id="AIR" data="0" />
         <background id="AIR" data="0" />
         <content>
-            <!-- drewniany miecz -->
+            <!-- wedka -->
             <button pos="2,1">
-                <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/swords.wood_sword/$playerId"/>
-                <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/swords.wood_sword/$playerId"/>
-                <icon id="WOOD_SWORD" data="0" name="@item.swords.wood_sword.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
-                <onClick>northplatform://minigame/bedwars/shop/buy/swords.wood_sword/$playerId</onClick>
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/swords.fishing_rod/$playerId"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/swords.fishing_rod/$playerId"/>
+                <icon id="FISHING_ROD" data="0" name="@item.swords.fishing_rod.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/shop/buy/swords.fishing_rod/$playerId</onClick>
             </button>
 
             <!-- kamienny miecz -->

@@ -4,10 +4,8 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 
 
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
@@ -55,13 +53,15 @@ public class SpecialItems implements Listener
     public void onBucketUse(final PlayerBucketEmptyEvent event)
     {
         final Player player = event.getPlayer();
-        player.getInventory().setItemInMainHand(null);
+        player.getInventory().remove(event.getItemStack());
+        //player.getInventory().setItemInMainHand(null);
     }
 
     @EventHandler()
     public void throwFireball(final PlayerInteractEvent event)
     {
-        final PlayerInventory inventory = event.getPlayer().getInventory();
+        final Player player = event.getPlayer();
+        final PlayerInventory inventory = player.getInventory();
 
         final ItemStack itemInMainHand = inventory.getItemInMainHand();
         if (itemInMainHand.getType() != Material.FIREBALL)
@@ -79,8 +79,6 @@ public class SpecialItems implements Listener
             itemInMainHand.setAmount(newAmount);
         }
 
-        final World world = event.getPlayer().getWorld();
-        final Entity fireball = world.spawnEntity(event.getPlayer().getLocation(), EntityType.FIREBALL);
-        fireball.setVelocity(event.getPlayer().getVelocity());
+        player.launchProjectile(Fireball.class, player.getVelocity());
     }
 }

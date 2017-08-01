@@ -23,8 +23,8 @@ public class ItemBuyListener implements Listener
     {
         final Player player = event.getPlayer();
 
-        final String messageKey = "item." + event.getShopEntry().getInternalName();
-        final String itemName = this.messagesShop.getMessage(player.spigot().getLocale(), messageKey);
+        final String messageKey = "item." + event.getShopEntry().getInternalName() + ".name";
+        final String itemName = this.messagesShop.getMessage(player.spigot().getLocale(), messageKey, "e");
 
         this.messagesShop.sendMessage(player, "action.buy_item", itemName);
     }

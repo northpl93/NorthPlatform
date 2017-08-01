@@ -2,6 +2,8 @@ package pl.arieals.minigame.bedwars.listener;
 
 import javax.xml.bind.JAXB;
 
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -18,6 +20,8 @@ import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.generator.GeneratorTask;
 import pl.arieals.minigame.bedwars.cfg.BwArenaConfig;
 import pl.arieals.minigame.bedwars.cfg.BwConfig;
+import pl.north93.zgame.api.bukkit.utils.FastBlockOp;
+import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ArenaStartListener implements Listener
@@ -39,6 +43,9 @@ public class ArenaStartListener implements Listener
     {
         final LocalArena arena = event.getArena();
 
+        // niszczymy lobby
+        this.destroyLobby(arena);
+
         // planujemy task generatorów co 1 tick
         arena.getScheduler().runTaskTimer(new GeneratorTask(arena), 1, 1);
 
@@ -53,6 +60,23 @@ public class ArenaStartListener implements Listener
                 arena.getDeathMatch().activateDeathMatch();
             }
         }, this.config.getStartDeathMatchAt());
+    }
+
+    private void destroyLobby(final LocalArena arena)
+    {
+        final BedWarsArena arenaData = arena.getArenaData();
+        final Cuboid lobby = arenaData.getConfig().getLobbyCuboid().toCuboid(arena.getWorld().getCurrentWorld());
+
+        final long l = System.currentTimeMillis();
+        for (final Block block : lobby)
+        {
+            if (block.getType() == Material.AIR)
+            {
+                continue;
+            }
+            FastBlockOp.setType(block, Material.AIR, (byte) 0);
+        }
+        System.out.println(System.currentTimeMillis() - l);
     }
 
     @EventHandler

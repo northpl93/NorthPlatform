@@ -2,11 +2,8 @@ package pl.arieals.minigame.bedwars.listener;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import static pl.arieals.minigame.bedwars.utils.PlayerTeamPredicates.isInTeam;
-import static pl.arieals.minigame.bedwars.utils.PlayerTeamPredicates.notInTeam;
 import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColorCodes;
 
-
-import java.util.function.Predicate;
 
 import com.destroystokyo.paper.Title;
 
@@ -28,6 +25,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public class BedDestroyListener implements Listener
 {
@@ -39,28 +37,29 @@ public class BedDestroyListener implements Listener
     @EventHandler
     public void onBedDestroy(final BedDestroyedEvent event)
     {
-        final BedWarsPlayer playerData = getPlayerData(event.getDestroyer(), BedWarsPlayer.class);
         final LocalArena arena = event.getArena();
         final Team team = event.getTeam();
 
         final PlayersManager playersManager = arena.getPlayersManager();
-        playersManager.broadcast(isInTeam(team), this.messages,
-                "bed_destroyed.you", MessageLayout.SEPARATED,
-                team.getColor().getChar(),
-                playerData.getTeam().getColor().getChar(),
-                playerData.getBukkitPlayer().getDisplayName());
-
-        final Predicate<Player> notInTeamPredicate = notInTeam(team);
-        for (final Player player : playersManager.getPlayers())
+        if (event.getDestroyer() != null)
         {
-            if (! notInTeamPredicate.test(player))
-            {
-                continue;
-            }
-            final String locale = player.spigot().getLocale();
-            final String teamName = this.messages.getMessage(locale, "team.genitive." + team.getName());
+            final BedWarsPlayer destroyerData = getPlayerData(event.getDestroyer(), BedWarsPlayer.class);
+            assert destroyerData != null; // tu nie moze byc nullem
 
-            this.messages.sendMessage(player, "bed_destroyed.global", MessageLayout.SEPARATED, team.getColorChar(), teamName, playerData.getTeam().getColorChar(), playerData.getBukkitPlayer().getDisplayName());
+            playersManager.broadcast(isInTeam(team), this.messages,
+                    "bed_destroyed.you", MessageLayout.SEPARATED,
+                    team.getColor().getChar(),
+                    destroyerData.getTeam().getColor().getChar(),
+                    destroyerData.getBukkitPlayer().getDisplayName());
+
+            final TranslatableString teamName = TranslatableString.of(this.messages, "@team.genitive." + team.getName());
+            playersManager.broadcast(this.messages, "bed_destroyed.global", MessageLayout.SEPARATED, team.getColorChar(), teamName, destroyerData.getTeam().getColorChar(), destroyerData.getBukkitPlayer().getDisplayName());
+        }
+        else
+        {
+            playersManager.broadcast(isInTeam(team), this.messages,
+                    "bed_destroyed.you_no_destroyer", MessageLayout.SEPARATED,
+                    team.getColor().getChar());
         }
 
         for (final Player player : team.getPlayers())

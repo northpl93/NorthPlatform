@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
 import pl.arieals.api.minigame.shared.api.GamePhase;
@@ -33,7 +34,8 @@ public class GameEndListener implements Listener
     @EventHandler
     public void onTeamEliminate(final TeamEliminatedEvent event)
     {
-        if (event.getArena().getGamePhase() != GamePhase.STARTED)
+        final LocalArena arena = event.getArena();
+        if (arena.getGamePhase() != GamePhase.STARTED)
         {
             // sprawdzamy czy mamy dobry gamephase, bo mozemy tu spowodowac przelaczenie areny
             // z trybu initialising spowrotem do post_game i spowodowac tym samym wyjatek.
@@ -42,17 +44,13 @@ public class GameEndListener implements Listener
 
         final Team team = event.getEliminatedTeam();
 
-        for (final Player player : event.getArena().getPlayersManager().getPlayers())
-        {
-            final String locale = player.spigot().getLocale();
-            final String teamName = this.messages.getMessage(locale, "team.nominative." + team.getName());
-            this.messages.sendMessage(player, "team_eliminated", MessageLayout.SEPARATED, team.getColorChar(), teamName);
-        }
+        final TranslatableString teamName = TranslatableString.of(this.messages, "@team.nominative." + team.getName());
+        arena.getPlayersManager().broadcast(this.messages, "team_eliminated", MessageLayout.SEPARATED, team.getColorChar(), teamName);
 
-        final BedWarsArena arenaData = event.getArena().getArenaData();
+        final BedWarsArena arenaData = arena.getArenaData();
         if (arenaData.getTeams().stream().filter(Team::isTeamAlive).count() <= 1)
         {
-            event.getArena().setGamePhase(GamePhase.POST_GAME); // todo temporary disable
+            arena.setGamePhase(GamePhase.POST_GAME);
         }
     }
 

@@ -1,11 +1,12 @@
 package pl.arieals.minigame.bedwars.arena;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
-import pl.arieals.minigame.bedwars.event.TeamEliminatedEvent;
+import pl.arieals.minigame.bedwars.event.BedDestroyedEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -38,16 +39,11 @@ public class BedDestroyTask extends BukkitRunnable
             }
 
             team.setBedAlive(false);
+            final Block bedBlock = team.getBedLocation().getBlock();
             // usuwamy klasyczna, wolna metoda zeby znikly obydwie czesci lozka.
-            team.getBedLocation().getBlock().setType(Material.AIR);
+            bedBlock.setType(Material.AIR);
 
-            if (team.isTeamAlive())
-            {
-                // team wciaz zyje, nie eliminujemy
-                continue;
-            }
-
-            this.apiCore.callEvent(new TeamEliminatedEvent(this.arena, team));
+            this.apiCore.callEvent(new BedDestroyedEvent(this.arena, null, bedBlock, team));
         }
     }
 }

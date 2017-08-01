@@ -63,7 +63,7 @@ public class NpcCreator implements Listener
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true) // spectatorzy beda mieli anulowany ten event
     public void onInteractWithNpc(final PlayerInteractAtEntityEvent event)
     {
         final Entity entity = event.getRightClicked();
