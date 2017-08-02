@@ -107,14 +107,15 @@ public abstract class ApiCore
         final File extractedAgent = this.getFile("NorthPlatformInstrumentation.jar");
         if (!extractedAgent.exists())
         {
-            URL inputUrl = this.getClass().getResource("/InstrumentationAgent.jar");
+            this.getLogger().log(Level.INFO, "Not found javaagent in {0}. Trying to copy from api's jar.", extractedAgent);
+            final URL inputUrl = this.getClass().getResource("/InstrumentationAgent.jar");
             try
             {
                 FileUtils.copyURLToFile(inputUrl, extractedAgent);
             }
             catch (final IOException e)
             {
-                e.printStackTrace();
+                this.getLogger().log(Level.SEVERE, "There's no javaagent inside api's jar. Place InstrumentationAgent.jar inside API's jar. You may also place it direct in API's working directory as NorthPlatformInstrumentation.jar", e);
                 return;
             }
         }
