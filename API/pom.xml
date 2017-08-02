@@ -191,19 +191,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
 
-            <!-- API is a runnable application that can host components -->
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>pl.north93.zgame.api.standalone.StandaloneApiCore</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-
             <!-- Konfigurujemy budowanie niestandardowego jara -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -213,6 +200,12 @@
                     <descriptors>
                         <descriptor>src/main/assembly/deploy-package.xml</descriptor>
                     </descriptors>
+                    <!-- API is a runnable application that can host components -->
+                    <archive>
+                        <manifest>
+                            <mainClass>pl.north93.zgame.api.standalone.StandaloneApiCore</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
