@@ -11,6 +11,9 @@
             <items>
                 <generatorItem material="IRON_INGOT" every="40" startAt="0"/>
                 <generatorItem material="GOLD_INGOT" every="80"/>
+
+                <generatorItem name="upgrade_1" triggerable="true" material="IRON_INGOT" every="20"/>
+                <generatorItem name="upgrade_1" triggerable="true" material="GOLD_INGOT" every="20"/>
             </items>
         </generatorType>
 

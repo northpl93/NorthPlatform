@@ -24,6 +24,8 @@ public class BwGeneratorItemConfig
     private int      amount = 1;
     @XmlAttribute(required = true)
     private int      every;
+    @XmlAttribute()
+    private boolean  triggerable;
     @XmlAttribute
     private int      startAt = 0;
 
@@ -31,13 +33,14 @@ public class BwGeneratorItemConfig
     {
     }
 
-    public BwGeneratorItemConfig(final String name, final Material material, final byte data, final int amount, final int every, final int startAt)
+    public BwGeneratorItemConfig(final String name, final Material material, final byte data, final int amount, final int every, final boolean triggerable, final int startAt)
     {
         this.name = name;
         this.material = material;
         this.data = data;
         this.amount = amount;
         this.every = every;
+        this.triggerable = triggerable;
         this.startAt = startAt;
     }
 
@@ -66,6 +69,11 @@ public class BwGeneratorItemConfig
         return this.every;
     }
 
+    public boolean isTriggerable()
+    {
+        return this.triggerable;
+    }
+
     public int getStartAt()
     {
         return this.startAt;
@@ -74,6 +82,6 @@ public class BwGeneratorItemConfig
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("material", this.material).append("data", this.data).append("amount", this.amount).append("every", this.every).append("startAt", this.startAt).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("material", this.material).append("data", this.data).append("amount", this.amount).append("every", this.every).append("triggerable", this.triggerable).append("startAt", this.startAt).toString();
     }
 }

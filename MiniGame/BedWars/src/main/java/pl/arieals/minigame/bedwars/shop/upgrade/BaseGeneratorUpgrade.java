@@ -1,8 +1,5 @@
 package pl.arieals.minigame.bedwars.shop.upgrade;
 
-import static org.bukkit.Material.EMERALD;
-
-
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -19,8 +16,6 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class BaseGeneratorUpgrade implements IUpgrade
 {
-    private static final BwGeneratorItemConfig emeralds1 = new BwGeneratorItemConfig("emeralds", EMERALD, (byte) 0, 1, 30, 0);
-    private static final BwGeneratorItemConfig emeralds2 = new BwGeneratorItemConfig("emeralds", EMERALD, (byte) 0, 2, 30, 1);
     @Inject
     private BwConfig config;
 
@@ -30,24 +25,15 @@ public class BaseGeneratorUpgrade implements IUpgrade
         final BedWarsArena arenaData = arena.getArenaData();
         final GeneratorController generator = this.findGenerator(arenaData, team);
 
-        if (level == 1 || level == 2)
+        for (final BwGeneratorItemConfig itemConfig : generator.getGeneratorType().getItems())
         {
-            // ulepszenia normalne
-            for (final GeneratorController.ItemGeneratorEntry entry : generator.getEntries())
+            if (! itemConfig.getName().equals("upgrade_" + level))
             {
-                entry.speedup(from -> from + 1);
+                continue;
             }
-        }
-        else
-        {
-            if (level == 3)
-            {
-                generator.addNewEntry(emeralds1);
-            }
-            else
-            {
-                generator.addNewEntry(emeralds2);
-            }
+
+            final BwGeneratorItemConfig newConfig = new BwGeneratorItemConfig(itemConfig.getName(), itemConfig.getMaterial(), itemConfig.getData(), itemConfig.getAmount(), itemConfig.getEvery(), false, level);
+            generator.addNewEntry(newConfig);
         }
     }
 

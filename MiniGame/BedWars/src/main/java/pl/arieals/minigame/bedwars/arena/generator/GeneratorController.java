@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 
 import net.minecraft.server.v1_10_R1.AxisAlignedBB;
 import net.minecraft.server.v1_10_R1.EntityItem;
@@ -163,17 +162,6 @@ public class GeneratorController
             return false;
         }
 
-        public void speedup(final Function<Integer, Integer> modifier)
-        {
-            final BwGeneratorItemConfig current = this.getCurrent();
-            final BwGeneratorItemConfig newConfig = new BwGeneratorItemConfig(current.getName(), current.getMaterial(), current.getData(), modifier.apply(current.getAmount()), current.getEvery(), current.getStartAt() + 1);
-
-            final BedWarsArena arenaData = GeneratorController.this.arena.getArenaData();
-            arenaData.getAnnouncedItems().add(newConfig);
-
-            this.items.add(newConfig);
-        }
-
         public BwGeneratorItemConfig getCurrent()
         {
             return this.items.stream()
@@ -184,7 +172,7 @@ public class GeneratorController
         private void tick(final long gameTime)
         {
             final BwGeneratorItemConfig current = this.items.stream()
-                                                            .filter(config -> config.getStartAt() <= gameTime)
+                                                            .filter(config -> ! config.isTriggerable() && config.getStartAt() <= gameTime)
                                                             .findFirst().orElse(null);
 
             GeneratorController.this.hudHandler.tick(current == null ? this.items.iterator().next() : current, this.timer);
