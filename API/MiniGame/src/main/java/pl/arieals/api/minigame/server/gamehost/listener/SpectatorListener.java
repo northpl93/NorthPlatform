@@ -17,6 +17,7 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.util.Vector;
 
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorModeChangeEvent;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
@@ -88,6 +89,7 @@ public class SpectatorListener implements Listener
     @EventHandler(priority = EventPriority.LOW)
     public void disableDamage(final EntityDamageEvent event)
     {
+        final Player player = instanceOf(event.getEntity(), Player.class);
         if (event instanceof EntityDamageByEntityEvent)
         {
             final EntityDamageByEntityEvent byEntity = (EntityDamageByEntityEvent) event;
@@ -99,8 +101,13 @@ public class SpectatorListener implements Listener
         }
         else
         {
-            final Player player = instanceOf(event.getEntity(), Player.class);
             this.cancelIfNecessary(event, player);
+        }
+
+        if (player != null && event.getCause() == EntityDamageEvent.DamageCause.VOID && event.isCancelled())
+        {
+            // ladnie odbijamy gracza w gore jesli dostal damage od voidu
+            player.setVelocity(new Vector(0, 4, 0));
         }
     }
 

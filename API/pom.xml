@@ -36,12 +36,13 @@
             <artifactId>bungeecord-api</artifactId>
             <version>${bungee-api.version}</version>
             <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>${bungee-api.version}</version>
-            <type>javadoc</type>
+            <exclusions>
+                <!-- stara guava -->
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14 -->
@@ -49,6 +50,13 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
             <version>1.7.25</version>
+        </dependency>
+
+        <!-- 17 bo taka jest w spigocie -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>17.0</version>
         </dependency>
 
         <dependency>

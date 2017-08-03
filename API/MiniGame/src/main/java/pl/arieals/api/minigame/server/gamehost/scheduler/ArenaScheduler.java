@@ -82,7 +82,7 @@ public class ArenaScheduler implements IArenaScheduler
 
     public void moveTimeForward(final long tickDiff)
     {
-        for (final BukkitTaskWrapper wrapper : this.wrappers)
+        for (final BukkitTaskWrapper wrapper : new ArrayList<>(this.wrappers))
         {
             if (wrapper.isCancelled())
             {
