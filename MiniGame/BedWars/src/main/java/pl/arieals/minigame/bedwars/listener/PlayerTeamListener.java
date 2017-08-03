@@ -9,12 +9,15 @@ import java.util.Comparator;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -57,7 +60,10 @@ public class PlayerTeamListener implements Listener
         final BedWarsPlayer playerData = new BedWarsPlayer(player);
         setPlayerData(player, playerData);
 
-        player.teleport(arenaData.getConfig().getLobby().toBukkit(event.getArena().getWorld().getCurrentWorld()));
+        final Location lobbyLocation = arenaData.getConfig().getLobby().toBukkit(event.getArena().getWorld().getCurrentWorld());
+
+        player.teleport(lobbyLocation);
+        player.teleport(lobbyLocation);
 
         this.scoreboardManager.setLayout(player, new LobbyScoreboard());
     }
@@ -95,6 +101,12 @@ public class PlayerTeamListener implements Listener
 
             this.scoreboardManager.setLayout(player, new GameScoreboard());
 
+            final ItemStack woodSword = new ItemStack(Material.WOOD_SWORD);
+            final ItemMeta itemMeta = woodSword.getItemMeta();
+            itemMeta.spigot().setUnbreakable(true);
+            woodSword.setItemMeta(itemMeta);
+            player.getInventory().addItem(woodSword); // drewniany miecz na start
+
             final String teamNameDative = this.messages.getMessage(player.spigot().getLocale(), "team.dative." + smallestTeam.getName());
             this.messages.sendMessage(player, "separator");
             this.messages.sendMessage(player, "welcome", MessageLayout.CENTER, smallestTeam.getColorChar(), teamNameDative);
@@ -109,6 +121,12 @@ public class PlayerTeamListener implements Listener
         if (playerData == null)
         {
             return;
+        }
+
+        if (playerData.isEliminated())
+        {
+            // jesli gracz jest wyeliminowany to nie wysylamy komunikatu wyjscia
+            event.setQuitMessage(null);
         }
 
         final Team team = playerData.getTeam();

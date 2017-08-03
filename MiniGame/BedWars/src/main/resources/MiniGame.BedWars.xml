@@ -8,12 +8,20 @@
         <generatorType>
             <name>island</name>
             <overload>64</overload>
+            <randomLocation>true</randomLocation>
             <items>
                 <generatorItem material="IRON_INGOT" every="40" startAt="0"/>
                 <generatorItem material="GOLD_INGOT" every="80"/>
 
                 <generatorItem name="upgrade_1" triggerable="true" material="IRON_INGOT" every="20"/>
                 <generatorItem name="upgrade_1" triggerable="true" material="GOLD_INGOT" every="20"/>
+
+                <generatorItem name="upgrade_2" triggerable="true" material="IRON_INGOT" every="20"/>
+                <generatorItem name="upgrade_2" triggerable="true" material="GOLD_INGOT" every="20"/>
+
+                <generatorItem name="upgrade_3" triggerable="true" material="EMERALD" every="20"/>
+
+                <generatorItem name="upgrade_4" triggerable="true" material="EMERALD" every="20"/>
             </items>
         </generatorType>
 
@@ -49,7 +57,7 @@
     </generatorTypes>
 
     <shopEntries>
-        <shopEntry internalName="materials.wool"> <!-- welna -->
+        <shopEntry internalName="materials.wool" specialHandler="WoolTeamColor"> <!-- welna w kolorze druzyny -->
             <items>
                 <item id="WOOL" count="16" />
             </items>
@@ -123,9 +131,9 @@
             <price id="GOLD_INGOT" count="13" />
         </shopEntry>
 
-        <shopEntry internalName="swords.wood_sword"> <!-- drewniany miecz -->
+        <shopEntry internalName="swords.fishing_rod"> <!-- wedka -->
             <items>
-                <item id="WOOD_SWORD" count="1" />
+                <item id="FISHING_ROD" count="1" />
             </items>
             <price id="IRON_INGOT" count="6" />
         </shopEntry>
@@ -259,7 +267,7 @@
             <price id="EMERALD" count="4" />
         </shopEntry>
 
-        <shopEntry internalName="lapis.life"> <!-- dodatkowe zycie -->
+        <shopEntry internalName="lapis.life" specialHandler="AdditionalLife"> <!-- dodatkowe zycie -->
             <price id="INK_SACK" data="4" count="1" />
         </shopEntry>
         <shopEntry internalName="lapis.permanent_sword"> <!-- pernamentny diamentowy miecz -->

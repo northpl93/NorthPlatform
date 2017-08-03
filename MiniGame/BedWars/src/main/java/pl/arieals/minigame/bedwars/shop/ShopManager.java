@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 import net.minecraft.server.v1_10_R1.NBTTagCompound;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -123,6 +124,7 @@ public class ShopManager
         final ItemStack price = entry.getPrice().createItemStack();
         if (! player.getInventory().containsAtLeast(price, price.getAmount()))
         {
+            player.playSound(player.getLocation(), Sound.ENTITY_ARMORSTAND_BREAK, 1, 2); // volume, pitch // dzwiek braku kasy
             return false; // gracz nie ma wymaganej ilosci kasy.
         }
 

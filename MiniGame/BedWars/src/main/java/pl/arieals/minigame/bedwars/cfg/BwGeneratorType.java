@@ -21,6 +21,8 @@ public class BwGeneratorType
     private String                      name;
     @XmlElement(required = true)
     private int                         overload;
+    @XmlElement(required = true)
+    private boolean                     randomLocation;
     @XmlElement
     private Material                    hudItem; // itemek wyswietlajacy sie nad generatorem
     @XmlElementWrapper(name = "items", required = true)
@@ -49,6 +51,11 @@ public class BwGeneratorType
         return this.overload;
     }
 
+    public boolean isRandomLocation()
+    {
+        return this.randomLocation;
+    }
+
     public Material getHudItem()
     {
         return this.hudItem;
@@ -62,6 +69,6 @@ public class BwGeneratorType
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("overload", this.overload).append("hudItem", this.hudItem).append("items", this.items).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("overload", this.overload).append("randomLocation", this.randomLocation).append("hudItem", this.hudItem).append("items", this.items).toString();
     }
 }

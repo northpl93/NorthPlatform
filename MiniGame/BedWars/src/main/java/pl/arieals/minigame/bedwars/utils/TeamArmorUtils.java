@@ -2,6 +2,7 @@ package pl.arieals.minigame.bedwars.utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -73,6 +74,47 @@ public final class TeamArmorUtils
                 return Color.YELLOW;
             case WHITE:
                 return Color.WHITE;
+            default:
+                throw new IllegalArgumentException(color.toString());
+        }
+    }
+
+    public static DyeColor chatColorToDyeColor(final ChatColor color)
+    {
+        switch (color)
+        {
+            case BLACK:
+                return DyeColor.BLACK;
+            case DARK_BLUE:
+                return DyeColor.BLUE;
+            case DARK_GREEN:
+                return DyeColor.GREEN;
+            case DARK_AQUA:
+                return DyeColor.LIGHT_BLUE;
+            case DARK_RED:
+                return DyeColor.RED;
+            case DARK_PURPLE:
+                return DyeColor.PURPLE;
+            case GOLD:
+                return DyeColor.YELLOW;
+            case GRAY:
+                return DyeColor.GRAY;
+            case DARK_GRAY:
+                return DyeColor.GRAY;
+            case BLUE:
+                return DyeColor.BLUE;
+            case GREEN:
+                return DyeColor.GREEN;
+            case AQUA:
+                return DyeColor.LIGHT_BLUE;
+            case RED:
+                return DyeColor.RED;
+            case LIGHT_PURPLE:
+                return DyeColor.PURPLE;
+            case YELLOW:
+                return DyeColor.YELLOW;
+            case WHITE:
+                return DyeColor.WHITE;
             default:
                 throw new IllegalArgumentException(color.toString());
         }

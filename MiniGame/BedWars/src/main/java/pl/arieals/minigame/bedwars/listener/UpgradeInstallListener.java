@@ -4,8 +4,10 @@ import static org.bukkit.event.EventPriority.MONITOR;
 
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -76,6 +78,27 @@ public class UpgradeInstallListener implements Listener
             final String upgradeName = this.messagesShop.getMessage(player.spigot().getLocale(), messageKey, "e");
 
             this.messagesShop.sendMessage(player, "action.buy_upgrade", issuer.getDisplayName(), upgradeName);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void upgradeBuySound(final UpgradeInstallEvent event)
+    {
+        if (! event.isInstalling())
+        {
+            return;
+        }
+
+        for (final Player player : event.getTeam().getPlayers())
+        {
+            if (event.isCancelled())
+            {
+                player.playSound(player.getLocation(), Sound.ENTITY_ARMORSTAND_BREAK, 1, 2); // volume, pitch
+            }
+            else
+            {
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2); // volume, pitch
+            }
         }
     }
 

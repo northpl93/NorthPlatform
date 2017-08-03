@@ -72,7 +72,7 @@ public class DeathListener implements Listener
     public void onPlayerHitPlayer(final EntityDamageByEntityEvent event)
     {
         final Player player = instanceOf(event.getEntity(), Player.class);
-        final Player damager = instanceOf(event.getDamager(), Player.class);
+        final Player damager = new DamageEntry(event, null).getPlayerDamager(); // porzyczylismy sobie kod z damagetrackera
         if (player == null || damager == null)
         {
             return;
@@ -100,9 +100,6 @@ public class DeathListener implements Listener
             return;
         }
 
-        player.setHealth(20);
-        setPlayerStatus(player, PlayerStatus.PLAYING_SPECTATOR);
-
         final Vector direction = player.getLocation().getDirection();
         final Vector newVector = direction.multiply(- 1).setY(2);
         player.setVelocity(newVector);
@@ -110,6 +107,9 @@ public class DeathListener implements Listener
         this.handleKiller(event, arena, team); // podbija licznik zabojstw, wysyla wiadomosc i daje nagrode zabojcy
         this.handleRespawn(player, arena, playerData, team);
         this.safePlaceTeleport(player, team, arena);
+
+        player.setHealth(20);
+        setPlayerStatus(player, PlayerStatus.PLAYING_SPECTATOR);
 
         if (! team.isTeamAlive())
         {
@@ -133,7 +133,9 @@ public class DeathListener implements Listener
             return;
         }
 
+        player.getInventory().clear(); // czyscimy ekwipunek po wyeliminowaniu
         playerData.setEliminated(true);
+
         final String locale = player.spigot().getLocale();
         final String title = translateAlternateColorCodes(this.messages.getMessage(locale, "die.norespawn.title"));
         final String subtitle = translateAlternateColorCodes(this.messages.getMessage(locale, "die.norespawn.subtitle"));

@@ -27,7 +27,7 @@ public class BaseGeneratorUpgrade implements IUpgrade
 
         for (final BwGeneratorItemConfig itemConfig : generator.getGeneratorType().getItems())
         {
-            if (! itemConfig.getName().equals("upgrade_" + level))
+            if (itemConfig.getName() == null || ! itemConfig.getName().equals("upgrade_" + level))
             {
                 continue;
             }

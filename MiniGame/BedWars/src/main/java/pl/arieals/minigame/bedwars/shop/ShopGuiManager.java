@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -78,6 +79,7 @@ public final class ShopGuiManager
         }
 
         gui.open(player);
+        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.4f, 1); // volume, pitch
 
         return true;
     }

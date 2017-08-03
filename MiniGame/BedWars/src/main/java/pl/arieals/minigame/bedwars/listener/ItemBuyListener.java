@@ -1,5 +1,6 @@
 package pl.arieals.minigame.bedwars.listener;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,6 +18,13 @@ public class ItemBuyListener implements Listener
 {
     @Inject @Messages("BedWarsShop")
     private MessagesBox messagesShop;
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void itemBuySound(final ItemBuyEvent event)
+    {
+        final Player player = event.getPlayer();
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2); // volume, pitch
+    }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void announceItemBuy(final ItemBuyEvent event)

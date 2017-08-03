@@ -7,6 +7,7 @@ import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColo
 
 import com.destroystokyo.paper.Title;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -70,6 +71,8 @@ public class BedDestroyListener implements Listener
             final String subtitle = translateAlternateColorCodes(this.messages.getMessage(locale, "bed_destroyed.title.subtitle"));
 
             player.sendTitle(new Title(title, subtitle, 20, 20, 20));
+
+            player.playSound(player.getLocation(), Sound.ENTITY_ENDERDRAGON_GROWL, 1, 1.5f); // volume, pitch
         }
 
         if (! team.isTeamAlive())

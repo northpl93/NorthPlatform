@@ -19,6 +19,8 @@ import org.bukkit.util.Vector;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import org.diorite.utils.math.DioriteRandomUtils;
+
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.cfg.BwConfig;
@@ -185,7 +187,18 @@ public class GeneratorController
 
             final Location location = GeneratorController.this.location;
             final Item item = location.getWorld().dropItem(location, new ItemStack(current.getMaterial(), current.getAmount(), current.getData()));
-            item.setVelocity(new Vector()); // set 0 vector
+
+            if (GeneratorController.this.generatorType.isRandomLocation())
+            {
+                final double x = (DioriteRandomUtils.getRandom().nextInt(6) - 2.5) / 10D;
+                final double z = (DioriteRandomUtils.getRandom().nextInt(6) - 2.5) / 10D;
+
+                item.setVelocity(new Vector(x, 0.1, z));
+            }
+            else
+            {
+                item.setVelocity(new Vector()); // set 0 vector
+            }
         }
 
         @Override
