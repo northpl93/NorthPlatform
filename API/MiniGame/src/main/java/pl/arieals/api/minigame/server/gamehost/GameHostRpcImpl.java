@@ -9,10 +9,12 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.IGameHostRpc;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class GameHostRpcImpl implements IGameHostRpc
 {
     private final GameHostManager manager;
+    @Inject
     private Logger                logger;
 
     public GameHostRpcImpl(final GameHostManager manager)

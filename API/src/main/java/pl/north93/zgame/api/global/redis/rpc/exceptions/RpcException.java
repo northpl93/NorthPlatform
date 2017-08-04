@@ -1,6 +1,6 @@
 package pl.north93.zgame.api.global.redis.rpc.exceptions;
 
-public abstract class RpcException extends Exception
+public abstract class RpcException extends RuntimeException
 {
     public RpcException()
     {

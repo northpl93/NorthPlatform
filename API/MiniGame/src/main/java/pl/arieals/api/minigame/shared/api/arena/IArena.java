@@ -17,5 +17,10 @@ public interface IArena
 
     GamePhase getGamePhase();
 
+    default int getPlayersCount()
+    {
+        return this.getPlayers().size();
+    }
+
     List<UUID> getPlayers();
 }

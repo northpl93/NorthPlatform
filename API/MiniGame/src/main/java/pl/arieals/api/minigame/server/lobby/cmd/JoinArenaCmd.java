@@ -30,6 +30,7 @@ public class JoinArenaCmd extends NorthCommand
     public JoinArenaCmd()
     {
         super("joinarena");
+        this.setAsync(true);
     }
 
     @Override
