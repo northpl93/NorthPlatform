@@ -31,11 +31,17 @@ class PlayerDataService
 
     public void addItem(final Player player, final String itemId)
     {
+        // przedmiot nie obsluguje poziomow, zgodnie z dokumentacja ustawiamy na 1.
+        this.addItem(player, itemId, 1);
+    }
+
+    public void addItem(final Player player, final String itemId, final Integer itemLevel)
+    {
         try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(player.getUniqueId()))
         {
             final PlayerData playerData = new PlayerData(t.getPlayer().getMetaStore());
 
-            playerData.getBoughtItems().add(itemId);
+            playerData.getBoughtItems().put(itemId, itemLevel);
         }
         catch (final Exception e)
         {

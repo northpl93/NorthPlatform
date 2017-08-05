@@ -29,7 +29,7 @@ public final class ItemsGroup
         for (final ItemCfg itemCfg : cfg.getItems())
         {
             final Map<String, String> itemData = itemCfg.getItemData().stream().collect(Collectors.toMap(ItemDataCfg::getName, ItemDataCfg::getValue));
-            this.items.add(new Item(this, itemCfg.getId(), itemCfg.getRarity(), itemData));
+            this.items.add(new Item(this, itemCfg.getId(), itemCfg.getMaxLevel(), itemCfg.getRarity(), itemData));
         }
     }
 

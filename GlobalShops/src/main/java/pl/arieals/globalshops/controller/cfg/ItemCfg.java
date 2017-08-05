@@ -19,6 +19,8 @@ public final class ItemCfg
 {
     @XmlElement(name = "id", required = true)
     private String            id;
+    @XmlElement(name = "maxLevel")
+    private Integer           maxLevel = 1; // default max level is 1, so item doesn't support leveling
     @XmlElement(name = "rarity")
     private Rarity            rarity = NORMAL; // default is normal
     @XmlElement(name = "itemData")
@@ -27,6 +29,11 @@ public final class ItemCfg
     public String getId()
     {
         return this.id;
+    }
+
+    public Integer getMaxLevel()
+    {
+        return this.maxLevel;
     }
 
     public Rarity getRarity()

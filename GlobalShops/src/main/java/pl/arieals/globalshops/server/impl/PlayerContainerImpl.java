@@ -35,14 +35,21 @@ class PlayerContainerImpl implements IPlayerContainer
     public Collection<Item> getBoughtItems(final ItemsGroup group)
     {
         final PlayerData data = this.playerData.get();
-        return data.getBoughtItems().stream().map(id -> this.shopsServer.getItem(id)).collect(Collectors.toList());
+        return data.getBoughtItems().keySet().stream().map(id -> this.shopsServer.getItem(id)).collect(Collectors.toList());
     }
 
     @Override
     public boolean hasBoughtItem(final Item item)
     {
         final PlayerData data = this.playerData.get();
-        return data.getBoughtItems().contains(item.getId());
+        return data.getBoughtItems().containsKey(item.getId());
+    }
+
+    @Override
+    public int getBoughtItemLevel(final Item item)
+    {
+        final PlayerData data = this.playerData.get();
+        return data.getBoughtItems().getOrDefault(item.getId(), 0);
     }
 
     @Override

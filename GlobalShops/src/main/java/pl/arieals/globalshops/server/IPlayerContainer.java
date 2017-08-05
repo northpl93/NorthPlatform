@@ -26,6 +26,17 @@ public interface IPlayerContainer
     boolean hasBoughtItem(Item item);
 
     /**
+     * Zwraca poziom danego przedmiotu.
+     * W przypadku gdy przedmiot nie jest kupiony zwroci 0.
+     * Jesli przedmiot nie obsluguje poziomow, najwyzsza
+     * wartoscia bedzie 1.
+     *
+     * @param item przedmiot dla ktorego sprawdzamy poziom.
+     * @return poziom zakupionego przedmiotu, zgodnie z opisem wyzej.
+     */
+    int getBoughtItemLevel(Item item);
+
+    /**
      * Zwraca wybrany przez gracza item jesli typ grupy to SINGLE_PICK.
      * Jesli typ grupy to MULTI_BUY, wtedy zostanie rzucony wyjatek.
      *

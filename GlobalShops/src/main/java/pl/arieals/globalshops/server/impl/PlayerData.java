@@ -1,9 +1,7 @@
 package pl.arieals.globalshops.server.impl;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import pl.north93.zgame.api.global.metadata.MetaKey;
@@ -21,12 +19,12 @@ class PlayerData implements Serializable
         this.store = store;
     }
 
-    public List<String> getBoughtItems()
+    public Map<String, Integer> getBoughtItems()
     {
-        List<String> boughtItems = (List<String>) this.store.get(BOUGHT_ITEMS);
+        Map<String, Integer> boughtItems = (Map<String, Integer>) this.store.get(BOUGHT_ITEMS);
         if (boughtItems == null)
         {
-            boughtItems = new ArrayList<>(0);
+            boughtItems = new HashMap<>(0);
             this.store.set(BOUGHT_ITEMS, boughtItems);
         }
         return boughtItems;
@@ -42,12 +40,4 @@ class PlayerData implements Serializable
         }
         return active;
     }
-
-    /*public Document toDocument()
-    {
-        final Document doc = new Document();
-        doc.put("boughtItems", this.boughtItems);
-        doc.put("activeItems", new Document((Map) this.activeItems));
-        return doc;
-    }*/
 }
