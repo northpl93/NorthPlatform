@@ -20,7 +20,7 @@ public class DevFastJoin extends NorthCommand
 
     public DevFastJoin()
     {
-        super("devfastjoin");
+        super("devfastjoin", "fastdevjoin"); // czesto sie myli
         this.setAsync(true);
     }
 
