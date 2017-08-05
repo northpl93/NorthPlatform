@@ -206,7 +206,14 @@ public class LocalArena implements IArena
     {
         return this.gameHostManager.getMiniGameConfig().isDynamic();
     }
-    
+
+    /**
+     * Zwraca ustawiony wczesniej obiekt areny.
+     *
+     * @param <T> typ ustawionego obiektu.
+     * @see LocalArena#setArenaData(IArenaData)
+     * @return ustawiony obiekt areny w setArenaData.
+     */
     @SuppressWarnings("unchecked")
     public <T extends IArenaData> T getArenaData()
     {
@@ -214,6 +221,11 @@ public class LocalArena implements IArena
         return (T) this.arenaData;
     }
 
+    /**
+     * Przygotowuje arene do nowego cyklu.
+     * Powinno byc wywolywane po zakonczeniu gry po jakims czasie.
+     * Dziala tylko w {@link GamePhase#POST_GAME}.
+     */
     public void prepareNewCycle()
     {
         Preconditions.checkState(this.getGamePhase() == GamePhase.POST_GAME); // arena moze byc zresetowana tylko po grze

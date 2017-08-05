@@ -1,8 +1,15 @@
 package pl.arieals.api.minigame.server.gamehost.listener;
 
+import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.getTrackerEntry;
+
+
 import java.util.Optional;
 
+import net.minecraft.server.v1_10_R1.EntityPlayer;
+import net.minecraft.server.v1_10_R1.EntityTrackerEntry;
+
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,12 +41,44 @@ public class PlayerListener implements Listener
 
         if (arena.isPresent())
         {
-            final PlayersManager playersManager = arena.get().getPlayersManager();
+            final LocalArena localArena = arena.get();
+
+            final PlayersManager playersManager = localArena.getPlayersManager();
             playersManager.playerConnected(player);
+
+            this.fixLobbyVisibility(localArena, player);
         }
         else
         {
             Bukkit.getPluginManager().callEvent(new PlayerJoinWithoutArenaEvent(player));
+        }
+    }
+
+    /*
+     * Gracze nie widza sie w lobby.
+     *
+     * Jest to spowodowane niepoprawnym dzialaniem
+     * entitytrackera (lub gubionych pakietow podczas
+     * przelaczania serwera w bungee, uj wie)
+     *
+     * Recznie untrackujemy kazdego wchodzacego gracza
+     * zeby serwer mogl go ztrackowac ponownie, poprawnie
+     */
+    private void fixLobbyVisibility(final LocalArena arena, final Player player)
+    {
+        final EntityPlayer joiningPlayer = ((CraftPlayer) player).getHandle();
+        final EntityTrackerEntry joiningTrackerEntry = getTrackerEntry(joiningPlayer);
+
+        for (final Player arenaPlayer : arena.getPlayersManager().getPlayers())
+        {
+            final EntityPlayer arenaEntityPlayer = ((CraftPlayer) arenaPlayer).getHandle();
+            final EntityTrackerEntry arenaTrackerEntry = getTrackerEntry(arenaEntityPlayer);
+
+            // untrackujemy wchodzacego gracza z trackera gracza bedacego juz na arenie
+            arenaTrackerEntry.a(joiningPlayer); // if (this.trackedPlayers.contains(entityplayer)) {
+
+            // untrackujemy gracza bedacego na arenie z trackera gracza wchodzacego na arene
+            joiningTrackerEntry.a(arenaEntityPlayer);
         }
     }
 
