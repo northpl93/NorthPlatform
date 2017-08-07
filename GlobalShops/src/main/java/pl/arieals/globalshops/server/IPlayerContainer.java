@@ -50,7 +50,23 @@ public interface IPlayerContainer
      *
      * @param item przedmiot do kupienia.
      */
-    void addItem(Item item);
+    default void addItem(Item item)
+    {
+        this.addItem(item, 1);
+    }
+
+    /**
+     * Oznacza dany przedmiot jako kupiony na danym poziomie.
+     * Poziom:
+     * <ul>
+     *     <li>nie moze byz nizszy niz 1
+     *     <li>nie moze byc nizszy lub rowny aktualnego kupionego przedmiotu
+     *     <li>nie moze byc wyzszy niz maksymalny poziom przedmiotu
+     *
+     * @param item przedmiot ktory oznaczamy jako kupiony.
+     * @param level poziom na ktorym oznaczamy jako kupiony.
+     */
+    void addItem(Item item, int level);
 
     /**
      * Oznacza dany przedmiot jako aktywny.

@@ -6,6 +6,8 @@ import static java.text.MessageFormat.format;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import com.google.common.base.Preconditions;
+
 import org.bukkit.entity.Player;
 
 import org.diorite.utils.lazy.LazyValue;
@@ -70,9 +72,14 @@ class PlayerContainerImpl implements IPlayerContainer
     }
 
     @Override
-    public void addItem(final Item item)
+    public void addItem(final Item item, final int level)
     {
-        this.service.addItem(this.player, item.getId());
+        Preconditions.checkNotNull(item, "Item can't be null");
+        Preconditions.checkState(level > 0, "Level must be grater than 0.");
+        Preconditions.checkState(item.getMaxLevel() <= level, "Level must be smaller or equal to item's max level.");
+        Preconditions.checkState(this.getBoughtItemLevel(item) < level, "Level must be grater than actual bought level");
+
+        this.service.addItem(this.player, item.getId(), level);
         this.playerData.reset();
     }
 
