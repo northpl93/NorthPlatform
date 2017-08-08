@@ -6,8 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import io.netty.channel.Channel;
-import pl.north93.zgame.api.bukkit.event.AsyncPacketInEvent;
-import pl.north93.zgame.api.bukkit.event.AsyncPacketOutEvent;
+import pl.north93.zgame.api.bukkit.packets.event.AsyncPacketInEvent;
+import pl.north93.zgame.api.bukkit.packets.event.AsyncPacketOutEvent;
 import pl.north93.zgame.api.bukkit.packets.tinyprotocol.TinyProtocol;
 
 public class PacketsHandler extends TinyProtocol

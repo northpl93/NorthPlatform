@@ -20,10 +20,6 @@ import org.spigotmc.SpigotConfig;
 
 import javassist.ClassPool;
 import javassist.LoaderClassPath;
-import pl.north93.zgame.api.bukkit.listeners.ChatListener;
-import pl.north93.zgame.api.bukkit.listeners.JoinLeftListener;
-import pl.north93.zgame.api.bukkit.listeners.LanguageKeeper;
-import pl.north93.zgame.api.bukkit.listeners.SignListener;
 import pl.north93.zgame.api.bukkit.packets.PacketsHandler;
 import pl.north93.zgame.api.bukkit.windows.WindowManager;
 import pl.north93.zgame.api.global.ApiCore;
@@ -49,6 +45,7 @@ public class BukkitApiCore extends ApiCore
         return this.pluginMain;
     }
 
+    @Deprecated // mamy nowy menadzer gui
     public WindowManager getWindowManager()
     {
         return this.windowManager;
@@ -137,11 +134,7 @@ public class BukkitApiCore extends ApiCore
     {
         SpigotConfig.bungee = true; // force enable IP forwarding
 
-        this.registerEvents(
-                new JoinLeftListener(),
-                new ChatListener(),
-                new SignListener(),
-                this.windowManager, new LanguageKeeper());
+        this.registerEvents(this.windowManager);
     }
 
     @Override

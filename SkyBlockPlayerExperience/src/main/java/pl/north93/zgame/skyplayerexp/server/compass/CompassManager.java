@@ -34,8 +34,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northspigot.event.PluginItemHeldEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.bukkit.event.AsyncPacketInEvent;
-import pl.north93.zgame.api.bukkit.event.AsyncPacketOutEvent;
+import pl.north93.zgame.api.bukkit.packets.event.AsyncPacketInEvent;
+import pl.north93.zgame.api.bukkit.packets.event.AsyncPacketOutEvent;
 import pl.north93.zgame.api.bukkit.packets.wrappers.WrapperPlayInClientCommand;
 import pl.north93.zgame.api.bukkit.packets.wrappers.WrapperPlayOutSetSlot;
 import pl.north93.zgame.api.global.component.annotations.PostInject;

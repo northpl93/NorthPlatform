@@ -1,8 +1,8 @@
-package pl.north93.zgame.api.bukkit.listeners;
+package pl.north93.zgame.api.bukkit.player.impl;
 
 import static org.bukkit.ChatColor.RED;
 
-import static pl.north93.zgame.api.bukkit.listeners.LanguageKeeper.updateLocale;
+import static pl.north93.zgame.api.bukkit.player.impl.LanguageKeeper.updateLocale;
 
 
 import java.text.MessageFormat;

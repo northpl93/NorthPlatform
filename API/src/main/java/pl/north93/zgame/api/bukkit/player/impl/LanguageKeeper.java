@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.bukkit.listeners;
+package pl.north93.zgame.api.bukkit.player.impl;
 
 import java.util.Locale;
 

@@ -2,25 +2,33 @@ package pl.north93.zgame.api.bukkit.player.impl;
 
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.player.IBukkitPlayerManager;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
+import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
+import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayerManager
 {
+    private BukkitApiCore   bukkitApiCore;
     @Inject
     private INetworkManager networkManager;
 
     @Override
     protected void enableComponent()
     {
+        this.bukkitApiCore.registerEvents(new JoinLeftListener(), new ChatListener(), new LanguageKeeper());
     }
 
     @Override
@@ -48,6 +56,33 @@ public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayerM
             return null;
         }
         return new NorthOfflinePlayer(player);
+    }
+
+    @Override
+    public INorthPlayer getPlayer(final UUID uuid)
+    {
+        final Player player = Bukkit.getPlayer(uuid);
+        final Value<IOnlinePlayer> onlinePlayerData = this.networkManager.getPlayers().unsafe().getOnline(player.getName());
+
+        return this.wrapNorthPlayer(player, onlinePlayerData);
+    }
+
+    @Override
+    public INorthPlayer getPlayer(final String nick)
+    {
+        final Player player = Bukkit.getPlayer(nick);
+        final Value<IOnlinePlayer> onlinePlayerData = this.networkManager.getPlayers().unsafe().getOnline(player.getName());
+
+        return this.wrapNorthPlayer(player, onlinePlayerData);
+    }
+
+    private INorthPlayer wrapNorthPlayer(final Player player, final Value<IOnlinePlayer> playerData)
+    {
+        if (player instanceof NorthPlayer)
+        {
+            return (INorthPlayer) player;
+        }
+        return new NorthPlayer(this.networkManager, player, playerData);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.bukkit.event;
+package pl.north93.zgame.api.bukkit.packets.event;
 
 import net.minecraft.server.v1_10_R1.Packet;
 
@@ -10,14 +10,14 @@ import org.bukkit.event.HandlerList;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public final class AsyncPacketOutEvent extends Event implements Cancellable
+public final class AsyncPacketInEvent extends Event implements Cancellable
 {
     private static final HandlerList handlers = new HandlerList();
     private final Player  player;
     private       Packet  packet;
     private       boolean cancelled;
 
-    public AsyncPacketOutEvent(final Player player, final Packet packet)
+    public AsyncPacketInEvent(final Player player, final Packet packet)
     {
         super(true); // async event
         this.player = player;

@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.network.players.IPlayer;
 
-public class NorthOfflinePlayer implements OfflinePlayer
+class NorthOfflinePlayer implements OfflinePlayer
 {
     private final IPlayer northPlayer;
 
