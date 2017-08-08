@@ -4,18 +4,14 @@ import java.lang.invoke.MethodHandle;
 
 import net.minecraft.server.v1_10_R1.PacketPlayOutEntityDestroy;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-public class WrapperPlayOutEntityDestroy extends AbstractWrapper
+public class WrapperPlayOutEntityDestroy extends AbstractWrapper<PacketPlayOutEntityDestroy>
 {
     private static final MethodHandle get_field_entities = unreflectGetter(PacketPlayOutEntityDestroy.class, "a");
     private static final MethodHandle set_field_entities = unreflectSetter(PacketPlayOutEntityDestroy.class, "a");
-    private final PacketPlayOutEntityDestroy packet;
 
     public WrapperPlayOutEntityDestroy(final PacketPlayOutEntityDestroy packet)
     {
-        this.packet = packet;
+        super(packet);
     }
 
     public int[] getEntities()
@@ -40,11 +36,5 @@ public class WrapperPlayOutEntityDestroy extends AbstractWrapper
         {
             throw new RuntimeException(throwable);
         }
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("packet", this.packet).toString();
     }
 }

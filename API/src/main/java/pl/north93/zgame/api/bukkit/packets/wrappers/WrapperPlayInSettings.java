@@ -4,14 +4,13 @@ import java.lang.invoke.MethodHandle;
 
 import net.minecraft.server.v1_10_R1.PacketPlayInSettings;
 
-public class WrapperPlayInSettings extends AbstractWrapper
+public class WrapperPlayInSettings extends AbstractWrapper<PacketPlayInSettings>
 {
     private static final MethodHandle set_field_lang = unreflectSetter(PacketPlayInSettings.class, "a");
-    private final PacketPlayInSettings packet;
 
     public WrapperPlayInSettings(final PacketPlayInSettings packet)
     {
-        this.packet = packet;
+        super(packet);
     }
 
     public String getLanguage()

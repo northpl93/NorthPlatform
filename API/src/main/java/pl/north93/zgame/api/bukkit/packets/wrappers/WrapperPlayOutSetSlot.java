@@ -5,10 +5,7 @@ import java.lang.invoke.MethodHandle;
 import net.minecraft.server.v1_10_R1.ItemStack;
 import net.minecraft.server.v1_10_R1.PacketPlayOutSetSlot;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-public class WrapperPlayOutSetSlot extends AbstractWrapper
+public class WrapperPlayOutSetSlot extends AbstractWrapper<PacketPlayOutSetSlot>
 {
     private static final MethodHandle get_field_windowId  = unreflectGetter(PacketPlayOutSetSlot.class, "a");
     private static final MethodHandle set_field_windowId  = unreflectSetter(PacketPlayOutSetSlot.class, "a");
@@ -16,11 +13,10 @@ public class WrapperPlayOutSetSlot extends AbstractWrapper
     private static final MethodHandle set_field_slot      = unreflectSetter(PacketPlayOutSetSlot.class, "b");
     private static final MethodHandle get_field_itemstack = unreflectGetter(PacketPlayOutSetSlot.class, "c");
     private static final MethodHandle set_field_itemstack = unreflectSetter(PacketPlayOutSetSlot.class, "c");
-    private final PacketPlayOutSetSlot packet;
 
     public WrapperPlayOutSetSlot(final PacketPlayOutSetSlot packet)
     {
-        this.packet = packet;
+        super(packet);
     }
 
     public int getWindowId()
@@ -93,11 +89,5 @@ public class WrapperPlayOutSetSlot extends AbstractWrapper
         {
             throw new RuntimeException(throwable);
         }
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("packet", this.packet).toString();
     }
 }

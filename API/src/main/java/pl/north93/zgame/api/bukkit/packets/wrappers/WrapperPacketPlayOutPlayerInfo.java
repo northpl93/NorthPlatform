@@ -13,22 +13,18 @@ import net.minecraft.server.v1_10_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoActio
 
 import com.mojang.authlib.GameProfile;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 /*
  * Stosujemy tu troche magii poniewaz uposledzony kod minecrafta
  * buguje kompilator javy i nie da sie bezposrednio uzyc klasy
  * PlayerInfoData. Dlatego recznie zdobywam jej konstruktor
  * przez MethodHandle i uzywam go w #addPlayerData.
  */
-public class WrapperPacketPlayOutPlayerInfo extends AbstractWrapper
+public class WrapperPacketPlayOutPlayerInfo extends AbstractWrapper<PacketPlayOutPlayerInfo>
 {
     private static final MethodHandle get_field_action = unreflectGetter(PacketPlayOutPlayerInfo.class, "a");
     private static final MethodHandle set_field_action = unreflectSetter(PacketPlayOutPlayerInfo.class, "a");
     private static final MethodHandle get_field_data = unreflectGetter(PacketPlayOutPlayerInfo.class, "b");
     private static final MethodHandle data_constructor;
-    private final PacketPlayOutPlayerInfo packet;
 
     static
     {
@@ -46,7 +42,7 @@ public class WrapperPacketPlayOutPlayerInfo extends AbstractWrapper
 
     public WrapperPacketPlayOutPlayerInfo(final PacketPlayOutPlayerInfo packet)
     {
-        this.packet = packet;
+        super(packet);
     }
 
     public EnumPlayerInfoAction getAction()
@@ -79,19 +75,11 @@ public class WrapperPacketPlayOutPlayerInfo extends AbstractWrapper
         try
         {
             final List dataList = (List) get_field_data.invokeExact(this.packet);
-            //final Object playerListData = ;
-
             dataList.add(data_constructor.invokeExact(this.packet, gameProfile, ping, gameMode, displayName));
         }
         catch (final Throwable throwable)
         {
             throw new RuntimeException(throwable);
         }
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("packet", this.packet).toString();
     }
 }

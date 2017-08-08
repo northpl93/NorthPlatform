@@ -5,18 +5,14 @@ import java.lang.invoke.MethodHandle;
 import net.minecraft.server.v1_10_R1.PacketPlayInClientCommand;
 import net.minecraft.server.v1_10_R1.PacketPlayInClientCommand.EnumClientCommand;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-public class WrapperPlayInClientCommand extends AbstractWrapper
+public class WrapperPlayInClientCommand extends AbstractWrapper<PacketPlayInClientCommand>
 {
     private static final MethodHandle get_field_cmd = unreflectGetter(PacketPlayInClientCommand.class, "a");
     private static final MethodHandle set_field_cmd = unreflectSetter(PacketPlayInClientCommand.class, "a");
-    private final PacketPlayInClientCommand packet;
 
     public WrapperPlayInClientCommand(final PacketPlayInClientCommand packet)
     {
-        this.packet = packet;
+        super(packet);
     }
 
     public EnumClientCommand getClientCommand()
@@ -41,11 +37,5 @@ public class WrapperPlayInClientCommand extends AbstractWrapper
         {
             throw new RuntimeException(throwable);
         }
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("packet", this.packet).toString();
     }
 }
