@@ -31,7 +31,7 @@ public class ServerGuiManager implements IServerGuiManager
         this.apiCore.getWindowManager().openWindow(player, window);
         this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
         {
-            window.loadAsyncData(this.networkManager.getOnlinePlayer(player.getName()));
+            window.loadAsyncData(this.networkManager.getPlayers().unsafe().getOnline(player.getName()));
         });
     }
 
@@ -42,7 +42,7 @@ public class ServerGuiManager implements IServerGuiManager
         this.apiCore.getWindowManager().openWindow(player, window);
         this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
         {
-            window.loadAsyncData(this.networkManager.getOnlinePlayer(player.getName()));
+            window.loadAsyncData(this.networkManager.getPlayers().unsafe().getOnline(player.getName()));
         });
     }
 
@@ -53,7 +53,7 @@ public class ServerGuiManager implements IServerGuiManager
         this.apiCore.getWindowManager().openWindow(player, window);
         this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
         {
-            window.loadAsyncData(this.networkManager.getOnlinePlayer(player.getName()));
+            window.loadAsyncData(this.networkManager.getPlayers().unsafe().getOnline(player.getName()));
         });
     }
 

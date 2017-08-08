@@ -71,7 +71,7 @@ public class PlayerListeners implements Listener
             return;
         }
 
-        final AuthPlayer authPlayer = AuthPlayer.get(this.networkManager.getOnlinePlayer(player.getName()));
+        final AuthPlayer authPlayer = AuthPlayer.get(this.networkManager.getPlayers().unsafe().getOnline(player.getName()));
         if (authPlayer.isRegistered())
         {
             this.sendMessage(player, "join.login");

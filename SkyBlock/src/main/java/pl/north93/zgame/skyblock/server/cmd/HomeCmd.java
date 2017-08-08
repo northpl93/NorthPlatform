@@ -33,7 +33,7 @@ public class HomeCmd extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        final Value<IOnlinePlayer> networkPlayer = this.networkManager.getOnlinePlayer(sender.getName());
+        final Value<IOnlinePlayer> networkPlayer = this.networkManager.getPlayers().unsafe().getOnline(sender.getName());
         final SkyPlayer skyPlayer = SkyPlayer.get(networkPlayer);
         if (! skyPlayer.hasIsland())
         {

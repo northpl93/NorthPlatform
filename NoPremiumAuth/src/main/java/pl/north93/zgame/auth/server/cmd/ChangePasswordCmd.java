@@ -44,7 +44,7 @@ public class ChangePasswordCmd extends NorthCommand
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
         final Player player = (Player) sender.unwrapped();
-        final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getOnlinePlayer(player.getName());
+        final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getPlayers().unsafe().getOnline(player.getName());
         final AuthPlayer authPlayer = AuthPlayer.get(onlinePlayer);
 
         if (! authPlayer.isRegistered())

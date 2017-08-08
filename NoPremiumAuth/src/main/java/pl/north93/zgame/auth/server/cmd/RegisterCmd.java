@@ -52,7 +52,7 @@ public class RegisterCmd extends NorthCommand
             return;
         }
 
-        final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getOnlinePlayer(player.getName());
+        final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getPlayers().unsafe().getOnline(player.getName());
         final AuthPlayer authPlayer = AuthPlayer.get(onlinePlayer);
         if (authPlayer.isRegistered())
         {

@@ -167,7 +167,7 @@ public class AriealsTablist implements Listener
     public void addAdminYtToTab(final PostLoginEvent event)
     {
         final ProxiedPlayer player = event.getPlayer();
-        final IOnlinePlayer netPlayer = this.networkManager.getOnlinePlayer(player.getName()).get();
+        final IOnlinePlayer netPlayer = this.networkManager.getPlayers().unsafe().getOnline(player.getName()).get();
         if (netPlayer == null)
         {
             return;

@@ -2,15 +2,12 @@ package pl.north93.zgame.api.global.network.impl;
 
 import static pl.north93.zgame.api.global.redis.RedisKeys.DAEMON;
 import static pl.north93.zgame.api.global.redis.RedisKeys.NETWORK_ACTION;
-import static pl.north93.zgame.api.global.redis.RedisKeys.PLAYERS;
 import static pl.north93.zgame.api.global.redis.RedisKeys.PROXY_INSTANCE;
 import static pl.north93.zgame.api.global.utils.StringUtils.asString;
 import static pl.north93.zgame.api.global.utils.StringUtils.toBytes;
 
 
-import java.util.Locale;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.lambdaworks.redis.api.sync.RedisCommands;
@@ -29,9 +26,6 @@ import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.NetworkAction;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
 import pl.north93.zgame.api.global.network.NetworkMeta;
-import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
-import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.proxy.ProxyInstanceInfo;
 import pl.north93.zgame.api.global.network.server.IServersManager;
@@ -98,68 +92,6 @@ class NetworkManager extends Component implements INetworkManager
     {
         final RedisCommands<String, byte[]> redis = this.storage.getRedis();
         return redis.keys(DAEMON + "*").stream().map(id -> this.msgPack.deserialize(RemoteDaemon.class, redis.get(id))).collect(Collectors.toSet());
-    }
-
-    @Override
-    public int onlinePlayersCount()
-    {
-        return this.playersManager.onlinePlayersCount();
-    }
-
-    @Override
-    public String getNickFromUuid(final UUID playerId)
-    {
-        return this.playersData.uuidToUsername(playerId);
-    }
-
-    @Override
-    public UUID getUuidFromNick(final String nick)
-    {
-        return this.playersData.usernameToUuid(nick);
-    }
-
-    @Override
-    public Value<IOnlinePlayer> getOnlinePlayer(final String nick)
-    {
-        //noinspection unchecked
-        return (Value) this.observationManager.get(OnlinePlayerImpl.class, PLAYERS + nick.toLowerCase(Locale.ROOT));
-    }
-
-    @Override
-    public Value<IOnlinePlayer> getOnlinePlayer(final UUID playerUuid)
-    {
-        return this.getOnlinePlayer(this.playersData.uuidToUsername(playerUuid));
-    }
-
-    @Override
-    public IOfflinePlayer getOfflinePlayer(final UUID playerUuid)
-    {
-        return this.playersData.getOfflinePlayer(playerUuid);
-    }
-
-    @Override
-    public IOfflinePlayer getOfflinePlayer(final String nick)
-    {
-        return this.playersData.getOfflinePlayer(nick);
-    }
-
-    @Override
-    public void savePlayer(final IPlayer player)
-    {
-        this.playersData.savePlayer(player);
-    }
-
-    /**
-     * Sprawdza czy gracz o danym nicku jest aktualnie na serwerze.
-     * Nie jest uwzględniana wielkość liter.
-     *
-     * @param nick Nazwa gracza do sprawdzenia.
-     * @return czy gracz jest online w sieci.
-     */
-    @Override
-    public boolean isOnline(final String nick)
-    {
-        return this.playersManager.isOnline(nick);
     }
 
     /**

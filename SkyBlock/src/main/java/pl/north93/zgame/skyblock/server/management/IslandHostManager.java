@@ -147,7 +147,7 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
         }
         else
         {
-            final Value<IOnlinePlayer> networkPlayer = this.networkManager.getOnlinePlayer(player.getName());
+            final Value<IOnlinePlayer> networkPlayer = this.networkManager.getPlayers().unsafe().getOnline(player.getName());
             networkPlayer.get().connectTo(this.networkManager.getServers().withUuid(islandData.getServerId()), new TeleportPlayerToIsland(islandId));
         }
     }
@@ -155,7 +155,7 @@ public class IslandHostManager implements ISkyBlockServerManager, IIslandHostMan
     @Override
     public void tpPlayerToSpawn(final Player player)
     {
-        this.networkManager.getOnlinePlayer(player.getName()).get().connectTo(this.skyBlockServer.getSkyBlockConfig().getLobbyServersGroup());
+        this.networkManager.getPlayers().unsafe().getOnline(player.getName()).get().connectTo(this.skyBlockServer.getSkyBlockConfig().getLobbyServersGroup());
     }
 
     @Override

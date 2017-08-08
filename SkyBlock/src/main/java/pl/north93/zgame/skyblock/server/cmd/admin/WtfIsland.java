@@ -59,14 +59,14 @@ public class WtfIsland extends NorthCommand
         else
         {
             final SkyPlayer skyPlayer;
-            final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getOnlinePlayer(target);
+            final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getPlayers().unsafe().getOnline(target);
             if (onlinePlayer.isAvailable())
             {
                 skyPlayer = SkyPlayer.get(onlinePlayer);
             }
             else
             {
-                skyPlayer = SkyPlayer.get(this.networkManager.getOfflinePlayer(target));
+                skyPlayer = SkyPlayer.get(this.networkManager.getPlayers().unsafe().getOffline(target));
             }
 
             if (skyPlayer.hasIsland())
@@ -82,7 +82,7 @@ public class WtfIsland extends NorthCommand
 
         sender.sendRawMessage("&eIsland ID: " + island.getIslandId());
         sender.sendRawMessage("&eServer: " + island.getServerId());
-        sender.sendRawMessage("&eOwner: " + island.getOwnerId() + " " + this.networkManager.getNickFromUuid(island.getOwnerId()));
+        sender.sendRawMessage("&eOwner: " + island.getOwnerId() + " " + this.networkManager.getPlayers().getNickFromUuid(island.getOwnerId()));
         sender.sendRawMessage("&eAccepting visits: " + (island.getAcceptingVisits() ? "&atrue" : "&cfalse"));
         final IslandConfig islandType = this.server.getSkyBlockConfig().getIslandType(island.getIslandType());
         sender.sendRawMessage("&eType: " + islandType.getName() + " (r= " + islandType.getRadius() + ")");
@@ -92,12 +92,12 @@ public class WtfIsland extends NorthCommand
         sender.sendRawMessage("&eInvites:");
         for (final UUID invite : island.getInvitations())
         {
-            sender.sendRawMessage("&e * " + invite + " " + this.networkManager.getNickFromUuid(invite));
+            sender.sendRawMessage("&e * " + invite + " " + this.networkManager.getPlayers().getNickFromUuid(invite));
         }
         sender.sendRawMessage("&eMembers:");
         for (final UUID member : island.getMembersUuid())
         {
-            sender.sendRawMessage("&e * " + member + " " + this.networkManager.getNickFromUuid(member));
+            sender.sendRawMessage("&e * " + member + " " + this.networkManager.getPlayers().getNickFromUuid(member));
         }
     }
 }

@@ -42,7 +42,8 @@ public class Msg extends NorthCommand
             return;
         }
 
-        final Value<IOnlinePlayer> networkPlayer = this.networkManager.getOnlinePlayer(args.asString(0));
+        // todo rewrite
+        final Value<IOnlinePlayer> networkPlayer = this.networkManager.getPlayers().unsafe().getOnline(args.asString(0));
         if (!networkPlayer.isCached() && !networkPlayer.isAvailable())
         {
             sender.sendMessage(this.messages, "command.no_player");

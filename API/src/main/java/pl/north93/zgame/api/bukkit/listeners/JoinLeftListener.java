@@ -42,12 +42,12 @@ public class JoinLeftListener implements Listener
     private IObservationManager observation;
 
     @EventHandler
-    public void onJoin(final PlayerJoinEvent event)
+    public void onJoin(final PlayerJoinEvent event) // todo rewrite
     {
         event.setJoinMessage(null);
 
         final Player player = event.getPlayer();
-        final IOnlinePlayer iplayer = this.networkManager.getOnlinePlayer(player.getName()).get();
+        final IOnlinePlayer iplayer = this.networkManager.getPlayers().unsafe().getOnline(player.getName()).get();
         if (iplayer == null)
         {
             this.bukkitApiCore.getLogger().log(Level.SEVERE, "Player {0} ({1}) joined, but iplayer is null in onJoin", new Object[]{player.getName(), player.getUniqueId()});

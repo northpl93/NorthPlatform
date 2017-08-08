@@ -37,14 +37,14 @@ public class SkyRankingSwitch extends NorthCommand
         }
         final String target = args.asString(0);
         final SkyPlayer skyPlayer;
-        final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getOnlinePlayer(target);
+        final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getPlayers().unsafe().getOnline(target);
         if (onlinePlayer.isAvailable())
         {
             skyPlayer = SkyPlayer.get(onlinePlayer);
         }
         else
         {
-            skyPlayer = SkyPlayer.get(this.networkManager.getOfflinePlayer(target));
+            skyPlayer = SkyPlayer.get(this.networkManager.getPlayers().unsafe().getOffline(target));
         }
 
         if (! skyPlayer.hasIsland())

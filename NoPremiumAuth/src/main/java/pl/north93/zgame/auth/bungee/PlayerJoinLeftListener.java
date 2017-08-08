@@ -24,7 +24,7 @@ public class PlayerJoinLeftListener implements Listener
     @EventHandler
     public void onPlayerJoin(final PostLoginEvent event)
     {
-        final IOnlinePlayer iOnlinePlayer = this.networkManager.getOnlinePlayer(event.getPlayer().getName()).get();
+        final IOnlinePlayer iOnlinePlayer = this.networkManager.getPlayers().unsafe().getOnline(event.getPlayer().getName()).get();
         if (iOnlinePlayer == null)
         {
             this.logger.warning("iOnlinePlayer == null in onPlayerJoin (NoPremiumAuth)");

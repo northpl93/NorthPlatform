@@ -8,7 +8,7 @@ import pl.north93.zgame.api.global.network.proxy.ProxyInstanceInfo;
 import pl.north93.zgame.api.global.network.server.IServersManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
-public interface INetworkManager extends IPlayerManagement
+public interface INetworkManager
 {
     Value<NetworkMeta> getNetworkMeta();
 

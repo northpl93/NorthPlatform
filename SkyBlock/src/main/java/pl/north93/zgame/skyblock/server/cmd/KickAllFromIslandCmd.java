@@ -29,7 +29,7 @@ public class KickAllFromIslandCmd extends NorthCommand
 
     @Override
     public void execute(NorthCommandSender sender, Arguments args, String label) {
-        final Value<IOnlinePlayer> onlineSender = this.networkManager.getOnlinePlayer(sender.getName());
+        final Value<IOnlinePlayer> onlineSender = this.networkManager.getPlayers().unsafe().getOnline(sender.getName());
         final SkyPlayer skyPlayer = SkyPlayer.get(onlineSender);
         if (! skyPlayer.hasIsland())
         {

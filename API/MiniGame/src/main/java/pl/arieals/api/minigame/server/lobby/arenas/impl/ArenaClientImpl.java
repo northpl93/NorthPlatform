@@ -110,7 +110,7 @@ public class ArenaClientImpl implements IArenaClient
         final Server server = this.networkManager.getServers().withUuid(arena.getServerId());
         for (final PlayerJoinInfo player : players)
         {
-            this.networkManager.getOnlinePlayer(player.getUuid()).get().connectTo(server);
+            this.networkManager.getPlayers().unsafe().getOnline(player.getUuid()).get().connectTo(server);
         }
         return true;
     }

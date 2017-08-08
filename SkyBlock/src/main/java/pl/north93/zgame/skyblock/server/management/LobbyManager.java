@@ -53,7 +53,7 @@ public class LobbyManager implements ISkyBlockServerManager
     public void tpPlayerToIsland(final Player player, final UUID islandId)
     {
         final IslandData islandData = this.server.getIslandDao().getIsland(islandId);
-        final Value<IOnlinePlayer> networkPlayer = this.networkManager.getOnlinePlayer(player.getName());
+        final Value<IOnlinePlayer> networkPlayer = this.networkManager.getPlayers().unsafe().getOnline(player.getName());
 
         networkPlayer.get().connectTo(this.networkManager.getServers().withUuid(islandData.getServerId()), new TeleportPlayerToIsland(islandId));
     }

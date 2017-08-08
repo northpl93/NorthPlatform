@@ -16,7 +16,8 @@ public class ChatListener implements Listener
     @EventHandler(ignoreCancelled = true)
     public void onChat(final AsyncPlayerChatEvent event)
     {
-        final Value<IOnlinePlayer> networkPlayer = API.getNetworkManager().getOnlinePlayer(event.getPlayer().getName());
+        // todo rewrite
+        final Value<IOnlinePlayer> networkPlayer = API.getNetworkManager().getPlayers().unsafe().getOnline(event.getPlayer().getName());
         final String newFormat = translateAlternateColorCodes('&', networkPlayer.get().getGroup().getChatFormat());
         event.setFormat(newFormat);
 

@@ -41,7 +41,7 @@ public class ItemRecoveryListener implements Listener
 
     private void fixAsync(final Player player)
     {
-        final Value<IOnlinePlayer> value = this.networkManager.getOnlinePlayer(player.getName());
+        final Value<IOnlinePlayer> value = this.networkManager.getPlayers().unsafe().getOnline(player.getName());
         final IOnlinePlayer iOnlinePlayer = value.get();
         if (iOnlinePlayer.getMetaStore().contains(RECOVERY_KEY))
         {

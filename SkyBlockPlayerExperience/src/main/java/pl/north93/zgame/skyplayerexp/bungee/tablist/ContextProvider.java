@@ -21,7 +21,7 @@ public final class ContextProvider
 
     public TablistDrawingContext getFor(final ProxiedPlayer player)
     {
-        final Value<IOnlinePlayer> netPlayer = this.networkManager.getOnlinePlayer(player.getName());
+        final Value<IOnlinePlayer> netPlayer = this.networkManager.getPlayers().unsafe().getOnline(player.getName());
         final SkyPlayer skyPlayer = SkyPlayer.get(netPlayer);
         final IslandData islandData = skyPlayer.hasIsland() ? this.skyBlock.getIslandDao().getIsland(skyPlayer.getIslandId()) : null;
         return new TablistDrawingContext(player, netPlayer, islandData);

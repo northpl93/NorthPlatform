@@ -56,13 +56,13 @@ public class AcceptCmd extends NorthCommand
 
     private UUID islandIdFromOwnerName(final String owner)
     {
-        final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getOnlinePlayer(owner);
+        final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getPlayers().unsafe().getOnline(owner);
         if (onlinePlayer.isAvailable())
         {
             return SkyPlayer.get(onlinePlayer).getIslandId();
         }
 
-        final IOfflinePlayer offlinePlayer = this.networkManager.getOfflinePlayer(owner);
+        final IOfflinePlayer offlinePlayer = this.networkManager.getPlayers().unsafe().getOffline(owner);
         if (offlinePlayer != null)
         {
             return SkyPlayer.get(offlinePlayer).getIslandId();

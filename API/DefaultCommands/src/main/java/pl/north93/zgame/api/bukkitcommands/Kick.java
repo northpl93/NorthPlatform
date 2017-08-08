@@ -13,7 +13,7 @@ import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 
 public class Kick extends NorthCommand
 {
@@ -40,24 +40,31 @@ public class Kick extends NorthCommand
             return;
         }
 
-        final Value<IOnlinePlayer> networkPlayer = this.networkManager.getOnlinePlayer(args.asString(0));
-        if (! networkPlayer.isCached() && ! networkPlayer.isAvailable())
+        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(args.asString(0)))
+        {
+            if (! t.isOnline())
+            {
+                sender.sendMessage(this.messages, "command.no_player");
+                return;
+            }
+            final IOnlinePlayer player = (IOnlinePlayer) t.getPlayer();
+
+            final String reason = args.asText(1);
+            final String kickMessage;
+            if (StringUtils.isEmpty(reason))
+            {
+                kickMessage = this.messages.getMessage(player.getLocale(), "kick.by_command.without_reason");
+            }
+            else
+            {
+                kickMessage = MessageFormat.format(this.messages.getMessage(player.getLocale(), "kick.by_command.with_reason"), reason);
+            }
+
+            player.kick(kickMessage);
+        }
+        catch (final Exception e)
         {
             sender.sendMessage(this.messages, "command.no_player");
-            return;
         }
-
-        final String reason = args.asText(1);
-        final String kickMessage;
-        if (StringUtils.isEmpty(reason))
-        {
-            kickMessage = this.messages.getMessage(networkPlayer.get().getLocale(), "kick.by_command.without_reason");
-        }
-        else
-        {
-            kickMessage = MessageFormat.format(this.messages.getMessage(networkPlayer.get().getLocale(), "kick.by_command.with_reason"), reason);
-        }
-
-        networkPlayer.get().kick(kickMessage);
     }
 }

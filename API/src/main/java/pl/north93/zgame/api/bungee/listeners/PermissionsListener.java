@@ -22,7 +22,8 @@ public class PermissionsListener implements Listener
     @EventHandler
     public void onPermissionCheck(final PermissionCheckEvent event)
     {
-        final IOnlinePlayer online = this.apiCore.getNetworkManager().getOnlinePlayer(event.getSender().getName()).get();
+        // todo rewrite
+        final IOnlinePlayer online = this.apiCore.getNetworkManager().getPlayers().unsafe().getOnline(event.getSender().getName()).get();
         if (online == null)
         {
             return;

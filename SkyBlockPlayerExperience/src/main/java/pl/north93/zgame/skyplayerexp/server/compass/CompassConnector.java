@@ -55,7 +55,7 @@ public class CompassConnector implements Listener
 
     public boolean compassEnabledInConfig(final String player)
     {
-        final MetaStore metaStore = this.networkManager.getOnlinePlayer(player).get().getMetaStore();
+        final MetaStore metaStore = this.networkManager.getPlayers().unsafe().getOnline(player).get().getMetaStore();
         if (metaStore.contains(COMPASS_ENABLED))
         {
             return metaStore.getBoolean(COMPASS_ENABLED);

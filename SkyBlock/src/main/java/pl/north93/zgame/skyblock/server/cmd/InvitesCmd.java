@@ -95,11 +95,11 @@ public class InvitesCmd extends NorthCommand
         this.server.getIslandDao().modifyIsland(skyPlayer.getIslandId(), islandData ->
         {
             final String members = islandData.getMembersUuid().stream()
-                                             .map(this.networkManager::getNickFromUuid)
+                                             .map(this.networkManager.getPlayers()::getNickFromUuid)
                                              .collect(Collectors.joining(", "));
 
             final String invites = islandData.getInvitations().stream()
-                                             .map(this.networkManager::getNickFromUuid)
+                                             .map(this.networkManager.getPlayers()::getNickFromUuid)
                                              .collect(Collectors.joining(", "));
 
             final String empty = this.messages.getMessage(sender.getLocale(), "cmd.invites.empty_list");

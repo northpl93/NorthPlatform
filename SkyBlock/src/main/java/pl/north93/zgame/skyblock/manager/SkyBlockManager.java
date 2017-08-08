@@ -99,7 +99,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
     @Override
     public void teleportToIsland(final String playerName, final UUID islandId)
     {
-        final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getOnlinePlayer(playerName);
+        final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getPlayers().unsafe().getOnline(playerName);
         if (! onlinePlayer.isAvailable())
         {
             return;
@@ -144,7 +144,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
         }
         this.getLogger().info("Found server for this island: " + server.getUuid());
 
-        final Value<IOnlinePlayer> networkPlayer = this.networkManager.getOnlinePlayer(ownerNick);
+        final Value<IOnlinePlayer> networkPlayer = this.networkManager.getPlayers().unsafe().getOnline(ownerNick);
         final SkyPlayer skyPlayer = SkyPlayer.get(networkPlayer);
 
         final UUID islandId = UUID.randomUUID();
@@ -250,7 +250,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
             {
                 islandData.getInvitations().add(invitedId);
 
-                invitedOnline.sendMessage(this.messages, "info.invited", this.networkManager.getNickFromUuid(islandData.getOwnerId()));
+                invitedOnline.sendMessage(this.messages, "info.invited", this.networkManager.getPlayers().getNickFromUuid(islandData.getOwnerId()));
 
                 islandOwner.ifPresent(player -> player.sendMessage(this.messages, "info.successfully_invited", invitedOnline.getNick()));
             }
@@ -289,10 +289,10 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
     @Override
     public void leaveIsland(final UUID islandId, final String invoker, final String leavingPlayer, final Boolean isSelfLeaving)
     {
-        final Value<IOnlinePlayer> player = this.networkManager.getOnlinePlayer(invoker);
+        final Value<IOnlinePlayer> player = this.networkManager.getPlayers().unsafe().getOnline(invoker);
         this.islandDao.modifyIsland(islandId, islandData ->
         {
-            final UUID playerId = this.networkManager.getUuidFromNick(leavingPlayer);
+            final UUID playerId = this.networkManager.getPlayers().getUuidFromNick(leavingPlayer);
             if (playerId == null)
             {
                 player.ifPresent(p -> p.sendMessage(this.messages, "cmd.invites.no_player"));
@@ -317,7 +317,7 @@ public class SkyBlockManager extends Component implements ISkyBlockManager
     @Override
     public void visitIsland(final UUID islandId, final String visitor)
     {
-        final Value<IOnlinePlayer> visitorValue = this.networkManager.getOnlinePlayer(visitor);
+        final Value<IOnlinePlayer> visitorValue = this.networkManager.getPlayers().unsafe().getOnline(visitor);
         if (! visitorValue.isAvailable())
         {
             return;

@@ -40,7 +40,7 @@ public class BiomeCmd extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        final SkyPlayer skyPlayer = SkyPlayer.get(this.networkManager.getOnlinePlayer(sender.getName()));
+        final SkyPlayer skyPlayer = SkyPlayer.get(this.networkManager.getPlayers().unsafe().getOnline(sender.getName()));
         if (! skyPlayer.hasIsland())
         {
             sender.sendMessage(this.messages, "error.you_must_have_island");

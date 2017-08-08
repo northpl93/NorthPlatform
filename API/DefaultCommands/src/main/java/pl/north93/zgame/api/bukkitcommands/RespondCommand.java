@@ -37,7 +37,7 @@ public class RespondCommand extends NorthCommand {
         // we can't execute commands asynchronously due to bukkit stupidity
         this.apiCore.sync(() -> // async part
         {
-            final String lastSender = this.networkManager.getOnlinePlayer(sender.getName()).get().getMetaStore().getString(LAST_SENDER);
+            final String lastSender = this.networkManager.getPlayers().unsafe().getOnline(sender.getName()).get().getMetaStore().getString(LAST_SENDER);
 
             if(StringUtils.isEmpty(lastSender))
             {

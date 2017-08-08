@@ -46,7 +46,7 @@ public class KickFromIslandCmd extends NorthCommand
             return;
         }
 
-        final IOnlinePlayer kickedPlayer = this.networkManager.getOnlinePlayer(args.asString(0)).get();
+        final IOnlinePlayer kickedPlayer = this.networkManager.getPlayers().unsafe().getOnline(args.asString(0)).get();
         if (kickedPlayer == null)
         {
             sender.sendRawMessage("&cPodany gracz nie znajduje sie na tej wyspie!");
