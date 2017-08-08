@@ -1,16 +1,16 @@
 package pl.north93.zgame.api.bukkit.gui.impl.xml;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
-import pl.north93.zgame.api.bukkit.gui.GuiIcon;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import pl.north93.zgame.api.bukkit.gui.IGuiIcon;
 import pl.north93.zgame.api.bukkit.gui.impl.RenderContext;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -83,7 +83,7 @@ public class XmlHotbarEntry
         return result;
     }
     
-    public GuiIcon createGuiIcon(RenderContext context)
+    public IGuiIcon createGuiIcon(RenderContext context)
     {
         if ( icon == null )
         {

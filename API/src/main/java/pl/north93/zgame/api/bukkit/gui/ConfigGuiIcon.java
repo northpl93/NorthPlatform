@@ -13,7 +13,10 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 import pl.north93.zgame.api.global.utils.Vars;
 
-public class GuiIcon
+/**
+ * Renderuje ikone na podstawie danych z xmlowego configu.
+ */
+public class ConfigGuiIcon implements IGuiIcon
 {
     private final Material type;
     private final int data;
@@ -26,7 +29,7 @@ public class GuiIcon
 
     private final boolean glowing;
 
-    private GuiIcon(Material type, int data, int count, TranslatableString name, TranslatableString lore, final List<XmlVariable> variables, boolean glow)
+    private ConfigGuiIcon(Material type, int data, int count, TranslatableString name, TranslatableString lore, final List<XmlVariable> variables, boolean glow)
     {
         this.type = type;
         this.data = data;
@@ -72,6 +75,7 @@ public class GuiIcon
         return glowing;
     }
     
+    @Override
     public ItemStack toItemStack(MessagesBox messages, Player player, Vars<Object> parameters)
     {
         // przetwarzamy dodane zmienne z xmla
@@ -151,9 +155,9 @@ public class GuiIcon
             return this;
         }
 
-        public GuiIcon build()
+        public IGuiIcon build()
         {
-            return new GuiIcon(type, data, count, name, lore, variables, glowing);
+            return new ConfigGuiIcon(type, data, count, name, lore, variables, glowing);
         }
     }
 }

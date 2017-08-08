@@ -1,10 +1,10 @@
 package pl.north93.zgame.api.bukkit.gui;
 
+import com.google.common.base.Preconditions;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-
-import com.google.common.base.Preconditions;
 
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
@@ -63,7 +63,7 @@ public class GuiContent extends GuiContainerElement
         {
             for ( int j = 0; j < renderedCanvas.getHeight(); j++ )
             {
-                GuiIcon icon = renderedCanvas.getGuiIconInSlot(i, j);
+                IGuiIcon icon = renderedCanvas.getGuiIconInSlot(i, j);
                 if ( icon != null )
                 {
                     inv.setItem(j * 9 + i, icon.toItemStack(gui.getMessagesBox(), player, gui.getVariables()));

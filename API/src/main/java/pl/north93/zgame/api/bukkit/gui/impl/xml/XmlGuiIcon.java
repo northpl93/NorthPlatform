@@ -11,7 +11,8 @@ import org.bukkit.Material;
 
 import org.diorite.utils.math.DioriteMathUtils;
 
-import pl.north93.zgame.api.bukkit.gui.GuiIcon;
+import pl.north93.zgame.api.bukkit.gui.ConfigGuiIcon;
+import pl.north93.zgame.api.bukkit.gui.IGuiIcon;
 import pl.north93.zgame.api.bukkit.gui.impl.RenderContext;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
@@ -105,11 +106,11 @@ public class XmlGuiIcon
         return Material.getMaterial(asInteger);
     }
     
-    public GuiIcon toGuiIcon(RenderContext renderContext, List<XmlVariable> variables)
+    public IGuiIcon toGuiIcon(RenderContext renderContext, List<XmlVariable> variables)
     {
         final MessagesBox messages = renderContext.getMessagesBox();
-        return GuiIcon.builder().type(this.toMaterial()).data(data).count(count)
-                .name(TranslatableString.of(messages, name)).lore(TranslatableString.of(messages, lore))
-                      .glowing(glowing).variables(variables).build();
+        return ConfigGuiIcon.builder().type(this.toMaterial()).data(data).count(count)
+                            .name(TranslatableString.of(messages, name)).lore(TranslatableString.of(messages, lore))
+                            .glowing(glowing).variables(variables).build();
     }
 }

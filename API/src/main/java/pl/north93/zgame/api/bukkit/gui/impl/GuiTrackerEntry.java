@@ -12,7 +12,6 @@ import com.google.common.base.Preconditions;
 
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.GuiContent;
-import pl.north93.zgame.api.bukkit.gui.GuiIcon;
 import pl.north93.zgame.api.bukkit.gui.HotbarEntry;
 import pl.north93.zgame.api.bukkit.gui.HotbarMenu;
 

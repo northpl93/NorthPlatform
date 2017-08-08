@@ -15,7 +15,7 @@ public class HotbarEntry implements IClickable
     private final List<String> clickHandlers = new ArrayList<>();
     private final Map<String, String> metadata = new HashMap<>();
     
-    private GuiIcon icon;
+    private IGuiIcon icon;
     
     public HotbarEntry(HotbarMenu hotbarMenu, int slot)
     {
@@ -43,12 +43,12 @@ public class HotbarEntry implements IClickable
         return metadata;
     }
     
-    public GuiIcon getIcon()
+    public IGuiIcon getIcon()
     {
         return icon;
     }
     
-    public void setIcon(GuiIcon icon)
+    public void setIcon(IGuiIcon icon)
     {
         this.icon = icon;
         markDirty();

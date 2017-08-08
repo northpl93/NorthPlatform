@@ -2,8 +2,8 @@ package pl.north93.zgame.api.bukkit.gui;
 
 public class GuiContainerElement extends GuiElement
 {
-    private GuiIcon background;
-    private GuiIcon border;
+    private IGuiIcon background;
+    private IGuiIcon border;
     
     private final GuiCanvas canvas;
     
@@ -29,13 +29,13 @@ public class GuiContainerElement extends GuiElement
         markDirty();
     }
     
-    public void setBackground(GuiIcon background)
+    public void setBackground(IGuiIcon background)
     {
         this.background = background;
         markDirty();
     }
     
-    public void setBorder(GuiIcon border)
+    public void setBorder(IGuiIcon border)
     {
         this.border = border;
         markDirty();

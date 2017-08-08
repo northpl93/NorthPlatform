@@ -70,12 +70,12 @@ public class GuiCanvas
         return getGuiContentEntry(slotX, slotY).map(e -> e.element).orElse(null);
     }
     
-    public GuiIcon getGuiIconInSlot(int slotX, int slotY)
+    public IGuiIcon getGuiIconInSlot(int slotX, int slotY)
     {
         return getGuiContentEntry(slotX, slotY).map(e -> e.icon).orElse(null);
     }
     
-    public void setEntry(int x, int y, GuiIcon icon, GuiElement element)
+    public void setEntry(int x, int y, IGuiIcon icon, GuiElement element)
     {
         Preconditions.checkArgument(icon != null);
         Preconditions.checkArgument(element != null);
@@ -112,10 +112,10 @@ public class GuiCanvas
 
 class GuiContentEntry
 {
-    final GuiIcon icon;
+    final IGuiIcon   icon;
     final GuiElement element;
     
-    GuiContentEntry(GuiIcon icon, GuiElement element)
+    GuiContentEntry(IGuiIcon icon, GuiElement element)
     {
         this.icon = icon;
         this.element = element;

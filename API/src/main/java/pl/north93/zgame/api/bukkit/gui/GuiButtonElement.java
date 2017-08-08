@@ -2,20 +2,20 @@ package pl.north93.zgame.api.bukkit.gui;
 
 public class GuiButtonElement extends GuiElement
 {
-    private GuiIcon icon;
+    private IGuiIcon icon;
     
-    public GuiButtonElement(GuiIcon icon)
+    public GuiButtonElement(IGuiIcon icon)
     {
         super(false);
         this.icon = icon;
     }
     
-    public GuiIcon getIcon()
+    public IGuiIcon getIcon()
     {
         return icon;
     }
     
-    public void setIcon(GuiIcon icon)
+    public void setIcon(IGuiIcon icon)
     {
         this.icon = icon;
         markDirty();
