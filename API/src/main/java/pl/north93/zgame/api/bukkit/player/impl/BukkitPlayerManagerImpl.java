@@ -21,6 +21,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayerManager
 {
+    @Inject
     private BukkitApiCore   bukkitApiCore;
     @Inject
     private INetworkManager networkManager;
