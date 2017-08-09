@@ -42,7 +42,7 @@ public class GuiContainerElement extends GuiElement
     }
 
     @Override
-    public void render(GuiCanvas canvas)
+    protected void render0(GuiCanvas canvas)
     {
         this.canvas.clear();
         getChildren().forEach(child -> child.render(this.canvas));

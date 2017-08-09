@@ -59,6 +59,7 @@ public class HotbarMenu implements IClickHandler
         {
             HotbarEntry current = getEntry(entry.getPosition());
             
+            current.setVisible(entry.isVisible());
             current.getClickHandlers().addAll(entry.getOnClick());
             current.getMetadata().putAll(entry.getMetadataAsMap());
             current.setIcon(entry.createGuiIcon(ctx));

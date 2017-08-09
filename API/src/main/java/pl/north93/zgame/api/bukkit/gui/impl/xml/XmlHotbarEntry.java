@@ -19,6 +19,9 @@ public class XmlHotbarEntry
     @XmlAttribute(name = "pos")
     private int position;
     
+    @XmlAttribute(name = "show")
+    private boolean visible;
+    
     @XmlElement
     private XmlGuiIcon icon;
     
@@ -39,6 +42,16 @@ public class XmlHotbarEntry
     public void setPosition(int position)
     {
         this.position = position;
+    }
+    
+    public boolean isVisible()
+    {
+        return visible;
+    }
+    
+    public void setVisible(boolean visible)
+    {
+        this.visible = visible;
     }
     
     public XmlGuiIcon getIcon()

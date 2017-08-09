@@ -113,6 +113,11 @@ public class GuiTrackerEntry
     {
         for ( HotbarEntry entry : currentHotbarMenu.getEntries() )
         {
+            if ( !entry.isVisible() )
+            {
+                continue;
+            }
+            
             ItemStack is = Optional.ofNullable(entry.getIcon()).map(icon -> icon.toItemStack(currentHotbarMenu.getMessages(), player, currentHotbarMenu.getVariables())).orElse(null);
             player.getInventory().setItem(entry.getSlot(), is);
         }

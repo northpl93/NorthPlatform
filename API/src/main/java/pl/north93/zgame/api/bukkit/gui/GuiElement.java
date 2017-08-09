@@ -24,6 +24,8 @@ public abstract class GuiElement implements IClickable
     
     private boolean isDirty = true;
     
+    private boolean visible = true;
+    
     protected GuiElement(boolean canHasChildren)
     {
         children = canHasChildren ? new ArrayList<>() : Arrays.asList();
@@ -115,6 +117,27 @@ public abstract class GuiElement implements IClickable
         isDirty = false;
     }
     
+    public final void show()
+    {
+        setVisible(true);
+    }
+    
+    public final void hide()
+    {
+        setVisible(false);
+    }
+    
+    public void setVisible(boolean visible)
+    {
+        this.visible = visible;
+        markDirty();
+    }
+    
+    public boolean isVisible()
+    {
+        return visible;
+    }
+    
     protected void onElementAdd(GuiElement element)
     {
     }
@@ -123,7 +146,15 @@ public abstract class GuiElement implements IClickable
     {
     }
     
-    public abstract void render(GuiCanvas canvas);
+    public final void render(GuiCanvas canvas)
+    {
+        if ( visible )
+        {
+            render0(canvas);
+        }
+    }
+    
+    protected abstract void render0(GuiCanvas canvas);
     
     @Override
     public final boolean equals(Object obj)

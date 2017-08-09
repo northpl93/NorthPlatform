@@ -18,6 +18,9 @@ public abstract class XmlGuiElement
 {
     @XmlAttribute(name = "pos")
     private String position = "0,0";
+    
+    @XmlAttribute(name = "show")
+    private boolean visible = true;
 
     @XmlElement(name = "variable")
     private List<XmlVariable> variables = new ArrayList<>();
@@ -38,6 +41,7 @@ public abstract class XmlGuiElement
         
         String[] split = position.split(",");
         element.setPosition(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
+        element.setVisible(visible);
         
         for ( String clickHandler : onClick )
         {

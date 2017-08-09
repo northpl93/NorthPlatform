@@ -17,6 +17,8 @@ public class HotbarEntry implements IClickable
     
     private IGuiIcon icon;
     
+    private boolean visible = true;
+    
     public HotbarEntry(HotbarMenu hotbarMenu, int slot)
     {
         this.slot = slot;
@@ -62,5 +64,26 @@ public class HotbarEntry implements IClickable
     public void markDirty()
     {
         hotbarMenu.markDirty();
+    }
+    
+    public void hide()
+    {
+        setVisible(false);
+    }
+    
+    public void show()
+    {
+        setVisible(true);
+    }
+    
+    public void setVisible(boolean visible)
+    {
+        this.visible = visible;
+        markDirty();
+    }
+    
+    public boolean isVisible()
+    {
+        return visible;
     }
 }

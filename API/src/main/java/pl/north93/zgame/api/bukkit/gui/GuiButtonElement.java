@@ -22,7 +22,7 @@ public class GuiButtonElement extends GuiElement
     }
     
     @Override
-    public void render(GuiCanvas content)
+    protected void render0(GuiCanvas content)
     {
         content.setEntry(getPosX(), getPosY(), icon, this);
     }
