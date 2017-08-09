@@ -20,7 +20,7 @@ public class XmlHotbarEntry
     private int position;
     
     @XmlAttribute(name = "show")
-    private boolean visible;
+    private boolean visible = true;
     
     @XmlElement
     private XmlGuiIcon icon;
