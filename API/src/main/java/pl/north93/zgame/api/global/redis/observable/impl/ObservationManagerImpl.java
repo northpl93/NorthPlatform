@@ -199,6 +199,11 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         return this.storageConnector.getRedis();
     }
 
+    /*default*/ StorageConnector getStorageConnector()
+    {
+        return this.storageConnector;
+    }
+
     /*default*/ TemplateManager getMsgPack()
     {
         return this.msgPack;

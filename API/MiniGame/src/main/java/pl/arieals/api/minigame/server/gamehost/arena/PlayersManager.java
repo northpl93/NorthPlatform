@@ -181,7 +181,7 @@ public class PlayersManager
         return true;
     }
 
-    public void playerConnected(final Player player)
+    public void playerConnected(final Player player) // TODO support for reconnecting
     {
         final BukkitApiCore apiCore = this.gameHostManager.getApiCore();
 
@@ -196,7 +196,7 @@ public class PlayersManager
 
         this.players.add(player);
         this.updateStatus(player, PlayerStatus.PLAYING);
-        final PlayerJoinArenaEvent event = apiCore.callEvent(new PlayerJoinArenaEvent(player, this.arena, "player.joined_arena"));
+        final PlayerJoinArenaEvent event = apiCore.callEvent(new PlayerJoinArenaEvent(player, this.arena, false, "player.joined_arena"));
         if ( event.getJoinMessage() != null )
         {
             this.announceJoinLeft(player, event.getJoinMessage());

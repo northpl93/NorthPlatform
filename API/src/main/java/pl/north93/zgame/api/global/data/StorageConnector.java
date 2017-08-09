@@ -4,6 +4,9 @@ import static pl.north93.zgame.api.global.cfg.ConfigUtils.loadConfigFile;
 
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Logger;
 
 import com.lambdaworks.redis.RedisClient;
@@ -23,6 +26,7 @@ import pl.north93.zgame.api.global.component.Component;
 
 public class StorageConnector extends Component
 {
+    private final ReadWriteLock                     redisLock = new ReentrantReadWriteLock();
     private RedisClient                             redisClient;
     private StatefulRedisConnection<String, byte[]> redisConnection;
     private MongoClient   mongoClient;
@@ -72,7 +76,21 @@ public class StorageConnector extends Component
      */
     public RedisCommands<String, byte[]> getRedis()
     {
-        return this.redisConnection.sync();
+        final Lock readLock = this.redisLock.readLock();
+        try
+        {
+            readLock.lock();
+            return this.redisConnection.sync();
+        }
+        finally
+        {
+            readLock.unlock();
+        }
+    }
+
+    public Lock getRedisLock()
+    {
+        return this.redisLock.writeLock();
     }
 
     public RedisClient getRedisClient()

@@ -9,22 +9,41 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 
+/**
+ * Event wywolywany gdy gracz wchodzi na arene.
+ * Jest wywolywany takze gdy gracz ponownie wchodzi na
+ * arene w trakcie gry, gdy nastapilo rozlaczenie.
+ */
 public class PlayerJoinArenaEvent extends PlayerEvent
 {
     private static final HandlerList handlers = new HandlerList();
     private final LocalArena arena;
-    
+    private final boolean reconnected;
     private String joinMessage;
 
-    public PlayerJoinArenaEvent(final Player who, final LocalArena arena, final String joinMessage)
+    public PlayerJoinArenaEvent(final Player who, final LocalArena arena, final boolean reconnected, final String joinMessage)
     {
         super(who);
         this.arena = arena;
+        this.reconnected = reconnected;
+        this.joinMessage = joinMessage;
     }
 
     public LocalArena getArena()
     {
         return this.arena;
+    }
+
+    /**
+     * Czy gracz juz byl wczesniej na arenie i czy laczy sie ponownie.
+     * (obsluga mechanizmu ponownego dolaczenia do areny po wywaleniu z serwera itp.)
+     * W fazie lobby tu bedzie zawsze false.
+     *
+     * @return czy gracz laczy sie do areny ponownie.
+     */
+    public boolean isReconnected()
+    {
+        return this.reconnected;
     }
 
     public String getJoinMessage()
@@ -51,6 +70,6 @@ public class PlayerJoinArenaEvent extends PlayerEvent
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("arena", this.arena).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("arena", this.arena).append("reconnected", this.reconnected).append("joinMessage", this.joinMessage).toString();
     }
 }

@@ -89,11 +89,24 @@ class CachedValueImpl<T> extends CachedValue<T>
         final String key = this.objectKey.getKey();
 
         final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
-        redis.multi();
-        redis.get(key);
-        redis.del(key);
+        final java.util.concurrent.locks.Lock redisLock = this.observationManager.getStorageConnector().getRedisLock();
 
-        final byte[] getResult = (byte[]) redis.exec().get(0);
+        final byte[] getResult;
+        try
+        {
+            redisLock.lock();
+
+            redis.multi();
+            redis.get(key);
+            redis.del(key);
+
+            getResult = (byte[]) redis.exec().get(0);
+        }
+        finally
+        {
+            redisLock.unlock();
+        }
+
         if (getResult == null)
         {
             return null;
