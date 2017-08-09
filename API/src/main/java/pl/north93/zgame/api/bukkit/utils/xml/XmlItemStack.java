@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -123,7 +124,20 @@ public class XmlItemStack
     public ItemStack createItemStack()
     {
         final Integer numberId = DioriteMathUtils.asInt(this.id);
-        final Material material = numberId == null ? Material.getMaterial(this.id) : Material.getMaterial(numberId);
+        final Material material;
+        
+        if ( numberId != null )
+        {
+            material = Material.getMaterial(numberId);
+        }
+        else if ( this.id.startsWith("minecraft:") )
+        {
+            material = Bukkit.getUnsafe().getMaterialFromInternalName(this.id);
+        }
+        else
+        {
+            material = Material.getMaterial(this.id);
+        }
 
         final ItemStackBuilder builder = new ItemStackBuilder().material(material).data(data).amount(count).name(name).lore(this.lore);
         this.enchants.forEach(builder::enchant);
