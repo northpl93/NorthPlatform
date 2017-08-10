@@ -6,7 +6,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.WeakHashMap;
 
-import org.bukkit.Bukkit;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
@@ -15,13 +17,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.gui.ClickType;
@@ -187,8 +186,22 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
     {
         GuiTrackerEntry entry = getEntry((Player) event.getWhoClicked());
         
-        if ( entry.getCurrentGui() == null || event.getClickedInventory() == null )
+        if ( event.getClickedInventory() == null )
         {
+            // jak kliknieto poza ekwipunkiem to nic nie robimy
+            return;
+        }
+
+        if ( entry.getCurrentHotbarMenu() != null && event.getSlotType() == InventoryType.SlotType.QUICKBAR )
+        {
+            // blokujemy klikniecia na hotbar gdy mamy jakis aktywny
+            event.setCancelled(true);
+            return;
+        }
+
+        if ( entry.getCurrentGui() == null )
+        {
+            // jak brak otwartego gui to nic nie musimy robic
             return;
         }
         
