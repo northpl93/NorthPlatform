@@ -7,9 +7,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import org.diorite.utils.math.DioriteMathUtils;
+
+import com.google.common.base.Preconditions;
 
 import pl.north93.zgame.api.bukkit.gui.ConfigGuiIcon;
 import pl.north93.zgame.api.bukkit.gui.IGuiIcon;
@@ -96,14 +99,26 @@ public class XmlGuiIcon
         this.glowing = glowing;
     }
 
+    @SuppressWarnings("deprecation")
     private Material toMaterial()
     {
-        final Integer asInteger = DioriteMathUtils.asInt(this.id); // will return null if it isn't number
-        if (asInteger == null)
+        final Integer numberId = DioriteMathUtils.asInt(this.id);
+        final Material material;
+        
+        if ( numberId != null )
         {
-            return Material.getMaterial(this.id);
+            material = Material.getMaterial(numberId);
         }
-        return Material.getMaterial(asInteger);
+        else if ( this.id.startsWith("minecraft:") )
+        {
+            material = Bukkit.getUnsafe().getMaterialFromInternalName(this.id);
+        }
+        else
+        {
+            material = Material.getMaterial(this.id);
+        }
+        
+        return material != null ? material : Material.BEDROCK;
     }
     
     public IGuiIcon toGuiIcon(RenderContext renderContext, List<XmlVariable> variables)
