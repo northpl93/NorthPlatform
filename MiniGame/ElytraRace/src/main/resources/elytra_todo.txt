@@ -1,0 +1,25 @@
+* odmiana punktów[done]
+* wiêcej particli przy wysokoœciowym booscie[done?]
+* gamerule dla aren[done]
+* komunikat gdy gracz nie moze czegos zrobic[done]
+* osobno konfigurowalna szybkosc i wysokosc w jednym booscie[done]
+* zamieniamy jeden height booster na booster speed moc 3[done]
+
+
+* jednolinijkowe komunikaty mety tylko dla graczy jeszcze lec¹cych (tych na mecie ju¿ to nie obchodzi)
+* ustawianie glowy gracza w dobrym kierunku przy starcie(?)
+* score sttack - bonus za 3 pierwsze miejsca na mecie
+
+* duzy komunikat gdy sie dotrze na mete
+  * w przypietych wiadomnosciach wzor
+  * pamietac ze potrzebne auto-dosrodkowanie
+
+
+CHECKPOINTY:
+* pierwszy booster - checkpoint
+* drugi pomiêdzy drzewami, przy pierwszym geight boost
+* trzeci - zwezenie przy zielonym boosterze
+* czwarty - przy jaskini z zielonym boosterem
+* pi¹ty, za boosterem
+* w jaskini za zakrêtem
+* od pochodni do œciany (zmieniony: nad obrecza przy wyskoku)

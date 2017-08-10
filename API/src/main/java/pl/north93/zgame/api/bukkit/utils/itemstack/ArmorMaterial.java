@@ -5,10 +5,15 @@ import org.bukkit.Material;
 public enum ArmorMaterial
 {
     LEATHER,
-    IRON,
     CHAINMAIL,
+    IRON,
     GOLD,
     DIAMOND;
+
+    public boolean isBetterOrSame(final ArmorMaterial armorMaterial)
+    {
+        return this.ordinal() <= armorMaterial.ordinal();
+    }
 
     public static ArmorMaterial getArmorMaterial(final Material material)
     {
