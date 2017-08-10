@@ -3,7 +3,6 @@ package pl.arieals.minigame.bedwars.event;
 import java.util.List;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
@@ -21,13 +20,12 @@ import pl.arieals.minigame.bedwars.cfg.BwShopEntry;
  * wymaganą opłatę.
  * @see pl.arieals.minigame.bedwars.shop.ShopManager
  */
-public class ItemBuyEvent extends ArenaEvent implements Cancellable
+public class ItemBuyEvent extends ArenaEvent
 {
     private static final HandlerList handlers = new HandlerList();
     private final Player          player;
     private final BwShopEntry     shopEntry;
     private final List<ItemStack> items;
-    private boolean cancelled;
 
     public ItemBuyEvent(final LocalArena arena, final Player player, final BwShopEntry shopEntry, final List<ItemStack> items)
     {
@@ -66,18 +64,6 @@ public class ItemBuyEvent extends ArenaEvent implements Cancellable
     }
 
     @Override
-    public boolean isCancelled()
-    {
-        return this.cancelled;
-    }
-
-    @Override
-    public void setCancelled(final boolean b)
-    {
-        this.cancelled = b;
-    }
-
-    @Override
     public HandlerList getHandlers()
     {
         return handlers;
@@ -86,7 +72,7 @@ public class ItemBuyEvent extends ArenaEvent implements Cancellable
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("player", this.player).append("shopEntry", this.shopEntry).append("items", this.items).append("cancelled", this.cancelled).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("player", this.player).append("shopEntry", this.shopEntry).append("items", this.items).toString();
     }
 
     public static HandlerList getHandlerList()

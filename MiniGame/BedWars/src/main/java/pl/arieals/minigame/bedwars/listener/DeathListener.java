@@ -18,7 +18,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.util.Vector;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -31,6 +30,7 @@ import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.RevivePlayerCountdown;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.event.TeamEliminatedEvent;
+import pl.arieals.minigame.bedwars.hotbar.SpectatorHotbar;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageContainer;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageEntry;
@@ -100,16 +100,12 @@ public class DeathListener implements Listener
             return;
         }
 
-        final Vector direction = player.getLocation().getDirection();
-        final Vector newVector = direction.multiply(- 1).setY(2);
-        player.setVelocity(newVector);
-
-        this.handleKiller(event, arena, team); // podbija licznik zabojstw, wysyla wiadomosc i daje nagrode zabojcy
-        this.handleRespawn(player, arena, playerData, team);
-        this.safePlaceTeleport(player, team, arena);
-
         player.setHealth(20);
         setPlayerStatus(player, PlayerStatus.PLAYING_SPECTATOR);
+
+        this.handleKiller(event, arena, playerData); // podbija licznik zabojstw, wysyla wiadomosc i daje nagrode zabojcy
+        this.handleRespawn(player, arena, playerData); // zmniejsza licznik zycia, uruchamia task respawnujacy, wysyla title
+        this.safePlaceTeleport(player, team, arena);
 
         if (! team.isTeamAlive())
         {
@@ -118,28 +114,38 @@ public class DeathListener implements Listener
         }
     }
 
-    private void handleRespawn(final Player player, final LocalArena arena, final BedWarsPlayer playerData, final Team team)
+    private void handleRespawn(final Player player, final LocalArena arena, final BedWarsPlayer playerData)
     {
+        final Team team = playerData.getTeam();
         if (team.isBedAlive())
         {
             new RevivePlayerCountdown(player, playerData).start(20);
             return;
         }
-        // gdy gracz ma zycie i deathmatch nie jest wlaczony to zabieramy zycie i normalnie respawnimy
-        else if (playerData.getLives() > 0 && arena.getDeathMatch().getState() == DeathMatchState.NOT_STARTED)
+        else
         {
-            playerData.removeLife();
-            new RevivePlayerCountdown(player, playerData).start(20);
-            return;
+            final DeathMatchState deathMatchState = arena.getDeathMatch().getState();
+
+            // gdy gracz ma zycie i deathmatch nie jest wlaczony to zabieramy zycie i normalnie respawnimy
+            if (playerData.getLives() > 0 && deathMatchState == DeathMatchState.NOT_STARTED)
+            {
+                playerData.removeLife();
+                new RevivePlayerCountdown(player, playerData).start(20);
+                return;
+            }
         }
 
         player.getInventory().clear(); // czyscimy ekwipunek po wyeliminowaniu
+        player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
         playerData.setEliminated(true);
 
         final String locale = player.spigot().getLocale();
         final String title = translateAlternateColorCodes(this.messages.getMessage(locale, "die.norespawn.title"));
         final String subtitle = translateAlternateColorCodes(this.messages.getMessage(locale, "die.norespawn.subtitle"));
         player.sendTitle(new Title(title, subtitle, 20, 20, 20));
+
+        final SpectatorHotbar spectatorHotbar = new SpectatorHotbar();
+        spectatorHotbar.display(player);
     }
 
     private void safePlaceTeleport(final Player player, final Team team, final LocalArena arena)
@@ -160,11 +166,12 @@ public class DeathListener implements Listener
         }
     }
 
-    private void handleKiller(final PlayerDeathEvent event, final LocalArena arena, final Team team)
+    private void handleKiller(final PlayerDeathEvent event, final LocalArena arena, final BedWarsPlayer deathData)
     {
         event.setDeathMessage(null);
+
         final Player player = event.getEntity();
-        final boolean elimination = ! team.isBedAlive();
+        final Team team = deathData.getTeam();
 
         final DamageContainer dmgContainer = DamageTracker.get().getContainer(player);
         final DamageEntry lastDmg = dmgContainer.getLastDamageByPlayer(Duration.ofSeconds(10));
@@ -178,8 +185,17 @@ public class DeathListener implements Listener
         assert damager != null; // damager nie moze byc tu nullem bo uzywamy getLastDamageByPlayer
 
         final BedWarsPlayer damagerData = getPlayerData(damager, BedWarsPlayer.class);
+        if (damagerData == null || damagerData.isEliminated())
+        {
+            // jesli damager jest wyeliminowany to nie uznajemy go za zabojce
+            return;
+        }
+
         damagerData.incrementKills(); // dodajemy zabojcy killa
         arena.getRewards().addReward(Identity.of(damager), new CurrencyReward("elimination", "minigame", 100));
+
+        // jesli gracz ma 0 i mniej zycia, a lozko jest zniszczone to nastapila eliminacja
+        final boolean elimination = deathData.getLives() <= 0 && ! team.isBedAlive();
 
         if (elimination)
         {

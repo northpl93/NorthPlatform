@@ -20,22 +20,23 @@ public final class TeamArmorUtils
     {
         final Color color = chatColorToColor(team.getColor());
 
-        final ItemStack helmet = new ItemStack(Material.LEATHER_HELMET, 1);
-        final LeatherArmorMeta helmetMeta = (LeatherArmorMeta) helmet.getItemMeta();
-        helmetMeta.setColor(color);
-        helmetMeta.spigot().setUnbreakable(true);
-        helmet.setItemMeta(helmetMeta);
-
-        final ItemStack chestPlate = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
-        final LeatherArmorMeta chestPlateMeta = (LeatherArmorMeta) chestPlate.getItemMeta();
-        chestPlateMeta.setColor(color);
-        chestPlateMeta.spigot().setUnbreakable(true);
-        chestPlate.setItemMeta(helmetMeta);
+        final ItemStack helmet = createColorArmor(Material.LEATHER_HELMET, color);
+        final ItemStack chestPlate = createColorArmor(Material.LEATHER_CHESTPLATE, color);
 
         final ItemStack[] armorContents = player.getInventory().getArmorContents();
         armorContents[2] = chestPlate;
         armorContents[3] = helmet;
         player.getInventory().setArmorContents(armorContents);
+    }
+
+    public static ItemStack createColorArmor(final Material leatherArmor, final Color color)
+    {
+        final ItemStack item = new ItemStack(leatherArmor, 1);
+        final LeatherArmorMeta leatherMeta = (LeatherArmorMeta) item.getItemMeta();
+        leatherMeta.setColor(color);
+        leatherMeta.spigot().setUnbreakable(true);
+        item.setItemMeta(leatherMeta);
+        return item;
     }
 
     public static Color chatColorToColor(final ChatColor color)
@@ -63,13 +64,13 @@ public final class TeamArmorUtils
             case BLUE:
                 return Color.BLUE;
             case GREEN:
-                return Color.GREEN;
+                return Color.fromRGB(8375321); //lime
             case AQUA:
                 return Color.AQUA;
             case RED:
                 return Color.RED;
             case LIGHT_PURPLE:
-                return Color.PURPLE;
+                return Color.fromRGB(15892389);
             case YELLOW:
                 return Color.YELLOW;
             case WHITE:
@@ -104,13 +105,13 @@ public final class TeamArmorUtils
             case BLUE:
                 return DyeColor.BLUE;
             case GREEN:
-                return DyeColor.GREEN;
+                return DyeColor.LIME;
             case AQUA:
                 return DyeColor.LIGHT_BLUE;
             case RED:
                 return DyeColor.RED;
             case LIGHT_PURPLE:
-                return DyeColor.PURPLE;
+                return DyeColor.PINK;
             case YELLOW:
                 return DyeColor.YELLOW;
             case WHITE:

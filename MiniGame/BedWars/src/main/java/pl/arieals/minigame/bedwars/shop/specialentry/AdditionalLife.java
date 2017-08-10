@@ -7,11 +7,12 @@ import java.util.Collection;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
-import pl.arieals.minigame.bedwars.event.ItemBuyEvent;
+import pl.arieals.minigame.bedwars.event.ItemPreBuyEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 
 public class AdditionalLife implements IShopSpecialEntry, Listener
@@ -21,8 +22,8 @@ public class AdditionalLife implements IShopSpecialEntry, Listener
         apiCore.registerEvents(this);
     }
 
-    @EventHandler(ignoreCancelled = true)
-    public void onBuy(final ItemBuyEvent event)
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onBuy(final ItemPreBuyEvent event)
     {
         if (! "AdditionalLife".equals(event.getShopEntry().getSpecialHandler()))
         {
@@ -32,13 +33,12 @@ public class AdditionalLife implements IShopSpecialEntry, Listener
         final BedWarsPlayer playerData = getPlayerData(event.getPlayer(), BedWarsPlayer.class);
         if (playerData == null)
         {
-            event.setCancelled(true);
             return;
         }
 
         if (playerData.getLives() >= 1)
         {
-            event.setCancelled(true);
+            event.setBuyStatus(ItemPreBuyEvent.BuyStatus.ALREADY_HAVE);
         }
     }
 

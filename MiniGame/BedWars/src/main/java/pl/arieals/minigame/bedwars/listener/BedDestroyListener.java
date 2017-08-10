@@ -2,6 +2,7 @@ package pl.arieals.minigame.bedwars.listener;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import static pl.arieals.minigame.bedwars.utils.PlayerTeamPredicates.isInTeam;
+import static pl.arieals.minigame.bedwars.utils.PlayerTeamPredicates.notInTeam;
 import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColorCodes;
 
 
@@ -54,13 +55,19 @@ public class BedDestroyListener implements Listener
                     destroyerData.getBukkitPlayer().getDisplayName());
 
             final TranslatableString teamName = TranslatableString.of(this.messages, "@team.genitive." + team.getName());
-            playersManager.broadcast(this.messages, "bed_destroyed.global", MessageLayout.SEPARATED, team.getColorChar(), teamName, destroyerData.getTeam().getColorChar(), destroyerData.getBukkitPlayer().getDisplayName());
+            playersManager.broadcast(notInTeam(team), this.messages, "bed_destroyed.global", MessageLayout.SEPARATED, team.getColorChar(), teamName, destroyerData.getTeam().getColorChar(), destroyerData.getBukkitPlayer().getDisplayName());
         }
         else
         {
             playersManager.broadcast(isInTeam(team), this.messages,
                     "bed_destroyed.you_no_destroyer", MessageLayout.SEPARATED,
                     team.getColor().getChar());
+        }
+
+        for (final Player player : arena.getPlayersManager().getPlayers())
+        {
+            // globalny dzwiek niszczenia lozka
+            player.playSound(player.getLocation(), Sound.ENTITY_ENDERDRAGON_GROWL, 1, 1.5f); // volume, pitch
         }
 
         for (final Player player : team.getPlayers())
@@ -71,8 +78,6 @@ public class BedDestroyListener implements Listener
             final String subtitle = translateAlternateColorCodes(this.messages.getMessage(locale, "bed_destroyed.title.subtitle"));
 
             player.sendTitle(new Title(title, subtitle, 20, 20, 20));
-
-            player.playSound(player.getLocation(), Sound.ENTITY_ENDERDRAGON_GROWL, 1, 1.5f); // volume, pitch
         }
 
         if (! team.isTeamAlive())

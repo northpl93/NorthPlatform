@@ -12,6 +12,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.bukkit.entity.Player;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.Pair;
@@ -65,7 +67,7 @@ public class GameScoreboard implements IScoreboardLayout
             this.buildGeneratorUpgrade(builder, nextUpgrade, arena, context.getLocale());
         }
 
-        this.buildTeamList(builder, arenaData, context.getLocale());
+        this.buildTeamList(builder, arenaData, context.getPlayer());
 
         builder.add("");
         builder.translated("scoreboard.ip");
@@ -120,12 +122,15 @@ public class GameScoreboard implements IScoreboardLayout
                 humanTime);
     }
 
-    private void buildTeamList(final ContentBuilder builder, final BedWarsArena arenaData, final String locale)
+    private void buildTeamList(final ContentBuilder builder, final BedWarsArena arenaData, final Player renderingPlayer)
     {
+        final String locale = renderingPlayer.spigot().getLocale();
+
         builder.add("");
         arenaData.getTeams().stream().sorted(comparing(Team::getScoreboardOrder)).forEach(team ->
         {
             final String teamName = this.messages.getMessage(locale, "team.scoreboard." + team.getName());
+            final int lives = team.countAdditionalLives();
             final String status;
 
             if (team.isBedAlive())
@@ -134,7 +139,7 @@ public class GameScoreboard implements IScoreboardLayout
             }
             else
             {
-                final int players = team.getAlivePlayers().size();
+                final int players = team.getNotEliminatedPlayers().size();
                 if (players == 0)
                 {
                     status = this.messages.getMessage(locale, "scoreboard.cross");
@@ -145,7 +150,15 @@ public class GameScoreboard implements IScoreboardLayout
                 }
             }
 
-            builder.translated("scoreboard.team_line", team.getColor().getChar(), teamName, status);
+            final boolean renderFlag = !team.isBedAlive() || team.getPlayers().contains(renderingPlayer);
+            if (renderFlag && lives > 0)
+            {
+                builder.translated("scoreboard.team_line_lives", team.getColor().getChar(), teamName, status, lives);
+            }
+            else
+            {
+                builder.translated("scoreboard.team_line", team.getColor().getChar(), teamName, status);
+            }
         });
     }
 

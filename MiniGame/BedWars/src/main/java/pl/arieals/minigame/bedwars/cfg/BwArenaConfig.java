@@ -18,6 +18,8 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class BwArenaConfig
 {
+    @XmlElement(name = "minSpectatorY", required = true)
+    private int                minSpectatorY;
     @XmlElement(name = "lobby", required = true)
     private XmlLocation        lobby;
     @XmlElement(name = "lobbyRegion", required = true)
@@ -31,6 +33,11 @@ public class BwArenaConfig
     @XmlElementWrapper(name = "secureRegions")
     @XmlElement(name = "secureRegion")
     private List<XmlCuboid>    secureRegions;
+
+    public int getMinSpectatorY()
+    {
+        return this.minSpectatorY;
+    }
 
     public XmlLocation getLobby()
     {
@@ -60,6 +67,6 @@ public class BwArenaConfig
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("lobby", this.lobby).append("lobbyCuboid", this.lobbyCuboid).append("teams", this.teams).append("generators", this.generators).append("secureRegions", this.secureRegions).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("minSpectatorY", this.minSpectatorY).append("lobby", this.lobby).append("lobbyCuboid", this.lobbyCuboid).append("teams", this.teams).append("generators", this.generators).append("secureRegions", this.secureRegions).toString();
     }
 }

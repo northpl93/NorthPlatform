@@ -1,5 +1,8 @@
 package pl.arieals.minigame.bedwars.npc;
 
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
+
+
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
@@ -18,6 +21,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.globalshops.server.IGlobalShops;
 import pl.arieals.globalshops.shared.ItemsGroup;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
@@ -79,6 +83,13 @@ public class NpcCreator implements Listener
         }
 
         final Player player = event.getPlayer();
+
+        // spectatorzy nie moga klikac na npcty
+        final PlayerStatus playerStatus = getPlayerStatus(player);
+        if (playerStatus == null || playerStatus.isSpectator())
+        {
+            return;
+        }
 
         final ShopTrait trait = npc.getTrait(ShopTrait.class);
         if (trait.getType() == ShopTrait.NpcType.SHOP)

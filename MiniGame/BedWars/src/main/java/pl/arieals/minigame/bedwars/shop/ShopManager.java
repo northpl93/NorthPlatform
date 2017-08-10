@@ -18,18 +18,22 @@ import java.util.stream.Stream;
 import net.minecraft.server.v1_10_R1.NBTTagCompound;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.minigame.bedwars.cfg.BwConfig;
+import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.minigame.bedwars.cfg.BwShopConfig;
 import pl.arieals.minigame.bedwars.cfg.BwShopEntry;
 import pl.arieals.minigame.bedwars.event.ItemBuyEvent;
+import pl.arieals.minigame.bedwars.event.ItemPreBuyEvent;
+import pl.arieals.minigame.bedwars.shop.gui.ShopBase;
 import pl.arieals.minigame.bedwars.shop.specialentry.IShopSpecialEntry;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.gui.Gui;
+import pl.north93.zgame.api.bukkit.gui.IGuiManager;
 import pl.north93.zgame.api.bukkit.utils.itemstack.ItemTransaction;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlItemStack;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
@@ -48,7 +52,9 @@ public class ShopManager
     @Inject
     private BukkitApiCore apiCore;
     @Inject
-    private BwConfig      config;
+    private BwShopConfig  config;
+    @Inject
+    private IGuiManager   guiManager;
     private Map<String, IShopSpecialEntry> specialEntryMap = new HashMap<>();
 
     @Bean
@@ -122,10 +128,12 @@ public class ShopManager
     {
         final BwShopEntry entry = this.getShopEntry(name);
         final ItemStack price = entry.getPrice().createItemStack();
-        if (! player.getInventory().containsAtLeast(price, price.getAmount()))
+        final LocalArena arena = getArena(player);
+
+        final ItemPreBuyEvent preBuyEvent = this.apiCore.callEvent(new ItemPreBuyEvent(arena, player, entry, price, false));
+        if (! preBuyEvent.getBuyStatus().canBuy())
         {
-            player.playSound(player.getLocation(), Sound.ENTITY_ARMORSTAND_BREAK, 1, 2); // volume, pitch // dzwiek braku kasy
-            return false; // gracz nie ma wymaganej ilosci kasy.
+            return false;
         }
 
         // tworzymy interesujace nas itemstacki
@@ -135,13 +143,7 @@ public class ShopManager
             itemStream = itemStream.map(this::markAsPermanent);
         }
         final List<ItemStack> items = itemStream.collect(Collectors.toList());
-
-        // wywolujemy event kupowania przedmiotow
-        final ItemBuyEvent itemBuyEvent = this.apiCore.callEvent(new ItemBuyEvent(getArena(player), player, entry, items));
-        if (itemBuyEvent.isCancelled())
-        {
-            return false;
-        }
+        this.apiCore.callEvent(new ItemBuyEvent(arena, player, entry, items));
 
         // obslugujemy dodanie itemów, przez specjalnego handlera lub normalnie przez ItemTransaction
         final IShopSpecialEntry specialEntry = this.specialEntryMap.get(entry.getSpecialHandler());
@@ -161,6 +163,11 @@ public class ShopManager
             return false;
         }
 
+        final Gui currentGui = this.guiManager.getCurrentGui(player);
+        if (currentGui instanceof ShopBase)
+        {
+            currentGui.markDirty();
+        }
         // pobieramy oplate dopiero jak sie udalo
         player.getInventory().removeItem(price);
         return true;

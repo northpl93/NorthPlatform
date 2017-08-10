@@ -34,9 +34,19 @@ public class BwGenerator
         return this.type;
     }
 
+    public void setType(final String type)
+    {
+        this.type = type;
+    }
+
     public XmlLocation getLocation()
     {
         return this.location;
+    }
+
+    public void setLocation(final XmlLocation location)
+    {
+        this.location = location;
     }
 
     @Override

@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.Team;
-import pl.arieals.minigame.bedwars.cfg.BwConfig;
+import pl.arieals.minigame.bedwars.cfg.BwShopConfig;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public interface IUpgrade
@@ -16,9 +16,9 @@ public interface IUpgrade
         return this.getClass().getSimpleName();
     }
 
-    default Integer getPrice(final BwConfig bwConfig, final Team team)
+    default Integer getPrice(final BwShopConfig bwShopConfig, final Team team)
     {
-        final Map<String, Integer> upgrades = bwConfig.getUpgrades();
+        final Map<String, Integer> upgrades = bwShopConfig.getUpgrades();
         final String name = this.getName();
 
         if (upgrades.containsKey(name))

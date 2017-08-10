@@ -10,7 +10,6 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -31,11 +30,6 @@ public class BwConfig
     @XmlElementWrapper(name = "generatorTypes")
     @XmlElement(name = "generatorType")
     private List<BwGeneratorType> generatorTypes;
-    @XmlElementWrapper(name = "shopEntries")
-    @XmlElement(name = "shopEntry")
-    private List<BwShopEntry>     shopEntries;
-    @XmlElement
-    private Map<String, Integer>  upgrades;
 
     public Integer getDestroyBedsAt()
     {
@@ -62,19 +56,9 @@ public class BwConfig
         return findInCollection(this.generatorTypes, BwGeneratorType::getName, name);
     }
 
-    public List<BwShopEntry> getShopEntries()
-    {
-        return this.shopEntries;
-    }
-
-    public Map<String, Integer> getUpgrades()
-    {
-        return this.upgrades;
-    }
-
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("destroyBedsAt", this.destroyBedsAt).append("startDeathMatchAt", this.startDeathMatchAt).append("teamSize", this.teamSize).append("generatorTypes", this.generatorTypes).append("shopEntries", this.shopEntries).append("upgrades", this.upgrades).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("destroyBedsAt", this.destroyBedsAt).append("startDeathMatchAt", this.startDeathMatchAt).append("teamSize", this.teamSize).append("generatorTypes", this.generatorTypes).toString();
     }
 }

@@ -43,6 +43,17 @@ public class Upgrades
         upgrade.apply(this.arena, this.team, newLevel);
     }
 
+    /**
+     * Usuwa dane ulepszenie z teamu.
+     * Nie wywoluje przy tym zadnego eventu.
+     *
+     * @param upgrade upgrade do usuniecia.
+     */
+    public void removeUpgrade(final IUpgrade upgrade)
+    {
+        this.installedUpgrades.remove(upgrade);
+    }
+
     @Override
     public String toString()
     {

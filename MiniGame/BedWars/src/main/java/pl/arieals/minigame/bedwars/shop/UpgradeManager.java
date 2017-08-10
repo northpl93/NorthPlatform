@@ -24,7 +24,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
-import pl.arieals.minigame.bedwars.cfg.BwConfig;
+import pl.arieals.minigame.bedwars.cfg.BwShopConfig;
 import pl.arieals.minigame.bedwars.event.UpgradeInstallEvent;
 import pl.arieals.minigame.bedwars.shop.gui.UpgradesGui;
 import pl.arieals.minigame.bedwars.shop.upgrade.IUpgrade;
@@ -48,7 +48,7 @@ public class UpgradeManager
     @Inject
     private GuiTracker    guiTracker;
     @Inject
-    private BwConfig      config;
+    private BwShopConfig  config;
     @Inject @Messages("BedWarsShop")
     private MessagesBox   shopMessages;
     private Map<String, IUpgrade> upgrades = new HashMap<>();

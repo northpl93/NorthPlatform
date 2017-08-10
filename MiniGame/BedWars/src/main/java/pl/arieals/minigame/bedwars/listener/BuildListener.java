@@ -2,8 +2,10 @@ package pl.arieals.minigame.bedwars.listener;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.zgame.api.global.utils.math.MathUtils.distanceSquared;
 
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -21,6 +23,7 @@ import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
+import pl.arieals.minigame.bedwars.arena.generator.GeneratorController;
 import pl.arieals.minigame.bedwars.event.BedDestroyedEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
@@ -44,9 +47,8 @@ public class BuildListener implements Listener
     @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(final BlockPlaceEvent event)
     {
-        final LocalArena arena = getArena(event.getBlock().getWorld());
-        final BedWarsArena arenaData = arena.getArenaData();
-        final BedWarsPlayer playerData = getPlayerData(event.getPlayer(), BedWarsPlayer.class);
+        final Block block = event.getBlock();
+        final LocalArena arena = getArena(block.getWorld());
 
         if (arena.getGamePhase() != GamePhase.STARTED)
         {
@@ -55,14 +57,15 @@ public class BuildListener implements Listener
             return;
         }
 
-        if (this.checkSecureRegion(arenaData, event.getBlock()))
+        final BedWarsArena arenaData = arena.getArenaData();
+        if (this.checkGenerator(arenaData, block) || this.checkSecureRegion(arenaData, block))
         {
             this.messages.sendMessage(event.getPlayer(), "no_permissions");
             event.setCancelled(true);
             return;
         }
 
-        arenaData.getPlayerBlocks().add(event.getBlock());
+        arenaData.getPlayerBlocks().add(block);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -138,6 +141,19 @@ public class BuildListener implements Listener
         this.apiCore.callEvent(new BedDestroyedEvent(arenaData.getArena(), playerData.getBukkitPlayer(), block, teamAt));
 
         return true;
+    }
+
+    private boolean checkGenerator(final BedWarsArena arenaData, final Block block)
+    {
+        for (final GeneratorController generator : arenaData.getGenerators())
+        {
+            final Location gen = generator.getLocation();
+            if (distanceSquared(gen.getBlockX(), gen.getBlockY(), gen.getBlockZ(), block.getX(), block.getY(), block.getZ()) <= 3)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     // zwraca true jesli blok jest w strefie niemodyfikowalnej

@@ -4,15 +4,32 @@ import static java.text.MessageFormat.format;
 
 
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class ArmorEntry implements IShopSpecialEntry
+import pl.arieals.minigame.bedwars.event.ItemPreBuyEvent;
+import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.utils.itemstack.ArmorMaterial;
+
+public class ArmorEntry implements IShopSpecialEntry, Listener
 {
+    private final Logger logger;
+
+    private ArmorEntry(final BukkitApiCore apiCore, final Logger logger) // aggregator wspiera SmartExecutora, wiec wstrzykiwanie dziala
+    {
+        apiCore.registerEvents(this);
+        this.logger = logger;
+    }
+
     @Override
     public boolean buy(final Player player, final Collection<ItemStack> items)
     {
@@ -28,6 +45,33 @@ public class ArmorEntry implements IShopSpecialEntry
         }
         player.getInventory().setArmorContents(armorContents);
         return true;
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onItemBuy(final ItemPreBuyEvent event)
+    {
+        if (! "ArmorEntry".equals(event.getShopEntry().getSpecialHandler()))
+        {
+            return;
+        }
+
+        final PlayerInventory inventory = event.getPlayer().getInventory();
+
+        final ItemStack itemStack = inventory.getArmorContents()[0];
+        if (itemStack == null)
+        {
+            return;
+        }
+
+        final ArmorMaterial hasType = ArmorMaterial.getArmorMaterial(itemStack.getType());
+        final ArmorMaterial buyingType = ArmorMaterial.getArmorMaterial(Material.getMaterial(event.getShopEntry().getItems().get(0).getId()));
+
+        if (buyingType.isBetterOrSame(hasType))
+        {
+            this.logger.log(Level.INFO, "Canceled purchase because player already has this armor, arena {0}, player {1}, armor {2}",
+                    new Object[]{event.getArena().getId(), event.getPlayer().getName(), event.getShopEntry().getInternalName()});
+            event.setBuyStatus(ItemPreBuyEvent.BuyStatus.ALREADY_HAVE);
+        }
     }
 }
 

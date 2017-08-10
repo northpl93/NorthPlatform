@@ -95,9 +95,30 @@ public class Team
         return this.players;
     }
 
+    /**
+     * Zwraca graczy zyjacych (BEZ wyeliminowanych i o czekujacych na respawn)
+     * @return gracze zyjacy/grajacy.
+     */
     public Set<Player> getAlivePlayers()
     {
         return this.players.stream().filter(player -> getPlayerStatus(player) == PlayerStatus.PLAYING).collect(Collectors.toSet());
+    }
+
+    /**
+     * Zwraca graczy zyjacych i oczekujacych na respawn (ALE NIE wyeliminowanych)
+     * @return gracze zyjacy i czekajacy na respawn.
+     */
+    public Set<Player> getNotEliminatedPlayers()
+    {
+        return this.players.stream().filter(player -> ! getPlayerData(player, BedWarsPlayer.class).isEliminated()).collect(Collectors.toSet());
+    }
+
+    /**
+     * @return liczba dodatkowych zyc posiadanych przez graczy.
+     */
+    public int countAdditionalLives()
+    {
+        return this.players.stream().mapToInt(player -> getPlayerData(player, BedWarsPlayer.class).getLives()).sum();
     }
 
     public Cuboid getTeamArena()
@@ -147,6 +168,12 @@ public class Team
         }
         for (final Player player : this.players)
         {
+            if (! player.isOnline())
+            {
+                // jesli gracz jest offline to nie uwzgledniamy go przy sprawdzaniu eliminacji teamu.
+                continue;
+            }
+
             final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
             if (playerData != null && ! playerData.isEliminated())
             {

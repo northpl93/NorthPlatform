@@ -50,7 +50,7 @@ public class GeneratorController
 
     public void tick()
     {
-        if (this.countItems(this.location, 1, 1, 1) >= this.generatorType.getOverload())
+        if (this.countItems(this.location, 2, 2, 2) >= this.generatorType.getOverload())
         {
             this.hudHandler.markOverload();
             return; // overload

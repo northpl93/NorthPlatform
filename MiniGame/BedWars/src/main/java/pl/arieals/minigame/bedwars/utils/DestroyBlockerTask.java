@@ -27,11 +27,10 @@ import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.block.BlockDamageEvent;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.bukkit.event.AsyncPacketInEvent;
+import pl.north93.zgame.api.bukkit.packets.event.AsyncPacketInEvent;
 
 public class DestroyBlockerTask implements Runnable, Listener
 {
@@ -99,19 +98,12 @@ public class DestroyBlockerTask implements Runnable, Listener
     }
 
     @EventHandler
-    public void onPlayerInteract(final PlayerInteractEvent event)
+    public void onBlockDamage(final BlockDamageEvent event)
     {
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
-        {
-            return;
-        }
-        if (event.getClickedBlock() == null)
-        {
-            return;
-        }
-
-        final BlockDestroyEntry destroyEntry = this.blocks.computeIfAbsent(event.getClickedBlock(), block -> new BlockDestroyEntry(block, event.getPlayer()));
+        final BlockDestroyEntry destroyEntry = this.blocks.computeIfAbsent(event.getBlock(), block -> new BlockDestroyEntry(block, event.getPlayer()));
         destroyEntry.heartbeat();
+
+        //event.setCancelled(true);
     }
 
     @EventHandler
@@ -215,6 +207,7 @@ class BlockDestroyEntry
 
         this.armorStandTime++;
 
+        // 1
         if (this.armorStand == null && this.armorStandTime >= 1)
         {
             final EntityArmorStand entityArmorStand = new EntityArmorStand(nmsWorld);
@@ -236,6 +229,7 @@ class BlockDestroyEntry
             this.armorStandTime = 0;
         }
 
+        // 2
         //if (this.armorStandTime > 5)
         //{
             //final EntityPlayer handle = ((CraftPlayer) player).getHandle();
@@ -251,6 +245,9 @@ class BlockDestroyEntry
             //this.armorStandTime = 0;
             //return;
         //}
+
+        // 3
+        //((CraftPlayer) this.player).getHandle().playerConnection.sendPacket(new PacketPlayOutBlockChange(nmsWorld, blockPosition));
 
         ((CraftPlayer) this.player).getHandle().playerConnection.sendPacket(packet);
         final EntityPlayer handle = ((CraftPlayer) this.player).getHandle();

@@ -20,13 +20,21 @@
                 <onClick>northplatform://minigame/bedwars/shop/buy/lapis.permanent_sword/$playerId</onClick>
             </button>
 
-            <!-- tarcza -->
+            <!-- obsidian -->
             <button pos="5,1">
+                <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/lapis.obsidian/$playerId"/>
+                <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/lapis.obsidian/$playerId"/>
+                <icon id="OBSIDIAN" name="@item.lapis.obsidian.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
+                <onClick>northplatform://minigame/bedwars/shop/buy/lapis.obsidian/$playerId</onClick>
+            </button>
+
+            <!-- tarcza -->
+            <!--<button pos="5,1">
                 <variable name="itemNameColor" value="northplatform://minigame/bedwars/shop/nameColor/lapis.shield/$playerId"/>
                 <variable name="itemLore" value="northplatform://minigame/bedwars/shop/lore/lapis.shield/$playerId"/>
                 <icon id="SHIELD" name="@item.lapis.shield.name$itemNameColor" lore="@gui.lore_placeholder$itemLore"/>
                 <onClick>northplatform://minigame/bedwars/shop/buy/lapis.shield/$playerId</onClick>
-            </button>
+            </button>-->
 
             <!-- back button -->
             <button pos="8,2">

@@ -1,5 +1,10 @@
 package pl.arieals.minigame.bedwars.listener;
 
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+
+
+import java.time.Duration;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,12 +16,17 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorModeChangeEvent;
+import pl.arieals.api.minigame.shared.api.PlayerStatus;
+import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.shop.ShopManager;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageEntry;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageTracker;
@@ -63,6 +73,39 @@ public class PlayerItemsListener implements Listener
             // blokujemy wywalanie itemow stalych z ekwipunku
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void giveWoodSwordWhenGameStarts(final GameStartEvent event)
+    {
+        for (final Player player : event.getArena().getPlayersManager().getPlayers())
+        {
+            this.giveWoodSword(player);
+        }
+    }
+
+    @EventHandler
+    public void giveWoodSwordWhenPlayerRespawn(final SpectatorModeChangeEvent event)
+    {
+        if (event.getNewStatus() != PlayerStatus.PLAYING || event.getOldStatus() != PlayerStatus.PLAYING_SPECTATOR)
+        {
+            return;
+        }
+
+        this.giveWoodSword(event.getPlayer());
+    }
+
+    /**
+     * Daje graczowi podanemu w argumencie startowy drewniany miecz.
+     * @param player gracz ktoremu dac miecz.
+     */
+    private void giveWoodSword(final Player player)
+    {
+        final ItemStack woodSword = new ItemStack(Material.WOOD_SWORD);
+        final ItemMeta itemMeta = woodSword.getItemMeta();
+        itemMeta.spigot().setUnbreakable(true);
+        woodSword.setItemMeta(itemMeta);
+        player.getInventory().addItem(woodSword); // drewniany miecz na start
     }
 
     /*
@@ -113,13 +156,20 @@ public class PlayerItemsListener implements Listener
     // daje przedmioty z mapy zabojcy danego gracza
     private void giveItemsToKiller(final Object2IntMap<Material> items, final Player death)
     {
-        final DamageEntry lastDamageByPlayer = DamageTracker.get().getContainer(death).getLastDamageByPlayer();
+        final DamageEntry lastDamageByPlayer = DamageTracker.get().getContainer(death).getLastDamageByPlayer(Duration.ofSeconds(10));
         if (lastDamageByPlayer == null)
         {
             return;
         }
         final Player lastDamager = lastDamageByPlayer.getPlayerDamager();
         assert lastDamager != null;
+
+        final BedWarsPlayer playerData = getPlayerData(lastDamager, BedWarsPlayer.class);
+        if (playerData == null || playerData.isEliminated())
+        {
+            // wyeliminowanemu graczowi nie dajemy surowcow.
+            return;
+        }
 
         for (final Object2IntMap.Entry<Material> entry : items.object2IntEntrySet())
         {

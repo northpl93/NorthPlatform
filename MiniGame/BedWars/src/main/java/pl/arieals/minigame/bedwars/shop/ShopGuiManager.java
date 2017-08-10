@@ -1,5 +1,8 @@
 package pl.arieals.minigame.bedwars.shop;
 
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
+
+
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -13,6 +16,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.minigame.bedwars.cfg.BwShopEntry;
+import pl.arieals.minigame.bedwars.event.ItemPreBuyEvent;
 import pl.arieals.minigame.bedwars.shop.gui.ShopArmor;
 import pl.arieals.minigame.bedwars.shop.gui.ShopBase;
 import pl.arieals.minigame.bedwars.shop.gui.ShopBows;
@@ -22,6 +26,7 @@ import pl.arieals.minigame.bedwars.shop.gui.ShopMain;
 import pl.arieals.minigame.bedwars.shop.gui.ShopMaterials;
 import pl.arieals.minigame.bedwars.shop.gui.ShopSwords;
 import pl.arieals.minigame.bedwars.shop.gui.ShopTools;
+import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.ChatUtils;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.messages.Messages;
@@ -31,12 +36,14 @@ import pl.north93.zgame.api.global.uri.UriHandler;
 
 public final class ShopGuiManager
 {
-    private final ShopManager shopManager;
-    private final MessagesBox shopMessages;
+    private final BukkitApiCore apiCore;
+    private final ShopManager   shopManager;
+    private final MessagesBox   shopMessages;
 
     @Bean
-    private ShopGuiManager(final ShopManager shopManager, final @Messages("BedWarsShop") MessagesBox shopMessages)
+    private ShopGuiManager(final BukkitApiCore apiCore, final ShopManager shopManager, final @Messages("BedWarsShop") MessagesBox shopMessages)
     {
+        this.apiCore = apiCore;
         this.shopManager = shopManager;
         this.shopMessages = shopMessages;
     }
@@ -90,8 +97,11 @@ public final class ShopGuiManager
         final Player player = Bukkit.getPlayer(UUID.fromString(parameters.get("playerId")));
         final String name = parameters.get("name");
 
-        final ItemStack price = this.shopManager.getShopEntry(name).getPrice().createItemStack();
-        if (player.getInventory().containsAtLeast(price, price.getAmount()))
+        final BwShopEntry shopEntry = this.shopManager.getShopEntry(name);
+        final ItemStack price = shopEntry.getPrice().createItemStack();
+
+        final ItemPreBuyEvent preBuyEvent = this.apiCore.callEvent(new ItemPreBuyEvent(getArena(player), player, shopEntry, price, true));
+        if (preBuyEvent.getBuyStatus().canBuy())
         {
             return "a";
         }
@@ -114,14 +124,17 @@ public final class ShopGuiManager
 
         final String description = this.shopMessages.getMessage(locale, "item." + name + ".lore");
 
-        if (player.getInventory().containsAtLeast(priceItem, priceItem.getAmount()))
+        final ItemPreBuyEvent preBuyEvent = this.apiCore.callEvent(new ItemPreBuyEvent(getArena(player), player, shopEntry, priceItem, true));
+        final ItemPreBuyEvent.BuyStatus buyStatus = preBuyEvent.getBuyStatus();
+
+        if (buyStatus.canBuy())
         {
             return this.shopMessages.getMessage(locale,
                     "gui.shop.item_lore.available",
                     description,
                     price);
         }
-        else
+        else if (buyStatus == ItemPreBuyEvent.BuyStatus.NOT_ENOUGH_CURRENCY)
         {
             final String currencyName = ChatUtils.stripColor(this.shopMessages.getMessage(locale, currencyKey + ".many", ""));
             return this.shopMessages.getMessage(locale,
@@ -129,6 +142,13 @@ public final class ShopGuiManager
                     description,
                     price,
                     currencyName);
+        }
+        else
+        {
+            return this.shopMessages.getMessage(locale,
+                    "gui.shop.item_lore.already_had",
+                    description,
+                    price);
         }
     }
 

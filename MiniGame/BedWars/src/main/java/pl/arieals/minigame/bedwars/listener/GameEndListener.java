@@ -1,10 +1,16 @@
 package pl.arieals.minigame.bedwars.listener;
 
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,11 +21,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
+import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
+import pl.arieals.minigame.bedwars.arena.PlayerReconnectTimedOut;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.event.TeamEliminatedEvent;
+import pl.north93.zgame.api.bukkit.utils.SimpleCountdown;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
@@ -28,6 +37,9 @@ import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public class GameEndListener implements Listener
 {
+    private static final int RECONNECT_TIMEOUT = 60 * 20;
+    @Inject
+    private Logger logger;
     @Inject @Messages("BedWars")
     private MessagesBox messages;
 
@@ -42,7 +54,20 @@ public class GameEndListener implements Listener
             return;
         }
 
+        this.logger.log(Level.INFO, "Team {0} eliminated on arena {1}", new Object[]{event.getEliminatedTeam().getName(), arena.getId()});
+
         final Team team = event.getEliminatedTeam();
+        for (final Player player : team.getPlayers())
+        {
+            // jesli gracz jest offline to wtedy mogl nie dostac statusu wyeliminowanego
+            // wiec recznie sie upewniamy, ze wszystko jest ok
+            final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+            if (playerData == null)
+            {
+                continue;
+            }
+            playerData.setEliminated(true);
+        }
 
         final TranslatableString teamName = TranslatableString.of(this.messages, "@team.nominative." + team.getName());
         arena.getPlayersManager().broadcast(this.messages, "team_eliminated", MessageLayout.SEPARATED, team.getColorChar(), teamName);
@@ -52,6 +77,45 @@ public class GameEndListener implements Listener
         {
             arena.setGamePhase(GamePhase.POST_GAME);
         }
+    }
+
+    @EventHandler
+    public void endArenaWhenOnePlayerLeft(final PlayerQuitArenaEvent event)
+    {
+        final BedWarsPlayer playerData = getPlayerData(event.getPlayer(), BedWarsPlayer.class);
+        if (playerData == null)
+        {
+            return;
+        }
+
+        final Team team = playerData.getTeam();
+        final Object[] playerLogData = {event.getPlayer().getName(), event.getArena().getId()};
+
+        if (team.isBedAlive())
+        {
+            // team ma lozko, ustawiamy timeout eliminacji gracza na 60 sekund.
+            // Po tym czasie juz nie wroci do gry
+            // Nic wiecej nie trzeba robic, gracz albo wroci do gry albo ktos mu zniszczy lozko.
+            event.getArena().getScheduler().runTaskLater(new PlayerReconnectTimedOut(playerData), RECONNECT_TIMEOUT);
+            this.logger.log(Level.INFO, "Player {0} has 60 seconds to return to the game on arena {1}.", playerLogData);
+            return;
+        }
+
+        this.logger.log(Level.INFO, "Player {0} eliminated because he disconnected without bed on arena {1}", playerLogData);
+        playerData.setEliminated(true);
+        if (! team.isTeamAlive())
+        {
+            Bukkit.getPluginManager().callEvent(new TeamEliminatedEvent(event.getArena(), team));
+        }
+    }
+
+    @EventHandler
+    public void scheduleArenaRestart(final GameEndEvent event)
+    {
+        final LocalArena arena = event.getArena();
+
+        final SimpleCountdown restartCountdown = new SimpleCountdown(200).endCallback(arena::prepareNewCycle);
+        arena.getScheduler().runSimpleCountdown(restartCountdown);
     }
 
     @EventHandler

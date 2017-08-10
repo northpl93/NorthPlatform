@@ -15,7 +15,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.minigame.bedwars.cfg.BwConfig;
+import pl.arieals.minigame.bedwars.cfg.BwShopConfig;
 import pl.arieals.minigame.bedwars.event.UpgradeInstallEvent;
 import pl.arieals.minigame.bedwars.shop.upgrade.IUpgrade;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -25,9 +25,9 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 public class UpgradeInstallListener implements Listener
 {
     @Inject
-    private BwConfig    config;
+    private BwShopConfig config;
     @Inject @Messages("BedWarsShop")
-    private MessagesBox messagesShop;
+    private MessagesBox  messagesShop;
 
     @EventHandler
     public void onUpgradeInstall(final UpgradeInstallEvent event)

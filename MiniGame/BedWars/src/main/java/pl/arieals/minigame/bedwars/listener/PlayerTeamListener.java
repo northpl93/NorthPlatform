@@ -16,8 +16,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -30,7 +28,6 @@ import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.cfg.BwConfig;
-import pl.arieals.minigame.bedwars.event.TeamEliminatedEvent;
 import pl.arieals.minigame.bedwars.scoreboard.GameScoreboard;
 import pl.arieals.minigame.bedwars.scoreboard.LobbyScoreboard;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
@@ -101,12 +98,6 @@ public class PlayerTeamListener implements Listener
 
             this.scoreboardManager.setLayout(player, new GameScoreboard());
 
-            final ItemStack woodSword = new ItemStack(Material.WOOD_SWORD);
-            final ItemMeta itemMeta = woodSword.getItemMeta();
-            itemMeta.spigot().setUnbreakable(true);
-            woodSword.setItemMeta(itemMeta);
-            player.getInventory().addItem(woodSword); // drewniany miecz na start
-
             final String teamNameDative = this.messages.getMessage(player.spigot().getLocale(), "team.dative." + smallestTeam.getName());
             this.messages.sendMessage(player, "separator");
             this.messages.sendMessage(player, "welcome", MessageLayout.CENTER, smallestTeam.getColorChar(), teamNameDative);
@@ -129,7 +120,7 @@ public class PlayerTeamListener implements Listener
             event.setQuitMessage(null);
         }
 
-        final Team team = playerData.getTeam();
+        /*final Team team = playerData.getTeam();
         if (team != null)
         {
             team.getPlayers().remove(event.getPlayer());
@@ -139,7 +130,7 @@ public class PlayerTeamListener implements Listener
                 // to go eliminujemy
                 this.apiCore.callEvent(new TeamEliminatedEvent(event.getArena(), team));
             }
-        }
+        }*/ // zmiana wymagan, obsluga reconnectu do gry, etc
     }
 
     @EventHandler
