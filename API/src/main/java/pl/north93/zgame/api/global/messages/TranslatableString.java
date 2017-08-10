@@ -112,6 +112,11 @@ public abstract class TranslatableString
     
     public abstract String toString();
     
+    public static TranslatableString constant(String string)
+    {
+        return new ConstantTranslatableString(string);
+    }
+    
     public static TranslatableString of(MessagesBox messagesBox, String string)
     {
         if ( string == null )
