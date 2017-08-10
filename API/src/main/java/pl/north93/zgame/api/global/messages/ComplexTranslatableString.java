@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import com.google.common.base.Preconditions;
+
 import pl.north93.zgame.api.global.utils.Vars;
 
 class ComplexTranslatableString extends TranslatableString
@@ -14,6 +16,9 @@ class ComplexTranslatableString extends TranslatableString
     
     ComplexTranslatableString(TranslatableString string1, TranslatableString string2)
     {
+        Preconditions.checkState(string1 != null);
+        Preconditions.checkState(string2 != null);
+        
         this.string1 = string1;
         this.string2 = string2;
     }
