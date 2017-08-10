@@ -68,11 +68,19 @@ public class PlayerListener implements Listener
     {
         final EntityPlayer joiningPlayer = ((CraftPlayer) player).getHandle();
         final EntityTrackerEntry joiningTrackerEntry = getTrackerEntry(joiningPlayer);
+        if (joiningTrackerEntry == null)
+        {
+            return;
+        }
 
         for (final Player arenaPlayer : arena.getPlayersManager().getPlayers())
         {
             final EntityPlayer arenaEntityPlayer = ((CraftPlayer) arenaPlayer).getHandle();
             final EntityTrackerEntry arenaTrackerEntry = getTrackerEntry(arenaEntityPlayer);
+            if (arenaTrackerEntry == null)
+            {
+                continue;
+            }
 
             // untrackujemy wchodzacego gracza z trackera gracza bedacego juz na arenie
             arenaTrackerEntry.a(joiningPlayer); // if (this.trackedPlayers.contains(entityplayer)) {
