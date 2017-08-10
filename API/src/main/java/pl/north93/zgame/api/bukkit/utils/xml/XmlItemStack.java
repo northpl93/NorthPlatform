@@ -23,11 +23,11 @@ import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
 public class XmlItemStack
 {
     @XmlAttribute(required = true)
-    private String id;
+    private String id = Material.STONE.name();
     @XmlAttribute
-    private int    data;
+    private int    data = 0;
     @XmlAttribute
-    private int    count;
+    private int    count = 1;
     
     @XmlElement
     private String name;
@@ -139,6 +139,13 @@ public class XmlItemStack
             material = Material.getMaterial(this.id);
         }
 
+        if ( material == null )
+        {
+            // Print error stack trace without throw an exception
+            new IllegalArgumentException("Cannot recognize item by id: '" + this.id).printStackTrace();
+            return null;
+        }
+        
         final ItemStackBuilder builder = new ItemStackBuilder().material(material).data(data).amount(count).name(name).lore(this.lore);
         this.enchants.forEach(builder::enchant);
         return builder.build();
