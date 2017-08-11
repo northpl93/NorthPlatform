@@ -29,11 +29,11 @@ public class PlayerReconnectTimedOut implements Runnable
         }
 
         this.logger.log(Level.INFO, "Player {0} doesn't returned in time, marked as eliminated.", this.player.getBukkitPlayer().getName());
-        this.player.setEliminated(true);
-        // nie ma potrzeby wywolywania eliminatedevent.
-        //
-        // jesli ktos zniszczyl lozko to wtedy poszedl teameliminatedevent,
-        // jak lozko jeszcze stoi to ktos je kiedys zniszczy to pojdzie eliminatedevent
+        this.player.eliminate();
+
+        // sprawdzamy czy team powinien zostac wyeliminowany
+        // to tylko zabezpieczenie bo teoretycznie na 100% bedzie tu wyeliminowany, albo nie bedzie musial byc wyeliminowany
+        this.player.getTeam().checkEliminated();
     }
 
     @Override

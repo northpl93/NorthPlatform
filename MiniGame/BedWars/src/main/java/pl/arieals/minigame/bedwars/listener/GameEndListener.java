@@ -1,5 +1,7 @@
 package pl.arieals.minigame.bedwars.listener;
 
+import static org.diorite.utils.function.FunctionUtils.not;
+
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
@@ -10,7 +12,6 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -66,14 +67,14 @@ public class GameEndListener implements Listener
             {
                 continue;
             }
-            playerData.setEliminated(true);
+            playerData.eliminate();
         }
 
         final TranslatableString teamName = TranslatableString.of(this.messages, "@team.nominative." + team.getName());
         arena.getPlayersManager().broadcast(this.messages, "team_eliminated", MessageLayout.SEPARATED, team.getColorChar(), teamName);
 
         final BedWarsArena arenaData = arena.getArenaData();
-        if (arenaData.getTeams().stream().filter(Team::isTeamAlive).count() <= 1)
+        if (arenaData.getTeams().stream().filter(not(Team::isEliminated)).count() <= 1)
         {
             arena.setGamePhase(GamePhase.POST_GAME);
         }
@@ -83,7 +84,7 @@ public class GameEndListener implements Listener
     public void endArenaWhenOnePlayerLeft(final PlayerQuitArenaEvent event)
     {
         final BedWarsPlayer playerData = getPlayerData(event.getPlayer(), BedWarsPlayer.class);
-        if (playerData == null)
+        if (event.getArena().getGamePhase() != GamePhase.STARTED || playerData == null)
         {
             return;
         }
@@ -102,11 +103,8 @@ public class GameEndListener implements Listener
         }
 
         this.logger.log(Level.INFO, "Player {0} eliminated because he disconnected without bed on arena {1}", playerLogData);
-        playerData.setEliminated(true);
-        if (! team.isTeamAlive())
-        {
-            Bukkit.getPluginManager().callEvent(new TeamEliminatedEvent(event.getArena(), team));
-        }
+        playerData.eliminate();
+        team.checkEliminated();
     }
 
     @EventHandler
@@ -127,7 +125,7 @@ public class GameEndListener implements Listener
         players.broadcast(this.messages, "separator");
         players.broadcast(this.messages, "end.header", MessageLayout.CENTER);
 
-        final Optional<Team> winner = arenaData.getTeams().stream().filter(Team::isTeamAlive).findAny();
+        final Optional<Team> winner = arenaData.getTeams().stream().filter(not(Team::isEliminated)).findAny();
         if (winner.isPresent())
         {
             final TranslatableString teamNameKey = TranslatableString.of(this.messages, "@team.scoreboard." + winner.get().getName());

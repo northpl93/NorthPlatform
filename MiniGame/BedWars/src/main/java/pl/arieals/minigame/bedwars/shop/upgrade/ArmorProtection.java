@@ -59,21 +59,15 @@ public class ArmorProtection implements IUpgrade, Listener
             return;
         }
 
-        final ItemStack itemStack = event.getPlayer().getInventory().getArmorContents()[3]; // czapka
-        if (itemStack == null)
-        {
-            return;
-        }
-
-        final int level = itemStack.getEnchantmentLevel(Enchantment.PROTECTION_ENVIRONMENTAL);
-        if (level == 0)
+        final int upgradeLevel = this.getUpgradeLevel(event.getPlayer());
+        if (upgradeLevel <= 0)
         {
             return;
         }
 
         for (final ItemStack stack : event.getItems())
         {
-            stack.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, level);
+            stack.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, upgradeLevel);
         }
     }
 

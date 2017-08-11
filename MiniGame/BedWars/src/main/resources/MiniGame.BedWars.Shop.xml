@@ -99,9 +99,13 @@
             </items>
             <price id="EMERALD" count="4"/>
         </shopEntry>
-        <shopEntry internalName="swords.knockback"> <!-- drewniany miecz -->
+        <shopEntry internalName="swords.knockback"> <!-- maczuga -->
             <items>
-                <item id="BLAZE_ROD" count="1"/>
+                <item id="BLAZE_ROD" count="1">
+                    <enchants>
+                        <enchant enchantment="KNOCKBACK" level="1"/>
+                    </enchants>
+                </item>
             </items>
             <price id="GOLD_INGOT" count="14"/>
         </shopEntry>
@@ -212,7 +216,7 @@
             <items></items>
             <price id="INK_SACK" data="4" count="1"/>
         </shopEntry>
-        <shopEntry internalName="lapis.permanent_sword"> <!-- pernamentny diamentowy miecz -->
+        <shopEntry internalName="lapis.permanent_sword" isPersistent="true"> <!-- pernamentny diamentowy miecz -->
             <items>
                 <item id="DIAMOND_SWORD" count="1"/>
             </items>

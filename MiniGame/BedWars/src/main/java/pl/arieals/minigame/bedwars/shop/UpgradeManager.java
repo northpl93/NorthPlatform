@@ -8,6 +8,8 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
+import javax.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -156,6 +158,11 @@ public class UpgradeManager
                         diamondsWord);
             }
         }
+    }
+
+    public @Nullable IUpgrade getUpgradeByName(final String upgradeName)
+    {
+        return this.upgrades.get(upgradeName);
     }
 
     private IUpgrade getUpgrade(final Map<String, String> parameters)

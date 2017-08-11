@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -17,10 +18,12 @@ import org.bukkit.entity.Player;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.minigame.bedwars.cfg.BwTeamConfig;
+import pl.arieals.minigame.bedwars.event.TeamEliminatedEvent;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 
 public class Team
 {
+    private final LocalArena arena;
     private final BwTeamConfig config;
     private Set<Player> players;
     private Cuboid      teamArena;
@@ -28,10 +31,12 @@ public class Team
     private Location    spawn;
     private Location    bedLocation;
     private boolean     isBedAlive;
+    private boolean     isAlreadyEliminated;
     private Upgrades    upgrades;
 
     public Team(final LocalArena arena, final BwTeamConfig config)
     {
+        this.arena = arena;
         this.config = config;
 
         final World currentWorld = arena.getWorld().getCurrentWorld();
@@ -41,7 +46,17 @@ public class Team
         this.spawn = config.getSpawnLocation().toBukkit(currentWorld);
         this.bedLocation = config.getBedLocation().toBukkit(currentWorld);
         this.isBedAlive = true;
+        this.isAlreadyEliminated = false;
         this.upgrades = new Upgrades(arena, this);
+    }
+
+    /**
+     * Zwraca arene powiazana z tym teamem bedwarsow.
+     * @return arena do ktorej nalezy ten team.
+     */
+    public LocalArena getArena()
+    {
+        return this.arena;
     }
 
     public BwTeamConfig getConfig()
@@ -156,11 +171,39 @@ public class Team
     }
 
     /**
+     * Sprawdza czy ten team zostal juz wywliminowany.
+     * Uwaga, to pobiera zawartosc zmiennej, nie sprawdza
+     * stanu faktycznego.
+     * @return czy team zostal wyeliminowany.
+     */
+    public boolean isEliminated()
+    {
+        return this.isAlreadyEliminated;
+    }
+
+    /**
+     * Sprawdza czy team pelnia warunki do eliminacji i ewentualnie
+     * eliminuje wywolujac tym samym event.
+     */
+    public void checkEliminated()
+    {
+        if (this.isAlreadyEliminated)
+        {
+            return;
+        }
+
+        if (! this.isTeamAlive())
+        {
+            this.forceEliminate();
+        }
+    }
+
+    /**
      * Sprawdza czy dany team jest zywy, tzn.
      * czy ma lozku lub przynajmniej jednego zywego/respawnujacego sie gracza
      * @return czy team jest zywy.
      */
-    public boolean isTeamAlive()
+    private boolean isTeamAlive()
     {
         if (this.isBedAlive)
         {
@@ -181,6 +224,16 @@ public class Team
             }
         }
         return false;
+    }
+
+    private void forceEliminate()
+    {
+        if (this.isAlreadyEliminated)
+        {
+            return;
+        }
+        this.isAlreadyEliminated = true;
+        Bukkit.getPluginManager().callEvent(new TeamEliminatedEvent(this.arena, this));
     }
 
     public Upgrades getUpgrades()

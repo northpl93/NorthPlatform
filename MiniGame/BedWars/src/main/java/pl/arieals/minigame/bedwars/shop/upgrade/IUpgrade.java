@@ -1,10 +1,14 @@
 package pl.arieals.minigame.bedwars.shop.upgrade;
 
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+
+
 import java.util.Map;
 
 import org.bukkit.entity.Player;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.cfg.BwShopConfig;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -38,4 +42,15 @@ public interface IUpgrade
     void apply(LocalArena arena, Team team, int level);
 
     int maxLevel();
+
+    default int getUpgradeLevel(final Player player)
+    {
+        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        if (playerData == null || playerData.getTeam() == null)
+        {
+            return 0;
+        }
+
+        return playerData.getTeam().getUpgrades().getUpgradeLevel(this);
+    }
 }

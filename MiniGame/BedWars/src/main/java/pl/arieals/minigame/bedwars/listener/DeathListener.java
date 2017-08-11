@@ -4,13 +4,11 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.setPlayerStatus;
-import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColorCodes;
 import static pl.north93.zgame.api.global.utils.JavaUtils.instanceOf;
 
 
 import java.time.Duration;
-
-import com.destroystokyo.paper.Title;
+import java.util.logging.Level;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,8 +27,6 @@ import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.RevivePlayerCountdown;
 import pl.arieals.minigame.bedwars.arena.Team;
-import pl.arieals.minigame.bedwars.event.TeamEliminatedEvent;
-import pl.arieals.minigame.bedwars.hotbar.SpectatorHotbar;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageContainer;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageEntry;
@@ -91,27 +87,28 @@ public class DeathListener implements Listener
     public void onPlayerDeath(final PlayerDeathEvent event)
     {
         final Player player = event.getEntity();
-
-        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
         final LocalArena arena = getArena(player);
+        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+
         final Team team = playerData.getTeam();
-        if (team == null)
+        if (arena == null || team == null)
         {
             return;
         }
 
-        player.setHealth(20);
+        this.apiCore.getLogger().log(Level.INFO, "Player {0} death on arena {1}", new Object[]{player.getName(), arena.getId()});
+
+        player.setHealth(player.getMaxHealth());
         setPlayerStatus(player, PlayerStatus.PLAYING_SPECTATOR);
+
+        // usuwamy wszystkie efekty potionek, upgradey zadbaja zeby je oddac
+        player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
 
         this.handleKiller(event, arena, playerData); // podbija licznik zabojstw, wysyla wiadomosc i daje nagrode zabojcy
         this.handleRespawn(player, arena, playerData); // zmniejsza licznik zycia, uruchamia task respawnujacy, wysyla title
         this.safePlaceTeleport(player, team, arena);
 
-        if (! team.isTeamAlive())
-        {
-            // team wyeliminowany tym zabojstwem, wywolujemy event
-            this.apiCore.callEvent(new TeamEliminatedEvent(arena, team));
-        }
+        team.checkEliminated();
     }
 
     private void handleRespawn(final Player player, final LocalArena arena, final BedWarsPlayer playerData)
@@ -135,17 +132,7 @@ public class DeathListener implements Listener
             }
         }
 
-        player.getInventory().clear(); // czyscimy ekwipunek po wyeliminowaniu
-        player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
-        playerData.setEliminated(true);
-
-        final String locale = player.spigot().getLocale();
-        final String title = translateAlternateColorCodes(this.messages.getMessage(locale, "die.norespawn.title"));
-        final String subtitle = translateAlternateColorCodes(this.messages.getMessage(locale, "die.norespawn.subtitle"));
-        player.sendTitle(new Title(title, subtitle, 20, 20, 20));
-
-        final SpectatorHotbar spectatorHotbar = new SpectatorHotbar();
-        spectatorHotbar.display(player);
+        playerData.eliminate();
     }
 
     private void safePlaceTeleport(final Player player, final Team team, final LocalArena arena)
@@ -196,11 +183,11 @@ public class DeathListener implements Listener
 
         // jesli gracz ma 0 i mniej zycia, a lozko jest zniszczone to nastapila eliminacja
         final boolean elimination = deathData.getLives() <= 0 && ! team.isBedAlive();
+        final String deathMessageKey = this.getDeathMessageKey(player, elimination);
 
         if (elimination)
         {
-            arena.getPlayersManager().broadcast(this.messages,
-                    "die.broadcast.eliminated_by",
+            arena.getPlayersManager().broadcast(this.messages, deathMessageKey,
                     team.getColorChar(),
                     player.getDisplayName(),
                     damagerData.getTeam().getColorChar(),
@@ -208,13 +195,30 @@ public class DeathListener implements Listener
         }
         else
         {
-            arena.getPlayersManager().broadcast(this.messages,
-                    "die.broadcast.killed_by",
+            arena.getPlayersManager().broadcast(this.messages, deathMessageKey,
                     team.getColorChar(),
                     player.getDisplayName(),
                     damagerData.getTeam().getColorChar(),
                     damager.getDisplayName());
         }
+    }
+
+    private String getDeathMessageKey(final Player deathPlayer, final boolean elimination)
+    {
+        final StringBuilder builder = new StringBuilder("die.broadcast.");
+
+        if (deathPlayer.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.VOID)
+        {
+            builder.append("fall.");
+        }
+        else
+        {
+            builder.append("kill.");
+        }
+
+        builder.append(elimination ? "eliminated_by" : "killed_by");
+
+        return builder.toString();
     }
 
     @Override

@@ -24,10 +24,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
-import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorModeChangeEvent;
-import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
+import pl.arieals.minigame.bedwars.event.PlayerRevivedEvent;
 import pl.arieals.minigame.bedwars.shop.ShopManager;
+import pl.arieals.minigame.bedwars.shop.UpgradeManager;
+import pl.arieals.minigame.bedwars.shop.upgrade.RoadOfWarrior;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageEntry;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageTracker;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -38,9 +39,11 @@ import pl.north93.zgame.api.global.messages.PluralForm;
 public class PlayerItemsListener implements Listener
 {
     @Inject
-    private ShopManager shopManager;
+    private ShopManager    shopManager;
+    @Inject
+    private UpgradeManager upgradeManager;
     @Inject @Messages("BedWars")
-    private MessagesBox messages;
+    private MessagesBox    messages;
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onInventoryClick(final InventoryClickEvent event)
@@ -73,39 +76,6 @@ public class PlayerItemsListener implements Listener
             // blokujemy wywalanie itemow stalych z ekwipunku
             event.setCancelled(true);
         }
-    }
-
-    @EventHandler
-    public void giveWoodSwordWhenGameStarts(final GameStartEvent event)
-    {
-        for (final Player player : event.getArena().getPlayersManager().getPlayers())
-        {
-            this.giveWoodSword(player);
-        }
-    }
-
-    @EventHandler
-    public void giveWoodSwordWhenPlayerRespawn(final SpectatorModeChangeEvent event)
-    {
-        if (event.getNewStatus() != PlayerStatus.PLAYING || event.getOldStatus() != PlayerStatus.PLAYING_SPECTATOR)
-        {
-            return;
-        }
-
-        this.giveWoodSword(event.getPlayer());
-    }
-
-    /**
-     * Daje graczowi podanemu w argumencie startowy drewniany miecz.
-     * @param player gracz ktoremu dac miecz.
-     */
-    private void giveWoodSword(final Player player)
-    {
-        final ItemStack woodSword = new ItemStack(Material.WOOD_SWORD);
-        final ItemMeta itemMeta = woodSword.getItemMeta();
-        itemMeta.spigot().setUnbreakable(true);
-        woodSword.setItemMeta(itemMeta);
-        player.getInventory().addItem(woodSword); // drewniany miecz na start
     }
 
     /*
@@ -185,6 +155,46 @@ public class PlayerItemsListener implements Listener
             final String messageKey = PluralForm.transformKey("die.received_items." + type, entry.getIntValue());
             this.messages.sendMessage(lastDamager, messageKey, entry.getIntValue());
         }
+    }
+
+    @EventHandler // dodajemy drewniany miecz gdy gra startuje
+    public void giveWoodSwordWhenGameStarts(final GameStartEvent event)
+    {
+        for (final Player player : event.getArena().getPlayersManager().getPlayers())
+        {
+            this.giveWoodSword(player);
+        }
+    }
+
+    @EventHandler // dodajemy drewniany miecz gdy gracz sie respawni
+    public void giveWoodSwordWhenPlayerRespawn(final PlayerRevivedEvent event)
+    {
+        final Player bukkitPlayer = event.getBedWarsPlayer().getBukkitPlayer();
+        this.giveWoodSword(bukkitPlayer);
+    }
+
+    /**
+     * Daje graczowi podanemu w argumencie startowy drewniany miecz.
+     * @param player gracz ktoremu dac miecz.
+     */
+    private void giveWoodSword(final Player player)
+    {
+        final ItemStack woodSword = new ItemStack(Material.WOOD_SWORD);
+        final ItemMeta itemMeta = woodSword.getItemMeta();
+        itemMeta.spigot().setUnbreakable(true);
+        woodSword.setItemMeta(itemMeta);
+
+        final RoadOfWarrior upgrade = (RoadOfWarrior) this.upgradeManager.getUpgradeByName("RoadOfWarrior");
+        if (upgrade != null)
+        {
+            final int upgradeLevel = upgrade.getUpgradeLevel(player);
+            if (upgradeLevel > 0)
+            {
+                upgrade.apply(woodSword, upgradeLevel);
+            }
+        }
+
+        player.getInventory().addItem(woodSword); // drewniany miecz na start
     }
 
     @Override

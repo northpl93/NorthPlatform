@@ -50,7 +50,7 @@ public class BuildListener implements Listener
         final Block block = event.getBlock();
         final LocalArena arena = getArena(block.getWorld());
 
-        if (arena.getGamePhase() != GamePhase.STARTED)
+        if (arena == null || arena.getGamePhase() != GamePhase.STARTED)
         {
             // gdy gra nie wystartowala to nic nie mozna robic
             event.setCancelled(true);
@@ -73,16 +73,15 @@ public class BuildListener implements Listener
     {
         final Block block = event.getBlock();
         final LocalArena arena = getArena(block.getWorld());
-        final BedWarsArena arenaData = arena.getArenaData();
-        final BedWarsPlayer playerData = getPlayerData(event.getPlayer(), BedWarsPlayer.class);
-
-        if (arena.getGamePhase() != GamePhase.STARTED)
+        if (arena == null || arena.getGamePhase() != GamePhase.STARTED)
         {
             // gdy gra nie wystartowala to nic nie mozna robic
             event.setCancelled(true);
             return;
         }
 
+        final BedWarsArena arenaData = arena.getArenaData();
+        final BedWarsPlayer playerData = getPlayerData(event.getPlayer(), BedWarsPlayer.class);
         if (this.checkSecureRegion(arenaData, block))
         {
             this.messages.sendMessage(event.getPlayer(), "no_permissions");

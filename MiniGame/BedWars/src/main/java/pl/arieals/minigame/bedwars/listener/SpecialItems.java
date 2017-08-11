@@ -13,6 +13,7 @@ import org.bukkit.craftbukkit.v1_10_R1.entity.CraftEntity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
@@ -134,14 +135,21 @@ public class SpecialItems implements Listener
             return;
         }
 
-        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
-        if (playerData == null)
+        final ItemStack itemInMainHand = inventory.getItemInMainHand();
+        if (itemInMainHand.getType() != Material.MONSTER_EGG || ((SpawnEgg) itemInMainHand.getData()).getSpawnedType() == EntityType.SKELETON)
         {
             return;
         }
 
-        final ItemStack itemInMainHand = inventory.getItemInMainHand();
-        if (itemInMainHand.getType() != Material.MONSTER_EGG || ((SpawnEgg) itemInMainHand.getData()).getSpawnedType() == EntityType.SKELETON)
+        final LocalArena arena = getArena(player);
+        assert arena != null;
+        if (arena.getDeathMatch().getState().isActive())
+        {
+            return;
+        }
+
+        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        if (playerData == null)
         {
             return;
         }
@@ -185,6 +193,7 @@ public class SpecialItems implements Listener
         final CraftEntity craftEntity = (CraftEntity) event.getEntity();
         if (craftEntity.getHandle() instanceof BedWarsSkeleton)
         {
+            event.setDroppedExp(0);
             event.getDrops().clear();
         }
     }
@@ -192,21 +201,30 @@ public class SpecialItems implements Listener
     @EventHandler
     public void disableAllySkeletonDamage(final EntityDamageByEntityEvent event)
     {
-        final Player player = instanceOf(event.getDamager(), Player.class);
         final BedWarsSkeleton skeleton = instanceOf(((CraftEntity) event.getEntity()).getHandle(), BedWarsSkeleton.class);
+        if (skeleton == null)
+        {
+            return;
+        }
 
-        if (player == null || skeleton == null)
+        final Player player;
+        if (event.getDamager() instanceof Projectile)
+        {
+            final Projectile projectileDamager = (Projectile) event.getDamager();
+            player = instanceOf(projectileDamager.getShooter(), Player.class);
+        }
+        else
+        {
+            player = instanceOf(event.getDamager(), Player.class);
+        }
+
+        if (player == null)
         {
             return;
         }
 
         final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
-        if (playerData == null)
-        {
-            return;
-        }
-
-        if (skeleton.getOwner() == playerData.getTeam())
+        if (playerData == null || skeleton.getOwner() == playerData.getTeam())
         {
             event.setCancelled(true);
         }

@@ -21,7 +21,6 @@ import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.event.BedDestroyedEvent;
-import pl.arieals.minigame.bedwars.event.TeamEliminatedEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
@@ -80,10 +79,7 @@ public class BedDestroyListener implements Listener
             player.sendTitle(new Title(title, subtitle, 20, 20, 20));
         }
 
-        if (! team.isTeamAlive())
-        {
-            this.apiCore.callEvent(new TeamEliminatedEvent(arena, team));
-        }
+        team.checkEliminated();
     }
 
     @Override

@@ -22,6 +22,7 @@ import pl.arieals.minigame.bedwars.listener.DeathListener;
 import pl.arieals.minigame.bedwars.listener.DeathMatchStartListener;
 import pl.arieals.minigame.bedwars.listener.GameEndListener;
 import pl.arieals.minigame.bedwars.listener.ItemBuyListener;
+import pl.arieals.minigame.bedwars.listener.PlayerEliminationListener;
 import pl.arieals.minigame.bedwars.listener.PlayerItemsListener;
 import pl.arieals.minigame.bedwars.listener.PlayerTeamListener;
 import pl.arieals.minigame.bedwars.listener.SpecialItems;
@@ -59,6 +60,7 @@ public class BedWarsComponent extends Component
                 new BuildListener(), // crafting,budowanie,niszczenie
                 new DeathListener(), // smierc gracza
                 new BedDestroyListener(), // zniszczenie lozka
+                new PlayerEliminationListener(), // eliminacja gracza
                 new BwSpectatorListener(), // spectator
                 new PlayerItemsListener(), // pilnuje ekwipunku, dropu po śmierci
                 new ItemBuyListener(), // zakup itemów,wysyłanie komunikatu zakupu

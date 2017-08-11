@@ -130,27 +130,23 @@ public class GameScoreboard implements IScoreboardLayout
         arenaData.getTeams().stream().sorted(comparing(Team::getScoreboardOrder)).forEach(team ->
         {
             final String teamName = this.messages.getMessage(locale, "team.scoreboard." + team.getName());
-            final int lives = team.countAdditionalLives();
-            final String status;
 
+            final String status;
             if (team.isBedAlive())
             {
                 status = this.messages.getMessage(locale, "scoreboard.tick");
             }
+            else if (team.isEliminated())
+            {
+                status = this.messages.getMessage(locale, "scoreboard.cross");
+            }
             else
             {
-                final int players = team.getNotEliminatedPlayers().size();
-                if (players == 0)
-                {
-                    status = this.messages.getMessage(locale, "scoreboard.cross");
-                }
-                else
-                {
-                    status = "&a" + players;
-                }
+                status = "&a" + team.getNotEliminatedPlayers().size();
             }
 
-            final boolean renderFlag = !team.isBedAlive() || team.getPlayers().contains(renderingPlayer);
+            final boolean renderFlag = !team.isEliminated() && (!team.isBedAlive() || team.getPlayers().contains(renderingPlayer));
+            final int lives = team.countAdditionalLives();
             if (renderFlag && lives > 0)
             {
                 builder.translated("scoreboard.team_line_lives", team.getColor().getChar(), teamName, status, lives);

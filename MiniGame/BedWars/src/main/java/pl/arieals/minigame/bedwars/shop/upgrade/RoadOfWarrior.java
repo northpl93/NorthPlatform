@@ -1,8 +1,5 @@
 package pl.arieals.minigame.bedwars.shop.upgrade;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-
-
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -13,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.diorite.utils.math.DioriteMathUtils;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.cfg.BwConfig;
 import pl.arieals.minigame.bedwars.event.ItemBuyEvent;
@@ -57,9 +53,7 @@ public class RoadOfWarrior implements IUpgrade, Listener
     @EventHandler(ignoreCancelled = true)
     public void onItemBuy(final ItemBuyEvent event)
     {
-        final BedWarsPlayer playerData = getPlayerData(event.getPlayer(), BedWarsPlayer.class);
-        final int upgradeLevel = playerData.getTeam().getUpgrades().getUpgradeLevel(this);
-
+        final int upgradeLevel = this.getUpgradeLevel(event.getPlayer());
         if (upgradeLevel == 0)
         {
             return;
@@ -81,7 +75,7 @@ public class RoadOfWarrior implements IUpgrade, Listener
         return type == Material.WOOD_SWORD || type == Material.STONE_SWORD || type == Material.IRON_SWORD || type == Material.GOLD_SWORD || type == Material.DIAMOND_SWORD;
     }
 
-    private void apply(final ItemStack itemStack, final int level)
+    public void apply(final ItemStack itemStack, final int level)
     {
         itemStack.addEnchantment(Enchantment.DAMAGE_ALL, level);
     }

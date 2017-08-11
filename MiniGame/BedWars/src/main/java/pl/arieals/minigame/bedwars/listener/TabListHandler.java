@@ -18,6 +18,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team.Option;
+import org.bukkit.scoreboard.Team.OptionStatus;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
@@ -62,6 +64,7 @@ public class TabListHandler implements Listener
         {
             final org.bukkit.scoreboard.Team newTeam = scoreboard.registerNewTeam(teamName);
             newTeam.setPrefix(team.getColor().toString());
+            newTeam.setOption(Option.COLLISION_RULE, OptionStatus.FOR_OWN_TEAM);
 
             this.logger.log(Level.FINE, "Created team {0} for arena {1}", new Object[]{teamName, arena.getId()});
 

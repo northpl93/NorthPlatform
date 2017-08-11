@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 
 public class BwSpectatorListener implements Listener
@@ -34,7 +35,9 @@ public class BwSpectatorListener implements Listener
     public void keepY(final PlayerMoveEvent event)
     {
         final Player player = event.getPlayer();
-        if (! getPlayerStatus(player).isSpectator())
+
+        final PlayerStatus playerStatus = getPlayerStatus(player);
+        if (playerStatus == null || ! playerStatus.isSpectator())
         {
             return;
         }

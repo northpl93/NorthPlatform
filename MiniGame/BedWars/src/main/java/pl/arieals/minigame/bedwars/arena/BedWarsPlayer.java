@@ -1,10 +1,12 @@
 package pl.arieals.minigame.bedwars.arena;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.minigame.bedwars.event.PlayerEliminatedEvent;
 import pl.arieals.minigame.bedwars.utils.TeamArmorUtils;
 
 public class BedWarsPlayer
@@ -47,9 +49,14 @@ public class BedWarsPlayer
         return this.eliminated;
     }
 
-    public void setEliminated(final boolean eliminated)
+    public void eliminate()
     {
-        this.eliminated = eliminated;
+        if (this.eliminated)
+        {
+            return;
+        }
+        this.eliminated = true;
+        Bukkit.getPluginManager().callEvent(new PlayerEliminatedEvent(this.team.getArena(), this.bukkitPlayer));
     }
 
     public int getKills()

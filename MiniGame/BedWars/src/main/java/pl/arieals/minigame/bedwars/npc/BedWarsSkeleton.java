@@ -73,7 +73,7 @@ public class BedWarsSkeleton extends EntitySkeleton
         this.goalSelector.a(3, new PathfinderGoalRandomLookaround(this)); // patrzenie gdziekolwiek
 
         // this, typ atakowanego celu, odleglosc, ?, ?, dodatkowy warunek ataku
-        this.targetSelector.a(1, new PathfinderGoalNearestAttackableTarget<>(this, EntityPlayer.class, 20, true, false, this::attackPlayer));
+        this.targetSelector.a(1, new PathfinderGoalNearestAttackableTarget<>(this, EntityPlayer.class, 32, true, false, this::attackPlayer));
     }
 
     // warunek ataku w PathfinderGoalNearestAttackableTarget
