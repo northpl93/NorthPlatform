@@ -1,6 +1,8 @@
 package pl.arieals.api.minigame.server.gamehost.listener;
 
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.getTrackerEntry;
+import static pl.north93.zgame.api.global.utils.JavaUtils.instanceOf;
 
 
 import java.util.Optional;
@@ -13,6 +15,7 @@ import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -24,6 +27,7 @@ import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinWithoutArenaEvent;
+import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class PlayerListener implements Listener
@@ -105,6 +109,22 @@ public class PlayerListener implements Listener
 
         final PlayersManager playersManager = arena.get().getPlayersManager();
         playersManager.playerDisconnected(player);
+    }
+
+    @EventHandler
+    public void blockPlayerDamageOutsideGame(final EntityDamageEvent event)
+    {
+        final Player player = instanceOf(event.getEntity(), Player.class);
+        if (player == null)
+        {
+            return;
+        }
+
+        final LocalArena arena = getArena(player);
+        if (arena == null || arena.getGamePhase() != GamePhase.STARTED)
+        {
+            event.setCancelled(true);
+        }
     }
 
     @Override
