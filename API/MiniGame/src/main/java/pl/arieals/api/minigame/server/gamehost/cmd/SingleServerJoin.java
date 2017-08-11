@@ -5,11 +5,13 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
-import pl.arieals.api.minigame.server.lobby.arenas.IArenaClient;
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
@@ -31,8 +33,6 @@ public class SingleServerJoin extends NorthCommand
     private MessagesBox    messages;
     @Inject
     private MiniGameServer server;
-    @Inject
-    private IArenaClient   arenaClient;
 
     public SingleServerJoin()
     {
@@ -47,9 +47,17 @@ public class SingleServerJoin extends NorthCommand
             sender.sendMessage(this.messages, "cmd.general.only_gamehost");
             return;
         }
-        final GameHostManager serverManager = this.server.getServerManager();
 
         final Player player = (Player) sender.unwrapped();
+        final GameHostManager serverManager = this.server.getServerManager();
+
+        if (serverManager.getArenaManager().getArenaAssociatedWith(player.getUniqueId()).isPresent())
+        {
+            sender.sendRawMessage("&cJuz jestes powiazany z jakas arena.");
+            sender.sendRawMessage("&cPrzeczytaj instrukcje w klasie SingleServerJoin");
+            return;
+        }
+
         final List<PlayerJoinInfo> players = Collections.singletonList(new PlayerJoinInfo(player.getUniqueId(), false, false));
 
         for (final LocalArena localArena : serverManager.getArenaManager().getArenas())
@@ -66,5 +74,11 @@ public class SingleServerJoin extends NorthCommand
         }
 
         sender.sendRawMessage("&cNie udalo sie cie dodac do zadnej areny");
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }
