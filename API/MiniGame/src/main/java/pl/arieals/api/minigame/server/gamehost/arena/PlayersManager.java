@@ -283,7 +283,7 @@ public class PlayersManager
         }
 
         player.setMetadata("minigameApiStatus", new FixedMetadataValue(this.gameHostManager.getPlugin(), newStatus));
-        this.gameHostManager.getApiCore().callEvent(new SpectatorModeChangeEvent(player, oldStatus, newStatus));
+        this.gameHostManager.getApiCore().callEvent(new SpectatorModeChangeEvent(this.arena, player, oldStatus, newStatus));
     }
 
     // = = = WYSYLANIE WIADOMOSCI = = = //

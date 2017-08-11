@@ -2,7 +2,6 @@ package pl.arieals.api.minigame.server.gamehost.event.player;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.player.PlayerEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -14,24 +13,17 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
  * Jest wywolywany takze gdy gracz ponownie wchodzi na
  * arene w trakcie gry, gdy nastapilo rozlaczenie.
  */
-public class PlayerJoinArenaEvent extends PlayerEvent
+public class PlayerJoinArenaEvent extends PlayerArenaEvent
 {
     private static final HandlerList handlers = new HandlerList();
-    private final LocalArena arena;
     private final boolean reconnected;
     private String joinMessage;
 
     public PlayerJoinArenaEvent(final Player who, final LocalArena arena, final boolean reconnected, final String joinMessage)
     {
-        super(who);
-        this.arena = arena;
+        super(arena, who);
         this.reconnected = reconnected;
         this.joinMessage = joinMessage;
-    }
-
-    public LocalArena getArena()
-    {
-        return this.arena;
     }
 
     /**
