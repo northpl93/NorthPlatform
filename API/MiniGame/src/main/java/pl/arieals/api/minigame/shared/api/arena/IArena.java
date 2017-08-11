@@ -1,6 +1,6 @@
 package pl.arieals.api.minigame.shared.api.arena;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import pl.arieals.api.minigame.shared.api.GamePhase;
@@ -22,5 +22,5 @@ public interface IArena
         return this.getPlayers().size();
     }
 
-    List<UUID> getPlayers();
+    Set<UUID> getPlayers();
 }

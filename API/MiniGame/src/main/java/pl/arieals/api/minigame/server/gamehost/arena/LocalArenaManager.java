@@ -3,6 +3,7 @@ package pl.arieals.api.minigame.server.gamehost.arena;
 import static java.text.MessageFormat.format;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -41,7 +42,7 @@ public class LocalArenaManager
         final UUID serverId = this.apiCore.getServerId();
         final String gameId = serverManager.getMiniGameConfig().getMiniGameId();
 
-        final RemoteArena arenaData = new RemoteArena(arenaId, serverId, gameId, "", GamePhase.INITIALISING, new ArrayList<>());
+        final RemoteArena arenaData = new RemoteArena(arenaId, serverId, gameId, "", GamePhase.INITIALISING, new HashSet<>());
         final LocalArena localArena = new LocalArena(serverManager, arenaManager, arenaData);
         this.arenas.add(localArena);
         arenaManager.setArena(arenaData);

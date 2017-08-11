@@ -1,6 +1,6 @@
 package pl.arieals.api.minigame.server.gamehost.arena;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -124,7 +124,7 @@ public class LocalArena implements IArena
     }
 
     @Override
-    public List<UUID> getPlayers()
+    public Set<UUID> getPlayers()
     {
         return this.data.getPlayers();
     }

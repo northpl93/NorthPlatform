@@ -1,11 +1,15 @@
 package pl.arieals.api.minigame.server.gamehost.arena;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -38,8 +42,11 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
  */
 public class PlayersManager
 {
+    private static final long PLAYER_JOIN_TIMEOUT = TimeUnit.SECONDS.toMillis(30);
     @Inject @Messages("MiniGameApi")
-    private       MessagesBox               messages;
+    private MessagesBox                     messages;
+    @Inject
+    private Logger                          logger;
     private final GameHostManager           gameHostManager;
     private final ArenaManager              manager;
     private final LocalArena                arena;
@@ -233,6 +240,24 @@ public class PlayersManager
         }
     }
 
+    public synchronized void checkTimeouts()
+    {
+        final long now = System.currentTimeMillis();
+
+        final Iterator<PlayerJoinInfo> joinInfos = this.joinInfos.values().iterator();
+        while (joinInfos.hasNext())
+        {
+            final PlayerJoinInfo joinInfo = joinInfos.next();
+            if (Bukkit.getPlayer(joinInfo.getUuid()) != null || now - joinInfo.getIssuedAt() <= PLAYER_JOIN_TIMEOUT)
+            {
+                continue;
+            }
+
+            this.logger.log(Level.INFO, "Player {0} join timeout on arena {1}", new Object[]{joinInfo.getUuid(), this.arena.getId()});
+            joinInfos.remove();
+        }
+    }
+
     // = = = AKTUALNY STAN GRACZA = = = //
 
     public PlayerStatus getStatus(final Player player)
@@ -332,7 +357,7 @@ public class PlayersManager
     private void announceJoinLeft(final Player player, final String messageKey)
     {
         final String name = player.getName();
-        final int playersCount = this.getPlayers().size();
+        final int playersCount = this.joinInfos.size();
         final int maxPlayers = this.gameHostManager.getMiniGameConfig().getSlots();
 
         this.broadcast(this.messages, messageKey, name, playersCount, maxPlayers);

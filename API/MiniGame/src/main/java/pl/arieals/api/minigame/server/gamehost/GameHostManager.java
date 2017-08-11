@@ -16,12 +16,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import org.spigotmc.SneakyThrow;
 import org.spigotmc.SpigotConfig;
 
 import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
+import pl.arieals.api.minigame.server.gamehost.arena.PlayerTimeoutChecker;
 import pl.arieals.api.minigame.server.gamehost.deathmatch.DeathMatchFightListener;
 import pl.arieals.api.minigame.server.gamehost.deathmatch.DeathMatchStartListener;
 import pl.arieals.api.minigame.server.gamehost.listener.ArenaEndListener;
@@ -85,7 +87,9 @@ public class GameHostManager implements IServerManager
         
         new MiniGameApi(); // inicjuje zmienne w klasie i statyczną INSTANCE
 
-        Bukkit.getScheduler().runTask(this.apiCore.getPluginMain(), this::createArenas);
+        final BukkitScheduler scheduler = Bukkit.getScheduler();
+        scheduler.runTask(this.apiCore.getPluginMain(), this::createArenas);
+        scheduler.runTaskTimer(this.apiCore.getPluginMain(), new PlayerTimeoutChecker(this.arenaManager), 100, 100);
     }
 
     private void createArenas()

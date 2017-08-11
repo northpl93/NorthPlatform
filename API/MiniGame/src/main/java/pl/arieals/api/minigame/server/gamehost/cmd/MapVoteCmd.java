@@ -8,13 +8,18 @@ import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.arena.MapVote;
+import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class MapVoteCmd extends NorthCommand
 {
+    @Inject @Messages("MiniGameApi")
+    private MessagesBox    messages;
     @Inject
     private MiniGameServer server;
 
@@ -26,7 +31,12 @@ public class MapVoteCmd extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        // todo Sprawdzic czy wykonywane na lobby i komunikat jesli tak
+        if (this.server.getServerManager() instanceof LobbyManager)
+        {
+            sender.sendMessage(this.messages, "cmd.general.only_gamehost");
+            return;
+        }
+
         final Player player = (Player) sender.unwrapped();
         final GameHostManager gameHostManager = this.server.getServerManager();
 

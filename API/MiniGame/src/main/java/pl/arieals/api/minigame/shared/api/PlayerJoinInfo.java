@@ -10,6 +10,7 @@ public class PlayerJoinInfo
     private UUID    uuid;
     private Boolean isVip;
     private Boolean spectator;
+    private Long    issuedAt;
 
     public PlayerJoinInfo() // serialization
     {
@@ -20,6 +21,7 @@ public class PlayerJoinInfo
         this.uuid = uuid;
         this.isVip = isVip;
         this.spectator = spectator;
+        this.issuedAt = System.currentTimeMillis();
     }
 
     public UUID getUuid()
@@ -37,9 +39,14 @@ public class PlayerJoinInfo
         return this.spectator;
     }
 
+    public Long getIssuedAt()
+    {
+        return this.issuedAt;
+    }
+
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).append("isVip", this.isVip).append("spectator", this.spectator).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).append("isVip", this.isVip).append("spectator", this.spectator).append("issuedAt", this.issuedAt).toString();
     }
 }

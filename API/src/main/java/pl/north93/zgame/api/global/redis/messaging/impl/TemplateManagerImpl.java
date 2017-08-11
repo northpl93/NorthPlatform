@@ -4,6 +4,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import pl.north93.zgame.api.global.redis.messaging.templates.ByteArrayTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.DateTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.DoubleTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.FloatTemplate;
+import pl.north93.zgame.api.global.redis.messaging.templates.HashSetTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.IntegerTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.LongTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.MapTemplate;
@@ -56,6 +58,7 @@ public class TemplateManagerImpl extends Component implements TemplateManager
         this.templateCache = new IdentityHashMap<>();
 
         this.registerTemplate(ArrayList.class, new ArrayListTemplate());
+        this.registerTemplate(HashSet.class, new HashSetTemplate());
         this.registerTemplate(HashMap.class, new MapTemplate());
         this.registerTemplate(Boolean.class, new BooleanTemplate());
         this.registerTemplate(Integer.class, new IntegerTemplate());

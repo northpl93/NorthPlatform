@@ -1,6 +1,6 @@
 package pl.arieals.api.minigame.shared.api.arena;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
-import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
+import pl.north93.zgame.api.global.redis.messaging.templates.HashSetTemplate;
 
 /**
  * Obiekt przedstawia arenę znajdującą się *gdzieś* w sieci.
@@ -16,19 +16,19 @@ import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
  */
 public class RemoteArena implements IArena
 {
-    private UUID       arenaId;
-    private UUID       serverId;
-    private String     miniGameId;
-    private String     worldId;
-    private GamePhase  gamePhase;
-    @MsgPackCustomTemplate(ArrayListTemplate.class)
-    private List<UUID> players;
+    private UUID      arenaId;
+    private UUID      serverId;
+    private String    miniGameId;
+    private String    worldId;
+    private GamePhase gamePhase;
+    @MsgPackCustomTemplate(HashSetTemplate.class)
+    private Set<UUID> players;
 
     public RemoteArena()
     {
     }
 
-    public RemoteArena(final UUID arenaId, final UUID serverId, final String miniGameId, final String worldId, final GamePhase gamePhase, final List<UUID> players)
+    public RemoteArena(final UUID arenaId, final UUID serverId, final String miniGameId, final String worldId, final GamePhase gamePhase, final Set<UUID> players)
     {
         this.arenaId = arenaId;
         this.serverId = serverId;
@@ -79,7 +79,7 @@ public class RemoteArena implements IArena
     }
 
     @Override
-    public List<UUID> getPlayers()
+    public Set<UUID> getPlayers()
     {
         return this.players;
     }
