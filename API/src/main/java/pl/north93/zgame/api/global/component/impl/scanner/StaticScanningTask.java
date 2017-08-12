@@ -64,7 +64,7 @@ class StaticScanningTask extends AbstractScanningTask
             try
             {
                 final AbstractBeanContainer beanContainer = this.beanContext.getBeanContainer(query);
-                field.set(null, beanContainer.getValue(new FieldInjectionContext(field)));
+                field.set(null, beanContainer.getValue(new FieldInjectionContext(null, field)));
                 iterator.remove();
             }
             catch (final Exception exception)

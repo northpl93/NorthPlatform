@@ -30,6 +30,10 @@ class DynamicBeanContainer extends AbstractBeanContainer
         final TemporaryBeanContext beanContext = new TemporaryBeanContext(this.beanContext);
 
         beanContext.put(Class.class, "Source", injectionContext.getDeclaringClass());
+        if (injectionContext.getInstance() != null)
+        {
+            beanContext.put(Object.class, "Instance", injectionContext.getInstance());
+        }
         for (final Annotation annotation : injectionContext.getAnnotations())
         {
             beanContext.put(annotation.getClass(), annotation);

@@ -8,10 +8,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class FieldInjectionContext implements IInjectionContext
 {
-    private final Field field;
+    private final Object instance;
+    private final Field  field;
 
-    public FieldInjectionContext(final Field field)
+    public FieldInjectionContext(final Object instance, final Field field)
     {
+        this.instance = instance;
         this.field = field;
     }
 
@@ -19,6 +21,12 @@ public class FieldInjectionContext implements IInjectionContext
     public Class<?> getDeclaringClass()
     {
         return this.field.getDeclaringClass();
+    }
+
+    @Override
+    public Object getInstance()
+    {
+        return this.instance;
     }
 
     @Override
@@ -30,6 +38,6 @@ public class FieldInjectionContext implements IInjectionContext
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("field", this.field).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("instance", this.instance).append("field", this.field).toString();
     }
 }

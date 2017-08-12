@@ -65,7 +65,7 @@ public class Injector
 
             try
             {
-                final FieldInjectionContext injectionContext = new FieldInjectionContext(field);
+                final FieldInjectionContext injectionContext = new FieldInjectionContext(instance, field);
                 final Object bean = context.getBeanContainer(query).getValue(injectionContext);
                 field.set(instance, bean);
             }

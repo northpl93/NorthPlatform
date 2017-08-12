@@ -40,7 +40,7 @@ public class SmartExecutor
             }
 
             final AbstractBeanContainer beanContainer = beanContext.getBeanContainer(query);
-            final Object bean = beanContainer.getValue(new MethodParameterInjectionContext(parameter));
+            final Object bean = beanContainer.getValue(new MethodParameterInjectionContext(instance, parameter));
             execArgs[i] = bean;
         }
 
