@@ -50,6 +50,19 @@ public class ScoreboardManagerImpl extends Component implements IScoreboardManag
         return (ScoreboardContextImpl) metadata.get(0).value();
     }
 
+    @Override
+    public void removeScoreboard(final Player player)
+    {
+        final ScoreboardContextImpl context = this.getContext(player);
+        if (context == null)
+        {
+            return;
+        }
+
+        context.cleanup();
+        player.removeMetadata("scoreboard_context", this.apiCore.getPluginMain());
+    }
+
     private void setContext(final Player player, final ScoreboardContextImpl scoreboardContext)
     {
         final ScoreboardContextImpl old = this.getContext(player);

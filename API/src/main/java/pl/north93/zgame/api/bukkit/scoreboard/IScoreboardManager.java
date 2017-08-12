@@ -7,4 +7,6 @@ public interface IScoreboardManager
     IScoreboardContext setLayout(Player player, IScoreboardLayout layout);
 
     IScoreboardContext getContext(Player player);
+
+    void removeScoreboard(Player player);
 }
