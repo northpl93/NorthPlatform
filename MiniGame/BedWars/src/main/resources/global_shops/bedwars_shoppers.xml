@@ -1,0 +1,91 @@
+<itemGroup>
+    <id>bedwars_shoppers</id>
+    <groupType>SINGLE_PICK</groupType>
+    <items>
+        <!-- kowal -->
+        <item>
+            <id>smith</id>
+            <itemData name="priority" value="1" />
+            <itemData name="type" value="PLAYER" />
+            <itemData name="profile" value="eyJ0aW1lc3RhbXAiOjE1MDI1MzM3MDQxNDQsInByb2ZpbGVJZCI6ImNjNzliYThjZTU0NTQ3YTNhNDU0NWU2NWY5YjgyOTdjIiwicHJvZmlsZU5hbWUiOiJOb3J0aFBMOTMiLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2Y5NGI3OTY1ZDI5ODc5NjljNmIzNzBmMDIyNTI3MjMwZDkyN2EzYWJlN2RlNzNkOTdmNjhiMjQzZTNmMmQ2ZmQifX19" />
+            <itemData name="sign" value="Jw8q3OI2iH22ZqbVP/HX1sZM6htch1GNjoIHVKN0MAUZE6GkpehzxQ4GbTGsYglz88XPA6CfRA/2Z35emDsRCt5Eavgy5iv0qerxCVn7RXNtr2JSHxGvo4Y+/IpWPLzurvnIxIHg2murb+aaNBgTqNU2aak5tYA1kW81V/mdUZLG4EXKnOYIOsJ5Xcz+AwGHCdxzuegH5zqYU/NvGSypos9uOB75cWrsq9Z558sypd1fXVr5NF47QA6IAhT1PRMhqCeAnJAJcaM2Vbb3vfCfbiVwUAylxsMnnBvOzBCP1epUXnCoxRELPcJxCpD41BGiSIHxgHmzgtZh56e/unbvunO9byINaKj/leJSim+auHsFvlDB/UFf+0Cd8mfmwoEw5d64LoSXdEVdO6fiUIyKtw8rmjEs0dGdYRVM0N9BP6+pqyPZ5fz7+w4zwiaLEz06FzVGZpBxUUgGukLPMXDOXhvYMqV9RcwmmVou5uGUpFLvjuzzvZVjBetSR4nAokyyREo809za6DZ+Y3y8bKEuJqvnpheYwbyCoc/CnIQoOXw9a/3U0R8ylikZv7xMJ1TE81satqjmD0ZN6SvM5J+n+ZBPaD8oQnIn6G1wq5678j5C5brwOBpy1KKA0Tk2DBBzNjgxMZlCP8IWbD+X3/+jI23h69CiogNo1Mj7uyT0IlE=" />
+        </item>
+
+        <!-- zombie -->
+        <item>
+            <id>zombie</id>
+            <itemData name="priority" value="2" />
+            <itemData name="type" value="ZOMBIE" />
+        </item>
+
+        <item>
+            <id>skeleton</id>
+            <itemData name="priority" value="3" />
+            <itemData name="type" value="SKELETON" />
+        </item>
+
+        <item>
+            <id>creeper</id>
+            <rarity>RARE</rarity>
+            <itemData name="priority" value="4" />
+            <itemData name="type" value="CREEPER" />
+        </item>
+
+        <item>
+            <id>blaze</id>
+            <rarity>RARE</rarity>
+            <itemData name="priority" value="5" />
+            <itemData name="type" value="BLAZE" />
+        </item>
+
+        <!-- Stormtrooper -->
+        <item>
+            <id>stormtrooper</id>
+            <rarity>EPIC</rarity>
+            <itemData name="priority" value="6" />
+            <itemData name="type" value="PLAYER" />
+            <itemData name="profile" value="eyJ0aW1lc3RhbXAiOjE1MDI1MzM3MDQxNDQsInByb2ZpbGVJZCI6ImNjNzliYThjZTU0NTQ3YTNhNDU0NWU2NWY5YjgyOTdjIiwicHJvZmlsZU5hbWUiOiJOb3J0aFBMOTMiLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2Y5NGI3OTY1ZDI5ODc5NjljNmIzNzBmMDIyNTI3MjMwZDkyN2EzYWJlN2RlNzNkOTdmNjhiMjQzZTNmMmQ2ZmQifX19" />
+            <itemData name="sign" value="Jw8q3OI2iH22ZqbVP/HX1sZM6htch1GNjoIHVKN0MAUZE6GkpehzxQ4GbTGsYglz88XPA6CfRA/2Z35emDsRCt5Eavgy5iv0qerxCVn7RXNtr2JSHxGvo4Y+/IpWPLzurvnIxIHg2murb+aaNBgTqNU2aak5tYA1kW81V/mdUZLG4EXKnOYIOsJ5Xcz+AwGHCdxzuegH5zqYU/NvGSypos9uOB75cWrsq9Z558sypd1fXVr5NF47QA6IAhT1PRMhqCeAnJAJcaM2Vbb3vfCfbiVwUAylxsMnnBvOzBCP1epUXnCoxRELPcJxCpD41BGiSIHxgHmzgtZh56e/unbvunO9byINaKj/leJSim+auHsFvlDB/UFf+0Cd8mfmwoEw5d64LoSXdEVdO6fiUIyKtw8rmjEs0dGdYRVM0N9BP6+pqyPZ5fz7+w4zwiaLEz06FzVGZpBxUUgGukLPMXDOXhvYMqV9RcwmmVou5uGUpFLvjuzzvZVjBetSR4nAokyyREo809za6DZ+Y3y8bKEuJqvnpheYwbyCoc/CnIQoOXw9a/3U0R8ylikZv7xMJ1TE81satqjmD0ZN6SvM5J+n+ZBPaD8oQnIn6G1wq5678j5C5brwOBpy1KKA0Tk2DBBzNjgxMZlCP8IWbD+X3/+jI23h69CiogNo1Mj7uyT0IlE=" />
+        </item>
+
+        <!-- Mario -->
+        <item>
+            <id>mario</id>
+            <rarity>EPIC</rarity>
+            <itemData name="priority" value="7" />
+            <itemData name="type" value="PLAYER" />
+            <itemData name="profile" value="eyJ0aW1lc3RhbXAiOjE1MDI1MzM3MDQxNDQsInByb2ZpbGVJZCI6ImNjNzliYThjZTU0NTQ3YTNhNDU0NWU2NWY5YjgyOTdjIiwicHJvZmlsZU5hbWUiOiJOb3J0aFBMOTMiLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2Y5NGI3OTY1ZDI5ODc5NjljNmIzNzBmMDIyNTI3MjMwZDkyN2EzYWJlN2RlNzNkOTdmNjhiMjQzZTNmMmQ2ZmQifX19" />
+            <itemData name="sign" value="Jw8q3OI2iH22ZqbVP/HX1sZM6htch1GNjoIHVKN0MAUZE6GkpehzxQ4GbTGsYglz88XPA6CfRA/2Z35emDsRCt5Eavgy5iv0qerxCVn7RXNtr2JSHxGvo4Y+/IpWPLzurvnIxIHg2murb+aaNBgTqNU2aak5tYA1kW81V/mdUZLG4EXKnOYIOsJ5Xcz+AwGHCdxzuegH5zqYU/NvGSypos9uOB75cWrsq9Z558sypd1fXVr5NF47QA6IAhT1PRMhqCeAnJAJcaM2Vbb3vfCfbiVwUAylxsMnnBvOzBCP1epUXnCoxRELPcJxCpD41BGiSIHxgHmzgtZh56e/unbvunO9byINaKj/leJSim+auHsFvlDB/UFf+0Cd8mfmwoEw5d64LoSXdEVdO6fiUIyKtw8rmjEs0dGdYRVM0N9BP6+pqyPZ5fz7+w4zwiaLEz06FzVGZpBxUUgGukLPMXDOXhvYMqV9RcwmmVou5uGUpFLvjuzzvZVjBetSR4nAokyyREo809za6DZ+Y3y8bKEuJqvnpheYwbyCoc/CnIQoOXw9a/3U0R8ylikZv7xMJ1TE81satqjmD0ZN6SvM5J+n+ZBPaD8oQnIn6G1wq5678j5C5brwOBpy1KKA0Tk2DBBzNjgxMZlCP8IWbD+X3/+jI23h69CiogNo1Mj7uyT0IlE=" />
+        </item>
+
+        <!-- Indiana Jones -->
+        <item>
+            <id>indiana_jones</id>
+            <rarity>LEGENDARY</rarity>
+            <itemData name="priority" value="8" />
+            <itemData name="type" value="PLAYER" />
+            <itemData name="profile" value="eyJ0aW1lc3RhbXAiOjE1MDI1MzM3MDQxNDQsInByb2ZpbGVJZCI6ImNjNzliYThjZTU0NTQ3YTNhNDU0NWU2NWY5YjgyOTdjIiwicHJvZmlsZU5hbWUiOiJOb3J0aFBMOTMiLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2Y5NGI3OTY1ZDI5ODc5NjljNmIzNzBmMDIyNTI3MjMwZDkyN2EzYWJlN2RlNzNkOTdmNjhiMjQzZTNmMmQ2ZmQifX19" />
+            <itemData name="sign" value="Jw8q3OI2iH22ZqbVP/HX1sZM6htch1GNjoIHVKN0MAUZE6GkpehzxQ4GbTGsYglz88XPA6CfRA/2Z35emDsRCt5Eavgy5iv0qerxCVn7RXNtr2JSHxGvo4Y+/IpWPLzurvnIxIHg2murb+aaNBgTqNU2aak5tYA1kW81V/mdUZLG4EXKnOYIOsJ5Xcz+AwGHCdxzuegH5zqYU/NvGSypos9uOB75cWrsq9Z558sypd1fXVr5NF47QA6IAhT1PRMhqCeAnJAJcaM2Vbb3vfCfbiVwUAylxsMnnBvOzBCP1epUXnCoxRELPcJxCpD41BGiSIHxgHmzgtZh56e/unbvunO9byINaKj/leJSim+auHsFvlDB/UFf+0Cd8mfmwoEw5d64LoSXdEVdO6fiUIyKtw8rmjEs0dGdYRVM0N9BP6+pqyPZ5fz7+w4zwiaLEz06FzVGZpBxUUgGukLPMXDOXhvYMqV9RcwmmVou5uGUpFLvjuzzvZVjBetSR4nAokyyREo809za6DZ+Y3y8bKEuJqvnpheYwbyCoc/CnIQoOXw9a/3U0R8ylikZv7xMJ1TE81satqjmD0ZN6SvM5J+n+ZBPaD8oQnIn6G1wq5678j5C5brwOBpy1KKA0Tk2DBBzNjgxMZlCP8IWbD+X3/+jI23h69CiogNo1Mj7uyT0IlE=" />
+        </item>
+
+        <!-- Darth Vader -->
+        <item>
+            <id>darth_vader</id>
+            <rarity>LEGENDARY</rarity>
+            <itemData name="priority" value="9" />
+            <itemData name="type" value="PLAYER" />
+            <itemData name="profile" value="eyJ0aW1lc3RhbXAiOjE1MDI1MzM3MDQxNDQsInByb2ZpbGVJZCI6ImNjNzliYThjZTU0NTQ3YTNhNDU0NWU2NWY5YjgyOTdjIiwicHJvZmlsZU5hbWUiOiJOb3J0aFBMOTMiLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2Y5NGI3OTY1ZDI5ODc5NjljNmIzNzBmMDIyNTI3MjMwZDkyN2EzYWJlN2RlNzNkOTdmNjhiMjQzZTNmMmQ2ZmQifX19" />
+            <itemData name="sign" value="Jw8q3OI2iH22ZqbVP/HX1sZM6htch1GNjoIHVKN0MAUZE6GkpehzxQ4GbTGsYglz88XPA6CfRA/2Z35emDsRCt5Eavgy5iv0qerxCVn7RXNtr2JSHxGvo4Y+/IpWPLzurvnIxIHg2murb+aaNBgTqNU2aak5tYA1kW81V/mdUZLG4EXKnOYIOsJ5Xcz+AwGHCdxzuegH5zqYU/NvGSypos9uOB75cWrsq9Z558sypd1fXVr5NF47QA6IAhT1PRMhqCeAnJAJcaM2Vbb3vfCfbiVwUAylxsMnnBvOzBCP1epUXnCoxRELPcJxCpD41BGiSIHxgHmzgtZh56e/unbvunO9byINaKj/leJSim+auHsFvlDB/UFf+0Cd8mfmwoEw5d64LoSXdEVdO6fiUIyKtw8rmjEs0dGdYRVM0N9BP6+pqyPZ5fz7+w4zwiaLEz06FzVGZpBxUUgGukLPMXDOXhvYMqV9RcwmmVou5uGUpFLvjuzzvZVjBetSR4nAokyyREo809za6DZ+Y3y8bKEuJqvnpheYwbyCoc/CnIQoOXw9a/3U0R8ylikZv7xMJ1TE81satqjmD0ZN6SvM5J+n+ZBPaD8oQnIn6G1wq5678j5C5brwOBpy1KKA0Tk2DBBzNjgxMZlCP8IWbD+X3/+jI23h69CiogNo1Mj7uyT0IlE=" />
+        </item>
+
+        <!-- Kapitan Jack Sparrow -->
+        <item>
+            <id>jack_sparrow</id>
+            <rarity>LEGENDARY</rarity>
+            <itemData name="priority" value="10" />
+            <itemData name="type" value="PLAYER" />
+            <itemData name="profile" value="eyJ0aW1lc3RhbXAiOjE1MDI1MzM3MDQxNDQsInByb2ZpbGVJZCI6ImNjNzliYThjZTU0NTQ3YTNhNDU0NWU2NWY5YjgyOTdjIiwicHJvZmlsZU5hbWUiOiJOb3J0aFBMOTMiLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2Y5NGI3OTY1ZDI5ODc5NjljNmIzNzBmMDIyNTI3MjMwZDkyN2EzYWJlN2RlNzNkOTdmNjhiMjQzZTNmMmQ2ZmQifX19" />
+            <itemData name="sign" value="Jw8q3OI2iH22ZqbVP/HX1sZM6htch1GNjoIHVKN0MAUZE6GkpehzxQ4GbTGsYglz88XPA6CfRA/2Z35emDsRCt5Eavgy5iv0qerxCVn7RXNtr2JSHxGvo4Y+/IpWPLzurvnIxIHg2murb+aaNBgTqNU2aak5tYA1kW81V/mdUZLG4EXKnOYIOsJ5Xcz+AwGHCdxzuegH5zqYU/NvGSypos9uOB75cWrsq9Z558sypd1fXVr5NF47QA6IAhT1PRMhqCeAnJAJcaM2Vbb3vfCfbiVwUAylxsMnnBvOzBCP1epUXnCoxRELPcJxCpD41BGiSIHxgHmzgtZh56e/unbvunO9byINaKj/leJSim+auHsFvlDB/UFf+0Cd8mfmwoEw5d64LoSXdEVdO6fiUIyKtw8rmjEs0dGdYRVM0N9BP6+pqyPZ5fz7+w4zwiaLEz06FzVGZpBxUUgGukLPMXDOXhvYMqV9RcwmmVou5uGUpFLvjuzzvZVjBetSR4nAokyyREo809za6DZ+Y3y8bKEuJqvnpheYwbyCoc/CnIQoOXw9a/3U0R8ylikZv7xMJ1TE81satqjmD0ZN6SvM5J+n+ZBPaD8oQnIn6G1wq5678j5C5brwOBpy1KKA0Tk2DBBzNjgxMZlCP8IWbD+X3/+jI23h69CiogNo1Mj7uyT0IlE=" />
+        </item>
+    </items>
+</itemGroup>

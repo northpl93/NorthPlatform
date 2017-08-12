@@ -1,7 +1,9 @@
 components:
   - name: Lobby.Features
     enabled: true
-    mainClass: "pl.north93.zgame.lobby.LobbyFeatures"
+    mainClass: "pl.arieals.lobby.LobbyFeatures"
     description: "Base features of lobby."
+    dependencies:
+      - API.GuiManager
     platforms:
       - BUKKIT

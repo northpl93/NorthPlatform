@@ -21,6 +21,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.arieals.api.minigame.server.utils.citizens.SkinTrait;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.globalshops.server.IGlobalShops;
 import pl.arieals.globalshops.shared.ItemsGroup;
@@ -48,19 +49,31 @@ public class NpcCreator implements Listener
     public void createNpc(final GameStartEvent event)
     {
         final BedWarsArena arenaData = event.getArena().getArenaData();
-        final ItemsGroup shoppers = this.globalShops.getGroup("bed_wars_shoppers");
+        final ItemsGroup shoppers = this.globalShops.getGroup("bedwars_shoppers");
 
         for (final Team team : arenaData.getTeams())
         {
             this.apiCore.sync(() -> this.getTeamNpc(shoppers, team), npc ->
             {
-                final NPC shopper = this.createNpc(npc.getKey());
+                // NPC z sklepem
+                final NpcItem shopperData = npc.getKey();
+                final NPC shopper = this.createNpc(shopperData);
                 shopper.addTrait(new ShopTrait(ShopTrait.NpcType.SHOP));
+                if (shopperData != null && shopperData.getEntityType() == EntityType.PLAYER)
+                {
+                    shopper.addTrait(new SkinTrait(shopperData.getProfileData(), shopperData.getDataSign()));
+                }
                 shopper.setName("Sklep");
                 shopper.spawn(team.getConfig().getShopNpc().toBukkit(event.getArena().getWorld().getCurrentWorld()));
 
-                final NPC upgrader = this.createNpc(npc.getValue());
+                // NPC z ulepszeniami
+                final NpcItem upgraderData = npc.getValue();
+                final NPC upgrader = this.createNpc(upgraderData);
                 upgrader.addTrait(new ShopTrait(ShopTrait.NpcType.UPGRADES));
+                if (upgraderData != null && upgraderData.getEntityType() == EntityType.PLAYER)
+                {
+                    upgrader.addTrait(new SkinTrait(upgraderData.getProfileData(), upgraderData.getDataSign()));
+                }
                 upgrader.setName("Ulepszenia");
                 upgrader.spawn(team.getConfig().getUpgradesNpc().toBukkit(event.getArena().getWorld().getCurrentWorld()));
             });
