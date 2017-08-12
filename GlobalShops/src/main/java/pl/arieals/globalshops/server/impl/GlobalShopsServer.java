@@ -77,16 +77,14 @@ public class GlobalShopsServer extends Component implements IGlobalShops
     }
 
     @Override
-    public synchronized Item getItem(final String id)
+    public synchronized Item getItem(final ItemsGroup group, final String id)
     {
+        Preconditions.checkNotNull(group);
         Preconditions.checkNotNull(id);
-        for (final ItemsGroup itemsGroup : this.groups.values())
+        final Item result = CollectionUtils.findInCollection(group.getItems(), Item::getId, id);
+        if (result != null)
         {
-            final Item result = CollectionUtils.findInCollection(itemsGroup.getItems(), Item::getId, id);
-            if (result != null)
-            {
-                return result;
-            }
+            return result;
         }
         throw new IllegalArgumentException("Not found item with ID " + id);
     }

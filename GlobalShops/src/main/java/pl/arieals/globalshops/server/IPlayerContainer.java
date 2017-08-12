@@ -18,7 +18,7 @@ public interface IPlayerContainer
     Collection<Item> getBoughtItems(ItemsGroup group);
 
     /**
-     * Sprawdza czy gracz ma kupiony dany przedmiot.
+     * Sprawdza czy gracz ma kupiony dany przedmiot na dowolnym poziomie.
      *
      * @param item przedmiot do sprawdzenia.
      * @return true jesli gracz posiada dany przedmiot.
@@ -35,6 +35,14 @@ public interface IPlayerContainer
      * @return poziom zakupionego przedmiotu, zgodnie z opisem wyzej.
      */
     int getBoughtItemLevel(Item item);
+
+    /**
+     * Sprawdza czy gracz posiada kupiony maksymalny poziom danego przedmiotu.
+     *
+     * @param item przedmiot do sprawdzenia.
+     * @return true jesli gracz ma kupiony najwyzszy poziom.
+     */
+    boolean hasMaxLevel(Item item);
 
     /**
      * Zwraca wybrany przez gracza item jesli typ grupy to SINGLE_PICK.

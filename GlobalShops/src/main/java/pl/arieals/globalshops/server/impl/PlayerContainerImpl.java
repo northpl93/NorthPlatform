@@ -10,6 +10,8 @@ import com.google.common.base.Preconditions;
 
 import org.bukkit.entity.Player;
 
+import org.apache.commons.lang3.StringUtils;
+
 import org.diorite.utils.lazy.LazyValue;
 
 import pl.arieals.globalshops.server.IPlayerContainer;
@@ -37,21 +39,27 @@ class PlayerContainerImpl implements IPlayerContainer
     public Collection<Item> getBoughtItems(final ItemsGroup group)
     {
         final PlayerData data = this.playerData.get();
-        return data.getBoughtItems().keySet().stream().map(id -> this.shopsServer.getItem(id)).collect(Collectors.toList());
+        return data.getBoughtItems().keySet().stream().map(id -> this.getItemFromInternalId(group, id)).collect(Collectors.toList());
     }
 
     @Override
     public boolean hasBoughtItem(final Item item)
     {
         final PlayerData data = this.playerData.get();
-        return data.getBoughtItems().containsKey(item.getId());
+        return data.getBoughtItems().containsKey(this.itemToInternalId(item));
     }
 
     @Override
     public int getBoughtItemLevel(final Item item)
     {
         final PlayerData data = this.playerData.get();
-        return data.getBoughtItems().getOrDefault(item.getId(), 0);
+        return data.getBoughtItems().getOrDefault(this.itemToInternalId(item), 0);
+    }
+
+    @Override
+    public boolean hasMaxLevel(final Item item)
+    {
+        return this.getBoughtItemLevel(item) >= item.getMaxLevel();
     }
 
     @Override
@@ -68,7 +76,7 @@ class PlayerContainerImpl implements IPlayerContainer
         {
             return null;
         }
-        return this.shopsServer.getItem(activeItemId);
+        return this.shopsServer.getItem(group, activeItemId);
     }
 
     @Override
@@ -79,7 +87,7 @@ class PlayerContainerImpl implements IPlayerContainer
         Preconditions.checkState(item.getMaxLevel() <= level, "Level must be smaller or equal to item's max level.");
         Preconditions.checkState(this.getBoughtItemLevel(item) < level, "Level must be grater than actual bought level");
 
-        this.service.addItem(this.player, item.getId(), level);
+        this.service.addItem(this.player, item.getGroup().getId(), item.getId(), level);
         this.playerData.reset();
     }
 
@@ -99,5 +107,16 @@ class PlayerContainerImpl implements IPlayerContainer
 
         this.service.setActiveItem(this.player, group.getId(), item.getId());
         this.playerData.reset();
+    }
+
+    private Item getItemFromInternalId(final ItemsGroup group, final String id)
+    {
+        final String properId = StringUtils.split(id, '$')[1];
+        return this.shopsServer.getItem(group, properId);
+    }
+
+    private String itemToInternalId(final Item item)
+    {
+        return item.getGroup().getId() + item.getId();
     }
 }

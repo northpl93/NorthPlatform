@@ -39,7 +39,7 @@ public class GlobalShopsDev extends NorthCommand
         else if (args.length() == 2)
         {
             final String arg0 = args.asString(0);
-            if (arg0.equalsIgnoreCase("item"))
+            /*if (arg0.equalsIgnoreCase("item"))
             {
                 final Item item = this.globalShops.getItem(args.asString(1));
                 if (item == null)
@@ -51,7 +51,7 @@ public class GlobalShopsDev extends NorthCommand
                 sender.sendRawMessage("&cItem id: " + item.getId());
                 sender.sendRawMessage("&cItem group: " + item.getGroup());
             }
-            else if (arg0.equalsIgnoreCase("group"))
+            else */if (arg0.equalsIgnoreCase("group"))
             {
                 final ItemsGroup group = this.globalShops.getGroup(args.asString(1));
                 if (group == null)
@@ -79,7 +79,7 @@ public class GlobalShopsDev extends NorthCommand
                 final Collection<Item> boughtItems = container.getBoughtItems(group);
                 sender.sendRawMessage(boughtItems.stream().map(Item::getId).collect(Collectors.joining(",")));
             }
-            else if (arg0.equalsIgnoreCase("buy"))
+            /*else if (arg0.equalsIgnoreCase("buy"))
             {
                 final Item item = this.globalShops.getItem(args.asString(1));
                 if (item == null)
@@ -108,7 +108,7 @@ public class GlobalShopsDev extends NorthCommand
 
                 container.markAsActive(item);
                 sender.sendRawMessage("&aok");
-            }
+            }*/
         }
     }
 

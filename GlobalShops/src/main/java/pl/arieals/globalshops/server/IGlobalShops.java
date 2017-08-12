@@ -22,10 +22,11 @@ public interface IGlobalShops
     /**
      * Zwraca przedmiot o podanym ID.
      *
+     * @param group Grupa do ktorej nalezy przedmiot.
      * @param id ID przedmiotu.
      * @return przedmiot o podanym ID.
      */
-    Item getItem(String id);
+    Item getItem(ItemsGroup group, String id);
 
     /**
      * Zwraca obiekt udostepniajacy dane o kupionych itemach
