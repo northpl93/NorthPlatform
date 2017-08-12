@@ -25,5 +25,14 @@
             <artifactId>economy</artifactId>
             <version>1.0-INDEV</version>
         </dependency>
+
+        <!-- NPCty -->
+        <dependency>
+            <groupId>net.citizensnpcs</groupId>
+            <artifactId>citizens</artifactId>
+            <version>2.0.22-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>
