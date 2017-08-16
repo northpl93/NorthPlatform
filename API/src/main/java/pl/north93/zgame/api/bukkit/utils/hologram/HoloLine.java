@@ -18,7 +18,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
+import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.nms.EntityMetaPacketHelper;
+import pl.north93.zgame.api.global.API;
 
 final class HoloLine
 {
@@ -42,20 +44,28 @@ final class HoloLine
 
         // Musimy sledzic aktualizacje w trackerze zeby wysylac nowa nazwe
         final ObservableMap<EntityPlayer, Boolean> observableTrackerList = observeTracker(((CraftArmorStand) this.armorStand).getHandle());
+        observableTrackerList.addListener(this::sendUpdatePacket);
+    }
 
-        observableTrackerList.addListener((MapChangeListener<? super EntityPlayer, ? super Boolean>) change ->
+    // wysyla pakiet aktualizujacy gdy gracz zacznie trackowac entity
+    private void sendUpdatePacket(MapChangeListener.Change<? extends EntityPlayer, ? extends Boolean> change)
+    {
+        final EntityPlayer key = change.getKey();
+        if (change.wasAdded() && change.getValueRemoved() == null && this.lastLine != null)
         {
-            final EntityPlayer key = change.getKey();
-            if (change.wasAdded() && this.lastLine != null)
+            final String newText = this.lastLine.render(this.hologram, key.getBukkitEntity());
+
+            final BukkitApiCore apiCore = (BukkitApiCore) API.getApiCore();
+            apiCore.run(() ->
             {
-                final String newText = this.lastLine.render(this.hologram, key.getBukkitEntity());
-
                 final EntityMetaPacketHelper packetHelper = new EntityMetaPacketHelper(this.armorStand.getEntityId());
-                packetHelper.addMeta(2, EntityMetaPacketHelper.MetaType.STRING, newText); // 2=custom name http://wiki.vg/Entities#Entity
-                key.playerConnection.networkManager.channel.writeAndFlush(packetHelper.complete());
-            }
-        });
 
+                // 2=custom name http://wiki.vg/Entities#Entity
+                packetHelper.addMeta(2, EntityMetaPacketHelper.MetaType.STRING, newText);
+
+                key.playerConnection.networkManager.channel.writeAndFlush(packetHelper.complete());
+            });
+        }
     }
 
     public int getLineNo()

@@ -87,6 +87,16 @@ public class BukkitApiCore extends ApiCore
         });
     }
 
+    /**
+     * Uruchamia dany task w Bukkit Schedulerze.
+     *
+     * @param runnable task do uruchomienia.
+     */
+    public final void run(final Runnable runnable)
+    {
+        Bukkit.getScheduler().runTask(this.pluginMain, runnable);
+    }
+
     @Override
     public Logger getLogger()
     {
