@@ -12,7 +12,7 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.bukkit.utils.xml.XmlItemStack;
+import pl.north93.zgame.api.bukkit.utils.xml.itemstack.XmlItemStack;
 
 @XmlRootElement(name = "shopEntry")
 @XmlAccessorType(XmlAccessType.FIELD)

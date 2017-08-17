@@ -7,10 +7,10 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class ElytraShopMain extends Gui
 {
-    @Inject @Messages("")
+    @Inject @Messages("ShopElytraRace")
     private static MessagesBox messagesBox;
 
-    protected ElytraShopMain()
+    public ElytraShopMain()
     {
         super(messagesBox, "elytrarace/elytrarace_shop_main");
     }

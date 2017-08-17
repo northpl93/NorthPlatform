@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="5" title="@elimination_effect.window_title">
+    <container pos="0,0" size="9,5">
+        <border id="0" data="0" />
+        <background id="0" data="0" />
+        <content>
+            <button pos="4,0">
+                <icon id="IRON_SWORD" name="@elimination_effect.category_name"/>
+            </button>
+
+            <!-- firework -->
+            <button pos="2,2">
+                <variable value="northplatform://lobby/shop/general/itemVars/bedwars_elimination/firework/$playerId" />
+                <icon id="FIREWORK" name="@general.name_placeholder$nameColor,name" lore="@elimination_effect.firework$lore" />
+                <onClick>northplatform://lobby/shop/general/click/bedwars_elimination/firework/$playerId</onClick>
+            </button>
+
+            <!-- domyslny -->
+            <button pos="4,4">
+                <icon id="BARRIER" name="@general.default" />
+                <onClick>northplatform://lobby/shop/general/default/bedwars_elimination/$playerId</onClick>
+            </button>
+
+            <!-- przycisk back -->
+            <button pos="7,4">
+                <icon id="IRON_DOOR" name="@general.back" />
+                <onClick>northplatform://lobby/shop/bedwars/openCategory/main/$playerId</onClick>
+            </button>
+        </content>
+    </container>
+</gui>

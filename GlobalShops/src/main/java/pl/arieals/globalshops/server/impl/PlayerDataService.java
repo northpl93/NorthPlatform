@@ -53,9 +53,23 @@ class PlayerDataService
     {
         try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(player.getUniqueId()))
         {
-            final PlayerData playerData = new PlayerData(t.getPlayer().getMetaStore());;
+            final PlayerData playerData = new PlayerData(t.getPlayer().getMetaStore());
 
             playerData.getActiveItems().put(groupId, itemId);
+        }
+        catch (final Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void resetActiveItem(final Player player, final String groupId)
+    {
+        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(player.getUniqueId()))
+        {
+            final PlayerData playerData = new PlayerData(t.getPlayer().getMetaStore());
+
+            playerData.getActiveItems().remove(groupId);
         }
         catch (final Exception e)
         {

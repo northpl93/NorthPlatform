@@ -2,6 +2,7 @@ package pl.arieals.globalshops.shared;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.globalshops.controller.cfg.ItemCfg;
 import pl.arieals.globalshops.controller.cfg.ItemDataCfg;
+import pl.arieals.globalshops.controller.cfg.ItemName;
 import pl.arieals.globalshops.controller.cfg.ItemsGroupCfg;
 
 /**
@@ -28,8 +30,9 @@ public final class ItemsGroup
         this.items = new ArrayList<>();
         for (final ItemCfg itemCfg : cfg.getItems())
         {
+            final Map<Locale, String> name = itemCfg.getNames().stream().collect(Collectors.toMap(itemName -> Locale.forLanguageTag(itemName.getLang()), ItemName::getName));
             final Map<String, String> itemData = itemCfg.getItemData().stream().collect(Collectors.toMap(ItemDataCfg::getName, ItemDataCfg::getValue));
-            this.items.add(new Item(this, itemCfg.getId(), itemCfg.getMaxLevel(), itemCfg.getRarity(), itemData));
+            this.items.add(new Item(this, itemCfg.getId(), itemCfg.getMaxLevel(), itemCfg.getRarity(), name, itemData));
         }
     }
 

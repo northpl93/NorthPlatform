@@ -36,10 +36,19 @@ class PlayerContainerImpl implements IPlayerContainer
     }
 
     @Override
+    public Player getBukkitPlayer()
+    {
+        return this.player;
+    }
+
+    @Override
     public Collection<Item> getBoughtItems(final ItemsGroup group)
     {
         final PlayerData data = this.playerData.get();
-        return data.getBoughtItems().keySet().stream().map(id -> this.getItemFromInternalId(group, id)).collect(Collectors.toList());
+        return data.getBoughtItems().keySet().stream()
+                   .filter(id -> StringUtils.startsWith(id, group.getId()))
+                   .map(id -> this.getItemFromInternalId(group, id))
+                   .collect(Collectors.toList());
     }
 
     @Override
@@ -94,6 +103,8 @@ class PlayerContainerImpl implements IPlayerContainer
     @Override
     public void markAsActive(final Item item)
     {
+        Preconditions.checkNotNull(item);
+
         final ItemsGroup group = item.getGroup();
         if (group.getGroupType() == GroupType.MULTI_BUY)
         {
@@ -109,6 +120,20 @@ class PlayerContainerImpl implements IPlayerContainer
         this.playerData.reset();
     }
 
+    @Override
+    public void resetActiveItem(final ItemsGroup group)
+    {
+        Preconditions.checkNotNull(group);
+
+        if (group.getGroupType() == GroupType.MULTI_BUY)
+        {
+            throw new IllegalArgumentException();
+        }
+
+        this.service.resetActiveItem(this.player, group.getId());
+        this.playerData.reset();
+    }
+
     private Item getItemFromInternalId(final ItemsGroup group, final String id)
     {
         final String properId = StringUtils.split(id, '$')[1];
@@ -117,6 +142,6 @@ class PlayerContainerImpl implements IPlayerContainer
 
     private String itemToInternalId(final Item item)
     {
-        return item.getGroup().getId() + item.getId();
+        return item.getGroup().getId() + "$" + item.getId();
     }
 }

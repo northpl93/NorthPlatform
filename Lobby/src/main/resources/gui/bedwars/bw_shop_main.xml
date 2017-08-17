@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<gui height="3" title="@window_title">
-    <container pos="0,0" size="9,3">
+<gui height="5" title="@general.shop_window_title">
+    <container pos="0,0" size="9,5">
         <border id="0" data="0" />
         <background id="0" data="0" />
         <content>
+            <button pos="4,0">
+                <icon id="BED" name="@general.shop_name"/>
+            </button>
 
+            <!-- efekty eliminacji -->
+            <button pos="2,2">
+                <variable value="northplatform://lobby/shop/general/categoryVars/bedwars_elimination/$playerId" />
+                <icon id="IRON_SWORD" data="0" name="@elimination_effect.category_name" lore="@elimination_effect.category_description$boughtItems,selected"/>
+                <onClick>northplatform://lobby/shop/bedwars/openCategory/elimination/$playerId</onClick>
+            </button>
+
+            <!-- sklepikarze -->
+            <button pos="4,2">
+                <variable value="northplatform://lobby/shop/general/categoryVars/bedwars_shoppers/$playerId" />
+                <icon id="SKULL_ITEM" data="0" name="@shoppers.category_name" lore="@shoppers.category_description$boughtItems,selected"/>
+                <onClick>northplatform://lobby/shop/bedwars/openCategory/shoppers/$playerId</onClick>
+            </button>
+
+            <!-- perki -->
+            <button pos="6,2">
+                <variable value="northplatform://lobby/shop/general/categoryVars/bedwars_perks/$playerId" />
+                <icon id="DIAMOND" data="0" name="@perks.category_name" lore="@perks.category_description$boughtItems,selected"/>
+                <onClick>northplatform://lobby/shop/bedwars/openCategory/perks/$playerId</onClick>
+            </button>
         </content>
     </container>
 </gui>

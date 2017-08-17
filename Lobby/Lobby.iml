@@ -55,5 +55,31 @@
     <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.13.Final" level="project" />
     <orderEntry type="library" name="Maven: org.msgpack:msgpack-core:0.8.13" level="project" />
     <orderEntry type="module" module-name="Pets" />
+    <orderEntry type="module" module-name="GlobalShops" />
+    <orderEntry type="module" module-name="API.MiniGame" />
+    <orderEntry type="module" module-name="API.Economy" />
+    <orderEntry type="module" module-name="RestfulApi" />
+    <orderEntry type="library" name="Maven: com.sparkjava:spark-core:2.6.0" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-server:9.4.4.v20170414" level="project" />
+    <orderEntry type="library" name="Maven: javax.servlet:javax.servlet-api:3.1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-http:9.4.4.v20170414" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-util:9.4.4.v20170414" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-io:9.4.4.v20170414" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-webapp:9.4.4.v20170414" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-xml:9.4.4.v20170414" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-servlet:9.4.4.v20170414" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-security:9.4.4.v20170414" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-server:9.4.4.v20170414" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-common:9.4.4.v20170414" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-client:9.4.4.v20170414" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-client:9.4.4.v20170414" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-servlet:9.4.4.v20170414" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-api:9.4.4.v20170414" level="project" />
+    <orderEntry type="library" name="Maven: net.citizensnpcs:citizens:2.0.22-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: net.citizensnpcs:citizens-main:2.0.22-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: net.citizensnpcs:citizens-v1_10_R1:2.0.22-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: net.citizensnpcs:citizens-v1_11_R1:2.0.22-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: net.citizensnpcs:citizens-v1_12_R1:2.0.22-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="Network Controller" />
   </component>
 </module>

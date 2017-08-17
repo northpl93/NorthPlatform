@@ -1,10 +1,131 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<gui height="3" title="@window_title">
-    <container pos="0,0" size="9,3">
+<gui height="5" title="@shoppers.window_title">
+    <container pos="0,0" size="9,5">
         <border id="0" data="0" />
         <background id="0" data="0" />
         <content>
+            <button pos="4,0">
+                <icon id="SKULL_ITEM" data="3" name="@shoppers.category_name">
+                    <skullMeta>
+                        <owner>Villager</owner>
+                    </skullMeta>
+                </icon>
+            </button>
 
+            <!-- kowal/inny skin villagera -->
+            <button pos="2,2">
+                <variable value="northplatform://lobby/shop/general/itemVars/bedwars_shoppers/smith/$playerId" />
+                <icon id="SKULL_ITEM" data="3" name="@general.name_placeholder$nameColor,name" lore="@shoppers.smith$lore">
+                    <skullMeta>
+                        <owner>Villager</owner>
+                    </skullMeta>
+                </icon>
+                <onClick>northplatform://lobby/shop/general/click/bedwars_shoppers/smith/$playerId</onClick>
+            </button>
+
+            <!-- zombie -->
+            <button pos="3,2">
+                <variable value="northplatform://lobby/shop/general/itemVars/bedwars_shoppers/zombie/$playerId" />
+                <icon id="SKULL_ITEM" data="2" name="@general.name_placeholder$nameColor,name" lore="@shoppers.zombie$lore" />
+                <onClick>northplatform://lobby/shop/general/click/bedwars_shoppers/zombie/$playerId</onClick>
+            </button>
+
+            <!-- skeleton -->
+            <button pos="4,2">
+                <variable value="northplatform://lobby/shop/general/itemVars/bedwars_shoppers/skeleton/$playerId" />
+                <icon id="SKULL_ITEM" data="0" name="@general.name_placeholder$nameColor,name" lore="@shoppers.skeleton$lore" />
+                <onClick>northplatform://lobby/shop/general/click/bedwars_shoppers/skeleton/$playerId</onClick>
+            </button>
+
+            <!-- creeper -->
+            <button pos="5,2">
+                <variable value="northplatform://lobby/shop/general/itemVars/bedwars_shoppers/creeper/$playerId" />
+                <icon id="SKULL_ITEM" data="4" name="@general.name_placeholder$nameColor,name" lore="@shoppers.creeper$lore" />
+                <onClick>northplatform://lobby/shop/general/click/bedwars_shoppers/creeper/$playerId</onClick>
+            </button>
+
+            <!-- blaze -->
+            <button pos="6,2">
+                <variable value="northplatform://lobby/shop/general/itemVars/bedwars_shoppers/blaze/$playerId" />
+                <icon id="SKULL_ITEM" data="3" name="@general.name_placeholder$nameColor,name" lore="@shoppers.blaze$lore">
+                    <skullMeta>
+                        <owner>Blaze</owner>
+                    </skullMeta>
+                </icon>
+                <onClick>northplatform://lobby/shop/general/click/bedwars_shoppers/blaze/$playerId</onClick>
+            </button>
+
+            <!-- stormtrooper -->
+            <button pos="2,3">
+                <variable value="northplatform://lobby/shop/general/itemVars/bedwars_shoppers/stormtrooper/$playerId" />
+                <icon id="SKULL_ITEM" data="3" name="@general.name_placeholder$nameColor,name" lore="@shoppers.stormtrooper$lore">
+                    <skullMeta>
+                        <textures>eyJ0aW1lc3RhbXAiOjE1MDI5ODExNDYxMzIsInByb2ZpbGVJZCI6ImRmYjg5MGRlNmI2ODQwNGJiY2RhZGZhYjY3NGIxNjc5IiwicHJvZmlsZU5hbWUiOiJfV29kemlvXyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWQ2ZDI1ZmRiYjgzMTkwMTExNGUzNzM0YmFkMzY4ODMwMzFiODU3NjdhYzFlMjZlMmYzYTI2YWMxOGE2ODUxIn19fQ==</textures>
+                        <sign>YA76zIj6e+W/tI04JaJnKiXDvOInifae6ejtx+adrkUgTX5YshmceI6fpyToaKRNfZZb3odqj0hl+LdGDZIJ7WzR2yN82jJ6ju38rbXbrGTIVBAb8HlBFn0IgySrVjaJDTZfhZqWyz9+4GBirI6RW8O4zvNVbT8k+mcp5SydiDdzRe/rcPu+h+7hsbulu+KnzXA3TJlN4Rx8I9joCuC4svAri5uWGpsTRiXCWuABl6sB32ZHzYO6AEhPB22CVtu8G/XzOQxW0N3Z0+LUeRV7Ru4/sSyXDuzx8817+u2HpcMQnoYgnjElSMTa0tdmUQzr/AwgYAYuHrkv0Zc32GrQq9DwI1CdxLl6cOrzxShxxDRtEFaXUqe1hAg5OGcOvu1lHG4xuAffyRv+USQOKwe1sKgkQrUA9Tt7HpOcNlLaz2fmhOgKY6qsCRdyL2Po8jGFlPqtCNYIeHmczPcHN3rfEwbmRn9gA0THaKsEvA5W4WobrgHpjDQ2HzxRx5uH3zqNCDc6CuvWbW63f/nPH9lD0FVMWxGwSkQkON1I9GBCWTSUF8wYh1Qgb5Gp1ej77pnPeyvME+Fpa4+ZAJmE6yLs1fmacMqbNf1eju8LGqxCQJachEyYcH2HMmO/3scw7TBivGH/y9Htap9aV/JtN+b+VPvdvKAXZrAN8sjzkUy91dE=</sign>
+                    </skullMeta>
+                </icon>
+                <onClick>northplatform://lobby/shop/general/click/bedwars_shoppers/stormtrooper/$playerId</onClick>
+            </button>
+
+            <!-- mario -->
+            <button pos="3,3">
+                <variable value="northplatform://lobby/shop/general/itemVars/bedwars_shoppers/mario/$playerId" />
+                <icon id="SKULL_ITEM" data="3" name="@general.name_placeholder$nameColor,name" lore="@shoppers.mario$lore">
+                    <skullMeta>
+                        <textures>eyJ0aW1lc3RhbXAiOjE1MDI5ODEwNDE2MDYsInByb2ZpbGVJZCI6ImRmYjg5MGRlNmI2ODQwNGJiY2RhZGZhYjY3NGIxNjc5IiwicHJvZmlsZU5hbWUiOiJfV29kemlvXyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjY1ZDk1ZTI2MGM4ZWY3ZGJlOTg4ZWQwYTY3ZTVjODQ5NDA4N2E4NmFhZTExOWYzYTM5ODQxOGI5N2IzMCJ9fX0=</textures>
+                        <sign>hQOP7Zm7EvsgDxB3es0ytC2gjjdoHhf3Nw3X4XZTAYpKl+HAiHp9RKXhyIG6jfdiXNTEA1GL2Gh3vAJk2GpCJJ0bU+pck3i4vcFDRo59kn1KAzGCDZ7Aoq70et9Vrcfj49UIdMlh2e/pfr5XEmr4kxGkOu2I0SjodVrip87iyR5xtYSo4brT9Asirw0aNpKzRT32F/2oeTUPGMHoy78zEZz0XQamevdjXW5ygTOQMRzV8A99P9w1xXq58kU+ugcL0yZrSSZdt2OviysZPLu6xlX0sGTYP+JKHTqHj3ebgixScrSQDRLP0x/HfTG3GnXhhoQqsvBy5MQBlBoIai6H1Gh4nzss3zglaUTgTFugUYeZQujICZW8tgbLUCJjIUzN1YweScBUgXQcSxAjjAjfi1iOTrl+R4T/1PTpZv5jLmsVPnj32+aYP5KaTrmpVU0lhqjkZ0Rf1JbEf4MnFtXkHcyvt5CEkehgGj6FTsuxCAm3FZFsbwE4/mZSrujzwKU9lK9FZn/iNzYhhPNazJ2QlaahBoKgSQRfGzBgKSIMWSVv3UoNu99HdrPjOET0RC+t/nBZmPRxtO1lsJ9u7IVb/fIul4mW8oeTubC/WBB/rSTyT3OyHds8c6CLap6WzlL1Nn3BfXo4fXMUw/B/TPq/qnSFxADBygfl1dBrH6HwUBw=</sign>
+                    </skullMeta>
+                </icon>
+                <onClick>northplatform://lobby/shop/general/click/bedwars_shoppers/mario/$playerId</onClick>
+            </button>
+
+            <!-- indiana_jones -->
+            <button pos="4,3">
+                <variable value="northplatform://lobby/shop/general/itemVars/bedwars_shoppers/indiana_jones/$playerId" />
+                <icon id="SKULL_ITEM" data="3" name="@general.name_placeholder$nameColor,name" lore="@shoppers.indiana_jones$lore">
+                    <skullMeta>
+                        <textures>eyJ0aW1lc3RhbXAiOjE1MDI5ODA2OTU2MjAsInByb2ZpbGVJZCI6ImRmYjg5MGRlNmI2ODQwNGJiY2RhZGZhYjY3NGIxNjc5IiwicHJvZmlsZU5hbWUiOiJfV29kemlvXyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmM3Nzg1NWU3ZmU2M2UxZmRkZmYwODllMDc2ZWY3Y2M4ZDExNGU5MTAzMjI3YTY3NTQ0Yzc4ODUyZGM3In19fQ==</textures>
+                        <sign>wDAhXoVKqNAj6Rus5xNuQOi2WugKanLGk+BLuxk2xXygustIaRLbUQnZw9ejRk9vH4J74qD2TEje0RNBJFUh98ahNQ3ceh8kCP96coGf72gRxq78RSErFF7lV0UfcGHIYuKFJyWpN4rwSEItfUsCShzQGkOrllAbuio5hHKKkXNXpqnELlOb+AvVHILEH6xRK0UNVD0DsphKdZ8gA3JLZs5uQjAMVBCCDEy119uR+uyJYgWNjDg0aHQldJpBTsG7eMJSJ9UzDJAZ3hcE3hC45EVXo4gIx3DwYvjJIMQqcTw6oFAFP/BJclMoVVPCiifuXxiYuSmPzMaQXdniWTQNZTZ/Zqt0RqPLDLE6UAcLbYBA9TybKmAWNx0scAFEtG2ahSQ0HOWJMoChkdrhLAmJVHN7CISkEKM6k2H7kPNr7BIDyDb8RhNtDIq2n4srHSvXO5iPjJPr3zC7/OPgse9d763hp1ENDemw6hmZRavQyZMlAeMXKBK154/Jt4uAqd9NfTbd2A2fQFwQqojI3nTDLlpB83KD4ufJZ2VWIGUpYZNAXbHUmSOEDPgNdfKd20dzUuYTk4IN2/oVCfWXZGdOPRfS93S8Zhn9hacRFGZQQMmpPi6/zUZV5p/Xgz03GYO/mJ24jIKxXdp1ZkJ5JFqEHDr3rH7eSYus2EDcJ/ZHu58=</sign>
+                    </skullMeta>
+                </icon>
+                <onClick>northplatform://lobby/shop/general/click/bedwars_shoppers/indiana_jones/$playerId</onClick>
+            </button>
+
+            <!-- darth_vader -->
+            <button pos="5,3">
+                <variable value="northplatform://lobby/shop/general/itemVars/bedwars_shoppers/darth_vader/$playerId" />
+                <icon id="SKULL_ITEM" data="3" name="@general.name_placeholder$nameColor,name" lore="@shoppers.darth_vader$lore">
+                    <skullMeta>
+                        <textures>eyJ0aW1lc3RhbXAiOjE1MDI5ODAzNDc2ODksInByb2ZpbGVJZCI6ImRmYjg5MGRlNmI2ODQwNGJiY2RhZGZhYjY3NGIxNjc5IiwicHJvZmlsZU5hbWUiOiJfV29kemlvXyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzFjM2UxZjIyNGI0NDZjY2FjNmE2Y2MzY2Q5ODkxMDE5YTEyMmY5OTY5MWMzOTA3OTkyYTNhZjk5YTIxYjAifX19</textures>
+                        <sign>mQysw2aHaaoup0Ssd8zLI+1g8+mpTnQ8x9QSrC2/M7IKgyoTdk/QzrvJ+vI2SJVYlC2imLY1ol+9UTjqeb6hk6RHVQFmkxnU+PMBEEKsum8SX8qa1UGF5rxJ/H9YPfSN5qG4yMEEJ/+nI/Khh+8d8LZ8VJrAclcVkA6RHmeAsGwYAqQhGEmOxJa1n4ytTwPHbtTsmQ41ojATRcTU3v+xxrsNPs3k1SjkiOPodkVBUVZm9L6LChA9vQ+AMxuggeSBsp1aLk6ruMfdLkGfUyjSLbFEqpdONzOQiNWQHaAWpK9LctWruZ18GFVP6ssdtZdJTK+rf0F0oTscNIaIwcUu+QpWuVNTMxQVl2YEP18ihLruQ6HMIprBQ+PEiT/4hWZTQUb0u0/B7jinkAxuKCMez/rISo0i5uiSnQqThsyfcdqhyWjbyAvIo/Od9YSuaAVbbMVRiwbgnyQhq3MvvqphT0W4F2/OA9slH0eER/0EvRsGk6bwuPKnLtkREB4fyuoXKDW5mQPzTThYTZnWH5fPqsBuZ5zZfVEEpyTtW+0m2qcn27nOlBXtD7cGirwFDHohyUR2919rNdIYqTr+RbltpV6lDn4oxmDZ11yOiv5W9NDzqOow1K9R8Jm0rLAZYOVb/6sRoRobD2rdw2HC8OHCOKmXAmSBptN3GIQ6IhTxmJI=</sign>
+                    </skullMeta>
+                </icon>
+                <onClick>northplatform://lobby/shop/general/click/bedwars_shoppers/darth_vader/$playerId</onClick>
+            </button>
+
+            <!-- jack_sparrow -->
+            <button pos="6,3">
+                <variable value="northplatform://lobby/shop/general/itemVars/bedwars_shoppers/jack_sparrow/$playerId" />
+                <icon id="SKULL_ITEM" data="3" name="@general.name_placeholder$nameColor,name" lore="@shoppers.jack_sparrow$lore">
+                    <skullMeta>
+                        <textures>eyJ0aW1lc3RhbXAiOjE1MDI5ODA4MjgxNzUsInByb2ZpbGVJZCI6ImRmYjg5MGRlNmI2ODQwNGJiY2RhZGZhYjY3NGIxNjc5IiwicHJvZmlsZU5hbWUiOiJfV29kemlvXyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2YxNWE3ZmRlNzI3M2U2NTFhYWJkMGI2YWQ0ZWUyZjM0ZTQ0ZDQ5ZjJhZWRhNjA0MTU0MTE5MTRjMzZiYmMwIn19fQ==</textures>
+                        <sign>RCdHlVaTnpjTdKy6o05T6uCXMK8Vxo0zYpaum+wC9cMC0gxq/D4kM+STax8XNInDKBMH9LI+Vp2snTHaAL1/pfv3lTeCoIQ6dC9RWrMrPCFW7suFlg4Rny7XwLrXMTD8KWyHuVp/NlxTvsOZzOMH/9qMGQl6IBBV1ajEDROnfSzIxGd+nYzjoJnwOQWYdcca3HgrVZsm7v1ar9cTrRZxRyNU+b2nw99fKIsnmLT5vOA3N/L1qc35aNvx10ZVbONvLybrTUMdAcU4GfOuDn4B030I/qeCMISbZJ1vYeV5n+cXbUxD7HLWmO9gzf6farzkYGMLedZBQ4VeOmZHpKMezHOCj/RDPEehhiNIXW/eQyZgpsf4vQIFtX9xs9XjIn3RMaBvSbIZPUZ1b47IFbSjuK+kuaeo0GIqsDsP4cFbmz4BA8a12VDaErIZumYzhdirj1EIfeSJy40u5mVi2KF4KtX+RsJ6dJNqtFRr4H3NgReo/P4naKaB8t4NoXxbCIzBTC9taRd4nduhZ/SGHleAzfV0nbcpjZFkFjn1HFd6BHEPjsQEPp7lomHQmKZ2/zbD72xYL7xtmnn7Qu/o99/lqTSrBhyUDw1e7UwlkqBUydg3jWYHvgWXHpwvWPxw/wAaTGcL7FRDhZb0PJLMc07UnD02CDs5SwyKy5wqZtZ9QXQ=</sign>
+                    </skullMeta>
+                </icon>
+                <onClick>northplatform://lobby/shop/general/click/bedwars_shoppers/jack_sparrow/$playerId</onClick>
+            </button>
+
+            <!-- domyslny -->
+            <button pos="4,4">
+                <icon id="BARRIER" name="@general.default" />
+                <onClick>northplatform://lobby/shop/general/default/bedwars_shoppers/$playerId</onClick>
+            </button>
+
+            <!-- przycisk back -->
+            <button pos="7,4">
+                <icon id="IRON_DOOR" name="@general.back" />
+                <onClick>northplatform://lobby/shop/bedwars/openCategory/main/$playerId</onClick>
+            </button>
         </content>
     </container>
 </gui>

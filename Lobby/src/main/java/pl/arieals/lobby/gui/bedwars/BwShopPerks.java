@@ -8,14 +8,14 @@ import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.utils.Vars;
 
-public class BwShopMain extends Gui
+public class BwShopPerks extends Gui
 {
     @Inject @Messages("ShopBedWars")
     private static MessagesBox messagesBox;
 
-    public BwShopMain(final Player player)
+    public BwShopPerks(final Player player)
     {
-        super(messagesBox, "bedwars/bw_shop_main");
+        super(messagesBox, "bedwars/bw_shop_perks");
         this.addVariables(Vars.of("$playerId", player.getUniqueId()));
     }
 }

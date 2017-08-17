@@ -1,0 +1,83 @@
+<itemGroup>
+    <id>bedwars_elimination</id>
+    <groupType>SINGLE_PICK</groupType>
+    <items>
+        <!-- fajerwerkl -->
+        <item>
+            <id>firework</id>
+            <name lang="pl-PL">Fajerwerki</name>
+            <name lang="en-GB">Fireworks</name>
+        </item>
+
+        <!-- lighting -->
+        <item>
+            <id>lighting</id>
+            <name lang="pl-PL">Piornem w niego!</name>
+            <name lang="en-GB">Piornem w niego!</name>
+        </item>
+
+        <!-- boom -->
+        <item>
+            <id>boom</id>
+            <name lang="pl-PL">Ka-Boom!</name>
+            <name lang="en-GB">Ka-Boom!</name>
+            <rarity>RARE</rarity>
+        </item>
+
+        <!-- cookies -->
+        <item>
+            <id>cookies</id>
+            <name lang="pl-PL">Ciasteczko?</name>
+            <name lang="en-GB">Ciasteczko?</name>
+            <rarity>RARE</rarity>
+        </item>
+
+        <!-- blood -->
+        <item>
+            <id>blood</id>
+            <name lang="pl-PL">Brutalnie</name>
+            <name lang="en-GB">Brutalnie</name>
+            <rarity>RARE</rarity>
+        </item>
+
+        <!-- hearts -->
+        <item>
+            <id>hearts</id>
+            <name lang="pl-PL">Przeprosiny</name>
+            <name lang="en-GB">Przeprosiny</name>
+            <rarity>EPIC</rarity>
+        </item>
+
+        <!-- flag -->
+        <item>
+            <id>flag</id>
+            <name lang="pl-PL">Flaga</name>
+            <name lang="en-GB">Flaga</name>
+            <rarity>EPIC</rarity>
+        </item>
+
+        <!-- bat -->
+        <item>
+            <id>bat</id>
+            <name lang="pl-PL">Nietoperz</name>
+            <name lang="en-GB">Nietoperz</name>
+            <rarity>LEGENDARY</rarity>
+        </item>
+
+        <!-- diamonds -->
+        <item>
+            <id>diamonds</id>
+            <name lang="pl-PL">Diamenty</name>
+            <name lang="en-GB">Diamenty</name>
+            <rarity>RARE</rarity>
+        </item>
+
+        <!-- grave -->
+        <item>
+            <id>grave</id>
+            <name lang="pl-PL">Grób</name>
+            <name lang="en-GB">Grób</name>
+            <rarity>RARE</rarity>
+        </item>
+    </items>
+</itemGroup>

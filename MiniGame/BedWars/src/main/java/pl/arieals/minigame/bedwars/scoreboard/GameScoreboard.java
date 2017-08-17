@@ -9,6 +9,8 @@ import static pl.north93.zgame.api.bukkit.utils.ChatUtils.stripColor;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -35,7 +37,7 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class GameScoreboard implements IScoreboardLayout
 {
-    private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("[mm:]ss");
+    private static final DateTimeFormatter FORMAT = new DateTimeFormatterBuilder().appendFraction(ChronoField.MINUTE_OF_HOUR, 1, 2, false).appendPattern("':'ss").toFormatter();
     @Inject
     private BwConfig    config;
     @Inject @Messages("BedWars")

@@ -4,11 +4,20 @@ import javax.annotation.Nullable;
 
 import java.util.Collection;
 
+import org.bukkit.entity.Player;
+
 import pl.arieals.globalshops.shared.Item;
 import pl.arieals.globalshops.shared.ItemsGroup;
 
 public interface IPlayerContainer
 {
+    /**
+     * Zwraca instancja gracza wrapowana przez ten {@link IPlayerContainer}.
+     *
+     * @return instancja bukkitowego gracza.
+     */
+    Player getBukkitPlayer();
+
     /**
      * Zwraca liste itemow zakupionych z danej grupy.
      *
@@ -45,15 +54,6 @@ public interface IPlayerContainer
     boolean hasMaxLevel(Item item);
 
     /**
-     * Zwraca wybrany przez gracza item jesli typ grupy to SINGLE_PICK.
-     * Jesli typ grupy to MULTI_BUY, wtedy zostanie rzucony wyjatek.
-     *
-     * @throws IllegalArgumentException gdy grupa jest typu MULTI_BUY.
-     * @return wybrany item z danej grupy.
-     */
-    @Nullable Item getActiveItem(ItemsGroup group);
-
-    /**
      * Oznacza dany przedmiot jako kupiony.
      *
      * @param item przedmiot do kupienia.
@@ -77,13 +77,35 @@ public interface IPlayerContainer
     void addItem(Item item, int level);
 
     /**
+     * Zwraca wybrany przez gracza item jesli typ grupy to SINGLE_PICK.
+     * Jesli typ grupy to MULTI_BUY, wtedy zostanie rzucony wyjatek.
+     *
+     * @throws IllegalArgumentException gdy grupa jest typu MULTI_BUY.
+     * @return wybrany item z danej grupy.
+     */
+    @Nullable Item getActiveItem(ItemsGroup group);
+
+    /**
      * Oznacza dany przedmiot jako aktywny.
      * Przedmiot musi nalezec do grupy typu SINGLE_PICK,
      * w przeciwnym wypadku zostanie rzucony wyjatek.
      *
+     * @see #getActiveItem(ItemsGroup)
+     * @throws NullPointerException Gdy przedmiot jest nullem.
      * @throws IllegalArgumentException Gdy przedmiot nalezy do grupy MULTI_BUY.
      * @throws IllegalStateException Gdy gracz nie ma kupionego danego przedmiotu.
      * @param item przedmiot ktory oznaczyc jako aktywny w grupie.
      */
     void markAsActive(Item item);
+
+    /**
+     * Resetuje aktywny przedmiot w danej grupie.
+     * Grupa musi byc typu SINGLE_PICK,
+     * w przeciwnym wypadku zostanie rzucony wyjatek.
+     *
+     * @throws NullPointerException Gdy grupa przedmiotow jest nullem.
+     * @throws IllegalArgumentException Gdy przedmiot nalezy do grupy MULTI_BUY.
+     * @param group Grupa w ktorej zresetowac (ustawic na null) aktywny przedmiot.
+     */
+    void resetActiveItem(ItemsGroup group);
 }

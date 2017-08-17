@@ -35,7 +35,7 @@ import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.IGuiManager;
 import pl.north93.zgame.api.bukkit.utils.itemstack.ItemTransaction;
-import pl.north93.zgame.api.bukkit.utils.xml.XmlItemStack;
+import pl.north93.zgame.api.bukkit.utils.xml.itemstack.XmlItemStack;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
