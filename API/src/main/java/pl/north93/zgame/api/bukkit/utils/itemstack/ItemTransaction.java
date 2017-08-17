@@ -7,7 +7,7 @@ import java.util.Set;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import pl.north93.zgame.api.bukkit.utils.xml.XmlItemStack;
+import pl.north93.zgame.api.bukkit.utils.xml.itemstack.XmlItemStack;
 
 /**
  * Klasa pomocnicza ułatwiająca dodanie do ekwipunku listy itemów.

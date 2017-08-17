@@ -1,11 +1,13 @@
-package pl.north93.zgame.api.bukkit.utils.xml;
+package pl.north93.zgame.api.bukkit.utils.xml.itemstack;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +15,16 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import org.diorite.utils.math.DioriteMathUtils;
 
 import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
+import pl.north93.zgame.api.bukkit.utils.xml.XmlEnchant;
 
 @XmlRootElement(name = "item")
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlSeeAlso({XmlItemMeta.class, XmlSkullMeta.class})
 public class XmlItemStack
 {
     @XmlAttribute(required = true)
@@ -28,7 +33,10 @@ public class XmlItemStack
     private int    data = 0;
     @XmlAttribute
     private int    count = 1;
-    
+
+    @XmlAnyElement(lax = true)
+    private XmlItemMeta itemMeta;
+
     @XmlAttribute
     private String name;
     @XmlElement(name = "loreLine")
@@ -90,7 +98,12 @@ public class XmlItemStack
     {
         this.count = count;
     }
-    
+
+    public XmlItemMeta getItemMeta()
+    {
+        return this.itemMeta;
+    }
+
     public String getName()
     {
         return name;
@@ -176,6 +189,15 @@ public class XmlItemStack
         }
 
         this.enchants.forEach(builder::enchant);
-        return builder.build();
+
+        final ItemStack build = builder.build();
+        if (this.itemMeta != null)
+        {
+            final ItemMeta itemMeta = build.getItemMeta();
+            this.itemMeta.apply(itemMeta);
+            build.setItemMeta(itemMeta);
+        }
+
+        return build;
     }
 }

@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import pl.north93.zgame.api.bukkit.gui.ConfigGuiIcon;
 import pl.north93.zgame.api.bukkit.gui.IGuiIcon;
 import pl.north93.zgame.api.bukkit.gui.impl.RenderContext;
-import pl.north93.zgame.api.bukkit.utils.xml.XmlItemStack;
+import pl.north93.zgame.api.bukkit.utils.xml.itemstack.XmlItemStack;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
