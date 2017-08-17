@@ -7,7 +7,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.impl.NorthUriUtils;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
@@ -18,16 +17,30 @@ public class XmlVariable
 {
     @XmlAttribute
     private String name;
-    @XmlAttribute
+    @XmlAttribute(required = true)
     private String value;
 
+    @SuppressWarnings("unchecked")
     public Vars<Object> process(final MessagesBox messages, final Vars<Object> vars)
     {
         if (this.value.startsWith("northplatform:"))
         {
-            return Vars.of(this.name, NorthUriUtils.getInstance().call(this.value, vars));
+            if (this.name == null)
+            {
+                return (Vars) NorthUriUtils.getInstance().call(this.value, vars);
+            }
+            else
+            {
+                return Vars.of(this.name, NorthUriUtils.getInstance().call(this.value, vars));
+            }
         }
-        else if (this.value.startsWith("@"))
+
+        if (this.name == null)
+        {
+            throw new IllegalStateException("Variable must have name!");
+        }
+
+        if (this.value.startsWith("@"))
         {
             return Vars.of(this.name, TranslatableString.of(messages, this.value));
         }

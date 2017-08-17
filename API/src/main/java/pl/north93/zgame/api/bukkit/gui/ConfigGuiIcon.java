@@ -3,12 +3,12 @@ package pl.north93.zgame.api.bukkit.gui;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlVariable;
-import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 import pl.north93.zgame.api.global.utils.Vars;
@@ -18,41 +18,19 @@ import pl.north93.zgame.api.global.utils.Vars;
  */
 public class ConfigGuiIcon implements IGuiIcon
 {
-    private final Material type;
-    private final int data;
-    private final int count;
+    private ItemStack preCreatedItemStack;
     
     private final TranslatableString name;
     private final TranslatableString lore;
 
     private final List<XmlVariable> variables;
 
-    private final boolean glowing;
-
-    private ConfigGuiIcon(Material type, int data, int count, TranslatableString name, TranslatableString lore, final List<XmlVariable> variables, boolean glow)
+    private ConfigGuiIcon(ItemStack preCreatedItemStack, TranslatableString name, TranslatableString lore, final List<XmlVariable> variables)
     {
-        this.type = type;
-        this.data = data;
-        this.count = count;
+        this.preCreatedItemStack = preCreatedItemStack;
         this.name = name;
         this.lore = lore;
         this.variables = variables;
-        this.glowing = glow;
-    }
-    
-    public Material getType()
-    {
-        return type;
-    }
-    
-    public int getData()
-    {
-        return data;
-    }
-    
-    public int getCount()
-    {
-        return count;
     }
     
     public TranslatableString getName()
@@ -69,11 +47,6 @@ public class ConfigGuiIcon implements IGuiIcon
     {
         return this.variables;
     }
-
-    public boolean isGlowing()
-    {
-        return glowing;
-    }
     
     @Override
     public ItemStack toItemStack(MessagesBox messages, Player player, Vars<Object> parameters)
@@ -86,9 +59,22 @@ public class ConfigGuiIcon implements IGuiIcon
 
         List<String> lore = this.lore != null ? Arrays.asList(this.lore.getValue(player.spigot().getLocale(), parameters).split("\n")) : Arrays.asList();
         String name = this.name.getValue(player.spigot().getLocale(), parameters);
-        
-        return new ItemStackBuilder().material(type).data(data).amount(count).name(!name.isEmpty() ? name : "§0")
-                .lore(lore).hideAttributes().build();
+
+        final ItemMeta itemMeta = this.preCreatedItemStack.getItemMeta();
+        if (itemMeta == null)
+        {
+            // air, nic wiecej nie ustawimy
+            return this.preCreatedItemStack;
+        }
+
+        itemMeta.setDisplayName(!name.isEmpty() ? name : "§0");
+        itemMeta.setLore(lore);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
+        final ItemStack newItemStack = this.preCreatedItemStack.clone();
+        newItemStack.setItemMeta(itemMeta);
+
+        return newItemStack;
     }
     
     public static Builder builder()
@@ -98,36 +84,20 @@ public class ConfigGuiIcon implements IGuiIcon
     
     public static class Builder
     {
-        private Material type = Material.DIRT;
-        private int data = 0;
-        private int count = 1;
+        private ItemStack preCreatedItemStack;
         
         private TranslatableString name = TranslatableString.EMPTY;
         private TranslatableString lore;
 
         private List<XmlVariable> variables;
-        
-        private boolean glowing;
-        
+
         private Builder()
         {
         }
         
-        public Builder type(Material type)
+        public Builder itemStack(final ItemStack itemStack)
         {
-            this.type = type;
-            return this;
-        }
-        
-        public Builder data(int data)
-        {
-            this.data = data;
-            return this;
-        }
-        
-        public Builder count(int count)
-        {
-            this.count = count;
+            this.preCreatedItemStack = itemStack;
             return this;
         }
         
@@ -142,12 +112,6 @@ public class ConfigGuiIcon implements IGuiIcon
             this.lore = lore;
             return this;
         }
-        
-        public Builder glowing(boolean glowing)
-        {
-            this.glowing = glowing;
-            return this;
-        }
 
         public Builder variables(final List<XmlVariable> variables)
         {
@@ -157,7 +121,7 @@ public class ConfigGuiIcon implements IGuiIcon
 
         public IGuiIcon build()
         {
-            return new ConfigGuiIcon(type, data, count, name, lore, variables, glowing);
+            return new ConfigGuiIcon(preCreatedItemStack, name, lore, variables);
         }
     }
 }

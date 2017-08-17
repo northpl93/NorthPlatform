@@ -29,15 +29,16 @@ public class XmlItemStack
     @XmlAttribute
     private int    count = 1;
     
-    @XmlElement
+    @XmlAttribute
     private String name;
-    @XmlElementWrapper(name = "lore")
-    @XmlElement(name = "line")
-    private List<String> lore = new ArrayList<>();
+    @XmlElement(name = "loreLine")
+    private List<String> loreLines = new ArrayList<>(0);
+    @XmlAttribute(name = "lore")
+    private String lore;
     
     @XmlElementWrapper(name = "enchants")
     @XmlElement(name = "enchant")
-    private List<XmlEnchant> enchants = new ArrayList<>();
+    private List<XmlEnchant> enchants = new ArrayList<>(0);
     
     public XmlItemStack()
     {
@@ -99,17 +100,27 @@ public class XmlItemStack
     {
         this.name = name;
     }
-    
-    public List<String> getLore()
+
+    public List<String> getLoreLines()
     {
-        return lore;
+        return this.loreLines;
     }
-    
-    public void setLore(List<String> lore)
+
+    public void setLoreLines(final List<String> loreLines)
+    {
+        this.loreLines = loreLines;
+    }
+
+    public String getLore()
+    {
+        return this.lore;
+    }
+
+    public void setLore(final String lore)
     {
         this.lore = lore;
     }
-    
+
     public List<XmlEnchant> getEnchants()
     {
         return enchants;
@@ -119,13 +130,13 @@ public class XmlItemStack
     {
         this.enchants = enchants;
     }
-    
+
     @SuppressWarnings("deprecation")
-    public ItemStack createItemStack()
+    private Material toMaterial()
     {
         final Integer numberId = DioriteMathUtils.asInt(this.id);
         final Material material;
-        
+
         if ( numberId != null )
         {
             material = Material.getMaterial(numberId);
@@ -139,6 +150,13 @@ public class XmlItemStack
             material = Material.getMaterial(this.id);
         }
 
+        return material;
+    }
+
+    @SuppressWarnings("deprecation")
+    public ItemStack createItemStack()
+    {
+        final Material material = this.toMaterial();
         if ( material == null )
         {
             // Print error stack trace without throw an exception
@@ -146,7 +164,17 @@ public class XmlItemStack
             return null;
         }
         
-        final ItemStackBuilder builder = new ItemStackBuilder().material(material).data(data).amount(count).name(name).lore(this.lore);
+        final ItemStackBuilder builder = new ItemStackBuilder().material(material).data(data).amount(count).name(name);
+
+        if (! this.loreLines.isEmpty())
+        {
+            builder.lore(this.loreLines);
+        }
+        else if (this.lore != null)
+        {
+            builder.lore(this.lore);
+        }
+
         this.enchants.forEach(builder::enchant);
         return builder.build();
     }
