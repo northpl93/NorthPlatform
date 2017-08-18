@@ -89,15 +89,16 @@ class PlayerContainerImpl implements IPlayerContainer
     }
 
     @Override
-    public void addItem(final Item item, final int level)
+    public boolean addItem(final Item item, final int level)
     {
         Preconditions.checkNotNull(item, "Item can't be null");
         Preconditions.checkState(level > 0, "Level must be grater than 0.");
         Preconditions.checkState(item.getMaxLevel() <= level, "Level must be smaller or equal to item's max level.");
-        Preconditions.checkState(this.getBoughtItemLevel(item) < level, "Level must be grater than actual bought level");
 
-        this.service.addItem(this.player, item.getGroup().getId(), item.getId(), level);
+        final boolean success = this.service.addItem(this.player, item.getGroup().getId(), item.getId(), level);
         this.playerData.reset();
+
+        return success;
     }
 
     @Override

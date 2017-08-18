@@ -12,6 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
+import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.proxy.ProxyInstanceInfo;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
@@ -56,34 +57,32 @@ class PlayersManagerImpl implements IPlayersManager
     }
 
     @Override
-    public boolean isOnline(final String nick)
+    public boolean isOnline(final Identity identity)
     {
-        return this.onlinePlayerValue(nick).isAvailable();
+        if (identity.getNick() != null)
+        {
+            return this.onlinePlayerValue(identity.getNick()).isAvailable();
+        }
+        else if (identity.getUuid() != null)
+        {
+            final String nickFromUuid = this.getNickFromUuid(identity.getUuid());
+            return this.onlinePlayerValue(nickFromUuid).isAvailable();
+        }
+        return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean access(final Identity identity, final Consumer<IPlayer> modifier)
+    {
+        return this.access(identity, (Consumer) modifier, (Consumer) modifier);
     }
 
     @Override
-    public boolean isOnline(final UUID uuid)
+    public boolean access(final Identity identity, final Consumer<IOnlinePlayer> modifierOnline, final Consumer<IOfflinePlayer> modifierOffline)
     {
-        return this.isOnline(this.getNickFromUuid(uuid));
-    }
-
-    @Override
-    public boolean access(final String nick, final Consumer<IPlayer> modifier)
-    {
-        //noinspection unchecked
-        return this.access(nick, (Consumer) modifier, (Consumer) modifier);
-    }
-
-    @Override
-    public boolean access(final UUID uuid, final Consumer<IPlayer> modifier)
-    {
-        return this.access(this.getNickFromUuid(uuid), modifier);
-    }
-
-    @Override
-    public boolean access(final String nick, final Consumer<IOnlinePlayer> modifierOnline, final Consumer<IOfflinePlayer> modifierOffline)
-    {
-        final Value<IOnlinePlayer> onlinePlayerValue = this.onlinePlayerValue(nick);
+        final Identity completeIdentity = this.completeIdentity(identity);
+        final Value<IOnlinePlayer> onlinePlayerValue = this.onlinePlayerValue(completeIdentity.getNick());
         try
         {
             onlinePlayerValue.lock();
@@ -100,7 +99,7 @@ class PlayersManagerImpl implements IPlayersManager
             onlinePlayerValue.unlock();
         }
 
-        final Value<IOfflinePlayer> offlinePlayerValue = this.playersData.getOfflinePlayerValue(nick);
+        final Value<IOfflinePlayer> offlinePlayerValue = this.playersData.getOfflinePlayerValue(identity.getUuid());
         if (offlinePlayerValue == null)
         {
             return false;
@@ -125,12 +124,6 @@ class PlayersManagerImpl implements IPlayersManager
     }
 
     @Override
-    public boolean access(final UUID uuid, final Consumer<IOnlinePlayer> modifierOnline, final Consumer<IOfflinePlayer> modifierOffline)
-    {
-        return this.access(this.getNickFromUuid(uuid), modifierOnline, modifierOffline);
-    }
-
-    @Override
     public void ifOnline(final String nick, final Consumer<IOnlinePlayer> onlineAction)
     {
         final Value<IOnlinePlayer> onlinePlayerValue = this.onlinePlayerValue(nick);
@@ -152,16 +145,12 @@ class PlayersManagerImpl implements IPlayersManager
     }
 
     @Override
-    public IPlayerTransaction transaction(final UUID playerId) throws PlayerNotFoundException
+    public IPlayerTransaction transaction(final Identity identity) throws PlayerNotFoundException
     {
-        final String playerName = this.getNickFromUuid(playerId);
-        if (playerName == null)
-        {
-            throw new PlayerNotFoundException(playerId);
-        }
+        final Identity completeIdentity = this.completeIdentity(identity);
 
-        final Value<IOnlinePlayer> onlinePlayer = this.onlinePlayerValue(playerName);
-        final Value<IOfflinePlayer> offlinePlayer = this.playersData.getOfflinePlayerValue(playerId);
+        final Value<IOnlinePlayer> onlinePlayer = this.onlinePlayerValue(completeIdentity.getNick());
+        final Value<IOfflinePlayer> offlinePlayer = this.playersData.getOfflinePlayerValue(completeIdentity.getUuid());
 
         final Lock lock = this.getMultiLock(onlinePlayer, offlinePlayer);
         lock.lock();
@@ -179,38 +168,7 @@ class PlayersManagerImpl implements IPlayersManager
         }
 
         lock.unlock();
-        throw new PlayerNotFoundException(playerId);
-    }
-
-    @Override
-    public IPlayerTransaction transaction(final String playerName) throws PlayerNotFoundException
-    {
-        final UUID playerId = this.getUuidFromNick(playerName);
-        if (playerId == null)
-        {
-            throw new PlayerNotFoundException(playerName);
-        }
-
-        final Value<IOnlinePlayer> onlinePlayer = this.onlinePlayerValue(playerName);
-        final Value<IOfflinePlayer> offlinePlayer = this.playersData.getOfflinePlayerValue(playerId);
-
-        final Lock lock = this.getMultiLock(onlinePlayer, offlinePlayer);
-        lock.lock();
-
-        if (onlinePlayer.isAvailable())
-        {
-            return new PlayerTransactionImpl(onlinePlayer, lock, player ->
-            {
-                onlinePlayer.set((IOnlinePlayer) player);
-            });
-        }
-        if (offlinePlayer.isAvailable())
-        {
-            return new PlayerTransactionImpl(offlinePlayer, lock, this.playersData::savePlayer);
-        }
-
-        lock.unlock();
-        throw new PlayerNotFoundException(playerName);
+        throw new PlayerNotFoundException(completeIdentity.getNick());
     }
 
     @Override
@@ -282,6 +240,19 @@ class PlayersManagerImpl implements IPlayersManager
     private Lock getMultiLock(final Value<IOnlinePlayer> onlineData, final Value<IOfflinePlayer> offlineData)
     {
         return this.observer.getMultiLock(onlineData.getLock(), offlineData.getLock());
+    }
+
+    private Identity completeIdentity(final Identity identity)
+    {
+        if (identity.getNick() == null && identity.getUuid() == null)
+        {
+            throw new IllegalArgumentException("Both nick and uuid are null");
+        }
+
+        final UUID uuid = identity.getUuid() == null ? this.getUuidFromNick(identity.getNick()) : identity.getUuid();
+        final String nick = identity.getNick() == null ? this.getNickFromUuid(identity.getUuid()) : identity.getNick();
+
+        return Identity.create(uuid, nick, identity.getDisplayName());
     }
 
     @Override

@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -24,7 +23,6 @@ import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.messages.TranslatableString;
 import pl.north93.zgame.api.global.uri.UriHandler;
 import pl.north93.zgame.api.global.utils.Vars;
 
@@ -69,62 +67,6 @@ public class GuiHelper
             else
             {
                 vars = vars.and("selected", activeItem.getName(Locale.forLanguageTag(player.spigot().getLocale())));
-            }
-        }
-
-        return vars;
-    }
-
-    @UriHandler("/lobby/shop/general/itemVars/:categoryName/:itemName/:playerId")
-    public Vars<Object> generateItemInfo(final String calledUri, final Map<String, String> parameters)
-    {
-        final ItemsGroup itemsGroup = this.globalShops.getGroup(parameters.get("categoryName"));
-        final Item item = this.globalShops.getItem(itemsGroup, parameters.get("itemName"));
-
-        final Player player = Bukkit.getPlayer(UUID.fromString(parameters.get("playerId")));
-        final IPlayerContainer playerContainer = this.globalShops.getPlayer(player);
-        Vars<Object> vars = Vars.empty();
-
-        // nazwa przedmiotu
-        vars = vars.and("name", TranslatableString.constant(item.getName(Locale.forLanguageTag(player.spigot().getLocale()))));
-        vars = vars.and("nameColor", ChatColor.GREEN);
-
-        // rzadkosc przedmiotu
-        vars = vars.and("rarity", TranslatableString.of(this.generalMessages, "@rarity." + item.getRarity()));
-
-        // shardy o obliczyc cene
-        vars = vars.and("price", "price todo");
-        vars = vars.and("shards", "shards todo");
-
-        if (item.getGroup().getGroupType() == GroupType.SINGLE_PICK)
-        {
-            if (item.equals(playerContainer.getActiveItem(itemsGroup)))
-            {
-                vars = vars.and("lore", TranslatableString.of(this.generalMessages, "@item.lore_selected$rarity"));
-                // lore_selected
-            }
-            else if (playerContainer.hasBoughtItem(item))
-            {
-                vars = vars.and("lore", TranslatableString.of(this.generalMessages, "@item.lore_select$rarity"));
-                // lore_select
-            }
-            else
-            {
-                vars = vars.and("lore", TranslatableString.of(this.generalMessages, "@item.lore_buy$rarity,price,shards"));
-                // lore_buy
-                // todo sprawdzenie czy ma hajsy
-            }
-        }
-        else if (item.getGroup().getGroupType() == GroupType.MULTI_BUY)
-        {
-            if (playerContainer.hasMaxLevel(item))
-            {
-                // najwyzszy level kupiony
-            }
-            else
-            {
-                vars = vars.and("lore", TranslatableString.of(this.generalMessages, "@item.lore_upgrade$rarity,price,shards"));
-                // lore_upgrade
             }
         }
 

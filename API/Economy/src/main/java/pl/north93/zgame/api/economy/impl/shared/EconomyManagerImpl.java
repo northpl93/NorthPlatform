@@ -3,8 +3,6 @@ package pl.north93.zgame.api.economy.impl.shared;
 import static pl.north93.zgame.api.global.utils.CollectionUtils.findInCollection;
 
 
-import java.util.UUID;
-
 import com.google.common.base.Preconditions;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -21,6 +19,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
+import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
@@ -59,20 +58,11 @@ public class EconomyManagerImpl implements IEconomyManager
     }
 
     @Override
-    public ITransaction openTransaction(final ICurrency currency, final UUID playerId) throws PlayerNotFoundException
+    public ITransaction openTransaction(final ICurrency currency, final Identity identity) throws PlayerNotFoundException
     {
         Preconditions.checkNotNull(currency, "Currency can't be null");
-        Preconditions.checkNotNull(playerId, "Player UUID can't be null");
-        final IPlayerTransaction transaction = this.networkManager.getPlayers().transaction(playerId);
-        return new TransactionImpl(currency, transaction, this.getRanking(currency));
-    }
-
-    @Override
-    public ITransaction openTransaction(final ICurrency currency, final String playerName) throws PlayerNotFoundException
-    {
-        Preconditions.checkNotNull(currency, "Currency can't be null");
-        Preconditions.checkNotNull(playerName, "Player name can't be null");
-        final IPlayerTransaction transaction = this.networkManager.getPlayers().transaction(playerName);
+        Preconditions.checkNotNull(identity, "Identity can't be null");
+        final IPlayerTransaction transaction = this.networkManager.getPlayers().transaction(identity);
         return new TransactionImpl(currency, transaction, this.getRanking(currency));
     }
 

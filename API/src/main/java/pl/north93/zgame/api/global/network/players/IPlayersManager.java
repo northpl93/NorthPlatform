@@ -14,25 +14,57 @@ public interface IPlayersManager
 
     UUID getUuidFromNick(String nick);
 
-    boolean isOnline(String nick);
+    boolean isOnline(Identity identity);
 
-    boolean isOnline(UUID uuid);
+    default boolean isOnline(String nick)
+    {
+        return this.isOnline(Identity.create(null, nick, null));
+    }
 
-    boolean access(String nick, Consumer<IPlayer> modifier);
+    default boolean isOnline(UUID uuid)
+    {
+        return this.isOnline(Identity.create(uuid, null, null));
+    }
 
-    boolean access(UUID uuid, Consumer<IPlayer> modifier);
+    boolean access(Identity identity, Consumer<IPlayer> modifier);
 
-    boolean access(String nick, Consumer<IOnlinePlayer> modifierOnline, Consumer<IOfflinePlayer> modifierOffline);
+    default boolean access(String nick, Consumer<IPlayer> modifier)
+    {
+        return this.access(Identity.create(null, nick, null), modifier);
+    }
 
-    boolean access(UUID uuid, Consumer<IOnlinePlayer> modifierOnline, Consumer<IOfflinePlayer> modifierOffline);
+    default boolean access(UUID uuid, Consumer<IPlayer> modifier)
+    {
+        return this.access(Identity.create(uuid, null, null), modifier);
+    }
+
+    boolean access(Identity identity, Consumer<IOnlinePlayer> modifierOnline, Consumer<IOfflinePlayer> modifierOffline);
+
+    default boolean access(String nick, Consumer<IOnlinePlayer> modifierOnline, Consumer<IOfflinePlayer> modifierOffline)
+    {
+        return this.access(Identity.create(null, nick, null), modifierOnline, modifierOffline);
+    }
+
+    default boolean access(UUID uuid, Consumer<IOnlinePlayer> modifierOnline, Consumer<IOfflinePlayer> modifierOffline)
+    {
+        return this.access(Identity.create(uuid, null, null), modifierOnline, modifierOffline);
+    }
 
     void ifOnline(String nick, Consumer<IOnlinePlayer> onlineAction);
 
     void ifOnline(UUID uuid, Consumer<IOnlinePlayer> onlineAction);
 
-    IPlayerTransaction transaction(UUID playerId) throws PlayerNotFoundException;
+    IPlayerTransaction transaction(Identity identity) throws PlayerNotFoundException;
 
-    IPlayerTransaction transaction(String playerName) throws PlayerNotFoundException;
+    default IPlayerTransaction transaction(UUID playerId) throws PlayerNotFoundException
+    {
+        return this.transaction(Identity.create(playerId, null, null));
+    }
+
+    default IPlayerTransaction transaction(String playerName) throws PlayerNotFoundException
+    {
+        return this.transaction(Identity.create(null, playerName, null));
+    }
 
     Unsafe unsafe();
 

@@ -57,10 +57,11 @@ public interface IPlayerContainer
      * Oznacza dany przedmiot jako kupiony.
      *
      * @param item przedmiot do kupienia.
+     * @return Czy udalo sie kupic (czy gracz nie posiada juz takiego).
      */
-    default void addItem(Item item)
+    default boolean addItem(Item item)
     {
-        this.addItem(item, 1);
+        return this.addItem(item, 1);
     }
 
     /**
@@ -73,8 +74,9 @@ public interface IPlayerContainer
      *
      * @param item przedmiot ktory oznaczamy jako kupiony.
      * @param level poziom na ktorym oznaczamy jako kupiony.
+     * @return Czy udalo sie dodac przedmiot (czy gracz nie posiada juz takiego).
      */
-    void addItem(Item item, int level);
+    boolean addItem(Item item, int level);
 
     /**
      * Zwraca wybrany przez gracza item jesli typ grupy to SINGLE_PICK.

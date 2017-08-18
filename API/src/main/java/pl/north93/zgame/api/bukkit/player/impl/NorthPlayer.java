@@ -65,6 +65,7 @@ import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
+import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.zgame.api.global.permissions.Group;
@@ -94,7 +95,7 @@ class NorthPlayer implements INorthPlayer
     {
         try
         {
-            return this.networkManager.getPlayers().transaction(this.bukkitPlayer.getUniqueId());
+            return this.networkManager.getPlayers().transaction(Identity.of(this.bukkitPlayer));
         }
         catch (final PlayerNotFoundException e)
         {

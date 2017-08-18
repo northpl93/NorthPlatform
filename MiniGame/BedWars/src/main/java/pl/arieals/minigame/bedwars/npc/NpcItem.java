@@ -3,6 +3,7 @@ package pl.arieals.minigame.bedwars.npc;
 import java.util.Map;
 
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Villager;
 
 import pl.arieals.globalshops.shared.Item;
 
@@ -13,6 +14,7 @@ public class NpcItem
     private final EntityType entityType;
     private final String profileData;
     private final String dataSign;
+    private final Villager.Profession profession;
 
     public NpcItem(final Item item)
     {
@@ -32,6 +34,8 @@ public class NpcItem
             this.profileData = null;
             this.dataSign = null;
         }
+
+        this.profession = Villager.Profession.valueOf(data.getOrDefault("profession", "NORMAL"));
     }
 
     public Item getItem()
@@ -57,5 +61,10 @@ public class NpcItem
     public String getDataSign()
     {
         return this.dataSign;
+    }
+
+    public Villager.Profession getVillagerProfession()
+    {
+        return this.profession;
     }
 }

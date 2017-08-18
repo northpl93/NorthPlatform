@@ -16,6 +16,7 @@ import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
+import pl.north93.zgame.api.global.network.players.Identity;
 
 public class LanguageCmd extends NorthCommand
 {
@@ -55,7 +56,7 @@ public class LanguageCmd extends NorthCommand
                 locale = Locale.forLanguageTag("pl-PL");
         }
 
-        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(player.getUniqueId()))
+        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(Identity.of(player)))
         {
             t.getPlayer().setLocale(locale);
         }

@@ -20,6 +20,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.trait.VillagerProfession;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.utils.citizens.SkinTrait;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
@@ -56,24 +57,14 @@ public class NpcCreator implements Listener
             this.apiCore.sync(() -> this.getTeamNpc(shoppers, team), npc ->
             {
                 // NPC z sklepem
-                final NpcItem shopperData = npc.getKey();
-                final NPC shopper = this.createNpc(shopperData);
+                final NPC shopper = this.createNpc(npc.getKey());
                 shopper.addTrait(new ShopTrait(ShopTrait.NpcType.SHOP));
-                if (shopperData != null && shopperData.getEntityType() == EntityType.PLAYER)
-                {
-                    shopper.addTrait(new SkinTrait(shopperData.getProfileData(), shopperData.getDataSign()));
-                }
                 shopper.setName("Sklep");
                 shopper.spawn(team.getConfig().getShopNpc().toBukkit(event.getArena().getWorld().getCurrentWorld()));
 
                 // NPC z ulepszeniami
-                final NpcItem upgraderData = npc.getValue();
-                final NPC upgrader = this.createNpc(upgraderData);
+                final NPC upgrader = this.createNpc(npc.getValue());
                 upgrader.addTrait(new ShopTrait(ShopTrait.NpcType.UPGRADES));
-                if (upgraderData != null && upgraderData.getEntityType() == EntityType.PLAYER)
-                {
-                    upgrader.addTrait(new SkinTrait(upgraderData.getProfileData(), upgraderData.getDataSign()));
-                }
                 upgrader.setName("Ulepszenia");
                 upgrader.spawn(team.getConfig().getUpgradesNpc().toBukkit(event.getArena().getWorld().getCurrentWorld()));
             });
@@ -124,7 +115,7 @@ public class NpcCreator implements Listener
                                             .map(player -> this.globalShops.getPlayer(player).getActiveItem(group))
                                             .filter(Objects::nonNull)
                                             .map(NpcItem::new)
-                                            .sorted(Comparator.comparing(NpcItem::getPriority)).iterator();
+                                            .sorted(Comparator.comparing(NpcItem::getPriority).reversed()).iterator();
 
         final NpcItem first = skins.hasNext() ? skins.next() : null;
         final NpcItem second = skins.hasNext() ? skins.next() : first;
@@ -138,6 +129,17 @@ public class NpcCreator implements Listener
         {
             return this.npcRegistry.createNPC(EntityType.VILLAGER, UUID.randomUUID().toString());
         }
-        return this.npcRegistry.createNPC(item.getEntityType(), UUID.randomUUID().toString());
+
+        final NPC npc = this.npcRegistry.createNPC(item.getEntityType(), UUID.randomUUID().toString());
+        if (item.getEntityType() == EntityType.PLAYER)
+        {
+            npc.addTrait(new SkinTrait(item.getProfileData(), item.getDataSign()));
+        }
+        else if (item.getEntityType() == EntityType.VILLAGER)
+        {
+            npc.getTrait(VillagerProfession.class).setProfession(item.getVillagerProfession());
+        }
+
+        return npc;
     }
 }

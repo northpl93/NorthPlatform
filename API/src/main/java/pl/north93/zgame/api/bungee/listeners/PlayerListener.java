@@ -38,6 +38,9 @@ import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.impl.OnlinePlayerImpl;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
+import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
+import pl.north93.zgame.api.global.network.players.IPlayersManager;
+import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class PlayerListener implements Listener
@@ -55,7 +58,6 @@ public class PlayerListener implements Listener
     public PlayerListener(final BungeeApiCore bungeeApiCore)
     {
         this.bungeeApiCore = bungeeApiCore;
-        //Injector.inject(bungeeApiCore.getComponentManager(), this); // manually perform injections
     }
 
     @EventHandler
@@ -227,30 +229,21 @@ public class PlayerListener implements Listener
     @EventHandler
     public void onServerChange(final ServerSwitchEvent event)
     {
-        final Value<IOnlinePlayer> player = this.bungeeApiCore.getNetworkManager().getPlayers().unsafe().getOnline(event.getPlayer().getName());
+        final IPlayersManager playersManager = this.bungeeApiCore.getNetworkManager().getPlayers();
+        try (final IPlayerTransaction transaction = playersManager.transaction(Identity.of(event.getPlayer())))
+        {
+            if (! transaction.isOnline())
+            {
+                return;
+            }
 
-        try
-        {
-            player.lock();
-            final IOnlinePlayer iOnlinePlayer = player.getWithoutCache();
-            if (iOnlinePlayer != null)
-            {
-                iOnlinePlayer.setServerId(UUID.fromString(event.getPlayer().getServer().getInfo().getName()));
-                player.set(iOnlinePlayer); // send new data to redis
-                this.updateLocale(event.getPlayer(), iOnlinePlayer.getLocale());
-            }
-            else
-            {
-                this.bungeeApiCore.getLogger().warning("iOnlinePlayer==null in onServerChange. " + event);
-            }
+            final IOnlinePlayer onlinePlayer = (IOnlinePlayer) transaction.getPlayer();
+            onlinePlayer.setServerId(UUID.fromString(event.getPlayer().getServer().getInfo().getName()));
+            this.updateLocale(event.getPlayer(), onlinePlayer.getLocale());
         }
-        catch (final IllegalArgumentException ex)
+        catch (final Exception e)
         {
-            this.bungeeApiCore.getLogger().log(Level.SEVERE, "Can't set player's serverId in onServerChange", ex);
-        }
-        finally
-        {
-            player.unlock();
+            this.bungeeApiCore.getLogger().log(Level.SEVERE, "Can't set player's serverId in onServerChange", e);
         }
     }
 

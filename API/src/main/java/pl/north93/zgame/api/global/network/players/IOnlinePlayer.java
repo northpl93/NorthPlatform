@@ -11,6 +11,12 @@ public interface IOnlinePlayer extends IPlayer, ProvidingRedisKey, Messageable
 {
     void transferDataFrom(IOfflinePlayer offlinePlayer);
 
+    @Override
+    default Identity getIdentity()
+    {
+        return Identity.create(this.getUuid(), this.getNick(), this.getDisplayName());
+    }
+
     /**
      * Zwraca nick pod którym aktualnie jest zalogowany gracz.
      * @return nick zalogowanego gracza.

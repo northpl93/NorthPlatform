@@ -25,10 +25,7 @@ public interface IPlayer extends Metadatable
      * porownujace po UUID.
      * @return identity gracza.
      */
-    default Identity getIdentity()
-    {
-        return new Identity(this.getUuid(), this.getDisplayName());
-    }
+    Identity getIdentity();
 
     /**
      * Sprawdza czy dany gracz ma ustawiona niestandardowa nazwe

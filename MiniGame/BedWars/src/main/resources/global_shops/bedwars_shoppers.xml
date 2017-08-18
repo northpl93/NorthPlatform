@@ -9,6 +9,7 @@
             <name lang="en-GB">Smith</name>
             <itemData name="priority" value="1" />
             <itemData name="type" value="VILLAGER" />
+            <itemData name="profession" value="BLACKSMITH" />
         </item>
 
         <!-- zombie -->

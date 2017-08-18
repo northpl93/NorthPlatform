@@ -114,7 +114,12 @@ public class Gui implements IClickHandler
     {
         catchException("onInit", () -> onInit());
     }
-    
+
+    public final void callOnRender()
+    {
+        catchException("onRender", this::onRender);
+    }
+
     public final void callOnOpen(Player player)
     {
         catchException("onOpen", () -> onOpen(player));
@@ -139,6 +144,10 @@ public class Gui implements IClickHandler
     }
 
     protected void onInit()
+    {
+    }
+
+    protected void onRender()
     {
     }
     

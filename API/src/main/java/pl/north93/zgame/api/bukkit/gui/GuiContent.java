@@ -50,13 +50,13 @@ public class GuiContent extends GuiContainerElement
     public void renderContent()
     {
         renderedCanvas.clear();
+        this.gui.callOnRender();
         render(renderedCanvas);
     }
     
     public void renderToInventory(Player player, Inventory inv)
     {
         Preconditions.checkState(inv.getType() == InventoryType.CHEST);
-        
         inv.clear();
         
         for ( int i = 0; i < renderedCanvas.getWidth(); i++ )

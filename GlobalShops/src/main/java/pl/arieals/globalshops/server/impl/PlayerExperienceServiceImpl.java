@@ -88,8 +88,13 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
             return;
         }
 
+        final boolean success = playerContainer.addItem(item);
+        if (! success)
+        {
+            this.logger.log(Level.WARNING, "Player {0} failed to buy {1}", new Object[]{bukkitPlayer.getName(), item.getId()});
+        }
+
         // todo bierzemy kase
-        playerContainer.addItem(item);
         this.logger.log(Level.INFO, "Player {0} bought {1}", new Object[]{bukkitPlayer.getName(), item.getId()});
 
         // oznaczamy dany item jako aktywny
