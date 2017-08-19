@@ -16,12 +16,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.statistics.IRecord;
-import pl.arieals.api.minigame.shared.api.statistics.IRecordResult;
 import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
+import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
-import pl.arieals.api.minigame.shared.api.statistics.NumberStatistic;
-import pl.arieals.api.minigame.shared.impl.statistics.RecordImpl;
-import pl.arieals.api.minigame.shared.impl.statistics.RecordResultImpl;
+import pl.arieals.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
+import pl.arieals.api.minigame.shared.api.statistics.unit.NumberUnit;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.arieals.minigame.elytrarace.arena.finish.IFinishHandler;
@@ -52,15 +51,17 @@ public class ScoreMetaHandler implements IFinishHandler
                 player.getDisplayName(),
                 scoreData.getPoints());
 
-        final IStatistic<NumberStatistic> scoreStatistic = this.getScoreStatistic(arena);
-        final NumberStatistic newValue = new NumberStatistic(scoreData.getPoints());
-        final CompletableFuture<IRecordResult> record = scoreStatistic.record(player.getUniqueId(), newValue);
-        this.points.put(new ScoreFinishInfo(player.getUniqueId(), player.getDisplayName(), record), scoreData.getPoints());
+        final IStatistic<NumberUnit> scoreStatistic = this.getScoreStatistic(arena);
+        final IStatisticHolder statisticsHolder = this.statisticsManager.getHolder(player.getUniqueId());
+        final CompletableFuture<IRecord<NumberUnit>> record = statisticsHolder.record(scoreStatistic, new NumberUnit((long) scoreData.getPoints()), true);
+
+        this.points.put(new ScoreFinishInfo(player.getUniqueId(), player.getDisplayName()), scoreData.getPoints());
 
         final boolean isFinished = IFinishHandler.checkFinished(arena);
 
         record.whenComplete((result, throwable) ->
         {
+            // todo rework systemu statystyk; tutaj result jest zle, trzeba osobno pobrac (i cachowac?) rekord globalny
             final ScoreMessage scoreMessage = new ScoreMessage(this.getTop(), result, !isFinished);
             if (isFinished)
             {
@@ -95,10 +96,10 @@ public class ScoreMetaHandler implements IFinishHandler
             return;
         }
 
-        this.getScoreStatistic(arena).getGlobalRecord().whenComplete((result, throwable) ->
+        final HigherNumberBetterStatistic scoreStatistic = this.getScoreStatistic(arena);
+        this.statisticsManager.getBestRecord(scoreStatistic).whenComplete((result, throwable) ->
         {
-            final RecordResultImpl fakeRecord = new RecordResultImpl(new RecordImpl(null, 0, 0), null, result, true);
-            final ScoreMessage raceMessage = new ScoreMessage(this.getTop(), fakeRecord, false);
+            final ScoreMessage raceMessage = new ScoreMessage(this.getTop(), result, false);
             for (final Player playerInArena : arena.getPlayersManager().getPlayers())
             {
                 raceMessage.print(playerInArena);
@@ -113,9 +114,9 @@ public class ScoreMetaHandler implements IFinishHandler
     {
     }
 
-    private IStatistic<NumberStatistic> getScoreStatistic(final LocalArena arena)
+    private HigherNumberBetterStatistic getScoreStatistic(final LocalArena arena)
     {
-        return this.statisticsManager.getStatistic(NumberStatistic.class, "elytra/score/" + arena.getWorld().getCurrentMapTemplate().getName(), false);
+        return new HigherNumberBetterStatistic("elytra/score/" + arena.getWorld().getCurrentMapTemplate().getName());
     }
 
     @Override

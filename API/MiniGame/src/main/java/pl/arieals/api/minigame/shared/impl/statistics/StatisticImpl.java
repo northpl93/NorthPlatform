@@ -1,27 +1,6 @@
 package pl.arieals.api.minigame.shared.impl.statistics;
 
-import static com.mongodb.client.model.Filters.eq;
-
-
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.FindOneAndUpdateOptions;
-import com.mongodb.client.model.UpdateOptions;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.bson.Document;
-
-import pl.arieals.api.minigame.shared.api.statistics.IRecord;
-import pl.arieals.api.minigame.shared.api.statistics.IRecordResult;
-import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
-import pl.arieals.api.minigame.shared.api.statistics.IStatisticEncoder;
-
-public class StatisticImpl<E extends IStatisticEncoder> implements IStatistic<E>
+/*public class StatisticImpl<E extends IStatisticEncoder> implements IStatistic<E>
 {
     private final StatisticsManagerImpl manager;
     private final String  key;
@@ -132,4 +111,4 @@ public class StatisticImpl<E extends IStatisticEncoder> implements IStatistic<E>
     {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("manager", this.manager).append("key", this.key).append("isReversed", this.isReversed).toString();
     }
-}
+}*/

@@ -1,6 +1,7 @@
 package pl.arieals.minigame.elytrarace.arena.finish.race;
 
 import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -11,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.shared.api.statistics.IRecord;
-import pl.arieals.api.minigame.shared.api.statistics.IRecordResult;
+import pl.arieals.api.minigame.shared.api.statistics.unit.DurationUnit;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
 import pl.north93.zgame.api.global.messages.MessageLayout;
@@ -22,16 +23,16 @@ import pl.north93.zgame.api.global.network.INetworkManager;
 public class RaceMessage
 {
     @Inject @Messages("ElytraRace")
-    private       MessagesBox          messages;
+    private       MessagesBox           messages;
     @Inject
-    private       INetworkManager      network;
+    private       INetworkManager       network;
     @Inject @Named("Elytra Race time format")
-    private       SimpleDateFormat     timeFormat;
-    private final List<RaceFinishInfo> finishInfo;
-    private final IRecordResult        record;
-    private final boolean              isPartial;
+    private       SimpleDateFormat      timeFormat;
+    private final List<RaceFinishInfo>  finishInfo;
+    private final IRecord<DurationUnit> record;
+    private final boolean               isPartial;
 
-    public RaceMessage(final List<RaceFinishInfo> finishInfo, final IRecordResult record, final boolean isPartial)
+    public RaceMessage(final List<RaceFinishInfo> finishInfo, final IRecord<DurationUnit> record, final boolean isPartial)
     {
         this.finishInfo = finishInfo;
         this.record = record;
@@ -108,11 +109,10 @@ public class RaceMessage
         final String formattedTime = this.timeFormat.format(new Date(this.getFinishInfo(player).getTime()));
         this.messages.sendMessage(player, "finish.race.your_time", MessageLayout.CENTER, formattedTime);
 
-        final IRecord previousGlobal = this.record.previousGlobal();
-        if (previousGlobal != null)
+        if (this.record != null)
         {
-            final String recordOwner = this.network.getPlayers().getNickFromUuid(previousGlobal.getOwner());
-            final String formattedRecord = this.timeFormat.format(new Date(previousGlobal.value()));
+            final String recordOwner = this.network.getPlayers().getNickFromUuid(this.record.getHolder().getUniqueId());
+            final String formattedRecord = this.timeFormat.format(new Date(this.record.getValue().getValue().get(ChronoUnit.MILLIS)));
             this.messages.sendMessage(player, "finish.race.record", MessageLayout.CENTER, recordOwner, formattedRecord);
         }
     }

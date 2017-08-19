@@ -7,6 +7,7 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -17,6 +18,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.shared.api.statistics.unit.DurationUnit;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.north93.zgame.api.bukkit.scoreboard.ContentBuilder;
@@ -29,11 +31,11 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 public class RaceScoreboard implements IScoreboardLayout
 {
     private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("[m:]ss");
-    private final CompletableFuture<Long> avgTime;
+    private final CompletableFuture<DurationUnit> avgTime;
     @Inject @Messages("ElytraRace")
     private       MessagesBox             msg;
 
-    public RaceScoreboard(final CompletableFuture<Long> avgTime)
+    public RaceScoreboard(final CompletableFuture<DurationUnit> avgTime)
     {
         this.avgTime = avgTime;
     }
@@ -76,7 +78,8 @@ public class RaceScoreboard implements IScoreboardLayout
 
         try
         {
-            return FORMAT.format(LocalDateTime.ofEpochSecond(this.avgTime.get(), 0, ZoneOffset.UTC));
+            final long millis = this.avgTime.get().getValue().get(ChronoUnit.MILLIS);
+            return FORMAT.format(LocalDateTime.ofEpochSecond(millis, 0, ZoneOffset.UTC));
         }
         catch (final InterruptedException | ExecutionException e)
         {

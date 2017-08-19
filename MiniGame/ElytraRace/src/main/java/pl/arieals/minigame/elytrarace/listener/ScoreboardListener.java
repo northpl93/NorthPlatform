@@ -12,9 +12,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
-import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
-import pl.arieals.api.minigame.shared.api.statistics.NumberStatistic;
+import pl.arieals.api.minigame.shared.api.statistics.type.ShorterTimeBetterStatistic;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.scoreboard.LobbyScoreboard;
 import pl.arieals.minigame.elytrarace.scoreboard.RaceScoreboard;
@@ -46,8 +45,8 @@ public class ScoreboardListener implements Listener
         if (arenaData.getGameMode() == RACE_MODE)
         {
             final String statKey = "elytra/race/" + event.getArena().getWorld().getCurrentMapTemplate().getName();
-            final IStatistic<NumberStatistic> statistic = this.statisticsManager.getStatistic(NumberStatistic.class, statKey, false);
-            layout = new RaceScoreboard(statistic.getAverageValue());
+            final ShorterTimeBetterStatistic statistic = new ShorterTimeBetterStatistic(statKey);
+            layout = new RaceScoreboard(this.statisticsManager.getAverage(statistic));
         }
         else
         {

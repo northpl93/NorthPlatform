@@ -1,12 +1,17 @@
 package pl.arieals.api.minigame.shared.api.statistics;
 
-import java.util.UUID;
+import java.time.Instant;
 
-public interface IRecord
+/**
+ * Reprezentuje zapisana wartosc danej statystyki dla danego holdera.
+ */
+public interface IRecord<UNIT extends IStatisticUnit>
 {
-    UUID getOwner();
+    IStatistic<UNIT> getStatistic();
 
-    long value();
+    IStatisticHolder getHolder();
 
-    long recordedAt();
+    Instant getRecordedAt();
+
+    UNIT getValue();
 }

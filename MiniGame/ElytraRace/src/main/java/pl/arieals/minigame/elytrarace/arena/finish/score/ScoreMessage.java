@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.shared.api.statistics.IRecord;
-import pl.arieals.api.minigame.shared.api.statistics.IRecordResult;
+import pl.arieals.api.minigame.shared.api.statistics.unit.NumberUnit;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
@@ -27,10 +27,10 @@ public class ScoreMessage
     @Inject
     private       INetworkManager               network;
     private final Map<ScoreFinishInfo, Integer> top;
-    private final IRecordResult                 record;
+    private final IRecord<NumberUnit>           record;
     private final boolean                       isPartial;
 
-    public ScoreMessage(final Map<ScoreFinishInfo, Integer> top, final IRecordResult record, final boolean isPartial)
+    public ScoreMessage(final Map<ScoreFinishInfo, Integer> top, final IRecord<NumberUnit> record, final boolean isPartial)
     {
         this.top = top;
         this.record = record;
@@ -104,11 +104,10 @@ public class ScoreMessage
     {
         player.sendMessage("");
         this.messages.sendMessage(player, "finish.score.your_points", MessageLayout.CENTER, getPlayerData(player, ElytraScorePlayer.class).getPoints());
-        final IRecord previousGlobal = this.record.previousGlobal();
-        if (previousGlobal != null)
+        if (this.record != null)
         {
-            final String recordOwner = this.network.getPlayers().getNickFromUuid(previousGlobal.getOwner());
-            this.messages.sendMessage(player, "finish.score.record", MessageLayout.CENTER, recordOwner, previousGlobal.value());
+            final String recordOwner = this.network.getPlayers().getNickFromUuid(this.record.getHolder().getUniqueId());
+            this.messages.sendMessage(player, "finish.score.record", MessageLayout.CENTER, recordOwner, this.record.getValue().getValue());
         }
     }
 

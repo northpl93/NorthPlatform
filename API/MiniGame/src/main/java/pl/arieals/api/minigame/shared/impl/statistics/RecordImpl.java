@@ -1,63 +1,57 @@
 package pl.arieals.api.minigame.shared.impl.statistics;
 
-import java.util.UUID;
+import java.time.Instant;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.bson.Document;
 
 import pl.arieals.api.minigame.shared.api.statistics.IRecord;
+import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
+import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
+import pl.arieals.api.minigame.shared.api.statistics.IStatisticUnit;
 
-public class RecordImpl implements IRecord
+class RecordImpl<UNIT extends IStatisticUnit> implements IRecord<UNIT>
 {
-    private final UUID owner;
-    private final long value;
-    private final long recordedAt;
+    private final IStatistic<UNIT> statistic;
+    private final IStatisticHolder holder;
+    private final Instant          recordTime;
+    private final UNIT             value;
 
-    public RecordImpl(final UUID owner, final long value, final long recordedAt)
+    public RecordImpl(final IStatistic<UNIT> statistic, final IStatisticHolder holder, final Instant recordTime, final UNIT value)
     {
-        this.owner = owner;
+        this.statistic = statistic;
+        this.holder = holder;
+        this.recordTime = recordTime;
         this.value = value;
-        this.recordedAt = recordedAt;
-    }
-
-    public RecordImpl(final Document document)
-    {
-        this.owner = document.get("ownerId", UUID.class);
-        this.value = document.getLong("value");
-        this.recordedAt = document.getLong("recordedAt");
     }
 
     @Override
-    public UUID getOwner()
+    public IStatistic<UNIT> getStatistic()
     {
-        return this.owner;
+        return this.statistic;
     }
 
     @Override
-    public long value()
+    public IStatisticHolder getHolder()
+    {
+        return this.holder;
+    }
+
+    @Override
+    public Instant getRecordedAt()
+    {
+        return this.recordTime;
+    }
+
+    @Override
+    public UNIT getValue()
     {
         return this.value;
     }
 
     @Override
-    public long recordedAt()
-    {
-        return this.recordedAt;
-    }
-
-    public Document toDocument()
-    {
-        final Document doc = new Document();
-        doc.put("ownerId", this.owner);
-        doc.put("value", this.value);
-        doc.put("recordedAt", this.recordedAt);
-        return doc;
-    }
-
-    @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("owner", this.owner).append("value", this.value).append("recordedAt", this.recordedAt).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("statistic", this.statistic).append("holder", this.holder).append("recordTime", this.recordTime).append("value", this.value).toString();
     }
 }
