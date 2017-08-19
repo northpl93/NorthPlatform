@@ -10,9 +10,62 @@
 
             <!-- firework -->
             <button pos="2,2">
-                <variable value="northplatform://lobby/shop/general/itemVars/bedwars_elimination/firework/$playerId" />
-                <icon id="FIREWORK" name="@general.name_placeholder$nameColor,name" lore="@elimination_effect.firework$lore" />
+                <icon id="FIREWORK" name="@general.name_placeholder$nameColor-firework,name-firework" lore="@elimination_effect.firework$lore-firework" />
                 <onClick>northplatform://lobby/shop/general/click/bedwars_elimination/firework/$playerId</onClick>
+            </button>
+
+            <!-- lighting -->
+            <button pos="3,2">
+                <icon id="BEACON" name="@general.name_placeholder$nameColor-lighting,name-lighting" lore="@elimination_effect.lighting$lore-lighting" />
+                <onClick>northplatform://lobby/shop/general/click/bedwars_elimination/lighting/$playerId</onClick>
+            </button>
+
+            <!-- boom -->
+            <button pos="4,2">
+                <icon id="TNT" name="@general.name_placeholder$nameColor-boom,name-boom" lore="@elimination_effect.boom$lore-boom" />
+                <onClick>northplatform://lobby/shop/general/click/bedwars_elimination/boom/$playerId</onClick>
+            </button>
+
+            <!-- cookies -->
+            <button pos="5,2">
+                <icon id="COOKIE" name="@general.name_placeholder$nameColor-cookies,name-cookies" lore="@elimination_effect.cookies$lore-cookies" />
+                <onClick>northplatform://lobby/shop/general/click/bedwars_elimination/cookies/$playerId</onClick>
+            </button>
+
+            <!-- blood -->
+            <button pos="6,2">
+                <icon id="REDSTONE" name="@general.name_placeholder$nameColor-blood,name-blood" lore="@elimination_effect.blood$lore-blood" />
+                <onClick>northplatform://lobby/shop/general/click/bedwars_elimination/blood/$playerId</onClick>
+            </button>
+
+            <!-- hearts -->
+            <button pos="2,3">
+                <icon id="APPLE" name="@general.name_placeholder$nameColor-hearts,name-hearts" lore="@elimination_effect.hearts$lore-hearts" />
+                <onClick>northplatform://lobby/shop/general/click/bedwars_elimination/hearts/$playerId</onClick>
+            </button>
+
+            <!-- flag -->
+            <button pos="3,3">
+                <icon id="BANNER" name="@general.name_placeholder$nameColor-flag,name-flag" lore="@elimination_effect.flag$lore-flag" />
+                <onClick>northplatform://lobby/shop/general/click/bedwars_elimination/flag/$playerId</onClick>
+            </button>
+
+            <!-- bat -->
+            <button pos="4,3">
+                <icon id="BANNER" name="@general.name_placeholder$nameColor-bat,name-bat" lore="@elimination_effect.bat$lore-bat" />
+                <onClick>northplatform://lobby/shop/general/click/bedwars_elimination/bat/$playerId</onClick>
+            </button>
+
+            <!-- diamonds -->
+            <button pos="5,3">
+                <icon id="DIAMOND" name="@general.name_placeholder$nameColor-diamonds,name-diamonds" lore="@elimination_effect.diamonds$lore-diamonds" />
+                <onClick>northplatform://lobby/shop/general/click/bedwars_elimination/diamonds/$playerId</onClick>
+            </button>
+
+            <!-- grave -->
+            <button pos="6,3">
+                <icon id="STONE" name="@general.name_placeholder$nameColor-grave,name-grave" lore="@elimination_effect.grave$lore-grave" />
+                <onClick>northplatform://lobby/shop/general/click/bedwars_elimination/grave/$playerId</onClick>
             </button>
 
             <!-- domyslny -->

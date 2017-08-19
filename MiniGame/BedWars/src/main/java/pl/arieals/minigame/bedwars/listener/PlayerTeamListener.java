@@ -30,6 +30,7 @@ import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.cfg.BwConfig;
 import pl.arieals.minigame.bedwars.scoreboard.GameScoreboard;
 import pl.arieals.minigame.bedwars.scoreboard.LobbyScoreboard;
+import pl.arieals.minigame.bedwars.shop.EliminationEffectManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -40,13 +41,15 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 public class PlayerTeamListener implements Listener
 {
     @Inject
-    private BukkitApiCore      apiCore;
+    private BukkitApiCore            apiCore;
     @Inject
-    private BwConfig           config;
+    private BwConfig                 config;
     @Inject
-    private IScoreboardManager scoreboardManager;
+    private IScoreboardManager       scoreboardManager;
+    @Inject
+    private EliminationEffectManager eliminationEffect;
     @Inject @Messages("BedWars")
-    private MessagesBox        messages;
+    private MessagesBox              messages;
 
     @EventHandler
     public void playerJoin(final PlayerJoinArenaEvent event)
@@ -54,12 +57,10 @@ public class PlayerTeamListener implements Listener
         final Player player = event.getPlayer();
 
         final BedWarsArena arenaData = event.getArena().getArenaData();
-        final BedWarsPlayer playerData = new BedWarsPlayer(player);
+        final BedWarsPlayer playerData = new BedWarsPlayer(player, this.eliminationEffect.getEffectOf(player));
         setPlayerData(player, playerData);
 
         final Location lobbyLocation = arenaData.getConfig().getLobby().toBukkit(event.getArena().getWorld().getCurrentWorld());
-
-        player.teleport(lobbyLocation);
         player.teleport(lobbyLocation);
 
         this.scoreboardManager.setLayout(player, new LobbyScoreboard());

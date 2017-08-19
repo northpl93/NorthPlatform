@@ -34,6 +34,11 @@ public class PlayerEliminationListener implements Listener
         final Player player = event.getPlayer();
 
         this.logger.log(Level.INFO, "Player eliminated event called for {0} on arena {1}", new Object[]{player.getName(), event.getArena().getId()});
+        if (! player.isOnline())
+        {
+            // gracz nie jest online gdy zostal wyeliminowany
+            return;
+        }
 
         // resetujemy maksymalne zdrowie ktore moglo zostac zmienione przez ulepszenie
         player.setMaxHealth(20);

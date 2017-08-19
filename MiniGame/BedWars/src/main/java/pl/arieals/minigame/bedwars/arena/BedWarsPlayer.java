@@ -7,24 +7,32 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.minigame.bedwars.event.PlayerEliminatedEvent;
+import pl.arieals.minigame.bedwars.shop.elimination.IEliminationEffect;
 import pl.arieals.minigame.bedwars.utils.TeamArmorUtils;
 
 public class BedWarsPlayer
 {
-    private final Player bukkitPlayer;
+    private final Player             bukkitPlayer;
+    private final IEliminationEffect eliminationEffect;
     private Team    team;
     private boolean eliminated;
     private int     kills;
     private int     lives; // ilosc dodatkowych zyc
 
-    public BedWarsPlayer(final Player bukkitPlayer)
+    public BedWarsPlayer(final Player bukkitPlayer, final IEliminationEffect eliminationEffect)
     {
         this.bukkitPlayer = bukkitPlayer;
+        this.eliminationEffect = eliminationEffect;
     }
 
     public Player getBukkitPlayer()
     {
         return this.bukkitPlayer;
+    }
+
+    public IEliminationEffect getEliminationEffect()
+    {
+        return this.eliminationEffect;
     }
 
     public Team getTeam()

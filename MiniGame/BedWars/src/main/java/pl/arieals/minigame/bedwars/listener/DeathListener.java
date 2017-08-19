@@ -27,6 +27,7 @@ import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.RevivePlayerCountdown;
 import pl.arieals.minigame.bedwars.arena.Team;
+import pl.arieals.minigame.bedwars.shop.elimination.IEliminationEffect;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageContainer;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageEntry;
@@ -176,6 +177,13 @@ public class DeathListener implements Listener
         {
             // jesli damager jest wyeliminowany to nie uznajemy go za zabojce
             return;
+        }
+
+        final IEliminationEffect eliminationEffect = damagerData.getEliminationEffect();
+        if (eliminationEffect != null)
+        {
+            // odtwarzamy animacje zabicia gracza
+            eliminationEffect.playerEliminated(player, damager);
         }
 
         damagerData.incrementKills(); // dodajemy zabojcy killa
