@@ -28,6 +28,8 @@ import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.RevivePlayerCountdown;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.shop.elimination.IEliminationEffect;
+import pl.arieals.minigame.bedwars.shop.stattrack.StatTrackManager;
+import pl.arieals.minigame.bedwars.shop.stattrack.TrackedStatistic;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageContainer;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageEntry;
@@ -40,9 +42,11 @@ import pl.north93.zgame.api.global.network.players.Identity;
 public class DeathListener implements Listener
 {
     @Inject
-    private BukkitApiCore apiCore;
+    private BukkitApiCore    apiCore;
+    @Inject
+    private StatTrackManager statTrackManager;
     @Inject @Messages("BedWars")
-    private MessagesBox   messages;
+    private MessagesBox      messages;
 
     @EventHandler
     public void onVoidDamage(final EntityDamageEvent event)
@@ -69,7 +73,7 @@ public class DeathListener implements Listener
     public void onPlayerHitPlayer(final EntityDamageByEntityEvent event)
     {
         final Player player = instanceOf(event.getEntity(), Player.class);
-        final Player damager = new DamageEntry(event, null).getPlayerDamager(); // porzyczylismy sobie kod z damagetrackera
+        final Player damager = new DamageEntry(event, null).getPlayerDamager(); // pozyczylismy sobie kod z damagetrackera
         if (player == null || damager == null)
         {
             return;
@@ -186,7 +190,11 @@ public class DeathListener implements Listener
             eliminationEffect.playerEliminated(player, damager);
         }
 
-        damagerData.incrementKills(); // dodajemy zabojcy killa
+        // dodajemy zabojcy killa w systemia stattrak
+        this.statTrackManager.bumpStatistic(damager, TrackedStatistic.KILLS, lastDmg.getTool());
+        // dodajemy zabojcy killa w obiekcie BedWarsPlayer
+        damagerData.incrementKills();
+        // dajemy zabojcy nagrode(?) za eliminacje
         arena.getRewards().addReward(Identity.of(damager), new CurrencyReward("elimination", "minigame", 100));
 
         // jesli gracz ma 0 i mniej zycia, a lozko jest zniszczone to nastapila eliminacja

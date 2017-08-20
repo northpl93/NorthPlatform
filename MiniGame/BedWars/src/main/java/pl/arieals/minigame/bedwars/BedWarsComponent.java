@@ -29,6 +29,7 @@ import pl.arieals.minigame.bedwars.listener.SpecialItems;
 import pl.arieals.minigame.bedwars.listener.TabListHandler;
 import pl.arieals.minigame.bedwars.listener.UpgradeInstallListener;
 import pl.arieals.minigame.bedwars.npc.NpcCreator;
+import pl.arieals.minigame.bedwars.shop.stattrack.StatTrackListener;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageTracker;
 import pl.north93.zgame.api.global.ApiCore;
@@ -53,6 +54,7 @@ public class BedWarsComponent extends Component
         }
         this.bukkitApi.registerEvents(
                 new ArenaStartListener(),
+                new StatTrackListener(), // zarzadza stat trakami.
                 new NpcCreator(), // zarzadza tworzeniem NPC w bazie
                 new TabListHandler(), // zarzadza tablista
                 new ChatListener(), // formatuje czat bedwarsow

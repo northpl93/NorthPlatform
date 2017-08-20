@@ -1,5 +1,40 @@
 <itemGroup>
     <id>bedwars_perks</id>
-    <groupType>SINGLE_PICK</groupType>
-    <items></items>
+    <groupType>MULTI_BUY</groupType>
+    <items>
+        <!-- stattrack drewniany miecz -->
+        <item>
+            <id>stattrack_wooden_sword</id>
+            <name lang="pl-PL">Stat-Track Drewniany Miecz</name>
+            <name lang="en-GB">Stat-Track Drewniany Miecz</name>
+        </item>
+
+        <!-- stattrack kamienny miecz -->
+        <item>
+            <id>stattrack_stone_sword</id>
+            <name lang="pl-PL">Stat-Track Kamienny Miecz</name>
+            <name lang="en-GB">Stat-Track Kamienny Miecz</name>
+        </item>
+
+        <!-- stattrack zelazny miecz -->
+        <item>
+            <id>stattrack_iron_sword</id>
+            <name lang="pl-PL">Stat-Track Zelazny Miecz</name>
+            <name lang="en-GB">Stat-Track Zelazny Miecz</name>
+        </item>
+
+        <!-- stattrack diamentowy miecz -->
+        <item>
+            <id>stattrack_diamond_sword</id>
+            <name lang="pl-PL">Stat-Track Diamentowy Miecz</name>
+            <name lang="en-GB">Stat-Track Diamentowy Miecz</name>
+        </item>
+
+        <!-- stattrack luk -->
+        <item>
+            <id>stattrack_bow</id>
+            <name lang="pl-PL">Stat-Track Luk</name>
+            <name lang="en-GB">Stat-Track Luk</name>
+        </item>
+    </items>
 </itemGroup>

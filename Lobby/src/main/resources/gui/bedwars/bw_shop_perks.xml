@@ -5,10 +5,44 @@
         <background id="0" data="0" />
         <content>
             <button pos="4,0">
-                <icon id="BED" name="todo" lore="todo"/>
+                <icon id="DIAMOND" name="@perks.category_name"/>
             </button>
-            <!-- perki todo -->
 
+            <!-- drewniany miecz stat track -->
+            <button pos="2,2">
+                <icon id="WOOD_SWORD" name="@general.name_placeholder$nameColor-stattrack_wooden_sword,name-stattrack_wooden_sword" lore="@perks.stattrack_wooden_sword$lore-stattrack_wooden_sword" />
+                <onClick>northplatform://lobby/shop/general/click/bedwars_perks/stattrack_wooden_sword/$playerId</onClick>
+            </button>
+
+            <!-- kamienny miecz stat track -->
+            <button pos="3,2">
+                <icon id="STONE_SWORD" name="@general.name_placeholder$nameColor-stattrack_stone_sword,name-stattrack_stone_sword" lore="@perks.stattrack_stone_sword$lore-stattrack_stone_sword" />
+                <onClick>northplatform://lobby/shop/general/click/bedwars_perks/stattrack_stone_sword/$playerId</onClick>
+            </button>
+
+            <!-- zelazny miecz stat track -->
+            <button pos="4,2">
+                <icon id="IRON_SWORD" name="@general.name_placeholder$nameColor-stattrack_iron_sword,name-stattrack_iron_sword" lore="@perks.stattrack_iron_sword$lore-stattrack_iron_sword" />
+                <onClick>northplatform://lobby/shop/general/click/bedwars_perks/stattrack_iron_sword/$playerId</onClick>
+            </button>
+
+            <!-- diamentowy miecz stat track -->
+            <button pos="5,2">
+                <icon id="DIAMOND_SWORD" name="@general.name_placeholder$nameColor-stattrack_diamond_sword,name-stattrack_diamond_sword" lore="@perks.stattrack_diamond_sword$lore-stattrack_diamond_sword" />
+                <onClick>northplatform://lobby/shop/general/click/bedwars_perks/stattrack_diamond_sword/$playerId</onClick>
+            </button>
+
+            <!-- luk stat track -->
+            <button pos="6,2">
+                <icon id="BOW" name="@general.name_placeholder$nameColor-stattrack_bow,name-stattrack_bow" lore="@perks.stattrack_bow$lore-stattrack_bow" />
+                <onClick>northplatform://lobby/shop/general/click/bedwars_perks/stattrack_bow/$playerId</onClick>
+            </button>
+
+            <!-- przycisk back -->
+            <button pos="7,4">
+                <icon id="IRON_DOOR" name="@general.back" />
+                <onClick>northplatform://lobby/shop/bedwars/openCategory/main/$playerId</onClick>
+            </button>
         </content>
     </container>
 </gui>

@@ -28,6 +28,7 @@ import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.event.PlayerRevivedEvent;
 import pl.arieals.minigame.bedwars.shop.ShopManager;
 import pl.arieals.minigame.bedwars.shop.UpgradeManager;
+import pl.arieals.minigame.bedwars.shop.stattrack.StatTrackItems;
 import pl.arieals.minigame.bedwars.shop.upgrade.RoadOfWarrior;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageEntry;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageTracker;
@@ -42,6 +43,8 @@ public class PlayerItemsListener implements Listener
     private ShopManager    shopManager;
     @Inject
     private UpgradeManager upgradeManager;
+    @Inject
+    private StatTrackItems statTrackItems;
     @Inject @Messages("BedWars")
     private MessagesBox    messages;
 
@@ -193,6 +196,9 @@ public class PlayerItemsListener implements Listener
                 upgrade.apply(woodSword, upgradeLevel);
             }
         }
+
+        // updatujemy stat tracka na drewnianym mieczu
+        this.statTrackItems.updateItem(player, woodSword);
 
         player.getInventory().addItem(woodSword); // drewniany miecz na start
     }
