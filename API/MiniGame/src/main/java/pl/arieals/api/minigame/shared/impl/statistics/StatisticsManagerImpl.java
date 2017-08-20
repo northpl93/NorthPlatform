@@ -1,6 +1,8 @@
 package pl.arieals.api.minigame.shared.impl.statistics;
 
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -62,7 +64,33 @@ public class StatisticsManagerImpl implements IStatisticsManager
     @Override
     public <UNIT extends IStatisticUnit> CompletableFuture<UNIT> getAverage(final IStatistic<UNIT> statistic)
     {
-        return null; // todo
+        final MongoCollection<Document> collection = this.getCollection();
+
+        final Document group = new Document("avg", new Document("$avg", "value"));
+        final Document match = new Document("statId", statistic.getId());
+
+        final List<Document> documents = Arrays.asList(new Document("$match", match), new Document("$group", group));
+
+        final CompletableFuture<UNIT> future = new CompletableFuture<>();
+        this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
+        {
+            final Document first = collection.aggregate(documents).first();
+
+            final UNIT value;
+            if (first == null)
+            {
+                value = statistic.getDbComposer().readValue(new Document("value", 0));
+            }
+            else
+            {
+                value = statistic.getDbComposer().readValue(first);
+            }
+
+            future.complete(value);
+        });
+
+
+        return future;
     }
 
     /*default*/ <UNIT extends IStatisticUnit> IRecord<UNIT> documentToUnit(final IStatistic<UNIT> statistic, final Document document)

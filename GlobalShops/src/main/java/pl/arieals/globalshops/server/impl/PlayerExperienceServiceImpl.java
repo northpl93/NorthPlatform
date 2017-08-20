@@ -29,9 +29,9 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
     }
 
     @Override
-    public BuyResult checkCanBuy(final IPlayerContainer playerContainer, final Item item)
+    public BuyResult checkCanBuy(final IPlayerContainer playerContainer, final Item item, final int level)
     {
-        final ItemCheckBuyEvent event = new ItemCheckBuyEvent(playerContainer.getBukkitPlayer(), playerContainer, item);
+        final ItemCheckBuyEvent event = new ItemCheckBuyEvent(playerContainer.getBukkitPlayer(), playerContainer, item, level);
 
         if (playerContainer.hasMaxLevel(item))
         {
@@ -59,7 +59,7 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
         }
         else
         {
-            // todo implement
+            this.upgradeItem(playerContainer, item);
         }
     }
 
@@ -74,7 +74,7 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
     private void buyItem(final IPlayerContainer playerContainer, final Item item)
     {
         final Player bukkitPlayer = playerContainer.getBukkitPlayer();
-        final BuyResult buyResult = this.checkCanBuy(playerContainer, item);
+        final BuyResult buyResult = this.checkCanBuy(playerContainer, item, 1);
 
         if (buyResult != BuyResult.CAN_BUY)
         {
@@ -82,7 +82,7 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
             return;
         }
 
-        final ItemBuyEvent buyEvent = this.apiCore.callEvent(new ItemBuyEvent(bukkitPlayer, item));
+        final ItemBuyEvent buyEvent = this.apiCore.callEvent(new ItemBuyEvent(bukkitPlayer, item, 1));
         if (buyEvent.isCancelled())
         {
             return;
@@ -92,6 +92,7 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
         if (! success)
         {
             this.logger.log(Level.WARNING, "Player {0} failed to buy {1}", new Object[]{bukkitPlayer.getName(), item.getId()});
+            return;
         }
 
         // todo bierzemy kase
@@ -99,5 +100,34 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
 
         // oznaczamy dany item jako aktywny
         this.markActive(playerContainer, item);
+    }
+
+    private void upgradeItem(final IPlayerContainer playerContainer, final Item item)
+    {
+        final int nextLevel = playerContainer.getBoughtItemLevel(item) + 1;
+        final Player bukkitPlayer = playerContainer.getBukkitPlayer();
+
+        final BuyResult buyResult = this.checkCanBuy(playerContainer, item, nextLevel);
+        if (buyResult != BuyResult.CAN_BUY)
+        {
+            this.logger.log(Level.INFO, "Upgrade cancelled with reason {0} for player {1} item {2} level {3}", new Object[]{buyResult, bukkitPlayer.getName(), item.getId(), nextLevel});
+            return;
+        }
+
+        final ItemBuyEvent buyEvent = this.apiCore.callEvent(new ItemBuyEvent(bukkitPlayer, item, nextLevel));
+        if (buyEvent.isCancelled())
+        {
+            return;
+        }
+
+        final boolean success = playerContainer.addItem(item, nextLevel);
+        if (! success)
+        {
+            this.logger.log(Level.WARNING, "Player {0} failed to buy {1} level {2} (success false)", new Object[]{bukkitPlayer.getName(), item.getId(), nextLevel});
+            return;
+        }
+
+        // todo bierzemy kase
+        this.logger.log(Level.INFO, "Player {0} bought {1} level {2}", new Object[]{bukkitPlayer.getName(), item.getId(), nextLevel});
     }
 }

@@ -16,13 +16,15 @@ public class ItemCheckBuyEvent extends PlayerEvent
     private static final HandlerList handlers = new HandlerList();
     private final IPlayerContainer playerContainer;
     private final Item item;
+    private final int  level;
     private BuyResult result = BuyResult.CAN_BUY;
 
-    public ItemCheckBuyEvent(final Player who, final IPlayerContainer playerContainer, final Item item)
+    public ItemCheckBuyEvent(final Player who, final IPlayerContainer playerContainer, final Item item, final int level)
     {
         super(who);
         this.playerContainer = playerContainer;
         this.item = item;
+        this.level = level;
     }
 
     public IPlayerContainer getPlayerContainer()
@@ -33,6 +35,11 @@ public class ItemCheckBuyEvent extends PlayerEvent
     public Item getItem()
     {
         return this.item;
+    }
+
+    public int getLevel()
+    {
+        return this.level;
     }
 
     public BuyResult getResult()
@@ -59,6 +66,6 @@ public class ItemCheckBuyEvent extends PlayerEvent
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("item", this.item).append("result", this.result).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("item", this.item).append("level", this.level).append("result", this.result).toString();
     }
 }

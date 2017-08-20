@@ -10,7 +10,7 @@ public interface IPlayerExperienceService
      * @param item
      * @return
      */
-    BuyResult checkCanBuy(IPlayerContainer playerContainer, Item item);
+    BuyResult checkCanBuy(IPlayerContainer playerContainer, Item item, int level);
 
     /**
      * Obsluguje klikniecie przedmiotu w gui.

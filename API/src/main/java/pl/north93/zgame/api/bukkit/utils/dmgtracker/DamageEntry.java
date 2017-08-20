@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.ItemStack;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -24,11 +25,18 @@ public class DamageEntry
 {
     private final Instant           time;
     private final EntityDamageEvent cause;
+    private final ItemStack         tool;
 
     public DamageEntry(final EntityDamageEvent cause, final Instant time)
     {
+        this(cause, time, null);
+    }
+
+    public DamageEntry(final EntityDamageEvent cause, final Instant time, final ItemStack tool)
+    {
         this.cause = cause;
         this.time = time;
+        this.tool = tool;
     }
 
     /**
@@ -71,6 +79,15 @@ public class DamageEntry
     public EntityDamageByEntityEvent getCauseByEntity()
     {
         return (EntityDamageByEntityEvent) this.cause;
+    }
+
+    /**
+     * Zwraca przedmiot ktorym zadano te obrazenia.
+     * @return Przedmiot ktorym zadano obrazenia.
+     */
+    public @Nullable ItemStack getTool()
+    {
+        return this.tool;
     }
 
     /**

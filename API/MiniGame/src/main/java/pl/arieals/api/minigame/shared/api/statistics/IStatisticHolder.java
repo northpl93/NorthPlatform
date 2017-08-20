@@ -41,4 +41,14 @@ public interface IStatisticHolder
     {
         return this.record(statistic, value, false);
     }
+
+    /**
+     * Inkrementuje podaną statystykę o podaną wartość.
+     *
+     * @param statistic Statystyka dla ktorej inkrementujemy wartosc.
+     * @param value O ile inkrementowac statystyke.
+     * @param <UNIT> Jednostka danej statystyki.
+     * @return Poprzednia wartosc statystyki.
+     */
+    <UNIT extends IStatisticUnit> CompletableFuture<IRecord<UNIT>> increment(IStatistic<UNIT> statistic, UNIT value);
 }

@@ -14,17 +14,24 @@ public class ItemBuyEvent extends PlayerEvent implements Cancellable
 {
     private static final HandlerList handlers = new HandlerList();
     private final Item    item;
+    private final int     level;
     private       boolean cancelled;
 
-    public ItemBuyEvent(final Player who, final Item item)
+    public ItemBuyEvent(final Player who, final Item item, final int level)
     {
         super(who);
         this.item = item;
+        this.level = level;
     }
 
     public Item getItem()
     {
         return this.item;
+    }
+
+    public int getLevel()
+    {
+        return this.level;
     }
 
     @Override
@@ -53,6 +60,6 @@ public class ItemBuyEvent extends PlayerEvent implements Cancellable
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("item", this.item).append("cancelled", this.cancelled).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("item", this.item).append("level", this.level).append("cancelled", this.cancelled).toString();
     }
 }
