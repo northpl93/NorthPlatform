@@ -4,11 +4,13 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 
 
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.zgame.api.bukkit.utils.SimpleCountdown;
 
 public class BatEffect implements IEliminationEffect
 {
@@ -33,6 +35,11 @@ public class BatEffect implements IEliminationEffect
 
         final Bat bat = (Bat) location.getWorld().spawnEntity(location, EntityType.BAT);
         bat.setInvulnerable(true);
+
+        arena.getScheduler().runSimpleCountdown(new SimpleCountdown(20).tickCallback(() ->
+        {
+            location.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, location, 10);
+        }));
 
         arena.getScheduler().runTaskLater(() ->
         {

@@ -2,7 +2,7 @@
     <id>bedwars_elimination</id>
     <groupType>SINGLE_PICK</groupType>
     <items>
-        <!-- fajerwerkl -->
+        <!-- fajerwerki -->
         <item>
             <id>firework</id>
             <name lang="pl-PL">Fajerwerki</name>

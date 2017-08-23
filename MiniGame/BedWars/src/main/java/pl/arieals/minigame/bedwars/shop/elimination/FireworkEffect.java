@@ -34,7 +34,7 @@ public class FireworkEffect implements IEliminationEffect
 
         final CraftWorld craftWorld = (CraftWorld) location.getWorld();
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 3; i++)
         {
             final EntityFireworks entityFireworks = new EntityFireworks(craftWorld.getHandle(), location.getX(), location.getY(), location.getZ(), null);
             final Firework firework = (Firework) entityFireworks.getBukkitEntity();
@@ -45,7 +45,7 @@ public class FireworkEffect implements IEliminationEffect
             final Color color = Color.fromRGB(getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255));
 
             fireworkMeta.addEffect(builder().with(type).withColor(color).build());
-            fireworkMeta.setPower(getRandomInt(1, 6));
+            fireworkMeta.setPower(getRandomInt(1, 5));
 
             firework.setFireworkMeta(fireworkMeta);
             craftWorld.addEntity(entityFireworks, CreatureSpawnEvent.SpawnReason.CUSTOM);

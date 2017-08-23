@@ -5,7 +5,9 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import org.bukkit.DyeColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
 import org.bukkit.block.banner.Pattern;
@@ -38,6 +40,9 @@ public class FlagEffect implements IEliminationEffect
         {
             return;
         }
+
+        final Location particle = block.getLocation().add(0.5, 0, 0.5);
+        block.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, particle, 5);
 
         final DyeColor dyeColor = TeamArmorUtils.chatColorToDyeColor(playerData.getTeam().getColor());
 
