@@ -1,0 +1,75 @@
+<itemGroup>
+    <id>elytra_heads</id>
+    <groupType>SINGLE_PICK</groupType>
+    <items>
+        <!-- skeleton (Szkielet) -->
+        <item>
+            <id>skeleton</id>
+            <name lang="pl-PL">Szkielet</name>
+            <name lang="en-GB">Szkielet</name>
+        </item>
+
+        <!-- zombie (Zombiak) -->
+        <item>
+            <id>zombie</id>
+            <name lang="pl-PL">Zombiak</name>
+            <name lang="en-GB">Zombiak</name>
+        </item>
+
+        <!-- creeper (Creeper) -->
+        <item>
+            <id>creeper</id>
+            <name lang="pl-PL">Creeper</name>
+            <name lang="en-GB">Creeper</name>
+        </item>
+
+        <!-- homer (Homer Simpson) -->
+        <item>
+            <id>homer</id>
+            <name lang="pl-PL">Homer Simpson</name>
+            <name lang="en-GB">Homer Simpson</name>
+        </item>
+
+        <!-- shrek (Shrek) -->
+        <item>
+            <id>shrek</id>
+            <name lang="pl-PL">Shrek</name>
+            <name lang="en-GB">Shrek</name>
+        </item>
+
+        <!-- batman (Batman) -->
+        <item>
+            <id>batman</id>
+            <name lang="pl-PL">Batman</name>
+            <name lang="en-GB">Batman</name>
+        </item>
+
+        <!-- flash (Flash) -->
+        <item>
+            <id>flash</id>
+            <name lang="pl-PL">Flash</name>
+            <name lang="en-GB">Flash</name>
+        </item>
+
+        <!-- wolverine (Wolverine) -->
+        <item>
+            <id>wolverine</id>
+            <name lang="pl-PL">Wolverine</name>
+            <name lang="en-GB">Wolverine</name>
+        </item>
+
+        <!-- derp (Derp) -->
+        <item>
+            <id>derp</id>
+            <name lang="pl-PL">Derp</name>
+            <name lang="en-GB">Derp</name>
+        </item>
+
+        <!-- dragon (Smoczyslaw) -->
+        <item>
+            <id>dragon</id>
+            <name lang="pl-PL">Smoczyslaw</name>
+            <name lang="en-GB">Smoczyslaw</name>
+        </item>
+    </items>
+</itemGroup>

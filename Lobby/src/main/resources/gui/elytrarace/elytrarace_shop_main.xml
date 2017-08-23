@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<gui height="3" title="@window_title">
-    <container pos="0,0" size="9,3">
+<gui height="5" title="@general.shop_window_title">
+    <container pos="0,0" size="9,5">
         <border id="0" data="0" />
         <background id="0" data="0" />
         <content>
+            <button pos="4,0">
+                <icon id="ELYTRA" name="@general.shop_name"/>
+            </button>
 
+            <!-- czapki -->
+            <button pos="2,2">
+                <variable value="northplatform://lobby/shop/general/categoryVars/elytra_hats/$playerId" />
+                <icon id="LEATHER_HELMET" data="0" name="@hats.category_name" lore="@hats.category_description$boughtItems,selected"/>
+                <onClick>northplatform://lobby/shop/elytra/openCategory/hats/$playerId</onClick>
+            </button>
+
+            <!-- glowy -->
+            <button pos="4,2">
+                <variable value="northplatform://lobby/shop/general/categoryVars/elytra_heads/$playerId" />
+                <icon id="SKULL_ITEM" data="0" name="@heads.category_name" lore="@heads.category_description$boughtItems,selected"/>
+                <onClick>northplatform://lobby/shop/elytra/openCategory/heads/$playerId</onClick>
+            </button>
+
+            <!-- efekty -->
+            <button pos="6,2">
+                <variable value="northplatform://lobby/shop/general/categoryVars/elytra_effects/$playerId" />
+                <icon id="BLAZE_POWDER" data="0" name="@effects.category_name" lore="@effects.category_description$boughtItems,selected"/>
+                <onClick>northplatform://lobby/shop/elytra/openCategory/effects/$playerId</onClick>
+            </button>
         </content>
     </container>
 </gui>

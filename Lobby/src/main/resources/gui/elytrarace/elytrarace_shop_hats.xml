@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="5" title="@hats.window_title">
+    <container pos="0,0" size="9,5">
+        <border id="0" data="0" />
+        <background id="0" data="0" />
+        <content>
+            <button pos="4,0">
+                <icon id="LEATHER_HELMET" name="@hats.category_name"/>
+            </button>
+
+            <!-- iron/zelazny helm -->
+            <button pos="2,2">
+                <icon id="IRON_HELMET" name="@general.name_placeholder$nameColor-iron,name-iron" lore="@hats.iron$lore-iron" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_hats/iron/$playerId</onClick>
+            </button>
+
+            <!-- gold/zloty helm -->
+            <button pos="3,2">
+                <icon id="GOLD_HELMET" name="@general.name_placeholder$nameColor-gold,name-gold" lore="@hats.gold$lore-gold" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_hats/gold/$playerId</onClick>
+            </button>
+
+            <!-- diamond/diamentowy helm -->
+            <button pos="4,2">
+                <icon id="DIAMOND_HELMET" name="@general.name_placeholder$nameColor-diamond,name-diamond" lore="@hats.diamond$lore-diamond" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_hats/diamond/$playerId</onClick>
+            </button>
+
+            <!-- pumpkin/dynia -->
+            <button pos="5,2">
+                <icon id="PUMPKIN" name="@general.name_placeholder$nameColor-pumpkin,name-pumpkin" lore="@hats.pumpkin$lore-pumpkin" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_hats/pumpkin/$playerId</onClick>
+            </button>
+
+            <!-- treasure/skarb -->
+            <button pos="6,2">
+                <icon id="CHEST" name="@general.name_placeholder$nameColor-treasure,name-treasure" lore="@hats.treasure$lore-treasure" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_hats/treasure/$playerId</onClick>
+            </button>
+
+            <!-- enderchest/Enderchest -->
+            <button pos="2,3">
+                <icon id="ENDER_CHEST" name="@general.name_placeholder$nameColor-enderchest,name-enderchest" lore="@hats.enderchest$lore-enderchest" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_hats/enderchest/$playerId</onClick>
+            </button>
+
+            <!-- anvil -->
+            <button pos="3,3">
+                <icon id="ANVIL" name="@general.name_placeholder$nameColor-anvil,name-anvil" lore="@hats.anvil$lore-anvil" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_hats/anvil/$playerId</onClick>
+            </button>
+
+            <!-- cactus/kakaktus -->
+            <button pos="4,3">
+                <icon id="CACTUS" name="@general.name_placeholder$nameColor-cactus,name-cactus" lore="@hats.cactus$lore-cactus" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_hats/cactus/$playerId</onClick>
+            </button>
+
+            <!-- astronaut/Astronauta -->
+            <button pos="5,3">
+                <icon id="BEACON" name="@general.name_placeholder$nameColor-astronaut,name-astronaut" lore="@hats.astronaut$lore-astronaut" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_hats/astronaut/$playerId</onClick>
+            </button>
+
+            <!-- tnt/tnt -->
+            <button pos="6,3">
+                <icon id="TNT" name="@general.name_placeholder$nameColor-tnt,name-tnt" lore="@hats.tnt$lore-tnt" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_hats/tnt/$playerId</onClick>
+            </button>
+
+            <!-- domyslny -->
+            <button pos="4,4">
+                <icon id="BARRIER" name="@general.default" />
+                <onClick>northplatform://lobby/shop/general/default/elytra_hats/$playerId</onClick>
+            </button>
+
+            <!-- przycisk back -->
+            <button pos="7,4">
+                <icon id="IRON_DOOR" name="@general.back" />
+                <onClick>northplatform://lobby/shop/elytra/openCategory/main/$playerId</onClick>
+            </button>
+        </content>
+    </container>
+</gui>

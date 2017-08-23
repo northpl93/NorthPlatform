@@ -1,0 +1,79 @@
+<itemGroup>
+    <id>elytra_effects</id>
+    <groupType>SINGLE_PICK</groupType>
+    <items>
+        <!-- smoke (dym) -->
+        <item>
+            <id>smoke</id>
+            <name lang="pl-PL">Ssszzzzz</name>
+            <name lang="en-GB">Ssszzzzz</name>
+        </item>
+
+        <!-- water (krople wody) -->
+        <item>
+            <id>water</id>
+            <name lang="pl-PL">Plum plum</name>
+            <name lang="en-GB">Plum plum</name>
+        </item>
+
+        <!-- runes (Runy) -->
+        <item>
+            <id>runes</id>
+            <name lang="pl-PL">Runy</name>
+            <name lang="en-GB">Runy</name>
+        </item>
+
+        <!-- stars (gwiazdki) -->
+        <item>
+            <id>stars</id>
+            <name lang="pl-PL">Gwiazdki</name>
+            <name lang="en-GB">Gwiazdki</name>
+            <rarity>RARE</rarity>
+        </item>
+
+        <!-- ray (promien) -->
+        <item>
+            <id>ray</id>
+            <name lang="pl-PL">Promien</name>
+            <name lang="en-GB">Promien</name>
+        </item>
+
+        <!-- streak (smuga) -->
+        <item>
+            <id>streak</id>
+            <name lang="pl-PL">Smuga</name>
+            <name lang="en-GB">Smuga</name>
+        </item>
+
+        <!-- ender (Ender) -->
+        <item>
+            <id>ender</id>
+            <name lang="pl-PL">Ender</name>
+            <name lang="en-GB">Ender</name>
+        </item>
+
+        <!-- magic (Magia) -->
+        <item>
+            <id>magic</id>
+            <name lang="pl-PL">Magia</name>
+            <name lang="en-GB">Magia</name>
+            <rarity>EPIC</rarity>
+        </item>
+
+        <!-- music (Muzyczka) -->
+        <item>
+            <id>music</id>
+            <name lang="pl-PL">Muzyczka</name>
+            <name lang="en-GB">Muzyczka</name>
+            <rarity>LEGENDARY</rarity>
+        </item>
+
+        <!-- hearts (serca) -->
+        <item>
+            <id>hearts</id>
+            <name lang="pl-PL">Serca</name>
+            <name lang="en-GB">Serca</name>
+            <rarity>LEGENDARY</rarity>
+        </item>
+    </items>
+</itemGroup>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="5" title="@heads.window_title">
+    <container pos="0,0" size="9,5">
+        <border id="0" data="0" />
+        <background id="0" data="0" />
+        <content>
+            <button pos="4,0">
+                <icon id="SKULL_ITEM" name="@heads.category_name"/>
+            </button>
+
+            <!-- skeleton/szkielet -->
+            <button pos="2,2">
+                <icon id="SKULL_ITEM" data="0" name="@general.name_placeholder$nameColor-skeleton,name-skeleton" lore="@heads.skeleton$lore-skeleton" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_heads/skeleton/$playerId</onClick>
+            </button>
+
+            <!-- zombie/zombiak -->
+            <button pos="3,2">
+                <icon id="SKULL_ITEM" data="2" name="@general.name_placeholder$nameColor-zombie,name-zombie" lore="@heads.zombie$lore-zombie" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_heads/zombie/$playerId</onClick>
+            </button>
+
+            <!-- creeper -->
+            <button pos="4,2">
+                <icon id="SKULL_ITEM" data="4" name="@general.name_placeholder$nameColor-creeper,name-creeper" lore="@heads.creeper$lore-creeper" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_heads/skeleton/$playerId</onClick>
+            </button>
+
+            <!-- homer (Homer Simpson) -->
+            <button pos="5,2">
+                <icon id="SKULL_ITEM" data="3" name="@general.name_placeholder$nameColor-homer,name-homer" lore="@heads.homer$lore-homer" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_heads/homer/$playerId</onClick>
+            </button>
+
+            <!-- shrek (Shrek) -->
+            <button pos="6,2">
+                <icon id="SKULL_ITEM" data="3" name="@general.name_placeholder$nameColor-shrek,name-shrek" lore="@heads.shrek$lore-shrek" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_heads/shrek/$playerId</onClick>
+            </button>
+
+            <!-- batman (Batman) -->
+            <button pos="2,3">
+                <icon id="SKULL_ITEM" data="3" name="@general.name_placeholder$nameColor-batman,name-batman" lore="@heads.batman$lore-batman" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_heads/batman/$playerId</onClick>
+            </button>
+
+            <!-- flash (Flash) -->
+            <button pos="3,3">
+                <icon id="SKULL_ITEM" data="3" name="@general.name_placeholder$nameColor-flash,name-flash" lore="@heads.flash$lore-flash" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_heads/flash/$playerId</onClick>
+            </button>
+
+            <!-- wolverine (Wolverine) -->
+            <button pos="4,3">
+                <icon id="SKULL_ITEM" data="3" name="@general.name_placeholder$nameColor-wolverine,name-wolverine" lore="@heads.wolverine$lore-wolverine" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_heads/wolverine/$playerId</onClick>
+            </button>
+
+            <!-- derp (Derp) -->
+            <button pos="5,3">
+                <icon id="SKULL_ITEM" data="3" name="@general.name_placeholder$nameColor-derp,name-derp" lore="@heads.derp$lore-derp" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_heads/derp/$playerId</onClick>
+            </button>
+
+            <!-- dragon (Smoczyslaw) -->
+            <button pos="6,3">
+                <icon id="SKULL_ITEM" data="5" name="@general.name_placeholder$nameColor-dragon,name-dragon" lore="@heads.dragon$lore-dragon" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_heads/dragon/$playerId</onClick>
+            </button>
+
+            <!-- domyslny -->
+            <button pos="4,4">
+                <icon id="BARRIER" name="@general.default" />
+                <onClick>northplatform://lobby/shop/general/default/elytra_heads/$playerId</onClick>
+            </button>
+
+            <!-- przycisk back -->
+            <button pos="7,4">
+                <icon id="IRON_DOOR" name="@general.back" />
+                <onClick>northplatform://lobby/shop/elytra/openCategory/main/$playerId</onClick>
+            </button>
+        </content>
+    </container>
+</gui>

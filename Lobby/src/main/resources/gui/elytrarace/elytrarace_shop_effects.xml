@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="5" title="@effects.window_title">
+    <container pos="0,0" size="9,5">
+        <border id="0" data="0" />
+        <background id="0" data="0" />
+        <content>
+            <button pos="4,0">
+                <icon id="BLAZE_POWDER" name="@effects.category_name"/>
+            </button>
+
+            <!-- smoke/dym -->
+            <button pos="2,2">
+                <icon id="INK_SACK" data="8" name="@general.name_placeholder$nameColor-smoke,name-smoke" lore="@effects.smoke$lore-smoke" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_effects/smoke/$playerId</onClick>
+            </button>
+
+            <!-- water/krople wody -->
+            <button pos="3,2">
+                <icon id="WATER_BUCKET" name="@general.name_placeholder$nameColor-water,name-water" lore="@effects.water$lore-water" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_effects/water/$playerId</onClick>
+            </button>
+
+            <!-- runes/runy -->
+            <button pos="4,2">
+                <icon id="ENCHANTED_BOOK" name="@general.name_placeholder$nameColor-eunes,name-runes" lore="@effects.runes$lore-runes" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_effects/runes/$playerId</onClick>
+            </button>
+
+            <!-- stars/gwiazdki -->
+            <button pos="5,2">
+                <icon id="NETHER_STAR" name="@general.name_placeholder$nameColor-stars,name-stars" lore="@effects.stars$lore-stars" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_effects/stars/$playerId</onClick>
+            </button>
+
+            <!-- ray/promien -->
+            <button pos="6,2">
+                <icon id="REDSTONE" name="@general.name_placeholder$nameColor-ray,name-ray" lore="@effects.ray$lore-ray" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_effects/ray/$playerId</onClick>
+            </button>
+
+            <!-- streak/smuga -->
+            <button pos="2,3">
+                <icon id="NETHER_STALK" name="@general.name_placeholder$nameColor-streak,name-streak" lore="@effects.streak$lore-streak" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_effects/streak/$playerId</onClick>
+            </button>
+
+            <!-- ender/ender -->
+            <button pos="3,3">
+                <icon id="ENDER_PEARL" name="@general.name_placeholder$nameColor-ender,name-ender" lore="@effects.ender$lore-ender" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_effects/ender/$playerId</onClick>
+            </button>
+
+            <!-- magic/magia -->
+            <button pos="4,3">
+                <icon id="INK_SACK" data="6" name="@general.name_placeholder$nameColor-magic,name-magic" lore="@effects.magic$lore-magic" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_effects/magic/$playerId</onClick>
+            </button>
+
+            <!-- music -->
+            <button pos="5,3">
+                <icon id="JUKEBOX" name="@general.name_placeholder$nameColor-music,name-music" lore="@effects.music$lore-music" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_effects/music/$playerId</onClick>
+            </button>
+
+            <!-- hearts -->
+            <button pos="6,3">
+                <icon id="INK_SACK" data="1" name="@general.name_placeholder$nameColor-hearts,name-hearts" lore="@effects.hearts$lore-hearts" />
+                <onClick>northplatform://lobby/shop/general/click/elytra_effects/hearts/$playerId</onClick>
+            </button>
+
+            <!-- domyslny -->
+            <button pos="4,4">
+                <icon id="BARRIER" name="@general.default" />
+                <onClick>northplatform://lobby/shop/general/default/elytra_effects/$playerId</onClick>
+            </button>
+
+            <!-- przycisk back -->
+            <button pos="7,4">
+                <icon id="IRON_DOOR" name="@general.back" />
+                <onClick>northplatform://lobby/shop/elytra/openCategory/main/$playerId</onClick>
+            </button>
+        </content>
+    </container>
+</gui>

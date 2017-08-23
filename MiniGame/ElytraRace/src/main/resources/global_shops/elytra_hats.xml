@@ -1,0 +1,82 @@
+<itemGroup>
+    <id>elytra_hats</id>
+    <groupType>SINGLE_PICK</groupType>
+    <items>
+        <!-- iron (zelazny helm) -->
+        <item>
+            <id>iron</id>
+            <name lang="pl-PL">Zelazo</name>
+            <name lang="en-GB">Zelazo</name>
+        </item>
+
+        <!-- gold (zloty helm) -->
+        <item>
+            <id>gold</id>
+            <name lang="pl-PL">Zloto</name>
+            <name lang="en-GB">Zloto</name>
+        </item>
+
+        <!-- diamond (diamentowy helm) -->
+        <item>
+            <id>diamond</id>
+            <name lang="pl-PL">Diament</name>
+            <name lang="en-GB">Diament</name>
+        </item>
+
+        <!-- pumpkin (dynia) -->
+        <item>
+            <id>pumpkin</id>
+            <name lang="pl-PL">Dynia</name>
+            <name lang="en-GB">Pumpkin</name>
+            <rarity>RARE</rarity>
+        </item>
+
+        <!-- treasure (skarb) -->
+        <item>
+            <id>treasure</id>
+            <name lang="pl-PL">Skarb</name>
+            <name lang="en-GB">Skarb</name>
+            <rarity>RARE</rarity>
+        </item>
+
+        <!-- enderchest (Enderskrzynka) -->
+        <item>
+            <id>enderchest</id>
+            <name lang="pl-PL">Enderskrzynka</name>
+            <name lang="en-GB">Enderskrzynka</name>
+            <rarity>RARE</rarity>
+        </item>
+
+        <!-- anvil (kowadlo) -->
+        <item>
+            <id>anvil</id>
+            <name lang="pl-PL">Kowadlo</name>
+            <name lang="en-GB">Kowadlo</name>
+            <rarity>EPIC</rarity>
+        </item>
+
+        <!-- cactus (Kakaktus) -->
+        <item>
+            <id>cactus</id>
+            <name lang="pl-PL">Kakaktus</name>
+            <name lang="en-GB">Kakaktus</name>
+            <rarity>EPIC</rarity>
+        </item>
+
+        <!-- astronaut (Astronauta) -->
+        <item>
+            <id>astronaut</id>
+            <name lang="pl-PL">Astronauta</name>
+            <name lang="en-GB">Astronauta</name>
+            <rarity>LEGENDARY</rarity>
+        </item>
+
+        <!-- tnt (tnt) -->
+        <item>
+            <id>tnt</id>
+            <name lang="pl-PL">TNT</name>
+            <name lang="en-GB">TNT</name>
+            <rarity>LEGENDARY</rarity>
+        </item>
+    </items>
+</itemGroup>
