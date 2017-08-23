@@ -1,7 +1,6 @@
 package pl.arieals.api.minigame.shared.api.statistics.type;
 
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 
 import com.mongodb.client.FindIterable;
 
@@ -57,12 +56,13 @@ class ShorterTimeBetterStatisticDbComposer implements IStatisticDbComposer<Durat
     @Override
     public DurationUnit readValue(final Document document)
     {
-        return new DurationUnit(Duration.ofMillis(document.getLong("value")));
+        final long longValue = document.get("value", Number.class).longValue();
+        return new DurationUnit(Duration.ofMillis(longValue));
     }
 
     @Override
     public void insertOnlyWhenBetter(final Document document, final DurationUnit unit)
     {
-        document.put("$max", new Document("value", unit.getValue().get(ChronoUnit.MILLIS)));
+        document.put("$max", new Document("value", unit.getValue().toMillis()));
     }
 }

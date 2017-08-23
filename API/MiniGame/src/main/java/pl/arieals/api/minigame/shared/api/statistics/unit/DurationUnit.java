@@ -1,7 +1,6 @@
 package pl.arieals.api.minigame.shared.api.statistics.unit;
 
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -26,8 +25,8 @@ public class DurationUnit implements IStatisticUnit<Duration>
      */
     public boolean isShorterThan(final DurationUnit durationUnit)
     {
-        final long thisMillis = this.duration.get(ChronoUnit.MILLIS);
-        final long otherMillis = durationUnit.getValue().get(ChronoUnit.MILLIS);
+        final long thisMillis = this.duration.toMillis();
+        final long otherMillis = durationUnit.getValue().toMillis();
 
         return thisMillis < otherMillis;
     }
@@ -47,8 +46,7 @@ public class DurationUnit implements IStatisticUnit<Duration>
     @Override
     public void toDocument(final Document document)
     {
-        final long millis = this.duration.get(ChronoUnit.MILLIS);
-        document.put("value", millis);
+        document.put("value", this.duration.toMillis());
     }
 
     @Override

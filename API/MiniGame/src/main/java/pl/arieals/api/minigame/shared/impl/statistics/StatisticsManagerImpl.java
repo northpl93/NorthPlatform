@@ -66,7 +66,7 @@ public class StatisticsManagerImpl implements IStatisticsManager
     {
         final MongoCollection<Document> collection = this.getCollection();
 
-        final Document group = new Document("avg", new Document("$avg", "value"));
+        final Document group = new Document("_id", null).append("value", new Document("$avg", "$value"));
         final Document match = new Document("statId", statistic.getId());
 
         final List<Document> documents = Arrays.asList(new Document("$match", match), new Document("$group", group));
@@ -88,7 +88,6 @@ public class StatisticsManagerImpl implements IStatisticsManager
 
             future.complete(value);
         });
-
 
         return future;
     }

@@ -49,7 +49,8 @@ class HigherNumberBetterStatisticDbComposer implements IStatisticDbComposer<Numb
     @Override
     public NumberUnit readValue(final Document document)
     {
-        return new NumberUnit(document.getLong("value"));
+        final long longValue = document.get("value", Number.class).longValue();
+        return new NumberUnit(longValue);
     }
 
     @Override
