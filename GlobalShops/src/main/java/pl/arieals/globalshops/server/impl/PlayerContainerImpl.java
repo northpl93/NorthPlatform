@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.diorite.utils.lazy.LazyValue;
 
 import pl.arieals.globalshops.server.IPlayerContainer;
+import pl.arieals.globalshops.server.event.ItemMarkedActiveEvent;
 import pl.arieals.globalshops.shared.GroupType;
 import pl.arieals.globalshops.shared.Item;
 import pl.arieals.globalshops.shared.ItemsGroup;
@@ -117,6 +118,7 @@ class PlayerContainerImpl implements IPlayerContainer
             throw new IllegalStateException(format("Item {0} isn't bought.", item.getId()));
         }
 
+        this.player.getServer().getPluginManager().callEvent(new ItemMarkedActiveEvent(this.player, group, item));
         this.service.setActiveItem(this.player, group.getId(), item.getId());
         this.playerData.reset();
     }
@@ -131,6 +133,7 @@ class PlayerContainerImpl implements IPlayerContainer
             throw new IllegalArgumentException();
         }
 
+        this.player.getServer().getPluginManager().callEvent(new ItemMarkedActiveEvent(this.player, group, null));
         this.service.resetActiveItem(this.player, group.getId());
         this.playerData.reset();
     }

@@ -166,7 +166,6 @@ public class XmlItemStack
         return material;
     }
 
-    @SuppressWarnings("deprecation")
     public ItemStack createItemStack()
     {
         final Material material = this.toMaterial();

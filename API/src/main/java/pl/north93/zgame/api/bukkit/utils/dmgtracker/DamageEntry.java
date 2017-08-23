@@ -7,6 +7,7 @@ import java.time.Instant;
 
 import com.google.common.base.Preconditions;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -29,14 +30,23 @@ public class DamageEntry
 
     public DamageEntry(final EntityDamageEvent cause, final Instant time)
     {
-        this(cause, time, null);
-    }
-
-    public DamageEntry(final EntityDamageEvent cause, final Instant time, final ItemStack tool)
-    {
         this.cause = cause;
         this.time = time;
-        this.tool = tool;
+        this.tool = this.initTool();
+    }
+
+    private ItemStack initTool()
+    {
+        final Player playerDamager = this.getPlayerDamager();
+        if (playerDamager != null)
+        {
+            if (this.getCauseByEntity().getDamager().getType() == EntityType.ARROW)
+            {
+                return new ItemStack(Material.BOW);
+            }
+            return playerDamager.getInventory().getItemInMainHand();
+        }
+        return null;
     }
 
     /**
