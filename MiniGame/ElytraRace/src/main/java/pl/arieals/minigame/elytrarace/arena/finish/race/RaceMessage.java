@@ -1,7 +1,9 @@
 package pl.arieals.minigame.elytrarace.arena.finish.race;
 
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
+
+
 import java.text.SimpleDateFormat;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -11,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.statistics.IRecord;
 import pl.arieals.api.minigame.shared.api.statistics.unit.DurationUnit;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -59,14 +62,14 @@ public class RaceMessage
         this.messages.sendMessage(player, "finish.rewards", MessageLayout.CENTER);
         player.sendMessage(" ");
 
+        final LocalArena arena = getArena(player);
         if (this.isPartial)
         {
             this.messages.sendMessage(player, "finish.wait_awards", MessageLayout.CENTER);
         }
-        else
+        else if (arena != null) // zawsze powinno byc spelnione
         {
-
-            // todo rewards
+            arena.getRewards().renderRewards(this.messages, player);
         }
 
         this.messages.sendMessage(player, "separator");
@@ -112,7 +115,7 @@ public class RaceMessage
         if (this.record != null)
         {
             final String recordOwner = this.network.getPlayers().getNickFromUuid(this.record.getHolder().getUniqueId());
-            final String formattedRecord = this.timeFormat.format(new Date(this.record.getValue().getValue().get(ChronoUnit.MILLIS)));
+            final String formattedRecord = this.timeFormat.format(new Date(this.record.getValue().getValue().toMillis()));
             this.messages.sendMessage(player, "finish.race.record", MessageLayout.CENTER, recordOwner, formattedRecord);
         }
     }

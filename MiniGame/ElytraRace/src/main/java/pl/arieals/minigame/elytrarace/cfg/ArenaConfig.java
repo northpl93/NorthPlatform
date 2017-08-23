@@ -19,6 +19,8 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ArenaConfig
 {
+    @XmlElement(name = "lobbyLocation", required = true)
+    private XmlLocation       lobbyLocation;
     @XmlElementWrapper(name = "startLocations")
     @XmlElement(name = "location")
     private List<XmlLocation> startLocations;
@@ -47,6 +49,11 @@ public class ArenaConfig
     {
         this.startLocations = startLocations;
         this.checkpoints = checkpoints;
+    }
+
+    public XmlLocation getLobbyLocation()
+    {
+        return this.lobbyLocation;
     }
 
     public List<XmlLocation> getStartLocations()
@@ -87,6 +94,6 @@ public class ArenaConfig
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("startLocations", this.startLocations).append("restartLocation", this.restartLocation).append("checkpoints", this.checkpoints).append("boosts", this.boosts).append("scoreGroups", this.scoreGroups).append("scores", this.scores).append("metaRegion", this.metaRegion).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("lobbyLocation", this.lobbyLocation).append("startLocations", this.startLocations).append("restartLocation", this.restartLocation).append("checkpoints", this.checkpoints).append("boosts", this.boosts).append("scoreGroups", this.scoreGroups).append("scores", this.scores).append("metaRegion", this.metaRegion).toString();
     }
 }

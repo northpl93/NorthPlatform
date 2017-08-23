@@ -1,5 +1,6 @@
 package pl.arieals.minigame.elytrarace.arena.finish.score;
 
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
@@ -11,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.statistics.IRecord;
 import pl.arieals.api.minigame.shared.api.statistics.unit.NumberUnit;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
@@ -57,14 +59,14 @@ public class ScoreMessage
         this.messages.sendMessage(player, "finish.rewards", MessageLayout.CENTER);
         player.sendMessage(" ");
 
+        final LocalArena arena = getArena(player);
         if (this.isPartial)
         {
             this.messages.sendMessage(player, "finish.wait_awards", MessageLayout.CENTER);
         }
-        else
+        else if (arena != null) // zawsze powinno byc spelnione
         {
-
-            // todo rewards
+            arena.getRewards().renderRewards(this.messages, player);
         }
 
         this.messages.sendMessage(player, "separator");

@@ -4,10 +4,9 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.Duration;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -78,8 +77,11 @@ public class RaceScoreboard implements IScoreboardLayout
 
         try
         {
-            final long millis = this.avgTime.get().getValue().get(ChronoUnit.MILLIS);
-            return FORMAT.format(LocalDateTime.ofEpochSecond(millis, 0, ZoneOffset.UTC));
+            final Duration averageDuration = this.avgTime.get().getValue();
+
+            final LocalTime time = LocalTime.ofNanoOfDay(averageDuration.toNanos());
+
+            return FORMAT.format(time);
         }
         catch (final InterruptedException | ExecutionException e)
         {

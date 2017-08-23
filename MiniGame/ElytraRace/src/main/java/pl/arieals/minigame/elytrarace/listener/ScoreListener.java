@@ -32,6 +32,8 @@ import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.zgame.api.global.messages.PluralForm;
+import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public class ScoreListener implements Listener
 {
@@ -127,31 +129,22 @@ public class ScoreListener implements Listener
         final int combo = scorePlayer.checkCombo(scoreGroup);
         int points = scoreGroup.getPoints();
 
-        this.messages.sendMessage(player, "score.points_added", points, this.pointsForm(player, points));
+        this.messages.sendMessage(player, "score.points_added", points, this.pointsForm(points));
 
         if (combo >= 3)
         {
             scorePlayer.setCombo(0);
             final int comboPoints = scoreGroup.getComboPoints();
             points += comboPoints;
-            this.messages.sendMessage(player, "score.points_added_combo", comboPoints, this.pointsForm(player, comboPoints));
+            this.messages.sendMessage(player, "score.points_added_combo", comboPoints, this.pointsForm(comboPoints));
         }
 
         scorePlayer.incrementPoints(points);
     }
 
-    private String pointsForm(final Player player, final int points)
+    private TranslatableString pointsForm(final int points)
     {
-        final String locale = player.spigot().getLocale();
-        if (points == 1)
-        {
-            return this.messages.getMessage(locale, "score.points.one");
-        }
-        else if (points < 5)
-        {
-            return this.messages.getMessage(locale, "score.points.some");
-        }
-        return this.messages.getMessage(locale, "score.points.many");
+        return TranslatableString.of(this.messages, PluralForm.transformKey("@score.points", points));
     }
 
     private void removeScorePoints(final LocalArena arena, final ElytraRaceArena arenaData)

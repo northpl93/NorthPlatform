@@ -6,7 +6,6 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.entity.Player;
 
@@ -53,27 +52,28 @@ public class ScoreMetaHandler implements IFinishHandler
 
         final IStatistic<NumberUnit> scoreStatistic = this.getScoreStatistic(arena);
         final IStatisticHolder statisticsHolder = this.statisticsManager.getHolder(player.getUniqueId());
-        final CompletableFuture<IRecord<NumberUnit>> record = statisticsHolder.record(scoreStatistic, new NumberUnit((long) scoreData.getPoints()), true);
 
         this.points.put(new ScoreFinishInfo(player.getUniqueId(), player.getDisplayName()), scoreData.getPoints());
 
         final boolean isFinished = IFinishHandler.checkFinished(arena);
 
-        record.whenComplete((result, throwable) ->
+        this.statisticsManager.getBestRecord(scoreStatistic).whenComplete((bestRecord, throwable) ->
         {
-            // todo rework systemu statystyk; tutaj result jest zle, trzeba osobno pobrac (i cachowac?) rekord globalny
-            final ScoreMessage scoreMessage = new ScoreMessage(this.getTop(), result, !isFinished);
-            if (isFinished)
+            statisticsHolder.record(scoreStatistic, new NumberUnit((long) scoreData.getPoints()), true).whenComplete((record, throwable2) ->
             {
-                for (final Player playerInArena : arena.getPlayersManager().getPlayers())
+                final ScoreMessage raceMessage = new ScoreMessage(this.getTop(), bestRecord, !isFinished);
+                if (isFinished)
                 {
-                    scoreMessage.print(playerInArena);
+                    for (final Player playerInArena : arena.getPlayersManager().getPlayers())
+                    {
+                        raceMessage.print(playerInArena);
+                    }
                 }
-            }
-            else
-            {
-                scoreMessage.print(player);
-            }
+                else
+                {
+                    raceMessage.print(player);
+                }
+            });
         });
 
         if (isFinished)

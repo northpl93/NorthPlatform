@@ -21,6 +21,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
+import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.minigame.elytrarace.ElytraRaceMode;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
@@ -42,11 +44,27 @@ public class ArenaStartListener implements Listener
     private ElytraConfig config;
 
     @EventHandler
-    public void startGame(final GameStartEvent event)
+    public void loadArenaData(final LobbyInitEvent event)
     {
         final ElytraRaceArena arenaData = new ElytraRaceArena(this.loadConfig(event.getArena()), this.config.getMode());
         event.getArena().setArenaData(arenaData);
+    }
 
+    @EventHandler
+    public void teleportToLobbyWhenPlayerJoin(final PlayerJoinArenaEvent event)
+    {
+        final LocalArena arena = event.getArena();
+        final ElytraRaceArena arenaData = arena.getArenaData();
+
+        final Location lobby = arenaData.getArenaConfig().getLobbyLocation().toBukkit(arena.getWorld().getCurrentWorld());
+
+        event.getPlayer().teleport(lobby);
+    }
+
+    @EventHandler
+    public void startGame(final GameStartEvent event)
+    {
+        final ElytraRaceArena arenaData = event.getArena().getArenaData();
         this.setupPlayers(event.getArena(), arenaData);
 
         final PlayersManager playersManager = event.getArena().getPlayersManager();

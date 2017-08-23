@@ -3,7 +3,6 @@ package pl.arieals.minigame.elytrarace.arena.finish.race;
 import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.entity.Player;
@@ -13,7 +12,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.GamePhase;
-import pl.arieals.api.minigame.shared.api.statistics.IRecord;
 import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
@@ -66,25 +64,24 @@ public class RaceMetaHandler implements IFinishHandler
         final IStatistic<DurationUnit> raceStatistic = this.getRaceStatistic(arena);
         final IStatisticHolder holder = this.statisticsManager.getHolder(player.getUniqueId());
 
-        final CompletableFuture<IRecord<DurationUnit>> record = holder.record(raceStatistic, new DurationUnit(Duration.ofMillis(playerTime)));
-
         final boolean isFinished = IFinishHandler.checkFinished(arena);
-
-        record.whenComplete((result, throwable) ->
+        this.statisticsManager.getBestRecord(raceStatistic).whenComplete((bestRecord, throwable) ->
         {
-            // todo rework systemu statystyk; tutaj result jest zle, trzeba osobno pobrac (i cachowac?) rekord globalny
-            final RaceMessage raceMessage = new RaceMessage(this.finishInfo, result, !isFinished);
-            if (isFinished)
+            holder.record(raceStatistic, new DurationUnit(Duration.ofMillis(playerTime)), true).whenComplete((record, throwable2) ->
             {
-                for (final Player playerInArena : arena.getPlayersManager().getPlayers())
+                final RaceMessage raceMessage = new RaceMessage(this.finishInfo, bestRecord, !isFinished);
+                if (isFinished)
                 {
-                    raceMessage.print(playerInArena);
+                    for (final Player playerInArena : arena.getPlayersManager().getPlayers())
+                    {
+                        raceMessage.print(playerInArena);
+                    }
                 }
-            }
-            else
-            {
-                raceMessage.print(player);
-            }
+                else
+                {
+                    raceMessage.print(player);
+                }
+            });
         });
 
         if (isFinished)
