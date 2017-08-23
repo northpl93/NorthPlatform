@@ -15,6 +15,7 @@ import java.time.temporal.ChronoUnit;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.PlayerInventory;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,12 +51,14 @@ public class DamageTrackerTest
 
         final CraftPlayer mockedPlayer1 = PowerMockito.mock(CraftPlayer.class);
         when(mockedPlayer1.getType()).thenCallRealMethod();
+        when(mockedPlayer1.getInventory()).thenReturn(PowerMockito.mock(PlayerInventory.class));
         final EntityDamageByEntityEvent mockedEvent1 = PowerMockito.mock(EntityDamageByEntityEvent.class);
         when(mockedEvent1.getCause()).thenReturn(ENTITY_ATTACK);
         when(mockedEvent1.getDamager()).thenReturn(mockedPlayer1);
 
         final CraftPlayer mockedPlayer2 = PowerMockito.mock(CraftPlayer.class);
         when(mockedPlayer2.getType()).thenCallRealMethod();
+        when(mockedPlayer2.getInventory()).thenReturn(PowerMockito.mock(PlayerInventory.class));
         final EntityDamageByEntityEvent mockedEvent2 = PowerMockito.mock(EntityDamageByEntityEvent.class);
         when(mockedEvent2.getCause()).thenReturn(ENTITY_ATTACK);
         when(mockedEvent2.getDamager()).thenReturn(mockedPlayer2);
