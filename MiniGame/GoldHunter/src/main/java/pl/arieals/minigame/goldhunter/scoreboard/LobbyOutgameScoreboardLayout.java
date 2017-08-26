@@ -18,8 +18,8 @@ public class LobbyOutgameScoreboardLayout extends GoldHunterScoreboardLayout
     {
         String players = context.get("playersCount") + "";
         String signed = context.get("signedCount") + "";
-        String required = context.get("requiredPlayers") + "";
+        String max = context.get("maxPlayers") + "";
         
-        return Arrays.asList(this.player.getMessageLines("scoreboard_lobby_outgame", players, signed, required));
+        return Arrays.asList(this.player.getMessageLines("scoreboard_lobby_outgame", players, signed, max));
     }
 }

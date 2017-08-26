@@ -18,12 +18,9 @@ public class LobbyIngameScoreboardLayout extends GoldHunterScoreboardLayout
     {
         String gameTime = context.get("gameTime") + "";
         
-        String team1Name = context.get("team1Name") + "";
-        String team2Name = context.get("team2Name") + "";
-        
         String team1Count = context.get("team1Count") + "";
         String team2Count = context.get("team2Count") + "";
         
-        return Arrays.asList(player.getMessageLines("scoreboard_lobby_ingame", gameTime, team1Name, team2Name, team1Count, team2Count));
+        return Arrays.asList(player.getMessageLines("scoreboard_lobby_ingame", gameTime, team1Count, team2Count));
     }
 }

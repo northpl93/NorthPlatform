@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="3" title="@select_class.title" >
+	<container pos="0,0" size="1,3" >
+		<background id="160" data="14" />
+	</container>
+	
+	<container pos="8,0" size="1,3" >
+		<background id="160" data="14" />
+	</container>
+	
+	<button pos="4,0">
+		<icon id="261" name="@archer$§e" />
+	</button>
+	
+	<button pos="8,2">
+		<icon id="330" name="@gui.exit" />
+		<onClick>return</onClick>
+	</button>
+	
+	<button pos="2,1">
+		<icon id="261" name="@archer.poison" />
+		<metadata key="class_name" value="lucznik-truciciel" />
+		<onClick>select</onClick>
+	</button>
+	
+	<button pos="6,1">
+		<icon id="261" name="@archer.bomb" />
+		<metadata key="class_name" value="lucznik-bombowiec" />
+		<onClick>select</onClick>
+	</button>
+</gui>

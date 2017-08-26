@@ -18,51 +18,51 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 public class GoldHunterMapConfig
 {
     @XmlElement(required = true)
-    private XmlLocation spawn1;
+    private XmlLocation spawnRed;
     @XmlElement(required = true)
-    private XmlLocation spawn2;
+    private XmlLocation spawnBlue;
     
-    @XmlElementWrapper(name = "chests1", required = true)
+    @XmlElementWrapper
     @XmlElement(name = "chest")
-    private List<XmlLocation> chests1 = new ArrayList<>();
+    private List<XmlLocation> chestsRed = new ArrayList<>();
     
-    @XmlElementWrapper(name = "chests2", required = true)
+    @XmlElementWrapper
     @XmlElement(name = "chest")
-    private List<XmlLocation> chests2 = new ArrayList<>();
+    private List<XmlLocation> chestsBlue = new ArrayList<>();
     
     public XmlLocation getSpawn1()
     {
-        return spawn1;
+        return spawnRed;
     }
     
     public void setSpawn1(XmlLocation spawn1)
     {
-        this.spawn1 = spawn1;
+        this.spawnRed = spawn1;
     }
     
     public XmlLocation getSpawn2()
     {
-        return spawn2;
+        return spawnBlue;
     }
     
     public void setSpawn2(XmlLocation spawn2)
     {
-        this.spawn2 = spawn2;
+        this.spawnBlue = spawn2;
     }
     
-    public List<XmlLocation> getChests1()
+    public List<XmlLocation> getChestsRed()
     {
-        return chests1;
+        return chestsRed;
     }
     
-    public List<XmlLocation> getChests2()
+    public List<XmlLocation> getChestsBlue()
     {
-        return chests2;
+        return chestsBlue;
     }
     
     public void validateConfig() throws IllegalArgumentException
     {
-        Preconditions.checkArgument(chests1.size() == chests2.size(), "Both teams must have the same number of chests");
-        Preconditions.checkArgument(chests1.size() > 0, "Each team must have at least one chest");
+        Preconditions.checkArgument(chestsRed.size() == chestsBlue.size(), "Both teams must have the same number of chests");
+        Preconditions.checkArgument(chestsBlue.size() > 0, "Each team must have at least one chest");
     }
 }

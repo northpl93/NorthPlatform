@@ -18,9 +18,6 @@ public class IngameScoreboardLayout extends GoldHunterScoreboardLayout
     {
         String gameTime = context.get("gameTime") + "";
         
-        String team1Name = context.get("team1Name") + "";
-        String team2Name = context.get("team2Name") + "";
-        
         String team1Count = context.get("team1Count") + "";
         String team2Count = context.get("team2Count") + "";
         
@@ -30,6 +27,6 @@ public class IngameScoreboardLayout extends GoldHunterScoreboardLayout
         String kills = context.get("kills") + "";
         String deaths = context.get("deaths") + "";
         
-        return Arrays.asList(player.getMessageLines("scoreboard_ingame", gameTime, team1Name, team2Name, team1Count, team2Count, team1Chests, team2Chests, kills, deaths));
+        return Arrays.asList(player.getMessageLines("scoreboard_ingame", gameTime, team1Count, team2Count, team1Chests, team2Chests, kills, deaths));
     }
 }

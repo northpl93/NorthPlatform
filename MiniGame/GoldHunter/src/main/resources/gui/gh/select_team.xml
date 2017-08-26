@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gui height="1" title="@select_team.title" >
+	<button pos="0,0" >
+		<icon id="35" data="14" name="@select_team.red" lore="@select_team.red_lore" />
+		<metadata key="team" value="RED" />
+		<onClick>select</onClick>
+	</button>
+	<button pos="4,0" >
+		<icon id="35" data="7" name="@select_team.random" lore="@select_team.random_lore" />
+		<onClick>select</onClick>
+	</button>
+	<button pos="8,0" >
+		<icon id="35" data="3" name="@select_team.blue" lore="@select_team.blue_lore" />
+		<metadata key="team" value="BLUE" />
+		<onClick>select</onClick>
+	</button>
+</gui>

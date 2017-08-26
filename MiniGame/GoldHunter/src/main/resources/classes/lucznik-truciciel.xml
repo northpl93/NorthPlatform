@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class>
+	<!-- @nazwa_klasy.nazwa_podklasy -->
+	<displayName>@archer.poison</displayName>
+	<!-- @nazwa_klasy -->
+	<shortName>@archer</shortName>
+	<!-- @nazwa_klasy -->
+	<lore>@archer.poison.lore</lore>
+	
+	<!-- KLASA PODSTAWOWA -->
+	
+	<specialAbility>POISON_ARROW</specialAbility>
+	
+	<equipment>
+		<chestplate>
+			<item ifbuyed="archer.poison.chainchest" id="minecraft:chainmail_chestplate" />
+			<item id="minecraft:leather_chestplate" /> 
+		</chestplate>
+		
+		<leggings>
+			<item id="minecraft:iron_leggings" /> 
+		</leggings>
+		
+		<boots>
+			<!-- <item ifbuyed="archer.poison.boots" id="minecraft:leather_boots" /> -->
+		</boots>
+		
+		<inv slot="0" >
+			<item id="minecraft:wooden_sword" />
+		</inv>
+
+		<inv slot="1" >
+			<item ifbuyed="archer.poison.punchbow" id="minecraft:bow" />
+			<item id="minecraft:bow" />
+		</inv>		
+	<!-- SIEKIERA -->
+		<inv slot="2" >
+			<item id="minecraft:iron_axe" />
+		</inv>
+	<!-- KILOF -->		
+		<inv slot="3" >
+			<item id="minecraft:diamond_pickaxe" />
+		</inv>		
+	<!-- BUDULEC -->		
+		<inv slot="8" >
+			<item ifbuyed="archer.poison.budulec:3" id="minecraft:planks" count="35" />
+			<item ifbuyed="archer.poison.budulec:2" id="minecraft:planks" count="30" />
+			<item ifbuyed="archer.poison.budulec:1" id="minecraft:planks" count="25" />
+			<item id="minecraft:planks" count="20" />
+		</inv>
+		
+		<inv slot="35">
+			<item id="minecraft:arrow" />
+		</inv>
+	</equipment>
+</class>

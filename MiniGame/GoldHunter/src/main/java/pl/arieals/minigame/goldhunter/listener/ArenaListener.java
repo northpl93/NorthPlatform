@@ -1,4 +1,4 @@
-package pl.arieals.minigame.goldhunter;
+package pl.arieals.minigame.goldhunter.listener;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,13 +11,18 @@ import pl.arieals.api.minigame.server.gamehost.event.arena.ArenaStartScheduledEv
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameInitEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
+import pl.arieals.minigame.goldhunter.GoldHunterArena;
+import pl.arieals.minigame.goldhunter.GoldHunterComponent;
+import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
+import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
-public class ArenaListener implements Listener
+public class ArenaListener implements AutoListener
 {
     private final Logger logger = LogManager.getLogger("ArenaListener");
         
@@ -40,9 +45,12 @@ public class ArenaListener implements Listener
             logger.info("Add GoldHunter arena with uuid: {}", localArena.getId());
             //goldHunter.prepareGoldHunterArena(localArena);
         }
-        
-        GoldHunterArena arena = localArena.getArenaData();
-        arena.gameInit();
+    }
+    
+    @EventHandler
+    public void onLobbyInit(LobbyInitEvent event)
+    {
+        event.getArena().<GoldHunterArena>getArenaData().gameInit();
     }
     
     @EventHandler

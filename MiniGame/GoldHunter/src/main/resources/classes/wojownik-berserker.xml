@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class>
+	<!-- @nazwa_klasy.nazwa_podklasy -->
+	<displayName>@warrior.berserker</displayName>
+	<!-- @nazwa_klasy -->
+	<shortName>@warriorr</shortName>
+	<!-- @nazwa_klasy -->
+	<lore>@warrior.berserker.lore</lore>
+	
+	<!-- KLASA DODATKOWA -->
+	
+	<specialAbility>CALL_OF_BLOOD</specialAbility>
+	
+	<equipment>
+		<chestplate>
+			<!-- <item ifbuyed="warrior.berserker.diamondchest" id="minecraft:diamond_chestplate" /> -->
+			<item ifbuyed="warrior.berserker.ironchest" id="minecraft:iron_chestplate" />
+			<item id="minecraft:chainmail_chestplate" /> 
+		</chestplate>
+		
+		<inv slot="0" >
+			<item ifbuyed="warrior.berserker.ironsword" id="minecraft:iron_sword" />
+			<item id="minecraft:stone_sword" />
+		</inv>
+	
+	<!-- SIEKIERA -->
+		<inv slot="1" >
+			<item id="minecraft:iron_axe" />
+		</inv>
+	<!-- KILOF -->		
+		<inv slot="2" >
+			<item id="minecraft:diamond_pickaxe" />
+		</inv>		
+	<!-- BUDULEC -->		
+		<inv slot="8" >
+			<item ifbuyed="warrior.berserker..budulec:3" id="minecraft:planks" count="40" />
+			<item ifbuyed="warrior.berserker.budulec:2" id="minecraft:planks" count="35" />
+			<item ifbuyed="warrior.berserker.budulec:1" id="minecraft:planks" count="30" />
+			<item id="minecraft:planks" count="25" />
+		</inv>
+		
+	</equipment>
+</class>

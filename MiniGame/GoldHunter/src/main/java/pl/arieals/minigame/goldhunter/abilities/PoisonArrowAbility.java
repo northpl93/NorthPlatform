@@ -1,0 +1,23 @@
+package pl.arieals.minigame.goldhunter.abilities;
+
+import org.bukkit.Location;
+
+import pl.arieals.minigame.goldhunter.AbilityHandler;
+import pl.arieals.minigame.goldhunter.GoldHunter;
+import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
+import pl.arieals.minigame.goldhunter.effect.PoisonArrowEffect;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+
+public class PoisonArrowAbility implements AbilityHandler
+{
+    @Inject
+    private static GoldHunter goldHunter;
+
+    @Override
+    public boolean onUse(GoldHunterPlayer player, Location targetBlock)
+    {
+        player.getAbilityTracker().suspendAbilityLoading();
+        player.getEffectTracker().addEffect(new PoisonArrowEffect()).onComplete(player.getAbilityTracker()::resetAbilityLoading);
+        return true;
+    }
+}

@@ -1,26 +1,43 @@
 package pl.arieals.minigame.goldhunter;
 
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import org.apache.logging.log4j.LogManager;
+import javax.xml.bind.JAXB;
+
 import org.apache.logging.log4j.Logger;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.util.BlockVector;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import pl.arieals.api.minigame.server.gamehost.arena.IArenaData;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.goldhunter.scoreboard.ArenaScoreboardManager;
+import pl.north93.zgame.api.bukkit.gui.IGuiManager;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.Tick;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class GoldHunterArena implements IArenaData, ITickable
 {
-    private final Logger logger;
+    @Inject
+    @GoldHunterLogger(useToString = true)
+    private Logger logger;
+    
+    @Inject
+    private IGuiManager guiManager;
+    
     private final LocalArena localArena;
     
     private final Set<GoldHunterPlayer> players = new HashSet<>();
@@ -28,9 +45,13 @@ public class GoldHunterArena implements IArenaData, ITickable
     
     private final ArenaScoreboardManager scoreboardManager = new ArenaScoreboardManager(this);
     
+    private GoldHunterMapConfig mapConfig;
+    
+    private final Multimap<GameTeam, BlockVector> chests = HashMultimap.create();
+    private final Map<GameTeam, Location> spawns = new EnumMap<>(GameTeam.class);
+    
     public GoldHunterArena(LocalArena localArena)
     {
-        this.logger = LogManager.getLogger("Arena " + localArena.getId());
         this.localArena = localArena;
         
         setDefaultScoreboardProperties();
@@ -40,7 +61,7 @@ public class GoldHunterArena implements IArenaData, ITickable
     {
         scoreboardManager.setProperties(
                 "signedCount", "0",
-                "requiredPlayers", localArena.getPlayersManager().getMinPlayers()
+                "maxPlayers", localArena.getPlayersManager().getMaxPlayers()
         );
     }
     
@@ -54,6 +75,16 @@ public class GoldHunterArena implements IArenaData, ITickable
         return localArena;
     }
     
+    public ArenaScoreboardManager getScoreboardManager()
+    {
+        return scoreboardManager;
+    }
+    
+    public boolean hasGame()
+    {
+        return localArena.getGamePhase() != GamePhase.LOBBY && localArena.getGamePhase() != GamePhase.INITIALISING;
+    }
+    
     public void forEachPlayer(Consumer<GoldHunterPlayer> action)
     {
         getPlayers().forEach(action);
@@ -64,9 +95,19 @@ public class GoldHunterArena implements IArenaData, ITickable
         return players;
     }
     
+    public Collection<GoldHunterPlayer> getSignedPlayers()
+    {
+        return signedPlayers.values();
+    }
+    
     public Collection<GoldHunterPlayer> getPlayersInTeam(GameTeam team)
     {
         return signedPlayers.get(team);
+    }
+    
+    public Multimap<GameTeam, BlockVector> getChests()
+    {
+        return chests;
     }
     
     public int getSignedPlayersCount()
@@ -74,15 +115,20 @@ public class GoldHunterArena implements IArenaData, ITickable
         return signedPlayers.size();
     }
     
+    public Location getTeamSpawn(GameTeam team)
+    {
+        Preconditions.checkState(hasGame());
+        return spawns.get(team);
+    }
+    
     public void playerJoin(GoldHunterPlayer player)
     {
         Preconditions.checkState(players.add(player));
         logger.debug("Player {} joined to the arena", player);
         
-        player.teleportToLobby();
+        player.spawnInLobby();
         
         updatePlayersCount();
-        scoreboardManager.setLobbyScoreboardLayout(player);
     }
     
     public void playerLeft(GoldHunterPlayer player)
@@ -97,53 +143,126 @@ public class GoldHunterArena implements IArenaData, ITickable
     public void gameStart()
     {
         logger.debug("Arena gameStart()");
-        // TODO:
+        
+        mapConfig = JAXB.unmarshal(localArena.getWorld().getResource("ghmap.xml"), GoldHunterMapConfig.class);
+        mapConfig.validateConfig();
+        
+        setupSpawns();
+        setupChests();
+        
+        signedPlayers.entries().forEach(e -> e.getValue().joinGame(e.getKey()));
+        
+        updateLobbyScoreboardLayout();
+    }
+
+    private void setupChests()
+    {
+        World world = localArena.getWorld().getCurrentWorld();
+        
+        mapConfig.getChestsRed().forEach(l -> chests.put(GameTeam.RED, l.toBukkit(world).toVector().toBlockVector()));
+        mapConfig.getChestsBlue().forEach(l -> chests.put(GameTeam.BLUE, l.toBukkit(world).toVector().toBlockVector()));
+        
+        updateChestsCount();
+    }
+
+    private void setupSpawns()
+    {
+        World world = localArena.getWorld().getCurrentWorld();
+        
+        spawns.put(GameTeam.RED, mapConfig.getSpawn1().toBukkit(world).add(0.5, 0.5, 0.5));
+        spawns.put(GameTeam.BLUE, mapConfig.getSpawn2().toBukkit(world).add(0.5, 0.5, 0.5));
     }
 
     public void gameEnd()
     {
         logger.debug("Arena gameEnd()");
-        // TODO Auto-generated method stub
         
+        localArena.getScheduler().runTaskLater(localArena::prepareNewCycle, 120);
     }
 
     public void gameInit()
     {
-        logger.debug("Arena gameInit()");
-        // TODO Auto-generated method stub
+        for ( GoldHunterPlayer player : signedPlayers.values() )
+        {
+            player.exitGame();
+        }
+        
+        Set<GoldHunterPlayer> previousSignedPlayers = new HashSet<>(signedPlayers.values());
+        signedPlayers.clear();
+        updateSignedPlayersCount();
+        
+        // resign and shuffle players in teams for next game 
+        for ( GoldHunterPlayer player : previousSignedPlayers )
+        {
+            signToTeam(player, null);
+        }
+        
+        mapConfig = null;
+        chests.clear();
+        spawns.clear();
+        
+        updateLobbyScoreboardLayout();
     }
     
     public void scheduleStart()
     {
         localArena.getStartScheduler().scheduleStart();
-        forEachPlayer(p -> scoreboardManager.setLobbyScoreboardLayout(p));
+        updateLobbyScoreboardLayout();
     }
     
     public void cancelStart()
     {
         localArena.getStartScheduler().cancelStarting();
-        forEachPlayer(p -> scoreboardManager.setLobbyScoreboardLayout(p));
+        updateLobbyScoreboardLayout();
+    }
+    
+    private void updateLobbyScoreboardLayout()
+    {
+        if ( !hasGame() )
+        {
+            forEachPlayer(p -> scoreboardManager.setLobbyScoreboardLayout(p));
+        }
+        else
+        {
+            getPlayers().stream().filter(p -> !p.isIngame()).forEach(p -> scoreboardManager.setLobbyScoreboardLayout(p));
+        }
     }
     
     public void signToTeam(GoldHunterPlayer player, GameTeam team)
     {
         Preconditions.checkArgument(player != null);
         
+        if ( signedPlayers.values().contains(player) )
+        {
+            return;
+        }
+        
         if ( team == null )
         {
-            team = signedPlayers.get(GameTeam.TEAM1).size() > signedPlayers.get(GameTeam.TEAM2).size() ? GameTeam.TEAM2 : GameTeam.TEAM1;
+            team = signedPlayers.get(GameTeam.RED).size() > signedPlayers.get(GameTeam.BLUE).size() ? GameTeam.BLUE : GameTeam.RED;
         }
         
         signedPlayers.put(team, player);
         updateSignedPlayersCount();
+        
+        if ( hasGame() )
+        {
+            player.joinGame(team);
+        }
+        
         logger.debug("Signed player {} to team {}", player, team);
     }
     
     public void unsignFromTeam(GoldHunterPlayer player)
     {
-        // TODO: check
         signedPlayers.values().removeIf(p -> p.equals(player));
         updateSignedPlayersCount();
+        
+        if ( player.isIngame() )
+        {
+            player.exitGame();
+        }
+        
         logger.debug("unsigned player {} from team", player);
     }
     
@@ -159,14 +278,25 @@ public class GoldHunterArena implements IArenaData, ITickable
         logger.debug("Current signed players count is {}", signedPlayers.size());
         
         scoreboardManager.setProperties("signedCount", signedPlayers.size(),
-                "team1Count", signedPlayers.get(GameTeam.TEAM1).size(),
-                "team2Count", signedPlayers.get(GameTeam.TEAM2).size());
+                "team1Count", signedPlayers.get(GameTeam.RED).size(),
+                "team2Count", signedPlayers.get(GameTeam.BLUE).size());
         
-        if ( isEnoughSignedPlayersToStart() && !localArena.getStartScheduler().isStartScheduled() )
+        if ( hasGame() && ( signedPlayers.get(GameTeam.RED).size() == 0 || signedPlayers.get(GameTeam.BLUE).size() == 0 ) )
+        {
+            // TODO: walkower info
+            localArena.setGamePhase(GamePhase.POST_GAME);
+            
+            if ( signedPlayers.size() == 0 )
+            {
+                localArena.prepareNewCycle();
+            }
+        }
+        
+        if ( !hasGame() && isEnoughSignedPlayersToStart() && !localArena.getStartScheduler().isStartScheduled() )
         {
             scheduleStart();
         }
-        if ( !isEnoughSignedPlayersToStart() && localArena.getStartScheduler().isStartScheduled() )
+        if ( !hasGame() && !isEnoughSignedPlayersToStart() && localArena.getStartScheduler().isStartScheduled() )
         {
             cancelStart();
         }
@@ -183,8 +313,107 @@ public class GoldHunterArena implements IArenaData, ITickable
         }
     }
     
+    public void broadcastMessageIngame(String key, Object... args)
+    {
+        if ( hasGame() )
+        {
+            signedPlayers.values().forEach(p -> p.sendMessage(key, args));
+        }
+    }
+    
+    public void broadcastSeparatedMessageIngame(String key, Object... args)
+    {
+        if ( hasGame() )
+        {
+            signedPlayers.values().forEach(p -> p.sendSeparatedMessage(key, args));;
+        }
+    }
+    
     public boolean isEnoughSignedPlayersToStart()
     {
         return getSignedPlayersCount() >= localArena.getPlayersManager().getMinPlayers();
+    }
+
+    public void breakChest(GoldHunterPlayer player, BlockVector chestLoc)
+    {
+        logger.debug("call breakChest() with {}, {}", player, chestLoc);
+        
+        Preconditions.checkArgument(player.isIngame());
+        
+        GameTeam team = getChestTeam(chestLoc);
+        Preconditions.checkState(team != null);
+        
+        if ( localArena.getGamePhase() != GamePhase.STARTED )
+        {
+            return;
+        }
+        
+        if ( player.getTeam() == team )
+        {
+            player.sendMessage("cannot_destroy_own_chest");
+            return;
+        }
+        
+        chests.get(team).remove(chestLoc);
+        breakChestBlock(chestLoc);
+        
+        broadcastSeparatedMessageIngame("chest_destroy", player.getDisplayNameBold(), team.getColoredBoldGenitive());
+        updateChestsCount();
+    }
+    
+    private void breakChestBlock(BlockVector chestLoc)
+    {
+        // TODO: particle, something effect etc.
+        chestLoc.toLocation(localArena.getWorld().getCurrentWorld()).getBlock().setType(Material.AIR);
+        SoundEffect.CHEST_DESTROY.play(this);
+    }
+    
+    private void updateChestsCount()
+    {
+        logger.debug("Current chests: RED={} BLUE={}", chests.get(GameTeam.RED).size(), chests.get(GameTeam.BLUE).size());
+        
+        int red = chests.get(GameTeam.RED).size();
+        int blue = chests.get(GameTeam.BLUE).size();
+       
+        scoreboardManager.setProperties("team1Chests", red, "team2Chests", blue);
+        
+        if ( red == 0 )
+        {
+            winGame(GameTeam.BLUE);
+        }
+        if ( blue == 0 )
+        {
+            winGame(GameTeam.RED);
+        }
+    }
+    
+    private void winGame(GameTeam winnerTeam)
+    {
+        logger.debug("Team {} win game...", winnerTeam);
+        
+        // TODO: special effects, fly etc.
+        
+        players.forEach(p -> p.sendSeparatedMessage("win_game", winnerTeam.getColoredBoldGenitive().getValue(p.getPlayer().spigot().getLocale()).toUpperCase()));
+        localArena.setGamePhase(GamePhase.POST_GAME);
+    }
+    
+    public GameTeam getChestTeam(BlockVector chestLoc)
+    {
+        if ( chests.get(GameTeam.RED).contains(chestLoc) )
+        {
+            return GameTeam.RED;
+        }
+        else if ( chests.get(GameTeam.BLUE).contains(chestLoc) )
+        {
+            return GameTeam.BLUE;
+        }
+        
+        return null;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return "Arena[" + localArena.getId() + "]";
     }
 }

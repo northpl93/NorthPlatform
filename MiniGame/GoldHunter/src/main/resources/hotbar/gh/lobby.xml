@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<hotbar>
+	<entry pos="0">
+		<icon id="minecraft:nether_star" name="@hotbar.select_team" />
+		<onClick>joinTeam</onClick>
+	</entry>
+	<entry pos="1">
+		<icon id="minecraft:iron_sword" name="@hotbar.select_class" />
+		<onClick>selectClass</onClick>
+	</entry>
+	<entry pos="2">
+		<icon id="minecraft:name_tag" name="@hotbar.mapvote" />
+		<onClick>mapVote</onClick>
+	</entry>
+	<entry pos="8">
+		<icon id="minecraft:web" name="@hotbar.quit" />
+		<onClick>quit</onClick>
+	</entry>
+</hotbar>

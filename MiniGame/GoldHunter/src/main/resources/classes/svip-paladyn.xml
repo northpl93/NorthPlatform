@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class>
+	<!-- @nazwa_klasy.nazwa_podklasy -->
+	<displayName>@svip.paladin</displayName>
+	<!-- @nazwa_klasy -->
+	<shortName>@svip</shortName>
+	<!-- @nazwa_klasy -->
+	<lore>@svip.paladin.lore</lore>
+	
+	<!-- KLASA DODATKOWA -->
+	
+	<specialAbility>REDEMPTION</specialAbility>
+	
+	<equipment>
+		<chestplate>
+			<item id="minecraft:golden_chestplate" /> 
+		</chestplate>
+		
+		<leggings>
+			<item ifbuyed="svip.paladin.diamondleggings" id="minecraft:diamond_leggings" />
+			<item id="minecraft:iron_leggings" /> 
+		</leggings>
+				
+		<boots>
+			<item id="minecraft:golden_boots" /> 
+		</boots>
+		
+		<inv slot="0" >
+			<item id="minecraft:iron_sword" />
+		</inv>
+		
+		<offhand>
+			<item id="minecraft:shield" />
+		</offhand>
+		
+	<!-- SIEKIERA -->
+		<inv slot="2" >
+			<item id="minecraft:iron_axe" />
+		</inv>
+	<!-- KILOF -->		
+		<inv slot="3" >
+			<item id="minecraft:diamond_pickaxe" />
+		</inv>		
+	<!-- BUDULEC -->		
+		<inv slot="8" >
+			<item ifbuyed="vip.defender.budulec:3" id="minecraft:planks" count="45" />
+			<item ifbuyed="vip.defender.budulec:2" id="minecraft:planks" count="40" />
+			<item ifbuyed="vip.defender.budulec:1" id="minecraft:planks" count="35" />
+			<item id="minecraft:planks" count="30" />
+		</inv>
+		
+	</equipment>
+	<effects>
+		<effect type="SLOW" />
+	</effects>
+	</class>
