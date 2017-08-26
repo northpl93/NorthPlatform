@@ -7,6 +7,7 @@
             <id>skeleton</id>
             <name lang="pl-PL">Szkielet</name>
             <name lang="en-GB">Szkielet</name>
+            <itemData name="material" value="SKULL_ITEM" />
         </item>
 
         <!-- zombie (Zombiak) -->
@@ -14,6 +15,8 @@
             <id>zombie</id>
             <name lang="pl-PL">Zombiak</name>
             <name lang="en-GB">Zombiak</name>
+            <itemData name="material" value="SKULL_ITEM" />
+            <itemData name="data" value="2" />
         </item>
 
         <!-- creeper (Creeper) -->
@@ -21,6 +24,8 @@
             <id>creeper</id>
             <name lang="pl-PL">Creeper</name>
             <name lang="en-GB">Creeper</name>
+            <itemData name="material" value="SKULL_ITEM" />
+            <itemData name="data" value="4" />
         </item>
 
         <!-- homer (Homer Simpson) -->
@@ -28,6 +33,10 @@
             <id>homer</id>
             <name lang="pl-PL">Homer Simpson</name>
             <name lang="en-GB">Homer Simpson</name>
+            <itemData name="material" value="SKULL_ITEM" />
+            <itemData name="data" value="3" />
+            <itemData name="textures" value="eyJ0aW1lc3RhbXAiOjE1MDI5ODE5NDY4ODMsInByb2ZpbGVJZCI6ImRmYjg5MGRlNmI2ODQwNGJiY2RhZGZhYjY3NGIxNjc5IiwicHJvZmlsZU5hbWUiOiJfV29kemlvXyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjQ5YzVkNDJjNGY0YWZiYTk2NDY1N2ZkYmM0ZmY2N2MyYmU3YWE1NzNmNzMzZDRhOTJlMWEzYTQ5YThmZWIifX19" />
+            <itemData name="sign" value="xZqvwqlMTe99+IhLiad0nNEUNKaSC4JkfY5iZdzvzFM7o7oa3txN9N0taYg4+jxPx3YTu9kjtrefj/8cQ9NS62KtS/3Ex5SRdBC8nYTnMp34EpHSwhocVIHFpaq7uLJGk4TqMyy5xzSzJIsDnH9AdZd/iXVEIO5rH+2PeGDJqCKR5SnN+HMLk/TzaQn/muGD8+ci/MTyNiEL7zGrdS2lB2/R29ZkewvarfK7TNGOuAuD3P+/lpGr1UNW8eL33dv0dhxpbQ8eA2tOI3im03kAIkLNR2ub6xUBTB4sV5SsKGvuapReS4nJOCqr9mv4UYeywbDf5KxD7Y8AfgtobWa9MHfSIplEOoC1tkw9Lenz5PS2yaNSz+utNF9eOj9Pp3P6Gwpb5QUhC4/JyIr+4mMadr+6xk+dZPgQ1B+N3ihq2wDLq5YOwRSz9psDLCfKGU0FaUr2qOVE+ioijDjCqukw+jkz9ZdleMt/xDCGT1Y/zoTHTyRuEOwDbS7TduxU1RIRfxy7z86fa3kUDahKvczLyZ9bDFT2ykgPmzvH7Ox7+5oPCR3tRFqWPogQc4krKZpQWoiQnNE4enGvzgAwFrWnDiPbgpPsGWIJbFgMH9wj2W/qBXbNQd9LVRK84Rofw629thEDbjna6Lr61hXPmYEkAKMUfGYuhxLuMMDYgbfLPK8=" />
         </item>
 
         <!-- shrek (Shrek) -->
@@ -35,6 +44,10 @@
             <id>shrek</id>
             <name lang="pl-PL">Shrek</name>
             <name lang="en-GB">Shrek</name>
+            <itemData name="material" value="SKULL_ITEM" />
+            <itemData name="data" value="3" />
+            <itemData name="textures" value="eyJ0aW1lc3RhbXAiOjE1MDI5ODIwNTgwMTIsInByb2ZpbGVJZCI6ImRmYjg5MGRlNmI2ODQwNGJiY2RhZGZhYjY3NGIxNjc5IiwicHJvZmlsZU5hbWUiOiJfV29kemlvXyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjc0ODZhZWRkZGFhYjRiOWJmMjUxZGM3M2Y2ZmY3NTdkY2E0NmIzNDkxOTg1MDI4ZmE0YzYzN2RhNTJkNjEifX19" />
+            <itemData name="sign" value="HM/Hw+D49PStcbXpx90S45fAJ+y4Vz8dSZtcoIbnVNwQlzSMuaWqc1BnQBpwp1ZX+hvWg+LGytVAT3zDUy17JglZWqK773gF+sLMoCU5aeaSgNAykpGD2D2f9Y086Lr/z3hkK1q8M22dnIJc99P9QuFYbhIj+j/LZkUs17sCYkS9STRbQ/4NV4KYUcxQ7E1LRVTIUhow/CH/HHWA2EC0Tem48JWrjJIXeOc/Elo0Pkd2ZzOxZqLFJC3vaK5QwrRR+fZDgmYfGZhKL1Wx8qfNA5CUM+Vj0TBVKguHpLtjufm8Ug81nu75hnRsGFNr11UyUu9gY93881OpLKzd3qgm54lJVIufewZhvpvTm7B5VMkjgHfC83+ZE5MMGnx3BFuxmYgHG4xGV7K97lxWy8llqnn7OgDFFQo/tnVBjIZ8gFpJWiSHup/AqugjsYRoL0kc3etwgKBSPP97RmBcissQAM6YUtK1+bA1M9na8JSbvKBlhXI0Diyz3cnaWrDGbqysl59qvW11pNMNQwNdp6DhsEpbzekJZ+gFvF+4Q+SJ68UpyfQVh5PZM60Q/l/Fu/xYYO3udaxOTS3rMAVEOz2RVXnYyPZ2bFzRONaLvnIon0hErVZEeCZ7eydiM3vHMc5qFaFJjvFYVc7R5ZZAvdSzHIj9gwNxDs6MOhu18zQUYK0=" />
         </item>
 
         <!-- batman (Batman) -->
@@ -42,6 +55,10 @@
             <id>batman</id>
             <name lang="pl-PL">Batman</name>
             <name lang="en-GB">Batman</name>
+            <itemData name="material" value="SKULL_ITEM" />
+            <itemData name="data" value="3" />
+            <itemData name="textures" value="eyJ0aW1lc3RhbXAiOjE1MDI5ODE2OTIzMTEsInByb2ZpbGVJZCI6ImRmYjg5MGRlNmI2ODQwNGJiY2RhZGZhYjY3NGIxNjc5IiwicHJvZmlsZU5hbWUiOiJfV29kemlvXyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmM3ZDlhMjJjN2MzOWI3YTMxNWIyN2FjN2U5MWZiNDc1ZWU5NjdmZWExZjQ1YWQ1MWE0YWJjMjQyMGEzIn19fQ==" />
+            <itemData name="sign" value="M9CixjSWqcDngtuYr9GI5PrMPoySgKtA3YxchAw+SLUyKH1EXoYOzB5R+j3VGFCO3H/xZh7lzkJ7lz0Qyg9TTSfNqLDStkvnCMJJte72Q+wmt38Pp9cFke4dC2yp3MFGw7ECTuR4oQKbSd89M3TqgM9cZLVOXKIzGsNzDZb8BEVUdrrEurkKkIsd9nbdr4ThOctkcBPghQm1QEFlSs+WWsFcn6bQgNsEoaWHbvA8UN8gtv60cmQdzcXJq84eV8EVHaEwfsBb8EYWPvLsGCMS2OGwAiB/vICpIiTgJNxAvlOkyf+BXZZfj3UgbxHFV+b4ggGFy5x07t6dpksiZZTWwd4ytR0NrxB95I88V87gEBMsXuwXHeW5ZHemwadhksJry6xnX79hiePpWWIUaeWcFJXQkuuMyJqoGqFAME/wHAMBwk/zAeWqhFP1lRIu7ZLrbqlP/fJQWv0nUvbqCUZ5WBB7tK9YCuJG35B4Io+sNxoCCyWpRYGXCmI1hxfFLIqAEsmw/cS4xPI2+ky6V7LzDTEqD6jddKHJw7cxwBbsJvzqFxeRwclaW3+pv9cak17ppExYVvDwKUZeBqtC1zClH3CmkXiLZgBv72xAP9KOUH2o1aYRCP3f12eBEZwLxeLc+xnp4L8RF+lAH1/AKsHZIGFEgH+XaWIc5sx6VGAwZuM=" />
         </item>
 
         <!-- flash (Flash) -->
@@ -49,6 +66,10 @@
             <id>flash</id>
             <name lang="pl-PL">Flash</name>
             <name lang="en-GB">Flash</name>
+            <itemData name="material" value="SKULL_ITEM" />
+            <itemData name="data" value="3" />
+            <itemData name="textures" value="eyJ0aW1lc3RhbXAiOjE1MDI5ODE4NTI1NzcsInByb2ZpbGVJZCI6ImRmYjg5MGRlNmI2ODQwNGJiY2RhZGZhYjY3NGIxNjc5IiwicHJvZmlsZU5hbWUiOiJfV29kemlvXyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmRjMTlmZGJhZjIzMmVhM2EyNmM1NTFhNDg5Mjc4NGZmMTYxNWJkYTYxYThlOTE2MDJiZmVhMWJkN2RkOWUifX19" />
+            <itemData name="sign" value="HoucCbSjYgHN5reLU49/pJXGReIDWXulcef39OkSJPTLeDVQoKszIkwcFgP79XhNoG1VA5iFPYy7vKf4IQsMrr8wUgMce2BaVaHubMAT48OBFaRE+QAbtE9blHmqeK5/13cTUmSaDgN7ugbJbHvn3m/5Sj3JzRvmyP1WQ65I93Y2LX5imtq2wXHskxVtwBlpVwdNezUcKQNXlF5u9syLN2PDq4zsPi7i7Yj45m8dU8ZIaAyT80YwlljHss9qIiICvEYGH0QaOhzltvO+uyW/fjl73r/SW1UT/PPsPIsXHCniAbaHvxXR/MVbYyo3g9cS9AQsba8IRF8BtWK6Ew99hSltjXwJyun06RuqXp4nY9gT1K+JmjO8okUl556sf+uS/OKk/a+L2XH/Wp6iycGjGDezWOTyNlZvylyF7p8+arIxjHQeLZ+NpzKGjqGlVAVlX2tunQwU/Ge5Az/FyH0oiHuUPiPDT/1Wghjla2qY5+KztHEDB5gLyfiRhvQ/3+Nd8rzN5gBrH9EZ+8IU5+CEFy1ZyMapT+C75ml0YWM58t3TSlCSAOH9uDuNVnRuAVU7sZx1bK0XDTIzdKXsGnVbcOahafAw5pYQVa7jli9Awbklz8ubNqQg1ivuwVL8uDcb6XrX97XShmwvBvI3QSXtr5xqQ+nOhoHp/Ep5ADYO5D4=" />
         </item>
 
         <!-- wolverine (Wolverine) -->
@@ -56,6 +77,10 @@
             <id>wolverine</id>
             <name lang="pl-PL">Wolverine</name>
             <name lang="en-GB">Wolverine</name>
+            <itemData name="material" value="SKULL_ITEM" />
+            <itemData name="data" value="3" />
+            <itemData name="textures" value="eyJ0aW1lc3RhbXAiOjE1MDI5ODIxMjMzMjgsInByb2ZpbGVJZCI6ImRmYjg5MGRlNmI2ODQwNGJiY2RhZGZhYjY3NGIxNjc5IiwicHJvZmlsZU5hbWUiOiJfV29kemlvXyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzk0NWQ0YzIxNjE2NjM2YzM3NThmYjkzOGY5ODM0ZmQ5NzRkNDk1ZDM2NjNhYTk5Y2ZhYWExM2NiYmJkMTNhIn19fQ==" />
+            <itemData name="sign" value="RnPDIteNmwkdJuVCpoBxS8X7ESOKZYjftOLKX1/+lz6/TaIJbWgLisfyyd3uu9TAqEUWY4XtC3vSfEEjB8SrtAT1fXkJY/GC/Yr0jpFu46HHfpx/97w6r/sQ8fm5vTgTja/I5vlISfBYcvonyGvT9BH4VlnMXm0431YaFd5uCMn0/N8ef1qV/IGQ8JUIIRqBuZQPJuIT32uQDd9Edv+qeUWICKBjrfFh5mvKmo+qU2Y9XT7jZ/aPmHTLMTRju+GJ/XlT44EdS8jlAldcUblzu2EWFl8jschpkixbVJvZyyruIx7Qa8lcquNUx4RsV7tYfodg9ee+pT2vfQSTfuu2joQBpVDV+BwEey2SvXMVSwi2ITLl7/LLMb+51E7XVwzP/0oyay0v5jo58/Fa9lhvsquXAMfrOESjvDR5zDmcfnSNlJxNC7ULC7SM6PF4R4drss3MUMJRuMZiJAgY/y9o3diL9Orrwo3jodynNVp/lKkbIX+DHj8O6fx7Zi/hWb+WL93xoNCBkgylQc3hrWrzt+BxLIXDZx38PjwJEt3EmLtU14jl+ScoHabJT/NcQ014REj0SHW0yAdm79PXXGzp5JsEywG/VzoSXy4/quZyKl8G3CbGx7nQqD1QT0AtFo28bbLsBjg9S+kPLdd+fyKul1LDT51iC7dH19rtmWbvXsg=" />
         </item>
 
         <!-- derp (Derp) -->
@@ -63,6 +88,10 @@
             <id>derp</id>
             <name lang="pl-PL">Derp</name>
             <name lang="en-GB">Derp</name>
+            <itemData name="material" value="SKULL_ITEM" />
+            <itemData name="data" value="3" />
+            <itemData name="textures" value="eyJ0aW1lc3RhbXAiOjE1MDI5ODE3NzQ3MTUsInByb2ZpbGVJZCI6ImRmYjg5MGRlNmI2ODQwNGJiY2RhZGZhYjY3NGIxNjc5IiwicHJvZmlsZU5hbWUiOiJfV29kemlvXyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2NiMzgyZGFmMzRiZGM4N2RkZmQxZmIxNWY2M2QzNzNmODEzMTdkY2ExMjM2ZThlZjE3NTYwM2M1M2MxZDkifX19" />
+            <itemData name="sign" value="N5OBXUAqTj2uP2ZFDzSNcvqKtd30csG2uRCA9x/LnRw+rVtpGa3A5AOmx5VrmGfIM9xAZQuIMNe4tqJJG9/ojhczszW8Kki5PyIGbu4XkSsleBt8hN991lnCSECbIRmP3HZWJlKxpxzmOyWoGmeWbIdw4oGmhDSgyjFVoZNf6itmJcqhPmL/XucvHjqctro9mUbbciAps8AWNvW0sU4EC4vavtgw09EUK7cOSiAxwaNjNoIneTChsuzMfUlYj52VX0ezPQQ33V2QrXsWDdzKfS5t+4NqP5Vq2o/J2u5If67+nTiLIZxlIanxHEINt7ZuWHaZViO0EU0oObOdPUVO9N9U6GQd3XMnbqnHMWE9q7efMDBR9n16k1c/u0iz9FefpVzqLZF9F/C9GZumlpo4Zm9Z7G4/mj+MY4V3pZfmE/SSPxNYuPbmTMXzP+t+a33a0n+Z6zPKZHWidhQkSFiE5bSlqfRFhqNjTAvlAvVz+D9I+GsuL0uJ7pDN+S5P2iX0jtqt6vXim7bOgNlsMoCvEfOEfc4zLVA0WZ+SUNeMyr7Axlr7DA8QOzbfybnQWMUIcvzVFpPJzjz/f+B5mBWGT2lI31+G0YKgaK7tQ2B5XF8rHzJlTxD0J7siwT+CR88yjeZvEDqH9TeQKpYfXNnMglYpSkvMHkP3kafeLHYtisI=" />
         </item>
 
         <!-- dragon (Smoczyslaw) -->
@@ -70,6 +99,8 @@
             <id>dragon</id>
             <name lang="pl-PL">Smoczyslaw</name>
             <name lang="en-GB">Smoczyslaw</name>
+            <itemData name="material" value="SKULL_ITEM" />
+            <itemData name="data" value="5" />
         </item>
     </items>
 </itemGroup>

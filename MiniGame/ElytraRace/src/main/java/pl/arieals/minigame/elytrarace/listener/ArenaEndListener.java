@@ -28,7 +28,8 @@ public class ArenaEndListener implements Listener
         // zabijamy wszystkie nasze entities.
         arenaData.getScoreControllers().values().forEach(ScoreController::cleanup);
 
-        new SimpleCountdown(POST_GAME_COOLDOWN).endCallback(arena::prepareNewCycle).start();
+        final SimpleCountdown postGameCountdown = new SimpleCountdown(POST_GAME_COOLDOWN).endCallback(arena::prepareNewCycle);
+        arena.getScheduler().runSimpleCountdown(postGameCountdown);
     }
 
     // gdy gracz wychodzi z areny informujemy o tym metahandlera

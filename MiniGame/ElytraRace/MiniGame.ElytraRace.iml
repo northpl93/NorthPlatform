@@ -78,5 +78,7 @@
     <orderEntry type="library" name="Maven: net.citizensnpcs:citizens-v1_10_R1:2.0.22-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: net.citizensnpcs:citizens-v1_11_R1:2.0.22-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: net.citizensnpcs:citizens-v1_12_R1:2.0.22-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="GlobalShops" />
+    <orderEntry type="module" module-name="Network Controller" />
   </component>
 </module>

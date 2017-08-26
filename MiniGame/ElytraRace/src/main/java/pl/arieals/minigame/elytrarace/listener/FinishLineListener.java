@@ -7,6 +7,7 @@ import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -41,7 +42,11 @@ public class FinishLineListener implements Listener
 
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 0);
             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 2, false, false));
-            player.getInventory().setChestplate(null);
+
+            // usuwamy czapke/glowe i elytre
+            final PlayerInventory inventory = player.getInventory();
+            inventory.setHelmet(null);
+            inventory.setChestplate(null);
 
             arenaData.getMetaHandler().handle(event.getArena(), player, playerData);
         });

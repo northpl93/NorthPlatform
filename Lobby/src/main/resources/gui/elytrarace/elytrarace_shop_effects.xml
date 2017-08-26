@@ -22,7 +22,7 @@
 
             <!-- runes/runy -->
             <button pos="4,2">
-                <icon id="ENCHANTED_BOOK" name="@general.name_placeholder$nameColor-eunes,name-runes" lore="@effects.runes$lore-runes" />
+                <icon id="ENCHANTED_BOOK" name="@general.name_placeholder$nameColor-runes,name-runes" lore="@effects.runes$lore-runes" />
                 <onClick>northplatform://lobby/shop/general/click/elytra_effects/runes/$playerId</onClick>
             </button>
 

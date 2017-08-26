@@ -30,6 +30,9 @@ import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.arieals.minigame.elytrarace.arena.StartCountdown;
 import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
 import pl.arieals.minigame.elytrarace.cfg.ElytraConfig;
+import pl.arieals.minigame.elytrarace.shop.ElytraEffectTask;
+import pl.arieals.minigame.elytrarace.shop.ElytraEffectsManager;
+import pl.arieals.minigame.elytrarace.shop.effects.IElytraEffect;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
@@ -39,9 +42,11 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 public class ArenaStartListener implements Listener
 {
     @Inject @Messages("ElytraRace")
-    private MessagesBox  messages;
+    private MessagesBox          messages;
     @Inject
-    private ElytraConfig config;
+    private ElytraEffectsManager effectsManager;
+    @Inject
+    private ElytraConfig         config;
 
     @EventHandler
     public void loadArenaData(final LobbyInitEvent event)
@@ -64,16 +69,20 @@ public class ArenaStartListener implements Listener
     @EventHandler
     public void startGame(final GameStartEvent event)
     {
-        final ElytraRaceArena arenaData = event.getArena().getArenaData();
-        this.setupPlayers(event.getArena(), arenaData);
+        final LocalArena arena = event.getArena();
+        final ElytraRaceArena arenaData = arena.getArenaData();
+        this.setupPlayers(arena, arenaData);
 
-        final PlayersManager playersManager = event.getArena().getPlayersManager();
+        final PlayersManager playersManager = arena.getPlayersManager();
         playersManager.broadcast(this.messages, "separator");
         playersManager.broadcast(this.messages, arenaData.getGameMode() == ElytraRaceMode.SCORE_MODE ? "score.welcome" : "race.welcome", MessageLayout.CENTER);
         playersManager.broadcast(this.messages, "separator");
 
+        // odpalamy taska generujacego efekty lotu
+        arena.getScheduler().runTaskTimer(new ElytraEffectTask(arena), 2, 2);
+
         // task odpalający arenę po 15 sekundach
-        new StartCountdown(15, event.getArena()).start(20);
+        arena.getScheduler().runAbstractCountdown(new StartCountdown(15, arena), 20);
     }
 
     private ArenaConfig loadConfig(final LocalArena arena)
@@ -89,7 +98,7 @@ public class ArenaStartListener implements Listener
         {
             final Location startLoc = locations.next().toBukkit(arena.getWorld().getCurrentWorld());
 
-            setPlayerData(player, new ElytraRacePlayer(startLoc));
+            setPlayerData(player, new ElytraRacePlayer(this.getEffect(player), startLoc));
             if (elytraRaceArena.getGameMode() == ElytraRaceMode.SCORE_MODE)
             {
                 // w trybie score ustawiamy graczowi dodatkowy obiekt
@@ -103,6 +112,11 @@ public class ArenaStartListener implements Listener
             player.setAllowFlight(true);
             player.setFlying(true);
         }
+    }
+
+    private IElytraEffect getEffect(final Player player)
+    {
+        return this.effectsManager.getEffect(player);
     }
 
     private ItemStack createElytra()

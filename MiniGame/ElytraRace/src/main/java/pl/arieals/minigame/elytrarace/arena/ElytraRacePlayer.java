@@ -6,17 +6,25 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.minigame.elytrarace.cfg.Checkpoint;
+import pl.arieals.minigame.elytrarace.shop.effects.IElytraEffect;
 
 public class ElytraRacePlayer
 {
-    private Location   startLocation;
-    private boolean    isDev;
-    private boolean    finished;
-    private Checkpoint checkpoint;
+    private Location      startLocation;
+    private boolean       isDev;
+    private boolean       finished;
+    private Checkpoint    checkpoint;
+    private IElytraEffect effect;
 
-    public ElytraRacePlayer(final Location startLocation)
+    public ElytraRacePlayer(final IElytraEffect effect, final Location startLocation)
     {
+        this.effect = effect;
         this.startLocation = startLocation;
+    }
+
+    public IElytraEffect getEffect()
+    {
+        return this.effect;
     }
 
     public Location getStartLocation()
@@ -71,6 +79,6 @@ public class ElytraRacePlayer
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("isDev", this.isDev).append("finished", this.finished).append("checkpoint", this.checkpoint).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("startLocation", this.startLocation).append("isDev", this.isDev).append("finished", this.finished).append("checkpoint", this.checkpoint).append("effect", this.effect).toString();
     }
 }
