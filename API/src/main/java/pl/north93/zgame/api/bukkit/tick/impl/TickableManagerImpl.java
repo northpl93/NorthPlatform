@@ -145,8 +145,16 @@ public class TickableManagerImpl extends Component implements ITickableManager
                 // tickable has been garbage collected
                 it.remove();
             }
-            
-            handle(tickable);
+        }
+        
+        // second loop is need for prevent concurrent modification exception
+        for ( TickableWeakReference tickableRef : new HashSet<>(tickableObjects) )
+        {
+            ITickable tickable = tickableRef.get();
+            if ( tickable != null )
+            {
+                handle(tickable);
+            }
         }
     }
 
