@@ -50,7 +50,7 @@ class ShorterTimeBetterStatisticDbComposer implements IStatisticDbComposer<Durat
     @Override
     public FindIterable<Document> bestRecordQuery(final FindIterable<Document> in)
     {
-        return in.sort(new Document("value", -1));
+        return in.sort(new Document("value", 1));
     }
 
     @Override
@@ -63,6 +63,6 @@ class ShorterTimeBetterStatisticDbComposer implements IStatisticDbComposer<Durat
     @Override
     public void insertOnlyWhenBetter(final Document document, final DurationUnit unit)
     {
-        document.put("$max", new Document("value", unit.getValue().toMillis()));
+        document.put("$min", new Document("value", unit.getValue().toMillis()));
     }
 }

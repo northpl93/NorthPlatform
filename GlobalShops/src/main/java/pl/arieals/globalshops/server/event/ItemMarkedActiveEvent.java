@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.globalshops.server.IPlayerContainer;
 import pl.arieals.globalshops.shared.Item;
 import pl.arieals.globalshops.shared.ItemsGroup;
 
@@ -19,14 +20,26 @@ import pl.arieals.globalshops.shared.ItemsGroup;
 public class ItemMarkedActiveEvent extends PlayerEvent
 {
     private static final HandlerList handlers = new HandlerList();
+    private final IPlayerContainer container;
     private final ItemsGroup group;
     private final Item item;
 
-    public ItemMarkedActiveEvent(final Player who, final ItemsGroup group, final Item item)
+    public ItemMarkedActiveEvent(final Player who, final IPlayerContainer container, final ItemsGroup group, final Item item)
     {
         super(who);
+        this.container = container;
         this.group = group;
         this.item = item;
+    }
+
+    /**
+     * Zwraca kontener reprezentujacy gracza.
+     *
+     * @return kontener reprezentujacy gracza.
+     */
+    public IPlayerContainer getContainer()
+    {
+        return this.container;
     }
 
     /**

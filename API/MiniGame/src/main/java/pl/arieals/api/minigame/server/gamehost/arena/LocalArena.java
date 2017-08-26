@@ -97,7 +97,7 @@ public class LocalArena implements IArena
         this.data.setGamePhase(gamePhase);
         this.arenaManager.setArena(this.data);
         
-        String mapName = this.world.getCurrentMapTemplate() != null ? this.world.getCurrentMapTemplate().getName() : "Lobby";
+        final String mapName = this.world.getCurrentMapTemplate() != null ? this.world.getCurrentMapTemplate().getName() : "Lobby";
         this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.data.getId(), this.getMiniGameId(), mapName, gamePhase, this.data.getPlayers().size()));
         
         GamePhaseEventFactory.getInstance().callEvent(this);

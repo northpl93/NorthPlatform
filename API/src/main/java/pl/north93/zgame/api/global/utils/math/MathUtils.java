@@ -2,6 +2,15 @@ package pl.north93.zgame.api.global.utils.math;
 
 public final class MathUtils
 {
+    // angle trzeba podawac w radianach
+    //
+    // double delta = Math.toRadians(YAW_KTORY_LICZYMY);
+    // boolean clockwise = true;
+    // if (delta < 0)
+    // {
+    //     clockwise = false;
+    //     delta = -delta;
+    // }
     public static Point rotatePoint(final boolean clockwise, final double cx, final double cy, final double angle, double pointX, double pointZ)
     {
         final double s = Math.sin(angle);

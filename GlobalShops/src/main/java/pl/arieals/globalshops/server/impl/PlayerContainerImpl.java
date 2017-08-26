@@ -118,8 +118,8 @@ class PlayerContainerImpl implements IPlayerContainer
             throw new IllegalStateException(format("Item {0} isn't bought.", item.getId()));
         }
 
-        this.player.getServer().getPluginManager().callEvent(new ItemMarkedActiveEvent(this.player, group, item));
         this.service.setActiveItem(this.player, group.getId(), item.getId());
+        this.player.getServer().getPluginManager().callEvent(new ItemMarkedActiveEvent(this.player, this, group, item));
         this.playerData.reset();
     }
 
@@ -133,8 +133,8 @@ class PlayerContainerImpl implements IPlayerContainer
             throw new IllegalArgumentException();
         }
 
-        this.player.getServer().getPluginManager().callEvent(new ItemMarkedActiveEvent(this.player, group, null));
         this.service.resetActiveItem(this.player, group.getId());
+        this.player.getServer().getPluginManager().callEvent(new ItemMarkedActiveEvent(this.player, this, group, null));
         this.playerData.reset();
     }
 

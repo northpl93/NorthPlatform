@@ -12,6 +12,7 @@
 
     <groupId>pl.arieals.minigame</groupId>
     <artifactId>bedwars</artifactId>
+    <name>MiniGame.BedWars</name>
 
     <dependencies>
         <dependency>

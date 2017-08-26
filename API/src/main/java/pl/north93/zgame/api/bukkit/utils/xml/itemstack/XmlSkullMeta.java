@@ -1,9 +1,5 @@
 package pl.north93.zgame.api.bukkit.utils.xml.itemstack;
 
-import static org.diorite.utils.reflections.DioriteReflectionUtils.getCanonicalClass;
-import static org.diorite.utils.reflections.DioriteReflectionUtils.getField;
-
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -20,15 +16,12 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.reflections.FieldAccessor;
+import pl.north93.zgame.api.bukkit.utils.nms.ItemStackHelper;
 
 @XmlRootElement(name = "skullMeta")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlSkullMeta extends XmlItemMeta
 {
-    private static final Class<?>                   CRAFT_META_SKULL   = getCanonicalClass("org.bukkit.craftbukkit.v1_10_R1.inventory.CraftMetaSkull");
-    private static final FieldAccessor<GameProfile> SKULL_GAME_PROFILE = getField(CRAFT_META_SKULL, "profile");
-
     @XmlElement
     private String owner;
     @XmlElement
@@ -57,7 +50,7 @@ public class XmlSkullMeta extends XmlItemMeta
         final GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "NorthPL93");
         gameProfile.getProperties().put("textures", new Property("textures", textures, sign));
 
-        SKULL_GAME_PROFILE.set(skullMeta, gameProfile);
+        ItemStackHelper.applyProfileToHead(skullMeta, gameProfile);
     }
 
     @Override
