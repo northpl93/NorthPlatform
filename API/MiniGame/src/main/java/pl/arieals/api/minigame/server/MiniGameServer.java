@@ -9,11 +9,9 @@ import pl.arieals.api.minigame.shared.impl.ArenaManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.server.IBukkitServerManager;
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.server.Server;
 
-@IncludeInScanning("pl.arieals.api.minigame.shared")
 public class MiniGameServer extends Component
 {
     @Inject

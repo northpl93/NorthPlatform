@@ -4,10 +4,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 import pl.north93.zgame.itemshop.shared.ReceiveStorage;
 
-@IncludeInScanning("pl.north93.zgame.itemshop.shared")
 public class ItemShopServer extends Component
 {
     private ReceiveStorage receiveStorage;

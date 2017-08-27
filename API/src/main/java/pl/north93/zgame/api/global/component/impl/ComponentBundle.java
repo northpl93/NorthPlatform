@@ -17,7 +17,6 @@ import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.ComponentStatus;
 import pl.north93.zgame.api.global.component.IComponentBundle;
-import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 import pl.north93.zgame.api.global.component.impl.container.BeanFactory;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.zgame.api.global.component.impl.injection.Injector;
@@ -54,19 +53,6 @@ public class ComponentBundle implements IComponentBundle
             else
             {
                 this.basePackages.addAll(this.description.getPackages());
-            }
-
-            try
-            {
-                final Class<?> clazz = Class.forName(mainClass, true, this.classLoader);
-                for (final IncludeInScanning includeInScanning : clazz.getAnnotationsByType(IncludeInScanning.class))
-                {
-                    API.getLogger().log(Level.WARNING, "Component {0} uses deprecated IncludeInScanning annotation.", this.getName());
-                    this.basePackages.add(includeInScanning.value());
-                }
-            }
-            catch (final Throwable ignored)
-            {
             }
         }
 

@@ -1,8 +1,10 @@
 components:
   - name: ItemShop.Controller
-    enabled: true
     mainClass: "pl.north93.zgame.itemshop.controller.ItemShopController"
     description: "ItemShop controller."
+    packages:
+      - "pl.north93.zgame.itemshop.shared"
+      - "pl.north93.zgame.itemshop.controller"
     dependencies:
       - API.MinecraftNetwork.NetworkManager
       - API.Economy.Controller
@@ -10,9 +12,11 @@ components:
       - STANDALONE
 
   - name: ItemShop.Server
-    enabled: true
     mainClass: "pl.north93.zgame.itemshop.server.ItemShopServer"
     description: "ItemShop server."
+    packages:
+      - "pl.north93.zgame.itemshop.shared"
+      - "pl.north93.zgame.itemshop.server"
     dependencies:
       - API.MinecraftNetwork.NetworkManager
     platforms:

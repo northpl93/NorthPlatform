@@ -9,7 +9,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.cfg.ConfigUtils;
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -35,7 +34,6 @@ import pl.north93.zgame.skyblock.shared.api.utils.Coords2D;
 import pl.north93.zgame.skyblock.shared.impl.IslandDao;
 import pl.north93.zgame.skyblock.shared.impl.IslandsRankingImpl;
 
-@IncludeInScanning("pl.north93.zgame.skyblock.shared")
 public class SkyBlockManager extends Component implements ISkyBlockManager
 {
     @Inject

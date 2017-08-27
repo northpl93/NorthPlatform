@@ -27,7 +27,6 @@ import org.reflections.util.FilterBuilder;
 import javassist.ClassPool;
 import javassist.CtClass;
 import pl.north93.zgame.api.global.component.ComponentDescription;
-import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 import pl.north93.zgame.api.global.component.annotations.SkipInjections;
 import pl.north93.zgame.api.global.component.impl.ComponentBundle;
 import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
@@ -88,20 +87,6 @@ public class ClassloaderScanningTask
                 {
                     filter.excludePackage(pack);
                 }
-            }
-
-            try
-            {
-                final Class<?> aClass = Class.forName(component.getMainClass(), true, this.classLoader);
-                final IncludeInScanning annotation = aClass.getAnnotation(IncludeInScanning.class);
-                if (annotation != null)
-                {
-                    filter.excludePackage(annotation.value());
-                }
-            }
-            catch (final ClassNotFoundException | NoClassDefFoundError ignored)
-            {
-                // jak sie nie uda zaladowac klasy to trudno, i tak jej nie uzyjemy
             }
         }
         this.scan(filter);

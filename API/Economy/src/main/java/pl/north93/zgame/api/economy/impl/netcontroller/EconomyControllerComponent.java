@@ -15,10 +15,8 @@ import pl.north93.zgame.api.economy.cfg.EconomyConfig;
 import pl.north93.zgame.api.economy.impl.netcontroller.rest.OperationInfo;
 import pl.north93.zgame.api.economy.impl.shared.EconomyManagerImpl;
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
-@IncludeInScanning("pl.north93.zgame.api.economy.impl.shared")
 public class EconomyControllerComponent extends Component
 {
     private final Gson gson = new Gson();

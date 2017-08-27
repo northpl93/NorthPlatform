@@ -1,12 +1,27 @@
 rootPackage: pl.arieals
 components:
   - name: MiniGameApi.Server
-    enabled: true
     mainClass: "pl.arieals.api.minigame.server.MiniGameServer"
     description: "MiniGames API."
+    packages:
+      - "pl.arieals.api.minigame.server"
+      - "pl.arieals.api.minigame.shared"
     dependencies:
       - API.Database.Redis.RPC
       - API.Database.Redis.Event
       - API.Economy
     platforms:
       - BUKKIT
+
+  - name: MiniGameApi.Controller
+    mainClass: "pl.arieals.api.minigame.controller.MiniGameController"
+    description: "MiniGames API Controller."
+    packages:
+      - "pl.arieals.api.minigame.controller"
+      - "pl.arieals.api.minigame.shared"
+    dependencies:
+      - API.Database.Redis.RPC
+      - API.Database.Redis.Event
+      - NetworkController.ConfigServer
+    platforms:
+      - STANDALONE

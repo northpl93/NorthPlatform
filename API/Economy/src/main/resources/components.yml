@@ -1,8 +1,10 @@
 components:
   - name: API.Economy
-    enabled: true
     mainClass: "pl.north93.zgame.api.economy.impl.client.EconomyComponent"
     description: "Provides API for accessing economy."
+    packages:
+      - "pl.north93.zgame.api.economy.impl.client"
+      - "pl.north93.zgame.api.economy.impl.shared"
     dependencies:
       - API.Database.Redis.Observer
       - API.MinecraftNetwork.NetworkManager
@@ -20,9 +22,11 @@ components:
       - BUKKIT
 
   - name: API.Economy.Controller
-    enabled: true
     mainClass: "pl.north93.zgame.api.economy.impl.netcontroller.EconomyControllerComponent"
     description: "Exposes config in the network."
+    packages:
+      - "pl.north93.zgame.api.economy.impl.netcontroller"
+      - "pl.north93.zgame.api.economy.impl.shared"
     dependencies:
       - API.Database.Redis.Observer
       - API.MinecraftNetwork.NetworkManager

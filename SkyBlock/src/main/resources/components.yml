@@ -8,6 +8,9 @@ components:
       - API.Database.Redis.RPC
       - API.Database.Redis.Observer
       - API.MinecraftNetwork.NetworkManager
+    packages:
+      - "pl.north93.zgame.skyblock.manager"
+      - "pl.north93.zgame.skyblock.shared"
     platforms:
       - STANDALONE
 
@@ -19,12 +22,17 @@ components:
       - API.Database.Redis.MessagePackSerializer
       - API.Database.Redis.RPC
       - API.Database.Redis.Observer
+    packages:
+      - "pl.north93.zgame.skyblock.server"
+      - "pl.north93.zgame.skyblock.shared"
     platforms:
       - BUKKIT
 
   - name: SkyBlock.Proxy
     mainClass: "pl.north93.zgame.skyblock.bungee.SkyBlockBungee"
     description: "Provides some classes needed to work."
-    dependencies: []
+    packages:
+      - "pl.north93.zgame.skyblock.bungee"
+      - "pl.north93.zgame.skyblock.shared"
     platforms:
       - BUNGEE

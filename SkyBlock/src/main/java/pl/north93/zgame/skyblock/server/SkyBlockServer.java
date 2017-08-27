@@ -7,7 +7,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.IncludeInScanning;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
@@ -22,7 +21,6 @@ import pl.north93.zgame.skyblock.shared.api.cfg.SkyBlockConfig;
 import pl.north93.zgame.skyblock.shared.impl.IslandDao;
 import pl.north93.zgame.skyblock.shared.impl.IslandsRankingImpl;
 
-@IncludeInScanning("pl.north93.zgame.skyblock.shared")
 public class SkyBlockServer extends Component
 {
     @Inject
