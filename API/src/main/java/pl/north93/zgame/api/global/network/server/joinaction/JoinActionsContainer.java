@@ -3,9 +3,14 @@ package pl.north93.zgame.api.global.network.server.joinaction;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
+
 public final class JoinActionsContainer
 {
-    private IServerJoinAction[] serverJoinActions;
+    @Inject
+    private static TemplateManager templateManager;
+    private byte[] serverJoinActions; // reading from byte[] is optimised
 
     public JoinActionsContainer()
     {
@@ -13,12 +18,14 @@ public final class JoinActionsContainer
 
     public JoinActionsContainer(final IServerJoinAction[] serverJoinActions)
     {
-        this.serverJoinActions = serverJoinActions;
+        final JoinActionsDto joinActionsDto = new JoinActionsDto(serverJoinActions);
+        this.serverJoinActions = templateManager.serialize(JoinActionsDto.class, joinActionsDto);
     }
 
     public IServerJoinAction[] getServerJoinActions()
     {
-        return this.serverJoinActions;
+        final JoinActionsDto actionsDto = templateManager.deserialize(JoinActionsDto.class, this.serverJoinActions);
+        return actionsDto.getActions();
     }
 
     @Override

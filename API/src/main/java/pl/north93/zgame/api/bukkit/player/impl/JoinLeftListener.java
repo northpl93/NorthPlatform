@@ -118,12 +118,11 @@ public class JoinLeftListener implements Listener
         this.bukkitApiCore.sync(() ->
         {
             final Value<JoinActionsContainer> actions = this.observation.get(JoinActionsContainer.class, "serveractions:" + player.getName());
-            final JoinActionsContainer joinActionsContainer = actions.get();
+            final JoinActionsContainer joinActionsContainer = actions.getAndDelete();
             if (joinActionsContainer == null)
             {
                 return null;
             }
-            actions.delete();
             return joinActionsContainer.getServerJoinActions();
         }, (actions) ->
         {

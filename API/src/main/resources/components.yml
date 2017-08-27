@@ -67,6 +67,8 @@ components:
   - name: API.MinecraftNetwork.NetworkManager
     mainClass: "pl.north93.zgame.api.global.network.impl.NetworkManager"
     description: "Provides core functions to manage Minecraft's network."
+    packages:
+      - "pl.north93.zgame.api.global.network"
     dependencies:
       - API.Database.StorageConnector
       - API.Database.Redis.MessagePackSerializer
