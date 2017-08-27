@@ -29,12 +29,7 @@ public class ConnectionManager
     @Inject
     private IObservationManager observationManager;
 
-    public ConnectionManager()
-    {
-        //Injector.inject(API.getApiCore().getComponentManager(), this);
-    }
-
-    public void connectPlayerToServer(final ProxiedPlayer player, final String serverName, JoinActionsContainer actions)
+    public void connectPlayerToServer(final ProxiedPlayer player, final String serverName, final JoinActionsContainer actions)
     {
         if (actions.getServerJoinActions().length != 0)
         {
@@ -44,7 +39,7 @@ public class ConnectionManager
         player.connect(ProxyServer.getInstance().getServerInfo(serverName));
     }
 
-    public void connectPlayerToServersGroup(final ProxiedPlayer player, final String serversGroup, JoinActionsContainer actions)
+    public void connectPlayerToServersGroup(final ProxiedPlayer player, final String serversGroup, final JoinActionsContainer actions)
     {
         final Server server = this.getBestServerFromServersGroup(serversGroup);
         if (server == null)

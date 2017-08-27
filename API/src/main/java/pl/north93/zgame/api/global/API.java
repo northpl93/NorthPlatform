@@ -42,11 +42,6 @@ public final class API
         return apiCore.getRpcManager();
     }
 
-    public static Platform getPlatform()
-    {
-        return apiCore.getPlatform();
-    }
-
     public static PlatformConnector getPlatformConnector()
     {
         return apiCore.getPlatformConnector();

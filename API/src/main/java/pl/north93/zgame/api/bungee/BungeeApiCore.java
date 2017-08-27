@@ -19,7 +19,6 @@ import pl.north93.zgame.api.bungee.listeners.PingListener;
 import pl.north93.zgame.api.bungee.listeners.PlayerListener;
 import pl.north93.zgame.api.bungee.mods.IBungeeServersManager;
 import pl.north93.zgame.api.bungee.mods.impl.BungeeServersManager;
-import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.data.StorageConnector;
@@ -129,7 +128,7 @@ public class BungeeApiCore extends ApiCore
 
     private void sendProxyInfo()
     {
-        final StorageConnector storageConnector = API.getApiCore().getComponentManager().getComponent("API.Database.StorageConnector"); // TODO
+        final StorageConnector storageConnector = this.getComponentManager().getComponent("API.Database.StorageConnector"); // TODO
         final ProxyInstanceInfo proxyInstanceInfo = new ProxyInstanceInfo();
 
         proxyInstanceInfo.setId(this.config.getUniqueName());

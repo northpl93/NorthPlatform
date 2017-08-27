@@ -19,23 +19,39 @@ import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
+import pl.north93.zgame.api.global.network.proxy.ProxyRpc;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
+import pl.north93.zgame.api.global.redis.rpc.Targets;
 
 class PlayersManagerImpl implements IPlayersManager
 {
+    /*default*/ static PlayersManagerImpl INSTANCE;
     private final NetworkManager      networkManager;
     private final IPlayersData        playersData;
     private final IObservationManager observer;
+    private final IRpcManager         rpcManager;
     private final Unsafe              unsafe;
 
-    public PlayersManagerImpl(final NetworkManager networkManager, final IPlayersData playersData, final IObservationManager observer)
+    public PlayersManagerImpl(final NetworkManager networkManager, final IPlayersData playersData, final IObservationManager observer, final IRpcManager rpcManager)
     {
+        INSTANCE = this;
+        this.rpcManager = rpcManager;
         this.networkManager = networkManager;
         this.playersData = playersData;
         this.observer = observer;
         this.unsafe = new PlayersManagerUnsafeImpl();
+    }
+
+    /*
+     * Wewnetrzna metoda implementacji.
+     * Uzywana w OnlinePlayerImpl.
+     */
+    public ProxyRpc getPlayerProxyRpc(final IOnlinePlayer onlinePlayer)
+    {
+        return this.rpcManager.createRpcProxy(ProxyRpc.class, Targets.proxy(onlinePlayer.getProxyId()));
     }
 
     @Override

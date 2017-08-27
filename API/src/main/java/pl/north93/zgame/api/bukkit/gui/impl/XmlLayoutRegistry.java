@@ -1,21 +1,24 @@
 package pl.north93.zgame.api.bukkit.gui.impl;
 
+import javax.xml.bind.JAXB;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.bind.JAXB;
+import com.google.common.base.Preconditions;
 
 import org.reflections.Reflections;
 
-import com.google.common.base.Preconditions;
-
 import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlGuiLayout;
 import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlHotbarLayout;
-import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.ApiCore;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class XmlLayoutRegistry
 {
+    @Inject
+    private static ApiCore apiCore;
     private static final Map<String, XmlGuiLayout> loadedGuiLayouts = new HashMap<>();
     private static final Map<String, XmlHotbarLayout> loadedHotbarLayouts = new HashMap<>();
     
@@ -33,7 +36,7 @@ public class XmlLayoutRegistry
     
     public static void loadLayouts(ClassLoader cl)
     {
-        final Reflections reflections = API.getApiCore().getComponentManager().accessReflections(cl);
+        final Reflections reflections = apiCore.getComponentManager().accessReflections(cl);
 
         final Collection<String> values = reflections.getStore().get("ResourcesScanner").values();
         

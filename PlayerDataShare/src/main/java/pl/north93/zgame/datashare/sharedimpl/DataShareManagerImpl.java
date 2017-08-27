@@ -17,7 +17,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.Document;
 
-import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
@@ -63,7 +62,7 @@ public class DataShareManagerImpl implements IDataShareManager
         final HashMap<String, IDataUnit> dataUnitHashMap = new HashMap<>();
         final Document document = new Document("uuid", player.getUniqueId());
         document.put("savedAt", System.currentTimeMillis());
-        document.put("savedBy", API.getApiCore().getId());
+        document.put("savedBy", this.apiCore.getId());
         for (final String dataUnitName : group.getDataUnits())
         {
             final RegisteredDataUnit dataUnit = this.dataUnits.get(dataUnitName);

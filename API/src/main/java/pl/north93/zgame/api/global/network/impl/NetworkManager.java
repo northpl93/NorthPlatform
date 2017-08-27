@@ -60,7 +60,7 @@ class NetworkManager extends Component implements INetworkManager
         this.networkMeta = this.observationManager.get(NetworkMeta.class, "configs_networkMeta"); // todo zamienic to na odwolanie do systemu configow
         this.redisSubscriber.subscribe(NETWORK_ACTION, this::handleNetworkAction);
         this.serversManager = new ServersManagerImpl(this.storage, this, this.msgPack, this.observationManager);
-        this.playersManager = new PlayersManagerImpl(this, this.playersData, this.observationManager);
+        this.playersManager = new PlayersManagerImpl(this, this.playersData, this.observationManager, this.rpcManager);
     }
 
     @Override

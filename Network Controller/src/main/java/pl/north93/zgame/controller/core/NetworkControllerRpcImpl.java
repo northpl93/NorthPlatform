@@ -3,12 +3,17 @@ package pl.north93.zgame.controller.core;
 import java.util.UUID;
 
 import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.ApiCore;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
 import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.controller.configbroadcaster.ConfigBroadcaster;
 
 public class NetworkControllerRpcImpl implements NetworkControllerRpc
 {
+    @Inject
+    private ApiCore apiCore;
+
     @Override
     public void ping()
     {
@@ -17,8 +22,8 @@ public class NetworkControllerRpcImpl implements NetworkControllerRpc
     @Override
     public void stopController()
     {
-        API.getLogger().info("Received stop request from network.");
-        API.getPlatformConnector().stop();
+        this.apiCore.getLogger().info("Received stop request from network.");
+        this.apiCore.getPlatformConnector().stop();
     }
 
     @Override

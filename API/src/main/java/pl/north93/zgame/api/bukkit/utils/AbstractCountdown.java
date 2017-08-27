@@ -8,13 +8,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public abstract class AbstractCountdown extends BukkitRunnable
 {
-    private static JavaPlugin PLUGIN = ((BukkitApiCore) API.getApiCore()).getPluginMain();
+    @Inject
+    private static JavaPlugin PLUGIN;
     private int time;
 
     public AbstractCountdown(final int time)

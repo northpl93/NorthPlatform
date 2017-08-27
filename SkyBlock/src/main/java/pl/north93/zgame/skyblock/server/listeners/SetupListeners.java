@@ -6,8 +6,7 @@ import org.bukkit.plugin.PluginManager;
 
 import pl.north93.northspigot.event.blockchange.BlockChangeInvoker;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.skyblock.shared.api.ServerMode;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.listeners.islandhost.BadMobsListener;
 import pl.north93.zgame.skyblock.server.listeners.islandhost.DieListener;
@@ -16,12 +15,16 @@ import pl.north93.zgame.skyblock.server.listeners.islandhost.TeleportListener;
 import pl.north93.zgame.skyblock.server.listeners.islandhost.WorldModificationListener;
 import pl.north93.zgame.skyblock.server.listeners.lobby.Launchpad;
 import pl.north93.zgame.skyblock.server.listeners.lobby.SkyLobbyJoin;
+import pl.north93.zgame.skyblock.shared.api.ServerMode;
 
 public class SetupListeners
 {
+    @Inject
+    private static BukkitApiCore apiCore;
+
     public static void setup(final SkyBlockServer server)
     {
-        final Plugin plugin = ((BukkitApiCore) API.getApiCore()).getPluginMain();
+        final Plugin plugin = apiCore.getPluginMain();
         final PluginManager pluginManager = Bukkit.getPluginManager();
         if (server.getServerMode().equals(ServerMode.ISLAND_HOST))
         {
