@@ -1,19 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <minigame>
+    <!-- Identyfikacja tej minigry w sieci -->
+    <gameIdentity>
+        <gameId>example</gameId>
+        <variantId>team_2x2</variantId>
+    </gameIdentity>
+
+    <!-- nazwa huba do ktorego beda trafiac gracze po zakonczeniu gry -->
+    <hubId>example</hubId>
+
+    <!-- tryb pracy minigry, powiazane z dostepnoscia glosowania na mape -->
     <lobbyMode>INTEGRATED</lobbyMode>
+
     <mapVoting>
         <enabled>false</enabled>
         <numberOfMaps>3</numberOfMaps>
     </mapVoting>
+
     <deathMatch>
         <enabled>true</enabled>
         <templateName>DeathMatch</templateName>
     </deathMatch>
+
+    <!-- czy gracze moga wchodzic na arene w trakcie gry -->
     <isDynamic>false</isDynamic>
+
+    <!-- maksymalna ilosc graczy -->
     <slots>12</slots>
+
+    <!-- ile slotow jest wydzielonych na vipow -->
     <vipSlots>2</vipSlots>
+
+    <!-- ilosc graczy do startu areny -->
     <toStart>1</toStart>
+
+    <!-- czas w tickach oczekiwania na start -->
     <startCooldown>600</startCooldown>
+
+    <!-- katalog przechowywania map tej minigry -->
     <mapsDirectory>game_worlds</mapsDirectory>
+
+    <!-- ilosc aren na serwerze -->
     <arenas>2</arenas>
 </minigame>

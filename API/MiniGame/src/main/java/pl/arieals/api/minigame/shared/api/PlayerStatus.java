@@ -11,7 +11,7 @@ public enum PlayerStatus
     PLAYING,
     /**
      * Gracz biorący udział w grze, ale aktualnie
-     * jest w trybie spectatora (bo np. umark).
+     * jest w trybie spectatora (bo np. umarl).
      */
     PLAYING_SPECTATOR,
     /**
@@ -23,6 +23,7 @@ public enum PlayerStatus
     /**
      * Sprawdza czy dany gracz bierze udzial w grze. <br>
      * Zwraca {@code true} dla {@link PlayerStatus#PLAYING} i {@link PlayerStatus#PLAYING_SPECTATOR}.
+     *
      * @return czy gracz bierze udzial w grze.
      */
     public boolean isPlaying()
@@ -33,6 +34,7 @@ public enum PlayerStatus
     /**
      * Sprawdza czy dany gracz jest spectatorem. <br>
      * Zwraca {@code true} dla {@link PlayerStatus#PLAYING_SPECTATOR} i {@link PlayerStatus#SPECTATOR}.
+     *
      * @return czy gracz jest spectatorem.
      */
     public boolean isSpectator()

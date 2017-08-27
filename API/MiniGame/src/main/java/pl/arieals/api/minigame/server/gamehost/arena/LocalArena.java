@@ -17,6 +17,7 @@ import pl.arieals.api.minigame.server.gamehost.reward.IArenaRewards;
 import pl.arieals.api.minigame.server.gamehost.reward.impl.ArenaRewardsImpl;
 import pl.arieals.api.minigame.server.gamehost.scheduler.ArenaScheduler;
 import pl.arieals.api.minigame.server.gamehost.scheduler.IArenaScheduler;
+import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
@@ -69,9 +70,9 @@ public class LocalArena implements IArena
     }
 
     @Override
-    public String getMiniGameId()
+    public GameIdentity getMiniGame()
     {
-        return this.gameHostManager.getMiniGameConfig().getMiniGameId();
+        return this.gameHostManager.getMiniGameConfig().getGameIdentity();
     }
 
     @Override
@@ -98,7 +99,7 @@ public class LocalArena implements IArena
         this.arenaManager.setArena(this.data);
         
         final String mapName = this.world.getCurrentMapTemplate() != null ? this.world.getCurrentMapTemplate().getName() : "Lobby";
-        this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.data.getId(), this.getMiniGameId(), mapName, gamePhase, this.data.getPlayers().size()));
+        this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.data.getId(), this.getMiniGame(), mapName, gamePhase, this.data.getPlayers().size()));
         
         GamePhaseEventFactory.getInstance().callEvent(this);
     }
@@ -246,8 +247,7 @@ public class LocalArena implements IArena
         this.arenaManager.removeArena(this.getId());
 
         final UUID serverId = apiCore.getServerId();
-        final String miniGameId = this.gameHostManager.getMiniGameConfig().getMiniGameId();
-        this.gameHostManager.publishArenaEvent(new ArenaDeletedNetEvent(this.getId(), serverId, miniGameId));
+        this.gameHostManager.publishArenaEvent(new ArenaDeletedNetEvent(this.getId(), serverId, this.getMiniGame()));
 
         this.gameHostManager.getArenaManager().getArenas().remove(this);
 

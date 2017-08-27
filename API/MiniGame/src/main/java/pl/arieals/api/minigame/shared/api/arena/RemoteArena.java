@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.HashSetTemplate;
@@ -16,23 +17,23 @@ import pl.north93.zgame.api.global.redis.messaging.templates.HashSetTemplate;
  */
 public class RemoteArena implements IArena
 {
-    private UUID      arenaId;
-    private UUID      serverId;
-    private String    miniGameId;
-    private String    worldId;
-    private GamePhase gamePhase;
+    private UUID         arenaId;
+    private UUID         serverId;
+    private GameIdentity miniGame;
+    private String       worldId;
+    private GamePhase    gamePhase;
     @MsgPackCustomTemplate(HashSetTemplate.class)
-    private Set<UUID> players;
+    private Set<UUID>    players;
 
     public RemoteArena()
     {
     }
 
-    public RemoteArena(final UUID arenaId, final UUID serverId, final String miniGameId, final String worldId, final GamePhase gamePhase, final Set<UUID> players)
+    public RemoteArena(final UUID arenaId, final UUID serverId, final GameIdentity miniGame, final String worldId, final GamePhase gamePhase, final Set<UUID> players)
     {
         this.arenaId = arenaId;
         this.serverId = serverId;
-        this.miniGameId = miniGameId;
+        this.miniGame = miniGame;
         this.worldId = worldId;
         this.gamePhase = gamePhase;
         this.players = players;
@@ -51,9 +52,9 @@ public class RemoteArena implements IArena
     }
 
     @Override
-    public String getMiniGameId()
+    public GameIdentity getMiniGame()
     {
-        return this.miniGameId;
+        return this.miniGame;
     }
 
     @Override
@@ -87,6 +88,6 @@ public class RemoteArena implements IArena
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("arenaId", this.arenaId).append("serverId", this.serverId).append("miniGameId", this.miniGameId).append("worldId", this.worldId).append("gamePhase", this.gamePhase).append("players", this.players).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("arenaId", this.arenaId).append("serverId", this.serverId).append("miniGame", this.miniGame).append("worldId", this.worldId).append("gamePhase", this.gamePhase).append("players", this.players).toString();
     }
 }

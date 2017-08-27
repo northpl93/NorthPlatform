@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
 
 @XmlRootElement(name = "minigame")
@@ -15,7 +16,9 @@ import pl.arieals.api.minigame.shared.api.LobbyMode;
 public class MiniGameConfig
 {
     @XmlElement
-    private String           miniGameId; // unikalna nazwa minigry
+    private GameIdentity     gameIdentity; // identyfikator minigry
+    @XmlElement
+    private String           hubId; // identyfikator huba tej minigry
     @XmlElement
     private LobbyMode        lobbyMode; // Tryb pracy lobby
     @XmlElement
@@ -37,9 +40,14 @@ public class MiniGameConfig
     @XmlElement
     private Integer          arenas; // Liczba aren uruchamianych na serwerze hostującym minigrę
 
-    public String getMiniGameId()
+    public GameIdentity getGameIdentity()
     {
-        return this.miniGameId;
+        return this.gameIdentity;
+    }
+
+    public String getHubId()
+    {
+        return this.hubId;
     }
 
     public LobbyMode getLobbyMode()
@@ -95,6 +103,6 @@ public class MiniGameConfig
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("miniGameId", this.miniGameId).append("lobbyMode", this.lobbyMode).append("mapVoting", this.mapVoting).append("deathMatch", this.deathMatch).append("isDynamic", this.isDynamic).append("slots", this.slots).append("vipSlots", this.vipSlots).append("toStart", this.toStart).append("startCooldown", this.startCooldown).append("mapsDirectory", this.mapsDirectory).append("arenas", this.arenas).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("gameIdentity", this.gameIdentity).append("hubId", this.hubId).append("lobbyMode", this.lobbyMode).append("mapVoting", this.mapVoting).append("deathMatch", this.deathMatch).append("isDynamic", this.isDynamic).append("slots", this.slots).append("vipSlots", this.vipSlots).append("toStart", this.toStart).append("startCooldown", this.startCooldown).append("mapsDirectory", this.mapsDirectory).append("arenas", this.arenas).toString();
     }
 }

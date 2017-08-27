@@ -16,6 +16,7 @@ import org.bukkit.World;
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
+import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaCreatedNetEvent;
@@ -40,18 +41,18 @@ public class LocalArenaManager
 
         final UUID arenaId = UUID.randomUUID();
         final UUID serverId = this.apiCore.getServerId();
-        final String gameId = serverManager.getMiniGameConfig().getMiniGameId();
+        final GameIdentity miniGame = serverManager.getMiniGameConfig().getGameIdentity();
 
-        final RemoteArena arenaData = new RemoteArena(arenaId, serverId, gameId, "", GamePhase.INITIALISING, new HashSet<>());
+        final RemoteArena arenaData = new RemoteArena(arenaId, serverId, miniGame, "", GamePhase.INITIALISING, new HashSet<>());
         final LocalArena localArena = new LocalArena(serverManager, arenaManager, arenaData);
         this.arenas.add(localArena);
         arenaManager.setArena(arenaData);
 
         GamePhaseEventFactory.getInstance().callEvent(localArena); // invoke GameInitEvent
-        serverManager.publishArenaEvent(new ArenaCreatedNetEvent(arenaId, gameId));
+        serverManager.publishArenaEvent(new ArenaCreatedNetEvent(arenaId, miniGame));
 
-        final String msg = "Added new local arena! Game ID:{0}, Arena ID:{1}, Server ID:{2}, Game Phase:{3}";
-        this.logger.info(format(msg, gameId, arenaId, serverId, arenaData.getGamePhase()));
+        final String msg = "Added new local arena! GameID:{0}/{1}, ArenaID:{2}, ServerID:{3}, GamePhase:{4}";
+        this.logger.info(format(msg, miniGame.getGameId(), miniGame.getVariantId(), arenaId, serverId, arenaData.getGamePhase()));
 
         return localArena;
     }

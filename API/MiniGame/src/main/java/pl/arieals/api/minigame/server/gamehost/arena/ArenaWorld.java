@@ -126,7 +126,7 @@ public class ArenaWorld
         final SimpleSyncCallback callback = new SimpleSyncCallback();
         progress.onComplete(() ->
         {
-            this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.arena.getId(), this.arena.getMiniGameId(), template.getName(), this.arena.getGamePhase(), this.arena.getPlayers().size()));
+            this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.arena.getId(), this.arena.getMiniGame(), template.getName(), this.arena.getGamePhase(), this.arena.getPlayers().size()));
             Bukkit.getPluginManager().callEvent(new MapSwitchedEvent(this.arena, MapSwitchReason.ARENA_INITIALISE));
             callback.callComplete();
         });

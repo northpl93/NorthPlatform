@@ -5,24 +5,25 @@ import java.util.UUID;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 
 public class ArenaDataChangedNetEvent implements IArenaNetEvent
 {
-    private UUID      arenaId;
-    private String    miniGameId;
-    private String    worldId;
-    private GamePhase gamePhase;
-    private Integer   playersCount;
+    private UUID         arenaId;
+    private GameIdentity miniGame;
+    private String       worldId;
+    private GamePhase    gamePhase;
+    private Integer      playersCount;
 
     public ArenaDataChangedNetEvent() // serialization
     {
     }
 
-    public ArenaDataChangedNetEvent(final UUID arenaId, final String miniGameId, final String worldId, final GamePhase gamePhase, final Integer playersCount)
+    public ArenaDataChangedNetEvent(final UUID arenaId, final GameIdentity miniGame, final String worldId, final GamePhase gamePhase, final Integer playersCount)
     {
         this.arenaId = arenaId;
-        this.miniGameId = miniGameId;
+        this.miniGame = miniGame;
         this.worldId = worldId;
         this.gamePhase = gamePhase;
         this.playersCount = playersCount;
@@ -35,9 +36,9 @@ public class ArenaDataChangedNetEvent implements IArenaNetEvent
     }
 
     @Override
-    public String getMiniGameId()
+    public GameIdentity getMiniGame()
     {
-        return this.miniGameId;
+        return this.miniGame;
     }
 
     public String getWorldId()
@@ -58,6 +59,6 @@ public class ArenaDataChangedNetEvent implements IArenaNetEvent
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("arenaId", this.arenaId).append("miniGameId", this.miniGameId).append("worldId", this.worldId).append("gamePhase", this.gamePhase).append("playersCount", this.playersCount).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("arenaId", this.arenaId).append("miniGame", this.miniGame).append("worldId", this.worldId).append("gamePhase", this.gamePhase).append("playersCount", this.playersCount).toString();
     }
 }

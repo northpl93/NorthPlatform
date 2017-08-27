@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -35,7 +37,8 @@ import pl.north93.zgame.api.global.redis.rpc.exceptions.RpcException;
 
 public class ArenaClientImpl implements IArenaClient
 {
-    private Map<UUID, IArena> arenas;
+    private Map<UUID, IArena>               arenas;
+    private Map<ArenaQuery, IArenaObserver> observers;
     @Inject
     private ArenaManager      arenaManager;
     @Inject
@@ -47,6 +50,7 @@ public class ArenaClientImpl implements IArenaClient
     private ArenaClientImpl()
     {
         this.arenas = new HashMap<>(100);
+        this.observers = new ConcurrentHashMap<>();
     }
 
     @PostInject
@@ -59,6 +63,20 @@ public class ArenaClientImpl implements IArenaClient
         }
     }
 
+    private void fireObservers(final IArena arena, final Consumer<IArenaObserver> action)
+    {
+        for (final Map.Entry<ArenaQuery, IArenaObserver> observerEntry : this.observers.entrySet())
+        {
+            final ArenaQuery observerQuery = observerEntry.getKey();
+            if (! observerQuery.test(arena))
+            {
+                continue;
+            }
+
+            action.accept(observerEntry.getValue());
+        }
+    }
+
     @Override
     public Collection<IArena> get(final ArenaQuery query)
     {
@@ -67,9 +85,9 @@ public class ArenaClientImpl implements IArenaClient
     }
 
     @Override
-    public void observe(final ArenaQuery query, final IArenaObserver observer)
+    public synchronized void observe(final ArenaQuery query, final IArenaObserver observer)
     {
-        // todo
+        this.observers.put(query, observer);
     }
 
     @Override
@@ -125,20 +143,32 @@ public class ArenaClientImpl implements IArenaClient
     private synchronized void onArenaCreate(final ArenaCreatedNetEvent event)
     {
         final UUID arenaId = event.getArenaId();
-        this.arenas.put(arenaId, this.arenaManager.getArena(arenaId));
+        final RemoteArena arena = this.arenaManager.getArena(arenaId);
+
+        this.arenas.put(arenaId, arena);
+
+        this.fireObservers(arena, observer -> observer.arenaCreated(arena));
     }
 
     @NetEventSubscriber(ArenaDataChangedNetEvent.class)
     private synchronized void onArenaUpdate(final ArenaDataChangedNetEvent event)
     {
         final UUID arenaId = event.getArenaId();
-        this.arenas.put(arenaId, this.arenaManager.getArena(arenaId));
+        final RemoteArena arena = this.arenaManager.getArena(arenaId);
+
+        this.arenas.put(arenaId, arena);
+
+        this.fireObservers(arena, observer -> observer.arenaUpdated(arena));
     }
 
     @NetEventSubscriber(ArenaDeletedNetEvent.class)
     private synchronized void onArenaDelete(final ArenaDeletedNetEvent event)
     {
-        this.arenas.remove(event.getArenaId());
+        final IArena arena = this.arenas.remove(event.getArenaId());
+        if (arena != null)
+        {
+            this.fireObservers(arena, observer -> observer.arenaRemoved(arena));
+        }
     }
 
     @Override
