@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.global.config.client;
 
+import java.util.logging.Level;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -32,7 +34,18 @@ public class ConfigClientImpl extends Component implements IConfigClient
 
     public void reloadConfig(final String id)
     {
-        this.serverRpc.reloadConfig(id);
+        if (this.serverRpc.reloadConfig(id))
+        {
+            this.getLogger().log(Level.INFO, "Received information about successfully reload of {0}", id);
+        }
+    }
+
+    public void updateConfig(final String id, final Object newValue)
+    {
+        if (this.serverRpc.updateConfig(id, newValue))
+        {
+            this.getLogger().log(Level.INFO, "Received information about successfully update of {0}", id);
+        }
     }
 
     @Override

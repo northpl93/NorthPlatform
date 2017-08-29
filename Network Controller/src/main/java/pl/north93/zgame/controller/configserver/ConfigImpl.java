@@ -34,6 +34,13 @@ class ConfigImpl<T> implements IConfig<T>
         return this.cached;
     }
 
+    @Override
+    public void update(final T newValue)
+    {
+        this.cached = newValue;
+        this.getValue().set(this.cached);
+    }
+
     private Value<T> getValue()
     {
         return this.observationManager.get(this.configSource.getType(), "configs_" + this.id);

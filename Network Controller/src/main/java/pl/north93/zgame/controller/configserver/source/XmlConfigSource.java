@@ -1,18 +1,18 @@
 package pl.north93.zgame.controller.configserver.source;
 
+import javax.xml.bind.JAXB;
+
 import java.io.File;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.cfg.ConfigUtils;
-
-public class YamlConfigSource<T> implements IConfigSource<T>
+public class XmlConfigSource<T> implements IConfigSource<T>
 {
     private final Class<T> type;
-    private final File file;
+    private final File     file;
 
-    public YamlConfigSource(final Class<T> type, final File file)
+    public XmlConfigSource(final Class<T> type, final File file)
     {
         this.type = type;
         this.file = file;
@@ -27,7 +27,7 @@ public class YamlConfigSource<T> implements IConfigSource<T>
     @Override
     public T load()
     {
-        return ConfigUtils.loadConfigFile(this.type, this.file);
+        return JAXB.unmarshal(this.file, this.type);
     }
 
     @Override

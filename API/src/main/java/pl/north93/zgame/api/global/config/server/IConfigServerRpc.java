@@ -7,4 +7,6 @@ package pl.north93.zgame.api.global.config.server;
 public interface IConfigServerRpc
 {
     Boolean reloadConfig(String configId);
+
+    Boolean updateConfig(String configId, Object newValue);
 }

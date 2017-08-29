@@ -61,6 +61,17 @@ public class ConfigServerComponent extends Component implements IConfigServer, I
         return true;
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public Boolean updateConfig(final String configId, final Object newValue)
+    {
+        final ConfigImpl<Object> config = (ConfigImpl<Object>) this.configs.get(configId);
+        config.update(newValue);
+        this.eventManager.callEvent(new ConfigUpdatedNetEvent(configId));
+        this.getLogger().log(Level.INFO, "Config with ID {0} has been updated programmatically", config);
+        return true;
+    }
+
     @Override
     public String toString()
     {

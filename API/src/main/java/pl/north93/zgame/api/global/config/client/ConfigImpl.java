@@ -32,6 +32,12 @@ class ConfigImpl<T> implements IConfig<T>
     }
 
     @Override
+    public void update(final T newValue)
+    {
+        this.client.updateConfig(this.id, newValue);
+    }
+
+    @Override
     public void reload()
     {
         this.client.reloadConfig(this.id);
