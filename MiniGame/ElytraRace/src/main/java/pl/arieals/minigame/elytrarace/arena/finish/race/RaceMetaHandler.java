@@ -11,7 +11,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
@@ -86,7 +85,7 @@ public class RaceMetaHandler implements IFinishHandler
 
         if (isFinished)
         {
-            arena.setGamePhase(GamePhase.POST_GAME);
+            arena.endGame();
         }
     }
 
@@ -108,7 +107,7 @@ public class RaceMetaHandler implements IFinishHandler
             }
         });
 
-        arena.setGamePhase(GamePhase.POST_GAME);
+        arena.endGame();
     }
 
     private IStatistic<DurationUnit> getRaceStatistic(final LocalArena arena)

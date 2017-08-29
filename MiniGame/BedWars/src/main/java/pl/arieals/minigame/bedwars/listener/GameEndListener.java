@@ -76,7 +76,7 @@ public class GameEndListener implements Listener
         final BedWarsArena arenaData = arena.getArenaData();
         if (arenaData.getTeams().stream().filter(not(Team::isEliminated)).count() <= 1)
         {
-            arena.setGamePhase(GamePhase.POST_GAME);
+            arena.endGame();
         }
     }
 

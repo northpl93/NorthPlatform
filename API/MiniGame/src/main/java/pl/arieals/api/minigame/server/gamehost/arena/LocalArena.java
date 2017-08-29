@@ -1,11 +1,15 @@
 package pl.arieals.api.minigame.server.gamehost.arena;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.common.base.Preconditions;
+
+import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -30,7 +34,8 @@ import pl.north93.zgame.api.bukkit.utils.StaticTimer;
 
 public class LocalArena implements IArena
 {
-    private final GameHostManager     gameHostManager;
+    private static final int MAX_TIME_TO_DISCONNECT = 30 * 20; // czas po jakim serwer wyrzuci graczy ktorzy nie wylecieli z areny
+    private final GameHostManager gameHostManager;
     private final ArenaManager        arenaManager;
     private final RemoteArena         data;
     private final ArenaWorld          world;
@@ -99,8 +104,11 @@ public class LocalArena implements IArena
         this.arenaManager.setArena(this.data);
         
         final String mapName = this.world.getCurrentMapTemplate() != null ? this.world.getCurrentMapTemplate().getName() : "Lobby";
-        this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.data.getId(), this.getMiniGame(), mapName, gamePhase, this.data.getPlayers().size()));
-        
+        this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.getId(), this.getMiniGame(), mapName, gamePhase, this.data.getPlayers().size()));
+
+        final Logger logger = this.gameHostManager.getApiCore().getLogger();
+        logger.log(Level.INFO, "Switched {0} to game phase {1}", new Object[]{this.getId(), gamePhase});
+
         GamePhaseEventFactory.getInstance().callEvent(this);
     }
 
@@ -223,6 +231,16 @@ public class LocalArena implements IArena
     }
 
     /**
+     * Konczy gre na tej arenie. Przelacza w tryb POST_GAME.
+     * Dziala tylko w {@link GamePhase#STARTED}.
+     */
+    public void endGame()
+    {
+        Preconditions.checkState(this.getGamePhase() == GamePhase.STARTED);
+        this.setGamePhase(GamePhase.POST_GAME);
+    }
+
+    /**
      * Przygotowuje arene do nowego cyklu.
      * Powinno byc wywolywane po zakonczeniu gry po jakims czasie.
      * Dziala tylko w {@link GamePhase#POST_GAME}.
@@ -230,7 +248,37 @@ public class LocalArena implements IArena
     public void prepareNewCycle()
     {
         Preconditions.checkState(this.getGamePhase() == GamePhase.POST_GAME); // arena moze byc zresetowana tylko po grze
-        this.setGamePhase(GamePhase.INITIALISING);
+
+        final Logger logger = this.gameHostManager.getApiCore().getLogger();
+        logger.log(Level.INFO, "Preparing {0} to new cycle", this.getId());
+
+        if (this.isDynamic())
+        {
+            // jesli gra jest dynamiczna to nikogo nie wywalamy tylko
+            // przelaczamy do inutialising
+            this.setGamePhase(GamePhase.INITIALISING);
+        }
+        else
+        {
+            // planujemy task ktory wymusi kick graczy po 30 sekundach
+            // na wypadek gdyby bungee nie zdazylo ich wyrzucic
+            // zostanie automatycznie usuniety gdy arena przelaczy sie do INITIALISING
+            this.getScheduler().runTaskLater(this::kickPendingPlayers, MAX_TIME_TO_DISCONNECT);
+
+            // arena zostanie przelaczona do INITIALISING gdy opuszcza ja wszyscy gracze
+            final String gameHubId = this.gameHostManager.getMiniGameConfig().getHubId();
+            this.gameHostManager.tpToHub(this.playersManager.getAllPlayers(), gameHubId);
+        }
+    }
+
+    // uzywane do wyrzucenia graczy ktorzy zostali
+    private void kickPendingPlayers()
+    {
+        final Logger logger = this.gameHostManager.getApiCore().getLogger();
+        logger.log(Level.WARNING, "There're still connected players to {0}, kicking them...", this.getId());
+
+        final List<Player> players = this.playersManager.getAllPlayers();
+        players.forEach(player -> player.kickPlayer(""));
     }
 
     /**

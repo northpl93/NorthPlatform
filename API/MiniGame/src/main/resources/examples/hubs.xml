@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <hubs>
+    <mainHub>main</mainHub>
 
+    <hub>
+        <hubId>main</hubId>
+        <worldName>main</worldName>
+        <joiningPolicy>EVERYONE</joiningPolicy>
+    </hub>
 </hubs>

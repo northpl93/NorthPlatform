@@ -1,11 +1,8 @@
 package pl.arieals.api.minigame.server.gamehost.listener;
 
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -40,30 +37,17 @@ public class ArenaInitListener implements Listener
     {
         final LocalArena arena = event.getArena();
 
-        if (arena.isDynamic())
+        if (! arena.isDynamic() && ! arena.getPlayersManager().getPlayers().isEmpty())
         {
-            // przenosimy wszystkich graczy do lobby areny jesli gra jest dynamiczna
-            //for (final Player player : arena.getPlayersManager().getPlayers())
-            //{
-            //    hostManager.getLobbyManager().addPlayer(arena, player);
-            //} Tym powinna zajac sie minigra?
-        }
-        else
-        {
-            final ArrayList<Player> players = new ArrayList<>(arena.getPlayersManager().getPlayers());
-            players.forEach(player -> player.kickPlayer("Powinienes wyleciec do poczekalni serwera, ale // TODO"));
-            Bukkit.broadcastMessage("Now kick all players to server lobby");
-            // todo kick all players to server lobby
+            throw new IllegalStateException("Non-dynamic game switched to INITIALISING with players on it.");
         }
 
-        if (! this.bukkitServerManager.isShutdownScheduled())
+        if (this.bukkitServerManager.isShutdownScheduled())
         {
-            return;
+            this.logger.log(Level.INFO, "Removing arena {0} because shutdown is scheduled.", arena.getId());
+            event.setCancelled(true);
+            arena.delete();
         }
-
-        this.logger.log(Level.INFO, "Removing arena {0} because shutdown is scheduled.", arena.getId());
-        event.setCancelled(true);
-        arena.delete();
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) // before normal

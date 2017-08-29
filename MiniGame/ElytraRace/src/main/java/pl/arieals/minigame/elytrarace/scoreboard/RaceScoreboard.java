@@ -7,6 +7,7 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -49,10 +50,15 @@ public class RaceScoreboard implements IScoreboardLayout
     public List<String> getContent(final IScoreboardContext context)
     {
         final Player player = context.getPlayer();
-        final ElytraRacePlayer playerData = getPlayerData(player, ElytraRacePlayer.class);
-        final LocalArena arena = getArena(player);
-        final ElytraRaceArena arenaData = arena.getArenaData();
 
+        final LocalArena arena = getArena(player);
+        final ElytraRacePlayer playerData = getPlayerData(player, ElytraRacePlayer.class);
+        if (arena == null || playerData == null)
+        {
+            return Collections.emptyList();
+        }
+
+        final ElytraRaceArena arenaData = arena.getArenaData();
         final ContentBuilder builder = IScoreboardLayout.builder();
 
         builder.box(this.msg).locale(player.spigot().getLocale());

@@ -11,7 +11,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.elytrarace.ElytraRaceMode;
 import pl.arieals.minigame.elytrarace.cfg.ElytraConfig;
 import pl.north93.zgame.api.global.commands.Arguments;
@@ -61,7 +60,8 @@ public class ElytraSetMode extends NorthCommand
         }
 
         this.elytraConfig.setMode(newMode);
-        arena.setGamePhase(GamePhase.INITIALISING);
+        arena.endGame();
+        arena.prepareNewCycle();
     }
 
     @Override

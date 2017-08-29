@@ -25,8 +25,8 @@ import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorModeChangeEvent;
-import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.cfg.MiniGameConfig;
@@ -80,6 +80,17 @@ public class PlayersManager
     public List<Player> getSpectators()
     {
         return this.spectators;
+    }
+
+    /**
+     * Zwraca wszystkich graczy na tej arenie lacznie z spectatorami.
+     * @return wszyscy gracze na tej arenie.
+     */
+    public List<Player> getAllPlayers()
+    {
+        final ArrayList<Player> players = new ArrayList<>(this.players);
+        players.addAll(this.spectators);
+        return players;
     }
 
     /**

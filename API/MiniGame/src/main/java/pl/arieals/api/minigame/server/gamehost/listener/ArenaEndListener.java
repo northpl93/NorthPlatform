@@ -2,13 +2,14 @@ package pl.arieals.api.minigame.server.gamehost.listener;
 
 import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
@@ -22,26 +23,42 @@ public class ArenaEndListener implements Listener
     @EventHandler
     public void stopEmptyArena(final PlayerQuitArenaEvent event)
     {
-        if ( event.getArena().getGamePhase() != GamePhase.STARTED )
-        {
-            // 1. jesli arena jest w lobby to nie ma sensu nic robic
-            //    gra po prostu nie wystartuje (zbyt mala ilosc graczy do startu)
-            // 2. jesli arena jest w post_game to tez nie trzeba nic robic
-            //    bo minigra powinna obsluzyc powrot areny do LOBBY po
-            //    jakims czasie
-            return;
-        }
-        
-        if (! event.getArena().getPlayersManager().getPlayers().isEmpty())
+        final LocalArena arena = event.getArena();
+        if (! arena.getPlayersManager().getPlayers().isEmpty())
         {
             return;
         }
 
-        this.apiCore.getLogger().log(Level.INFO, "Arena {0} jest pusta, przelaczanie do INITIALISING...", event.getArena().getId());
-        Bukkit.getScheduler().runTaskLater(this.apiCore.getPluginMain(), () ->
+        if (arena.getGamePhase() == GamePhase.LOBBY || arena.getGamePhase() == GamePhase.INITIALISING)
         {
-            event.getArena().setGamePhase(GamePhase.INITIALISING);
-        }, 1);
+            // W lobby nie trzeba nic robic, a podczas initialising wychodzacy
+            // gracze nas nie interesuja
+            return;
+        }
+
+        this.apiCore.getLogger().log(Level.INFO, "Arena {0} is empty, switching to INITIALISING...", arena.getId());
+        this.apiCore.run(() ->
+        {
+            arena.setGamePhase(GamePhase.INITIALISING);
+        });
+    }
+
+    @EventHandler
+    public void switchToInitialisingWhenEndEmpty(final GameEndEvent event)
+    {
+        final LocalArena arena = event.getArena();
+        if (! arena.getPlayersManager().getPlayers().isEmpty())
+        {
+            return;
+        }
+
+        this.apiCore.getLogger().log(Level.INFO, "Arena {0} has been switched to POST_GAME without players, switching to INITIALISING", arena.getId());
+        this.apiCore.run(() ->
+        {
+            // kiedy cos przelaczylo pusta arene do POST_GAME to natychmiast przerzucamy do INITIALISING
+            // dopiero przy nastepnym ticku zeby nie zepsuc innej logiki w minigrach
+            arena.setGamePhase(GamePhase.INITIALISING);
+        });
     }
 
     @Override

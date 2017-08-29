@@ -13,7 +13,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.statistics.IRecord;
 import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
@@ -78,7 +77,7 @@ public class ScoreMetaHandler implements IFinishHandler
 
         if (isFinished)
         {
-            arena.setGamePhase(GamePhase.POST_GAME);
+            arena.endGame();
         }
     }
 
@@ -106,7 +105,7 @@ public class ScoreMetaHandler implements IFinishHandler
             }
         });
 
-        arena.setGamePhase(GamePhase.POST_GAME);
+        arena.endGame();
     }
 
     @Override

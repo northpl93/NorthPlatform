@@ -3,6 +3,7 @@ package pl.arieals.api.minigame.server.gamehost;
 import javax.xml.bind.JAXB;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.server.v1_10_R1.DedicatedPlayerList;
@@ -51,16 +52,17 @@ import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 public class GameHostManager implements IServerManager
 {
     @Inject
-    private BukkitApiCore     apiCore;
+    private BukkitApiCore       apiCore;
     @Inject
-    private IRpcManager       rpcManager;
+    private IRpcManager         rpcManager;
     @Inject
-    private IEventManager     eventManager;
-    private LocalArenaManager arenaManager = new LocalArenaManager();
-    private WorldManager      worldManager = new WorldManager();
-    private RegionManagerImpl regionManager = new RegionManagerImpl();
-    private MapTemplateManager mapTemplateManager = new MapTemplateManager();
-    private MiniGameConfig    miniGameConfig;
+    private IEventManager       eventManager;
+    private GameHostHubsManager gameHostHubsManager = new GameHostHubsManager();
+    private LocalArenaManager   arenaManager = new LocalArenaManager();
+    private WorldManager        worldManager = new WorldManager();
+    private RegionManagerImpl   regionManager = new RegionManagerImpl();
+    private MapTemplateManager  mapTemplateManager = new MapTemplateManager();
+    private MiniGameConfig      miniGameConfig;
 
     @Override
     public void start()
@@ -105,6 +107,12 @@ public class GameHostManager implements IServerManager
     {
         Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer("")); // prevent errors (especially in testing environment)
         this.arenaManager.removeArenas();
+    }
+
+    @Override
+    public void tpToHub(final Collection<Player> players, final String hubId)
+    {
+        this.gameHostHubsManager.tpToHub(players, hubId);
     }
 
     /**

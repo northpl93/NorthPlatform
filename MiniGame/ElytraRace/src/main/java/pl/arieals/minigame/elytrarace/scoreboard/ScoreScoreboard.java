@@ -4,6 +4,7 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,8 +51,13 @@ public class ScoreScoreboard implements IScoreboardLayout
     public List<String> getContent(final IScoreboardContext context)
     {
         final Player player = context.getPlayer();
+
         final LocalArena arena = getArena(player);
         final ElytraScorePlayer playerData = getPlayerData(player, ElytraScorePlayer.class);
+        if (arena == null || playerData == null)
+        {
+            return Collections.emptyList();
+        }
 
         final ContentBuilder builder = IScoreboardLayout.builder();
         builder.box(this.msg).locale(player.spigot().getLocale());
