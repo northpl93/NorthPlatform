@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.bukkit.player.IBukkitPlayerManager;
+import pl.north93.zgame.api.bukkit.player.IBukkitPlayers;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -19,7 +19,7 @@ import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
-public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayerManager
+public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
 {
     @Inject
     private BukkitApiCore   bukkitApiCore;
@@ -60,21 +60,22 @@ public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayerM
     }
 
     @Override
+    public INorthPlayer getPlayer(final Player player)
+    {
+        final Value<IOnlinePlayer> onlinePlayerData = this.networkManager.getPlayers().unsafe().getOnline(player.getName());
+        return this.wrapNorthPlayer(player, onlinePlayerData);
+    }
+
+    @Override
     public INorthPlayer getPlayer(final UUID uuid)
     {
-        final Player player = Bukkit.getPlayer(uuid);
-        final Value<IOnlinePlayer> onlinePlayerData = this.networkManager.getPlayers().unsafe().getOnline(player.getName());
-
-        return this.wrapNorthPlayer(player, onlinePlayerData);
+        return this.getPlayer(Bukkit.getPlayer(uuid));
     }
 
     @Override
     public INorthPlayer getPlayer(final String nick)
     {
-        final Player player = Bukkit.getPlayer(nick);
-        final Value<IOnlinePlayer> onlinePlayerData = this.networkManager.getPlayers().unsafe().getOnline(player.getName());
-
-        return this.wrapNorthPlayer(player, onlinePlayerData);
+        return this.getPlayer(Bukkit.getPlayer(nick));
     }
 
     private INorthPlayer wrapNorthPlayer(final Player player, final Value<IOnlinePlayer> playerData)

@@ -55,6 +55,7 @@
     <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.13.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.13.Final" level="project" />
     <orderEntry type="library" name="Maven: org.msgpack:msgpack-core:0.8.13" level="project" />
+    <orderEntry type="module" module-name="Network Controller" />
     <orderEntry type="module" module-name="API.Economy" />
     <orderEntry type="module" module-name="RestfulApi" />
     <orderEntry type="library" name="Maven: com.sparkjava:spark-core:2.6.0" level="project" />
@@ -79,6 +80,5 @@
     <orderEntry type="library" name="Maven: net.citizensnpcs:citizens-v1_11_R1:2.0.22-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: net.citizensnpcs:citizens-v1_12_R1:2.0.22-SNAPSHOT" level="project" />
     <orderEntry type="module" module-name="GlobalShops" />
-    <orderEntry type="module" module-name="Network Controller" />
   </component>
 </module>
