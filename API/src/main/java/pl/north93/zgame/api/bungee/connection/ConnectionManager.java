@@ -31,7 +31,7 @@ public class ConnectionManager
 
     public void connectPlayerToServer(final ProxiedPlayer player, final String serverName, final JoinActionsContainer actions)
     {
-        if (actions.getServerJoinActions().length != 0)
+        if (! actions.isEmpty())
         {
             final Value<JoinActionsContainer> value = this.observationManager.get(JoinActionsContainer.class, "serveractions:" + player.getName());
             value.setExpire(actions, 10, TimeUnit.SECONDS);

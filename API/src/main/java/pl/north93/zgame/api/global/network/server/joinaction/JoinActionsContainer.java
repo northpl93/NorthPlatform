@@ -3,6 +3,8 @@ package pl.north93.zgame.api.global.network.server.joinaction;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import org.diorite.utils.collections.arrays.DioriteArrayUtils;
+
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 
@@ -18,14 +20,26 @@ public final class JoinActionsContainer
 
     public JoinActionsContainer(final IServerJoinAction[] serverJoinActions)
     {
-        final JoinActionsDto joinActionsDto = new JoinActionsDto(serverJoinActions);
-        this.serverJoinActions = templateManager.serialize(JoinActionsDto.class, joinActionsDto);
+        if (serverJoinActions == null || serverJoinActions.length == 0)
+        {
+            this.serverJoinActions = DioriteArrayUtils.EMPTY_BYTES;
+        }
+        else
+        {
+            final JoinActionsDto joinActionsDto = new JoinActionsDto(serverJoinActions);
+            this.serverJoinActions = templateManager.serialize(JoinActionsDto.class, joinActionsDto);
+        }
     }
 
     public IServerJoinAction[] getServerJoinActions()
     {
         final JoinActionsDto actionsDto = templateManager.deserialize(JoinActionsDto.class, this.serverJoinActions);
         return actionsDto.getActions();
+    }
+
+    public boolean isEmpty()
+    {
+        return this.serverJoinActions.length == 0;
     }
 
     @Override
