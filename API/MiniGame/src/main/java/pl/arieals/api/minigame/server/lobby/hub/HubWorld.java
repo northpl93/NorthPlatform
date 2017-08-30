@@ -8,12 +8,19 @@ import pl.north93.zgame.api.global.network.JoiningPolicy;
 
 public class HubWorld
 {
-    private final World bukkitWorld;
+    private final String hubId;
+    private final World  bukkitWorld;
     private JoiningPolicy policy;
 
-    public HubWorld(final World bukkitWorld)
+    public HubWorld(final String hubId, final World bukkitWorld)
     {
+        this.hubId = hubId;
         this.bukkitWorld = bukkitWorld;
+    }
+
+    public String getHubId()
+    {
+        return this.hubId;
     }
 
     public World getBukkitWorld()

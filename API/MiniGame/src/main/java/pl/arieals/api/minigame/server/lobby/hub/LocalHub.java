@@ -104,8 +104,10 @@ public class LocalHub implements IHubServer
     private void createNewHubWorld(final HubConfig hubConfig)
     {
         final World bukkitWorld = this.createWorld(hubConfig);
-        final HubWorld hubWorld = new HubWorld(bukkitWorld);
+
+        final HubWorld hubWorld = new HubWorld(hubConfig.getHubId(), bukkitWorld);
         hubWorld.updateConfig(hubConfig);
+
         this.hubWorlds.put(hubConfig.getHubId(), hubWorld);
         this.apiCore.getLogger().log(Level.INFO, "Created hub with ID {0}", hubConfig.getHubId());
     }

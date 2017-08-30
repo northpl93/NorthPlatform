@@ -37,11 +37,26 @@ public class ArenaQuery implements Predicate<IArena>
     @Override
     public boolean test(final IArena arena)
     {
-        if (arena.getGamePhase() == this.gamePhase)
+        // na ekstremalne wypadki zakladamy ze moze przyjsc null. I tak java to pewnie zoptymalizuje
+        if (arena == null)
         {
-            return true;
+            return false;
         }
-        // todo
+
+        // jesli this.gamePhase nie jest nullem to sprawdzamy
+        if (this.gamePhase != null && arena.getGamePhase() != this.gamePhase)
+        {
+            return false;
+        }
+
+        // jesli this.worldId nie jest nullem to sprawdzamy
+        if (this.worldId != null && !arena.getWorldId().equals(this.worldId))
+        {
+            return false;
+        }
+
+        // todo zaimplemrntowac id i variant minigry
+
         return true;
     }
 }
