@@ -7,18 +7,24 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.redis.observable.Value;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import pl.north93.zgame.api.bukkit.player.IBukkitPlayers;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ChatListener implements Listener
 {
+    @Inject
+    private IBukkitPlayers bukkitPlayers;
+
     @EventHandler(ignoreCancelled = true)
     public void onChat(final AsyncPlayerChatEvent event)
     {
         // todo rewrite
-        final Value<IOnlinePlayer> networkPlayer = API.getNetworkManager().getPlayers().unsafe().getOnline(event.getPlayer().getName());
-        final String newFormat = translateAlternateColorCodes('&', networkPlayer.get().getGroup().getChatFormat());
+        final INorthPlayer player = this.bukkitPlayers.getPlayer(event.getPlayer());
+        final String newFormat = translateAlternateColorCodes('&', player.getGroup().getChatFormat());
         event.setFormat(newFormat);
 
         if (event.getPlayer().hasPermission("chat.colorize"))
@@ -35,5 +41,11 @@ public class ChatListener implements Listener
                  .replaceAll("usun potwierdz", "")
             );
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.bukkit.player;
 
+import java.util.Locale;
+
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -29,6 +31,7 @@ public interface INorthPlayer extends Player
 
     /**
      * Otwiera transakcje dostepu do sieciowych danych gracza.
+     * Umozliwia takze bezpieczna, atomowa ich edycje.
      * Zalecany sposob uzycia to try/catch-with-resources
      * {@code try (final PlayerTransaction t = iNorthPlayer.openTransaction()){} }
      */
@@ -38,6 +41,11 @@ public interface INorthPlayer extends Player
      * @return czy gracz gra jako premium.
      */
     boolean isPremium();
+
+    /**
+     * @return jezyk uzywany przez tego gracza.
+     */
+    Locale getLocale();
 
     /**
      * @return serwer na ktorym jest gracz.
@@ -56,5 +64,10 @@ public interface INorthPlayer extends Player
      */
     void connectTo(ServerProxyData server, IServerJoinAction... actions);
 
+    /**
+     * Wrzuca gracza do danej grupy serwerow, bungee odpowiada za wybranie serwera.
+     * @param serversGroupName Nazwa grupy serwerow.
+     * @param actions obiekty akcji do wykonania po wejsciu na serwer.
+     */
     void connectTo(String serversGroupName, IServerJoinAction... actions);
 }

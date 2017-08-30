@@ -2,11 +2,10 @@ package pl.north93.zgame.skyblock.server.actions;
 
 import java.util.UUID;
 
-import org.bukkit.entity.Player;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackIgnore;
@@ -31,7 +30,7 @@ public class TeleportPlayerToIsland implements IServerJoinAction
     }
 
     @Override
-    public void playerJoined(final Player bukkitPlayer)
+    public void playerJoined(final INorthPlayer bukkitPlayer)
     {
         if (this.server.getServerMode().equals(ServerMode.LOBBY))
         {

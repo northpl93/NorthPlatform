@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 
 public class TeleportToPlayer implements IServerJoinAction
@@ -24,7 +25,7 @@ public class TeleportToPlayer implements IServerJoinAction
     }
 
     @Override
-    public void playerJoined(final Player bukkitPlayer)
+    public void playerJoined(final INorthPlayer bukkitPlayer)
     {
         final Player player = Bukkit.getPlayer(this.playerId);
         if (player != null)

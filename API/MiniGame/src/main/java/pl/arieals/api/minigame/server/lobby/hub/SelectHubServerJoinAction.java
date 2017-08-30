@@ -2,13 +2,12 @@ package pl.arieals.api.minigame.server.lobby.hub;
 
 import java.util.Collections;
 
-import org.bukkit.entity.Player;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackIgnore;
@@ -30,10 +29,10 @@ public class SelectHubServerJoinAction implements IServerJoinAction
     }
 
     @Override
-    public void playerJoined(final Player bukkitPlayer)
+    public void playerJoined(final INorthPlayer player)
     {
         final LobbyManager lobbyManager = this.miniGameServer.getServerManager();
-        lobbyManager.tpToHub(Collections.singleton(bukkitPlayer), this.hubId);
+        lobbyManager.tpToHub(Collections.singleton(player), this.hubId);
     }
 
     @Override

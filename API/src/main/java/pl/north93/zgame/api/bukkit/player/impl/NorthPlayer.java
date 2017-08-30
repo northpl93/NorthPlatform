@@ -4,6 +4,7 @@ import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -111,6 +112,13 @@ class NorthPlayer implements INorthPlayer
     }
 
     @Override
+    public Locale getLocale()
+    {
+        final IOnlinePlayer playerData = this.playerData.get();
+        return playerData.getLocale();
+    }
+
+    @Override
     public pl.north93.zgame.api.global.network.server.Server getCurrentServer()
     {
         final IOnlinePlayer playerData = this.playerData.get();
@@ -136,6 +144,12 @@ class NorthPlayer implements INorthPlayer
     {
         final IOnlinePlayer playerData = this.playerData.get();
         playerData.connectTo(serversGroupName, actions);
+    }
+
+    // wewnetrzna metoda uzywana przez implementacje.
+    public Value<IOnlinePlayer> getValue()
+    {
+        return this.playerData;
     }
 
     // = = = DELEGOWANE METODY = = = //

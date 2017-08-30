@@ -12,16 +12,20 @@ import org.bukkit.event.Listener;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
+import pl.north93.zgame.api.bukkit.player.IBukkitPlayers;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class LanguageKeeper implements Listener
 {
+    @Inject
+    private IBukkitPlayers bukkitPlayers;
+
     @EventHandler
     public void onClientSettings(final PlayerLocaleChangeEvent event)
     {
-        final IOnlinePlayer player = (IOnlinePlayer) API.getNetworkManager().getPlayers().unsafe().get(event.getPlayer().getName());
-        updateLocale(event.getPlayer(), player.getLocale());
+        final INorthPlayer northPlayer = this.bukkitPlayers.getPlayer(event.getPlayer());
+        updateLocale(event.getPlayer(), northPlayer.getLocale());
     }
 
     public static void updateLocale(final Player player, final Locale locale)
