@@ -10,6 +10,7 @@ import com.lambdaworks.redis.api.sync.RedisCommands;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.redis.observable.Value;
@@ -88,24 +89,15 @@ class CachedValueImpl<T> extends CachedValue<T>
     {
         final String key = this.objectKey.getKey();
 
-        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
-        final java.util.concurrent.locks.Lock redisLock = this.observationManager.getStorageConnector().getRedisLock();
-
-        final byte[] getResult;
-        try
+        final StorageConnector storageConnector = this.observationManager.getStorageConnector();
+        final byte[] getResult = storageConnector.redisAtomically(redis ->
         {
-            redisLock.lock();
-
             redis.multi();
             redis.get(key);
             redis.del(key);
 
-            getResult = (byte[]) redis.exec().get(0);
-        }
-        finally
-        {
-            redisLock.unlock();
-        }
+            return (byte[]) redis.exec().get(0);
+        });
 
         if (getResult == null)
         {

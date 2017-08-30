@@ -4,7 +4,6 @@ import static pl.north93.zgame.api.global.cfg.ConfigUtils.loadConfigFile;
 
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Logger;
@@ -13,6 +12,7 @@ import com.lambdaworks.redis.RedisClient;
 import com.lambdaworks.redis.RedisURI;
 import com.lambdaworks.redis.api.StatefulRedisConnection;
 import com.lambdaworks.redis.api.sync.RedisCommands;
+import com.mongodb.Function;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
@@ -29,8 +29,9 @@ public class StorageConnector extends Component
     private final ReadWriteLock                     redisLock = new ReentrantReadWriteLock();
     private RedisClient                             redisClient;
     private StatefulRedisConnection<String, byte[]> redisConnection;
-    private MongoClient   mongoClient;
-    private MongoDatabase mainDatabase;
+    private StatefulRedisConnection<String, byte[]> atomicallyConnection;
+    private MongoClient                             mongoClient;
+    private MongoDatabase                           mainDatabase;
 
     @Override
     protected void enableComponent()
@@ -44,6 +45,7 @@ public class StorageConnector extends Component
                                                .build();
         this.redisClient = RedisClient.create(connectionUri);
         this.redisConnection  = this.redisClient.connect(StringByteRedisCodec.INSTANCE);
+        this.atomicallyConnection = this.redisClient.connect(StringByteRedisCodec.INSTANCE);
 
         this.fixMongoLogger(Logger.getLogger("org.mongodb.driver.connection"));
         this.fixMongoLogger(Logger.getLogger("org.mongodb.driver.management"));
@@ -76,21 +78,20 @@ public class StorageConnector extends Component
      */
     public RedisCommands<String, byte[]> getRedis()
     {
-        final Lock readLock = this.redisLock.readLock();
-        try
-        {
-            readLock.lock();
-            return this.redisConnection.sync();
-        }
-        finally
-        {
-            readLock.unlock();
-        }
+        return this.redisConnection.sync();
     }
 
-    public Lock getRedisLock()
+    /**
+     * Udostepnia drugie polaczenie redisa do rzeczy ktore musza byc przeprowadzane
+     * atmowo, np. uzywanie multi.
+     *
+     * @param function Funkcja przyjmujaca klienta redisa i zwracajaca wynik.
+     * @param <R> Typ wyniku.
+     * @return Wynik zwrocony przez funkcje.
+     */
+    public synchronized <R> R redisAtomically(final Function<RedisCommands<String, byte[]>, R> function)
     {
-        return this.redisLock.writeLock();
+        return function.apply(this.atomicallyConnection.sync());
     }
 
     public RedisClient getRedisClient()
