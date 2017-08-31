@@ -4,6 +4,8 @@ import java.util.Map;
 
 import org.bukkit.entity.Player;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
@@ -34,12 +36,6 @@ class PlayerDataService
         return new PlayerData(onlinePlayer.getMetaStore());
     }
 
-    public boolean addItem(final Player player, final String groupId, final String itemId)
-    {
-        // przedmiot nie obsluguje poziomow, zgodnie z dokumentacja ustawiamy na 1.
-        return this.addItem(player, itemId, groupId, 1);
-    }
-
     public boolean addItem(final Player player, final String groupId, final String itemId, final Integer itemLevel)
     {
         try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(Identity.of(player)))
@@ -64,13 +60,15 @@ class PlayerDataService
         }
     }
 
-    public void setActiveItem(final Player player, final String groupId, final String itemId)
+    public PlayerData setActiveItem(final Player player, final String groupId, final String itemId)
     {
         try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(Identity.of(player)))
         {
             final PlayerData playerData = new PlayerData(t.getPlayer().getMetaStore());
 
             playerData.getActiveItems().put(groupId, itemId);
+
+            return playerData;
         }
         catch (final Exception e)
         {
@@ -78,13 +76,62 @@ class PlayerDataService
         }
     }
 
-    public void resetActiveItem(final Player player, final String groupId)
+    public PlayerData resetActiveItem(final Player player, final String groupId)
     {
         try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(Identity.of(player)))
         {
             final PlayerData playerData = new PlayerData(t.getPlayer().getMetaStore());
 
             playerData.getActiveItems().remove(groupId);
+
+            return playerData;
+        }
+        catch (final Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Pair<PlayerData, Integer> addShards(final Player player, final String groupId, final String itemId, final int shards)
+    {
+        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(Identity.of(player)))
+        {
+            final PlayerData playerData = new PlayerData(t.getPlayer().getMetaStore());
+            final String itemInternalId = groupId + "$" + itemId;
+
+            final Map<String, Integer> shardsMap = playerData.getShards();
+
+            final int actualShards = shardsMap.getOrDefault(itemInternalId, 0);
+            final int newShards = actualShards + shards;
+
+            shardsMap.put(itemInternalId, newShards);
+
+            return Pair.of(playerData, newShards);
+        }
+        catch (final Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public PlayerData setShards(final Player player, final String groupId, final String itemId, final int shards)
+    {
+        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(Identity.of(player)))
+        {
+            final PlayerData playerData = new PlayerData(t.getPlayer().getMetaStore());
+            final String itemInternalId = groupId + "$" + itemId;
+
+            final Map<String, Integer> shardsMap = playerData.getShards();
+            if (shards == 0)
+            {
+                shardsMap.remove(itemInternalId);
+            }
+            else
+            {
+                shardsMap.put(itemInternalId, shards);
+            }
+
+            return playerData;
         }
         catch (final Exception e)
         {

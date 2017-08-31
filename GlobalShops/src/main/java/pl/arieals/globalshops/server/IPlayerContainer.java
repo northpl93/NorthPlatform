@@ -79,6 +79,35 @@ public interface IPlayerContainer
     boolean addItem(Item item, int level);
 
     /**
+     * Podnosi poziom danego przedmiotu o 1.
+     * Gdy sie nie uda (np. gracz ma juz maksymalny poziom) zostanie
+     * zwrocone false.
+     *
+     * @param item przedmiot ktoremu podnosimy poziom.
+     * @return True jesli sie udalo, przeciwnie false.
+     */
+    boolean bumpItemLevel(Item item);
+
+    /**
+     * Podnosi ilosc posiadanych przez gracza odlamkow o podana ilosc.
+     * Podana wartosc musi miescic sie w zakresie 1-100.
+     * Metoda automatycznie uaktywni przedmiot jesli gracz uzyska 100 odlamkow.
+     *
+     * @param item Przedmiot do ktorego przypisujemy odlamki.
+     * @param amount Ilosc odlamkow.
+     */
+    void addShards(Item item, int amount);
+
+    /**
+     * Zwraca ilosc posiadanych przez gracza odlamkow.
+     *
+     * @param item Przedmiot dla ktorego sa sprawdzane odlamki.
+     * @return Ilosc posiadanych odlamkow dango przedmiotu.
+     *         Miesci sie w zakresie 0-99
+     */
+    int getShards(Item item);
+
+    /**
      * Zwraca wybrany przez gracza item jesli typ grupy to SINGLE_PICK.
      * Jesli typ grupy to MULTI_BUY, wtedy zostanie rzucony wyjatek.
      *

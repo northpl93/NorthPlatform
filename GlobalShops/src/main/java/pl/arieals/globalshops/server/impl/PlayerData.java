@@ -12,6 +12,7 @@ class PlayerData implements Serializable
 {
     private static final MetaKey BOUGHT_ITEMS = MetaKey.get("globalShops_bought");
     private static final MetaKey ACTIVE_ITEMS = MetaKey.get("globalShops_active");
+    private static final MetaKey SHARDS       = MetaKey.get("globalShops_shards");
     private MetaStore store;
 
     public PlayerData(final MetaStore store)
@@ -39,5 +40,16 @@ class PlayerData implements Serializable
             this.store.set(ACTIVE_ITEMS, active);
         }
         return active;
+    }
+
+    public Map<String, Integer> getShards()
+    {
+        Map<String, Integer> shards = (Map<String, Integer>) this.store.get(SHARDS);
+        if (shards == null)
+        {
+            shards = new HashMap<>(0);
+            this.store.set(SHARDS, shards);
+        }
+        return shards;
     }
 }

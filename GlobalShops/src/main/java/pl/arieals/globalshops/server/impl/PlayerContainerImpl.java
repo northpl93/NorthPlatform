@@ -4,6 +4,7 @@ import static java.text.MessageFormat.format;
 
 
 import java.util.Collection;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.google.common.base.Preconditions;
@@ -11,6 +12,7 @@ import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import org.diorite.utils.lazy.LazyValue;
 
@@ -24,16 +26,16 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 class PlayerContainerImpl implements IPlayerContainer
 {
     @Inject
-    private PlayerDataService     service;
+    private PlayerDataService service;
     @Inject
-    private GlobalShopsServer     shopsServer;
-    private LazyValue<PlayerData> playerData;
+    private GlobalShopsServer shopsServer;
+    private PlayerDataHolder  playerData;
     private final Player player;
 
     public PlayerContainerImpl(final Player player)
     {
         this.player = player;
-        this.playerData = new LazyValue<>(() -> this.service.getData(player));
+        this.playerData = new PlayerDataHolder(() -> this.service.getData(player));
     }
 
     @Override
@@ -103,6 +105,59 @@ class PlayerContainerImpl implements IPlayerContainer
     }
 
     @Override
+    public boolean bumpItemLevel(final Item item)
+    {
+        if (this.hasMaxLevel(item))
+        {
+            return false;
+        }
+
+        final int currentLevel = this.getBoughtItemLevel(item);
+        return this.addItem(item, currentLevel + 1);
+    }
+
+    @Override
+    public void addShards(final Item item, final int amount)
+    {
+        Preconditions.checkNotNull(item, "Item can't be null");
+        Preconditions.checkArgument(amount > 0);
+        Preconditions.checkArgument(amount <= 100);
+
+        final Pair<PlayerData, Integer> result = this.service.addShards(this.player, item.getGroup().getId(), item.getId(), amount);
+
+        final int newShards = result.getValue();
+        if (newShards >= 100)
+        {
+            this.bumpItemLevel(item);
+
+            final PlayerData newData;
+            if (this.hasMaxLevel(item))
+            {
+                newData = this.service.setShards(this.player, item.getGroup().getId(), item.getId(), 0);
+            }
+            else
+            {
+                newData = this.service.setShards(this.player, item.getGroup().getId(), item.getId(), newShards - 100);
+            }
+
+            this.playerData.update(newData);
+        }
+        else
+        {
+            // aktualizujemy danymi pobranymi z add shards
+            this.playerData.update(result.getKey());
+        }
+    }
+
+    @Override
+    public int getShards(final Item item)
+    {
+        final PlayerData playerData = this.playerData.get();
+
+        return playerData.getShards().getOrDefault(this.itemToInternalId(item), 0);
+    }
+
+    @Override
     public void markAsActive(final Item item)
     {
         Preconditions.checkNotNull(item);
@@ -118,9 +173,10 @@ class PlayerContainerImpl implements IPlayerContainer
             throw new IllegalStateException(format("Item {0} isn't bought.", item.getId()));
         }
 
-        this.service.setActiveItem(this.player, group.getId(), item.getId());
+        final PlayerData updatedData = this.service.setActiveItem(this.player, group.getId(), item.getId());
+        this.playerData.update(updatedData);
+
         this.player.getServer().getPluginManager().callEvent(new ItemMarkedActiveEvent(this.player, this, group, item));
-        this.playerData.reset();
     }
 
     @Override
@@ -133,9 +189,10 @@ class PlayerContainerImpl implements IPlayerContainer
             throw new IllegalArgumentException();
         }
 
-        this.service.resetActiveItem(this.player, group.getId());
+        final PlayerData updatedData = this.service.resetActiveItem(this.player, group.getId());
+        this.playerData.update(updatedData);
+
         this.player.getServer().getPluginManager().callEvent(new ItemMarkedActiveEvent(this.player, this, group, null));
-        this.playerData.reset();
     }
 
     private Item getItemFromInternalId(final ItemsGroup group, final String id)
@@ -147,5 +204,19 @@ class PlayerContainerImpl implements IPlayerContainer
     private String itemToInternalId(final Item item)
     {
         return item.getGroup().getId() + "$" + item.getId();
+    }
+}
+
+class PlayerDataHolder extends LazyValue<PlayerData>
+{
+    public PlayerDataHolder(final Supplier<PlayerData> supplier)
+    {
+        super(supplier);
+    }
+
+    public void update(final PlayerData playerData)
+    {
+        this.cached = playerData;
+        this.isCached = true;
     }
 }

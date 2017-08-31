@@ -68,7 +68,7 @@ public abstract class ShopGui extends Gui
 
         // shardy o obliczyc cene
         loreVars = loreVars.and("price", "price todo");
-        loreVars = loreVars.and("shards", "shards todo");
+        loreVars = loreVars.and("shards", playerContainer.getShards(item));
 
         if (group.getGroupType() == GroupType.SINGLE_PICK)
         {
