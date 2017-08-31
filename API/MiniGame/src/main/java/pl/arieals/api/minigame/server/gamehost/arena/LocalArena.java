@@ -237,6 +237,10 @@ public class LocalArena implements IArena
     public void endGame()
     {
         Preconditions.checkState(this.getGamePhase() == GamePhase.STARTED);
+
+        final Logger logger = this.gameHostManager.getApiCore().getLogger();
+        logger.log(Level.INFO, "Ending game on {0}", this.getId());
+
         this.setGamePhase(GamePhase.POST_GAME);
     }
 
@@ -258,6 +262,11 @@ public class LocalArena implements IArena
             // przelaczamy do inutialising
             this.setGamePhase(GamePhase.INITIALISING);
         }
+        else if (this.getPlayersManager().getAllPlayers().isEmpty())
+        {
+            // jesli nie ma zadnych graczy na arenie to od razu przelaczamy do INITIALISING.
+            this.setGamePhase(GamePhase.INITIALISING);
+        }
         else
         {
             // planujemy task ktory wymusi kick graczy po 30 sekundach
@@ -271,11 +280,11 @@ public class LocalArena implements IArena
         }
     }
 
-    // uzywane do wyrzucenia graczy ktorzy zostali
+    // uzywane do wyrzucenia graczy ktorzy zostali na arenie po probie teleportu do huba
     private void kickPendingPlayers()
     {
         final Logger logger = this.gameHostManager.getApiCore().getLogger();
-        logger.log(Level.WARNING, "There're still connected players to {0}, kicking them...", this.getId());
+        logger.log(Level.WARNING, "There are still connected players to {0}, kicking them...", this.getId());
 
         final List<Player> players = this.playersManager.getAllPlayers();
         players.forEach(player -> player.kickPlayer(""));

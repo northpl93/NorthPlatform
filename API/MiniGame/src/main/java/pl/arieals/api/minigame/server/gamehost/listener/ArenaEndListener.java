@@ -1,5 +1,8 @@
 package pl.arieals.api.minigame.server.gamehost.listener;
 
+import static org.bukkit.event.EventPriority.MONITOR;
+
+
 import java.util.logging.Level;
 
 import org.bukkit.event.EventHandler;
@@ -20,7 +23,7 @@ public class ArenaEndListener implements Listener
     @Inject
     private BukkitApiCore apiCore;
 
-    @EventHandler
+    @EventHandler(priority = MONITOR)
     public void stopEmptyArena(final PlayerQuitArenaEvent event)
     {
         final LocalArena arena = event.getArena();
@@ -29,10 +32,11 @@ public class ArenaEndListener implements Listener
             return;
         }
 
-        if (arena.getGamePhase() == GamePhase.LOBBY || arena.getGamePhase() == GamePhase.INITIALISING)
+        if (arena.getGamePhase() != GamePhase.STARTED)
         {
-            // W lobby nie trzeba nic robic, a podczas initialising wychodzacy
-            // gracze nas nie interesuja
+            // W lobby nie trzeba nic robic
+            // W initialising nic nie robimy zeby nie zbugowac
+            // W postgame nic nie robimy bo arena sama zakonczy gre
             return;
         }
 
