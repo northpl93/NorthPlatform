@@ -1,36 +1,43 @@
-package pl.north93.zgame.api.global.deployment.serversgroup;
+package pl.north93.zgame.controller.servers.cfg;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import java.util.UUID;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.cfg.annotations.CfgComment;
-
+@XmlRootElement(name = "server")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class UnManagedServer
 {
-    @CfgComment("Identyfikator serwera. Należy go podać podczas uruchamiania serwera.")
-    private String  serverId;
-    @CfgComment("Adres do łączenia się z tym serwerem.")
+    @XmlAttribute
+    private UUID    serverId;
+    @XmlAttribute
     private String  connectIp;
-    @CfgComment("Port do łączenia się z tym serwerem.")
+    @XmlAttribute
     private Integer connectPort;
 
     public UnManagedServer()
     {
     }
 
-    public UnManagedServer(final String serverId, final String connectIp, final Integer connectPort)
+    public UnManagedServer(final UUID serverId, final String connectIp, final Integer connectPort)
     {
         this.serverId = serverId;
         this.connectIp = connectIp;
         this.connectPort = connectPort;
     }
 
-    public String getServerId()
+    public UUID getServerId()
     {
         return this.serverId;
     }
 
-    public void setServerId(final String serverId)
+    public void setServerId(final UUID serverId)
     {
         this.serverId = serverId;
     }

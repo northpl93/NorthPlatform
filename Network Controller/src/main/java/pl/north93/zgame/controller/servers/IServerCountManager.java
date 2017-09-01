@@ -1,12 +1,12 @@
 package pl.north93.zgame.controller.servers;
 
-import pl.north93.zgame.api.global.deployment.serversgroup.ManagedServersGroup;
+import pl.north93.zgame.controller.servers.cfg.ManagedServersGroupConfig;
 
 public interface IServerCountManager
 {
-    long getServersCount(ManagedServersGroup serversGroup);
+    long getServersCount(ManagedServersGroupConfig serversGroup);
 
-    void addServers(ManagedServersGroup serversGroup, long servers);
+    void addServers(ManagedServersGroupConfig serversGroup, long servers);
 
-    void removeServers(ManagedServersGroup serversGroup, long servers);
+    void removeServers(ManagedServersGroupConfig serversGroup, long servers);
 }

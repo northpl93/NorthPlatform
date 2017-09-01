@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.deployment;
+package pl.north93.zgame.api.global.network.daemon;
 
 import static pl.north93.zgame.api.global.redis.RedisKeys.DAEMON;
 
@@ -15,7 +15,7 @@ import pl.north93.zgame.api.global.redis.rpc.Targets;
  * Obiekt przechowujący dane o demonie.
  * Właściwie tylko do celów informacyjnych.
  */
-public class RemoteDaemon implements ProvidingRedisKey
+public class DaemonDto implements ProvidingRedisKey
 {
     private String  name;
     private String  hostName;
@@ -108,7 +108,7 @@ public class RemoteDaemon implements ProvidingRedisKey
 
     public static final class Builder
     {
-        private final RemoteDaemon daemon = new RemoteDaemon();
+        private final DaemonDto daemon = new DaemonDto();
 
         public Builder setName(final String name)
         {
@@ -146,7 +146,7 @@ public class RemoteDaemon implements ProvidingRedisKey
             return this;
         }
 
-        public RemoteDaemon build()
+        public DaemonDto build()
         {
             return this.daemon;
         }

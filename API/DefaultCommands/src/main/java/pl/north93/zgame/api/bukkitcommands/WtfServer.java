@@ -10,7 +10,7 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
+import pl.north93.zgame.api.global.network.server.group.IServersGroup;
 import pl.north93.zgame.api.global.network.server.Server;
 
 public class WtfServer extends NorthCommand

@@ -25,6 +25,7 @@ class CachedHashValueImpl<T> extends CachedValue<T>
         this.hash = hash;
         this.name = name;
         this.clazz = clazz;
+
         this.myLock = observationManager.getLock("caval_lock:" + this.getInternalName());
         observationManager.getValueSubHandler().addListener(this);
     }
@@ -188,21 +189,9 @@ class CachedHashValueImpl<T> extends CachedValue<T>
     }
 
     @Override
-    public Lock getLock()
+    public final Lock getLock()
     {
         return this.myLock;
-    }
-
-    @Override
-    public void lock()
-    {
-        this.myLock.lock();
-    }
-
-    @Override
-    public void unlock()
-    {
-        this.myLock.unlock();
     }
 
     @Override

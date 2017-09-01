@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.deployment;
+package pl.north93.zgame.api.global.network.daemon;
 
 import java.util.UUID;
 

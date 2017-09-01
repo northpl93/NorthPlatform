@@ -2,12 +2,10 @@ package pl.north93.zgame.controller.core;
 
 import java.util.UUID;
 
-import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
 import pl.north93.zgame.api.global.network.server.ServerState;
-import pl.north93.zgame.controller.configbroadcaster.ConfigBroadcaster;
 
 public class NetworkControllerRpcImpl implements NetworkControllerRpc
 {
@@ -24,13 +22,6 @@ public class NetworkControllerRpcImpl implements NetworkControllerRpc
     {
         this.apiCore.getLogger().info("Received stop request from network.");
         this.apiCore.getPlatformConnector().stop();
-    }
-
-    @Override
-    public void updateConfigs()
-    {
-        final ConfigBroadcaster configBroadcaster = API.getApiCore().getComponentManager().getComponent("NetworkController.ConfigBroadcaster");
-        configBroadcaster.loadAndBroadcastConfigs();
     }
 
     @Override

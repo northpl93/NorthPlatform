@@ -1,11 +1,13 @@
 package pl.north93.zgame.api.global.network.server;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import pl.north93.zgame.api.global.deployment.ServerPattern;
-import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
+import pl.north93.zgame.api.global.network.impl.ServerDto;
+import pl.north93.zgame.api.global.network.server.group.IServersGroup;
+import pl.north93.zgame.api.global.network.server.group.ServersGroupDto;
+import pl.north93.zgame.api.global.redis.observable.Hash;
+import pl.north93.zgame.api.global.redis.observable.Value;
 
 /**
  * Definiuje podstawowe metody sluzace do pobierania informacji
@@ -37,7 +39,7 @@ public interface IServersManager
      * Zwraca listę wszystkich serwerów.
      * @return wszystkie serwery.
      */
-    Set<Server> all();
+    Set<? extends Server> all();
 
     /**
      * Zwraca listę wszystkich serwerów znajdujących się w
@@ -47,11 +49,16 @@ public interface IServersManager
      */
     Set<Server> inGroup(String group);
 
-    Set<IServersGroup> getServersGroups();
+    Set<? extends IServersGroup> getServersGroups();
 
     IServersGroup getServersGroup(String name);
 
-    List<ServerPattern> getServerPatterns();
+    Unsafe unsafe();
 
-    ServerPattern getServerPattern(String name);
+    interface Unsafe
+    {
+        Value<ServerDto> getServerDto(final UUID serverId);
+
+        Hash<ServersGroupDto> getServersGroups();
+    }
 }

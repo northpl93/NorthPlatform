@@ -14,6 +14,18 @@ abstract class CachedValue<T> implements Value<T>
         this.observationManager = observationManager;
     }
 
+    @Override
+    public final void lock()
+    {
+        this.getLock().lock();
+    }
+
+    @Override
+    public final void unlock()
+    {
+        this.getLock().unlock();
+    }
+
     // zwraca unikalna nazwe tej wartosci, sluzy do nasluchiwania
     abstract String getInternalName();
 

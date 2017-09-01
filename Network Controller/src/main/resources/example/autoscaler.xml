@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<autoscaler>
+    <patterns>
+
+    </patterns>
+
+    <groups>
+        <unmanaged name="default">
+            <serversType>NORMAL</serversType>
+            <joiningPolicy>EVERYONE</joiningPolicy>
+
+            <server serverId="a89498a5-4571-41ab-a471-d78e325aeaba" connectIp="localhost" connectPort="25565" />
+        </unmanaged>
+
+        <unmanaged name="minigame_server">
+            <serversType>MINIGAME</serversType>
+            <joiningPolicy>EVERYONE</joiningPolicy>
+
+            <server serverId="b8ddf9cb-2fff-4861-91f0-1841c313817f" connectIp="localhost" connectPort="25566" />
+        </unmanaged>
+    </groups>
+</autoscaler>

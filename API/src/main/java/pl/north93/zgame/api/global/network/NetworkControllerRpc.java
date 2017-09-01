@@ -19,12 +19,6 @@ public interface NetworkControllerRpc
     void stopController();
 
     /**
-     * Przeładowuje uprawnienia w kontrolerze sieci.
-     */
-    @DoNotWaitForResponse
-    void updateConfigs();
-
-    /**
      * Zmienia stan serwera o podanym UUID
      *
      * @param serverId unikalny identyfikator serwera

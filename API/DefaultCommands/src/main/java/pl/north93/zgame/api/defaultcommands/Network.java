@@ -7,7 +7,7 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.deployment.RemoteDaemon;
+import pl.north93.zgame.api.global.network.daemon.DaemonDto;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.NetworkAction;
 import pl.north93.zgame.api.global.network.proxy.ProxyInstanceInfo;
@@ -51,7 +51,7 @@ public class Network extends NorthCommand
             else if ("daemons".equals(args.asString(0)))
             {
                 sender.sendRawMessage("&cPołączone demony");
-                for (final RemoteDaemon daemon : this.networkManager.getDaemons())
+                for (final DaemonDto daemon : this.networkManager.getDaemons())
                 {
                     sender.sendRawMessage("|- " + daemon.getName());
                     sender.sendRawMessage("  |- Nazwa hosta: " + daemon.getHostName());

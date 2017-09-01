@@ -9,8 +9,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.deployment.DaemonRpc;
-import pl.north93.zgame.api.global.deployment.RemoteDaemon;
+import pl.north93.zgame.api.global.network.daemon.DaemonRpc;
+import pl.north93.zgame.api.global.network.daemon.DaemonDto;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
@@ -20,22 +20,22 @@ import pl.north93.zgame.daemon.servers.ServersManager;
 public class DaemonComponent extends Component
 {
     @Inject
-    private IRpcManager         rpcManager;
-    private DaemonConfig        config;
-    private Value<RemoteDaemon> daemonInfo;
-    private ServersManager      serversManager;
+    private IRpcManager      rpcManager;
+    private DaemonConfig     config;
+    private Value<DaemonDto> daemonInfo;
+    private ServersManager   serversManager;
 
     @Override
     protected void enableComponent()
     {
         this.config = loadConfigFile(DaemonConfig.class, API.getFile("daemon.yml"));
-        final RemoteDaemon daemon = RemoteDaemon.builder().setName(this.getApiCore().getId())
-                                                .setHostName(this.getApiCore().getHostName())
-                                                .setMaxRam(this.config.maxMemory)
-                                                .setRamUsed(0)
-                                                .setServerCount(0)
-                                                .setAcceptingServers(true)
-                                                .build();
+        final DaemonDto daemon = DaemonDto.builder().setName(this.getApiCore().getId())
+                                          .setHostName(this.getApiCore().getHostName())
+                                          .setMaxRam(this.config.maxMemory)
+                                          .setRamUsed(0)
+                                          .setServerCount(0)
+                                          .setAcceptingServers(true)
+                                          .build();
 
         final IObservationManager observation = this.getApiCore().getComponentManager().getComponent("API.Database.Redis.Observer");
         this.daemonInfo = observation.of(daemon);
@@ -52,7 +52,7 @@ public class DaemonComponent extends Component
         this.serversManager.stopServerManager();
     }
 
-    public Value<RemoteDaemon> getDaemonInfo()
+    public Value<DaemonDto> getDaemonInfo()
     {
         return this.daemonInfo;
     }

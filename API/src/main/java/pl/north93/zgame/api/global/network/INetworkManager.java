@@ -2,7 +2,7 @@ package pl.north93.zgame.api.global.network;
 
 import java.util.Set;
 
-import pl.north93.zgame.api.global.deployment.RemoteDaemon;
+import pl.north93.zgame.api.global.network.daemon.DaemonDto;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.proxy.ProxyInstanceInfo;
 import pl.north93.zgame.api.global.network.server.IServersManager;
@@ -26,7 +26,7 @@ public interface INetworkManager
      *
      * @return lista demonów.
      */
-    Set<RemoteDaemon> getDaemons();
+    Set<DaemonDto> getDaemons();
 
     void broadcastNetworkAction(NetworkAction networkAction);
 

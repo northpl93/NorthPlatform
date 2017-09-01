@@ -3,7 +3,7 @@ package pl.north93.zgame.daemon;
 import java.util.UUID;
 
 import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.deployment.DaemonRpc;
+import pl.north93.zgame.api.global.network.daemon.DaemonRpc;
 import pl.north93.zgame.daemon.servers.ServerInstance;
 
 public class DaemonRpcImpl implements DaemonRpc

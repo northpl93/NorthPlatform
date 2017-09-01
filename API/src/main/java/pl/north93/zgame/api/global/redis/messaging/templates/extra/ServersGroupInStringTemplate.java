@@ -4,7 +4,7 @@ import org.msgpack.core.MessageBufferPacker;
 import org.msgpack.core.MessageUnpacker;
 
 import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
+import pl.north93.zgame.api.global.network.server.group.IServersGroup;
 import pl.north93.zgame.api.global.redis.messaging.Template;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 

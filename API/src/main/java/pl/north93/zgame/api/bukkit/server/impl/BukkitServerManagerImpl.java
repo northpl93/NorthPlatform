@@ -20,13 +20,13 @@ import pl.north93.zgame.api.bukkit.server.event.ShutdownScheduledEvent;
 import pl.north93.zgame.api.bukkit.utils.SimpleCountdown;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
-import pl.north93.zgame.api.global.network.impl.ServerImpl;
+import pl.north93.zgame.api.global.network.impl.ServerDto;
 import pl.north93.zgame.api.global.network.server.IServerRpc;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.network.server.ServerType;
-import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 
@@ -34,22 +34,30 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
 {
     private static final int TIME_TO_NEXT_TRY = 30 * 20; // 30 sekund
     @Inject
-    private BukkitApiCore       apiCore;
+    private BukkitApiCore    apiCore;
     @Inject
-    private IObservationManager observer;
+    private INetworkManager  networkManager;
     @Inject
-    private IRpcManager         rpcManager;
+    private IRpcManager      rpcManager;
     // - - - - - - -
-    private Value<ServerImpl>   serverValue;
-    private SimpleCountdown     countdown;
+    private Value<ServerDto> serverValue;
+    private SimpleCountdown  countdown;
 
     @Override
     protected void enableComponent()
     {
-        Bukkit.getScheduler().runTask(this.apiCore.getPluginMain(), () -> Bukkit.getPluginManager().callEvent(new ServerStartedEvent()));
+        this.apiCore.run(() ->
+        {
+            // po pelnym uruchomieniu serwera zmianiamy stan na wlaczony i wykonujemy event
+            this.changeState(ServerState.WORKING);
+            this.apiCore.callEvent(new ServerStartedEvent());
+        });
+
         this.rpcManager.addRpcImplementation(IServerRpc.class, new ServerRpcImpl());
         this.countdown = new SimpleCountdown(TIME_TO_NEXT_TRY).endCallback(this::tryShutdown);
-        this.serverValue = this.observer.get(ServerImpl.class, this.apiCore.getId());
+
+        this.serverValue = this.networkManager.getServers().unsafe().getServerDto(this.apiCore.getServerId());
+
         if (! this.serverValue.isAvailable())
         {
             this.serverValue.set(this.generateServer());
@@ -119,10 +127,10 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
         this.countdown.start();
     }
 
-    private ServerImpl generateServer()
+    private ServerDto generateServer()
     {
         final Properties properties = System.getProperties();
-        return new ServerImpl(this.apiCore.getServerId(), false, ServerType.valueOf(properties.getProperty("northplatform.servertype")), ServerState.STARTING, JoiningPolicy.EVERYONE, Bukkit.getIp(), Bukkit.getPort());
+        return new ServerDto(this.apiCore.getServerId(), false, ServerType.valueOf(properties.getProperty("northplatform.servertype")), ServerState.STARTING, JoiningPolicy.EVERYONE, Bukkit.getIp(), Bukkit.getPort());
     }
 
     @Override

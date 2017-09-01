@@ -4,9 +4,7 @@ components:
     description: "Manages Minecraft network."
     dependencies:
       - API.Database.StorageConnector
-      - API.Database.Redis.MessagePackSerializer
-      - API.Database.Redis.Subscriber
-      - API.Database.Redis.RPC
+      - NetworkController.ConfigServer
 
   - name: NetworkController.ConfigServer
     mainClass: "pl.north93.zgame.controller.configserver.ConfigServerComponent"
@@ -15,21 +13,13 @@ components:
       - API.Database.Redis.RPC
       - API.Database.Redis.Observer
 
-  - name: NetworkController.ConfigBroadcaster
-    mainClass: "pl.north93.zgame.controller.configbroadcaster.ConfigBroadcaster"
-    description: "Legacy component that registers base configs in ConfigServer."
-    dependencies:
-      - NetworkController.ConfigServer
-
   - name: NetworkController.ServersManager
     mainClass: "pl.north93.zgame.controller.servers.NetworkServersManager"
     description: "Manages all servers in network."
     dependencies:
-      - NetworkController.Core
-      - NetworkController.ConfigBroadcaster
-      - API.Database.Redis.Observer
       - API.Database.StorageConnector
-      - API.Database.Redis.MessagePackSerializer
+      - NetworkController.Core
+      - NetworkController.ConfigServer
 
   - name: NetworkController.PlayersDataFixer
     mainClass: "pl.north93.zgame.controller.playerfixer.PlayersDataFixer"

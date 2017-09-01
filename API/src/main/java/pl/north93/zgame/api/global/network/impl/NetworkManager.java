@@ -20,7 +20,7 @@ import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.data.players.IPlayersData;
-import pl.north93.zgame.api.global.deployment.RemoteDaemon;
+import pl.north93.zgame.api.global.network.daemon.DaemonDto;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.NetworkAction;
@@ -59,7 +59,7 @@ class NetworkManager extends Component implements INetworkManager
     {
         this.networkMeta = this.observationManager.get(NetworkMeta.class, "configs_networkMeta"); // todo zamienic to na odwolanie do systemu configow
         this.redisSubscriber.subscribe(NETWORK_ACTION, this::handleNetworkAction);
-        this.serversManager = new ServersManagerImpl(this.storage, this, this.msgPack, this.observationManager);
+        this.serversManager = new ServersManagerImpl(this.observationManager);
         this.playersManager = new PlayersManagerImpl(this, this.playersData, this.observationManager, this.rpcManager);
     }
 
@@ -88,10 +88,10 @@ class NetworkManager extends Component implements INetworkManager
     }
 
     @Override
-    public Set<RemoteDaemon> getDaemons()
+    public Set<DaemonDto> getDaemons()
     {
         final RedisCommands<String, byte[]> redis = this.storage.getRedis();
-        return redis.keys(DAEMON + "*").stream().map(id -> this.msgPack.deserialize(RemoteDaemon.class, redis.get(id))).collect(Collectors.toSet());
+        return redis.keys(DAEMON + "*").stream().map(id -> this.msgPack.deserialize(DaemonDto.class, redis.get(id))).collect(Collectors.toSet());
     }
 
     /**

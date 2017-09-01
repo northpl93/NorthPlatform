@@ -15,7 +15,7 @@ import org.diorite.utils.DioriteUtils;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.PostInject;
-import pl.north93.zgame.api.global.deployment.ServerPattern;
+import pl.north93.zgame.api.global.network.daemon.ServerPattern;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
 import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.utils.JavaArguments;

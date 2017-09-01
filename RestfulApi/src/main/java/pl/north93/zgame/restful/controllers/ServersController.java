@@ -1,7 +1,5 @@
 package pl.north93.zgame.restful.controllers;
 
-import static java.util.Optional.ofNullable;
-
 import static spark.Spark.halt;
 
 
@@ -12,10 +10,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.deployment.ServerPattern;
-import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.server.Server;
+import pl.north93.zgame.api.global.network.server.group.IServersGroup;
 import pl.north93.zgame.restful.models.ServerModel;
 import spark.Request;
 import spark.Response;
@@ -47,9 +44,8 @@ public class ServersController
         final boolean isDaemon = s.isLaunchedViaDaemon();
         final String state = s.getServerState().name();
         final String joinPolicy = s.getJoiningPolicy().name();
-        final String pattern = ofNullable(s.getServerPattern()).map(ServerPattern::getPatternName).orElse("");
         final String group = s.getServersGroup().map(IServersGroup::getName).orElse("");
-        return new ServerModel(s.getUuid(), type, isDaemon, state, joinPolicy, pattern, group);
+        return new ServerModel(s.getUuid(), type, isDaemon, state, joinPolicy, group);
     }
 
     @Override

@@ -1,30 +1,28 @@
 package pl.north93.zgame.api.global.network.impl;
 
-import static pl.north93.zgame.api.global.redis.RedisKeys.SERVER;
-
-
 import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.deployment.ServerPattern;
-import pl.north93.zgame.api.global.deployment.serversgroup.IServersGroup;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.network.server.ServerType;
+import pl.north93.zgame.api.global.network.server.group.IServersGroup;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackNullable;
-import pl.north93.zgame.api.global.redis.messaging.templates.extra.ServerPatternInStringTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.extra.ServersGroupInStringTemplate;
-import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.redis.rpc.IRpcTarget;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 
-public class ServerImpl implements Server, ServerProxyData
+/**
+ * Obiekt przechowujacy dane o serwerze uruchomionym w sieci.
+ * Sluzy do przekazywania danych przez redisa.
+ */
+public class ServerDto implements Server, ServerProxyData
 {
     private UUID          serverId;
     private String        connectIp;
@@ -37,15 +35,12 @@ public class ServerImpl implements Server, ServerProxyData
     @MsgPackNullable
     @MsgPackCustomTemplate(ServersGroupInStringTemplate.class)
     private IServersGroup serversGroup;
-    @MsgPackNullable
-    @MsgPackCustomTemplate(ServerPatternInStringTemplate.class)
-    private ServerPattern serverPattern;
 
-    public ServerImpl() // for serialization
+    public ServerDto() // for serialization
     {
     }
 
-    public ServerImpl(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy, final String connectIp, final Integer connectPort)
+    public ServerDto(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy, final String connectIp, final Integer connectPort)
     {
         this.serverId = serverId;
         this.connectIp = connectIp;
@@ -57,17 +52,10 @@ public class ServerImpl implements Server, ServerProxyData
         this.shutdown = false;
     }
 
-    public ServerImpl(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy, final String connectIp, final Integer connectPort, final IServersGroup serversGroup, final ServerPattern serverPattern)
+    public ServerDto(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy, final String connectIp, final Integer connectPort, final IServersGroup serversGroup)
     {
         this(serverId, isLaunchedViaDaemon, serverType, serverState, joiningPolicy, connectIp, connectPort);
         this.serversGroup = serversGroup;
-        this.serverPattern = serverPattern;
-    }
-
-    @Override
-    public ObjectKey getKey()
-    {
-        return new ObjectKey(SERVER + this.serverId);
     }
 
     @Override
@@ -104,12 +92,6 @@ public class ServerImpl implements Server, ServerProxyData
     public JoiningPolicy getJoiningPolicy()
     {
         return this.joiningPolicy;
-    }
-
-    @Override
-    public ServerPattern getServerPattern()
-    {
-        return this.serverPattern;
     }
 
     @Override
@@ -161,15 +143,5 @@ public class ServerImpl implements Server, ServerProxyData
     public String toString()
     {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("serverId", this.serverId).append("isLaunchedViaDaemon", this.isLaunchedViaDaemon).append("serverType", this.serverType).append("serverState", this.serverState).toString();
-    }
-
-    public static Builder builder()
-    {
-        return new Builder();
-    }
-
-    public static final class Builder // ServerImpl builder
-    {
-        // TODO
     }
 }

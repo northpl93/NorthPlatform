@@ -1,8 +1,11 @@
-package pl.north93.zgame.api.global.deployment;
+package pl.north93.zgame.controller.servers.cfg;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import java.util.List;
-
-import org.diorite.cfg.annotations.CfgComment;
 
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
@@ -10,18 +13,20 @@ import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
 /**
  * Reprezentuje wzór według którego tworzone będą instancje serwerów.
  */
-public class ServerPattern
+@XmlRootElement(name = "serverPattern")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class ServerPatternConfig
 {
-    @CfgComment("Nazwa tego wzoru")
+    @XmlElement
     private String       patternName;
-    @CfgComment("Nazwa silnika który zostanie użyty")
+    @XmlElement
     private String       engineName;
-    @CfgComment("Maksymalna ilość pamięci (w MB)")
+    @XmlElement
     private Integer      maxMemory;
-    @CfgComment("Startowa ilość pamięci (w MB)")
+    @XmlElement
     private Integer      startMemory;
     @MsgPackCustomTemplate(ArrayListTemplate.class)
-    @CfgComment("Lista komponentów z których będzie budowana przestrzeń robocza serwera")
+    @XmlElement
     private List<String> components;
 
     public String getPatternName()
