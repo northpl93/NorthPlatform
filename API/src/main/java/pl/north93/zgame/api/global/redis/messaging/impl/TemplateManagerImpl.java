@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.global.redis.messaging.impl;
 
+import static java.lang.reflect.Modifier.isAbstract;
+
+
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Date;
@@ -139,7 +142,7 @@ public class TemplateManagerImpl extends Component implements TemplateManager
             return this.getTemplate((Class<T>) clazz.getAnnotation(MsgPackUseTemplateOf.class).value());
         }
 
-        if (clazz.isInterface() || clazz == Object.class)
+        if (clazz.isInterface() || isAbstract(clazz.getModifiers()) || clazz == Object.class)
         {
             return new DynamicTemplate<>(); // templatka która będzie w locie zapisywać konkretny typ i go odczytywać
         }
