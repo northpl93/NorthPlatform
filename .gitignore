@@ -72,3 +72,7 @@ gradle.run.settings.xml
 mavenVersion.xml
 ui.lnf.xml
 dependency-reduced-pom.xml
+
+# API test enviroment
+/API/logs/
+/API/connection.yml
