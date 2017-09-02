@@ -48,11 +48,11 @@ public class XmlClassEquipmentInfo
     {
         PlayerInventory inv = player.getPlayer().getInventory();
         
+        inv.setContents(getInventoryContents(player));
+        
         inv.setChestplate(chestplate.getItemStack(player));
         inv.setLeggings(leggins.getItemStack(player));
         inv.setBoots(boots.getItemStack(player));
-        
-        inv.setContents(getInventoryContents(player));
     }
     
     private ItemStack[] getInventoryContents(GoldHunterPlayer player)
