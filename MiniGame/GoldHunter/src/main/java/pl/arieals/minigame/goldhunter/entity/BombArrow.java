@@ -1,5 +1,6 @@
 package pl.arieals.minigame.goldhunter.entity;
 
+import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 
@@ -17,10 +18,24 @@ public class BombArrow extends HomingArrow
     {
         super.onTick();
         
-        if ( onGround )
+        if ( inGround )
         {
             die();
             makeExplosion();
+            return;
+        }
+        
+        spawnParticle();
+    }
+    
+    private void spawnParticle()
+    {
+        if ( !isInGround() )
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                this.world.getWorld().spawnParticle(Particle.DRIP_LAVA, this.locX + this.motX * i / 4.0D, this.locY + this.motY * i / 4.0D, this.locZ + this.motZ * i / 4.0D, 2, 0, 0, 0, 0, null);
+            }
         }
     }
     
