@@ -47,6 +47,6 @@ public class BombArrow extends HomingArrow
     
     private void makeExplosion()
     {
-        world.getWorld().createExplosion(locX, locY - 1, locZ, 3, false, false);
+        world.getWorld().createExplosion(locX, locY - 1, locZ, 3, true, false);
     }
 }
