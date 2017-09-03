@@ -1,10 +1,13 @@
 package pl.arieals.minigame.goldhunter.listener;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
+import pl.north93.zgame.api.bukkit.utils.itemstack.MaterialUtils;
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -28,6 +31,26 @@ public class DamageListener implements AutoListener
             event.setCancelled(true);
             player.setNoFallDamageTicks(0);
             return;
+        }
+    }
+    
+    @EventHandler
+    public void onPlayerDamageByPlayer(EntityDamageByEntityEvent event)
+    {
+        if ( !( event.getDamager() instanceof Player ) )
+        {
+            return;
+        }
+        
+        GoldHunterPlayer damager = goldHunter.getPlayer((Player) event.getDamager());
+        if ( damager == null )
+        {
+            return;
+        }
+        
+        if ( !MaterialUtils.isSword(damager.getPlayer().getInventory().getItemInMainHand().getType()) )
+        {
+            event.setDamage(1);
         }
         
         // TODO: obrazenia
