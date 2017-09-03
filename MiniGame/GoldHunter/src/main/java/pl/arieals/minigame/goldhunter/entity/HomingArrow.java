@@ -26,7 +26,7 @@ public class HomingArrow extends EntityTippedArrow
         super(((CraftWorld) world).getHandle(), ((CraftLivingEntity) shooter).getHandle());
         
         if ( target != null )
-        {
+        { 
             this.target = ((CraftLivingEntity) target).getHandle();
         }
         
@@ -65,7 +65,7 @@ public class HomingArrow extends EntityTippedArrow
     public final void m() // onTick
     {
         super.m();
-     
+        
         try
         {
             onTick();
@@ -84,7 +84,7 @@ public class HomingArrow extends EntityTippedArrow
             return;
         }
         
-        if ( this.onGround || target.getWorld() != this.getWorld() || target.dead )
+        if ( this.inGround || target.getWorld() != this.getWorld() || target.dead )
         {
             target = null;
             return;
@@ -97,25 +97,25 @@ public class HomingArrow extends EntityTippedArrow
     {
         double currentSpeed = getBukkitEntity().getVelocity().length();
         
-        Vector toTarget = target.getBukkitEntity().getLocation().add(0, 1.2, 0).subtract(getBukkitEntity().getLocation()).toVector();
+        Vector toTarget = target.getBukkitEntity().getLocation().add(0, 1.3, 0).subtract(getBukkitEntity().getLocation()).toVector();
         
         Vector velocityDir = getBukkitEntity().getVelocity().normalize();
         Vector toTargetDir = toTarget.clone().normalize();
         
-        double angle = velocityDir.angle(toTargetDir);
+        double distance = target.getBukkitEntity().getLocation().distance(getBukkitEntity().getLocation());
+        double targetRatio = 1 / Math.sqrt(distance);
         
-        double newSpeed = 0.9 * currentSpeed + 0.14;
+        Vector newDir;
+        if ( targetRatio > 1 )
+        {
+            newDir = toTargetDir;
+        }
+        else
+        {
+            newDir = velocityDir.clone().multiply(1 - targetRatio).add(toTargetDir.multiply(targetRatio));
+        }
         
-        Vector newVelocity;
-        if ( angle < 0.12 )
-        {
-            newVelocity = velocityDir.clone().multiply(newSpeed);
-        }
-        else 
-        {
-            Vector newDir = velocityDir.clone().multiply((angle - 0.12D) / angle).add(toTargetDir.clone().multiply(0.12D / angle));
-            newVelocity = newDir.normalize().multiply(newSpeed);
-        }
+        Vector newVelocity = newDir.normalize().multiply(currentSpeed);
         
         getBukkitEntity().setVelocity(newVelocity);
     }
