@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import net.minecraft.server.v1_10_R1.EntityLiving;
 import net.minecraft.server.v1_10_R1.EntityPlayer;
+import net.minecraft.server.v1_10_R1.MinecraftServer;
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
@@ -31,11 +32,29 @@ public class PoisonArrow extends HomingArrow
     protected void onTick()
     {
         super.onTick();
-        
-        for (int i = 0; i < 4; i++)
+        spawnParticle();
+    }
+    
+    private void spawnParticle()
+    {
+        if ( !isInGround() )
         {
-            this.world.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, this.locX + this.motX * i / 4.0D, this.locY + this.motY * i / 4.0D, this.locZ + this.motZ * i / 4.0D, 10, 0, 0, 0, 0, null);
-            //this.world.addParticle(EnumParticle.VILLAGER_HAPPY, this.locX + this.motX * i / 4.0D, this.locY + this.motY * i / 4.0D, this.locZ + this.motZ * i / 4.0D, 0, 0, 0);
+            for (int i = 0; i < 4; i++)
+            {
+                double offsetX = random.nextGaussian() * 0.09;
+                double offsetY = random.nextGaussian() * 0.09;
+                double offsetZ = random.nextGaussian() * 0.09;
+                
+                this.world.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, this.locX + this.motX * i / 4.0, this.locY + this.motY * i / 4.0, this.locZ + this.motZ * i / 4.0, 2, offsetX, offsetY, offsetZ, 0, null);
+            }
+        }
+        else if ( MinecraftServer.currentTick % 20 == 0 )
+        {
+            double offsetX = random.nextGaussian() * 0.22;
+            double offsetY = random.nextGaussian() * 0.22;
+            double offsetZ = random.nextGaussian() * 0.22;
+            
+            this.world.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, locX, locY, locZ, 1, offsetX, offsetY, offsetZ, 0, null);
         }
     }
     
