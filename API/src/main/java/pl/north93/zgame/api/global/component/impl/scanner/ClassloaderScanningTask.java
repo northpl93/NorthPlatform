@@ -114,13 +114,24 @@ public class ClassloaderScanningTask
                 continue;
             }
 
+            if (! clazz.isInterface() && ! clazz.isEnum())
+            {
+                // nie probujemy instalowac injectora w enumach i interfejsach
+                // zeby nie marnowac czasu.
+                this.injectorInstaller.tryInstall(ctClass);
+            }
+
             final AbstractBeanContext beanContext = this.manager.getOwningContext(clazz);
-            this.injectorInstaller.tryInstall(ctClass);
 
             // dodajemy pozostale zadania do kolejki zeby wykonaly sie w miare mozliwosci
             this.pendingTasks.add(new StaticScanningTask(this, clazz, ctClass, beanContext));
             this.pendingTasks.add(new ConstructorScanningTask(this, clazz, ctClass, beanContext));
             this.pendingTasks.add(new MethodScanningTask(this, clazz, ctClass, beanContext));
+            if (clazz.isEnum())
+            {
+                // dodatkowe wsparcie do wstrzykiwania wartosci w enumach
+                this.pendingTasks.add(new EnumScanningTask(this, clazz, ctClass, beanContext));
+            }
         }
 
         this.processQueue();
