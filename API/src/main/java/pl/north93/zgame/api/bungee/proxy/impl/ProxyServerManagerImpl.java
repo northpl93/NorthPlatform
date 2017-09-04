@@ -1,0 +1,76 @@
+package pl.north93.zgame.api.bungee.proxy.impl;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import net.md_5.bungee.api.ProxyServer;
+import pl.north93.zgame.api.bungee.BungeeApiCore;
+import pl.north93.zgame.api.bungee.proxy.IProxyServerList;
+import pl.north93.zgame.api.bungee.proxy.IProxyServerManager;
+import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.network.INetworkManager;
+import pl.north93.zgame.api.global.network.proxy.ProxyInstanceInfo;
+import pl.north93.zgame.api.global.network.proxy.ProxyRpc;
+import pl.north93.zgame.api.global.redis.observable.Hash;
+import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
+
+public class ProxyServerManagerImpl extends Component implements IProxyServerManager
+{
+    private static final int UPDATE_PROXY_DATA_EVERY = 20;
+    @Inject
+    private IRpcManager         rpcManager;
+    @Inject
+    private INetworkManager     networkManager;
+    private ProxyServerListImpl proxyServerList;
+
+    @Override
+    protected void enableComponent()
+    {
+        this.proxyServerList = new ProxyServerListImpl();
+        this.proxyServerList.synchronizeServers();
+
+        this.rpcManager.addRpcImplementation(ProxyRpc.class, new ProxyRpcImpl());
+
+        this.uploadInfo();
+        this.getApiCore().getPlatformConnector().runTaskAsynchronously(this::uploadInfo, UPDATE_PROXY_DATA_EVERY);
+    }
+
+    @Override
+    protected void disableComponent()
+    {
+        final Hash<ProxyInstanceInfo> hash = this.networkManager.getProxies().unsafe().getHash();
+        hash.delete(this.getApiCore().getId());
+    }
+
+    @Override
+    public IProxyServerList getServerList()
+    {
+        return this.proxyServerList;
+    }
+
+    private void uploadInfo()
+    {
+        final Hash<ProxyInstanceInfo> hash = this.networkManager.getProxies().unsafe().getHash();
+        hash.put(this.getApiCore().getId(), this.generateInfo());
+    }
+
+    private ProxyInstanceInfo generateInfo()
+    {
+        final ProxyInstanceInfo proxyInstanceInfo = new ProxyInstanceInfo();
+
+        final BungeeApiCore apiCore = (BungeeApiCore) this.getApiCore();
+
+        proxyInstanceInfo.setId(apiCore.getProxyConfig().getUniqueName());
+        proxyInstanceInfo.setHostname(apiCore.getHostName());
+        proxyInstanceInfo.setOnlinePlayers(ProxyServer.getInstance().getOnlineCount());
+
+        return proxyInstanceInfo;
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
+    }
+}

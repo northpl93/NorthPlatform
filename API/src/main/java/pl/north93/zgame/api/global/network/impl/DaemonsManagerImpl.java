@@ -20,7 +20,7 @@ class DaemonsManagerImpl implements IDaemonsManager
     }
 
     @Override
-    public Set<DaemonDto> getDaemons()
+    public Set<DaemonDto> all()
     {
         return this.daemons.values();
     }

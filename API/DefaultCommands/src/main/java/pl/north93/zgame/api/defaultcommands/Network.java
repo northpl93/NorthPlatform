@@ -44,7 +44,7 @@ public class Network extends NorthCommand
             if ("proxies".equals(args.asString(0)))
             {
                 sender.sendRawMessage("&cPołączone serwery proxy");
-                for (final ProxyInstanceInfo proxyInstanceInfo : this.networkManager.getProxies().getProxyServers())
+                for (final ProxyInstanceInfo proxyInstanceInfo : this.networkManager.getProxies().all())
                 {
                     sender.sendRawMessage("|- " + proxyInstanceInfo.getId());
                     sender.sendRawMessage("  |- Liczba graczy: " + proxyInstanceInfo.getOnlinePlayers());
@@ -54,7 +54,7 @@ public class Network extends NorthCommand
             else if ("daemons".equals(args.asString(0)))
             {
                 sender.sendRawMessage("&cPołączone demony");
-                for (final DaemonDto daemon : this.networkManager.getDaemons().getDaemons())
+                for (final DaemonDto daemon : this.networkManager.getDaemons().all())
                 {
                     sender.sendRawMessage("|- " + daemon.getName());
                     sender.sendRawMessage("  |- Nazwa hosta: " + daemon.getHostName());

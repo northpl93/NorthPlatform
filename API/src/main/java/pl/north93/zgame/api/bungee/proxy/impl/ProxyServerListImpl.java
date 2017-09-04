@@ -1,7 +1,8 @@
-package pl.north93.zgame.api.bungee.mods.impl;
+package pl.north93.zgame.api.bungee.proxy.impl;
 
 import java.net.InetSocketAddress;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -9,23 +10,22 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import pl.north93.zgame.api.bungee.mods.IBungeeServersManager;
+import pl.north93.zgame.api.bungee.proxy.IProxyServerList;
 import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
 
-/**
- * Klasa zarządzająca serwerami dostępnymi w Proxy.
- * Odpowiada za modyfikacje refleksjami tej listy.
- */
-public class BungeeServersManager implements IBungeeServersManager
+public class ProxyServerListImpl implements IProxyServerList
 {
     private final ProxyServer proxyServer = ProxyServer.getInstance();
+    @Inject
+    private Logger logger;
 
     @Override
     public void synchronizeServers()
     {
-        API.getLogger().info("Synchronizing servers...");
+        this.logger.info("Synchronizing servers...");
         this.removeAllServers();
         for (final Server server : API.getNetworkManager().getServers().all())
         {
@@ -66,6 +66,6 @@ public class BungeeServersManager implements IBungeeServersManager
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("proxyServer", this.proxyServer).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

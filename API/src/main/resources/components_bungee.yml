@@ -1,0 +1,10 @@
+# Lista komponentów dla platformy BUNGEE
+components:
+  - name: API.ProxyServerManager
+    mainClass: "pl.north93.zgame.api.bungee.proxy.impl.ProxyServerManagerImpl"
+    description: "Core component that manages the proxy instance."
+    dependencies:
+      - API.Database.Redis.Observer
+      - API.Database.Redis.RPC
+    platforms:
+      - BUNGEE

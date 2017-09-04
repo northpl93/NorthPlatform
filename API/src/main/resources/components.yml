@@ -1,6 +1,7 @@
 # Dołączenie pozostałych plików
 include:
   - components_bukkit.yml
+  - components_bungee.yml
 
 # Lista komponentów dla platformy STANDALONE
 components:

@@ -1,8 +1,8 @@
-package pl.north93.zgame.api.bungee.mods;
+package pl.north93.zgame.api.bungee.proxy;
 
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
 
-public interface IBungeeServersManager
+public interface IProxyServerList
 {
     void synchronizeServers();
 

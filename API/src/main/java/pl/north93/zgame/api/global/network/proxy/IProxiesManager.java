@@ -22,7 +22,7 @@ public interface IProxiesManager
      *
      * @return lista serwerów proxy.
      */
-    Set<ProxyInstanceInfo> getProxyServers();
+    Set<ProxyInstanceInfo> all();
 
     Unsafe unsafe();
 

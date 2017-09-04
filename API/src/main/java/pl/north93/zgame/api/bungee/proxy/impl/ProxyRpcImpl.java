@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.bungee;
+package pl.north93.zgame.api.bungee.proxy.impl;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -6,19 +6,20 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
+import pl.north93.zgame.api.bungee.BungeeApiCore;
+import pl.north93.zgame.api.bungee.proxy.IProxyServerManager;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.proxy.ProxyRpc;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.network.server.joinaction.JoinActionsContainer;
 
 public class ProxyRpcImpl implements ProxyRpc
 {
-    private final BungeeApiCore apiCore;
+    @Inject
+    private BungeeApiCore apiCore;
+    @Inject
+    private IProxyServerManager proxyServerManager;
     private final ProxyServer proxy = ProxyServer.getInstance();
-
-    public ProxyRpcImpl(final BungeeApiCore apiCore)
-    {
-        this.apiCore = apiCore;
-    }
 
     @Override
     public Boolean isOnline(final String nick)
@@ -59,19 +60,19 @@ public class ProxyRpcImpl implements ProxyRpc
     @Override
     public void addServer(final ServerProxyData proxyData)
     {
-        this.apiCore.getServersManager().addServer(proxyData);
+        this.proxyServerManager.getServerList().addServer(proxyData);
     }
 
     @Override
     public void removeServer(final String serverName)
     {
-        this.apiCore.getServersManager().removeServer(serverName);
+        this.proxyServerManager.getServerList().removeServer(serverName);
     }
 
     @Override
     public void removeAllServers()
     {
-        this.apiCore.getServersManager().removeAllServers();
+        this.proxyServerManager.getServerList().removeAllServers();
     }
 
     @Override

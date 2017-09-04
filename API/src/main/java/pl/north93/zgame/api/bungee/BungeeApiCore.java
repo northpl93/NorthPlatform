@@ -7,7 +7,8 @@ import static pl.north93.zgame.api.global.redis.RedisKeys.PROXY_INSTANCE;
 import java.io.File;
 import java.util.logging.Logger;
 
-import com.lambdaworks.redis.api.sync.RedisCommands;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.PluginManager;
@@ -17,20 +18,14 @@ import pl.north93.zgame.api.bungee.connection.NorthReconnectHandler;
 import pl.north93.zgame.api.bungee.listeners.PermissionsListener;
 import pl.north93.zgame.api.bungee.listeners.PingListener;
 import pl.north93.zgame.api.bungee.listeners.PlayerListener;
-import pl.north93.zgame.api.bungee.mods.IBungeeServersManager;
-import pl.north93.zgame.api.bungee.mods.impl.BungeeServersManager;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
-import pl.north93.zgame.api.global.data.StorageConnector;
-import pl.north93.zgame.api.global.network.proxy.ProxyInstanceInfo;
-import pl.north93.zgame.api.global.network.proxy.ProxyRpc;
 
 public class BungeeApiCore extends ApiCore
 {
-    private final Main            bungeePlugin;
-    private IBungeeServersManager serversManager;
-    private ConnectionManager     connectionManager;
-    private ProxyInstanceConfig   config;
+    private final Main          bungeePlugin;
+    private ConnectionManager   connectionManager;
+    private ProxyInstanceConfig config;
 
     public BungeeApiCore(final Main bungeePlugin)
     {
@@ -77,15 +72,6 @@ public class BungeeApiCore extends ApiCore
         this.connectionManager = new ConnectionManager();
         ProxyServer.getInstance().setReconnectHandler(new NorthReconnectHandler(this));
 
-        this.getRpcManager().addRpcImplementation(ProxyRpc.class, new ProxyRpcImpl(this));
-
-        this.serversManager = new BungeeServersManager();
-        this.serversManager.synchronizeServers();
-
-        this.sendProxyInfo();
-
-        this.getPlatformConnector().runTaskAsynchronously(this::sendProxyInfo, 300);
-
         final PluginManager pluginManager = this.bungeePlugin.getProxy().getPluginManager();
         pluginManager.registerListener(this.bungeePlugin, new PingListener());
         pluginManager.registerListener(this.bungeePlugin, new PlayerListener(this));
@@ -95,9 +81,6 @@ public class BungeeApiCore extends ApiCore
     @Override
     protected void stop()
     {
-        final StorageConnector storageConnector = this.getComponentManager().getComponent("API.Database.StorageConnector"); // TODO
-        final RedisCommands<String, byte[]> redis = storageConnector.getRedis();
-        redis.del(this.getId());
     }
 
     @Override
@@ -116,26 +99,14 @@ public class BungeeApiCore extends ApiCore
         return this.config;
     }
 
-    public IBungeeServersManager getServersManager()
-    {
-        return this.serversManager;
-    }
-
     public Main getBungeePlugin()
     {
         return this.bungeePlugin;
     }
 
-    private void sendProxyInfo()
+    @Override
+    public String toString()
     {
-        final StorageConnector storageConnector = this.getComponentManager().getComponent("API.Database.StorageConnector"); // TODO
-        final ProxyInstanceInfo proxyInstanceInfo = new ProxyInstanceInfo();
-
-        proxyInstanceInfo.setId(this.config.getUniqueName());
-        proxyInstanceInfo.setHostname(this.getHostName());
-        proxyInstanceInfo.setOnlinePlayers(this.bungeePlugin.getProxy().getOnlineCount());
-
-        final RedisCommands<String, byte[]> redis = storageConnector.getRedis();
-        redis.set(this.getId(), this.getMessagePackTemplates().serialize(proxyInstanceInfo));
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("bungeePlugin", this.bungeePlugin).toString();
     }
 }

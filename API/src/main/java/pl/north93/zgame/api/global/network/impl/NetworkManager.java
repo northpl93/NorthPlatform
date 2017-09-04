@@ -12,7 +12,6 @@ import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
 import pl.north93.zgame.api.global.network.NetworkMeta;
 import pl.north93.zgame.api.global.network.event.NetworkShutdownNetEvent;
-import pl.north93.zgame.api.global.network.proxy.IProxiesManager;
 import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
@@ -36,7 +35,7 @@ class NetworkManager extends Component implements INetworkManager
     @Override
     protected void enableComponent()
     {
-
+        this.proxiesManager = new ProxiesManagerImpl(this.observationManager);
         this.daemonsManager = new DaemonsManagerImpl(this.observationManager);
         this.serversManager = new ServersManagerImpl(this.observationManager);
         this.playersManager = new PlayersManagerImpl(this, this.playersData, this.observationManager, this.rpcManager);
@@ -65,9 +64,9 @@ class NetworkManager extends Component implements INetworkManager
     }
 
     @Override
-    public IProxiesManager getProxies()
+    public ProxiesManagerImpl getProxies()
     {
-        return null;
+        return this.proxiesManager;
     }
 
     @Override

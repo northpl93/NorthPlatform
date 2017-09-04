@@ -9,5 +9,10 @@ public interface IDaemonsManager
      *
      * @return lista demonów.
      */
-    Set<DaemonDto> getDaemons();
+    Set<DaemonDto> all();
+
+    interface Unsafe
+    {
+
+    }
 }

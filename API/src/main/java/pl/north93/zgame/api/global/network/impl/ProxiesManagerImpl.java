@@ -23,11 +23,11 @@ public class ProxiesManagerImpl implements IProxiesManager
     @Override
     public int onlinePlayersCount()
     {
-        return this.getProxyServers().stream().mapToInt(ProxyInstanceInfo::getOnlinePlayers).sum();
+        return this.all().stream().mapToInt(ProxyInstanceInfo::getOnlinePlayers).sum();
     }
 
     @Override
-    public Set<ProxyInstanceInfo> getProxyServers()
+    public Set<ProxyInstanceInfo> all()
     {
         return this.proxies.values();
     }
