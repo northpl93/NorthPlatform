@@ -32,14 +32,15 @@ public class ArenaEndListener implements Listener
             return;
         }
 
-        if (arena.getGamePhase() != GamePhase.STARTED)
+        final GamePhase gamePhase = arena.getGamePhase();
+        if (gamePhase == GamePhase.INITIALISING || gamePhase == GamePhase.LOBBY)
         {
-            // W lobby nie trzeba nic robic
             // W initialising nic nie robimy zeby nie zbugowac
-            // W postgame nic nie robimy bo arena sama zakonczy gre
+            // W lobby nie trzeba nic robic
             return;
         }
 
+        // jak arena byla w trakcie gry lub po grze to przelaczamy do ponownej inicjalizacji
         this.apiCore.getLogger().log(Level.INFO, "Arena {0} is empty, switching to INITIALISING...", arena.getId());
         this.apiCore.run(() ->
         {
@@ -56,7 +57,7 @@ public class ArenaEndListener implements Listener
             return;
         }
 
-        this.apiCore.getLogger().log(Level.INFO, "Arena {0} has been switched to POST_GAME without players, switching to INITIALISING", arena.getId());
+        this.apiCore.getLogger().log(Level.WARNING, "Arena {0} has been switched to POST_GAME without players, switching to INITIALISING", arena.getId());
         this.apiCore.run(() ->
         {
             // kiedy cos przelaczylo pusta arene do POST_GAME to natychmiast przerzucamy do INITIALISING
