@@ -13,6 +13,7 @@
 
     <artifactId>controller</artifactId>
     <version>1.0-INDEV</version>
+    <name>Network Controller</name>
 
     <dependencies>
         <dependency>

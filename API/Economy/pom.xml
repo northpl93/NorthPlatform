@@ -12,6 +12,7 @@
 
     <groupId>pl.north93.zgame.api</groupId>
     <artifactId>economy</artifactId>
+    <name>API.Economy</name>
 
     <repositories>
         <repository>
