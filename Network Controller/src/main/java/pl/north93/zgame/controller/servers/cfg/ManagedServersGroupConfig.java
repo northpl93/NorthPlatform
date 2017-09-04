@@ -8,31 +8,33 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.network.server.group.ServersGroupDto;
 import pl.north93.zgame.api.global.network.server.group.ServersGroupType;
+import pl.north93.zgame.controller.servers.cfg.rules.RulesConfig;
 import pl.north93.zgame.controller.servers.groups.ILocalServersGroup;
+import pl.north93.zgame.controller.servers.groups.LocalManagedServersGroup;
 
-/**
- * Reprezentuje grupę serwerów mogących pracować na różnych demonach.
- */
 @XmlRootElement(name = "managed")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ManagedServersGroupConfig extends ServersGroupConfig
 {
     @XmlElement
-    private String serverPattern;
+    private String      pattern;
+    @XmlElement
+    private RulesConfig rules;
 
     public ManagedServersGroupConfig()
     {
     }
 
-    public String getServerPattern()
+    public String getPattern()
     {
-        return this.serverPattern;
+        return this.pattern;
     }
 
-    public void setServerPattern(final String serverPattern)
+    public RulesConfig getRules()
     {
-        this.serverPattern = serverPattern;
+        return this.rules;
     }
 
     @Override
@@ -44,12 +46,13 @@ public class ManagedServersGroupConfig extends ServersGroupConfig
     @Override
     public ILocalServersGroup createLocalGroup()
     {
-        return null;
+        final ServersGroupDto serversGroupDto = new ServersGroupDto(this.getName(), ServersGroupType.MANAGED, this.getServersType(), this.getJoiningPolicy());
+        return new LocalManagedServersGroup(serversGroupDto, this);
     }
 
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("serverPattern", this.serverPattern).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("pattern", this.pattern).append("rules", this.rules).toString();
     }
 }

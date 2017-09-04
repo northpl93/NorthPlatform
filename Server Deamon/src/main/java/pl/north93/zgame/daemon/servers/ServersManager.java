@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
@@ -14,11 +13,8 @@ import org.diorite.utils.DioriteUtils;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.ApiCore;
-import pl.north93.zgame.api.global.component.annotations.PostInject;
-import pl.north93.zgame.api.global.network.daemon.ServerPattern;
-import pl.north93.zgame.api.global.network.NetworkControllerRpc;
-import pl.north93.zgame.api.global.network.server.ServerState;
-import pl.north93.zgame.api.global.utils.JavaArguments;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.network.INetworkManager;
 
 /**
  * Klasa demona zarządzająca uruchomionymi serwerami
@@ -26,19 +22,22 @@ import pl.north93.zgame.api.global.utils.JavaArguments;
  */
 public class ServersManager
 {
-    private final ApiCore                   apiCore    = null;
-    private final NetworkControllerRpc      controller = API.getNetworkManager().getNetworkController();
-    private final File                      workspace  = API.getFile("workspace");
-    private final File                      engines    = API.getFile("engines");
-    private final File                      patterns   = API.getFile("patterns");
+    @Inject
+    private ApiCore         apiCore;
+    @Inject
+    private INetworkManager networkManager;
+    private final File                      workspace;
+    private final File                      engines;
+    private final File                      patterns;
     private final ServersWatchdog           watchdog   = new ServersWatchdog();
     private final Logger                    outputLog  = Logger.getLogger("Servers");
     private final Map<UUID, ServerInstance> servers    = new HashMap<>();
 
-    @PostInject
-    private void postInject()
+    public ServersManager()
     {
-
+        this.workspace = this.apiCore.getFile("workspace");
+        this.engines = this.apiCore.getFile("engines");
+        this.patterns = this.apiCore.getFile("patterns");
     }
 
     public void startServerManager()
@@ -46,7 +45,7 @@ public class ServersManager
         DioriteUtils.createDirectory(this.workspace);
         DioriteUtils.createDirectory(this.engines);
         DioriteUtils.createDirectory(this.patterns);
-        this.outputLog.setParent(API.getLogger());
+        this.outputLog.setParent(this.apiCore.getLogger());
         this.watchdog.start();
     }
 
@@ -87,13 +86,13 @@ public class ServersManager
             e.printStackTrace(); // TODO ?
         }
         this.servers.remove(serverUuid); // remove server from internal daemon list
-        this.controller.removeServer(serverUuid); // inform network controller about removing server
+        //this.controller.removeServer(serverUuid); // inform network controller about removing server
         API.getLogger().info("Removed server with UUID: " + serverUuid);
     }
 
     public void deployNewServer(final UUID serverId, final String serverTemplate)
     {
-        API.getLogger().info("Deploying new server with id " + serverId + " and template " + serverTemplate);
+        /*API.getLogger().info("Deploying new server with id " + serverId + " and template " + serverTemplate);
         this.controller.updateServerState(serverId, ServerState.INSTALLING);
         final ServerPattern pattern = API.getNetworkManager().getServers().getServerPattern(serverTemplate);
 
@@ -131,7 +130,7 @@ public class ServersManager
             this.controller.updateServerState(serverId, ServerState.ERROR);
             return;
         }
-        this.controller.updateServerState(serverId, ServerState.STARTING);
+        this.controller.updateServerState(serverId, ServerState.STARTING);*/
     }
 
     public String getEngineFile(final String engineName)
@@ -139,7 +138,7 @@ public class ServersManager
         return new File(this.engines, engineName).getAbsolutePath();
     }
 
-    private void setupWorkspace(final File workspace, final ServerPattern pattern)
+    /*private void setupWorkspace(final File workspace, final ServerPattern pattern)
     {
         API.getLogger().info("Setting up workspace: " + workspace);
         workspace.mkdir();
@@ -154,5 +153,5 @@ public class ServersManager
                 API.getLogger().log(Level.SEVERE, "Exception while setting up workspace", e);
             }
         }
-    }
+    }*/
 }

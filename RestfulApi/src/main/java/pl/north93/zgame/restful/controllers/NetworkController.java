@@ -4,11 +4,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.config.IConfig;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
-import pl.north93.zgame.api.global.network.NetworkAction;
 import pl.north93.zgame.api.global.network.NetworkMeta;
-import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.restful.models.NetworkJoinPolicyChanged;
 import pl.north93.zgame.restful.models.NetworkStatus;
 import spark.Request;
@@ -21,36 +20,36 @@ public class NetworkController
 
     public Object root(final Request request, final Response response)
     {
-        final NetworkMeta meta = this.networkManager.getNetworkMeta().get();
-        final int onlinePlayers = this.networkManager.getPlayers().onlinePlayersCount();
+        final NetworkMeta meta = this.networkManager.getNetworkConfig().get();
+        final int onlinePlayers = this.networkManager.getProxies().onlinePlayersCount();
 
         return new NetworkStatus(meta.displayMaxPlayers, onlinePlayers, meta.joiningPolicy, meta.serverListMotd);
     }
 
     public Object joinpolicy(final Request request, final Response response)
     {
-        final Value<NetworkMeta> networkMeta = this.networkManager.getNetworkMeta();
+        final IConfig<NetworkMeta> networkConfig = this.networkManager.getNetworkConfig();
+        final NetworkMeta networkMeta = networkConfig.get();
 
-        final JoiningPolicy oldJoinPolicy = networkMeta.get().joiningPolicy;
+        final JoiningPolicy oldJoinPolicy = networkMeta.joiningPolicy;
         final JoiningPolicy newJoinPolicy = JoiningPolicy.valueOf(request.params(":policy"));
 
-        networkMeta.update(meta ->
-        {
-            meta.joiningPolicy = newJoinPolicy;
-        });
+        networkMeta.joiningPolicy = newJoinPolicy;
+        networkConfig.update(networkMeta);
 
         return new NetworkJoinPolicyChanged(oldJoinPolicy, newJoinPolicy);
     }
 
     public Object kickall(final Request request, final Response response)
     {
-        this.networkManager.broadcastNetworkAction(NetworkAction.KICK_ALL);
+        // todo
+        //this.networkManager.broadcastNetworkAction(NetworkAction.KICK_ALL);
         return "ok";
     }
 
     public Object stopall(final Request request, final Response response)
     {
-        this.networkManager.broadcastNetworkAction(NetworkAction.STOP_ALL);
+        //this.networkManager.broadcastNetworkAction(NetworkAction.STOP_ALL);
         return "ok";
     }
 

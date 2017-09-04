@@ -1,35 +1,25 @@
 package pl.north93.zgame.daemon.cfg;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.cfg.annotations.CfgComment;
-import org.diorite.cfg.annotations.CfgComments;
-import org.diorite.cfg.annotations.CfgFooterComment;
-import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
-import org.diorite.cfg.annotations.defaults.CfgIntDefault;
-import org.diorite.cfg.annotations.defaults.CfgStringDefault;
-
-@CfgComments({"Konfiguracja demona"})
-@CfgFooterComment("Koniec konfiguracji!")
-@CfgDelegateDefault("{new}")
+@XmlRootElement(name = "daemon")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class DaemonConfig
 {
-    @CfgComment("Adres do którego ma się łączyć proxy")
-    @CfgStringDefault("localhost")
-    public String externalHost;
-
-    @CfgComment("Na jaki adres mają nasłuchiwać serwery")
-    @CfgStringDefault("0.0.0.0")
-    public String listenHost;
-
-    @CfgComment("Od jakiego numeru portu zaczynać uruchamianie serwerów")
-    @CfgIntDefault(25570)
-    public int portRangeStart;
-
-    @CfgComment("Maksymalna ilosc pamieci (w MB) która może zostać użyta przez serwery")
-    @CfgIntDefault(1024)
-    public int maxMemory;
+    @XmlElement
+    public String externalHost = "127.0.0.1";
+    @XmlElement
+    public String listenHost = "0.0.0.0";
+    @XmlElement
+    public int portRangeStart = 25570;
+    @XmlElement
+    public int maxMemory = 1024;
 
     @Override
     public String toString()

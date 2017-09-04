@@ -38,7 +38,7 @@ public class NorthReconnectHandler implements ReconnectHandler
     @Override
     public ServerInfo getServer(final ProxiedPlayer proxiedPlayer)
     {
-        final NetworkMeta meta = this.networkManager.getNetworkMeta().get();
+        final NetworkMeta meta = this.networkManager.getNetworkConfig().get();
         final Server server = this.apiCore.getConnectionManager().getBestServerFromServersGroup(meta.defaultServersGroup);
         if (server == null)
         {

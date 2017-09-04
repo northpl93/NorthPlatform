@@ -27,8 +27,8 @@ public class SlotsCommand extends NorthCommand
     {
         if (args.length() == 0)
         {
-            final NetworkMeta meta = this.networkManager.getNetworkMeta().get();
-            sender.sendRawMessage("&eAktualne sloty: " + meta.displayMaxPlayers + " Gracze: " + this.networkManager.getPlayers().onlinePlayersCount());
+            final NetworkMeta meta = this.networkManager.getNetworkConfig().get();
+            sender.sendRawMessage("&eAktualne sloty: " + meta.displayMaxPlayers + " Gracze: " + this.networkManager.getProxies().onlinePlayersCount());
         }
         else if (args.length() == 1)
         {
@@ -38,7 +38,8 @@ public class SlotsCommand extends NorthCommand
                 sender.sendRawMessage("&cPodaj cyfre.");
                 return;
             }
-            this.networkManager.getNetworkMeta().update(meta ->
+
+            this.networkManager.getNetworkConfig().update(meta ->
             {
                 meta.displayMaxPlayers = newSlots;
             });

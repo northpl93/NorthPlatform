@@ -1,36 +1,36 @@
 package pl.north93.zgame.api.global.network;
 
-import java.util.Set;
-
-import pl.north93.zgame.api.global.network.daemon.DaemonDto;
+import pl.north93.zgame.api.global.config.IConfig;
+import pl.north93.zgame.api.global.network.daemon.IDaemonsManager;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
-import pl.north93.zgame.api.global.network.proxy.ProxyInstanceInfo;
+import pl.north93.zgame.api.global.network.proxy.IProxiesManager;
 import pl.north93.zgame.api.global.network.server.IServersManager;
-import pl.north93.zgame.api.global.redis.observable.Value;
 
 public interface INetworkManager
 {
-    Value<NetworkMeta> getNetworkMeta();
-
-    JoiningPolicy getJoiningPolicy();
+    /**
+     * Zwraca obiekt konfiguracji sieci. Moze sie on dynamicznie aktualizowac.
+     *
+     * @return konfiguracja sieci.
+     */
+    IConfig<NetworkMeta> getNetworkConfig();
 
     /**
-     * Zwraca aktualną listę serwerów proxy podłączonych do sieci.
+     * Zwraca interfejs zdalnego wywolywania procedur zbindowany do instancji
+     * kontrolera sieci.
      *
-     * @return lista serwerów proxy.
+     * @return Interfejs RPC do wywolywania metod na kontrolerze.
      */
-    Set<ProxyInstanceInfo> getProxyServers();
-
-    /**
-     * Zwraca aktualną listę demonów podłączonych do sieci.
-     *
-     * @return lista demonów.
-     */
-    Set<DaemonDto> getDaemons();
-
-    void broadcastNetworkAction(NetworkAction networkAction);
-
     NetworkControllerRpc getNetworkController();
+
+    /**
+     * Zwraca interfejs sluzacy do zarzadzania instancjami proxy w sieci.
+     *
+     * @return Interfejs do zarzadzania instancjami proxy.
+     */
+    IProxiesManager getProxies();
+
+    IDaemonsManager getDaemons();
 
     IServersManager getServers();
 

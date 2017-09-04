@@ -12,21 +12,6 @@ import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 
 public class Injector
 {
-    private static final Field F_MODIFIERS;
-
-    static
-    {
-        try
-        {
-            F_MODIFIERS = Field.class.getDeclaredField("modifiers");
-            F_MODIFIERS.setAccessible(true);
-        }
-        catch (final NoSuchFieldException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static void inject(final Object instance)
     {
         final ComponentManagerImpl manager = ComponentManagerImpl.instance;
@@ -46,13 +31,7 @@ public class Injector
 
             if (Modifier.isFinal(field.getModifiers()))
             {
-                try
-                {
-                    F_MODIFIERS.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-                }
-                catch (final IllegalAccessException ignored) // will never happen
-                {
-                }
+                throw new InjectionException("Tried to inject final field");
             }
 
             final BeanQuery query = new BeanQuery();

@@ -7,13 +7,16 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.network.daemon.DaemonDto;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.NetworkAction;
+import pl.north93.zgame.api.global.network.daemon.DaemonDto;
+import pl.north93.zgame.api.global.network.event.NetworkShutdownNetEvent;
 import pl.north93.zgame.api.global.network.proxy.ProxyInstanceInfo;
+import pl.north93.zgame.api.global.redis.event.IEventManager;
 
 public class Network extends NorthCommand
 {
+    @Inject
+    private IEventManager eventManager;
     @Inject
     private INetworkManager networkManager;
 
@@ -41,7 +44,7 @@ public class Network extends NorthCommand
             if ("proxies".equals(args.asString(0)))
             {
                 sender.sendRawMessage("&cPołączone serwery proxy");
-                for (final ProxyInstanceInfo proxyInstanceInfo : this.networkManager.getProxyServers())
+                for (final ProxyInstanceInfo proxyInstanceInfo : this.networkManager.getProxies().getProxyServers())
                 {
                     sender.sendRawMessage("|- " + proxyInstanceInfo.getId());
                     sender.sendRawMessage("  |- Liczba graczy: " + proxyInstanceInfo.getOnlinePlayers());
@@ -51,7 +54,7 @@ public class Network extends NorthCommand
             else if ("daemons".equals(args.asString(0)))
             {
                 sender.sendRawMessage("&cPołączone demony");
-                for (final DaemonDto daemon : this.networkManager.getDaemons())
+                for (final DaemonDto daemon : this.networkManager.getDaemons().getDaemons())
                 {
                     sender.sendRawMessage("|- " + daemon.getName());
                     sender.sendRawMessage("  |- Nazwa hosta: " + daemon.getHostName());
@@ -63,12 +66,12 @@ public class Network extends NorthCommand
             else if ("stopall".equals(args.asString(0)))
             {
                 sender.sendRawMessage("&cZa chwile wszystkie komponenty sieci zostaną wyłączone...");
-                this.networkManager.broadcastNetworkAction(NetworkAction.STOP_ALL);
+                this.eventManager.callEvent(new NetworkShutdownNetEvent());
             }
             else if ("kickall".equals(args.asString(0)))
             {
                 sender.sendRawMessage("&cZa chwile wszyscy gracze zostaną rozłączeni...");
-                this.networkManager.broadcastNetworkAction(NetworkAction.KICK_ALL);
+                //this.networkManager.broadcastNetworkAction(NetworkAction.KICK_ALL);
             }
             else
             {

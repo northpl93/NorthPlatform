@@ -18,5 +18,16 @@
 
             <server serverId="b8ddf9cb-2fff-4861-91f0-1841c313817f" connectIp="localhost" connectPort="25566" />
         </unmanaged>
+
+        <managed name="test_managed">
+            <serversType>MINIGAME</serversType>
+            <joiningPolicy>EVERYONE</joiningPolicy>
+            <pattern>test1</pattern>
+
+            <rules min="1" max="5">
+                <value id="freeArenasPct" is="SMALLER" than="25" then="CREATE_SERVER"/>
+                <value id="freeArenasPct" is="GREATER" than="50" then="REMOVE_SERVER"/>
+            </rules>
+        </managed>
     </groups>
 </autoscaler>

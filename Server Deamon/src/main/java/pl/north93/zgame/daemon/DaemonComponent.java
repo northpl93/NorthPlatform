@@ -1,16 +1,14 @@
 package pl.north93.zgame.daemon;
 
-import static pl.north93.zgame.api.global.cfg.ConfigUtils.loadConfigFile;
-
+import javax.xml.bind.JAXB;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.network.daemon.DaemonRpc;
 import pl.north93.zgame.api.global.network.daemon.DaemonDto;
+import pl.north93.zgame.api.global.network.daemon.DaemonRpc;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
@@ -28,14 +26,8 @@ public class DaemonComponent extends Component
     @Override
     protected void enableComponent()
     {
-        this.config = loadConfigFile(DaemonConfig.class, API.getFile("daemon.yml"));
-        final DaemonDto daemon = DaemonDto.builder().setName(this.getApiCore().getId())
-                                          .setHostName(this.getApiCore().getHostName())
-                                          .setMaxRam(this.config.maxMemory)
-                                          .setRamUsed(0)
-                                          .setServerCount(0)
-                                          .setAcceptingServers(true)
-                                          .build();
+        this.config = JAXB.unmarshal(this.getApiCore().getFile("daemon.xml"), DaemonConfig.class);
+        final DaemonDto daemon = new DaemonDto(this.getApiCore().getId(), this.getApiCore().getHostName(), this.config.maxMemory, 0, 0, true);
 
         final IObservationManager observation = this.getApiCore().getComponentManager().getComponent("API.Database.Redis.Observer");
         this.daemonInfo = observation.of(daemon);

@@ -8,8 +8,6 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
 public interface IPlayersManager
 {
-    int onlinePlayersCount();
-
     String getNickFromUuid(UUID playerId);
 
     UUID getUuidFromNick(String nick);

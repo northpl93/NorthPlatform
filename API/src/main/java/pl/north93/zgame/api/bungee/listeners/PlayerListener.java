@@ -121,7 +121,7 @@ public class PlayerListener implements Listener
         {
             try
             {
-                final JoiningPolicy joiningPolicy = this.bungeeApiCore.getNetworkManager().getJoiningPolicy();
+                final JoiningPolicy joiningPolicy = this.bungeeApiCore.getNetworkManager().getNetworkConfig().get().joiningPolicy;
 
                 final Value<OnlinePlayerImpl> player;
                 try
@@ -175,7 +175,7 @@ public class PlayerListener implements Listener
                         event.setCancelReason(message(this.apiMessages, "join.banned"));
                     }
                 }
-                else if (this.networkManager.getPlayers().onlinePlayersCount() > this.networkManager.getNetworkMeta().get().displayMaxPlayers && ! cache.hasPermission("join.bypass"))
+                else if (this.networkManager.getProxies().onlinePlayersCount() > this.networkManager.getNetworkConfig().get().displayMaxPlayers && ! cache.hasPermission("join.bypass"))
                 {
                     event.setCancelled(true);
                     event.setCancelReason(message(this.apiMessages, "join.server_full"));

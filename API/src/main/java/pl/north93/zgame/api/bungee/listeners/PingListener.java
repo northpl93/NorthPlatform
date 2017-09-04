@@ -28,7 +28,7 @@ public class PingListener implements Listener
     @EventHandler
     public void onPing(final ProxyPingEvent event)
     {
-        final NetworkMeta networkMeta = this.networkManager.getNetworkMeta().get();
+        final NetworkMeta networkMeta = this.networkManager.getNetworkConfig().get();
         final ServerPing response = event.getResponse();
         if (networkMeta == null)
         {
@@ -43,7 +43,7 @@ public class PingListener implements Listener
         final ServerPing.Players players = response.getPlayers();
         players.setSample(null);
         players.setMax(networkMeta.displayMaxPlayers);
-        players.setOnline(this.networkManager.getPlayers().onlinePlayersCount());
+        players.setOnline(this.networkManager.getProxies().onlinePlayersCount());
 
         final ServerPing.Protocol version = response.getVersion();
         version.setName("1.10 lub 1.11");

@@ -6,10 +6,8 @@ import static pl.north93.zgame.api.global.redis.RedisKeys.DAEMON;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
-import pl.north93.zgame.api.global.redis.rpc.Targets;
 
 /**
  * Obiekt przechowujący dane o demonie.
@@ -23,6 +21,20 @@ public class DaemonDto implements ProvidingRedisKey
     private Integer ramUsed;
     private Integer serverCount;
     private Boolean isAcceptingServers;
+
+    public DaemonDto()
+    {
+    }
+
+    public DaemonDto(final String name, final String hostName, final Integer maxRam, final Integer ramUsed, final Integer serverCount, final Boolean isAcceptingServers)
+    {
+        this.name = name;
+        this.hostName = hostName;
+        this.maxRam = maxRam;
+        this.ramUsed = ramUsed;
+        this.serverCount = serverCount;
+        this.isAcceptingServers = isAcceptingServers;
+    }
 
     @Override
     public ObjectKey getKey()
@@ -90,71 +102,9 @@ public class DaemonDto implements ProvidingRedisKey
         this.isAcceptingServers = acceptingServers;
     }
 
-    public DaemonRpc getRpc()
-    {
-        return API.getRpcManager().createRpcProxy(DaemonRpc.class, Targets.daemon(this.name));
-    }
-
     @Override
     public String toString()
     {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("hostName", this.hostName).append("maxRam", this.maxRam).append("ramUsed", this.ramUsed).append("serverCount", this.serverCount).append("isAcceptingServers", this.isAcceptingServers).toString();
-    }
-
-    public static Builder builder()
-    {
-        return new Builder();
-    }
-
-    public static final class Builder
-    {
-        private final DaemonDto daemon = new DaemonDto();
-
-        public Builder setName(final String name)
-        {
-            this.daemon.setName(name);
-            return this;
-        }
-
-        public Builder setHostName(final String hostName)
-        {
-            this.daemon.setHostName(hostName);
-            return this;
-        }
-
-        public Builder setMaxRam(final Integer maxRam)
-        {
-            this.daemon.setMaxRam(maxRam);
-            return this;
-        }
-
-        public Builder setRamUsed(final Integer ramUsed)
-        {
-            this.daemon.setRamUsed(ramUsed);
-            return this;
-        }
-
-        public Builder setServerCount(final Integer serverCount)
-        {
-            this.daemon.setServerCount(serverCount);
-            return this;
-        }
-
-        public Builder setAcceptingServers(final Boolean acceptingServers)
-        {
-            this.daemon.setAcceptingServers(acceptingServers);
-            return this;
-        }
-
-        public DaemonDto build()
-        {
-            return this.daemon;
-        }
-
-        @Override
-        public String toString()
-        {
-            return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("daemon", this.daemon).toString();
-        }
     }
 }

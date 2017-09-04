@@ -12,13 +12,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
-import pl.north93.zgame.api.global.network.players.Identity;
-import pl.north93.zgame.api.global.network.proxy.ProxyInstanceInfo;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
+import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.proxy.ProxyRpc;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Lock;
@@ -52,12 +51,6 @@ class PlayersManagerImpl implements IPlayersManager
     public ProxyRpc getPlayerProxyRpc(final IOnlinePlayer onlinePlayer)
     {
         return this.rpcManager.createRpcProxy(ProxyRpc.class, Targets.proxy(onlinePlayer.getProxyId()));
-    }
-
-    @Override
-    public int onlinePlayersCount()
-    {
-        return this.networkManager.getProxyServers().stream().mapToInt(ProxyInstanceInfo::getOnlinePlayers).sum();
     }
 
     @Override

@@ -31,7 +31,7 @@ public class JoiningPolicyCommand extends NorthCommand
         {
             final String values = Arrays.stream(JoiningPolicy.values()).map(Enum::name).collect(Collectors.joining(", "));
             sender.sendRawMessage("&eDostępne wartości: " + values);
-            sender.sendRawMessage("&eAktualnie wybrana opcja: " + this.networkManager.getJoiningPolicy());
+            sender.sendRawMessage("&eAktualnie wybrana opcja: " + this.networkManager.getNetworkConfig().get().joiningPolicy);
         }
         else if (args.length() == 1)
         {
@@ -46,7 +46,7 @@ public class JoiningPolicyCommand extends NorthCommand
                 return;
             }
 
-            this.networkManager.getNetworkMeta().update(meta ->
+            this.networkManager.getNetworkConfig().update(meta ->
             {
                 meta.joiningPolicy = newJoinPolicy;
             });

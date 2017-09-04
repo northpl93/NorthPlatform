@@ -13,16 +13,14 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.controller.servers.cfg.UnManagedServer;
 import pl.north93.zgame.controller.servers.cfg.UnManagedServersGroupConfig;
 
-public class LocalUnManagedServersGroup extends AbstractLocalServersGroup
+public class LocalUnManagedServersGroup extends AbstractLocalServersGroup<UnManagedServersGroupConfig>
 {
     @Inject
     private INetworkManager networkManager;
-    private final UnManagedServersGroupConfig config;
 
     public LocalUnManagedServersGroup(final ServersGroupDto dto, final UnManagedServersGroupConfig config)
     {
-        super(dto);
-        this.config = config;
+        super(dto, config);
     }
 
     private void insertServer(final ServerDto serverDto)
@@ -44,7 +42,7 @@ public class LocalUnManagedServersGroup extends AbstractLocalServersGroup
             final String connectIp = serverConfig.getConnectIp();
             final Integer connectPort = serverConfig.getConnectPort();
 
-            final ServerDto serverDto = new ServerDto(serverId, false, serversType, ServerState.INSTALLING, joiningPolicy, connectIp, connectPort, groupDto);
+            final ServerDto serverDto = new ServerDto(serverId, false, serversType, ServerState.CREATING, joiningPolicy, connectIp, connectPort, groupDto);
             this.insertServer(serverDto);
         }
     }
