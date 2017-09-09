@@ -5,9 +5,6 @@ import static pl.north93.zgame.api.global.utils.JavaUtils.hideException;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -31,18 +28,33 @@ class InstancesAggregator implements IAggregator
     @Override
     public boolean isSuitableFor(final CtClass clazz)
     {
-        if (Modifier.isAbstract(clazz.getModifiers()) || clazz.isInterface())
-        {
-            return false;
-        }
+        return ! Modifier.isAbstract(clazz.getModifiers()) && ! clazz.isInterface() && this.isSuitable(clazz);
+    }
 
-        for (final CtClass ctClass : this.getPossibleAggregationPoints(clazz))
+    private boolean isSuitable(final CtClass checkedClass)
+    {
+        if (this.clazz.isInterface())
         {
-            if (ctClass.getName().equals(this.clazz.getName()))
+            final CtClass[] interfaces = hideException(checkedClass::getInterfaces);
+            if (interfaces != null)
             {
-                return true;
+                for (final CtClass anInterface : interfaces)
+                {
+                    if (anInterface.getName().equals(this.clazz.getName()))
+                    {
+                        return true;
+                    }
+                }
             }
         }
+
+        final CtClass superclass = hideException(checkedClass::getSuperclass);
+        if (superclass != null && !superclass.getName().equals("java.lang.Object"))
+        {
+            return superclass.getName().equals(this.clazz.getName()) || this.isSuitable(superclass);
+        }
+
+        // nic nie pasuje
         return false;
     }
 
@@ -60,23 +72,6 @@ class InstancesAggregator implements IAggregator
         {
             SmartExecutor.execute(listener, tempContext, beanContext.getBean(listener.getDeclaringClass()));
         }
-    }
-
-    private Collection<CtClass> getPossibleAggregationPoints(final CtClass clazz)
-    {
-        final Collection<CtClass> possibilities = new HashSet<>();
-
-        final CtClass superclass = hideException(clazz::getSuperclass);
-        if (superclass != null && !superclass.getName().equals("java.lang.Object"))
-        {
-            // uzywamy rekursywnego zbierania mozliwych punktow agregacji zeby
-            // wylapac tez interfejsy super-klas.
-            possibilities.addAll(this.getPossibleAggregationPoints(superclass));
-        }
-
-        possibilities.addAll(Arrays.asList(hideException(clazz::getInterfaces)));
-
-        return possibilities;
     }
 
     @Override
