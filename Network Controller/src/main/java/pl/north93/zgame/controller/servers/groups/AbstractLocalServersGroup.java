@@ -7,7 +7,7 @@ import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.server.ServerType;
 import pl.north93.zgame.api.global.network.server.group.ServersGroupDto;
 import pl.north93.zgame.api.global.network.server.group.ServersGroupType;
-import pl.north93.zgame.controller.servers.cfg.ServersGroupConfig;
+import pl.north93.zgame.api.global.network.daemon.config.ServersGroupConfig;
 
 abstract class AbstractLocalServersGroup<CONFIG extends ServersGroupConfig> implements ILocalServersGroup
 {

@@ -1,8 +1,9 @@
-package pl.north93.zgame.controller.servers.cfg;
+package pl.north93.zgame.api.global.network.daemon.config;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import java.util.List;
@@ -26,7 +27,8 @@ public class ServerPatternConfig
     @XmlElement
     private Integer      startMemory;
     @MsgPackCustomTemplate(ArrayListTemplate.class)
-    @XmlElement
+    @XmlElementWrapper(name = "components")
+    @XmlElement(name = "component")
     private List<String> components;
 
     public String getPatternName()

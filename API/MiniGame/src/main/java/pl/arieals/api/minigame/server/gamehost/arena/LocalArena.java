@@ -138,6 +138,18 @@ public class LocalArena implements IArena
         return this.data.getPlayers();
     }
 
+    @Override
+    public int getMaxPlayers()
+    {
+        return this.gameHostManager.getMiniGameConfig().getSlots();
+    }
+
+    @Override
+    public boolean isDynamic()
+    {
+        return this.gameHostManager.getMiniGameConfig().isDynamic();
+    }
+
     public StaticTimer getTimer()
     {
         return this.timer;
@@ -209,11 +221,6 @@ public class LocalArena implements IArena
     public LobbyMode getLobbyMode()
     {
         return this.gameHostManager.getMiniGameConfig().getLobbyMode();
-    }
-    
-    public boolean isDynamic()
-    {
-        return this.gameHostManager.getMiniGameConfig().isDynamic();
     }
 
     /**

@@ -1,6 +1,5 @@
 package pl.north93.zgame.api.global.network.server;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import pl.north93.zgame.api.global.network.JoiningPolicy;
@@ -57,11 +56,12 @@ public interface Server extends ServerProxyData
     JoiningPolicy getJoiningPolicy();
 
     /**
-     * Opcjonalnie zwraca grupę serwerów do której należy ten serwer.
+     * Zwraca grupe serwerow do ktorej nalezy ten serwer.
+     * Nie ma mozliwosci uruchomienia serwera bez skonfigurowanej grupy.
      *
      * @return grupa serwerów do której należy ten serwer.
      */
-    Optional<IServersGroup> getServersGroup();
+    IServersGroup getServersGroup();
 
     /**
      * Zwraca obiekt IRpcTarget do wykorzystania w zdalnym wywoływaniu

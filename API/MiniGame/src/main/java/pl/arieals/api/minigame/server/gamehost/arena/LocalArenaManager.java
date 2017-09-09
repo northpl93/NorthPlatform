@@ -20,6 +20,7 @@ import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaCreatedNetEvent;
+import pl.arieals.api.minigame.shared.api.cfg.MiniGameConfig;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -37,13 +38,16 @@ public class LocalArenaManager
     public LocalArena createArena()
     {
         final GameHostManager serverManager = this.miniGameServer.getServerManager();
+        final MiniGameConfig miniGameConfig = serverManager.getMiniGameConfig();
         final ArenaManager arenaManager = this.miniGameServer.getArenaManager();
 
         final UUID arenaId = UUID.randomUUID();
         final UUID serverId = this.apiCore.getServerId();
-        final GameIdentity miniGame = serverManager.getMiniGameConfig().getGameIdentity();
+        final GameIdentity miniGame = miniGameConfig.getGameIdentity();
+        final Boolean dynamic = miniGameConfig.isDynamic();
+        final Integer maxPlayers = miniGameConfig.getSlots();
 
-        final RemoteArena arenaData = new RemoteArena(arenaId, serverId, miniGame, "", GamePhase.INITIALISING, new HashSet<>());
+        final RemoteArena arenaData = new RemoteArena(arenaId, serverId, miniGame, dynamic, "", GamePhase.INITIALISING, maxPlayers, new HashSet<>());
         final LocalArena localArena = new LocalArena(serverManager, arenaManager, arenaData);
         this.arenas.add(localArena);
         arenaManager.setArena(arenaData);

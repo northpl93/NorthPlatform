@@ -19,8 +19,8 @@ import pl.north93.zgame.api.global.config.NetConfig;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.server.group.ServersGroupDto;
 import pl.north93.zgame.api.global.redis.observable.Hash;
-import pl.north93.zgame.controller.servers.cfg.AutoScalingConfig;
-import pl.north93.zgame.controller.servers.cfg.ServersGroupConfig;
+import pl.north93.zgame.api.global.network.daemon.config.AutoScalingConfig;
+import pl.north93.zgame.api.global.network.daemon.config.ServersGroupConfig;
 import pl.north93.zgame.controller.servers.scaler.value.IScalingValue;
 
 public class LocalGroupsManager
@@ -80,7 +80,7 @@ public class LocalGroupsManager
     {
         final Hash<ServersGroupDto> serversGroups = this.networkManager.getServers().unsafe().getServersGroups();
 
-        final ILocalServersGroup localGroup = config.createLocalGroup();
+        final ILocalServersGroup localGroup = LocalServersGroupFactory.INSTANCE.createLocalGroup(config);
         this.localGroups.put(localGroup.getName(), localGroup);
         serversGroups.put(localGroup.getName(), localGroup.getAsDto());
 

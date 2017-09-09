@@ -1,6 +1,5 @@
 package pl.north93.zgame.api.bukkit.server.impl;
 
-import java.util.Properties;
 import java.util.logging.Level;
 
 import net.minecraft.server.v1_10_R1.MinecraftServer;
@@ -21,12 +20,10 @@ import pl.north93.zgame.api.bukkit.utils.SimpleCountdown;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.impl.ServerDto;
 import pl.north93.zgame.api.global.network.server.IServerRpc;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerState;
-import pl.north93.zgame.api.global.network.server.ServerType;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 
@@ -60,7 +57,7 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
 
         if (! this.serverValue.isAvailable())
         {
-            this.serverValue.set(this.generateServer());
+            throw new RuntimeException("Not found server data in redis. Ensure that controller is running and serverId is valid.");
         }
     }
 
@@ -86,6 +83,12 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
     }
 
     @Override
+    public boolean isWorking()
+    {
+        return MinecraftServer.getServer().isRunning();
+    }
+
+    @Override
     public boolean isShutdownScheduled()
     {
         return this.getServer().isShutdownScheduled();
@@ -107,7 +110,7 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
     public void cancelShutdown()
     {
         Preconditions.checkState(this.isShutdownScheduled(), "Shutdown isn't scheduled");
-        Preconditions.checkState(MinecraftServer.getServer().isRunning(), "Server is already stopping");
+        Preconditions.checkState(this.isWorking(), "Server is already stopping");
 
         this.countdown.stop();
         this.apiCore.callEvent(new ShutdownCancelledEvent());
@@ -125,12 +128,6 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
 
         this.countdown.reset(TIME_TO_NEXT_TRY);
         this.countdown.start();
-    }
-
-    private ServerDto generateServer()
-    {
-        final Properties properties = System.getProperties();
-        return new ServerDto(this.apiCore.getServerId(), false, ServerType.valueOf(properties.getProperty("northplatform.servertype")), ServerState.STARTING, JoiningPolicy.EVERYONE, Bukkit.getIp(), Bukkit.getPort());
     }
 
     @Override

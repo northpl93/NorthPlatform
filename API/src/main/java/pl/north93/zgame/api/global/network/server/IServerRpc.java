@@ -23,4 +23,12 @@ public interface IServerRpc
      * ustawi wartosc pola shutdown.
      */
     void setShutdownScheduled();
+
+    /**
+     * Probuje anulowac wylaczenie serwera.
+     * Gdy sie z jakiegos powodu nie uda zwroci false.
+     *
+     * @return Czy udalo sie anulowac wylaczenie.
+     */
+    Boolean cancelShutdown();
 }

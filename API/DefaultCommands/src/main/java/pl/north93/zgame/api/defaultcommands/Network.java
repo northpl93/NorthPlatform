@@ -10,7 +10,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.daemon.DaemonDto;
 import pl.north93.zgame.api.global.network.event.NetworkShutdownNetEvent;
-import pl.north93.zgame.api.global.network.proxy.ProxyInstanceInfo;
+import pl.north93.zgame.api.global.network.proxy.ProxyDto;
 import pl.north93.zgame.api.global.redis.event.IEventManager;
 
 public class Network extends NorthCommand
@@ -44,7 +44,7 @@ public class Network extends NorthCommand
             if ("proxies".equals(args.asString(0)))
             {
                 sender.sendRawMessage("&cPołączone serwery proxy");
-                for (final ProxyInstanceInfo proxyInstanceInfo : this.networkManager.getProxies().all())
+                for (final ProxyDto proxyInstanceInfo : this.networkManager.getProxies().all())
                 {
                     sender.sendRawMessage("|- " + proxyInstanceInfo.getId());
                     sender.sendRawMessage("  |- Liczba graczy: " + proxyInstanceInfo.getOnlinePlayers());

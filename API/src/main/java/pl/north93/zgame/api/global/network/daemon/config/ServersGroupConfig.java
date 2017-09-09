@@ -1,4 +1,4 @@
-package pl.north93.zgame.controller.servers.cfg;
+package pl.north93.zgame.api.global.network.daemon.config;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -11,7 +11,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.server.ServerType;
 import pl.north93.zgame.api.global.network.server.group.ServersGroupType;
-import pl.north93.zgame.controller.servers.groups.ILocalServersGroup;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class ServersGroupConfig
@@ -39,8 +38,6 @@ public abstract class ServersGroupConfig
     {
         return this.joiningPolicy;
     }
-
-    public abstract ILocalServersGroup createLocalGroup();
 
     @Override
     public String toString()

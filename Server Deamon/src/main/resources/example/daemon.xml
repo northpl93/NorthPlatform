@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<daemon>
+    <externalHost>127.0.0.1</externalHost>
+    <listenHost>0.0.0.0</listenHost>
+    <portRangeStart>25590</portRangeStart>
+    <maxMemory>2048</maxMemory>
+</daemon>

@@ -23,5 +23,6 @@ components:
       - API.Database.Redis.RPC
       - API.Database.Redis.Event
       - NetworkController.ConfigServer
+      - NetworkController.ServersManager
     platforms:
       - STANDALONE

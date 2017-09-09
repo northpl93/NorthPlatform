@@ -2,46 +2,52 @@ package pl.north93.zgame.daemon;
 
 import javax.xml.bind.JAXB;
 
+import com.google.common.eventbus.EventBus;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.component.annotations.bean.Named;
+import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.daemon.DaemonDto;
 import pl.north93.zgame.api.global.network.daemon.DaemonRpc;
-import pl.north93.zgame.api.global.redis.observable.IObservationManager;
+import pl.north93.zgame.api.global.redis.observable.Hash;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.daemon.cfg.DaemonConfig;
-import pl.north93.zgame.daemon.servers.ServersManager;
+import pl.north93.zgame.daemon.servers.ProcessWatchdog;
 
 public class DaemonComponent extends Component
 {
     @Inject
     private IRpcManager      rpcManager;
+    @Inject
+    private INetworkManager  networkManager;
+    @Inject
     private DaemonConfig     config;
     private Value<DaemonDto> daemonInfo;
-    private ServersManager   serversManager;
 
     @Override
     protected void enableComponent()
     {
-        this.config = JAXB.unmarshal(this.getApiCore().getFile("daemon.xml"), DaemonConfig.class);
         final DaemonDto daemon = new DaemonDto(this.getApiCore().getId(), this.getApiCore().getHostName(), this.config.maxMemory, 0, 0, true);
 
-        final IObservationManager observation = this.getApiCore().getComponentManager().getComponent("API.Database.Redis.Observer");
-        this.daemonInfo = observation.of(daemon);
+        final Hash<DaemonDto> daemons = this.networkManager.getDaemons().unsafe().getHash();
+        daemons.put(this.getApiCore().getId(), daemon);
+        this.daemonInfo = daemons.getAsValue(this.getApiCore().getId());
 
-        this.rpcManager.addRpcImplementation(DaemonRpc.class, new DaemonRpcImpl(this));
-        this.serversManager = new ServersManager();
-        this.serversManager.startServerManager();
+        this.rpcManager.addRpcImplementation(DaemonRpc.class, new DaemonRpcImpl());
+
+        this.getApiCore().getPlatformConnector().runTaskAsynchronously(new ProcessWatchdog(), 20);
     }
 
     @Override
     protected void disableComponent()
     {
         this.daemonInfo.delete();
-        this.serversManager.stopServerManager();
     }
 
     public Value<DaemonDto> getDaemonInfo()
@@ -49,9 +55,16 @@ public class DaemonComponent extends Component
         return this.daemonInfo;
     }
 
-    public ServersManager getServersManager()
+    @Bean
+    private DaemonConfig daemonConfig()
     {
-        return this.serversManager;
+        return JAXB.unmarshal(this.getApiCore().getFile("daemon.xml"), DaemonConfig.class);
+    }
+
+    @Named("daemon") @Bean
+    private EventBus daemonEventBus()
+    {
+        return new EventBus("daemon");
     }
 
     @Override

@@ -32,6 +32,19 @@ public interface IArena
      */
     GameIdentity getMiniGame();
 
+    /**
+     * Sprawdza czy ta arena hostuje gre dynamiczna.
+     * (czyli taka ktora zezwala na wchodzenie w trakcie gry)
+     *
+     * @return czy arena hostuje gre dynamiczna.
+     */
+    boolean isDynamic();
+
+    /**
+     * Zwraca nazwe aktualnie zaladowanego swiata na arenie.
+     *
+     * @return nazwa aktualnie zaladowanego swiata.
+     */
     String getWorldId();
 
     GamePhase getGamePhase();
@@ -42,4 +55,12 @@ public interface IArena
     }
 
     Set<UUID> getPlayers();
+
+    /**
+     * Zwraca maksymalna ilosc graczy mogacych byc na tej arenie.
+     * Jest to wartosc z konfiguracji minigry.
+     *
+     * @return maksymalna ilosc graczy na arenie.
+     */
+    int getMaxPlayers();
 }

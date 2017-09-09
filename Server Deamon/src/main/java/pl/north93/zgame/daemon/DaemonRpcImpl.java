@@ -2,18 +2,19 @@ package pl.north93.zgame.daemon;
 
 import java.util.UUID;
 
-import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.ApiCore;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.daemon.DaemonRpc;
-import pl.north93.zgame.daemon.servers.ServerInstance;
+import pl.north93.zgame.daemon.servers.LocalServersManager;
 
 public class DaemonRpcImpl implements DaemonRpc
 {
-    private final DaemonComponent daemonCore;
-
-    public DaemonRpcImpl(final DaemonComponent daemonCore)
-    {
-        this.daemonCore = daemonCore;
-    }
+    @Inject
+    private DaemonComponent daemonCore;
+    @Inject
+    private LocalServersManager localServersManager;
+    @Inject
+    private ApiCore apiCore;
 
     @Override
     public void setAcceptingNewServers(final Boolean isAcceptingNewServers)
@@ -27,18 +28,18 @@ public class DaemonRpcImpl implements DaemonRpc
     @Override
     public void deployServer(final UUID serverUuid, final String templateName)
     {
-        API.getPlatformConnector().runTaskAsynchronously(() -> this.daemonCore.getServersManager().deployNewServer(serverUuid, templateName));
+        this.localServersManager.deployServer(serverUuid, templateName);
     }
 
     @Override
     public void stopServer(final UUID serverUuid)
     {
-        final ServerInstance instance = this.daemonCore.getServersManager().getServer(serverUuid);
+        /*final ServerInstance instance = this.daemonCore.getServersManager().getServer(serverUuid);
         if (instance == null)
         {
-            API.getLogger().warning("Received server stop request, but server " + serverUuid + " cant be found.");
+            this.apiCore.getLogger().log(Level.WARNING, "Received server stop request, but server {0} cant be found.", serverUuid);
             return;
         }
-        instance.executeCommand("stop");
+        instance.executeCommand("stop");*/
     }
 }

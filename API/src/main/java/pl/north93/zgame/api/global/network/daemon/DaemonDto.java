@@ -1,19 +1,13 @@
 package pl.north93.zgame.api.global.network.daemon;
 
-import static pl.north93.zgame.api.global.redis.RedisKeys.DAEMON;
-
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.north93.zgame.api.global.redis.observable.ObjectKey;
-import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
 
 /**
  * Obiekt przechowujący dane o demonie.
  * Właściwie tylko do celów informacyjnych.
  */
-public class DaemonDto implements ProvidingRedisKey
+public class DaemonDto
 {
     private String  name;
     private String  hostName;
@@ -34,12 +28,6 @@ public class DaemonDto implements ProvidingRedisKey
         this.ramUsed = ramUsed;
         this.serverCount = serverCount;
         this.isAcceptingServers = isAcceptingServers;
-    }
-
-    @Override
-    public ObjectKey getKey()
-    {
-        return new ObjectKey(DAEMON + this.name);
     }
 
     public String getName()

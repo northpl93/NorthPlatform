@@ -7,16 +7,18 @@ import java.util.Map;
 
 public class JavaArguments
 {
-    private String                  jar;
-    private int                     startHeapSize;
-    private int                     maxHeapSize;
-    private List<String>            javaArgs;
-    private HashMap<String, String> envVars;
+    private String              jar;
+    private int                 startHeapSize;
+    private int                 maxHeapSize;
+    private List<String>        javaArgs;
+    private Map<String, String> envVars;
+    private List<String>        programArgs;
 
     public JavaArguments()
     {
         this.javaArgs = new ArrayList<>();
         this.envVars = new HashMap<>();
+        this.programArgs = new ArrayList<>();
     }
 
     public JavaArguments setJar(final String jar)
@@ -46,6 +48,12 @@ public class JavaArguments
     public JavaArguments addEnvVar(final String key, final String value)
     {
         this.envVars.put(key, value);
+        return this;
+    }
+
+    public JavaArguments addProgramVar(final String var)
+    {
+        this.programArgs.add(var);
         return this;
     }
 
@@ -80,6 +88,12 @@ public class JavaArguments
 
         line.append("-jar ");
         line.append(this.jar);
+
+        for (final String programArg : this.programArgs)
+        {
+            line.append(' ');
+            line.append(programArg);
+        }
 
         return line.toString();
     }

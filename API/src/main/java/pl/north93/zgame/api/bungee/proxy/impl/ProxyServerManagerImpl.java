@@ -10,8 +10,8 @@ import pl.north93.zgame.api.bungee.proxy.IProxyServerManager;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.proxy.ProxyInstanceInfo;
-import pl.north93.zgame.api.global.network.proxy.ProxyRpc;
+import pl.north93.zgame.api.global.network.proxy.ProxyDto;
+import pl.north93.zgame.api.global.network.proxy.IProxyRpc;
 import pl.north93.zgame.api.global.redis.observable.Hash;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 
@@ -30,7 +30,7 @@ public class ProxyServerManagerImpl extends Component implements IProxyServerMan
         this.proxyServerList = new ProxyServerListImpl();
         this.proxyServerList.synchronizeServers();
 
-        this.rpcManager.addRpcImplementation(ProxyRpc.class, new ProxyRpcImpl());
+        this.rpcManager.addRpcImplementation(IProxyRpc.class, new ProxyRpcImpl());
 
         this.uploadInfo();
         this.getApiCore().getPlatformConnector().runTaskAsynchronously(this::uploadInfo, UPDATE_PROXY_DATA_EVERY);
@@ -39,7 +39,7 @@ public class ProxyServerManagerImpl extends Component implements IProxyServerMan
     @Override
     protected void disableComponent()
     {
-        final Hash<ProxyInstanceInfo> hash = this.networkManager.getProxies().unsafe().getHash();
+        final Hash<ProxyDto> hash = this.networkManager.getProxies().unsafe().getHash();
         hash.delete(this.getApiCore().getId());
     }
 
@@ -51,13 +51,13 @@ public class ProxyServerManagerImpl extends Component implements IProxyServerMan
 
     private void uploadInfo()
     {
-        final Hash<ProxyInstanceInfo> hash = this.networkManager.getProxies().unsafe().getHash();
+        final Hash<ProxyDto> hash = this.networkManager.getProxies().unsafe().getHash();
         hash.put(this.getApiCore().getId(), this.generateInfo());
     }
 
-    private ProxyInstanceInfo generateInfo()
+    private ProxyDto generateInfo()
     {
-        final ProxyInstanceInfo proxyInstanceInfo = new ProxyInstanceInfo();
+        final ProxyDto proxyInstanceInfo = new ProxyDto();
 
         final BungeeApiCore apiCore = (BungeeApiCore) this.getApiCore();
 

@@ -9,7 +9,7 @@ import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.controller.configserver.IConfigServer;
 import pl.north93.zgame.controller.configserver.source.XmlConfigSource;
-import pl.north93.zgame.controller.servers.cfg.AutoScalingConfig;
+import pl.north93.zgame.api.global.network.daemon.config.AutoScalingConfig;
 import pl.north93.zgame.controller.servers.groups.LocalGroupsManager;
 
 public class NetworkServersManager extends Component implements INetworkServersManager

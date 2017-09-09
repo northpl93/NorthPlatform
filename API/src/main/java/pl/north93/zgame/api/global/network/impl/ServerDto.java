@@ -1,6 +1,5 @@
 package pl.north93.zgame.api.global.network.impl;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,7 +12,6 @@ import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.network.server.ServerType;
 import pl.north93.zgame.api.global.network.server.group.IServersGroup;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
-import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackNullable;
 import pl.north93.zgame.api.global.redis.messaging.templates.extra.ServersGroupInStringTemplate;
 import pl.north93.zgame.api.global.redis.rpc.IRpcTarget;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
@@ -32,7 +30,6 @@ public class ServerDto implements Server, ServerProxyData
     private ServerState   serverState;
     private Boolean       shutdown;
     private JoiningPolicy joiningPolicy;
-    @MsgPackNullable
     @MsgPackCustomTemplate(ServersGroupInStringTemplate.class)
     private IServersGroup serversGroup;
 
@@ -40,7 +37,7 @@ public class ServerDto implements Server, ServerProxyData
     {
     }
 
-    public ServerDto(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy, final String connectIp, final Integer connectPort)
+    public ServerDto(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy, final String connectIp, final Integer connectPort, final IServersGroup serversGroup)
     {
         this.serverId = serverId;
         this.connectIp = connectIp;
@@ -49,13 +46,8 @@ public class ServerDto implements Server, ServerProxyData
         this.serverType = serverType;
         this.serverState = serverState;
         this.joiningPolicy = joiningPolicy;
-        this.shutdown = false;
-    }
-
-    public ServerDto(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy, final String connectIp, final Integer connectPort, final IServersGroup serversGroup)
-    {
-        this(serverId, isLaunchedViaDaemon, serverType, serverState, joiningPolicy, connectIp, connectPort);
         this.serversGroup = serversGroup;
+        this.shutdown = false;
     }
 
     @Override
@@ -95,9 +87,9 @@ public class ServerDto implements Server, ServerProxyData
     }
 
     @Override
-    public Optional<IServersGroup> getServersGroup()
+    public IServersGroup getServersGroup()
     {
-        return Optional.ofNullable(this.serversGroup);
+        return this.serversGroup;
     }
 
     @Override
@@ -137,6 +129,16 @@ public class ServerDto implements Server, ServerProxyData
     public void setJoiningPolicy(final JoiningPolicy joiningPolicy)
     {
         this.joiningPolicy = joiningPolicy;
+    }
+
+    public void setConnectIp(final String connectIp)
+    {
+        this.connectIp = connectIp;
+    }
+
+    public void setConnectPort(final Integer connectPort)
+    {
+        this.connectPort = connectPort;
     }
 
     @Override

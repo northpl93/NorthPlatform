@@ -6,30 +6,62 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.network.proxy.IProxiesManager;
-import pl.north93.zgame.api.global.network.proxy.ProxyInstanceInfo;
+import pl.north93.zgame.api.global.network.proxy.IProxyRpc;
+import pl.north93.zgame.api.global.network.proxy.ProxyDto;
+import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.redis.observable.Hash;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
+import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
+import pl.north93.zgame.api.global.redis.rpc.Targets;
 
-public class ProxiesManagerImpl implements IProxiesManager
+class ProxiesManagerImpl implements IProxiesManager
 {
+    private final IRpcManager rpcManager;
     private final Unsafe unsafe = new ProxiesManagerUnsafe();
-    private final Hash<ProxyInstanceInfo> proxies;
+    private final Hash<ProxyDto> proxies;
 
-    public ProxiesManagerImpl(final IObservationManager observationManager)
+    public ProxiesManagerImpl(final IRpcManager rpcManager, final IObservationManager observationManager)
     {
-        this.proxies = observationManager.getHash(ProxyInstanceInfo.class, "proxies");
+        this.rpcManager = rpcManager;
+        this.proxies = observationManager.getHash(ProxyDto.class, "proxies");
     }
 
     @Override
     public int onlinePlayersCount()
     {
-        return this.all().stream().mapToInt(ProxyInstanceInfo::getOnlinePlayers).sum();
+        return this.all().stream().mapToInt(ProxyDto::getOnlinePlayers).sum();
     }
 
     @Override
-    public Set<ProxyInstanceInfo> all()
+    public Set<ProxyDto> all()
     {
         return this.proxies.values();
+    }
+
+    @Override
+    public IProxyRpc getRpc(final ProxyDto proxyDto)
+    {
+        return this.rpcManager.createRpcProxy(IProxyRpc.class, Targets.proxy(proxyDto.getId()));
+    }
+
+    @Override
+    public void addServer(final ServerProxyData proxyData)
+    {
+        for (final ProxyDto proxy : this.all())
+        {
+            final IProxyRpc rpc = this.getRpc(proxy);
+            rpc.addServer(proxyData);
+        }
+    }
+
+    @Override
+    public void removeServer(final ServerProxyData proxyData)
+    {
+        for (final ProxyDto proxy : this.all())
+        {
+            final IProxyRpc rpc = this.getRpc(proxy);
+            rpc.removeServer(proxyData);
+        }
     }
 
     @Override
@@ -47,7 +79,7 @@ public class ProxiesManagerImpl implements IProxiesManager
     private class ProxiesManagerUnsafe implements Unsafe
     {
         @Override
-        public Hash<ProxyInstanceInfo> getHash()
+        public Hash<ProxyDto> getHash()
         {
             return ProxiesManagerImpl.this.proxies;
         }

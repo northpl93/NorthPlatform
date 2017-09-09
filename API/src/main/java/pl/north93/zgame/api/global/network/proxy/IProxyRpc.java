@@ -4,7 +4,7 @@ import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.network.server.joinaction.JoinActionsContainer;
 import pl.north93.zgame.api.global.redis.rpc.annotation.DoNotWaitForResponse;
 
-public interface ProxyRpc
+public interface IProxyRpc
 {
     Boolean isOnline(String nick); // sprawdza czy gracz jest online na tym proxy
 
@@ -24,8 +24,5 @@ public interface ProxyRpc
     void addServer(ServerProxyData proxyData);
 
     @DoNotWaitForResponse
-    void removeServer(String serverName);
-
-    @DoNotWaitForResponse
-    void removeAllServers();
+    void removeServer(ServerProxyData proxyData);
 }

@@ -8,12 +8,7 @@ public interface IProxyServerList
 
     void addServer(ServerProxyData proxyData);
 
-    void removeServer(String serverName);
-
-    default void removeServer(ServerProxyData proxyData)
-    {
-        this.removeServer(proxyData.getProxyName());
-    }
+    void removeServer(ServerProxyData proxyData);
 
     void removeAllServers();
 }

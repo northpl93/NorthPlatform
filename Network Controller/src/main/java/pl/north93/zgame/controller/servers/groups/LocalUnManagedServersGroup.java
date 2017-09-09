@@ -10,8 +10,8 @@ import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.network.server.ServerType;
 import pl.north93.zgame.api.global.network.server.group.ServersGroupDto;
 import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.controller.servers.cfg.UnManagedServer;
-import pl.north93.zgame.controller.servers.cfg.UnManagedServersGroupConfig;
+import pl.north93.zgame.api.global.network.daemon.config.UnManagedServer;
+import pl.north93.zgame.api.global.network.daemon.config.UnManagedServersGroupConfig;
 
 public class LocalUnManagedServersGroup extends AbstractLocalServersGroup<UnManagedServersGroupConfig>
 {

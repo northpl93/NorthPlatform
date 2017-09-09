@@ -1,5 +1,8 @@
 package pl.north93.zgame.controller.servers.scaler;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -12,6 +15,8 @@ import pl.north93.zgame.controller.servers.groups.LocalManagedServersGroup;
 
 public class ScalerWorker implements Runnable
 {
+    @Inject
+    private Logger             logger;
     @Inject
     private LocalGroupsManager localGroupsManager;
     @Inject
@@ -37,17 +42,24 @@ public class ScalerWorker implements Runnable
 
     private void processGroup(final LocalManagedServersGroup group)
     {
-        // aktualizuje stan listy operacji
-        group.getOperations();
-
-        // jesli grupa ma wylaczone aktualnie automatyczne wydawanie decyzji to nic dalej nie robimy
-        if (! group.shouldBeTicked())
+        try
         {
-            return;
-        }
+            // aktualizuje stan listy operacji
+            group.getOperations();
 
-        // przetwarza liste zasad i generuje decyzje, nastepnie ja przekazuje do realizacji
-        this.rulesProcessor.generateDecisionAndApply(group);
+            // jesli grupa ma wylaczone aktualnie automatyczne wydawanie decyzji to nic dalej nie robimy
+            if (! group.shouldBeTicked())
+            {
+                return;
+            }
+
+            // przetwarza liste zasad i generuje decyzje, nastepnie ja przekazuje do realizacji
+            this.rulesProcessor.generateDecisionAndApply(group);
+        }
+        catch (final Exception e)
+        {
+            this.logger.log(Level.SEVERE, "An exception has been throw while processing group " + group.getName(), e);
+        }
     }
 
     @Override

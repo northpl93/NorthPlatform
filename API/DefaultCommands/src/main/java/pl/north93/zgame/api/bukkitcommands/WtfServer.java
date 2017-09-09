@@ -1,7 +1,5 @@
 package pl.north93.zgame.api.bukkitcommands;
 
-import java.util.Optional;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -10,7 +8,6 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.network.server.group.IServersGroup;
 import pl.north93.zgame.api.global.network.server.Server;
 
 public class WtfServer extends NorthCommand
@@ -33,8 +30,7 @@ public class WtfServer extends NorthCommand
         sender.sendRawMessage("Typ serwera: " + server.getType());
         sender.sendRawMessage("Czy uruchomiony przez demona: " + (server.isLaunchedViaDaemon() ? "tak" : "nie"));
         sender.sendRawMessage("Stan serwera: " + server.getServerState());
-        final Optional<IServersGroup> serversGroup = server.getServersGroup();
-        sender.sendRawMessage("Grupa serwerów: " + serversGroup.map(IServersGroup::getName).orElse("brak"));
+        sender.sendRawMessage("Grupa serwerów: " + server.getServersGroup().getName());
     }
 
     @Override

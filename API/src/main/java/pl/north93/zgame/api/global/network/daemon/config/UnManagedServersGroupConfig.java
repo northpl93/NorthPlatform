@@ -1,4 +1,4 @@
-package pl.north93.zgame.controller.servers.cfg;
+package pl.north93.zgame.api.global.network.daemon.config;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -10,10 +10,7 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.network.server.group.ServersGroupDto;
 import pl.north93.zgame.api.global.network.server.group.ServersGroupType;
-import pl.north93.zgame.controller.servers.groups.ILocalServersGroup;
-import pl.north93.zgame.controller.servers.groups.LocalUnManagedServersGroup;
 
 @XmlRootElement(name = "unmanaged")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -40,13 +37,6 @@ public class UnManagedServersGroupConfig extends ServersGroupConfig
     public ServersGroupType getType()
     {
         return ServersGroupType.UN_MANAGED;
-    }
-
-    @Override
-    public ILocalServersGroup createLocalGroup()
-    {
-        final ServersGroupDto serversGroupDto = new ServersGroupDto(this.getName(), ServersGroupType.UN_MANAGED, this.getServersType(), this.getJoiningPolicy());
-        return new LocalUnManagedServersGroup(serversGroupDto, this);
     }
 
     @Override

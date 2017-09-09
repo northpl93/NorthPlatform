@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <autoscaler>
     <patterns>
-
+        <pattern>
+            <patternName>test1</patternName>
+            <engineName>spigot-1.10.jar</engineName>
+            <maxMemory>512</maxMemory>
+            <startMemory>512</startMemory>
+            <components>
+                <component>core</component>
+            </components>
+        </pattern>
     </patterns>
 
     <groups>

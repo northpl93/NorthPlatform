@@ -20,8 +20,10 @@ public class RemoteArena implements IArena
     private UUID         arenaId;
     private UUID         serverId;
     private GameIdentity miniGame;
+    private Boolean      isDynamic;
     private String       worldId;
     private GamePhase    gamePhase;
+    private Integer      maxPlayers;
     @MsgPackCustomTemplate(HashSetTemplate.class)
     private Set<UUID>    players;
 
@@ -29,13 +31,15 @@ public class RemoteArena implements IArena
     {
     }
 
-    public RemoteArena(final UUID arenaId, final UUID serverId, final GameIdentity miniGame, final String worldId, final GamePhase gamePhase, final Set<UUID> players)
+    public RemoteArena(final UUID arenaId, final UUID serverId, final GameIdentity miniGame, final Boolean isDynamic, final String worldId, final GamePhase gamePhase, final Integer maxPlayers, final Set<UUID> players)
     {
         this.arenaId = arenaId;
         this.serverId = serverId;
         this.miniGame = miniGame;
+        this.isDynamic = isDynamic;
         this.worldId = worldId;
         this.gamePhase = gamePhase;
+        this.maxPlayers = maxPlayers;
         this.players = players;
     }
 
@@ -55,6 +59,12 @@ public class RemoteArena implements IArena
     public GameIdentity getMiniGame()
     {
         return this.miniGame;
+    }
+
+    @Override
+    public boolean isDynamic()
+    {
+        return this.isDynamic;
     }
 
     @Override
@@ -86,8 +96,14 @@ public class RemoteArena implements IArena
     }
 
     @Override
+    public int getMaxPlayers()
+    {
+        return this.maxPlayers;
+    }
+
+    @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("arenaId", this.arenaId).append("serverId", this.serverId).append("miniGame", this.miniGame).append("worldId", this.worldId).append("gamePhase", this.gamePhase).append("players", this.players).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("arenaId", this.arenaId).append("serverId", this.serverId).append("miniGame", this.miniGame).append("isDynamic", this.isDynamic).append("worldId", this.worldId).append("gamePhase", this.gamePhase).append("maxPlayers", this.maxPlayers).append("players", this.players).toString();
     }
 }

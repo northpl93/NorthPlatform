@@ -14,8 +14,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.controller.servers.cfg.rules.RuleEntryConfig;
-import pl.north93.zgame.controller.servers.cfg.rules.RulesConfig;
+import pl.north93.zgame.api.global.network.daemon.config.rules.RuleEntryConfig;
+import pl.north93.zgame.api.global.network.daemon.config.rules.RulesConfig;
 import pl.north93.zgame.controller.servers.groups.LocalGroupsManager;
 import pl.north93.zgame.controller.servers.groups.LocalManagedServersGroup;
 import pl.north93.zgame.controller.servers.scaler.value.IScalingValue;

@@ -188,17 +188,12 @@ public class BukkitApiCore extends ApiCore
         final Properties properties = System.getProperties();
         if (properties.containsKey("northplatform.serverid")) // Konfiguracja serwera pobierana jest z Redisa
         {
-            this.debug("Server is identified by northplatform.serverid");
             return UUID.fromString(properties.getProperty("northplatform.serverid"));
-        }
-        else if (properties.containsKey("northplatform.servertype")) // Konfiguracja ręczna - serwer sam zgłasza się do Redisa
-        {
-            this.debug("Server identity is generated (northplatform.servertype)");
-            return UUID.randomUUID();
         }
         else
         {
-            throw new ConfigurationException("Invalid startup parameters. Please specify northplatform.serverid or northplatform.servertype");
+            Bukkit.shutdown();
+            throw new ConfigurationException("Invalid startup parameters. Please specify northplatform.serverid");
         }
     }
 

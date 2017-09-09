@@ -1,4 +1,4 @@
-package pl.north93.zgame.controller.servers.cfg;
+package pl.north93.zgame.api.global.network.daemon.config;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -8,11 +8,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.network.server.group.ServersGroupDto;
+import pl.north93.zgame.api.global.network.daemon.config.rules.RulesConfig;
 import pl.north93.zgame.api.global.network.server.group.ServersGroupType;
-import pl.north93.zgame.controller.servers.cfg.rules.RulesConfig;
-import pl.north93.zgame.controller.servers.groups.ILocalServersGroup;
-import pl.north93.zgame.controller.servers.groups.LocalManagedServersGroup;
 
 @XmlRootElement(name = "managed")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -41,13 +38,6 @@ public class ManagedServersGroupConfig extends ServersGroupConfig
     public ServersGroupType getType()
     {
         return ServersGroupType.MANAGED;
-    }
-
-    @Override
-    public ILocalServersGroup createLocalGroup()
-    {
-        final ServersGroupDto serversGroupDto = new ServersGroupDto(this.getName(), ServersGroupType.MANAGED, this.getServersType(), this.getJoiningPolicy());
-        return new LocalManagedServersGroup(serversGroupDto, this);
     }
 
     @Override

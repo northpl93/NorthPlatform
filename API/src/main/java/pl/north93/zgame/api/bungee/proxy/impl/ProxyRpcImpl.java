@@ -9,11 +9,11 @@ import net.md_5.bungee.api.chat.TextComponent;
 import pl.north93.zgame.api.bungee.BungeeApiCore;
 import pl.north93.zgame.api.bungee.proxy.IProxyServerManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.network.proxy.ProxyRpc;
+import pl.north93.zgame.api.global.network.proxy.IProxyRpc;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.network.server.joinaction.JoinActionsContainer;
 
-public class ProxyRpcImpl implements ProxyRpc
+public class ProxyRpcImpl implements IProxyRpc
 {
     @Inject
     private BungeeApiCore apiCore;
@@ -64,15 +64,9 @@ public class ProxyRpcImpl implements ProxyRpc
     }
 
     @Override
-    public void removeServer(final String serverName)
+    public void removeServer(final ServerProxyData proxyData)
     {
-        this.proxyServerManager.getServerList().removeServer(serverName);
-    }
-
-    @Override
-    public void removeAllServers()
-    {
-        this.proxyServerManager.getServerList().removeAllServers();
+        this.proxyServerManager.getServerList().removeServer(proxyData);
     }
 
     @Override

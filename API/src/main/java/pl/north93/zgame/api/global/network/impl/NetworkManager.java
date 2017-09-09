@@ -35,8 +35,8 @@ class NetworkManager extends Component implements INetworkManager
     @Override
     protected void enableComponent()
     {
-        this.proxiesManager = new ProxiesManagerImpl(this.observationManager);
-        this.daemonsManager = new DaemonsManagerImpl(this.observationManager);
+        this.proxiesManager = new ProxiesManagerImpl(this.rpcManager, this.observationManager);
+        this.daemonsManager = new DaemonsManagerImpl(this.rpcManager, this.observationManager);
         this.serversManager = new ServersManagerImpl(this.observationManager);
         this.playersManager = new PlayersManagerImpl(this, this.playersData, this.observationManager, this.rpcManager);
     }

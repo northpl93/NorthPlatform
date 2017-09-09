@@ -1,4 +1,4 @@
-package pl.north93.zgame.controller.servers.cfg.rules;
+package pl.north93.zgame.api.global.network.daemon.config.rules;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

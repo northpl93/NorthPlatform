@@ -18,7 +18,7 @@ import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.Identity;
-import pl.north93.zgame.api.global.network.proxy.ProxyRpc;
+import pl.north93.zgame.api.global.network.proxy.IProxyRpc;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.Value;
@@ -48,9 +48,9 @@ class PlayersManagerImpl implements IPlayersManager
      * Wewnetrzna metoda implementacji.
      * Uzywana w OnlinePlayerImpl.
      */
-    public ProxyRpc getPlayerProxyRpc(final IOnlinePlayer onlinePlayer)
+    public IProxyRpc getPlayerProxyRpc(final IOnlinePlayer onlinePlayer)
     {
-        return this.rpcManager.createRpcProxy(ProxyRpc.class, Targets.proxy(onlinePlayer.getProxyId()));
+        return this.rpcManager.createRpcProxy(IProxyRpc.class, Targets.proxy(onlinePlayer.getProxyId()));
     }
 
     @Override

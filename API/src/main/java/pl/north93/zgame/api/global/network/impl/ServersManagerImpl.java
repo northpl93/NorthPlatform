@@ -3,7 +3,6 @@ package pl.north93.zgame.api.global.network.impl;
 import static pl.north93.zgame.api.global.utils.CollectionUtils.findInCollection;
 
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -53,11 +52,7 @@ class ServersManagerImpl implements IServersManager
     @Override
     public Set<Server> inGroup(final String group)
     {
-        return this.all().stream().filter(server ->
-        {
-            final Optional<IServersGroup> groupOptional = server.getServersGroup();
-            return groupOptional.isPresent() && groupOptional.get().getName().equals(group);
-        }).collect(Collectors.toSet());
+        return this.all().stream().filter(server -> server.getServersGroup().getName().equals(group)).collect(Collectors.toSet());
     }
 
     @Override

@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.network.server.group.ServersGroupDto;
-import pl.north93.zgame.controller.servers.cfg.ManagedServersGroupConfig;
+import pl.north93.zgame.api.global.network.daemon.config.ManagedServersGroupConfig;
 import pl.north93.zgame.controller.servers.operation.AutoScalerOperation;
 import pl.north93.zgame.controller.servers.operation.OperationCommitter;
 import pl.north93.zgame.controller.servers.operation.ScalerOperationState;

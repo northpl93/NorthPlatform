@@ -2,6 +2,7 @@ package pl.north93.zgame.api.global.network.proxy;
 
 import java.util.Set;
 
+import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.redis.observable.Hash;
 
 /**
@@ -22,12 +23,28 @@ public interface IProxiesManager
      *
      * @return lista serwerów proxy.
      */
-    Set<ProxyInstanceInfo> all();
+    Set<ProxyDto> all();
+
+    IProxyRpc getRpc(ProxyDto proxyDto);
+
+    /**
+     * Dodaje podany serwer do wszystkich polaczonych proxy.
+     *
+     * @param proxyData Serwer do dodania.
+     */
+    void addServer(ServerProxyData proxyData);
+
+    /**
+     * Usuwa podany serwer z wszystkich polaczonych proxy.
+     *
+     * @param proxyData Serwer do usuniecia.
+     */
+    void removeServer(ServerProxyData proxyData);
 
     Unsafe unsafe();
 
     interface Unsafe
     {
-        Hash<ProxyInstanceInfo> getHash();
+        Hash<ProxyDto> getHash();
     }
 }

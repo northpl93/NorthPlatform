@@ -14,7 +14,7 @@ import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.network.proxy.ProxyRpc;
+import pl.north93.zgame.api.global.network.proxy.IProxyRpc;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.zgame.api.global.network.server.joinaction.JoinActionsContainer;
@@ -205,7 +205,7 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     @Override
     public boolean isOnline()
     {
-        final ProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
+        final IProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
         return proxyRpc.isOnline(this.nick);
     }
 
@@ -239,7 +239,7 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     @Override
     public void sendRawMessage(final String message, final boolean colorText)
     {
-        final ProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
+        final IProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
         proxyRpc.sendMessage(this.nick, message, colorText);
     }
 
@@ -250,21 +250,21 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     @Override
     public void kick(final String message)
     {
-        final ProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
+        final IProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
         proxyRpc.kick(this.nick, message);
     }
 
     @Override
     public void connectTo(final ServerProxyData server, IServerJoinAction... actions)
     {
-        final ProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
+        final IProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
         proxyRpc.connectPlayer(this.nick, server.getProxyName(), new JoinActionsContainer(actions));
     }
 
     @Override
     public void connectTo(final String serversGroupName, IServerJoinAction... actions)
     {
-        final ProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
+        final IProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
         proxyRpc.connectPlayerToServersGroup(this.nick, serversGroupName, new JoinActionsContainer(actions));
     }
 

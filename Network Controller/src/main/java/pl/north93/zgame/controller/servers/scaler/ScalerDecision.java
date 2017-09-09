@@ -1,8 +1,9 @@
 package pl.north93.zgame.controller.servers.scaler;
 
-import pl.north93.zgame.controller.servers.cfg.rules.RuleEntryConfig;
+import pl.north93.zgame.api.global.network.daemon.config.rules.RuleEntryConfig;
 import pl.north93.zgame.controller.servers.groups.LocalManagedServersGroup;
 import pl.north93.zgame.controller.servers.operation.DeployServerOperation;
+import pl.north93.zgame.controller.servers.operation.RemoveServerOperation;
 
 public enum ScalerDecision
 {
@@ -19,7 +20,7 @@ public enum ScalerDecision
                 @Override
                 public boolean apply(final LocalManagedServersGroup serversGroup)
                 {
-                    return false; // todo implement
+                    return serversGroup.commitOperation(new RemoveServerOperation(serversGroup));
                 }
             },
     DO_NOTHING
