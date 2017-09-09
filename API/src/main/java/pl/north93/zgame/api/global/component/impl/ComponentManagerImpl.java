@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.global.component.impl;
 
+import static java.text.MessageFormat.format;
+
 import static pl.north93.zgame.api.global.utils.CollectionUtils.findInCollection;
 
 
@@ -234,6 +236,8 @@ public class ComponentManagerImpl implements IComponentManager
 
     private void loadComponentsFromFile(final File file)
     {
+        this.apiCore.debug(format("Loading components from file {0}", file.getAbsolutePath()));
+
         final JarComponentLoader loader;
         try
         {

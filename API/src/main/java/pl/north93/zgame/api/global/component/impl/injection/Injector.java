@@ -12,13 +12,11 @@ import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 
 public class Injector
 {
-    public static void inject(final Object instance)
+    public static void inject(final Object instance, final Class<?> clazz)
     {
         final ComponentManagerImpl manager = ComponentManagerImpl.instance;
-        final Class<?> clazz = instance.getClass();
 
         final AbstractBeanContext context = manager.getOwningContext(clazz);
-
         for (final Field field : clazz.getDeclaredFields())
         {
             field.setAccessible(true);

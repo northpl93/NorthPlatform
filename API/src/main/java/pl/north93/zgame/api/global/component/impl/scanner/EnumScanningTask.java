@@ -29,7 +29,7 @@ class EnumScanningTask extends AbstractScanningTask
         {
             try
             {
-                Injector.inject(enumConstant);
+                Injector.inject(enumConstant, enumConstant.getClass());
             }
             catch (final Exception e)
             {

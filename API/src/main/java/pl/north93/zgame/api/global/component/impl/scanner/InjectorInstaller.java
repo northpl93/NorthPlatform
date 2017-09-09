@@ -74,7 +74,7 @@ class InjectorInstaller
         for (final CtConstructor ctConstructor : ctClass.getDeclaredConstructors())
         {
             // na poczatek kod wstrzykujacy
-            ctConstructor.insertBeforeBody(INJECTOR_NAME + ".inject(this);");
+            ctConstructor.insertBeforeBody(INJECTOR_NAME + ".inject(this, " + ctClass.getName() + ".class);");
 
             // na koniec metody PostInject
             for (final CtMethod method : postInject)

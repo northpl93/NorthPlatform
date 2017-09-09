@@ -69,7 +69,9 @@ class InstancesAggregator implements IAggregator
         final CtClass superclass = hideException(clazz::getSuperclass);
         if (superclass != null && !superclass.getName().equals("java.lang.Object"))
         {
-            possibilities.add(superclass);
+            // uzywamy rekursywnego zbierania mozliwych punktow agregacji zeby
+            // wylapac tez interfejsy super-klas.
+            possibilities.addAll(this.getPossibleAggregationPoints(superclass));
         }
 
         possibilities.addAll(Arrays.asList(hideException(clazz::getInterfaces)));

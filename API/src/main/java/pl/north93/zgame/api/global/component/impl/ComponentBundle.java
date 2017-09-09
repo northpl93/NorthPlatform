@@ -97,7 +97,7 @@ public class ComponentBundle implements IComponentBundle
         {
             this.instantiateClass(); // tworzymy klase glowna
             this.scanNow(); // wykonujemy wszystkie skanowania
-            Injector.inject(this.component); // wstrzykujemy klase glowna
+            Injector.inject(this.component, this.component.getClass()); // wstrzykujemy klase glowna
             this.getComponent().callStartMethod(true); // wywolujemy enableComponent
         }
         catch (final Exception e)
