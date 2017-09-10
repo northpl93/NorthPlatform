@@ -2,7 +2,7 @@ package pl.north93.zgame.api.global.utils;
 
 import javax.annotation.Nonnull;
 
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Implementacja mapy bazujaca na HashMapie trzymajaca wartosci jako
- * WeakReference. Gdy zostanie wykonane finalize wtedy klucz do ktorego
+ * SoftReference. Gdy zostanie wykonane finalize wtedy klucz do ktorego
  * przypisana jest wartosc usuwa sie. Wszystkie wywolania sa synchronizowane
  * wiec jest wielowatkowo bezpieczna.
  *
@@ -24,9 +24,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @param <K> Typ klucza.
  * @param <V> Typ wartosci.
  */
-public class WeakValueHashMap<K, V> implements Map<K, V>
+public class SoftValueHashMap<K, V> implements Map<K, V>
 {
-    private final Map<K, WeakReference<WeakObjectHolder>> map = new HashMap<>();
+    private final Map<K, SoftReference<WeakObjectHolder>> map = new HashMap<>();
 
     @Override
     public int size()
@@ -75,7 +75,7 @@ public class WeakValueHashMap<K, V> implements Map<K, V>
     {
         synchronized (this.map)
         {
-            return this.decodeReference(this.map.put(key, new WeakReference<>(new WeakObjectHolder(key, value))));
+            return this.decodeReference(this.map.put(key, new SoftReference<>(new WeakObjectHolder(key, value))));
         }
     }
 
@@ -136,11 +136,11 @@ public class WeakValueHashMap<K, V> implements Map<K, V>
     {
         synchronized (this.map)
         {
-            WeakReference<WeakObjectHolder> value = this.map.get(key);
+            SoftReference<WeakObjectHolder> value = this.map.get(key);
             if (value == null)
             {
                 final V newValue = mappingFunction.apply(key);
-                value = new WeakReference<>(new WeakObjectHolder(key, newValue));
+                value = new SoftReference<>(new WeakObjectHolder(key, newValue));
                 this.map.put(key, value);
 
                 return newValue;
@@ -151,7 +151,7 @@ public class WeakValueHashMap<K, V> implements Map<K, V>
                 if (weakHolder == null)
                 {
                     final V newValue = mappingFunction.apply(key);
-                    value = new WeakReference<>(new WeakObjectHolder(key, newValue));
+                    value = new SoftReference<>(new WeakObjectHolder(key, newValue));
                     this.map.put(key, value);
 
                     return newValue;
@@ -164,7 +164,7 @@ public class WeakValueHashMap<K, V> implements Map<K, V>
         }
     }
 
-    private V decodeReference(final WeakReference<WeakObjectHolder> reference)
+    private V decodeReference(final SoftReference<WeakObjectHolder> reference)
     {
         if (reference == null)
         {
@@ -204,7 +204,7 @@ public class WeakValueHashMap<K, V> implements Map<K, V>
         @Override
         protected void finalize() throws Throwable
         {
-            WeakValueHashMap.this.valueFinalized(this.key);
+            SoftValueHashMap.this.valueFinalized(this.key);
         }
 
         @Override
