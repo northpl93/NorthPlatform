@@ -2,7 +2,7 @@ package pl.north93.zgame.datashare.sharedimpl;
 
 import static java.text.MessageFormat.format;
 
-import static pl.north93.zgame.api.global.utils.StringUtils.toBytes;
+import static pl.north93.zgame.api.global.utils.lang.StringUtils.toBytes;
 
 
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.utils;
+package pl.north93.zgame.api.global.utils.lang;
 
 import java.util.Collection;
 import java.util.function.Function;

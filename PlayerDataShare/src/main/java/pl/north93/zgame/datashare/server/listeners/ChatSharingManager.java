@@ -2,7 +2,7 @@ package pl.north93.zgame.datashare.server.listeners;
 
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
-import static pl.north93.zgame.api.global.utils.StringUtils.asString;
+import static pl.north93.zgame.api.global.utils.lang.StringUtils.asString;
 
 
 import java.text.MessageFormat;

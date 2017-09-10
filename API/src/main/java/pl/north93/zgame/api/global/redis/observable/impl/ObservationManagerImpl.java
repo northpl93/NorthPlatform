@@ -1,9 +1,7 @@
 package pl.north93.zgame.api.global.redis.observable.impl;
 
-import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -28,12 +26,13 @@ import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
 import pl.north93.zgame.api.global.redis.observable.SortedSet;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
+import pl.north93.zgame.api.global.utils.WeakValueHashMap;
 
 public class ObservationManagerImpl extends Component implements IObservationManager
 {
-    private final Map<String, WeakReference<Value<?>>> cachedValues = new HashMap<>();
-    private final ValueSubscriptionHandler             valueSubHandler;
-    private final List<LockImpl>                       waitingLocks = new ArrayList<>();
+    private final Map<String, CachedValue> cachedValues = new WeakValueHashMap<>();
+    private final ValueSubscriptionHandler valueSubHandler;
+    private final List<LockImpl>           waitingLocks = new ArrayList<>();
     @Inject
     private StorageConnector storageConnector;
     @Inject
@@ -52,24 +51,13 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         return this.get(clazz, new ObjectKey(objectKey));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> Value<T> get(final Class<T> clazz, final ObjectKey objectKey)
     {
         final String key = objectKey.getKey();
 
-        WeakReference<Value<?>> value;
-        synchronized (this.cachedValues)
-        {
-            value = this.cachedValues.get(key);
-            if (value == null || value.get() == null)
-            {
-                value = new WeakReference<>(new CachedValueImpl<>(this, clazz, objectKey));
-                this.cachedValues.put(key, value);
-            }
-        }
-
-        //noinspection unchecked
-        return (Value<T>) value.get();
+        return this.cachedValues.computeIfAbsent(key, p1 -> new CachedValueImpl<>(this, clazz, objectKey));
     }
 
     @Override
@@ -78,11 +66,14 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         return this.get(clazz, keyProvider.getKey());
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> Value<T> get(final Hash<T> hash, final String key)
     {
         final HashImpl<T> hashImpl = (HashImpl<T>) hash;
-        return new CachedHashValueImpl<>(this, hashImpl, key, hashImpl.getClazz());
+        final String mapKey = "hash:" + hash.getName() + ":" + key;
+
+        return this.cachedValues.computeIfAbsent(mapKey, p1 -> new CachedHashValueImpl<>(this, hashImpl, key, hashImpl.getClazz()));
     }
 
     @Override

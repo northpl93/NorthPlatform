@@ -2,7 +2,7 @@ package pl.north93.zgame.api.global.component.impl;
 
 import static java.text.MessageFormat.format;
 
-import static pl.north93.zgame.api.global.utils.CollectionUtils.findInCollection;
+import static pl.north93.zgame.api.global.utils.lang.CollectionUtils.findInCollection;
 
 
 import java.io.File;

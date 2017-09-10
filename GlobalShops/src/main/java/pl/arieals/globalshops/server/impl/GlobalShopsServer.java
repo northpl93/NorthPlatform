@@ -22,7 +22,7 @@ import pl.north93.zgame.api.global.config.ConfigUpdatedNetEvent;
 import pl.north93.zgame.api.global.config.IConfig;
 import pl.north93.zgame.api.global.config.NetConfig;
 import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
-import pl.north93.zgame.api.global.utils.CollectionUtils;
+import pl.north93.zgame.api.global.utils.lang.CollectionUtils;
 
 public class GlobalShopsServer extends Component implements IGlobalShops
 {

@@ -86,7 +86,7 @@ class CachedValueImpl<T> extends CachedValue<T>
     }
 
     @Override
-    public T getAndDelete()
+    public synchronized T getAndDelete()
     {
         final String key = this.objectKey.getKey();
 
@@ -104,6 +104,10 @@ class CachedValueImpl<T> extends CachedValue<T>
         {
             return null;
         }
+
+        // wysylamy aktualizacje mowiaca o usunieciu wartosci.
+        this.observationManager.getValueSubHandler().update(this, new byte[0]);
+
         return this.observationManager.getMsgPack().deserialize(this.clazz, getResult);
     }
 

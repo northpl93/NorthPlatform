@@ -1,6 +1,6 @@
 package pl.north93.zgame.api.global.component.impl.aggregation;
 
-import static pl.north93.zgame.api.global.utils.JavaUtils.hideException;
+import static pl.north93.zgame.api.global.utils.lang.JavaUtils.hideException;
 
 
 import java.lang.reflect.Method;

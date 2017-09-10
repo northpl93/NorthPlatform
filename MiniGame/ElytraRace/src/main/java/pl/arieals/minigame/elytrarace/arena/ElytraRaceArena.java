@@ -1,7 +1,7 @@
 package pl.arieals.minigame.elytrarace.arena;
 
 import static pl.arieals.minigame.elytrarace.ElytraRaceMode.RACE_MODE;
-import static pl.north93.zgame.api.global.utils.CollectionUtils.findInCollection;
+import static pl.north93.zgame.api.global.utils.lang.CollectionUtils.findInCollection;
 
 
 import java.util.HashMap;

@@ -1,6 +1,6 @@
 package pl.north93.zgame.daemon.servers;
 
-import static pl.north93.zgame.api.global.utils.CollectionUtils.findInCollection;
+import static pl.north93.zgame.api.global.utils.lang.CollectionUtils.findInCollection;
 
 
 import javax.annotation.Nullable;

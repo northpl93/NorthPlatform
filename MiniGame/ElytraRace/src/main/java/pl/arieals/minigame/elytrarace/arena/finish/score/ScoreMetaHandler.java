@@ -25,7 +25,7 @@ import pl.arieals.minigame.elytrarace.arena.finish.IFinishHandler;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.utils.MapCollector;
+import pl.north93.zgame.api.global.utils.lang.MapCollector;
 
 public class ScoreMetaHandler implements IFinishHandler
 {

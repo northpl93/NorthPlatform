@@ -5,7 +5,7 @@ import static java.text.MessageFormat.format;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
 
-import static pl.north93.zgame.api.global.utils.CollectionUtils.findInCollection;
+import static pl.north93.zgame.api.global.utils.lang.CollectionUtils.findInCollection;
 
 
 import java.text.MessageFormat;

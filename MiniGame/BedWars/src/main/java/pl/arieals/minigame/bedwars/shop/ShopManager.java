@@ -5,7 +5,7 @@ import static java.text.MessageFormat.format;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.north93.zgame.api.bukkit.utils.nms.ItemStackHelper.ensureCraftItemStack;
 import static pl.north93.zgame.api.bukkit.utils.nms.ItemStackHelper.getPersistentStorage;
-import static pl.north93.zgame.api.global.utils.CollectionUtils.findInCollection;
+import static pl.north93.zgame.api.global.utils.lang.CollectionUtils.findInCollection;
 
 
 import java.util.HashMap;

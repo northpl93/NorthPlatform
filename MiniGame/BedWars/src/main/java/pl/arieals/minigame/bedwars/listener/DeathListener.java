@@ -4,7 +4,7 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.setPlayerStatus;
-import static pl.north93.zgame.api.global.utils.JavaUtils.instanceOf;
+import static pl.north93.zgame.api.global.utils.lang.JavaUtils.instanceOf;
 
 
 import java.time.Duration;

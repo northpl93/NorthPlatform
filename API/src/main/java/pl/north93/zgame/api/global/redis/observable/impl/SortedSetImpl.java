@@ -1,7 +1,7 @@
 package pl.north93.zgame.api.global.redis.observable.impl;
 
-import static pl.north93.zgame.api.global.utils.StringUtils.asString;
-import static pl.north93.zgame.api.global.utils.StringUtils.toBytes;
+import static pl.north93.zgame.api.global.utils.lang.StringUtils.asString;
+import static pl.north93.zgame.api.global.utils.lang.StringUtils.toBytes;
 
 
 import java.util.Set;
@@ -15,7 +15,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.Pair;
 
 import pl.north93.zgame.api.global.redis.observable.SortedSet;
-import pl.north93.zgame.api.global.utils.StringUtils;
+import pl.north93.zgame.api.global.utils.lang.StringUtils;
 
 class SortedSetImpl<K> implements SortedSet<K>
 {
