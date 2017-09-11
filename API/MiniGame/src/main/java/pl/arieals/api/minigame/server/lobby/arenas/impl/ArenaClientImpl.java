@@ -25,7 +25,6 @@ import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaCreatedNetEvent;
 import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDataChangedNetEvent;
 import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDeletedNetEvent;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
-import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
@@ -49,18 +48,15 @@ public class ArenaClientImpl implements IArenaClient
     @Bean
     private ArenaClientImpl()
     {
-        this.arenas = new HashMap<>(100);
-        this.observers = new ConcurrentHashMap<>();
-    }
-
-    @PostInject
-    private synchronized void postInject()
-    {
         final Set<RemoteArena> allArenas = this.arenaManager.getAllArenas();
+
+        this.arenas = new HashMap<>(allArenas.size());
         for (final RemoteArena arena : allArenas)
         {
             this.arenas.put(arena.getId(), arena);
         }
+
+        this.observers = new ConcurrentHashMap<>();
     }
 
     private void fireObservers(final IArena arena, final Consumer<IArenaObserver> action)

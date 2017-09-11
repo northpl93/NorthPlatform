@@ -86,6 +86,11 @@ public class LocalHub implements IHubServer
     public void refreshConfiguration()
     {
         final HubsConfig hubsConfig = this.hubsConfig.get();
+        if (hubsConfig == null)
+        {
+            this.apiCore.getLogger().log(Level.WARNING, "HubsConfig is null in LocalHub#refreshConfiguration()! Did controller is set up properly?");
+            return;
+        }
 
         for (final HubConfig hubConfig : hubsConfig.getHubs())
         {
