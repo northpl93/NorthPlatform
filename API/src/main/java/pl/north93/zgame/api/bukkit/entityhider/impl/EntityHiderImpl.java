@@ -57,11 +57,11 @@ public class EntityHiderImpl extends Component implements IEntityHider
 
         if (visible)
         {
-            hiddenEntities.add(entity.getEntityId());
+            hiddenEntities.remove(entity.getEntityId());
         }
         else
         {
-            hiddenEntities.remove(entity.getEntityId());
+            hiddenEntities.add(entity.getEntityId());
         }
     }
 
