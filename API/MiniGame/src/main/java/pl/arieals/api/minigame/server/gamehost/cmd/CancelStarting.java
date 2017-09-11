@@ -57,12 +57,13 @@ public class CancelStarting extends NorthCommand
 
         if (arena.getStartScheduler().isStartScheduled())
         {
-            sender.sendRawMessage("&aAnulowano start.");
+            sender.sendRawMessage("&aAnulowano start. (uzyj ponownie aby wznowic)");
             arena.getStartScheduler().cancelStarting();
         }
         else
         {
-            sender.sendRawMessage("&cOdliczanie do startu nie jest aktywne.");
+            sender.sendRawMessage("&aWznowiono odliczanie do startu.");
+            arena.getStartScheduler().scheduleStart();
         }
     }
 

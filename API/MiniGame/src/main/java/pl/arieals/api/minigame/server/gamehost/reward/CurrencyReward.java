@@ -50,7 +50,7 @@ public class CurrencyReward implements IReward
     public void apply(final Identity identity)
     {
         final ICurrency currency = manager.getCurrency(this.currencyId);
-        try (final ITransaction t = manager.openTransaction(currency, identity.getUuid()))
+        try (final ITransaction t = manager.openTransaction(currency, identity))
         {
             t.add(this.amount);
         }

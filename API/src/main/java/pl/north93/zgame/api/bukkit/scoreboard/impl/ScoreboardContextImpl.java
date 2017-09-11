@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -41,6 +43,7 @@ class ScoreboardContextImpl implements IScoreboardContext
         this.data = new HashMap<>();
         this.boardId = RandomStringUtils.random(4);
         this.boardLines = new LinkedList<>();
+        layout.initContext(this);
     }
 
     @Override
@@ -74,6 +77,27 @@ class ScoreboardContextImpl implements IScoreboardContext
     {
         //noinspection unchecked
         return (T) this.data.get(key);
+    }
+
+    @Override
+    public <T> void setCompletableFuture(final String key, final CompletableFuture<T> future)
+    {
+        this.data.put(key, future);
+        if (! future.isDone())
+        {
+            future.whenComplete((result, throwable) -> this.update());
+        }
+    }
+
+    @Override
+    public <T> Optional<T> getCompletableFuture(final String key)
+    {
+        final CompletableFuture<T> future = this.get(key); // ew. jebnie ClassCastException gdy to jednak nie completablefuture.
+        if (future.isDone())
+        {
+            return Optional.ofNullable(future.getNow(null));
+        }
+        return Optional.empty();
     }
 
     @Override
