@@ -33,5 +33,6 @@ public class JoinTeamGui extends Gui
         }
         
         player.getArena().signToTeam(player, team);
+        closeAll();
     }
 }

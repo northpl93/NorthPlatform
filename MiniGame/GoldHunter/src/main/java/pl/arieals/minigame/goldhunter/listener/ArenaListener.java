@@ -1,9 +1,7 @@
 package pl.arieals.minigame.goldhunter.listener;
 
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 
 import pl.arieals.api.minigame.server.gamehost.MiniGameApi;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
@@ -14,22 +12,26 @@ import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEv
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
+import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.GoldHunterArena;
-import pl.arieals.minigame.goldhunter.GoldHunterComponent;
+import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ArenaListener implements AutoListener
 {
-    private final Logger logger = LogManager.getLogger("ArenaListener");
-        
-    @Inject
-    private GoldHunterComponent goldHunter;
-    @Inject
-    private ITickableManager tickableManager;
+    private final Logger logger;
+    private final GoldHunter goldHunter;
+    private final ITickableManager tickableManager;
+    
+    public ArenaListener(@GoldHunterLogger Logger logger, GoldHunter goldHunter, ITickableManager tickableManager)
+    {
+        this.logger = logger;
+        this.goldHunter = goldHunter;
+        this.tickableManager = tickableManager;
+    }
     
     @EventHandler
     public void onGameInit(GameInitEvent event)
@@ -57,6 +59,7 @@ public class ArenaListener implements AutoListener
     public void onGameStart(GameStartEvent event)
     {
         GoldHunterArena arena = event.getArena().getArenaData();
+        goldHunter.setWorldProperties(event.getArena().getWorld().getCurrentWorld());
         arena.gameStart();
     }
     

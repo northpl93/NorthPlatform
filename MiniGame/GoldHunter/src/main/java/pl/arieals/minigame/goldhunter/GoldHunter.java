@@ -5,10 +5,11 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
+import org.bukkit.Difficulty;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-import net.minecraft.server.v1_10_R1.EntityTypes;
 import pl.arieals.api.minigame.server.gamehost.MiniGameApi;
 import pl.arieals.minigame.goldhunter.classes.CharacterClassManager;
 import pl.arieals.minigame.goldhunter.entity.GoldHunterEntityUtils;
@@ -33,6 +34,7 @@ public class GoldHunter
     {
         characterClassManager.initClasses();
         GoldHunterEntityUtils.registerGoldHunterEntities();
+        runTask(() -> setWorldProperties(Bukkit.getWorlds().get(0)));
     }
     
     void disable()
@@ -53,6 +55,18 @@ public class GoldHunter
     public BukkitTask runTask(int ticks, Runnable runnable)
     {
         return Bukkit.getScheduler().runTaskLater(apiCore.getPluginMain(), runnable, ticks);
+    }
+    
+    public void setWorldProperties(World world)
+    {
+        world.setSpawnFlags(false, false);
+        world.setDifficulty(Difficulty.HARD);
+        world.setWeatherDuration(Integer.MAX_VALUE);
+        world.setThundering(false);
+        world.setStorm(false);
+        
+        world.setGameRuleValue("doWeatherCycle", "false");
+        world.setGameRuleValue("doDaylightCycle", "false");
     }
     
     @DynamicBean

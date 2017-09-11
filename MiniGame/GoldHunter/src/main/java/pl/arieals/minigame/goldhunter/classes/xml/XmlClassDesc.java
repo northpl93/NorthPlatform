@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import pl.arieals.minigame.goldhunter.InventoryRefilRule;
 import pl.arieals.minigame.goldhunter.SpecialAbilityType;
 import pl.arieals.minigame.goldhunter.classes.CharacterClass;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -18,6 +19,9 @@ public class XmlClassDesc
     private String lore;
     
     private String specialAbility;
+    
+    private String invRefilRule;
+    private int invRefilTime;
     
     private XmlClassEquipmentInfo equipment;
     
@@ -52,6 +56,8 @@ public class XmlClassDesc
                 TranslatableString.of(messagesBox, shortName),
                 TranslatableString.of(messagesBox, lore),
                 SpecialAbilityType.byName(specialAbility),
-                equipment);
+                equipment,
+                InventoryRefilRule.byName(invRefilRule),
+                invRefilTime);
     }
 }

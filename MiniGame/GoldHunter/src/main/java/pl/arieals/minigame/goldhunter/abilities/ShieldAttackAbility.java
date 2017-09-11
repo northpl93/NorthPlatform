@@ -28,7 +28,15 @@ public class ShieldAttackAbility implements AbilityHandler
             Vector entityPos = le.getLocation().toVector();
             Vector playerPos = player.getPlayer().getLocation().toVector();
             
-            Vector velocity = entityPos.subtract(playerPos).setY(0).normalize().multiply(3).setY(2);
+            Vector toTarget = entityPos.clone().subtract(playerPos).setY(0).normalize();
+            Vector dir = player.getPlayer().getLocation().getDirection().setY(0).normalize();
+            
+            if ( Math.abs(Math.toDegrees(toTarget.angle(dir))) > 30 )
+            {
+                continue;
+            }
+            
+            Vector velocity = toTarget.setY(0.5);
             le.setVelocity(velocity);
         }
         

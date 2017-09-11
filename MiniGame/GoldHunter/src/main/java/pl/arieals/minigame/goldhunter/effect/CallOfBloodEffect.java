@@ -38,6 +38,7 @@ public class CallOfBloodEffect extends Effect
         PlayerInventory inv = getPlayer().getPlayer().getInventory();
         
         Arrays.stream(inv.getContents()).filter(is -> is != null && MaterialUtils.isSword(is.getType())).forEach(this::applyEnchant);
+        getPlayer().getPlayer().updateInventory();
     }
     
     private void applyEnchant(ItemStack is)
@@ -52,6 +53,7 @@ public class CallOfBloodEffect extends Effect
         PlayerInventory inv = getPlayer().getPlayer().getInventory();
         
         Arrays.stream(inv.getContents()).filter(is -> is != null && MaterialUtils.isSword(is.getType())).forEach(this::removeEnchant);
+        getPlayer().getPlayer().updateInventory();
     }
     
     private void removeEnchant(ItemStack is)

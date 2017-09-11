@@ -1,6 +1,7 @@
 package pl.arieals.minigame.goldhunter.listener;
 
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -35,7 +36,7 @@ public class DamageListener implements AutoListener
     }
     
     @EventHandler
-    public void onPlayerDamageByPlayer(EntityDamageByEntityEvent event)
+    public void onDamageByPlayer(EntityDamageByEntityEvent event)
     {
         if ( !( event.getDamager() instanceof Player ) )
         {
@@ -53,6 +54,56 @@ public class DamageListener implements AutoListener
             event.setDamage(1);
         }
         
-        // TODO: obrazenia
+        if ( !( event.getEntity() instanceof Player ) )
+        {
+            return;
+        }
+        
+        GoldHunterPlayer damaged = goldHunter.getPlayer((Player) event.getEntity());
+        if ( damaged == null || damager.getTeam().opositeTeam() != damaged.getTeam() )
+        {
+            event.setCancelled(true);
+            event.setDamage(0);
+            return;
+        }
+        
+        damaged.setLastDamager(damager);
+    }
+    
+    @EventHandler
+    public void onDamagedByProjectile(EntityDamageByEntityEvent event)
+    {
+        if ( !( event.getDamager() instanceof Projectile ) )
+        {
+            return;
+        }
+        
+        Projectile projectile = (Projectile) event.getDamager();
+        
+        if ( !( projectile.getShooter() instanceof Player ) )
+        {
+            return;
+        }
+        
+        GoldHunterPlayer damager = goldHunter.getPlayer((Player) projectile.getShooter());
+        if ( damager == null )
+        {
+            return;
+        }
+        
+        if ( !( event.getEntity() instanceof Player ) )
+        {
+            return;
+        }
+        
+        GoldHunterPlayer damaged = goldHunter.getPlayer((Player) event.getEntity());
+        if ( damaged == null || damager.getTeam().opositeTeam() != damaged.getTeam() )
+        {
+            event.setCancelled(true);
+            event.setDamage(0);
+            return;
+        }
+        
+        damaged.setLastDamager(damager);
     }
 }

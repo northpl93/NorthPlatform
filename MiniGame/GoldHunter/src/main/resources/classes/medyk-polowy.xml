@@ -54,4 +54,7 @@
 		</inv>
 		
 	</equipment>
+	
+	<invRefilRule>MEDYK_POLOWY</invRefilRule>
+	<invRefilTime>600</invRefilTime>
 </class>

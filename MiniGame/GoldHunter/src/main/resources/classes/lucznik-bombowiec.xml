@@ -48,9 +48,8 @@
 			<item ifbuyed="archer.bomb.budulec:1" id="minecraft:planks" count="25" />
 			<item id="minecraft:planks" count="20" />
 		</inv>
-		
-		<inv slot="35">
-			<item id="minecraft:arrow" />
-		</inv>
 	</equipment>
+	
+	<invRefilRule>LUCZNIK</invRefilRule>
+	<invRefilTime>50</invRefilTime>
 </class>

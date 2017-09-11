@@ -4,6 +4,7 @@ import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 
 import pl.arieals.minigame.goldhunter.AbilityHandler;
 import pl.arieals.minigame.goldhunter.GoldHunter;
@@ -25,6 +26,7 @@ public class DazzleAbility implements AbilityHandler
         return false;
     }
     
+    /*
     @EventHandler
     public void onFishHookDamage(EntityDamageByEntityEvent event)
     {
@@ -47,5 +49,11 @@ public class DazzleAbility implements AbilityHandler
             GoldHunterPlayer attacked = goldHunter.getPlayer((Player) event.getEntity());
             attacked.getEffectTracker().addEffect(new BlindnessEffect(), 50); // TODO: add level up
         }
+    } */
+    
+    @EventHandler
+    public void onFishHookDamage(PlayerFishEvent event)
+    {
+        System.out.println(event.getState());
     }
 }

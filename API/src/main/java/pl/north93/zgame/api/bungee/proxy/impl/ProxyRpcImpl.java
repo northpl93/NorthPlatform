@@ -47,7 +47,7 @@ public class ProxyRpcImpl implements IProxyRpc
 
     @Override
     public void connectPlayer(final String nick, final String serverName, final JoinActionsContainer actions)
-    {
+    {   
         this.apiCore.getConnectionManager().connectPlayerToServer(this.proxy.getPlayer(nick), serverName, actions);
     }
 

@@ -53,4 +53,7 @@
 			<item id="minecraft:arrow" />
 		</inv>
 	</equipment>
+	
+	<invRefilRule>LUCZNIK</invRefilRule>
+	<invRefilTime>50</invRefilTime>
 </class>

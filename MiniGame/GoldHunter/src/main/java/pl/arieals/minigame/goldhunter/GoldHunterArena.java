@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 import javax.xml.bind.JAXB;
 
 import org.apache.logging.log4j.Logger;
+import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -28,11 +29,12 @@ import pl.north93.zgame.api.bukkit.gui.IGuiManager;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public class GoldHunterArena implements IArenaData, ITickable
 {
     @Inject
-    @GoldHunterLogger(useToString = true)
+    @GoldHunterLogger
     private Logger logger;
     
     @Inject
@@ -129,6 +131,8 @@ public class GoldHunterArena implements IArenaData, ITickable
         player.spawnInLobby();
         
         updatePlayersCount();
+        
+        scoreboardManager.updateTeamColors();
     }
     
     public void playerLeft(GoldHunterPlayer player)
@@ -138,6 +142,8 @@ public class GoldHunterArena implements IArenaData, ITickable
         
         unsignFromTeam(player);
         updatePlayersCount();
+        
+        scoreboardManager.removeEntryFromTeams(player.getPlayer().getName());
     }
 
     public void gameStart()
@@ -409,6 +415,18 @@ public class GoldHunterArena implements IArenaData, ITickable
         }
         
         return null;
+    }
+
+    public void broadcastDeath(GoldHunterPlayer goldHunterPlayer, GoldHunterPlayer lastDamager)
+    {
+        if ( lastDamager != null )
+        {
+            broadcastMessageIngame("kill_message", goldHunterPlayer.getDisplayNameBold(), lastDamager.getDisplayNameBold());
+        }
+        else
+        {
+            broadcastMessageIngame("death_message", goldHunterPlayer.getDisplayNameBold());
+        }
     }
     
     @Override

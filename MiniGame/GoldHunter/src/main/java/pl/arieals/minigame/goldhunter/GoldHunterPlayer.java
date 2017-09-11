@@ -1,24 +1,37 @@
 package pl.arieals.minigame.goldhunter;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import com.google.common.base.Preconditions;
 
 import net.minecraft.server.v1_10_R1.EntityPlayer;
 import pl.arieals.minigame.goldhunter.classes.CharacterClass;
 import pl.arieals.minigame.goldhunter.classes.CharacterClassManager;
+import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
 import pl.north93.zgame.api.bukkit.gui.IGuiManager;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
 import pl.north93.zgame.api.bukkit.tick.Tick;
+import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
@@ -26,6 +39,8 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class GoldHunterPlayer implements ITickable
 {
+    @Inject
+    private static IEntityHider entityHider;
     @Inject
     private static IGuiManager guiManager;
     @Inject
@@ -48,6 +63,7 @@ public class GoldHunterPlayer implements ITickable
     private IScoreboardContext scoreboardContext;
     
     private GameTeam team;
+    private GameTeam displayTeam;
     
     private CharacterClass selectedClass = classManager.getDefaultClass();
     private CharacterClass currentClass;
@@ -62,6 +78,10 @@ public class GoldHunterPlayer implements ITickable
     
     private GoldHunterPlayer lastDamager;
     private int lastDamagerTicks;
+    
+    private int toRefilEquipmentTicks;
+    
+    private boolean shadow;
     
     public GoldHunterPlayer(Player player, GoldHunterArena arena)
     {
@@ -102,6 +122,40 @@ public class GoldHunterPlayer implements ITickable
     public GameTeam getTeam()
     {
         return team;
+    }
+    
+    public GameTeam getDisplayTeam()
+    {
+        return displayTeam;
+    }
+    
+    public void setDisplayTeam(GameTeam newTeam)
+    {
+        displayTeam = newTeam;
+        
+        if ( isIngame() )
+        {
+            setLeatherArmorColor();
+        }
+        
+        arena.getScoreboardManager().updateTeamColors();
+    }
+    
+    public boolean isShadow()
+    {
+        return shadow;
+    }
+    
+    public void setShadow(boolean shadow)
+    {
+        this.shadow = shadow;
+
+        arena.getSignedPlayers().forEach(p -> p.updatePlayersVisibility());
+    }
+    
+    public boolean canSee(GoldHunterPlayer other)
+    {
+        return !other.isShadow() || other.getTeam() == getTeam();
     }
     
     public boolean isDoubleJumpActive()
@@ -155,7 +209,7 @@ public class GoldHunterPlayer implements ITickable
     public void incrementKills()
     {
         kills++;
-        scoreboardContext.set("deaths", deaths);
+        scoreboardContext.set("kills", deaths);
     }
     
     public void incrementDeaths()
@@ -222,6 +276,54 @@ public class GoldHunterPlayer implements ITickable
         return ((CraftPlayer) player).getHandle();
     }
     
+    public void addLeatherHatToInventory()
+    {
+        player.getInventory().setHelmet(new ItemStackBuilder().material(Material.LEATHER_HELMET).build());
+    }
+    
+    public void setLeatherArmorColor()
+    {
+        PlayerInventory inv = player.getInventory();
+        
+        for ( ItemStack armor : inv.getArmorContents() )
+        {
+            if ( armor == null || ( armor.getType() != Material.LEATHER_BOOTS && armor.getType() != Material.LEATHER_LEGGINGS 
+                    && armor.getType() != Material.LEATHER_CHESTPLATE && armor.getType() != Material.LEATHER_HELMET ) )
+            {
+                continue;
+            }
+            
+            LeatherArmorMeta meta = (LeatherArmorMeta) armor.getItemMeta();
+            meta.setColor(displayTeam.getArmorColor());
+            armor.setItemMeta(meta);
+        }
+    }
+    
+    private void hideItemsAttributesAndMakeUnbreakable()
+    {
+        PlayerInventory inv = player.getInventory();
+        for ( ItemStack is : inv.getArmorContents() )
+        {
+            hideItemAttributesAndMakeUnbreakable(is);
+        }
+        
+        for ( ItemStack is : inv.getContents() )
+        {
+            hideItemAttributesAndMakeUnbreakable(is);
+        }
+    }
+    
+    private void hideItemAttributesAndMakeUnbreakable(ItemStack is)
+    {
+        if ( is != null && is.getType() != Material.AIR )
+        {
+            ItemMeta meta = is.getItemMeta();
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
+            meta.spigot().setUnbreakable(true);
+            is.setItemMeta(meta);
+        }
+    }
+    
     public void exitGame()
     {
         Preconditions.checkState(isIngame());
@@ -229,11 +331,17 @@ public class GoldHunterPlayer implements ITickable
         
         team = null;
         
+        setShadow(false);
         effectTracker.clearEffects();
         abilityTracker.setNewAbilityType(null);
         
         kills = 0;
         deaths = 0;
+        
+        noFallDamageTicks = 0;
+        lastDamager = null;
+        
+        setDisplayTeam(null);
         
         spawnInLobby();
     }
@@ -259,6 +367,7 @@ public class GoldHunterPlayer implements ITickable
         Preconditions.checkState(!isIngame());
         logger.debug("{} join to {}", this, team);
         
+        updatePlayersVisibility();
         this.team = team;
         
         guiManager.closeHotbarMenu(player);
@@ -273,22 +382,68 @@ public class GoldHunterPlayer implements ITickable
         player.teleport(respawn());
     }
     
+    private void updatePlayersVisibility()
+    {
+        for ( GoldHunterPlayer p : arena.getSignedPlayers() )
+        {
+            entityHider.setEntityVisible(player, p.getPlayer(), canSee(p));
+        }
+    }
+    
     public Location respawn()
     {
         Preconditions.checkState(isIngame());
         logger.debug("{} respawn", this);
         
+        player.setHealth(player.getMaxHealth());
+        player.setFoodLevel(20);
+        
         currentClass = selectedClass;
         currentClass.applyEquipment(this);
+        addLeatherHatToInventory();
+        hideItemsAttributesAndMakeUnbreakable();
+        
+        setDisplayTeam(team);
+        
         abilityTracker.setNewAbilityType(currentClass.getSpecialAbility());
         effectTracker.clearEffects();
+        
+        player.getActivePotionEffects().forEach(e -> player.removePotionEffect(e.getType()));
         
         noFallDamageTicks = 0;
         doubleJumpActive = false;
         buildBridgeActive = false;
-        // TODO give eq, set ability, effects etc.
+        
+        lastDamager = null;
+        
+        toRefilEquipmentTicks = currentClass.getInventoryRefilTime();
+        
+        setShadow(false);
         
         return arena.getTeamSpawn(team);
+    }
+    
+    public void die()
+    {
+        Preconditions.checkState(isIngame());
+        logger.debug("{} die", this);
+        
+        arena.broadcastDeath(this, lastDamager);
+        
+        incrementDeaths();
+        
+        if ( lastDamager != null )
+        {
+            lastDamager.incrementKills();
+        }
+        
+        player.teleport(respawn());
+        playDeathEffect();
+    }
+    
+    private void playDeathEffect()
+    {
+        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 600, 0, true, false), true);
     }
     
     public String getDisplayName()
@@ -358,9 +513,17 @@ public class GoldHunterPlayer implements ITickable
     @Tick
     private void updateLastDamager()
     {
-        if ( lastDamagerTicks > 0 )
+        if ( lastDamager != null )
         {
-            lastDamagerTicks--;
+            if ( lastDamager.getTeam() == null || lastDamager.getTeam().opositeTeam() != getTeam() )
+            {
+                lastDamagerTicks = 0;
+            }
+            
+            if ( lastDamagerTicks > 0 )
+            {
+                lastDamagerTicks--;
+            }
             
             if ( lastDamagerTicks == 0 )
             {
@@ -388,11 +551,9 @@ public class GoldHunterPlayer implements ITickable
         
         for ( int i = 0; i < 3; i++ )
         {
-            Block base = underFoot.getRelative(dir.getBlockFace(), i);
+            Block block = underFoot.getRelative(dir.getBlockFace(), i);
             
-            buildBrigdeBlock(base);
-            buildBrigdeBlock(base.getRelative(dir.turnLeft().getBlockFace()));
-            buildBrigdeBlock(base.getRelative(dir.turnRight().getBlockFace()));
+            buildBrigdeBlock(block);
         }
     }
     
@@ -401,8 +562,68 @@ public class GoldHunterPlayer implements ITickable
         if ( block.getType() == Material.AIR )
         {
             block.setType(Material.WOOD);
-            // TODO: spawn particles;
+            
+            double offX = ThreadLocalRandom.current().nextGaussian() * 0.13;
+            double offY = Math.abs(ThreadLocalRandom.current().nextGaussian()) * 0.13;
+            double offZ = ThreadLocalRandom.current().nextGaussian() * 0.13;
+            block.getWorld().spawnParticle(Particle.SMOKE_LARGE, block.getX() + 0.5, block.getY() + 0.5, block.getZ() + 0.5, 1, offX, offY, offZ, 0, null);
         }
+    }
+    
+    @Tick
+    public void updateRefilEquipmentTicks()
+    {
+        if ( !isIngame() || currentClass.getInventoryRefilRule() == null )
+        {
+            return;
+        }
+        
+        if ( toRefilEquipmentTicks > 0 )
+        {
+            toRefilEquipmentTicks--;
+        }
+        
+        if ( toRefilEquipmentTicks == 0 )
+        {
+            currentClass.getInventoryRefilRule().tryRefilEquipment(this);
+            toRefilEquipmentTicks = currentClass.getInventoryRefilTime();
+        }
+    }
+    
+    public void tryRefilItem(ItemStack is, int maxCount)
+    {
+        int currentCount = 0;
+        
+        InventoryView openInventory = player.getOpenInventory();
+        if ( openInventory.getCursor() != null && openInventory.getCursor().getType() == is.getType() )
+        {
+            currentCount += openInventory.getCursor().getAmount();
+        }
+        
+        for ( ItemStack item : openInventory.getTopInventory().getContents() )
+        {
+            if ( item != null && item.getType() == is.getType() )
+            {
+                currentCount += item.getAmount();
+            }
+        }
+        
+        for ( ItemStack item : openInventory.getBottomInventory().getContents() )
+        {
+            if ( item != null && item.getType() == is.getType() )
+            {
+                currentCount += item.getAmount();
+            }
+        }
+        
+        if ( currentCount >= maxCount )
+        {
+            return;
+        }
+        
+        int diff = maxCount - currentCount;
+        is.setAmount(Math.min(diff, is.getAmount()));
+        player.getInventory().addItem(is);
     }
     
     @Override

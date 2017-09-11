@@ -3,9 +3,15 @@ package pl.arieals.minigame.goldhunter.scoreboard;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
+import org.bukkit.scoreboard.Team.Option;
+import org.bukkit.scoreboard.Team.OptionStatus;
+
 import com.google.common.base.Preconditions;
 
 import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.arieals.minigame.goldhunter.GameTeam;
 import pl.arieals.minigame.goldhunter.GoldHunterArena;
 import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
@@ -60,6 +66,9 @@ public class ArenaScoreboardManager
         IScoreboardContext newContext = scoreboardManager.setLayout(player.getPlayer(), layout);
         player.setScoreboardContext(newContext);
         newContext.set(contextProperties);
+        
+        initializeScoreboardTeams(player);
+        updateTeamColors(player);
     }
     
     public void setProperty(String key, Object value)
@@ -107,5 +116,50 @@ public class ArenaScoreboardManager
                 .forEach(player -> player.getScoreboardContext().set(contextProperties));
     }
     
+    private void initializeScoreboardTeams(GoldHunterPlayer player)
+    {
+        Scoreboard scoreboard = player.getPlayer().getScoreboard();
+        
+        Team red = scoreboard.registerNewTeam("red");
+        red.setPrefix(GameTeam.RED.getTeamColor() + "");
+        red.setCanSeeFriendlyInvisibles(true);
+        red.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
+        
+        Team blue = scoreboard.registerNewTeam("blue");
+        blue.setPrefix(GameTeam.BLUE.getTeamColor() + "");
+        blue.setCanSeeFriendlyInvisibles(true);
+        blue.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
+        
+        Team none = scoreboard.registerNewTeam("none");
+        none.setPrefix("§7");
+        none.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
+    }
     
+    public void updateTeamColors()
+    {
+        arena.getPlayers().forEach(this::updateTeamColors);
+    }
+    
+    public void updateTeamColors(GoldHunterPlayer player)
+    {
+        Scoreboard scoreboard = player.getPlayer().getScoreboard();
+        
+        Team red = scoreboard.getTeam("red");
+        Team blue = scoreboard.getTeam("blue");
+        Team none = scoreboard.getTeam("none");
+        
+        for ( GoldHunterPlayer p : arena.getPlayers() )
+        {
+            Team team = p.getDisplayTeam() == GameTeam.RED ? red : ( p.getDisplayTeam() == GameTeam.BLUE ? blue : none );
+            team.addEntry(p.getPlayer().getName());
+        }
+    }
+    
+    public void removeEntryFromTeams(String entry)
+    {
+        for ( GoldHunterPlayer player : arena.getPlayers() )
+        {
+            player.getPlayer().getScoreboard().getEntryTeam(entry).removeEntry(entry);
+        }
+    }
 }

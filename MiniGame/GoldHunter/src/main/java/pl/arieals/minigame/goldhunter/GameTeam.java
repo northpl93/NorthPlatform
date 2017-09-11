@@ -1,23 +1,26 @@
 package pl.arieals.minigame.goldhunter;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public enum GameTeam
 {
-    RED(ChatColor.RED),
-    BLUE(ChatColor.AQUA),
+    RED(ChatColor.RED, Color.RED),
+    BLUE(ChatColor.AQUA, Color.BLUE),
     ;
     
     private final ChatColor teamColor;
+    private final Color armorColor;
     
     private TranslatableString nominativeName;
     private TranslatableString genitiveName;
     
-    private GameTeam(ChatColor teamColor)
+    private GameTeam(ChatColor teamColor, Color armorColor)
     {
+        this.armorColor = armorColor;
         this.teamColor = teamColor;
         
         MessagesBox messages = new MessagesBox(GameTeam.class.getClassLoader(), "GoldHunter");
@@ -29,6 +32,11 @@ public enum GameTeam
     public ChatColor getTeamColor()
     {
         return teamColor;
+    }
+    
+    public Color getArmorColor()
+    {
+        return armorColor;
     }
     
     public TranslatableString getNominative()
