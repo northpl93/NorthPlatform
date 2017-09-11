@@ -443,7 +443,7 @@ public class GoldHunterPlayer implements ITickable
     
     private void playDeathEffect()
     {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 600, 0, true, false), true);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 0, true, false), true);
     }
     
     public String getDisplayName()
