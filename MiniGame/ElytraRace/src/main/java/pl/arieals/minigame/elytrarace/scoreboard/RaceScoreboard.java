@@ -9,8 +9,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.Optional;
 
 import org.bukkit.entity.Player;
 
@@ -18,6 +17,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.shared.api.statistics.IRecord;
+import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
+import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
+import pl.arieals.api.minigame.shared.api.statistics.type.ShorterTimeBetterStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.unit.DurationUnit;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
@@ -31,13 +34,23 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 public class RaceScoreboard implements IScoreboardLayout
 {
     private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("[m:]ss");
-    private final CompletableFuture<DurationUnit> avgTime;
+    @Inject
+    private IStatisticsManager statisticsManager;
     @Inject @Messages("ElytraRace")
-    private       MessagesBox             msg;
+    private MessagesBox        msg;
 
-    public RaceScoreboard(final CompletableFuture<DurationUnit> avgTime)
+    @Override
+    public void initContext(final IScoreboardContext context)
     {
-        this.avgTime = avgTime;
+        final LocalArena arena = getArena(context.getPlayer());
+        assert arena != null;
+
+        final String statKey = "elytra/race/" + arena.getWorld().getCurrentMapTemplate().getName();
+        final ShorterTimeBetterStatistic statistic = new ShorterTimeBetterStatistic(statKey);
+
+        final IStatisticHolder holder = this.statisticsManager.getHolder(context.getPlayer().getUniqueId());
+
+        context.setCompletableFuture("avgTime", holder.getValue(statistic));
     }
 
     @Override
@@ -65,7 +78,7 @@ public class RaceScoreboard implements IScoreboardLayout
 
         builder.add("");
         builder.translated("scoreboard.race.time", arena.getTimer().humanReadableTimeAfterStart());
-        builder.translated("scoreboard.race.avg_time", this.getAvgTime());
+        builder.translated("scoreboard.race.avg_time", this.getAvgTime(context));
         builder.add("");
         builder.translated("scoreboard.race.checkpoint", playerData.getCheckpointNumber(), arenaData.getMaxCheckpoints());
         builder.add("");
@@ -74,25 +87,16 @@ public class RaceScoreboard implements IScoreboardLayout
         return builder.getContent();
     }
 
-    private String getAvgTime()
+    private String getAvgTime(final IScoreboardContext ctx)
     {
-        if (! this.avgTime.isDone())
+        final Optional<IRecord<DurationUnit>> avgTime = ctx.getCompletableFuture("avgTime");
+        return avgTime.map(record ->
         {
-            return "?";
-        }
-
-        try
-        {
-            final Duration averageDuration = this.avgTime.get().getValue();
-
+            final Duration averageDuration = record.getValue().getValue();
             final LocalTime time = LocalTime.ofNanoOfDay(averageDuration.toNanos());
 
             return FORMAT.format(time);
-        }
-        catch (final InterruptedException | ExecutionException e)
-        {
-            throw new RuntimeException("", e);
-        }
+        }).orElse("?");
     }
 
     @Override

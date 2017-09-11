@@ -59,6 +59,9 @@ public class StatTrackManager
 
     public void bumpStatistic(final Player player, final TrackedStatistic statistic, final ItemStack tool)
     {
+        final IStatisticHolder holder = this.statisticsManager.getHolder(player.getUniqueId());
+        this.bumpGlobalStatistic(holder);
+
         final TrackedWeapon weapon = TrackedWeapon.getByMaterial(tool.getType());
         if (weapon == null)
         {
@@ -71,9 +74,7 @@ public class StatTrackManager
             return;
         }
 
-        final IStatisticHolder holder = this.statisticsManager.getHolder(player.getUniqueId());
         final IStatistic<NumberUnit> statisticSystem = this.getStatistic(statistic, weapon);
-
         holder.increment(statisticSystem, new NumberUnit(1L)).whenComplete((result, throwable) ->
         {
             final long newValue = result.getValue().getValue() + 1;
@@ -88,6 +89,12 @@ public class StatTrackManager
         final String weaponName = weapon.name().toLowerCase(Locale.ENGLISH);
         final String statId = "bedwars/stattrak/" + statName + "/" + weaponName;
         return new HigherNumberBetterStatistic(statId);
+    }
+
+    private void bumpGlobalStatistic(final IStatisticHolder holder)
+    {
+        final HigherNumberBetterStatistic killsStat = new HigherNumberBetterStatistic("bedwars/kills");
+        holder.increment(killsStat, new NumberUnit(1L));
     }
 
     @Override

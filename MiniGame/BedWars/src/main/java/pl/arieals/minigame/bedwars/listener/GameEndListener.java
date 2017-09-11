@@ -24,6 +24,10 @@ import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
+import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
+import pl.arieals.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
+import pl.arieals.api.minigame.shared.api.statistics.unit.NumberUnit;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.PlayerReconnectTimedOut;
@@ -41,6 +45,8 @@ public class GameEndListener implements Listener
     private static final int RECONNECT_TIMEOUT = 60 * 20;
     @Inject
     private Logger logger;
+    @Inject
+    private IStatisticsManager statisticsManager;
     @Inject @Messages("BedWars")
     private MessagesBox messages;
 
@@ -128,10 +134,14 @@ public class GameEndListener implements Listener
         final Optional<Team> winner = arenaData.getTeams().stream().filter(not(Team::isEliminated)).findAny();
         if (winner.isPresent())
         {
-            final TranslatableString teamNameKey = TranslatableString.of(this.messages, "@team.scoreboard." + winner.get().getName());
-            final String nicks = this.playersList(winner.get());
+            final Team winnerTeam = winner.get();
+            // podnosimy licznik zwyciestw wszystkich osob w teamie
+            this.bumpWinsCount(winnerTeam);
 
-            players.broadcast(this.messages, "end.winner_list", MessageLayout.CENTER, winner.get().getColorChar(), teamNameKey, nicks);
+            final TranslatableString teamNameKey = TranslatableString.of(this.messages, "@team.scoreboard." + winnerTeam.getName());
+            final String nicks = this.playersList(winnerTeam);
+
+            players.broadcast(this.messages, "end.winner_list", MessageLayout.CENTER, winnerTeam.getColorChar(), teamNameKey, nicks);
         }
 
         players.broadcast(this.messages, "end.top_kills", MessageLayout.CENTER);
@@ -178,6 +188,18 @@ public class GameEndListener implements Listener
             }
         }
         return nicks.toString();
+    }
+
+    private void bumpWinsCount(final Team team)
+    {
+        final HigherNumberBetterStatistic winsStat = new HigherNumberBetterStatistic("bedwars/wins");
+        final NumberUnit numberUnit = new NumberUnit(1L);
+
+        for (final Player player : team.getPlayers())
+        {
+            final IStatisticHolder holder = this.statisticsManager.getHolder(player.getUniqueId());
+            holder.increment(winsStat, numberUnit);
+        }
     }
 
     @Override

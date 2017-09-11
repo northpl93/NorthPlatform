@@ -44,13 +44,15 @@ public class LobbyScoreboard implements IScoreboardLayout
 
         final TranslatableString modeName = TranslatableString.of(this.messages, "@scoreboard.mode." + this.bwConfig.getTeamSize());
         builder.translated("scoreboard.lobby.mode", modeName);
-
-        builder.translated("scoreboard.lobby.players", arena.getPlayers().size(), arena.getPlayersManager().getMaxPlayers());
-        builder.translated("scoreboard.lobby.map", arena.getWorld().getCurrentMapTemplate().getDisplayName());
-
         builder.add("");
 
-        if (arena.getPlayersManager().isEnoughToStart())
+        builder.translated("scoreboard.lobby.map", arena.getWorld().getCurrentMapTemplate().getDisplayName());
+        builder.add("");
+
+        builder.translated("scoreboard.lobby.players", arena.getPlayers().size(), arena.getPlayersManager().getMaxPlayers());
+        builder.add("");
+
+        if (arena.getStartScheduler().isStartScheduled())
         {
             builder.translated("scoreboard.lobby.starting", arena.getTimer().calcTimeTo(0, TimeUnit.SECONDS, TimeUnit.SECONDS));
         }

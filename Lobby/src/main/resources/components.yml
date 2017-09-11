@@ -6,5 +6,6 @@ components:
     dependencies:
       - API.GuiManager
       - GlobalShops.Server
+      - MiniGameApi.Server
     platforms:
       - BUKKIT
