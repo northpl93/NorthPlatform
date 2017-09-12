@@ -13,11 +13,11 @@ import pl.north93.zgame.api.economy.IEconomyManager;
 import pl.north93.zgame.api.economy.ITransaction;
 import pl.north93.zgame.api.economy.cfg.CurrencyConfig;
 import pl.north93.zgame.api.economy.cfg.EconomyConfig;
-import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.INetworkManager;
+import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
@@ -35,11 +35,6 @@ public class EconomyManagerImpl implements IEconomyManager
     @Bean
     private EconomyManagerImpl()
     {
-    }
-
-    @PostInject
-    private void init()
-    {
         this.config = this.observation.get(EconomyConfig.class, "economy_config");
     }
 
@@ -55,6 +50,15 @@ public class EconomyManagerImpl implements IEconomyManager
     {
         Preconditions.checkNotNull(currency, "Currency can't be null");
         return new CurrencyRankingImpl(currency.getName());
+    }
+
+    @Override
+    public double getAmount(final ICurrency currency, final Identity identity)
+    {
+        final IPlayer player = this.networkManager.getPlayers().unsafe().get(identity);
+        final PlayerAccessor playerAccessor = new PlayerAccessor(player, currency);
+
+        return playerAccessor.getAmount();
     }
 
     @Override

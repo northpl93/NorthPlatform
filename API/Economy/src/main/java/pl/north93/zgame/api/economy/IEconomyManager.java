@@ -11,6 +11,19 @@ public interface IEconomyManager
 
     ICurrencyRanking getRanking(ICurrency currency);
 
+    /**
+     * Umozliwia szybkie pobranie aktualnej ilosci posiadanej
+     * waluty przez gracza. Nie uruchamia transakcji.
+     *
+     * Ta wartosc powinna byc tylko informacyjna, przy
+     * przetwarzaniu zakupu nalezy uzyc transakcji.
+     *
+     * @param currency Waluta ktorej ilosc sprawdzamy.
+     * @param identity Gracz ktorego sprawdzamy.
+     * @return Aktualna ilosc waluty.
+     */
+    double getAmount(ICurrency currency, Identity identity);
+
     ITransaction openTransaction(ICurrency currency, Identity identity) throws PlayerNotFoundException;
 
     default ITransaction openTransaction(ICurrency currency, UUID playerId) throws PlayerNotFoundException

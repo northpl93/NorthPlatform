@@ -22,6 +22,10 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.config.IConfig;
 import pl.north93.zgame.api.global.config.NetConfig;
 
+/**
+ * Reprezentuje huba znajdujacego sie lokalnie na serwerze
+ * hostujacym huby.
+ */
 public class LocalHub implements IHubServer
 {
     @Inject
@@ -45,6 +49,26 @@ public class LocalHub implements IHubServer
     public HubWorld getHubWorld(final String hubId)
     {
         return this.hubWorlds.get(hubId);
+    }
+
+    /**
+     * Zwraca obiekt swiata huba powiazany z danym swiatem Bukkita.
+     * Moze zwrocic null jesli swiat nie jest powiazany z zadnym lobby.
+     *
+     * @param world Swiat dla ktorego pobieramy HubWorld.
+     * @return HubWorld.
+     */
+    public HubWorld getHubWorld(final World world)
+    {
+        for (final HubWorld hubWorld : this.hubWorlds.values())
+        {
+            if (hubWorld.getBukkitWorld().equals(world))
+            {
+                return hubWorld;
+            }
+        }
+
+        return null;
     }
 
     /**

@@ -5,25 +5,23 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.economy.ICurrency;
 import pl.north93.zgame.api.economy.ITransaction;
-import pl.north93.zgame.api.global.metadata.MetaKey;
-import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 
-public class TransactionImpl implements ITransaction
+class TransactionImpl implements ITransaction
 {
     private final ICurrency           currency;
     private final IPlayerTransaction  playerTransaction;
+    private final PlayerAccessor      playerAccessor;
     private final CurrencyRankingImpl currencyRanking;
-    private final MetaKey             prefix;
     private boolean isClosed;
 
     public TransactionImpl(final ICurrency currency, final IPlayerTransaction playerTransaction, final CurrencyRankingImpl currencyRanking)
     {
         this.currency = currency;
         this.playerTransaction = playerTransaction;
+        this.playerAccessor = new PlayerAccessor(playerTransaction.getPlayer(), currency);
         this.currencyRanking = currencyRanking;
-        this.prefix = MetaKey.get("currency:" + this.currency.getName());
     }
 
     @Override
@@ -42,40 +40,33 @@ public class TransactionImpl implements ITransaction
     @Override
     public double add(final double amount)
     {
-        final MetaStore metaStore = this.getAssociatedPlayer().getMetaStore();
-        final double current = metaStore.contains(this.prefix) ? metaStore.getDouble(this.prefix) : this.currency.getStartValue();
-        metaStore.setDouble(this.prefix, current + amount);
+        this.checkClosed();
+        final double current = this.playerAccessor.getAmount();
+        this.playerAccessor.setAmount(current + amount);
         return current;
     }
 
     @Override
     public double remove(final double amount)
     {
-        final MetaStore metaStore = this.getAssociatedPlayer().getMetaStore();
-        final double current = metaStore.contains(this.prefix) ? metaStore.getDouble(this.prefix) : this.currency.getStartValue();
-        metaStore.setDouble(this.prefix, current - amount);
+        this.checkClosed();
+        final double current = this.playerAccessor.getAmount();
+        this.playerAccessor.setAmount(current - amount);
         return current;
     }
 
     @Override
     public double getAmount()
     {
-        final MetaStore metaStore = this.getAssociatedPlayer().getMetaStore();
-        if (metaStore.contains(this.prefix))
-        {
-            return metaStore.getDouble(this.prefix);
-        }
-        else
-        {
-            return this.currency.getStartValue();
-        }
+        this.checkClosed();
+        return this.playerAccessor.getAmount();
     }
 
     @Override
     public void setAmount(final double newAmount)
     {
         this.checkClosed();
-        this.getAssociatedPlayer().getMetaStore().setDouble(this.prefix, newAmount);
+        this.playerAccessor.setAmount(newAmount);
     }
 
     @Override

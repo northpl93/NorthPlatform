@@ -7,6 +7,8 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import com.google.common.base.Preconditions;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -56,12 +58,16 @@ class PlayersManagerImpl implements IPlayersManager
     @Override
     public String getNickFromUuid(final UUID playerId)
     {
+        Preconditions.checkNotNull(playerId);
+
         return this.playersData.uuidToUsername(playerId);
     }
 
     @Override
     public UUID getUuidFromNick(final String nick)
     {
+        Preconditions.checkNotNull(nick);
+
         return this.playersData.usernameToUuid(nick);
     }
 
@@ -189,25 +195,17 @@ class PlayersManagerImpl implements IPlayersManager
     class PlayersManagerUnsafeImpl implements Unsafe
     {
         @Override
-        public IPlayer get(final String nick)
+        public IPlayer get(final Identity identity)
         {
-            final Value<IOnlinePlayer> online = this.getOnline(nick);
-            if (online.isCached() || online.isAvailable())
-            {
-                return online.get();
-            }
-            return this.getOffline(nick);
-        }
+            final Identity completed = PlayersManagerImpl.this.completeIdentity(identity);
 
-        @Override
-        public IPlayer get(final UUID uuid)
-        {
-            final Value<IOnlinePlayer> online = this.getOnline(uuid);
+            final Value<IOnlinePlayer> online = this.getOnline(completed.getNick());
             if (online.isCached() || online.isAvailable())
             {
                 return online.get();
             }
-            return this.getOffline(uuid);
+
+            return this.getOffline(completed.getNick());
         }
 
         @Override
@@ -253,13 +251,22 @@ class PlayersManagerImpl implements IPlayersManager
 
     private Identity completeIdentity(final Identity identity)
     {
-        if (identity.getNick() == null && identity.getUuid() == null)
+        final UUID currentUuid = identity.getUuid();
+        final String currentNick = identity.getNick();
+
+        if (currentUuid != null && currentNick != null)
         {
+            // nic nie musimy uzupelniac
+            return identity;
+        }
+        else if (currentNick == null && currentUuid == null)
+        {
+            // mamy calkowicie puste identity, nic z nim nie zrobimy
             throw new IllegalArgumentException("Both nick and uuid are null");
         }
 
-        final UUID uuid = identity.getUuid() == null ? this.getUuidFromNick(identity.getNick()) : identity.getUuid();
-        final String nick = identity.getNick() == null ? this.getNickFromUuid(identity.getUuid()) : identity.getNick();
+        final UUID uuid = currentUuid == null ? this.getUuidFromNick(currentNick) : currentUuid;
+        final String nick = currentNick == null ? this.getNickFromUuid(currentUuid) : currentNick;
 
         return Identity.create(uuid, nick, identity.getDisplayName());
     }

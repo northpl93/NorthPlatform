@@ -13,6 +13,13 @@
     <groupId>pl.arieals.minigame</groupId>
     <artifactId>elytrarace</artifactId>
     <name>MiniGame.ElytraRace</name>
+    <developers>
+        <developer>
+            <id>NorthPL93</id>
+            <name>Michał Kasprzyk</name>
+            <email>northpl93@gmail.com</email>
+        </developer>
+    </developers>
 
     <dependencies>
         <dependency>

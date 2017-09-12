@@ -15,6 +15,16 @@
     <artifactId>api</artifactId>
     <version>1.0-INDEV</version>
     <name>API</name>
+    <developers>
+        <developer>
+            <id>NorthPL93</id>
+            <name>Michał Kasprzyk</name>
+            <email>northpl93@gmail.com</email>
+        </developer>
+        <developer>
+            <name>Rafał Szewczyk</name>
+        </developer>
+    </developers>
 
     <dependencies>
         <!-- Instaluje zaleznosci z katalogu lib. Wiecej info w pom.xml tego modulu -->

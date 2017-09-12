@@ -9,12 +9,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.Pair;
 
 import pl.north93.zgame.api.economy.ICurrencyRanking;
-import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.SortedSet;
 
-public class CurrencyRankingImpl implements ICurrencyRanking
+class CurrencyRankingImpl implements ICurrencyRanking
 {
     private final String currencyName;
     @Inject
@@ -24,11 +23,6 @@ public class CurrencyRankingImpl implements ICurrencyRanking
     public CurrencyRankingImpl(final String currencyName)
     {
         this.currencyName = currencyName;
-    }
-
-    @PostInject
-    private void postInject()
-    {
         this.ranking = this.observationManager.getSortedSet("currank:" + this.currencyName);
     }
 

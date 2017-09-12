@@ -68,9 +68,7 @@ public interface IPlayersManager
 
     interface Unsafe
     {
-        IPlayer get(String nick); // do not modify returned instance. It will be not saved!
-
-        IPlayer get(UUID uuid); // do not modify returned instance. It will be not saved!
+        IPlayer get(Identity identity); // do not modify returned instance. It will be not saved!
 
         Value<IOnlinePlayer> getOnline(String nick);
 
