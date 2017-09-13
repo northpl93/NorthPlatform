@@ -11,6 +11,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>skyplayerexp</artifactId>
+    <developers>
+        <developer>
+            <id>NorthPL93</id>
+            <name>Michał Kasprzyk</name>
+            <email>northpl93@gmail.com</email>
+        </developer>
+    </developers>
 
     <dependencies>
         <dependency>

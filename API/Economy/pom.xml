@@ -13,6 +13,13 @@
     <groupId>pl.north93.zgame.api</groupId>
     <artifactId>economy</artifactId>
     <name>API.Economy</name>
+    <developers>
+        <developer>
+            <id>NorthPL93</id>
+            <name>Michał Kasprzyk</name>
+            <email>northpl93@gmail.com</email>
+        </developer>
+    </developers>
 
     <repositories>
         <repository>
