@@ -11,13 +11,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.PluginManager;
 import pl.north93.zgame.api.bungee.cfg.ProxyInstanceConfig;
 import pl.north93.zgame.api.bungee.connection.ConnectionManager;
 import pl.north93.zgame.api.bungee.connection.NorthReconnectHandler;
-import pl.north93.zgame.api.bungee.listeners.PermissionsListener;
-import pl.north93.zgame.api.bungee.listeners.PingListener;
-import pl.north93.zgame.api.bungee.listeners.PlayerListener;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
 
@@ -71,11 +69,6 @@ public class BungeeApiCore extends ApiCore
         }
         this.connectionManager = new ConnectionManager();
         ProxyServer.getInstance().setReconnectHandler(new NorthReconnectHandler(this));
-
-        final PluginManager pluginManager = this.bungeePlugin.getProxy().getPluginManager();
-        pluginManager.registerListener(this.bungeePlugin, new PingListener());
-        pluginManager.registerListener(this.bungeePlugin, new PlayerListener(this));
-        pluginManager.registerListener(this.bungeePlugin, new PermissionsListener(this));
     }
 
     @Override
@@ -87,6 +80,20 @@ public class BungeeApiCore extends ApiCore
     public File getFile(final String name)
     {
         return new File(this.bungeePlugin.getDataFolder(), name);
+    }
+
+    /**
+     * Rejestruje podane instancje jako listenery BungeeCorda.
+     *
+     * @param listeners Listenery do zarejestrowania.
+     */
+    public void registerListeners(final Listener... listeners)
+    {
+        final PluginManager pluginManager = this.bungeePlugin.getProxy().getPluginManager();
+        for (final Listener listener : listeners)
+        {
+            pluginManager.registerListener(this.bungeePlugin, listener);
+        }
     }
 
     public ConnectionManager getConnectionManager()

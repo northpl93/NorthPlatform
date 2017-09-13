@@ -17,7 +17,7 @@ import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
 
-public class ProxyServerListImpl implements IProxyServerList
+class ProxyServerListImpl implements IProxyServerList
 {
     private final ProxyServer proxyServer = ProxyServer.getInstance();
     @Inject

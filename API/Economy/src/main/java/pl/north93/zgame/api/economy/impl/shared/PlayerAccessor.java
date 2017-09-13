@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.economy.impl.shared;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.north93.zgame.api.economy.ICurrency;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.metadata.MetaStore;
@@ -27,5 +30,11 @@ class PlayerAccessor
     {
         final MetaStore metaStore = this.player.getMetaStore();
         return metaStore.contains(this.prefix) ? metaStore.getDouble(this.prefix) : this.currency.getStartValue();
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("player", this.player).append("currency", this.currency).toString();
     }
 }

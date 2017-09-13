@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.bungee.listeners;
+package pl.north93.zgame.api.bungee.proxy.impl;
 
 import static net.md_5.bungee.api.ChatColor.RED;
 import static pl.north93.zgame.api.global.messages.MessagesBox.message;
@@ -47,18 +47,14 @@ public class PlayerListener implements Listener
 {
     private static final MetaKey  BAN_EXPIRE   = MetaKey.get("banExpireAt");
     private static final Pattern  NICK_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{3,16}$");
-    private final BungeeApiCore   bungeeApiCore;
+    @Inject
+    private BungeeApiCore   bungeeApiCore;
     @Inject @Messages("Messages")
-    private       MessagesBox     apiMessages;
+    private MessagesBox     apiMessages;
     @Inject
-    private       IPlayersData    playersDao;
+    private IPlayersData    playersDao;
     @Inject
-    private       INetworkManager networkManager;
-
-    public PlayerListener(final BungeeApiCore bungeeApiCore)
-    {
-        this.bungeeApiCore = bungeeApiCore;
-    }
+    private INetworkManager networkManager;
 
     @EventHandler
     public void onLogin(final PreLoginEvent event)

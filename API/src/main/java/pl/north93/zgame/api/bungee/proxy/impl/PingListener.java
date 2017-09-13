@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.bungee.listeners;
+package pl.north93.zgame.api.bungee.proxy.impl;
 
 import static net.md_5.bungee.api.chat.TextComponent.fromLegacyText;
 

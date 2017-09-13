@@ -10,14 +10,16 @@ import pl.north93.zgame.api.bungee.proxy.IProxyServerManager;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.proxy.ProxyDto;
 import pl.north93.zgame.api.global.network.proxy.IProxyRpc;
+import pl.north93.zgame.api.global.network.proxy.ProxyDto;
 import pl.north93.zgame.api.global.redis.observable.Hash;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 
-public class ProxyServerManagerImpl extends Component implements IProxyServerManager
+class ProxyServerManagerImpl extends Component implements IProxyServerManager
 {
     private static final int UPDATE_PROXY_DATA_EVERY = 20;
+    @Inject
+    private BungeeApiCore       apiCore;
     @Inject
     private IRpcManager         rpcManager;
     @Inject
@@ -31,6 +33,9 @@ public class ProxyServerManagerImpl extends Component implements IProxyServerMan
         this.proxyServerList.synchronizeServers();
 
         this.rpcManager.addRpcImplementation(IProxyRpc.class, new ProxyRpcImpl());
+
+        // rejestrujemy nasze listenery
+        this.apiCore.registerListeners(new PingListener(), new PlayerListener(), new PermissionsListener());
 
         this.uploadInfo();
         this.getApiCore().getPlatformConnector().runTaskAsynchronously(this::uploadInfo, UPDATE_PROXY_DATA_EVERY);
