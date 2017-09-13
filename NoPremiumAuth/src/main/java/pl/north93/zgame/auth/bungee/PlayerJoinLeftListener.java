@@ -15,6 +15,7 @@ import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 
 public class PlayerJoinLeftListener implements Listener
 {
+    @Inject
     private Logger             logger;
     @Inject
     private INetworkManager    networkManager;
