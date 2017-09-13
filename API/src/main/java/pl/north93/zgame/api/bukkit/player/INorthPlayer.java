@@ -1,10 +1,9 @@
 package pl.north93.zgame.api.bukkit.player;
 
-import java.util.Locale;
-
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import pl.north93.zgame.api.global.messages.Messageable;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
@@ -19,7 +18,7 @@ import pl.north93.zgame.api.global.permissions.Group;
  * edycje danych i sa one nieatomowe (np. podczas Twoich dzialan
  * gracz moze zmienic serwer)
  */
-public interface INorthPlayer extends Player
+public interface INorthPlayer extends Player, Messageable
 {
     /**
      * Zwraca instance CraftPlayera wrapowanego gracza.
@@ -41,11 +40,6 @@ public interface INorthPlayer extends Player
      * @return czy gracz gra jako premium.
      */
     boolean isPremium();
-
-    /**
-     * @return jezyk uzywany przez tego gracza.
-     */
-    Locale getLocale();
 
     /**
      * @return serwer na ktorym jest gracz.

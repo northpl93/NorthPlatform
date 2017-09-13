@@ -24,8 +24,6 @@ import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
 import pl.north93.zgame.api.global.data.UsernameCache;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.permissions.PermissionsManager;
-import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
-import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 
 public abstract class ApiCore
 {
@@ -154,20 +152,6 @@ public abstract class ApiCore
     public UsernameCache getUsernameCache()
     {
         return this.componentManager.getComponent("API.MinecraftNetwork.UsernameCache");
-    }
-
-    @ProvidesComponent
-    @Deprecated
-    public TemplateManager getMessagePackTemplates()
-    {
-        return this.componentManager.getComponent("API.Database.Redis.MessagePackSerializer");
-    }
-
-    @ProvidesComponent
-    @Deprecated
-    public IRpcManager getRpcManager()
-    {
-        return this.componentManager.getComponent("API.Database.Redis.RPC");
     }
 
     public IAgentClient getInstrumentationClient()
