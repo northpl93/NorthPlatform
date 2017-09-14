@@ -33,7 +33,7 @@ public class ScoreboardManagerImpl extends Component implements IScoreboardManag
     @Override
     public IScoreboardContext setLayout(final Player player, final IScoreboardLayout layout)
     {
-        final ScoreboardContextImpl context = new ScoreboardContextImpl(player, layout);
+        final ScoreboardContextImpl context = new ScoreboardContextImpl(this.apiCore, player, layout);
         this.setContext(player, context);
         this.checkRunUpdater(layout);
         return context;

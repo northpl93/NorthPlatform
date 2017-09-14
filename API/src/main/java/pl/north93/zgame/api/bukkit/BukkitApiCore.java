@@ -10,6 +10,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
+import net.minecraft.server.v1_10_R1.MinecraftServer;
+
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
@@ -95,6 +97,24 @@ public class BukkitApiCore extends ApiCore
     public final void run(final Runnable runnable)
     {
         Bukkit.getScheduler().runTask(this.pluginMain, runnable);
+    }
+
+    /**
+     * Wymusza uruchomienie kodu na glownym watku serwera.
+     * Jesli juz w nim jestesmy to po prostu wykona kod.
+     *
+     * @param runnable Kod do wykonania w glownym watku serwera.
+     */
+    public final void ensureMainThread(final Runnable runnable)
+    {
+        if (MinecraftServer.getServer().isMainThread())
+        {
+            runnable.run();
+        }
+        else
+        {
+            this.run(runnable);
+        }
     }
 
     @Override

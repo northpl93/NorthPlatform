@@ -4,8 +4,6 @@ import static pl.north93.zgame.api.global.cfg.ConfigUtils.loadConfigFile;
 
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Logger;
 
 import com.lambdaworks.redis.RedisClient;
@@ -14,6 +12,7 @@ import com.lambdaworks.redis.api.StatefulRedisConnection;
 import com.lambdaworks.redis.api.sync.RedisCommands;
 import com.mongodb.Function;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
 
@@ -26,7 +25,6 @@ import pl.north93.zgame.api.global.component.Component;
 
 public class StorageConnector extends Component
 {
-    private final ReadWriteLock                     redisLock = new ReentrantReadWriteLock();
     private RedisClient                             redisClient;
     private StatefulRedisConnection<String, byte[]> redisConnection;
     private StatefulRedisConnection<String, byte[]> atomicallyConnection;
@@ -54,7 +52,11 @@ public class StorageConnector extends Component
         this.fixMongoLogger(Logger.getLogger("org.mongodb.driver.protocol.query"));
         this.fixMongoLogger(Logger.getLogger("org.mongodb.driver.protocol.update"));
 
-        this.mongoClient = new MongoClient(new MongoClientURI(config.getMongoDbConnect()));
+        final MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
+        builder.connectionsPerHost(10); // maksymalnie 10 polaczen. Default 100
+        builder.minConnectionsPerHost(1); // minimum utrzymywane jedno polaczenie. Default 0
+        this.mongoClient = new MongoClient(new MongoClientURI(config.getMongoDbConnect(), builder));
+
         this.mainDatabase = this.mongoClient.getDatabase(config.getMongoMainDatabase());
     }
 
