@@ -1,13 +1,18 @@
-package pl.arieals.lobby.game.bedwars;
+package pl.arieals.lobby.game.elytra;
 
+import java.time.Duration;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 
+import pl.arieals.api.minigame.shared.api.statistics.IRecord;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
 import pl.arieals.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
+import pl.arieals.api.minigame.shared.api.statistics.type.LongerTimeBetterStatistic;
+import pl.arieals.api.minigame.shared.api.statistics.unit.DurationUnit;
 import pl.arieals.lobby.game.HubScoreboardLayout;
 import pl.north93.zgame.api.bukkit.scoreboard.ContentBuilder;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
@@ -16,10 +21,11 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
-public class BedWarsHubScoreboard extends HubScoreboardLayout
+public class ElytraHubScoreboard extends HubScoreboardLayout
 {
-    @Inject @Messages("HubBedWars")
-    private MessagesBox messages;
+    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("DD'D' HH'H' mm'M'");
+    @Inject @Messages("HubElytraRace")
+    private MessagesBox        messages;
     @Inject
     private IStatisticsManager statisticsManager;
 
@@ -28,10 +34,13 @@ public class BedWarsHubScoreboard extends HubScoreboardLayout
     {
         final IStatisticHolder playerHolder = this.statisticsManager.getHolder(context.getPlayer().getUniqueId());
 
-        final HigherNumberBetterStatistic killsStat = new HigherNumberBetterStatistic("bedwars/kills");
-        context.setCompletableFuture("kills", playerHolder.getValue(killsStat));
+        final LongerTimeBetterStatistic totalRaceTimeStat = new LongerTimeBetterStatistic("elytra/totalRaceTime");
+        context.setCompletableFuture("raceTime", playerHolder.getValue(totalRaceTimeStat));
 
-        final HigherNumberBetterStatistic winsStat = new HigherNumberBetterStatistic("bedwars/wins");
+        final HigherNumberBetterStatistic totalScorePointsStat = new HigherNumberBetterStatistic("elytra/totalScorePoints");
+        context.setCompletableFuture("scorePoints", playerHolder.getValue(totalScorePointsStat));
+
+        final HigherNumberBetterStatistic winsStat = new HigherNumberBetterStatistic("elytra/totalWins");
         context.setCompletableFuture("wins", playerHolder.getValue(winsStat));
     }
 
@@ -49,7 +58,10 @@ public class BedWarsHubScoreboard extends HubScoreboardLayout
         builder.box(this.messages).locale(context.getLocale());
         builder.add("");
 
-        builder.translated("scoreboard.kills",  this.parseNumber(context.getCompletableFuture("kills")));
+        builder.translated("scoreboard.raceTime", this.parseTime(context.getCompletableFuture("raceTime")));
+        builder.add("");
+
+        builder.translated("scoreboard.scorePoints", this.parseNumber(context.getCompletableFuture("scorePoints")));
         builder.add("");
 
         builder.translated("scoreboard.wins", this.parseNumber(context.getCompletableFuture("wins")));
@@ -63,9 +75,9 @@ public class BedWarsHubScoreboard extends HubScoreboardLayout
         return builder.getContent();
     }
 
-    @Override
-    public String toString()
+    protected final String parseTime(final Optional<IRecord<DurationUnit>> optional)
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
+        final Duration duration = optional.map(durationUnitIRecord -> durationUnitIRecord.getValue().getValue()).orElse(Duration.ZERO);
+        return DurationFormatUtils.formatDuration(duration.toMillis(), "d'D' H'H' m'M'");
     }
 }

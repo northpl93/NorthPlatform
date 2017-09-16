@@ -14,8 +14,11 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
+import pl.arieals.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
+import pl.arieals.api.minigame.shared.api.statistics.type.LongerTimeBetterStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.type.ShorterTimeBetterStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.unit.DurationUnit;
+import pl.arieals.api.minigame.shared.api.statistics.unit.NumberUnit;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.finish.IFinishHandler;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -60,13 +63,16 @@ public class RaceMetaHandler implements IFinishHandler
                     arena.getTimer().humanReadableTimeAfterStart());
         }
 
+        // czas jaki osiagnal gracz
+        final DurationUnit playerTimeDuration = new DurationUnit(Duration.ofMillis(playerTime));
+
         final IStatistic<DurationUnit> raceStatistic = this.getRaceStatistic(arena);
         final IStatisticHolder holder = this.statisticsManager.getHolder(player.getUniqueId());
 
         final boolean isFinished = IFinishHandler.checkFinished(arena);
         this.statisticsManager.getBestRecord(raceStatistic).whenComplete((bestRecord, throwable) ->
         {
-            holder.record(raceStatistic, new DurationUnit(Duration.ofMillis(playerTime)), true).whenComplete((record, throwable2) ->
+            holder.record(raceStatistic, playerTimeDuration, true).whenComplete((record, throwable2) ->
             {
                 final RaceMessage raceMessage = new RaceMessage(this.finishInfo, bestRecord, !isFinished);
                 if (isFinished)
@@ -82,6 +88,10 @@ public class RaceMetaHandler implements IFinishHandler
                 }
             });
         });
+
+        // podbijamy statystyke calkowitego przelecianego czasu
+        final LongerTimeBetterStatistic totalRaceTimeStat = new LongerTimeBetterStatistic("elytra/totalRaceTime");
+        holder.increment(totalRaceTimeStat, playerTimeDuration);
 
         if (isFinished)
         {
@@ -118,6 +128,27 @@ public class RaceMetaHandler implements IFinishHandler
     @Override
     public void gameEnd(final LocalArena arena)
     {
+        this.bumpWinsCount();
+    }
+
+    /**
+     * Podnosi o jeden statystyke przechowujaca liczbe zwyciestw na elytrze.
+     * Potrzebne do scoreboardu na lobby
+     */
+    private void bumpWinsCount()
+    {
+        if (this.finishInfo.isEmpty())
+        {
+            // nikt nie ukonczyl areny, malo prawdopodobne, ale moze sie zdazyc
+            // gdy arena zostanie wylaczona np. komenda
+            return;
+        }
+
+        final RaceFinishInfo firstPlayer = this.finishInfo.get(0);
+        final IStatisticHolder holder = this.statisticsManager.getHolder(firstPlayer.getUuid());
+
+        final HigherNumberBetterStatistic totalElytraWins = new HigherNumberBetterStatistic("elytra/totalWins");
+        holder.increment(totalElytraWins, new NumberUnit(1L));
     }
 
     @Override

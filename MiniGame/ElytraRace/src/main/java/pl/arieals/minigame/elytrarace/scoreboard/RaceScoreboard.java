@@ -75,8 +75,8 @@ public class RaceScoreboard implements IScoreboardLayout
         final ContentBuilder builder = IScoreboardLayout.builder();
 
         builder.box(this.msg).locale(player.spigot().getLocale());
-
         builder.add("");
+
         builder.translated("scoreboard.race.time", arena.getTimer().humanReadableTimeAfterStart());
         builder.translated("scoreboard.race.avg_time", this.getAvgTime(context));
         builder.add("");

@@ -65,15 +65,15 @@ public class ScoreScoreboard implements IScoreboardLayout
         builder.add("");
         builder.translated("scoreboard.score.points", playerData.getPoints());
         builder.add("");
-        builder.translated("scoreboard.score.top3");
+        builder.translated("scoreboard.score.top");
 
-        final Map<Player, Integer> ranking = this.getRanking(arena, 3);
+        final Map<Player, Integer> ranking = this.getRanking(arena, 5);
 
         final int max = ranking.values().iterator().next();
 
         for (final Map.Entry<Player, Integer> entry : ranking.entrySet())
         {
-            builder.translated("scoreboard.score.top3_line", this.align(max, entry.getValue()), entry.getKey().getDisplayName());
+            builder.translated("scoreboard.score.top_line", this.align(max, entry.getValue()), entry.getKey().getDisplayName());
         }
 
         builder.add("");
@@ -84,9 +84,9 @@ public class ScoreScoreboard implements IScoreboardLayout
 
     private String align(final int max, final int points)
     {
-        final int maxLength = String.valueOf(max).length();
-        final String pointsString = String.valueOf(points);
-        return StringUtils.repeat('0', maxLength - pointsString.length()) + pointsString;
+        final int maxLength = Math.max(2, String.valueOf(max).length()); // 2
+        final String pointsString = String.valueOf(points); // 3
+        return StringUtils.repeat('0', Math.max(0, maxLength - pointsString.length())) + pointsString;
     }
 
     private Map<Player, Integer> getRanking(final LocalArena arena, int limit)

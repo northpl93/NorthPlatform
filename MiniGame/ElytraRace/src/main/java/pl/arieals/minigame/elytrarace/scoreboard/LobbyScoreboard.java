@@ -1,6 +1,7 @@
 package pl.arieals.minigame.elytrarace.scoreboard;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
+import static pl.arieals.minigame.elytrarace.ElytraRaceMode.RACE_MODE;
 
 
 import java.util.List;
@@ -12,23 +13,25 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.north93.zgame.api.bukkit.scoreboard.ContentBuilder;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardLayout;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public class LobbyScoreboard implements IScoreboardLayout
 {
-    @Inject
-    @Messages("ElytraRace")
+    private static final int REFRESH_TICKS = 20;
+    @Inject @Messages("ElytraRace")
     private MessagesBox msg;
 
     @Override
     public String getTitle(final IScoreboardContext context)
     {
-        return "&e&lElytra Race";
+        return "&e&lELYTRA RACE";
     }
 
     @Override
@@ -36,11 +39,24 @@ public class LobbyScoreboard implements IScoreboardLayout
     {
         final Player player = context.getPlayer();
         final LocalArena arena = getArena(player);
+        assert arena != null;
+
+        final ElytraRaceArena arenaData = arena.getArenaData();
 
         final ContentBuilder content = IScoreboardLayout.builder();
-        content.box(this.msg).locale(player.spigot().getLocale());
-
+        content.box(this.msg).locale(context.getLocale());
         content.add("");
+
+        final String modeName = arenaData.getGameMode() == RACE_MODE ? "@scoreboard.lobby.mode_race" : "@scoreboard.lobby.mode_score";
+        content.translated("scoreboard.lobby.mode", TranslatableString.of(this.msg, modeName));
+        content.add("");
+
+        content.translated("scoreboard.lobby.map", arena.getWorld().getCurrentMapTemplate().getDisplayName());
+        content.add("");
+
+        content.translated("scoreboard.lobby.players", arena.getPlayers().size(), arena.getPlayersManager().getMaxPlayers());
+        content.add("");
+
         if (arena.getStartScheduler().isStartScheduled())
         {
             content.translated("scoreboard.lobby.start", arena.getTimer().calcTimeTo(0, TimeUnit.SECONDS, TimeUnit.SECONDS));
@@ -51,9 +67,6 @@ public class LobbyScoreboard implements IScoreboardLayout
         }
 
         content.add("");
-        content.translated("scoreboard.lobby.players", arena.getPlayers().size(), arena.getPlayersManager().getMaxPlayers());
-
-        content.add("");
         content.translated("scoreboard.ip");
 
         return content.getContent();
@@ -62,7 +75,7 @@ public class LobbyScoreboard implements IScoreboardLayout
     @Override
     public int updateEvery()
     {
-        return 10;
+        return REFRESH_TICKS;
     }
 
     @Override

@@ -56,9 +56,10 @@ public class ScoreMetaHandler implements IFinishHandler
 
         final boolean isFinished = IFinishHandler.checkFinished(arena);
 
+        final NumberUnit points = new NumberUnit((long) scoreData.getPoints()); // ilosc punktow gracza w NumberUnit
         this.statisticsManager.getBestRecord(scoreStatistic).whenComplete((bestRecord, throwable) ->
         {
-            statisticsHolder.record(scoreStatistic, new NumberUnit((long) scoreData.getPoints()), true).whenComplete((record, throwable2) ->
+            statisticsHolder.record(scoreStatistic, points, true).whenComplete((record, throwable2) ->
             {
                 final ScoreMessage raceMessage = new ScoreMessage(this.getTop(), bestRecord, !isFinished);
                 if (isFinished)
@@ -74,6 +75,10 @@ public class ScoreMetaHandler implements IFinishHandler
                 }
             });
         });
+
+        // podbijamy statystyke zliczajaca zdobyte punkty
+        final HigherNumberBetterStatistic totalScorePointsStat = new HigherNumberBetterStatistic("elytra/totalScorePoints");
+        statisticsHolder.increment(totalScorePointsStat, points);
 
         if (isFinished)
         {
@@ -111,6 +116,28 @@ public class ScoreMetaHandler implements IFinishHandler
     @Override
     public void gameEnd(final LocalArena arena)
     {
+        this.bumpWinsCount();
+    }
+
+    /**
+     * Podnosi o jeden statystyke przechowujaca liczbe zwyciestw na elytrze.
+     * Potrzebne do scoreboardu na lobby
+     */
+    private void bumpWinsCount()
+    {
+        final Map<ScoreFinishInfo, Integer> top = this.getTop(); // pobiera topke graczy
+        if (top.isEmpty())
+        {
+            // nikt nie ukonczyl areny, malo prawdopodobne, ale moze sie zdazyc
+            // gdy arena zostanie wylaczona np. komenda
+            return;
+        }
+
+        final ScoreFinishInfo firstPlayer = top.keySet().iterator().next(); // pobiera pierwszego gracza z topki
+        final IStatisticHolder holder = this.statisticsManager.getHolder(firstPlayer.getUuid());
+
+        final HigherNumberBetterStatistic totalElytraWins = new HigherNumberBetterStatistic("elytra/totalWins");
+        holder.increment(totalElytraWins, new NumberUnit(1L));
     }
 
     private HigherNumberBetterStatistic getScoreStatistic(final LocalArena arena)

@@ -1,4 +1,4 @@
-package pl.arieals.lobby.game.bedwars;
+package pl.arieals.lobby.game.goldhunter;
 
 import org.bukkit.event.EventHandler;
 
@@ -8,7 +8,7 @@ import pl.arieals.lobby.game.HubListener;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
-public class BedWarsHubListeners extends HubListener
+public class GoldHunterHubListener extends HubListener
 {
     @Inject
     private IScoreboardManager scoreboardManager;
@@ -21,13 +21,13 @@ public class BedWarsHubListeners extends HubListener
             return;
         }
 
-        this.scoreboardManager.setLayout(event.getPlayer(), new BedWarsHubScoreboard());
-        event.getPlayer().sendMessage("BedWarsHubListener#playerJoinHub()");
+        this.scoreboardManager.setLayout(event.getPlayer(), new GoldHunterHubScoreboard());
     }
 
     @Override
     public boolean isMyHub(final HubWorld hubWorld)
     {
-        return hubWorld.getHubId().equals("bedWars"); // todo na pewno taka nazwa?
+        // Nazwa z pliku hubs.xml
+        return hubWorld.getHubId().equals("goldHunter");
     }
 }
