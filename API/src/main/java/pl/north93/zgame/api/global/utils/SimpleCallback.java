@@ -24,10 +24,6 @@ public class SimpleCallback implements ICallback
         {
             runTask();
         }
-        else
-        {
-            this.task = task;
-        }
     }
     
     protected void runTask()
