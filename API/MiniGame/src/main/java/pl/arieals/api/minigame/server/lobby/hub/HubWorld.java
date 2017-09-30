@@ -6,6 +6,10 @@ import org.bukkit.entity.Player;
 import pl.arieals.api.minigame.shared.api.cfg.HubConfig;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 
+/**
+ * Reprezentuje pojedynczy swiat huba znajdujacy sie na serwerze hostujacym huby.
+ * Kazdy serwer ma (a w kazdym razie powinien miec) taki sam zestaw tych obiektow.
+ */
 public class HubWorld
 {
     private final String hubId;

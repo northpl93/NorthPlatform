@@ -72,6 +72,19 @@ public class LocalHub implements IHubServer
     }
 
     /**
+     * Zwraca huba na ktorym jest obecnie podany gracz.
+     * Moze zwrocic null tylko w wypadku gdy na serwerze jest wiecej swiatow
+     * niz hubow.
+     *
+     * @param player Gracz ktoremu sprawdzamy hub.
+     * @return Hub na ktorym znajduje sie gracz.
+     */
+    public HubWorld getHubWorld(final Player player)
+    {
+        return this.getHubWorld(player.getWorld());
+    }
+
+    /**
      * Teleportuje podanego gracza na hub o podanym ID znajdujacego sie
      * na tym serwerze. Wywoluje eventy itd.
      *
