@@ -10,8 +10,9 @@ import pl.north93.zgame.api.global.agent.client.IAgentClient;
 
 /**
  * Modyfikujemy metode c z klasy EntityTrackerEntry
- * i dodajemy tam kod sprawdzajacy czy gracz ma ukryte
- * dane entity id.
+ * i dodajemy tam kod delegujacy sprawdzanie
+ * widocznosci entity do zewnetrznego kontrolera
+ * przez funkcje zapisana w metadanych.
  */
 class EntityTrackerEntryPatcher
 {
@@ -29,30 +30,18 @@ class EntityTrackerEntryPatcher
     }
 
     private static final String PATCH =
-            "{\n" +
-                    "        final java.util.List metadata = $1.getBukkitEntity().getMetadata(\"API.EntityHider/hiddenEntities\");\n" +
-                    "        if (metadata.size() != 0)\n" +
-                    "        {\n" +
-                    "            final java.util.Set hiddenEntities = (java.util.Set) ((org.bukkit.metadata.MetadataValue) metadata.get(0)).value();\n" +
-                    "            if (hiddenEntities.contains(java.lang.Integer.valueOf($0.tracker.getId())))\n" +
-                    "            {\n" +
-                    "                return false;\n" +
-                    "            }\n" +
+            "{" +
+                    "    final java.util.List metadata = $1.getBukkitEntity().getMetadata(\"API.EntityHider/hideFunction\");\n" +
+                    "    if (! metadata.isEmpty()) {\n" +
+                    "        final java.util.function.Function hideFunction = (java.util.function.Function) ((org.bukkit.metadata.MetadataValue) metadata.get(0)).value();\n" +
+                    "        if (((Boolean)hideFunction.apply($0.tracker)).booleanValue()) {\n" +
+                    "            return false; // jesli funkcja zwraca true to ukrywamy entity\n" +
                     "        }\n" +
-                    "        if ($0.tracker.isPassenger())\n" +
-                    "        {\n" +
-                    "            return isTrackedBy($0.tracker.getVehicle(), $1);\n" +
-                    "        }\n" +
-                    "        else\n" +
-                    "        {\n" +
-                    "            if (hasPassengerInRange($0.tracker, $1))\n" +
-                    "            {\n" +
-                    "                return true;\n" +
-                    "            }\n" +
-                    "            else\n" +
-                    "            {\n" +
-                    "                return this.isInRangeOfPlayer($1);\n" +
-                    "            }\n" +
-                    "        }\n" +
-                    "    }";
+                    "    }\n" +
+                    "    if ($0.tracker.isPassenger()) {\n" +
+                    "        return isTrackedBy($0.tracker.getVehicle(), $1);\n" +
+                    "    } else {\n" +
+                    "        return hasPassengerInRange($0.tracker, $1) ? true : $0.isInRangeOfPlayer($1);\n" +
+                    "    }" +
+                    "}";
 }

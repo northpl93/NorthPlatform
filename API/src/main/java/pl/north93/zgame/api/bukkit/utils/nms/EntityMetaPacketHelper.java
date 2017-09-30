@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.UnpooledByteBufAllocator;
 
 /**
  * Klasa pomocnicza sluzaca do recznego wysylania danych
@@ -29,7 +29,7 @@ public class EntityMetaPacketHelper
      */
     public EntityMetaPacketHelper(final int entityId)
     {
-        this.buffer = PooledByteBufAllocator.DEFAULT.buffer(32); // allocate new pooled bytebuf
+        this.buffer = UnpooledByteBufAllocator.DEFAULT.buffer(32);
         this.pds = new PacketDataSerializer(this.buffer);
 
         this.pds.writeByte(0x39); // PacketPlayOutEntityMetadata id PAMIETAC ZEBY TU ZMIENIC PRZY AKTUSLIZACJI MINECRAFTA

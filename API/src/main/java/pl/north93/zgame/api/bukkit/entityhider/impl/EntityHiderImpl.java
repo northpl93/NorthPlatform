@@ -1,10 +1,8 @@
 package pl.north93.zgame.api.bukkit.entityhider.impl;
 
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -15,6 +13,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.Main;
+import pl.north93.zgame.api.bukkit.entityhider.EntityVisibility;
 import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -23,65 +23,47 @@ public class EntityHiderImpl extends Component implements IEntityHider
 {
     @Inject
     private BukkitApiCore apiCore;
+    private final GlobalVisibility globalVisibility = new GlobalVisibility();
 
     @Override
-    public void showEntities(final Player player, final List<Entity> entities)
+    public void setVisibility(final Player player, final EntityVisibility visibility, final Collection<Entity> entities)
     {
-        final Set<Integer> hiddenEntities = this.getHiddenEntities(player);
-        hiddenEntities.removeAll(entities.stream().map(Entity::getEntityId).collect(Collectors.toSet()));
-        /*for (final Entity entity : entities) // gdy to odkomentujemy to nie ma opoznienia, ale to chyba noe przeszkadza
+        final VisibilityController controller = this.getController(player);
+        entities.forEach(entity -> controller.setVisibility(entity, visibility));
+    }
+
+    @Override
+    public void setVisibility(final EntityVisibility visibility, final Collection<Entity> entities)
+    {
+        entities.forEach(entity -> this.globalVisibility.setGlobalEntityStatus(entity, visibility));
+        /*for (final Entity entity : entities) // kod wymuszajacy zaktualizowanie trackerow, zmniejsza opoznienie ale to chyba zbedne
         {
             final CraftEntity craftEntity = (CraftEntity) entity;
             final EntityTrackerEntry tracker = EntityTrackerHelper.getTrackerEntry(craftEntity.getHandle());
             tracker.updatePlayer(((CraftPlayer) player).getHandle());
         }*/
-    }
-
-    @Override
-    public void hideEntities(final Player player, final List<Entity> entities)
-    {
-        final Set<Integer> hiddenEntities = this.getHiddenEntities(player);
-        hiddenEntities.addAll(entities.stream().map(Entity::getEntityId).collect(Collectors.toSet()));
-        /*for (final Entity entity : entities)
-        {
-            final CraftEntity craftEntity = (CraftEntity) entity;
-            final EntityTrackerEntry tracker = EntityTrackerHelper.getTrackerEntry(craftEntity.getHandle());
-            tracker.updatePlayer(((CraftPlayer) player).getHandle());
-        }*/
-    }
-
-    @Override
-    public void setEntityVisible(final Player player, final Entity entity, final boolean visible)
-    {
-        final Set<Integer> hiddenEntities = this.getHiddenEntities(player);
-
-        if (visible)
-        {
-            hiddenEntities.remove(entity.getEntityId());
-        }
-        else
-        {
-            hiddenEntities.add(entity.getEntityId());
-        }
     }
 
     @Override
     public boolean isVisible(final Player player, final Entity entity)
     {
-        return ! this.getHiddenEntities(player).contains(entity.getEntityId());
+        return this.getController(player).isEntityVisible(entity);
     }
 
-    @SuppressWarnings("unchecked")
-    private Set<Integer> getHiddenEntities(final Player player)
+    private VisibilityController getController(final Player player)
     {
-        final List<MetadataValue> metadata = player.getMetadata("API.EntityHider/hiddenEntities");
-        if (metadata.size() == 0)
+        final List<MetadataValue> metadata = player.getMetadata("API.EntityHider/controller");
+        if (metadata.isEmpty())
         {
-            final Set<Integer> entities = new HashSet<>();
-            player.setMetadata("API.EntityHider/hiddenEntities", new FixedMetadataValue(this.apiCore.getPluginMain(), entities));
-            return entities;
+            final Main pluginMain = this.apiCore.getPluginMain();
+            final VisibilityController controller = new VisibilityController(this.globalVisibility);
+
+            player.setMetadata("API.EntityHider/controller", new FixedMetadataValue(pluginMain, controller));
+            player.setMetadata("API.EntityHider/hideFunction", new FixedMetadataValue(pluginMain, controller.getHideFunction()));
+
+            return controller;
         }
-        return (Set<Integer>) metadata.get(0).value();
+        return (VisibilityController) metadata.get(0).value();
     }
 
     @Override
