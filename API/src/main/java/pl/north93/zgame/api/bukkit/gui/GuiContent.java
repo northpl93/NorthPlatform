@@ -12,7 +12,7 @@ public class GuiContent extends GuiContainerElement
 {
     private final Gui gui;
     
-    private TranslatableString title = TranslatableString.EMPTY;
+    private TranslatableString title = TranslatableString.empty();
     
     private GuiCanvas renderedCanvas;
     

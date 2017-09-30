@@ -86,7 +86,7 @@ public class ConfigGuiIcon implements IGuiIcon
     {
         private ItemStack preCreatedItemStack;
         
-        private TranslatableString name = TranslatableString.EMPTY;
+        private TranslatableString name = TranslatableString.empty();
         private TranslatableString lore;
 
         private List<XmlVariable> variables;
@@ -103,7 +103,7 @@ public class ConfigGuiIcon implements IGuiIcon
         
         public Builder name(TranslatableString name)
         {
-            this.name = name != null ? name : TranslatableString.EMPTY;
+            this.name = name != null ? name : TranslatableString.empty();
             return this;
         }
         

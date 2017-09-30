@@ -7,6 +7,7 @@ import pl.north93.zgame.api.global.utils.Vars;
 
 class ConstantTranslatableString extends TranslatableString
 {
+    public static final TranslatableString EMPTY = new ConstantTranslatableString(""); // uzywane w TranslatableString#empty()
     private final String fixedValue;
     
     ConstantTranslatableString(String fixedValue)

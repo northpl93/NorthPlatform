@@ -8,6 +8,8 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.messages.TranslatableString;
+
 public final class Item
 {
     private final ItemsGroup          group;
@@ -45,6 +47,17 @@ public final class Item
     public Rarity getRarity()
     {
         return this.rarity;
+    }
+
+    /**
+     * Zwraca nazwe tego przedmiotu jako {@link TranslatableString}.
+     * Zestaw tlumaczen pobierany jest z configu.
+     *
+     * @return Nazwa przedmiotu jako tlumaczalny lancuch tekstowy.
+     */
+    public TranslatableString getName()
+    {
+        return TranslatableString.custom(this.name);
     }
 
     public String getName(final Locale locale)

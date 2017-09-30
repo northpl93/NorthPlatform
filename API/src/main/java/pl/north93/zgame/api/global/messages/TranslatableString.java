@@ -1,15 +1,25 @@
 package pl.north93.zgame.api.global.messages;
 
 import java.util.Locale;
+import java.util.Map;
 
 import org.bukkit.entity.Player;
 
 import pl.north93.zgame.api.global.utils.Vars;
 
+/**
+ * Klasa {@code TranslatableString} reprezentuje tekst ktory moze
+ * zostac przetlumaczony. Zrodlo tlumaczenia zalezy od wybranej
+ * metody fabrykujacej.
+ *
+ * @see #empty()
+ * @see #constant(String)
+ * @see #of(MessagesBox, String)
+ * @see #constant(String)
+ * @see #custom(Map)
+ */
 public abstract class TranslatableString
 {
-    public static final TranslatableString EMPTY = new ConstantTranslatableString("");
-
     TranslatableString()
     {
     }
@@ -111,7 +121,24 @@ public abstract class TranslatableString
     public abstract int hashCode();
     
     public abstract String toString();
-    
+
+    /**
+     * Zwraca predefiniowana instancje {@link TranslatableString} ktora zawsze
+     * zwroci pusty String (dlugosc 0).
+     *
+     * @return TranslatableString zawsze zwracajacy pusty string.
+     */
+    public static TranslatableString empty()
+    {
+        return ConstantTranslatableString.EMPTY;
+    }
+
+    /**
+     * Tworzy obiekt {@link TranslatableString} ktory zawsze zwraca stala wartosc.
+     *
+     * @param string Wartosc ktora bedzie zawsze zwracana przez tego TranslatableString.
+     * @return TranslatableString o stalej wartosci.
+     */
     public static TranslatableString constant(String string)
     {
         return new ConstantTranslatableString(string);
@@ -147,5 +174,17 @@ public abstract class TranslatableString
     public static TranslatableString concat(TranslatableString string1, TranslatableString string2)
     {
         return new ComplexTranslatableString(string1, string2);
+    }
+
+    /**
+     * Umozliwia utworzenie instancji {@link TranslatableString} na podstawie mapy
+     * tlumaczen. Mapa nie jest kopiowana.
+     *
+     * @param translations Mapa z tlumaczeniami ktora zostanie uzyta w tym TranslatableString.
+     * @return TranslatableString z podana mapa tlumaczen.
+     */
+    public static TranslatableString custom(final Map<Locale, String> translations)
+    {
+        return new CustomTranslatableString(translations);
     }
 }
