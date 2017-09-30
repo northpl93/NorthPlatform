@@ -24,13 +24,13 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardLayout;
+import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 
 class ScoreboardContextImpl implements IScoreboardContext
 {
-    private final BukkitApiCore         bukkitApiCore;
+    private final IBukkitExecutor       executor;
     private final Player                player;
     private final IScoreboardLayout     layout;
     private final Map<String, Object>   data;
@@ -38,9 +38,9 @@ class ScoreboardContextImpl implements IScoreboardContext
     private final String                boardId;
     private final LinkedList<BoardLine> boardLines;
 
-    public ScoreboardContextImpl(final BukkitApiCore bukkitApiCore, final Player player, final IScoreboardLayout layout)
+    public ScoreboardContextImpl(final IBukkitExecutor executor, final Player player, final IScoreboardLayout layout)
     {
-        this.bukkitApiCore = bukkitApiCore;
+        this.executor = executor;
         this.player = player;
         this.layout = layout;
         this.data = new HashMap<>();
@@ -86,7 +86,7 @@ class ScoreboardContextImpl implements IScoreboardContext
     public <T> void setCompletableFuture(final String key, final CompletableFuture<T> future)
     {
         this.data.put(key, future);
-        future.thenRun(() -> this.bukkitApiCore.ensureMainThread(this::update));
+        future.thenRun(() -> this.executor.inMainThread(this::update));
     }
 
     @Override

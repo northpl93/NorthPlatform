@@ -18,6 +18,7 @@ import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.player.IBukkitPlayers;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.player.event.PlayerDataLoadedEvent;
+import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
@@ -28,11 +29,14 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 class PlayerDataLoadTask implements Runnable
 {
     @Inject
-    private       BukkitApiCore       apiCore;
+    private BukkitApiCore       apiCore;
     @Inject
-    private       IObservationManager observation;
+    private IBukkitExecutor     executor;
     @Inject
-    private       IBukkitPlayers      bukkitPlayers;
+    private IObservationManager observation;
+    @Inject
+    private IBukkitPlayers      bukkitPlayers;
+
     private final Player              player;
 
     public PlayerDataLoadTask(final Player player)
@@ -66,7 +70,7 @@ class PlayerDataLoadTask implements Runnable
         // pobieramy liste akcji do wykonania po wejsciu na serwer
         final Collection<IServerJoinAction> joinActions = this.fetchActions(northPlayer);
 
-        this.apiCore.run(() ->
+        this.executor.sync(() ->
         {
             // wywolujemy synchronicznie do serwera event o zaladowaniu danych gracza.
             this.apiCore.callEvent(new PlayerDataLoadedEvent(northPlayer, joinActions));

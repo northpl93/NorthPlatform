@@ -31,20 +31,20 @@ import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.shop.ShopGuiManager;
 import pl.arieals.minigame.bedwars.shop.gui.ShopMain;
 import pl.arieals.minigame.bedwars.shop.gui.UpgradesGui;
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
 
 public class NpcCreator implements Listener
 {
     @Inject
-    private BukkitApiCore  apiCore;
+    private IBukkitExecutor executor;
     @Inject
-    private IGlobalShops   globalShops;
+    private IGlobalShops    globalShops;
     @Inject
-    private ShopGuiManager shopGuiManager;
+    private ShopGuiManager  shopGuiManager;
     @Inject @Named("BedWarsNpcRegistry")
-    private NPCRegistry    npcRegistry;
+    private NPCRegistry     npcRegistry;
 
     @EventHandler(priority = EventPriority.HIGH)
     public void createNpc(final GameStartEvent event)
@@ -54,7 +54,7 @@ public class NpcCreator implements Listener
 
         for (final Team team : arenaData.getTeams())
         {
-            this.apiCore.sync(() -> this.getTeamNpc(shoppers, team), npc ->
+            this.executor.mixed(() -> this.getTeamNpc(shoppers, team), npc ->
             {
                 // NPC z sklepem
                 final NPC shopper = this.createNpc(npc.getKey());

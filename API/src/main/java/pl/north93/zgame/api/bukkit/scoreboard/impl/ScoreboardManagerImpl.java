@@ -16,6 +16,7 @@ import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardLayout;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
+import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -23,7 +24,9 @@ public class ScoreboardManagerImpl extends Component implements IScoreboardManag
 {
     private final Map<LayoutUpdateTask, IScoreboardLayout> layoutUpdaters;
     @Inject
-    private BukkitApiCore apiCore;
+    private BukkitApiCore   apiCore;
+    @Inject
+    private IBukkitExecutor bukkitExecutor;
 
     public ScoreboardManagerImpl()
     {
@@ -33,7 +36,7 @@ public class ScoreboardManagerImpl extends Component implements IScoreboardManag
     @Override
     public IScoreboardContext setLayout(final Player player, final IScoreboardLayout layout)
     {
-        final ScoreboardContextImpl context = new ScoreboardContextImpl(this.apiCore, player, layout);
+        final ScoreboardContextImpl context = new ScoreboardContextImpl(this.bukkitExecutor, player, layout);
         this.setContext(player, context);
         this.checkRunUpdater(layout);
         return context;

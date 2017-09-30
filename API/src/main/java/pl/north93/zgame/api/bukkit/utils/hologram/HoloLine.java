@@ -56,7 +56,7 @@ final class HoloLine
             final String newText = this.lastLine.render(this.hologram, key.getBukkitEntity());
 
             final BukkitApiCore apiCore = (BukkitApiCore) API.getApiCore();
-            apiCore.run(() ->
+            apiCore.sync(() ->
             {
                 final EntityMetaPacketHelper packetHelper = new EntityMetaPacketHelper(this.armorStand.getEntityId());
 

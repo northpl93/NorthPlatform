@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.bukkit.server.impl;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 
 import net.minecraft.server.v1_10_R1.MinecraftServer;
@@ -12,6 +14,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.bukkit.server.IBukkitServerManager;
 import pl.north93.zgame.api.bukkit.server.event.ServerStartedEvent;
 import pl.north93.zgame.api.bukkit.server.event.ShutdownCancelledEvent;
@@ -27,7 +30,7 @@ import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 
-public class BukkitServerManagerImpl extends Component implements IBukkitServerManager
+public class BukkitServerManagerImpl extends Component implements IBukkitServerManager, IBukkitExecutor
 {
     private static final int TIME_TO_NEXT_TRY = 30 * 20; // 30 sekund
     @Inject
@@ -43,7 +46,7 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
     @Override
     protected void enableComponent()
     {
-        this.apiCore.run(() ->
+        this.sync(() ->
         {
             // po pelnym uruchomieniu serwera zmianiamy stan na wlaczony i wykonujemy event
             this.changeState(ServerState.WORKING);
@@ -128,6 +131,44 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
 
         this.countdown.reset(TIME_TO_NEXT_TRY);
         this.countdown.start();
+    }
+
+    @Override
+    public void sync(final Runnable runnable)
+    {
+        Bukkit.getScheduler().runTask(this.apiCore.getPluginMain(), runnable);
+    }
+
+    @Override
+    public void async(final Runnable runnable)
+    {
+        Bukkit.getScheduler().runTaskAsynchronously(this.apiCore.getPluginMain(), runnable);
+    }
+
+    @Override
+    public <T> void mixed(final Supplier<T> async, final Consumer<T> synced)
+    {
+        this.async(() ->
+        {
+            final T t = async.get();
+            if (t != null)
+            {
+                this.sync(() -> synced.accept(t));
+            }
+        });
+    }
+
+    @Override
+    public void inMainThread(final Runnable runnable)
+    {
+        if (MinecraftServer.getServer().isMainThread())
+        {
+            runnable.run();
+        }
+        else
+        {
+            this.sync(runnable);
+        }
     }
 
     @Override

@@ -6,11 +6,7 @@ import static pl.north93.zgame.api.global.redis.RedisKeys.SERVER;
 import java.io.File;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.logging.Logger;
-
-import net.minecraft.server.v1_10_R1.MinecraftServer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -61,60 +57,13 @@ public class BukkitApiCore extends ApiCore
     /**
      * Synchronizuje podany runnable do wątku serwera przy użyciu Schedulera.
      *
+     * @deprecated Przeniesiono do {@link pl.north93.zgame.api.bukkit.server.IBukkitExecutor#sync(Runnable)}.
      * @param runnable do zsynchronizowania.
      */
+    @Deprecated
     public final void sync(final Runnable runnable)
     {
         this.pluginMain.getServer().getScheduler().runTask(this.pluginMain, runnable);
-    }
-
-    /**
-     * Wykonuje kod w pierwszym argumencie asynchronicznie,
-     * wynik przekazuje do drugiego i wykonuje go synchronicznie.
-     * Jeś zostanie zwrócony null częsc synchroniczna sie nie wykona.
-     *
-     * @param async kod asynchroniczny.
-     * @param synced kod zsynchronizowany do serwerra.
-     * @param <T> wartość przekazywana z kodu asynchronicznego do synchronicznego.
-     */
-    public final <T> void sync(final Supplier<T> async, final Consumer<T> synced)
-    {
-        this.getPlatformConnector().runTaskAsynchronously(() ->
-        {
-            final T t = async.get();
-            if (t != null)
-            {
-                this.sync(() -> synced.accept(t));
-            }
-        });
-    }
-
-    /**
-     * Uruchamia dany task w Bukkit Schedulerze.
-     *
-     * @param runnable task do uruchomienia.
-     */
-    public final void run(final Runnable runnable)
-    {
-        Bukkit.getScheduler().runTask(this.pluginMain, runnable);
-    }
-
-    /**
-     * Wymusza uruchomienie kodu na glownym watku serwera.
-     * Jesli juz w nim jestesmy to po prostu wykona kod.
-     *
-     * @param runnable Kod do wykonania w glownym watku serwera.
-     */
-    public final void ensureMainThread(final Runnable runnable)
-    {
-        if (MinecraftServer.getServer().isMainThread())
-        {
-            runnable.run();
-        }
-        else
-        {
-            this.run(runnable);
-        }
     }
 
     @Override

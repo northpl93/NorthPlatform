@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang.StringUtils;
 
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
@@ -17,7 +17,7 @@ import pl.north93.zgame.api.global.network.INetworkManager;
  */
 public class RespondCommand extends NorthCommand {
     @Inject
-    private BukkitApiCore  apiCore;
+    private IBukkitExecutor executor;
     @Inject
     private INetworkManager networkManager;
 
@@ -35,7 +35,7 @@ public class RespondCommand extends NorthCommand {
         }
 
         // we can't execute commands asynchronously due to bukkit stupidity
-        this.apiCore.sync(() -> // async part
+        this.executor.mixed(() -> // async part
         {
             final String lastSender = this.networkManager.getPlayers().unsafe().getOnline(sender.getName()).get().getMetaStore().getString(LAST_SENDER);
 
