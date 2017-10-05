@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<hubOpening>
+    <chestType>bedwars</chestType>
+    <playerLocation x="5" y="5" z="5"/>
+    <chestLocation x="7" y="4" z="5"/>
+</hubOpening>

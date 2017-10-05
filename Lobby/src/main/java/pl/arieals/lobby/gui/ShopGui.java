@@ -1,6 +1,5 @@
 package pl.arieals.lobby.gui;
 
-import java.util.Locale;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
@@ -59,7 +58,8 @@ public abstract class ShopGui extends Gui
         Vars<Object> vars = Vars.empty();
 
         // nazwa przedmiotu
-        vars = vars.and("name", TranslatableString.constant(item.getName(Locale.forLanguageTag(this.player.spigot().getLocale()))));
+        vars = vars.and("name", item.getName());
+        //vars = vars.and("name", TranslatableString.constant(item.getName(Locale.forLanguageTag(this.player.spigot().getLocale()))));
         vars = vars.and("nameColor", ChatColor.GREEN);
 
         Vars<Object> loreVars = Vars.empty();

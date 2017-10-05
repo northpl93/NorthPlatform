@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ Plik mapujacy grupe przedmiotow (GlobalShops) na GUI zawierajace definicje ikony.
+ Zeby nie trzeba bylo dwa razy konfigurowac ikon.
+-->
+<iconMappings>
+    <!-- bedwarsy -->
+    <mapping groupId="bedwars_elimination">
+        <gui>bedwars/bw_shop_elimination</gui>
+    </mapping>
+    <mapping groupId="bedwars_perks">
+        <gui>bedwars/bw_shop_perks</gui>
+    </mapping>
+    <mapping groupId="bedwars_shoppers">
+        <gui>bedwars/bw_shop_shoppers</gui>
+    </mapping>
+
+    <!-- elytra -->
+    <mapping groupId="elytra_effects">
+        <gui>elytra/elytrarace_shop_effects</gui>
+    </mapping>
+    <mapping groupId="elytra_hats">
+        <gui>elytra/elytrarace_shop_hats</gui>
+    </mapping>
+    <mapping groupId="elytra_heads">
+        <gui>elytra/elytrarace_shop_heads</gui>
+    </mapping>
+</iconMappings>

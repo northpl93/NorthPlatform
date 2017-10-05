@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ Plik konfiguracyjny z typami skrzynek na serwerze.
+-->
+<chestTypes>
+    <chestType name="bedwars">
+        <category>bedwars_elimination</category>
+        <category>bedwars_perks</category>
+        <category>bedwars_shoppers</category>
+    </chestType>
+
+    <chestType name="elytra">
+        <category>elytra_effects</category>
+        <category>elytra_hats</category>
+        <category>elytra_heads</category>
+    </chestType>
+</chestTypes>

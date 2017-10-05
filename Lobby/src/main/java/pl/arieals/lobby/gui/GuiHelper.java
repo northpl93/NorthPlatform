@@ -1,6 +1,5 @@
 package pl.arieals.lobby.gui;
 
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -16,9 +15,9 @@ import pl.arieals.globalshops.server.IPlayerExperienceService;
 import pl.arieals.globalshops.shared.GroupType;
 import pl.arieals.globalshops.shared.Item;
 import pl.arieals.globalshops.shared.ItemsGroup;
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.IGuiManager;
+import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
@@ -29,13 +28,13 @@ import pl.north93.zgame.api.global.utils.Vars;
 public class GuiHelper
 {
     @Inject @Messages("ShopGeneral")
-    private MessagesBox  generalMessages;
+    private MessagesBox     generalMessages;
     @Inject
-    private BukkitApiCore apiCore;
+    private IBukkitExecutor executor;
     @Inject
-    private IGlobalShops globalShops;
+    private IGlobalShops    globalShops;
     @Inject
-    private IGuiManager  guiManager;
+    private IGuiManager     guiManager;
     @Inject
     private IPlayerExperienceService playerExperienceService;
 
@@ -66,7 +65,8 @@ public class GuiHelper
             }
             else
             {
-                vars = vars.and("selected", activeItem.getName(Locale.forLanguageTag(player.spigot().getLocale())));
+                //vars = vars.and("selected", activeItem.getName(Locale.forLanguageTag(player.spigot().getLocale())));
+                vars = vars.and("selected", activeItem.getName());
             }
         }
 
@@ -76,7 +76,7 @@ public class GuiHelper
     @UriHandler("/lobby/shop/general/click/:categoryName/:itemName/:playerId")
     public void handleClick(final String calledUri, final Map<String, String> parameters)
     {
-        this.apiCore.sync(() ->
+        this.executor.mixed(() ->
         {
             final ItemsGroup itemsGroup = this.globalShops.getGroup(parameters.get("categoryName"));
             final Item item = this.globalShops.getItem(itemsGroup, parameters.get("itemName"));
@@ -91,7 +91,7 @@ public class GuiHelper
     @UriHandler("/lobby/shop/general/default/:categoryName/:playerId")
     public void handleDefault(final String calledUri, final Map<String, String> parameters)
     {
-        this.apiCore.sync(() ->
+        this.executor.mixed(() ->
         {
             final ItemsGroup itemsGroup = this.globalShops.getGroup(parameters.get("categoryName"));
             final Player player = Bukkit.getPlayer(UUID.fromString(parameters.get("playerId")));
