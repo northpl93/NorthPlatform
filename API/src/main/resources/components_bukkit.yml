@@ -42,3 +42,10 @@ components:
       - API.TickableManager
     platforms:
       - BUKKIT
+
+  - name: API.HoloGui
+    mainClass: "pl.north93.zgame.api.bukkit.hologui.impl.HoloGuiManagerImpl"
+    description: "Holographic GUI."
+    dependencies: []
+    platforms:
+      - BUKKIT
