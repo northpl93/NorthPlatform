@@ -1,4 +1,3 @@
-rootPackage: pl.arieals
 components:
   - name: GlobalShops.Controller
     mainClass: "pl.arieals.globalshops.controller.GlobalShopsController"

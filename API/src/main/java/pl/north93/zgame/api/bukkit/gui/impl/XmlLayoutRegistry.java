@@ -4,7 +4,9 @@ import javax.xml.bind.JAXB;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.common.base.Preconditions;
 
@@ -19,23 +21,36 @@ public class XmlLayoutRegistry
 {
     @Inject
     private static ApiCore apiCore;
+    private static final Set<ClassLoader>          scannedLoaders = new HashSet<>();
     private static final Map<String, XmlGuiLayout> loadedGuiLayouts = new HashMap<>();
     private static final Map<String, XmlHotbarLayout> loadedHotbarLayouts = new HashMap<>();
     
-    public static XmlGuiLayout getGuiLayout(String name)
+    public static XmlGuiLayout getGuiLayout(final ClassLoader classLoader, String name)
     {
+        loadLayouts(classLoader);
+
         Preconditions.checkArgument(loadedGuiLayouts.containsKey(name), "Gui layout with name " + name + " doesn't exists!");
         return loadedGuiLayouts.get(name);
     }
     
-    public static XmlHotbarLayout getHotbarLayout(String name)
+    public static XmlHotbarLayout getHotbarLayout(final ClassLoader classLoader, String name)
     {
+        loadLayouts(classLoader);
+
         Preconditions.checkArgument(loadedHotbarLayouts.containsKey(name), "Hotbar layout with name " + name + " doesn't exists!");
         return loadedHotbarLayouts.get(name);
     }
-    
-    public static void loadLayouts(ClassLoader cl)
+
+    // przeprowadza leniwe wczytywanie layoutow.
+    // jesli zeskanowalo juz classloader to go wiecej nie ruszy
+    private static void loadLayouts(ClassLoader cl)
     {
+        if (scannedLoaders.contains(cl))
+        {
+            return;
+        }
+        scannedLoaders.add(cl);
+
         final Reflections reflections = apiCore.getComponentManager().accessReflections(cl);
 
         final Collection<String> values = reflections.getStore().get("ResourcesScanner").values();

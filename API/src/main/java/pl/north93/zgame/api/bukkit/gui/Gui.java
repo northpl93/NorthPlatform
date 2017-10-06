@@ -15,6 +15,7 @@ import pl.north93.zgame.api.bukkit.gui.impl.IClickHandler;
 import pl.north93.zgame.api.bukkit.gui.impl.XmlLayoutRegistry;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.utils.Vars;
+import pl.north93.zgame.api.global.utils.lang.ClassUtils;
 
 public class Gui implements IClickHandler
 {
@@ -32,7 +33,8 @@ public class Gui implements IClickHandler
         this.messagesBox = messagesBox;
         if ( StringUtils.isNotEmpty(layout) )
         {
-            content = XmlLayoutRegistry.getGuiLayout(layout).createGuiContent(this);
+            final ClassLoader callerClassLoader = ClassUtils.getCallerClass().getClassLoader();
+            content = XmlLayoutRegistry.getGuiLayout(callerClassLoader, layout).createGuiContent(this);
         }
         else
         {

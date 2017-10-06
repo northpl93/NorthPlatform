@@ -3,6 +3,16 @@ include:
   - components_bukkit.yml
   - components_bungee.yml
 
+# Zeby skanowanie nie trwalo wieki wykluczamy pakiety libek
+excludedPackages:
+  - "rx"
+  - "org"
+  - "javax"
+  - "javassist"
+  - "it"
+  - "io"
+  - "com"
+
 # Lista komponentów dla platformy STANDALONE
 components:
   - name: API.Commands

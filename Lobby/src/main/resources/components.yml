@@ -1,4 +1,3 @@
-rootPackage: pl.arieals
 components:
   - name: Lobby.Features
     mainClass: "pl.arieals.lobby.LobbyFeatures"

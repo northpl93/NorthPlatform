@@ -1,4 +1,3 @@
-rootPackage: pl.arieals
 components:
   - name: MiniGameApi.Server
     mainClass: "pl.arieals.api.minigame.server.MiniGameServer"

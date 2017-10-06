@@ -1,6 +1,10 @@
+excludedPackages:
+  - "spark"
+  - "org"
+  - "javax"
+
 components:
   - name: RestfulApi
-    enabled: true
     mainClass: "pl.north93.zgame.restful.RestfulComponent"
     description: "Provides REST API for network management."
     dependencies:

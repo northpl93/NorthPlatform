@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import org.bukkit.entity.Player;
-
 import com.google.common.base.Preconditions;
+
+import org.bukkit.entity.Player;
 
 import pl.north93.zgame.api.bukkit.gui.impl.GuiTracker;
 import pl.north93.zgame.api.bukkit.gui.impl.HotbarClickEvent;
@@ -17,6 +17,7 @@ import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlHotbarEntry;
 import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlHotbarLayout;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.utils.Vars;
+import pl.north93.zgame.api.global.utils.lang.ClassUtils;
 
 public class HotbarMenu implements IClickHandler
 {
@@ -37,7 +38,8 @@ public class HotbarMenu implements IClickHandler
         
         if ( layout != null && !layout.isEmpty() )
         {
-            applyLayout(XmlLayoutRegistry.getHotbarLayout(layout));
+            final ClassLoader callerClassLoader = ClassUtils.getCallerClass().getClassLoader();
+            applyLayout(XmlLayoutRegistry.getHotbarLayout(callerClassLoader, layout));
         }
         
         callOnInit();

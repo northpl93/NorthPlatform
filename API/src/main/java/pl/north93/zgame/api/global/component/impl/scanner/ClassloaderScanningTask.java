@@ -43,30 +43,37 @@ public class ClassloaderScanningTask
     private final InjectorInstaller           injectorInstaller;
     private final Queue<AbstractScanningTask> pendingTasks;
 
-    public ClassloaderScanningTask(final ComponentManagerImpl manager, final ClassLoader classLoader, final URL loadedFile, final String rootPackage)
+    public ClassloaderScanningTask(final ComponentManagerImpl manager, final ClassLoader classLoader, final URL loadedFile, final Set<String> excludedPackages)
     {
         this.manager = manager;
         this.classLoader = classLoader;
         this.loadedFile = loadedFile;
         this.classPool = manager.getClassPool(classLoader);
-        this.injectorInstaller = new InjectorInstaller();
-        this.reflections = this.createReflections(new FilterBuilder().includePackage(rootPackage).includePackage("gui").includePackage("hotbar")); // todo allow to register own packages
+        this.injectorInstaller = new InjectorInstaller(manager.getApiCore());
+
+        final FilterBuilder filterBuilder = new FilterBuilder();
+        for (final String excludedPackage : excludedPackages)
+        {
+            filterBuilder.excludePackage(excludedPackage);
+        }
+        this.reflections = this.createReflections(filterBuilder);
+
         this.pendingTasks = new ArrayDeque<>();
     }
 
-    public static ClassloaderScanningTask create(final ComponentManagerImpl manager, final ClassLoader classLoader, final String rootPackage)
+    public static ClassloaderScanningTask create(final ComponentManagerImpl manager, final ClassLoader classLoader, final Set<String> excludedPackages)
     {
         Preconditions.checkNotNull(manager, "Manager can't be null!");
         Preconditions.checkNotNull(classLoader, "ClassLoader can't be null");
-        Preconditions.checkNotNull(rootPackage, "Root package can't be null!");
+        Preconditions.checkNotNull(excludedPackages, "ExcludedPackages can't be null!");
 
         if (classLoader instanceof JarComponentLoader)
         {
-            return new ClassloaderScanningTask(manager, classLoader, ((JarComponentLoader) classLoader).getFileUrl(), rootPackage);
+            return new ClassloaderScanningTask(manager, classLoader, ((JarComponentLoader) classLoader).getFileUrl(), excludedPackages);
         }
         else if (classLoader == ClassloaderScanningTask.class.getClassLoader())
         {
-            return new ClassloaderScanningTask(manager, classLoader, ClassloaderScanningTask.class.getProtectionDomain().getCodeSource().getLocation(), rootPackage);
+            return new ClassloaderScanningTask(manager, classLoader, ClassloaderScanningTask.class.getProtectionDomain().getCodeSource().getLocation(), excludedPackages);
         }
         throw new IllegalArgumentException();
     }

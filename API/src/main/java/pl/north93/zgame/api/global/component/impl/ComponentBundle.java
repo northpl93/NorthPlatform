@@ -183,7 +183,7 @@ public class ComponentBundle implements IComponentBundle
 
     private void scanNow()
     {
-        // rootPackage moze byc nullem bo na pewno juz mamy utworzony ScanningTask.
+        // excludedPackages moze byc nullem bo na pewno juz mamy utworzony ScanningTask.
         ComponentManagerImpl.instance.getScanningTask(this.classLoader, null).scanComponent(this);
     }
 

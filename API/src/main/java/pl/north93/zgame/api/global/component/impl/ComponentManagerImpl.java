@@ -17,6 +17,7 @@ import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,7 +33,6 @@ import org.diorite.cfg.system.TemplateCreator;
 import javassist.ClassPool;
 import javassist.LoaderClassPath;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.bukkit.gui.impl.XmlLayoutRegistry;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.component.Component;
@@ -53,8 +53,8 @@ public class ComponentManagerImpl implements IComponentManager
     private final List<ComponentBundle> components    = new ArrayList<>();
     private final ClassPool             rootClassPool = new ClassPool();
     private final RootBeanContext       rootBeanCtx   = new RootBeanContext();
-    private final ClassloaderScanningTask rootScanningTask;
     private final AggregationManager aggregationManager = new AggregationManager();
+    private ClassloaderScanningTask rootScanningTask;
     private boolean autoEnable;
     private List<ClassLoader> scannedClassloaders = new ArrayList<>();
 
@@ -63,7 +63,6 @@ public class ComponentManagerImpl implements IComponentManager
         instance = this;
         this.apiCore = apiCore;
         this.rootClassPool.appendClassPath(new LoaderClassPath(this.getClass().getClassLoader()));
-        this.rootScanningTask = ClassloaderScanningTask.create(this, this.getClass().getClassLoader(), "pl.north93");
     }
 
     public void initDefaultBeans()
@@ -177,39 +176,66 @@ public class ComponentManagerImpl implements IComponentManager
     @Override
     public void doComponentScan(final String componentsYml, final ClassLoader classLoader)
     {
-        final InputStream stream = classLoader.getResourceAsStream(componentsYml);
-        if (stream == null)
+        final ComponentsConfig componentsConfig = this.loadComponentsConfig(componentsYml, classLoader);
+        if (componentsConfig == null)
         {
             return;
         }
-        final Reader reader = new InputStreamReader(stream);
-        final ComponentsConfig componentsConfig = TemplateCreator.getTemplate(ComponentsConfig.class).load(reader, classLoader);
+        this.flatComponentsConfig(classLoader, componentsConfig); // splaszczamy strukture includowanych plikow do jednego
 
         for (final ComponentDescription componentDescription : componentsConfig.getComponents())
         {
             this.loadComponent(classLoader, componentDescription);
         }
 
-        this.scanClassloader(classLoader, componentsConfig.getRootPackage(), componentsConfig.getComponents());
-        if (this.apiCore.getPlatform() == Platform.BUKKIT)
+        this.scanClassloader(classLoader, componentsConfig.getExcludedPackages(), componentsConfig.getComponents());
+    }
+
+    // splaszcza strukture includowanych plikow
+    // po wykonaniu operacji lista includes bedzie pusta
+    private void flatComponentsConfig(final ClassLoader loader, final ComponentsConfig componentsConfig)
+    {
+        final Iterator<String> includes = componentsConfig.getInclude().iterator();
+        while (includes.hasNext())
         {
-            XmlLayoutRegistry.loadLayouts(classLoader);
-        }
-        
-        for (final String includeConfig : componentsConfig.getInclude())
-        {
-            this.doComponentScan(includeConfig, classLoader);
+            final String include = includes.next();
+            includes.remove();
+
+            final ComponentsConfig includedConfig = this.loadComponentsConfig(include, loader);
+            if (includedConfig == null)
+            {
+                // log?
+                continue;
+            }
+
+            // najpierw splaszczamy config ktory zaladowalismy
+            this.flatComponentsConfig(loader, includedConfig);
+
+            // pozniej przenosimy z niego dane do configu 'wyzszego'
+            componentsConfig.getExcludedPackages().addAll(includedConfig.getExcludedPackages());
+            componentsConfig.getComponents().addAll(includedConfig.getComponents());
         }
     }
 
-    private void scanClassloader(final ClassLoader classLoader, final String rootPackage, final List<ComponentDescription> components)
+    private ComponentsConfig loadComponentsConfig(final String componentsYml, final ClassLoader classLoader)
+    {
+        final InputStream stream = classLoader.getResourceAsStream(componentsYml);
+        if (stream == null)
+        {
+            return null;
+        }
+        final Reader reader = new InputStreamReader(stream);
+        return TemplateCreator.getTemplate(ComponentsConfig.class).load(reader, classLoader);
+    }
+
+    private void scanClassloader(final ClassLoader classLoader, final Set<String> excludedPackages, final List<ComponentDescription> components)
     {
         if (this.scannedClassloaders.contains(classLoader))
         {
             return;
         }
 
-        this.getScanningTask(classLoader, rootPackage).scanWithoutComponents(components);
+        this.getScanningTask(classLoader, excludedPackages).scanWithoutComponents(components);
         this.scannedClassloaders.add(classLoader);
     }
 
@@ -411,14 +437,14 @@ public class ComponentManagerImpl implements IComponentManager
         throw new IllegalArgumentException("Unknown classloader: " + classLoader);
     }
 
-    public ClassloaderScanningTask getScanningTask(final ClassLoader classLoader, final String rootPackage)
+    public ClassloaderScanningTask getScanningTask(final ClassLoader classLoader, final Set<String> excludedPackages)
     {
         if (classLoader instanceof JarComponentLoader)
         {
             final JarComponentLoader componentLoader = (JarComponentLoader) classLoader;
             if (componentLoader.getScanningTask() == null)
             {
-                final ClassloaderScanningTask task = ClassloaderScanningTask.create(this, classLoader, rootPackage);
+                final ClassloaderScanningTask task = ClassloaderScanningTask.create(this, classLoader, excludedPackages);
                 componentLoader.setScanningTask(task);
                 return task;
             }
@@ -426,6 +452,10 @@ public class ComponentManagerImpl implements IComponentManager
         }
         else
         {
+            if (this.rootScanningTask == null)
+            {
+                this.rootScanningTask = ClassloaderScanningTask.create(this, this.getClass().getClassLoader(), excludedPackages);
+            }
             return this.rootScanningTask;
         }
     }
@@ -433,6 +463,12 @@ public class ComponentManagerImpl implements IComponentManager
     public AggregationManager getAggregationManager()
     {
         return this.aggregationManager;
+    }
+
+    // zwraca instancje ApiCore powiazana z tym menadzerem komponentow
+    public ApiCore getApiCore()
+    {
+        return this.apiCore;
     }
 
     @Override
