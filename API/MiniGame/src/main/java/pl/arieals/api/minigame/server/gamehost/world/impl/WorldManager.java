@@ -32,7 +32,6 @@ import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.Main;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlChunk;
-import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class WorldManager implements IWorldManager, Listener
@@ -43,8 +42,7 @@ public class WorldManager implements IWorldManager, Listener
     private ChunkLoadingTask chunkLoadingTask;
     private final List<World> worlds = new ArrayList<>();
 
-    @PostInject
-    public void postInject()
+    public WorldManager()
     {
         this.worldHelper = new NmsWorldHelper();
         this.chunkLoadingTask = new ChunkLoadingTask();

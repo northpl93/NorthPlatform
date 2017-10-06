@@ -9,7 +9,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.ApiCore;
-import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ApiSecurity
@@ -18,8 +17,7 @@ public class ApiSecurity
     private ApiCore   api;
     private ApiConfig apiConfig;
 
-    @PostInject
-    private void postInject()
+    public ApiSecurity()
     {
         this.apiConfig = loadConfigFile(ApiConfig.class, this.api.getFile("rest-api.yml"));
     }

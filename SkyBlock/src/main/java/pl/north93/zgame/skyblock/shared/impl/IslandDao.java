@@ -15,7 +15,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.Document;
 
 import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.redis.observable.Cache;
@@ -36,8 +35,7 @@ public class IslandDao
     private IObservationManager     observer;
     private Cache<UUID, IslandData> islandDataCache;
 
-    @PostInject
-    private void init()
+    public IslandDao()
     {
         this.islandDataCache = this.observer.cacheBuilder(UUID.class, IslandData.class)
                                             .name("isldata:")

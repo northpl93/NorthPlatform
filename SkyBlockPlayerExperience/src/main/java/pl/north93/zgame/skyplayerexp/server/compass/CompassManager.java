@@ -38,7 +38,6 @@ import pl.north93.zgame.api.bukkit.packets.event.AsyncPacketInEvent;
 import pl.north93.zgame.api.bukkit.packets.event.AsyncPacketOutEvent;
 import pl.north93.zgame.api.bukkit.packets.wrappers.WrapperPlayInClientCommand;
 import pl.north93.zgame.api.bukkit.packets.wrappers.WrapperPlayOutSetSlot;
-import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.skyplayerexp.server.ExperienceServer;
 
@@ -51,8 +50,7 @@ public class CompassManager implements Listener, ICompassManager
     @Inject
     private CompassConnector compassConnector = new CompassConnector();
 
-    @PostInject
-    private void postInject()
+    public CompassManager()
     {
         final PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(this, this.apiCore.getPluginMain());

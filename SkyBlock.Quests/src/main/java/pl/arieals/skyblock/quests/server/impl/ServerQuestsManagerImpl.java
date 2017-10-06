@@ -19,7 +19,6 @@ import pl.arieals.skyblock.quests.server.api.IServerQuestsComponent;
 import pl.arieals.skyblock.quests.server.api.IServerQuestsManager;
 import pl.arieals.skyblock.quests.shared.api.IQuest;
 import pl.arieals.skyblock.quests.shared.api.ITrackedStatistic;
-import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.data.StorageConnector;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
@@ -34,8 +33,7 @@ public class ServerQuestsManagerImpl implements IServerQuestsManager
     private IServerQuestsComponent component;
     private Map<UUID, IQuest>      quests;
 
-    @PostInject
-    private void postInject()
+    public ServerQuestsManagerImpl()
     {
         this.downloadQuests();
         this.subscriber.subscribe("skyquests_update", (channel, message) -> this.downloadQuests());

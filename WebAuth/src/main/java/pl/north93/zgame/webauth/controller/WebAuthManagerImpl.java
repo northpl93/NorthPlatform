@@ -13,7 +13,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
@@ -42,11 +41,7 @@ public class WebAuthManagerImpl implements IWebAuthManager
     {
         this.config = config;
         get("webauth/:key", this::requestHandler, gson::toJson);
-    }
 
-    @PostInject
-    private void init()
-    {
         this.keys = this.observer.cacheBuilder(String.class, UUID.class)
                                  .name("webauth:")
                                  .keyMapper(ObjectKey::new)

@@ -15,7 +15,6 @@ import pl.arieals.api.minigame.server.gamehost.region.IRegionManager;
 import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.region.IRegion;
-import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class RegionManagerImpl implements IRegionManager
@@ -24,8 +23,7 @@ public class RegionManagerImpl implements IRegionManager
     private BukkitApiCore apiCore;
     private Collection<TrackedRegionImpl> regions = new ConcurrentLinkedQueue<>(); // potrzebujemy concurrent, indexy są nieważne.
 
-    @PostInject
-    public void init()
+    public RegionManagerImpl()
     {
         this.apiCore.registerEvents(new MoveListener(this));
     }

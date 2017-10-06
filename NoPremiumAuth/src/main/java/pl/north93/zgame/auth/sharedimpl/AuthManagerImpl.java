@@ -5,7 +5,6 @@ import java.util.UUID;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.component.annotations.PostInject;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.observable.Cache;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
@@ -18,8 +17,7 @@ public class AuthManagerImpl implements IAuthManager
     private IObservationManager  observer;
     private Cache<UUID, Boolean> logInStatus;
 
-    @PostInject
-    private void init()
+    public AuthManagerImpl()
     {
         this.logInStatus = this.observer.cacheBuilder(UUID.class, Boolean.class)
                                         .name("auth:")
