@@ -10,8 +10,8 @@ class OpeningHoloGui extends BaseOpeningHoloGui
     @Override
     protected void openGui0(final IHoloContext context)
     {
-        this.shopIcon.setPosition(new IconPosition(3, 25, 1));
-        this.closeIcon.setPosition(new IconPosition(3, -25, 1));
+        this.shopIcon.setPosition(new IconPosition(3, 25, 2));
+        this.closeIcon.setPosition(new IconPosition(3, -25, 2));
     }
 
     @Override

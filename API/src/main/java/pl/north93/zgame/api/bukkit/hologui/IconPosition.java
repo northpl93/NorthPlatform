@@ -36,6 +36,13 @@ public final class IconPosition
         return this.height;
     }
 
+    /**
+     * Oblicza lokalizacje na podstawie podanego srodkowego punktu.
+     * Instancja podana w argumencie nie jest modyfikowana.
+     *
+     * @param location Lokalizacja srodka.
+     * @return Przeliczona pozycja.
+     */
     public Location calculateTarget(final Location location)
     {
         final double targetAngle = location.getYaw() + this.angle + 90;
@@ -44,8 +51,8 @@ public final class IconPosition
         boolean clockwise = true;
         if (delta < 0)
         {
-           clockwise = false;
-           delta = -delta;
+            clockwise = false;
+            delta = - delta;
         }
 
         final double targetPointX = location.getX() + this.distance;

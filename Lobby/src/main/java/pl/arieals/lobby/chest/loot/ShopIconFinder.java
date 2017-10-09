@@ -96,7 +96,7 @@ public class ShopIconFinder
 
     private @Nullable ItemStack tryGetIconFromShopGui(final String guiName, final Item item)
     {
-        final XmlGuiLayout guiLayout = XmlLayoutRegistry.getGuiLayout(guiName);
+        final XmlGuiLayout guiLayout = XmlLayoutRegistry.getGuiLayout(this.getClass().getClassLoader(), guiName);
         return this.scanContentForItem(guiLayout.getContent(), item);
     }
 

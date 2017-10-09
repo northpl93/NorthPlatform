@@ -12,6 +12,11 @@ public interface IHologram
 
     static IHologram create(final Location location)
     {
-        return new HologramImpl(location);
+        return create(DefaultVisibility.INSTANCE, location);
+    }
+
+    static IHologram create(final IHologramVisibility hologramVisibility, final Location location)
+    {
+        return new HologramImpl(hologramVisibility, location);
     }
 }

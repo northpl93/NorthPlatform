@@ -71,9 +71,11 @@ public class ChestAnimationController
     }
 
     /**
+     * Zwraca instancje animacji na podstawie entity bedacego czescia animacji.
+     * Przydatne przy sprawdzaniu czy gracz kliknal na skrzynke.
      *
-     * @param entity
-     * @return
+     * @param entity Entity do sprawdzenia.
+     * @return Instancja animacji jesli podane entity do niej nalezy.
      */
     public @Nullable AnimationInstance getInstanceByEntity(final Entity entity)
     {

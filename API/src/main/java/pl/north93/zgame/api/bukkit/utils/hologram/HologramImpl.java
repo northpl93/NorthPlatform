@@ -6,39 +6,28 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.entity.ArmorStand;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+
 final class HologramImpl implements IHologram
 {
-    private final Location       location;
-    private final List<HoloLine> lines;
+    @Inject
+    private IEntityHider              entityHider;
 
-    public HologramImpl(final Location location)
+    private final IHologramVisibility hologramVisibility;
+    private final Location            location;
+    private final List<HoloLine>      lines;
+
+    public HologramImpl(final IHologramVisibility hologramVisibility, final Location location)
     {
+        this.hologramVisibility = hologramVisibility;
         this.location = location;
         this.lines = new LinkedList<>();
-    }
-
-    private HoloLine ensureLine(final int line, final boolean create)
-    {
-        for (final HoloLine holoLine : this.lines)
-        {
-            if (holoLine.getLineNo() == line)
-            {
-                return holoLine;
-            }
-        }
-
-        if (! create)
-        {
-            return null;
-        }
-
-        final HoloLine holoLine = new HoloLine(this, line);
-        this.lines.add(holoLine);
-        return holoLine;
     }
 
     @Override
@@ -74,6 +63,31 @@ final class HologramImpl implements IHologram
     public Location getLocation()
     {
         return this.location;
+    }
+
+    private HoloLine ensureLine(final int line, final boolean create)
+    {
+        for (final HoloLine holoLine : this.lines)
+        {
+            if (holoLine.getLineNo() == line)
+            {
+                return holoLine;
+            }
+        }
+
+        if (! create)
+        {
+            return null;
+        }
+
+        final HoloLine holoLine = new HoloLine(this, line);
+        this.lines.add(holoLine);
+        return holoLine;
+    }
+
+    public void setupVisibility(final ArmorStand armorStand)
+    {
+        this.hologramVisibility.setup(this.entityHider, armorStand);
     }
 
     @Override

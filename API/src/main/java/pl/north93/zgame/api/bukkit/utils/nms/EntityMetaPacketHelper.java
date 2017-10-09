@@ -69,6 +69,24 @@ public class EntityMetaPacketHelper
 
     public enum MetaType
     {
+        STRING
+                {
+                    @Override
+                    void write(final PacketDataSerializer serializer, final Object object)
+                    {
+                        serializer.writeByte(3);
+                        serializer.a((String) object);
+                    }
+                },
+        BOOLEAN
+                {
+                    @Override
+                    void write(final PacketDataSerializer serializer, final Object object)
+                    {
+                        serializer.writeByte(6);
+                        serializer.writeBoolean((Boolean) object);
+                    }
+                },
         VECTOR
                 {
                     @Override
@@ -80,15 +98,6 @@ public class EntityMetaPacketHelper
                         serializer.writeFloat(vector.getX());
                         serializer.writeFloat(vector.getY());
                         serializer.writeFloat(vector.getZ());
-                    }
-                },
-        STRING
-                {
-                    @Override
-                    void write(final PacketDataSerializer serializer, final Object object)
-                    {
-                        serializer.writeByte(3);
-                        serializer.a((String) object);
                     }
                 };
 

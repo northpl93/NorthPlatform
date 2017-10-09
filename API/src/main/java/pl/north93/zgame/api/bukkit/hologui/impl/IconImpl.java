@@ -16,6 +16,9 @@ import org.bukkit.inventory.ItemStack;
 
 import pl.north93.zgame.api.bukkit.hologui.IIcon;
 import pl.north93.zgame.api.bukkit.hologui.IconPosition;
+import pl.north93.zgame.api.bukkit.utils.hologram.IHologram;
+import pl.north93.zgame.api.bukkit.utils.hologram.PlayerVisibility;
+import pl.north93.zgame.api.bukkit.utils.hologram.TranslatableStringLine;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public class IconImpl implements IIcon
@@ -23,8 +26,10 @@ public class IconImpl implements IIcon
     private final HoloContextImpl holoContext;
     private IconPosition       position;
     private ItemStack          itemStack;
-    private ArmorStand         armorStand;
     private TranslatableString name;
+    // dane implementacyjne
+    private ArmorStand         armorStand;
+    private IHologram          hologram;
 
     public IconImpl(final HoloContextImpl holoContext)
     {
@@ -69,11 +74,23 @@ public class IconImpl implements IIcon
 
     public void refreshLocation()
     {
-        if (this.armorStand != null)
+        if (this.armorStand == null)
         {
-            final Location location = this.position.calculateTarget(this.holoContext.getCenter());
-            this.armorStand.teleport(location);
+            // nic nie musimy aktualizowac
+            return;
         }
+
+        // przelicza docelowy punkt.
+        final Location location = this.position.calculateTarget(this.holoContext.getCenter());
+
+        if (this.itemStack != null)
+        {
+            final Location result = ArmorStandLocationFixer.INSTANCE.fixLocation(location, this.itemStack);
+            location.setY(result.getY());
+        }
+
+        final CraftArmorStand armorStand = (CraftArmorStand) this.armorStand;
+        armorStand.getHandle().setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
     }
 
     @Override
@@ -91,16 +108,38 @@ public class IconImpl implements IIcon
 
     private void updateName()
     {
-        if (this.armorStand != null && this.name != null)
+        if (this.armorStand == null)
         {
-            final String translatedName = this.name.getValue(this.holoContext.getPlayer());
-            this.armorStand.setCustomName(translatedName);
-            this.armorStand.setCustomNameVisible(true);
+            return;
+        }
+
+        if (this.name != null)
+        {
+            if (this.hologram == null)
+            {
+                final PlayerVisibility hologramVisibility = new PlayerVisibility(this.holoContext.getPlayer());
+                this.hologram = IHologram.create(hologramVisibility, this.armorStand.getLocation());
+            }
+
+            this.hologram.setLine(0, new TranslatableStringLine(this.name));
+        }
+        else if (this.hologram != null)
+        {
+            this.hologram.remove();
+            this.hologram = null;
         }
     }
 
-    public void create()
+    /**
+     * Tworzy armorstanda, konfiguruje go i przypisuje do tej instancji
+     * ikony.
+     *
+     * @return Stworzona instancja ArmorStanda.
+     */
+    public ArmorStand create()
     {
+        Preconditions.checkState(this.armorStand == null, "Icon already created");
+
         final World world = this.holoContext.getCenter().getWorld();
         final WorldServer nmsWorld = ((CraftWorld) world).getHandle();
 
@@ -108,8 +147,7 @@ public class IconImpl implements IIcon
         this.armorStand = (ArmorStand) entityArmorStand.getBukkitEntity();
 
         // ustawia poczatkowa lokacje ArmorStanda
-        final Location location = this.position.calculateTarget(this.holoContext.getCenter());
-        entityArmorStand.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        this.refreshLocation();
 
         // aktualizuje typ itemu
         this.updateType();
@@ -123,14 +161,12 @@ public class IconImpl implements IIcon
         this.armorStand.setSmall(true);
 
         nmsWorld.addEntity(entityArmorStand, CreatureSpawnEvent.SpawnReason.CUSTOM);
+        return this.armorStand;
     }
 
     public void destroy()
     {
-        if (this.armorStand == null)
-        {
-            return;
-        }
+        Preconditions.checkState(this.armorStand != null, "Icon is already destroyed or never created");
 
         final CraftArmorStand craftEntity = (CraftArmorStand) this.armorStand;
         craftEntity.getHandle().die();

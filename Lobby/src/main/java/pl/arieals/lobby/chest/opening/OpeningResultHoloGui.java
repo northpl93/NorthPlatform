@@ -33,8 +33,8 @@ class OpeningResultHoloGui extends BaseOpeningHoloGui
     {
         this.setupLootIcons(context, this.lootResult);
 
-        this.shopIcon.setPosition(new IconPosition(3, 50, 1));
-        this.closeIcon.setPosition(new IconPosition(3, -50, 1));
+        this.shopIcon.setPosition(new IconPosition(3, 50, 2));
+        this.closeIcon.setPosition(new IconPosition(3, -50, 2));
     }
 
     private void setupLootIcons(final IHoloContext holoContext, final LootResult result)
@@ -65,8 +65,9 @@ class OpeningResultHoloGui extends BaseOpeningHoloGui
             final ItemShardLoot shardLoot = (ItemShardLoot) loot;
 
             final IIcon icon = holoContext.createIcon();
-            icon.setPosition(new IconPosition(3, position, 1));
+            icon.setPosition(new IconPosition(3, position, 2));
             icon.setType(this.shopIconFinder.getItemStack(shardLoot.getItem()));
+            icon.setDisplayName(loot.getName());
             holoContext.addIcon(icon);
         }
     }

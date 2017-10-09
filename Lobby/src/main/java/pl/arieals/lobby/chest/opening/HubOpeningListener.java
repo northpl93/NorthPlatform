@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -145,6 +146,13 @@ public class HubOpeningListener implements AutoListener
             // jesli gracz otwiera skrzynke to blokujemy ruch
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onQuit(final PlayerQuitEvent event)
+    {
+        // gdy gracz wychodzi z serwera to wymuszamy zakonczenie openingu
+        this.chestOpeningController.endOpening(event.getPlayer());
     }
 
     @Override
