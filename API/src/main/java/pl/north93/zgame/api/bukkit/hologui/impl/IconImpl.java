@@ -16,9 +16,9 @@ import org.bukkit.inventory.ItemStack;
 
 import pl.north93.zgame.api.bukkit.hologui.IIcon;
 import pl.north93.zgame.api.bukkit.hologui.IconPosition;
-import pl.north93.zgame.api.bukkit.utils.hologram.IHologram;
-import pl.north93.zgame.api.bukkit.utils.hologram.PlayerVisibility;
-import pl.north93.zgame.api.bukkit.utils.hologram.TranslatableStringLine;
+import pl.north93.zgame.api.bukkit.hologui.hologram.IHologram;
+import pl.north93.zgame.api.bukkit.hologui.hologram.PlayerVisibility;
+import pl.north93.zgame.api.bukkit.hologui.hologram.TranslatableStringLine;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public class IconImpl implements IIcon

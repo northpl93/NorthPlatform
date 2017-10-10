@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.bukkit.utils.hologram;
+package pl.north93.zgame.api.bukkit.hologui.hologram;
 
 import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.getTrackerEntry;
 import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.observeTracker;
