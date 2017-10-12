@@ -36,6 +36,7 @@ public class ComponentBundle implements IComponentBundle
         this.classLoader = classLoader;
         this.componentBeanContext = componentBeanContext;
         this.basePackages = new ObjectArraySet<>();
+        this.status = ComponentStatus.DISABLED; // prevent NPEs
     }
 
     @Override
