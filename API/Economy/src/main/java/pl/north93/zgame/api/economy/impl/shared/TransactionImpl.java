@@ -10,7 +10,6 @@ import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 
 class TransactionImpl implements ITransaction
 {
-    private final ICurrency           currency;
     private final IPlayerTransaction  playerTransaction;
     private final PlayerAccessor      playerAccessor;
     private final CurrencyRankingImpl currencyRanking;
@@ -18,7 +17,6 @@ class TransactionImpl implements ITransaction
 
     public TransactionImpl(final ICurrency currency, final IPlayerTransaction playerTransaction, final CurrencyRankingImpl currencyRanking)
     {
-        this.currency = currency;
         this.playerTransaction = playerTransaction;
         this.playerAccessor = new PlayerAccessor(playerTransaction.getPlayer(), currency);
         this.currencyRanking = currencyRanking;
@@ -29,6 +27,13 @@ class TransactionImpl implements ITransaction
     {
         this.checkClosed();
         return this.playerTransaction.getPlayer();
+    }
+
+    @Override
+    public ICurrency getCurrency()
+    {
+        this.checkClosed();
+        return this.playerAccessor.getCurrency();
     }
 
     @Override
@@ -70,10 +75,18 @@ class TransactionImpl implements ITransaction
     }
 
     @Override
+    public boolean isTransactionOpen()
+    {
+        return ! this.isClosed;
+    }
+
+    @Override
     public void close() throws Exception
     {
-        this.currencyRanking.update(this.getAssociatedPlayer().getUuid(), this.getAmount());
+        this.checkClosed();
         this.isClosed = true;
+
+        this.currencyRanking.update(this.getAssociatedPlayer().getUuid(), this.getAmount());
         this.playerTransaction.close();
     }
 
@@ -88,6 +101,6 @@ class TransactionImpl implements ITransaction
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("currency", this.currency).append("playerTransaction", this.playerTransaction).append("isClosed", this.isClosed).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("playerTransaction", this.playerTransaction).append("isClosed", this.isClosed).toString();
     }
 }

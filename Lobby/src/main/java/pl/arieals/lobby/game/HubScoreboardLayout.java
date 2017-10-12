@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.shared.api.statistics.IRecord;
 import pl.arieals.api.minigame.shared.api.statistics.unit.NumberUnit;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardLayout;
+import pl.north93.zgame.api.economy.IAccountAccessor;
 import pl.north93.zgame.api.economy.ICurrency;
 import pl.north93.zgame.api.economy.IEconomyManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -39,7 +40,8 @@ public abstract class HubScoreboardLayout implements IScoreboardLayout
         final Identity identity = Identity.of(player);
         final ICurrency currency = this.economyManager.getCurrency("minigame");
 
-        return String.valueOf(this.economyManager.getAmount(currency, identity));
+        final IAccountAccessor unsafeAccessor = this.economyManager.getUnsafeAccessor(currency, identity);
+        return String.valueOf(unsafeAccessor.getAmount());
     }
 
     @Override

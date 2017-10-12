@@ -12,17 +12,18 @@ public interface IEconomyManager
     ICurrencyRanking getRanking(ICurrency currency);
 
     /**
-     * Umozliwia szybkie pobranie aktualnej ilosci posiadanej
-     * waluty przez gracza. Nie uruchamia transakcji.
+     * Umozliwia szybkie sprawdzanie aktualnej ilosci posiadanej
+     * przez gracza waluty.
      *
-     * Ta wartosc powinna byc tylko informacyjna, przy
-     * przetwarzaniu zakupu nalezy uzyc transakcji.
+     * Ten accessor jest niebezpieczny poniewaz nie otwiera transakcji.
+     * Wartosci zwracane przez niego powinny byc uzywane tylko w
+     * celach informacyjnych.
      *
-     * @param currency Waluta ktorej ilosc sprawdzamy.
-     * @param identity Gracz ktorego sprawdzamy.
-     * @return Aktualna ilosc waluty.
+     * @param currency Waluta dla ktorej tworzymy accessor.
+     * @param identity Gracz ktoremu tworzymy accessor.
+     * @return Nietransakcyjny accessor read-only.
      */
-    double getAmount(ICurrency currency, Identity identity);
+    IAccountAccessor getUnsafeAccessor(ICurrency currency, Identity identity);
 
     ITransaction openTransaction(ICurrency currency, Identity identity) throws PlayerNotFoundException;
 

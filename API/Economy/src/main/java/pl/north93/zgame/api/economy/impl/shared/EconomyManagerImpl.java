@@ -8,6 +8,7 @@ import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.economy.IAccountAccessor;
 import pl.north93.zgame.api.economy.ICurrency;
 import pl.north93.zgame.api.economy.IEconomyManager;
 import pl.north93.zgame.api.economy.ITransaction;
@@ -53,12 +54,10 @@ public class EconomyManagerImpl implements IEconomyManager
     }
 
     @Override
-    public double getAmount(final ICurrency currency, final Identity identity)
+    public IAccountAccessor getUnsafeAccessor(final ICurrency currency, final Identity identity)
     {
         final IPlayer player = this.networkManager.getPlayers().unsafe().get(identity);
-        final PlayerAccessor playerAccessor = new PlayerAccessor(player, currency);
-
-        return playerAccessor.getAmount();
+        return new PlayerAccessor(player, currency);
     }
 
     @Override

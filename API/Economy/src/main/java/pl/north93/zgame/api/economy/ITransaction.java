@@ -1,12 +1,12 @@
 package pl.north93.zgame.api.economy;
 
-import pl.north93.zgame.api.global.network.players.IPlayer;
-
-public interface ITransaction extends AutoCloseable
+/**
+ * Interfejs reprezentujacy aktualnie wykonywana transakcje.
+ * Umozliwia modyfikowanie stanu konta.
+ */
+public interface ITransaction extends IAccountAccessor, AutoCloseable
 {
-    IPlayer getAssociatedPlayer();
-
-    boolean has(double amount);
+    void setAmount(double newAmount);
 
     /**
      * Dodaje wartość do konta.
@@ -24,7 +24,11 @@ public interface ITransaction extends AutoCloseable
      */
     double remove(double amount);
 
-    double getAmount();
-
-    void setAmount(double newAmount);
+    /**
+     * Sprawdza czy ta transakcja jest ciagle aktywna.
+     * Jesli zostala zamknieta, ta metoda zwroci {@code false}.
+     *
+     * @return Czy transakcja jest jeszcze otwarta.
+     */
+    boolean isTransactionOpen();
 }
