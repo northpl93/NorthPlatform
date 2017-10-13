@@ -6,6 +6,14 @@ import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public interface IIcon
 {
+    /**
+     * Zwraca kontekst do ktorego nalezy ta ikona.
+     *
+     * @see IHoloContext
+     * @return Kontekst do ktorego nalezy ikona.
+     */
+    IHoloContext getHoloContext();
+
     ItemStack getItem();
 
     void setType(ItemStack stack);
@@ -14,7 +22,9 @@ public interface IIcon
 
     void setPosition(IconPosition position);
 
-    TranslatableString getDisplayName();
+    void setNameLocation(IconNameLocation location);
 
-    void setDisplayName(TranslatableString name);
+    TranslatableString[] getDisplayName();
+
+    void setDisplayName(TranslatableString... name);
 }

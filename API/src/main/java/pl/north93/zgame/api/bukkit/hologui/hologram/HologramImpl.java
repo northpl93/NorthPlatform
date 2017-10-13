@@ -43,6 +43,12 @@ final class HologramImpl implements IHologram
     }
 
     @Override
+    public double getLinesSpacing()
+    {
+        return 0.3;
+    }
+
+    @Override
     public void setLine(final int line, final IHologramLine text)
     {
         //noinspection ConstantConditions

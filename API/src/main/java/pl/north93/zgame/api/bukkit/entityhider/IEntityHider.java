@@ -37,6 +37,13 @@ public interface IEntityHider
      */
     boolean isVisible(Player player, Entity entity);
 
+    /**
+     * Wymusza aktualizacje trackera danych entities.
+     *
+     * @param entities Lista entities do zaktualizowania.
+     */
+    void refreshEntities(Collection<Entity> entities);
+
     default void showEntities(Player player, List<Entity> entities)
     {
         // tutaj teoretycznie mozna by uzyc neutral, ale dla zapewnienia pelnej

@@ -75,19 +75,15 @@ final class HoloLine
         Preconditions.checkState(this.armorStand == null, "ArmorStand already created");
         Preconditions.checkNotNull(this.lastLine, "Tried to create Armorstand when lastLine is null");
 
-        final Location myLoc = this.hologram.getLocation().clone().add(0, - this.lineNo * 0.3, 0);
+        final double deltaY = - this.lineNo * this.hologram.getLinesSpacing();
+        final Location myLoc = this.hologram.getLocation().clone().add(0, deltaY, 0);
 
         final CraftWorld craftWorld = (CraftWorld) myLoc.getWorld();
         final WorldServer nmsWorld = craftWorld.getHandle();
 
         final EntityArmorStand entityArmorStand = new EntityArmorStand(nmsWorld, myLoc.getX(), myLoc.getY(), myLoc.getZ());
         this.armorStand = (ArmorStand) entityArmorStand.getBukkitEntity();
-
-        this.armorStand.setSmall(true);
-        this.armorStand.setGravity(false);
-        this.armorStand.setVisible(false);
-        this.armorStand.setCustomNameVisible(true);
-        this.armorStand.setMarker(true);
+        this.setupArmorStand();
 
         // konfigurujemy widocznosc
         this.hologram.setupVisibility(this.armorStand);
@@ -159,6 +155,18 @@ final class HoloLine
         packetHelper.addMeta(2, EntityMetaPacketHelper.MetaType.STRING, newText);
 
         entityPlayer.playerConnection.networkManager.channel.writeAndFlush(packetHelper.complete());
+    }
+
+    private void setupArmorStand()
+    {
+        this.armorStand.setAI(false);
+        this.armorStand.setGravity(false);
+        this.armorStand.setVisible(false);
+        this.armorStand.setSmall(true);
+        this.armorStand.setMarker(true);
+        this.armorStand.setSilent(true);
+        this.armorStand.setInvulnerable(true);
+        this.armorStand.setCustomNameVisible(true);
     }
 
     @Override

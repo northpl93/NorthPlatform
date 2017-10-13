@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.bukkit.hologui.impl;
 
+import java.util.Collections;
+import java.util.Set;
+
 import net.minecraft.server.v1_10_R1.EntityArmorStand;
 import net.minecraft.server.v1_10_R1.WorldServer;
 
@@ -13,27 +16,45 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import pl.north93.zgame.api.bukkit.entityhider.EntityVisibility;
+import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
 import pl.north93.zgame.api.bukkit.hologui.IIcon;
+import pl.north93.zgame.api.bukkit.hologui.IconNameLocation;
 import pl.north93.zgame.api.bukkit.hologui.IconPosition;
 import pl.north93.zgame.api.bukkit.hologui.hologram.IHologram;
 import pl.north93.zgame.api.bukkit.hologui.hologram.PlayerVisibility;
 import pl.north93.zgame.api.bukkit.hologui.hologram.TranslatableStringLine;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
-public class IconImpl implements IIcon
+class IconImpl implements IIcon
 {
-    private final HoloContextImpl holoContext;
-    private IconPosition       position;
-    private ItemStack          itemStack;
-    private TranslatableString name;
+    @Inject
+    private static IEntityHider         entityHider;
+    private final  HoloContextImpl      holoContext;
+    private        IconPosition         position;
+    private        ItemStack            itemStack;
+    private        IconNameLocation     iconNameLocation;
+    private        TranslatableString[] name;
     // dane implementacyjne
-    private ArmorStand         armorStand;
-    private IHologram          hologram;
+    private        ArmorStand           armorStand;
+    private        IHologram            hologram;
 
     public IconImpl(final HoloContextImpl holoContext)
     {
         this.holoContext = holoContext;
+        this.iconNameLocation = IconNameLocation.BELOW;
+    }
+
+    @Override
+    public HoloContextImpl getHoloContext()
+    {
+        return this.holoContext;
     }
 
     @Override
@@ -50,14 +71,6 @@ public class IconImpl implements IIcon
         this.updateType();
     }
 
-    private void updateType()
-    {
-        if (this.armorStand != null)
-        {
-            this.armorStand.setHelmet(this.itemStack);
-        }
-    }
-
     @Override
     public IconPosition getPosition()
     {
@@ -72,6 +85,36 @@ public class IconImpl implements IIcon
         this.refreshLocation();
     }
 
+    @Override
+    public void setNameLocation(final IconNameLocation location)
+    {
+        this.iconNameLocation = location;
+        this.updateName();
+    }
+
+    @Override
+    public TranslatableString[] getDisplayName()
+    {
+        return this.name;
+    }
+
+    @Override
+    public void setDisplayName(final TranslatableString... name)
+    {
+        this.name = name;
+        this.updateName();
+    }
+
+    // aktualizuje item na glowie
+    private void updateType()
+    {
+        if (this.armorStand != null)
+        {
+            this.armorStand.setHelmet(this.itemStack);
+        }
+    }
+
+    // aktualizuje lokalizacje armorstandu
     public void refreshLocation()
     {
         if (this.armorStand == null)
@@ -93,19 +136,7 @@ public class IconImpl implements IIcon
         armorStand.getHandle().setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
     }
 
-    @Override
-    public TranslatableString getDisplayName()
-    {
-        return this.name;
-    }
-
-    @Override
-    public void setDisplayName(final TranslatableString name)
-    {
-        this.name = name;
-        this.updateName();
-    }
-
+    // aktualizuje hologram z nazwa
     private void updateName()
     {
         if (this.armorStand == null)
@@ -118,10 +149,15 @@ public class IconImpl implements IIcon
             if (this.hologram == null)
             {
                 final PlayerVisibility hologramVisibility = new PlayerVisibility(this.holoContext.getPlayer());
-                this.hologram = IHologram.create(hologramVisibility, this.armorStand.getLocation());
+                final Location location = this.iconNameLocation.calculate(this);
+
+                this.hologram = IHologram.create(hologramVisibility, location);
             }
 
-            this.hologram.setLine(0, new TranslatableStringLine(this.name));
+            for (int i = 0; i < this.name.length; i++)
+            {
+                this.hologram.setLine(i, new TranslatableStringLine(this.name[i]));
+            }
         }
         else if (this.hologram != null)
         {
@@ -146,6 +182,14 @@ public class IconImpl implements IIcon
         final EntityArmorStand entityArmorStand = new EntityArmorStand(nmsWorld);
         this.armorStand = (ArmorStand) entityArmorStand.getBukkitEntity();
 
+        // ustawiamy widocznosc
+        final Set<Entity> entity = Collections.singleton(this.armorStand);
+        entityHider.setVisibility(this.holoContext.getPlayer(), EntityVisibility.VISIBLE, entity);
+        entityHider.setVisibility(EntityVisibility.HIDDEN, entity);
+
+        // konfigurujemy armorstand
+        this.setupArmorStand();
+
         // ustawia poczatkowa lokacje ArmorStanda
         this.refreshLocation();
 
@@ -154,11 +198,6 @@ public class IconImpl implements IIcon
 
         // aktualizuje nazwe
         this.updateName();
-
-        this.armorStand.setAI(false);
-        this.armorStand.setGravity(false);
-        this.armorStand.setVisible(false);
-        this.armorStand.setSmall(true);
 
         nmsWorld.addEntity(entityArmorStand, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return this.armorStand;
@@ -171,16 +210,51 @@ public class IconImpl implements IIcon
         final CraftArmorStand craftEntity = (CraftArmorStand) this.armorStand;
         craftEntity.getHandle().die();
         this.armorStand = null;
+
+        if (this.hologram != null)
+        {
+            // usuwamy hologram jesli byl
+            this.hologram.remove();
+            this.hologram = null;
+        }
     }
 
     /**
-     * Sprawdza czy dane entity jest ta ikona.
+     * Sprawdza czy dana lokalizacja wskazuje na ta ikone.
+     * https://www.spigotmc.org/threads/check-what-entity-a-player-is-looking-at.46715/#post-527815
      *
-     * @param entity Entity do sprawdzenia.
-     * @return True jesli entity z argumenty jest ta ikona.
+     * @param location Lokalizacja do sprawdzenia.
+     * @return true jesli jest wskazywana ta ikona.
      */
-    public boolean isValidClick(final Entity entity)
+    public boolean isLookingAt(final Location location)
     {
-        return entity == this.armorStand;
+        final Location armorStandLocation = this.armorStand.getLocation();
+        armorStandLocation.add(0, -0.4, 0); // przesuwamy troche centralny punkt w dol
+
+        final Vector toEntity = armorStandLocation.toVector().subtract(location.toVector());
+        final Vector direction = location.getDirection();
+
+        final double dot = toEntity.normalize().dot(direction);
+        // wartosc wyznaczona metoda prob i bledow
+        // im blizej 1 tym mniejszy kat miedzy graczem a itemem
+        return dot >= 0.995;
+    }
+
+    // konfiguruje podstawowe opcje armor standa
+    private void setupArmorStand()
+    {
+        this.armorStand.setAI(false);
+        this.armorStand.setGravity(false);
+        this.armorStand.setVisible(false);
+        this.armorStand.setSmall(true);
+        this.armorStand.setMarker(true);
+        this.armorStand.setSilent(true);
+        this.armorStand.setInvulnerable(true);
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("position", this.position).append("itemStack", this.itemStack).append("iconNameLocation", this.iconNameLocation).append("name", this.name).toString();
     }
 }

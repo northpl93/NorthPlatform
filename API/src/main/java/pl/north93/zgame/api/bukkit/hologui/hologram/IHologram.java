@@ -8,6 +8,13 @@ public interface IHologram
 
     void clearLine(int line);
 
+    /**
+     * Zwraca odleglosc miedzy kolejnymi linijkami tekstu.
+     *
+     * @return Odleglosc miedzy linijkami
+     */
+    double getLinesSpacing();
+
     void remove();
 
     static IHologram create(final Location location)

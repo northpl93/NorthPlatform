@@ -1,13 +1,15 @@
 package pl.north93.zgame.api.bukkit.hologui.impl;
 
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftArmorStand;
-import org.bukkit.entity.Entity;
+import static org.bukkit.event.block.Action.LEFT_CLICK_AIR;
+import static org.bukkit.event.block.Action.RIGHT_CLICK_AIR;
+
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class HoloGuiListener implements Listener
@@ -26,6 +28,30 @@ public class HoloGuiListener implements Listener
         this.holoGuiManager.closeGui(event.getPlayer());
     }
 
+    @EventHandler
+    public void onPlayerInteractAir(final PlayerInteractEvent event)
+    {
+        final Action action = event.getAction();
+        if (action != LEFT_CLICK_AIR && action != RIGHT_CLICK_AIR)
+        {
+            return;
+        }
+
+        this.handleGuiClick(event.getPlayer(), event);
+    }
+
+    private void handleGuiClick(final Player player, final Cancellable cancellable)
+    {
+        final HoloContextImpl playerContext = this.holoGuiManager.getPlayerContext(player);
+        if (playerContext == null)
+        {
+            return;
+        }
+
+        playerContext.handleClick(player.getLocation());
+        cancellable.setCancelled(true);
+    }
+
     /*@EventHandler
     public void onMove(final PlayerMoveEvent event)
     {
@@ -35,38 +61,4 @@ public class HoloGuiListener implements Listener
             playerContext.setCenter(event.getTo());
         }
     }*/
-
-    @EventHandler
-    public void onEntityInteract(final PlayerInteractAtEntityEvent event)
-    {
-        final Entity target = event.getRightClicked();
-        this.handleGuiClick(event.getPlayer(), target, event);
-    }
-
-    @EventHandler
-    public void playerHitEntity(final EntityDamageByEntityEvent event)
-    {
-        if (event.getDamager() instanceof Player)
-        {
-            final Player player = (Player) event.getDamager();
-            this.handleGuiClick(player, event.getEntity(), event);
-        }
-    }
-
-    private void handleGuiClick(final Player player, final Entity entity, final Cancellable cancellable)
-    {
-        if (! (entity instanceof CraftArmorStand))
-        {
-            return;
-        }
-
-        final HoloContextImpl playerContext = this.holoGuiManager.getPlayerContext(player);
-        if (playerContext == null)
-        {
-            return;
-        }
-
-        playerContext.handleClick(entity);
-        cancellable.setCancelled(true);
-    }
 }

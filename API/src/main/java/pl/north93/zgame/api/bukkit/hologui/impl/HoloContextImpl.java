@@ -1,27 +1,19 @@
 package pl.north93.zgame.api.bukkit.hologui.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import pl.north93.zgame.api.bukkit.entityhider.EntityVisibility;
-import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
 import pl.north93.zgame.api.bukkit.hologui.IHoloContext;
 import pl.north93.zgame.api.bukkit.hologui.IHoloGui;
 import pl.north93.zgame.api.bukkit.hologui.IIcon;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
-public class HoloContextImpl implements IHoloContext
+class HoloContextImpl implements IHoloContext
 {
-    @Inject
-    private IEntityHider entityHider;
-
     private final IHoloGui      holoGui;
     private final Player        player;
     private final Set<IconImpl> icons = new HashSet<>();
@@ -70,10 +62,7 @@ public class HoloContextImpl implements IHoloContext
     {
         final IconImpl impl = (IconImpl) icon;
         this.icons.add(impl);
-
-        final Set<Entity> entity = Collections.singleton(impl.create());
-        this.entityHider.setVisibility(this.player, EntityVisibility.VISIBLE, entity);
-        this.entityHider.setVisibility(EntityVisibility.HIDDEN, entity);
+        impl.create();
     }
 
     @Override
@@ -86,16 +75,16 @@ public class HoloContextImpl implements IHoloContext
         }
     }
 
-    public void handleClick(final Entity entity)
+    // sprawdza czy z tej lokalizacji nastapila kolizja z jakas ikona
+    public void handleClick(final Location location)
     {
         for (final IconImpl icon : new ArrayList<>(this.icons))
         {
-            if (! icon.isValidClick(entity))
+            if (icon.isLookingAt(location))
             {
-                continue;
+                this.holoGui.iconClicked(this, icon);
+                return; // obsluzylismy klikniecie, dalej nie iterujemy
             }
-
-            this.holoGui.iconClicked(this, icon);
         }
     }
 

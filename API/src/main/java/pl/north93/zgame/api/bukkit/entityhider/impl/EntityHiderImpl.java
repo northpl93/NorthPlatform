@@ -1,9 +1,17 @@
 package pl.north93.zgame.api.bukkit.entityhider.impl;
 
+import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.getTrackerEntry;
+
+
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 
+import net.minecraft.server.v1_10_R1.EntityPlayer;
+import net.minecraft.server.v1_10_R1.EntityTrackerEntry;
+
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -48,6 +56,26 @@ public class EntityHiderImpl extends Component implements IEntityHider
     public boolean isVisible(final Player player, final Entity entity)
     {
         return this.getController(player).isEntityVisible(entity);
+    }
+
+    @Override
+    public void refreshEntities(final Collection<Entity> entities)
+    {
+        for (final Entity entity : entities)
+        {
+            final CraftEntity craftEntity = (CraftEntity) entity;
+
+            final EntityTrackerEntry tracker = getTrackerEntry(craftEntity.getHandle());
+            if (tracker == null)
+            {
+                continue;
+            }
+
+            for (final EntityPlayer trackedPlayer : new HashSet<>(tracker.trackedPlayers))
+            {
+                tracker.updatePlayer(trackedPlayer);
+            }
+        }
     }
 
     private VisibilityController getController(final Player player)

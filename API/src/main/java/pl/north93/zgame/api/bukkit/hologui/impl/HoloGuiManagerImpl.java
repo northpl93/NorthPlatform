@@ -38,6 +38,7 @@ public class HoloGuiManagerImpl extends Component implements IHoloGuiManager
         // jesli jakies bylo otwarte to je zamykamy
         this.closeGui(player);
 
+        // konfigurujemy GUI
         final HoloContextImpl holoContext = new HoloContextImpl(holoGui, location, player);
         this.setPlayerContext(player, holoContext);
         holoGui.openGui(holoContext); // wywolujemy metode renderujaca gui

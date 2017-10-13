@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.bukkit.hologui.hologram;
 
+import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColorCodes;
+
+
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -19,7 +22,8 @@ public class TranslatableStringLine implements IHologramLine
     @Override
     public String render(final IHologram hologram, final Player player)
     {
-        return this.translatableString.getValue(player);
+        // getValue zwraca nieprzekonwertowany tekst.
+        return translateAlternateColorCodes(this.translatableString.getValue(player));
     }
 
     @Override
