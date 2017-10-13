@@ -1,4 +1,4 @@
-package pl.arieals.lobby.chest.opening;
+package pl.arieals.lobby.chest.opening.event;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -8,11 +8,13 @@ import org.bukkit.event.player.PlayerEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.lobby.chest.opening.IOpeningSession;
+
 public class NextChestEvent extends PlayerEvent implements Cancellable
 {
     private static final HandlerList handlers = new HandlerList();
     private final IOpeningSession openingSession;
-    private boolean cancelled;
+    private       boolean         cancelled;
 
     public NextChestEvent(final Player who, final IOpeningSession openingSession)
     {

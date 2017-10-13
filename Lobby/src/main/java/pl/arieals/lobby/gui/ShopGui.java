@@ -64,7 +64,7 @@ public abstract class ShopGui extends Gui
 
         Vars<Object> loreVars = Vars.empty();
         // rzadkosc przedmiotu
-        loreVars = loreVars.and("rarity", TranslatableString.of(generalMessages, "@rarity." + item.getRarity()));
+        loreVars = loreVars.and("rarity", TranslatableString.of(generalMessages, "@rarity." + item.getRarity().name()));
 
         // shardy o obliczyc cene
         loreVars = loreVars.and("price", "price todo");

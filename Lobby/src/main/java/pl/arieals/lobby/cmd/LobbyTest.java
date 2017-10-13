@@ -27,6 +27,6 @@ public class LobbyTest extends NorthCommand
         final Player player = (Player) sender.unwrapped();
         //this.holoGuiManager.openGui(player, new TestHoloGui());
 
-        this.openingController.startOpening(player);
+        this.openingController.openOpeningGui(player);
     }
 }

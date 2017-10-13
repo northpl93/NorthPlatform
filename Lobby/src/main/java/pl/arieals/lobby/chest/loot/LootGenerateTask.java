@@ -10,6 +10,8 @@ import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -59,7 +61,7 @@ class LootGenerateTask implements Runnable
             groups[weightedShardAmount.ordinal()] = groups[weightedShardAmount.ordinal()] + 1;
         }
 
-        System.out.println(Arrays.toString(groups));
+        Bukkit.broadcastMessage("shards: " + Arrays.toString(groups));
     }
 
     public void testRandomWeight(final Collection<WeightedItem> possibleItems)
@@ -72,6 +74,8 @@ class LootGenerateTask implements Runnable
             final int ordinal = weightedItem.getItem().getRarity().ordinal();
             rarities[ordinal] = rarities[ordinal] + 1;
         }
+
+        Bukkit.broadcastMessage("rarities: " + Arrays.toString(rarities));
     }
 
     private void addShardsToLoot(final Collection<ILoot> loot, final Collection<WeightedItem> possibleItems, final int amount)

@@ -1,4 +1,4 @@
-package pl.arieals.lobby.chest.opening;
+package pl.arieals.lobby.chest.opening.event;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -8,12 +8,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.lobby.chest.loot.LootResult;
+import pl.arieals.lobby.chest.opening.IOpeningSession;
 
 public class PresentOpeningResultsEvent extends PlayerEvent
 {
     private static final HandlerList handlers = new HandlerList();
     private final IOpeningSession openingSession;
-    private final LootResult result;
+    private final LootResult      result;
 
     public PresentOpeningResultsEvent(final Player who, final IOpeningSession openingSession, final LootResult result)
     {

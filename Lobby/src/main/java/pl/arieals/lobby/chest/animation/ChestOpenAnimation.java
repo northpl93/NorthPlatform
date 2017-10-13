@@ -2,6 +2,8 @@ package pl.arieals.lobby.chest.animation;
 
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 
 import pl.arieals.lobby.chest.opening.ChestOpeningController;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
@@ -61,6 +63,8 @@ class ChestOpenAnimation extends AbstractChestRotationAnimation
         }
         this.isEnded = true;
 
+        final Player player = this.getPlayer();
+
         // lokacja skrzynki, tu odpalamy particle
         final Location location = this.instance.getArmorStand().getLocation();
 
@@ -70,11 +74,17 @@ class ChestOpenAnimation extends AbstractChestRotationAnimation
             // niszczymy animacje
             this.instance.setDestroyed();
 
+            // zatrzymujemy dzwiek odpalony w ChestIdleAnimation#clicked()
+            player.stopSound(Sound.ITEM_ELYTRA_FLYING);
+
             // uruchamiamy particle
-            this.getPlayer().spawnParticle(Particle.EXPLOSION_LARGE, location, 10);
+            player.spawnParticle(Particle.EXPLOSION_LARGE, location, 10);
+
+            // dzwiek otworzenia
+            player.playSound(location, Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
 
             // wyswietla wyniki otwierania
-            this.openingController.showOpeningResults(this.getPlayer());
+            this.openingController.showOpeningResults(player);
         });
     }
 }

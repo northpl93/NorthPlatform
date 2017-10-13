@@ -5,9 +5,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public enum Rarity
 {
-    NORMAL(8),
-    RARE(5),
-    EPIC(3),
+    NORMAL(17),
+    RARE(10),
+    EPIC(4),
     LEGENDARY(1);
 
     private final int weight;

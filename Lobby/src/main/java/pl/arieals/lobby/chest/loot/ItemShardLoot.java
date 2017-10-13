@@ -18,6 +18,9 @@ import pl.arieals.globalshops.shared.Item;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
+/**
+ * Przedstawia loot w postaci odlamkow danego przedmiotu.
+ */
 public class ItemShardLoot implements ILoot
 {
     @Inject
@@ -40,12 +43,27 @@ public class ItemShardLoot implements ILoot
     @Override
     public TranslatableString getName()
     {
-        return TranslatableString.constant(this.shards + " odlamkow ").concat(this.item.getName());
+        return this.item.getName();
     }
 
+    /**
+     * Zwraca przedmiot ktorego odlamki zawiera ten loot.
+     *
+     * @return Przedmiot ktorego odlamki zawieramy.
+     */
     public Item getItem()
     {
         return this.item;
+    }
+
+    /**
+     * Zwraca ilosc odlamkow danego przedmiotu ktora zawiera ten loot.
+     *
+     * @return Ilosc odlamkow przedmiotu.
+     */
+    public int getShards()
+    {
+        return this.shards;
     }
 
     @Override
@@ -69,12 +87,10 @@ public class ItemShardLoot implements ILoot
 
     public enum WeightedShardAmount implements IWeightedRandomChoice
     {
-        FIRST(20, 1, 20),
-        SECOND(12, 21, 40),
-        THIRD(5, 41, 60),
-        FOURTH(3, 61, 80),
-        FIFTH(2, 81, 90),
-        SIXTH(1, 91, 100);
+        FIRST(18, 9, 19),
+        SECOND(10, 20, 30),
+        THIRD(3, 31, 40),
+        FOURTH(1, 41, 50);
 
         private final int weight;
         private final int from;

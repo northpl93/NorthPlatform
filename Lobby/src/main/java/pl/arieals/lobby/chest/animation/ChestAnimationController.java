@@ -30,6 +30,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
 public class ChestAnimationController
 {
+    private final ChestAnimationThread   animationThread;
     private final IEntityHider           entityHider;
     private final Set<AnimationInstance> animations = new HashSet<>();
 
@@ -37,8 +38,11 @@ public class ChestAnimationController
     private ChestAnimationController(final BukkitApiCore apiCore, final IEntityHider entityHider)
     {
         this.entityHider = entityHider;
+
         // uruchamiamy watek animacji
-        new ChestAnimationThread().start();
+        this.animationThread = new ChestAnimationThread();
+        this.animationThread.start();
+
         apiCore.registerEvents(new AnimationListener(this));
     }
 
@@ -48,6 +52,11 @@ public class ChestAnimationController
         {
             final AnimationInstance animationInstance = this.create(player, location);
             this.animations.add(animationInstance);
+        }
+
+        synchronized (this.animationThread)
+        {
+            this.animationThread.notify(); // wzbudzamy watek animacji
         }
     }
 
@@ -101,6 +110,7 @@ public class ChestAnimationController
         final ArmorStand armorStand = (ArmorStand) entityArmorStand.getBukkitEntity();
         this.setupVisibility(player, armorStand); // konfigurujemy widocznosc tego entity
 
+        armorStand.setSilent(true); // bez dzwiekow
         armorStand.setVisible(false);
         armorStand.setAI(false);
         armorStand.setGravity(false);
@@ -136,6 +146,8 @@ public class ChestAnimationController
             while (MinecraftServer.getServer().isRunning()) // dopki serwer pracuje
             {
                 final ChestAnimationController controller = ChestAnimationController.this;
+                final boolean shouldRun;
+
                 synchronized (controller.animations)
                 {
                     final Iterator<AnimationInstance> iterator = controller.animations.iterator();
@@ -150,13 +162,22 @@ public class ChestAnimationController
 
                         instance.tick();
                     }
+
+                    shouldRun = ! controller.animations.isEmpty();
                 }
 
                 try
                 {
                     synchronized (this)
                     {
-                        this.wait(10);
+                        if (shouldRun)
+                        {
+                            this.wait(10);
+                        }
+                        else
+                        {
+                            this.wait(); // blokujemy watek zeby nie uzywac cpu
+                        }
                     }
                 }
                 catch (final InterruptedException e)

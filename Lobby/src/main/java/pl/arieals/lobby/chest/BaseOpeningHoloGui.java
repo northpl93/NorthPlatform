@@ -1,5 +1,6 @@
 package pl.arieals.lobby.chest;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -7,7 +8,9 @@ import pl.arieals.lobby.chest.opening.ChestOpeningController;
 import pl.north93.zgame.api.bukkit.hologui.IHoloContext;
 import pl.north93.zgame.api.bukkit.hologui.IHoloGui;
 import pl.north93.zgame.api.bukkit.hologui.IIcon;
+import pl.north93.zgame.api.bukkit.hologui.IconNameLocation;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public abstract class BaseOpeningHoloGui implements IHoloGui
 {
@@ -22,9 +25,13 @@ public abstract class BaseOpeningHoloGui implements IHoloGui
     {
         this.shopIcon = context.createIcon();
         this.shopIcon.setType(new ItemStack(Material.NETHER_STAR));
+        this.shopIcon.setNameLocation(IconNameLocation.ABOVE);
+        this.shopIcon.setDisplayName(TranslatableString.constant(ChatColor.YELLOW + "Sklep"));
 
         this.closeIcon = context.createIcon();
         this.closeIcon.setType(new ItemStack(Material.BARRIER));
+        this.closeIcon.setNameLocation(IconNameLocation.ABOVE);
+        this.closeIcon.setDisplayName(TranslatableString.constant(ChatColor.RED + "Powrót"));
 
         this.openGui0(context);
 

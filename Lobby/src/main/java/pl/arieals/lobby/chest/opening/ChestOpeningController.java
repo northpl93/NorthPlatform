@@ -24,6 +24,11 @@ import pl.arieals.lobby.chest.ChestService;
 import pl.arieals.lobby.chest.ChestType;
 import pl.arieals.lobby.chest.loot.ChestLootService;
 import pl.arieals.lobby.chest.loot.LootResult;
+import pl.arieals.lobby.chest.opening.event.BeginChestOpeningEvent;
+import pl.arieals.lobby.chest.opening.event.CloseOpeningGuiEvent;
+import pl.arieals.lobby.chest.opening.event.NextChestEvent;
+import pl.arieals.lobby.chest.opening.event.OpenOpeningGuiEvent;
+import pl.arieals.lobby.chest.opening.event.PresentOpeningResultsEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.Main;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
@@ -50,7 +55,7 @@ public class ChestOpeningController
         return this.getSession(player) != null;
     }
 
-    public void startOpening(final Player player)
+    public void openOpeningGui(final Player player)
     {
         final HubWorld hubWorld = this.getThisHubServer().getHubWorld(player);
 
@@ -58,12 +63,12 @@ public class ChestOpeningController
         final OpeningSession openingSession = new OpeningSession(player, hubWorld, config); // tworzymy sesje
 
         this.updateSession(player, openingSession);
-        this.apiCore.callEvent(new StartChestOpeningEvent(openingSession));
+        this.apiCore.callEvent(new OpenOpeningGuiEvent(openingSession));
 
         this.apiCore.getLogger().log(Level.INFO, "[Lobby] Player {0} is now in opening gui on hub {1}", new Object[]{player.getName(), hubWorld.getHubId()});
     }
 
-    public void endOpening(final Player player)
+    public void closeOpeningGui(final Player player)
     {
         final OpeningSession session = this.getSession(player);
         if (session == null)
@@ -71,7 +76,7 @@ public class ChestOpeningController
             // gracz nie ma aktywnej sesji otwierania
             return;
         }
-        this.apiCore.callEvent(new EndChestOpeningEvent(session));
+        this.apiCore.callEvent(new CloseOpeningGuiEvent(session));
 
         // usuwamy sesje gracza
         this.updateSession(player, null);
@@ -128,7 +133,8 @@ public class ChestOpeningController
         final ChestType type = this.chestService.getType(session.getConfig().getChestType());
         session.setLastResults(this.lootService.openChest(player, type));
 
-        return true;
+        final BeginChestOpeningEvent event = this.apiCore.callEvent(new BeginChestOpeningEvent(player, session, type));
+        return ! event.isCancelled(); // jak nie anulowana to znaczy, ze sie udalo
     }
 
     /**
@@ -152,7 +158,7 @@ public class ChestOpeningController
             this.apiCore.getLogger().log(Level.WARNING, "lastResults is null in showOpeningResults. Player: {0}", player.getName());
 
             // restart jest dobry na wszystko, wywalamy gracza z otwierania skrzynek
-            this.endOpening(player);
+            this.closeOpeningGui(player);
             return;
         }
 
@@ -163,7 +169,7 @@ public class ChestOpeningController
         catch (final InterruptedException | ExecutionException e)
         {
             e.printStackTrace();
-            this.endOpening(player); // jak cos sie zepsulo to wywalamy gracza z openingu
+            this.closeOpeningGui(player); // jak cos sie zepsulo to wywalamy gracza z openingu
         }
     }
 

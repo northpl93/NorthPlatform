@@ -1,9 +1,10 @@
 package pl.arieals.lobby.chest.opening;
 
 import java.util.Collections;
+import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,6 +17,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.lobby.chest.animation.ChestAnimationController;
 import pl.arieals.lobby.chest.loot.LootResult;
+import pl.arieals.lobby.chest.opening.event.BeginChestOpeningEvent;
+import pl.arieals.lobby.chest.opening.event.CloseOpeningGuiEvent;
+import pl.arieals.lobby.chest.opening.event.NextChestEvent;
+import pl.arieals.lobby.chest.opening.event.OpenOpeningGuiEvent;
+import pl.arieals.lobby.chest.opening.event.PresentOpeningResultsEvent;
 import pl.north93.zgame.api.bukkit.entityhider.EntityVisibility;
 import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
 import pl.north93.zgame.api.bukkit.hologui.IHoloContext;
@@ -35,16 +41,17 @@ public class HubOpeningListener implements AutoListener
     private ChestAnimationController chestAnimationController;
 
     @EventHandler
-    public void onStartOpening(final StartChestOpeningEvent event)
+    public void onStartOpening(final OpenOpeningGuiEvent event)
     {
         final Player player = event.getPlayer();
 
-        // teleportujemy gracza do lokacji docelowej
-        final Location location = event.getConfig().getPlayerLocation().toBukkit(event.getHub().getBukkitWorld());
-        player.teleport(location);
+        // ukrywamy gracza przed teleportacja zeby nie mignelo
+        final Set<Entity> playerSet = Collections.singleton(player);
+        this.entityHider.setVisibility(EntityVisibility.HIDDEN, playerSet);
 
-        // ukrywamy gracza
-        this.entityHider.setVisibility(EntityVisibility.HIDDEN, Collections.singleton(player));
+        // teleportujemy gracza do lokacji docelowej
+        final Location location = event.getSession().getPlayerLocation();
+        player.teleport(location);
 
         // wywolujemy pierwsza skrzynke (jesli gracz ja ma)
         this.chestOpeningController.nextChest(player);
@@ -65,12 +72,12 @@ public class HubOpeningListener implements AutoListener
         if (this.chestOpeningController.isCurrentlyInOpening(player))
         {
             // konczymy otwieranie
-            this.chestOpeningController.endOpening(player);
+            this.chestOpeningController.closeOpeningGui(player);
         }
     }
 
     @EventHandler
-    public void onEndOpening(final EndChestOpeningEvent event)
+    public void onEndOpening(final CloseOpeningGuiEvent event)
     {
         final Player player = event.getSession().getPlayer();
 
@@ -116,15 +123,20 @@ public class HubOpeningListener implements AutoListener
     }
 
     @EventHandler
+    public void onOpeningBegin(final BeginChestOpeningEvent event)
+    {
+        // gdy kliknelismy skrzynke i zaczelismy otwieranie
+        // to zamykamy gui
+        this.holoGuiManager.closeGui(event.getPlayer());
+    }
+
+    @EventHandler
     public void showOpeningResults(final PresentOpeningResultsEvent event)
     {
         final LootResult result = event.getResult();
 
         final OpeningResultHoloGui resultsGui = new OpeningResultHoloGui(result);
         final Location guiLocation = event.getOpeningSession().getPlayerLocation();
-
-        Bukkit.broadcastMessage("showOpeningResults");
-        result.getLoot().forEach(iLoot -> event.getPlayer().sendMessage(iLoot.getName().getValue(event.getPlayer())));
 
         this.holoGuiManager.openGui(event.getPlayer(), guiLocation, resultsGui);
     }
@@ -152,7 +164,7 @@ public class HubOpeningListener implements AutoListener
     public void onQuit(final PlayerQuitEvent event)
     {
         // gdy gracz wychodzi z serwera to wymuszamy zakonczenie openingu
-        this.chestOpeningController.endOpening(event.getPlayer());
+        this.chestOpeningController.closeOpeningGui(event.getPlayer());
     }
 
     @Override

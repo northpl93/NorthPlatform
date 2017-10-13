@@ -1,5 +1,9 @@
 package pl.arieals.lobby.chest.animation;
 
+import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -31,12 +35,19 @@ class ChestIdleAnimation extends AbstractChestRotationAnimation
     @Override
     void clicked()
     {
-        if (! this.openingController.beginChestOpening(this.getPlayer()))
+        final Player player = this.getPlayer();
+        if (! this.openingController.beginChestOpening(player))
         {
             // wymusza odswiezenie widoku jak nie udalo sie rozpoczac otwierania
-            this.openingController.nextChest(this.getPlayer());
+            this.openingController.nextChest(player);
             return;
         }
+
+        final Location chestLocation = this.instance.getArmorStand().getLocation();
+        // odpalamy dzwiek uderzenia skrzynki
+        player.playSound(chestLocation, Sound.BLOCK_WOOD_HIT, 0.4f, 1);
+        // uruchamiamy dzwiek elytry, wiatru
+        player.playSound(chestLocation, Sound.ITEM_ELYTRA_FLYING, 1, 2);
 
         this.instance.setAnimation(new ChestOpenAnimation(this.instance));
     }
