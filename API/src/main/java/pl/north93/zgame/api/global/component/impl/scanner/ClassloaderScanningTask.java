@@ -28,9 +28,9 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.annotations.SkipInjections;
-import pl.north93.zgame.api.global.component.impl.ComponentBundle;
-import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
-import pl.north93.zgame.api.global.component.impl.JarComponentLoader;
+import pl.north93.zgame.api.global.component.impl.general.ComponentBundle;
+import pl.north93.zgame.api.global.component.impl.general.ComponentManagerImpl;
+import pl.north93.zgame.api.global.component.impl.general.JarComponentLoader;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 
 public class ClassloaderScanningTask
@@ -116,7 +116,7 @@ public class ClassloaderScanningTask
         {
             final Class<?> clazz = entry.getKey();
             final CtClass ctClass = entry.getValue();
-            if (clazz.isAnnotationPresent(SkipInjections.class))
+            if (this.shouldSkipClass(clazz)) // pomijamy klase jesli trzeba
             {
                 continue;
             }
@@ -234,9 +234,20 @@ public class ClassloaderScanningTask
         return null;
     }
 
+    // sprawdza czy dana klase nalezy wywalic z skanowania
+    private boolean shouldSkipClass(final Class<?> clazz)
+    {
+        return clazz.isAnnotationPresent(SkipInjections.class) || ! this.manager.getProfileManager().isActive(clazz);
+    }
+
     public Reflections getReflections()
     {
         return this.reflections;
+    }
+
+    public ComponentManagerImpl getManager()
+    {
+        return this.manager;
     }
 
     private Reflections createReflections(final FilterBuilder packageFilter)

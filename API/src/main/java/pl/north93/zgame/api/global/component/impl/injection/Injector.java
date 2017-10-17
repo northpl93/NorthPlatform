@@ -6,8 +6,8 @@ import java.lang.reflect.Modifier;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
 import pl.north93.zgame.api.global.component.exceptions.InjectionException;
-import pl.north93.zgame.api.global.component.impl.BeanQuery;
-import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
+import pl.north93.zgame.api.global.component.impl.general.BeanQuery;
+import pl.north93.zgame.api.global.component.impl.general.ComponentManagerImpl;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 
 public class Injector

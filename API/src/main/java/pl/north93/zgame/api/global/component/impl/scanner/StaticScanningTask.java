@@ -1,6 +1,6 @@
 package pl.north93.zgame.api.global.component.impl.scanner;
 
-import static pl.north93.zgame.api.global.component.impl.CtUtils.toJavaField;
+import static pl.north93.zgame.api.global.component.impl.general.CtUtils.toJavaField;
 
 
 import java.lang.reflect.Field;
@@ -17,7 +17,7 @@ import javassist.CtClass;
 import javassist.CtField;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
-import pl.north93.zgame.api.global.component.impl.BeanQuery;
+import pl.north93.zgame.api.global.component.impl.general.BeanQuery;
 import pl.north93.zgame.api.global.component.impl.container.AbstractBeanContainer;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.zgame.api.global.component.impl.injection.FieldInjectionContext;

@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.component.impl;
+package pl.north93.zgame.api.global.component.impl.general;
 
 import java.net.URL;
 import java.net.URLClassLoader;

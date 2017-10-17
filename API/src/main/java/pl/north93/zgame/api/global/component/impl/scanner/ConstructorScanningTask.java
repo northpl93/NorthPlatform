@@ -1,6 +1,6 @@
 package pl.north93.zgame.api.global.component.impl.scanner;
 
-import static pl.north93.zgame.api.global.component.impl.CtUtils.toJavaConstructor;
+import static pl.north93.zgame.api.global.component.impl.general.CtUtils.toJavaConstructor;
 
 
 import java.util.Arrays;
@@ -36,7 +36,7 @@ class ConstructorScanningTask extends AbstractScanningTask
             final CtConstructor constructor = iterator.next();
             try
             {
-                if (constructor.hasAnnotation(Bean.class))
+                if (this.isConstructorBean(constructor))
                 {
                     BeanFactory.INSTANCE.createStaticBean(this.beanContext, toJavaConstructor(this.clazz, constructor));
                 }
@@ -49,6 +49,11 @@ class ConstructorScanningTask extends AbstractScanningTask
             iterator.remove();
         }
         return this.constructors.isEmpty();
+    }
+
+    private boolean isConstructorBean(final CtConstructor constructor) throws ClassNotFoundException
+    {
+        return constructor.hasAnnotation(Bean.class) && this.classloaderScanner.getManager().getProfileManager().isActive(constructor);
     }
 
     @Override

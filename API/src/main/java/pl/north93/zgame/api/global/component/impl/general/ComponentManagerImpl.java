@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.component.impl;
+package pl.north93.zgame.api.global.component.impl.general;
 
 import static java.text.MessageFormat.format;
 
@@ -44,16 +44,18 @@ import pl.north93.zgame.api.global.component.impl.container.BeanFactory;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.zgame.api.global.component.impl.context.ComponentBeanContext;
 import pl.north93.zgame.api.global.component.impl.context.RootBeanContext;
+import pl.north93.zgame.api.global.component.impl.profile.ProfileManagerImpl;
 import pl.north93.zgame.api.global.component.impl.scanner.ClassloaderScanningTask;
 
 public class ComponentManagerImpl implements IComponentManager
 {
     public static ComponentManagerImpl instance;
-    private final ApiCore                  apiCore;
-    private final List<ComponentBundle> components    = new ArrayList<>();
-    private final ClassPool             rootClassPool = new ClassPool();
-    private final RootBeanContext       rootBeanCtx   = new RootBeanContext();
-    private final AggregationManager aggregationManager = new AggregationManager();
+    private final ApiCore               apiCore;
+    private final List<ComponentBundle> components;
+    private final ClassPool             rootClassPool;
+    private final RootBeanContext       rootBeanCtx;
+    private final ProfileManagerImpl    profileManager;
+    private final AggregationManager    aggregationManager;
     private ClassloaderScanningTask rootScanningTask;
     private boolean autoEnable;
     private List<ClassLoader> scannedClassloaders = new ArrayList<>();
@@ -62,7 +64,14 @@ public class ComponentManagerImpl implements IComponentManager
     {
         instance = this;
         this.apiCore = apiCore;
+        this.components = new ArrayList<>();
+
+        this.rootClassPool = new ClassPool();
         this.rootClassPool.appendClassPath(new LoaderClassPath(this.getClass().getClassLoader()));
+
+        this.rootBeanCtx = new RootBeanContext();
+        this.profileManager = new ProfileManagerImpl(this);
+        this.aggregationManager = new AggregationManager();
     }
 
     public void initDefaultBeans()
@@ -88,7 +97,7 @@ public class ComponentManagerImpl implements IComponentManager
         {
             return; // skip loading of component
         }
-        this.apiCore.getLogger().info("Loading component " + componentDescription.getName());
+        this.apiCore.getLogger().log(Level.INFO, "Loading component {0}", componentDescription.getName());
 
         final AbstractBeanContext componentBeanContext;
         if (classLoader instanceof JarComponentLoader)
@@ -100,7 +109,7 @@ public class ComponentManagerImpl implements IComponentManager
             componentBeanContext = this.rootBeanCtx;
         }
 
-        final ComponentBundle componentBundle = new ComponentBundle(componentDescription, classLoader, componentBeanContext);
+        final ComponentBundle componentBundle = new ComponentBundle(this, componentDescription, classLoader, componentBeanContext);
         this.components.add(componentBundle);
     }
 
@@ -181,14 +190,17 @@ public class ComponentManagerImpl implements IComponentManager
         {
             return;
         }
-        this.flatComponentsConfig(classLoader, componentsConfig); // splaszczamy strukture includowanych plikow do jednego
+        // splaszczamy strukture includowanych plikow do jednego obiektu
+        this.flatComponentsConfig(classLoader, componentsConfig);
 
+        // skanujemy elementy nie nalezace do zadnego komponentu
+        this.scanClassloaderWithoutComponents(classLoader, componentsConfig.getExcludedPackages(), componentsConfig.getComponents());
+
+        // skanujemy komponenty
         for (final ComponentDescription componentDescription : componentsConfig.getComponents())
         {
             this.loadComponent(classLoader, componentDescription);
         }
-
-        this.scanClassloader(classLoader, componentsConfig.getExcludedPackages(), componentsConfig.getComponents());
     }
 
     // splaszcza strukture includowanych plikow
@@ -228,7 +240,7 @@ public class ComponentManagerImpl implements IComponentManager
         return TemplateCreator.getTemplate(ComponentsConfig.class).load(reader, classLoader);
     }
 
-    private void scanClassloader(final ClassLoader classLoader, final Set<String> excludedPackages, final List<ComponentDescription> components)
+    private void scanClassloaderWithoutComponents(final ClassLoader classLoader, final Set<String> excludedPackages, final List<ComponentDescription> components)
     {
         if (this.scannedClassloaders.contains(classLoader))
         {
@@ -364,6 +376,12 @@ public class ComponentManagerImpl implements IComponentManager
     public Collection<? extends IComponentBundle> getComponents()
     {
         return Collections.unmodifiableList(this.components);
+    }
+
+    @Override
+    public ProfileManagerImpl getProfileManager()
+    {
+        return this.profileManager;
     }
 
     @Override

@@ -3,7 +3,7 @@ package pl.north93.zgame.api.global.component.impl.context;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.component.impl.JarComponentLoader;
+import pl.north93.zgame.api.global.component.impl.general.JarComponentLoader;
 
 public class JarBeanContext extends AbstractBeanContext
 {

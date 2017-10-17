@@ -22,7 +22,7 @@ import pl.north93.zgame.api.bukkit.packets.PacketsHandler;
 import pl.north93.zgame.api.bukkit.windows.WindowManager;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
-import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
+import pl.north93.zgame.api.global.component.impl.general.ComponentManagerImpl;
 import pl.north93.zgame.api.global.exceptions.ConfigurationException;
 
 public class BukkitApiCore extends ApiCore

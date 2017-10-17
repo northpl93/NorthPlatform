@@ -1,6 +1,6 @@
 package pl.north93.zgame.api.global.component.impl.aggregation;
 
-import static pl.north93.zgame.api.global.component.impl.CtUtils.toJavaMethod;
+import static pl.north93.zgame.api.global.component.impl.general.CtUtils.toJavaMethod;
 
 
 import java.lang.annotation.Annotation;
@@ -14,7 +14,7 @@ import org.diorite.utils.lazy.LazyValue;
 
 import javassist.CtClass;
 import javassist.CtMethod;
-import pl.north93.zgame.api.global.component.impl.SmartExecutor;
+import pl.north93.zgame.api.global.component.impl.general.SmartExecutor;
 import pl.north93.zgame.api.global.component.impl.container.BeanFactory;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.zgame.api.global.component.impl.context.TemporaryBeanContext;

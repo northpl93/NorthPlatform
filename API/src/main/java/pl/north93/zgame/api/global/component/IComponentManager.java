@@ -7,6 +7,8 @@ import org.reflections.Reflections;
 
 public interface IComponentManager
 {
+    IProfileManager getProfileManager();
+
     void doComponentScan(String componentsYml, ClassLoader classLoader);
 
     default void doComponentScan(ClassLoader classLoader)

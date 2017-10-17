@@ -9,11 +9,10 @@ import pl.north93.zgame.api.global.ApiCore;
 
 public abstract class Component implements IBeanContext
 {
-    private ApiCore           apiCore;
-    private IComponentManager manager;
-    private IComponentBundle  componentBundle;
-    private String            name;
-    private boolean           isInitialised;
+    private ApiCore          apiCore;
+    private IComponentBundle componentBundle;
+    private String           name;
+    private boolean          isInitialised;
 
     protected Component()
     {
@@ -33,11 +32,6 @@ public abstract class Component implements IBeanContext
         return this.name;
     }
 
-    public final IComponentManager getComponentManager()
-    {
-        return this.manager;
-    }
-
     protected final ApiCore getApiCore()
     {
         return this.apiCore;
@@ -46,11 +40,6 @@ public abstract class Component implements IBeanContext
     protected final Logger getLogger()
     {
         return this.apiCore.getLogger();
-    }
-
-    protected final <T extends Component> T getComponent(final String name)
-    {
-        return this.manager.getComponent(name);
     }
 
     @Override
@@ -85,7 +74,7 @@ public abstract class Component implements IBeanContext
 
     // = = = INTERNAL IMPLEMENTATION METHODS = = = //
 
-    public final void init(final IComponentBundle componentBundle, final IComponentManager componentManager, final ApiCore apiCore)
+    public final void init(final IComponentBundle componentBundle, final ApiCore apiCore)
     {
         if (this.isInitialised)
         {
@@ -94,7 +83,6 @@ public abstract class Component implements IBeanContext
         this.isInitialised = true;
         this.componentBundle = componentBundle;
         this.name = componentBundle.getName();
-        this.manager = componentManager;
         this.apiCore = apiCore;
     }
 
@@ -113,6 +101,6 @@ public abstract class Component implements IBeanContext
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("apiCore", this.apiCore).append("manager", this.manager).append("name", this.name).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("apiCore", this.apiCore).append("name", this.name).toString();
     }
 }

@@ -20,7 +20,7 @@ import pl.north93.zgame.api.global.agent.client.IAgentClient;
 import pl.north93.zgame.api.global.agent.client.LocalAgentClient;
 import pl.north93.zgame.api.global.component.IComponentManager;
 import pl.north93.zgame.api.global.component.annotations.ProvidesComponent;
-import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
+import pl.north93.zgame.api.global.component.impl.general.ComponentManagerImpl;
 import pl.north93.zgame.api.global.data.UsernameCache;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.permissions.PermissionsManager;

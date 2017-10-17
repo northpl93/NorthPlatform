@@ -1,6 +1,6 @@
 package pl.north93.zgame.api.global.component.impl.scanner;
 
-import static pl.north93.zgame.api.global.component.impl.CtUtils.toJavaMethod;
+import static pl.north93.zgame.api.global.component.impl.general.CtUtils.toJavaMethod;
 
 
 import java.util.Arrays;
@@ -16,10 +16,9 @@ import javassist.CtMethod;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.DynamicBean;
-import pl.north93.zgame.api.global.component.exceptions.BeanCreationException;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.zgame.api.global.component.impl.container.BeanFactory;
-import pl.north93.zgame.api.global.component.impl.ComponentManagerImpl;
+import pl.north93.zgame.api.global.component.impl.general.ComponentManagerImpl;
 
 class MethodScanningTask extends AbstractScanningTask
 {
@@ -40,6 +39,11 @@ class MethodScanningTask extends AbstractScanningTask
             final CtMethod method = iterator.next();
             try
             {
+                if (this.shouldBeSkipped(method))
+                {
+                    continue;
+                }
+
                 if (method.hasAnnotation(Bean.class))
                 {
                     BeanFactory.INSTANCE.createStaticBean(this.beanContext, toJavaMethod(this.clazz, method));
@@ -63,6 +67,11 @@ class MethodScanningTask extends AbstractScanningTask
         }
 
         return this.methods.isEmpty();
+    }
+
+    private boolean shouldBeSkipped(final CtMethod method) throws ClassNotFoundException
+    {
+        return ! this.classloaderScanner.getManager().getProfileManager().isActive(method);
     }
 
     @Override

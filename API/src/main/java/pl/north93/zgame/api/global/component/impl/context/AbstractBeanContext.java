@@ -13,7 +13,7 @@ import pl.north93.zgame.api.global.component.IBeanContext;
 import pl.north93.zgame.api.global.component.IBeanQuery;
 import pl.north93.zgame.api.global.component.exceptions.BeanCollisionException;
 import pl.north93.zgame.api.global.component.exceptions.BeanNotFoundException;
-import pl.north93.zgame.api.global.component.impl.BeanQuery;
+import pl.north93.zgame.api.global.component.impl.general.BeanQuery;
 import pl.north93.zgame.api.global.component.impl.container.AbstractBeanContainer;
 
 public abstract class AbstractBeanContext implements IBeanContext

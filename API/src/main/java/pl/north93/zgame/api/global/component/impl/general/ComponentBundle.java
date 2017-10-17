@@ -1,9 +1,10 @@
-package pl.north93.zgame.api.global.component.impl;
+package pl.north93.zgame.api.global.component.impl.general;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
@@ -12,7 +13,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
-import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.ComponentStatus;
@@ -23,40 +24,27 @@ import pl.north93.zgame.api.global.component.impl.injection.Injector;
 
 public class ComponentBundle implements IComponentBundle
 {
+    private final ComponentManagerImpl componentManager;
     private final ComponentDescription description;
     private final ClassLoader          classLoader;
     private final AbstractBeanContext  componentBeanContext;
-    private       Set<String>          basePackages;
+    private final Set<String>          basePackages;
     private       Component            component;
     private       ComponentStatus      status;
 
-    public ComponentBundle(final ComponentDescription description, final ClassLoader classLoader, final AbstractBeanContext componentBeanContext)
+    public ComponentBundle(final ComponentManagerImpl componentManager, final ComponentDescription description, final ClassLoader classLoader, final AbstractBeanContext componentBeanContext)
     {
+        this.componentManager = componentManager;
         this.description = description;
         this.classLoader = classLoader;
         this.componentBeanContext = componentBeanContext;
-        this.basePackages = new ObjectArraySet<>();
+        this.basePackages = this.createPackageList(); // inicjujemy liste paczek
         this.status = ComponentStatus.DISABLED; // prevent NPEs
     }
 
     @Override
     public Set<String> getBasePackages()
     {
-        if (this.basePackages.isEmpty())
-        {
-            final String mainClass = this.description.getMainClass();
-
-            if (this.description.getPackages().isEmpty())
-            {
-                final int lastIndexOfDot = mainClass.lastIndexOf(".");
-                this.basePackages.add(mainClass.substring(0, lastIndexOfDot));
-            }
-            else
-            {
-                this.basePackages.addAll(this.description.getPackages());
-            }
-        }
-
         return Sets.newCopyOnWriteArraySet(this.basePackages);
     }
 
@@ -93,7 +81,7 @@ public class ComponentBundle implements IComponentBundle
     public final void enable()
     {
         final String prettyPackages = this.getBasePackages().stream().collect(Collectors.joining(", "));
-        API.getLogger().info("Enabling component " + this.getName() + " (packages used to scan: " + prettyPackages + ")");
+        this.getLogger().info("Enabling component " + this.getName() + " (packages used to scan: " + prettyPackages + ")");
         try
         {
             this.instantiateClass(); // tworzymy klase glowna
@@ -104,7 +92,7 @@ public class ComponentBundle implements IComponentBundle
         catch (final Exception e)
         {
             this.status = ComponentStatus.ERROR;
-            API.getLogger().log(Level.SEVERE, "An exception has been thrown while enabling component " + this.getName(), e);
+            this.getLogger().log(Level.SEVERE, "An exception has been thrown while enabling component " + this.getName(), e);
             return;
         }
         this.status = ComponentStatus.ENABLED;
@@ -112,7 +100,7 @@ public class ComponentBundle implements IComponentBundle
 
     public final void disable()
     {
-        API.getLogger().info("Disabling component " + this.getName());
+        this.getLogger().info("Disabling component " + this.getName());
         try
         {
             this.getComponent().callStartMethod(false);
@@ -120,7 +108,7 @@ public class ComponentBundle implements IComponentBundle
         catch (final Exception e)
         {
             this.status = ComponentStatus.ERROR;
-            API.getLogger().log(Level.SEVERE, "An exception has been thrown while disabling component " + this.getName(), e);
+            this.getLogger().log(Level.SEVERE, "An exception has been thrown while disabling component " + this.getName(), e);
             return;
         }
         this.status = ComponentStatus.DISABLED;
@@ -163,6 +151,24 @@ public class ComponentBundle implements IComponentBundle
         return this.componentBeanContext;
     }
 
+    private Set<String> createPackageList()
+    {
+        final Set<String> packages = new ObjectArraySet<>();
+
+        final String mainClass = this.description.getMainClass();
+        if (this.description.getPackages().isEmpty())
+        {
+            final int lastIndexOfDot = mainClass.lastIndexOf(".");
+            packages.add(mainClass.substring(0, lastIndexOfDot));
+        }
+        else
+        {
+            packages.addAll(this.description.getPackages());
+        }
+
+        return packages;
+    }
+
     private void instantiateClass()
     {
         final Component newComponent;
@@ -179,13 +185,23 @@ public class ComponentBundle implements IComponentBundle
         }
 
         this.setComponent(newComponent);
-        newComponent.init(this, ComponentManagerImpl.instance, API.getApiCore());
+        newComponent.init(this, this.getApiCore());
     }
 
     private void scanNow()
     {
         // excludedPackages moze byc nullem bo na pewno juz mamy utworzony ScanningTask.
-        ComponentManagerImpl.instance.getScanningTask(this.classLoader, null).scanComponent(this);
+        this.componentManager.getScanningTask(this.classLoader, null).scanComponent(this);
+    }
+
+    private ApiCore getApiCore()
+    {
+        return this.componentManager.getApiCore();
+    }
+
+    private Logger getLogger()
+    {
+        return this.getApiCore().getLogger();
     }
 
     @Override
