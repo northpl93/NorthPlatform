@@ -38,7 +38,7 @@ import org.diorite.utils.reflections.DioriteReflectionUtils;
 import pl.north93.zgame.api.global.commands.exceptions.InvalidCommandArgumentException;
 
 /**
- * Class used to read command parametrs instead of String[] to make some stuff easier/simpler
+ * Class used to read command parameters instead of String[] to make some stuff easier/simpler
  */
 public class Arguments implements Iterable<String>
 {
@@ -69,6 +69,14 @@ public class Arguments implements Iterable<String>
     public int length()
     {
         return this.args.length;
+    }
+
+    /**
+     * @return true if there is no arguments. True otherwise.
+     */
+    public boolean isEmpty()
+    {
+        return this.args.length == 0;
     }
 
     /**
