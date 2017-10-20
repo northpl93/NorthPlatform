@@ -17,6 +17,27 @@ public final class ClassUtils
     {
         return HELPER.getClassContext()[depth + 3];
     }
+
+    public static Package getParent(final Package pack)
+    {
+        String name = pack.getName();
+        Package parent;
+        do
+        {
+            final int lastDot = name.lastIndexOf('.');
+            if (lastDot == -1)
+            {
+                return Package.getPackage(name);
+            }
+            else
+            {
+                name = name.substring(0, lastDot);
+                parent = Package.getPackage(name);
+            }
+        }
+        while (parent == null);
+        return parent;
+    }
 }
 
 class SecurityManagerHelper extends SecurityManager

@@ -32,6 +32,7 @@ import pl.north93.zgame.api.global.component.impl.general.ComponentBundle;
 import pl.north93.zgame.api.global.component.impl.general.ComponentManagerImpl;
 import pl.north93.zgame.api.global.component.impl.general.JarComponentLoader;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
+import pl.north93.zgame.api.global.component.impl.profile.ProfileManagerImpl;
 
 public class ClassloaderScanningTask
 {
@@ -237,7 +238,10 @@ public class ClassloaderScanningTask
     // sprawdza czy dana klase nalezy wywalic z skanowania
     private boolean shouldSkipClass(final Class<?> clazz)
     {
-        return clazz.isAnnotationPresent(SkipInjections.class) || ! this.manager.getProfileManager().isActive(clazz);
+        final ProfileManagerImpl profileManager = this.manager.getProfileManager();
+        return clazz.isAnnotationPresent(SkipInjections.class) ||
+                       ! profileManager.isActive(clazz.getPackage()) ||
+                       ! profileManager.isActive(clazz);
     }
 
     public Reflections getReflections()

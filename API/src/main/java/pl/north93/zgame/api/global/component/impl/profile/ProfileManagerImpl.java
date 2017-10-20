@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.global.component.impl.profile;
 
+import static pl.north93.zgame.api.global.utils.lang.ClassUtils.getParent;
+
+
 import java.lang.reflect.AnnotatedElement;
 import java.util.Collection;
 import java.util.Collections;
@@ -48,6 +51,18 @@ public class ProfileManagerImpl implements IProfileManager
     public boolean isActive(final String name)
     {
         return this.profiles.contains(name);
+    }
+
+    public boolean isActive(final Package pack)
+    {
+        final Profile profile = pack.getAnnotation(Profile.class);
+        if (profile != null && ! this.isActive(profile.value()))
+        {
+            return false;
+        }
+
+        final Package parent = getParent(pack);
+        return parent == null || this.isActive(parent);
     }
 
     public boolean isActive(final AnnotatedElement annotatedElement)
