@@ -159,6 +159,12 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
     }
 
     @Override
+    public void syncTimer(final int every, final Runnable runnable)
+    {
+        Bukkit.getScheduler().runTaskTimer(this.apiCore.getPluginMain(), runnable, every, every);
+    }
+
+    @Override
     public void inMainThread(final Runnable runnable)
     {
         if (MinecraftServer.getServer().isMainThread())
