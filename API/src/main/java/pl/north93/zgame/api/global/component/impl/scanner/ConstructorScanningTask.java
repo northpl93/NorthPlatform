@@ -28,7 +28,7 @@ class ConstructorScanningTask extends AbstractScanningTask
     }
 
     @Override
-    boolean tryComplete()
+    boolean tryComplete0()
     {
         final Iterator<CtConstructor> iterator = this.constructors.iterator();
         while (iterator.hasNext())
@@ -51,9 +51,10 @@ class ConstructorScanningTask extends AbstractScanningTask
         return this.constructors.isEmpty();
     }
 
+    // sprawdza czy dany konstruktor jest beanem i czy jest aktywny
     private boolean isConstructorBean(final CtConstructor constructor) throws ClassNotFoundException
     {
-        return constructor.hasAnnotation(Bean.class) && this.classloaderScanner.getManager().getProfileManager().isActive(constructor);
+        return constructor.hasAnnotation(Bean.class) && this.classloaderScanner.getManager().getProfileManager().isActive(this.clazz.getClassLoader(), constructor);
     }
 
     @Override

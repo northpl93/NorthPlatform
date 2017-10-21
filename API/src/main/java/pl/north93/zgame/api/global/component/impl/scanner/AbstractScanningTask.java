@@ -22,11 +22,38 @@ abstract class AbstractScanningTask
         this.ctClass = ctClass;
     }
 
-    /*default*/ abstract boolean tryComplete();
+    public final boolean tryComplete()
+    {
+        if (this.shouldSkipClass())
+        {
+            return true;
+        }
+
+        return this.tryComplete0();
+    }
+
+    /*default*/ abstract boolean tryComplete0();
 
     public final Throwable getLastCause()
     {
         return this.lastCause;
+    }
+
+    private boolean shouldSkipClass()
+    {
+        try
+        {
+            final boolean active = this.classloaderScanner.getManager().getProfileManager().isActive(this.clazz);
+            if (! active)
+            {
+                return true;
+            }
+        }
+        catch (final Exception e)
+        {
+            this.lastCause = e;
+        }
+        return false;
     }
 
     @Override

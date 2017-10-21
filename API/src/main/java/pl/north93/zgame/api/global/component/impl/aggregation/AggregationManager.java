@@ -49,7 +49,7 @@ public class AggregationManager
 
     public void call(final AbstractBeanContext beanContext, final CtClass ctClass, final Class<?> javaClass)
     {
-        if (ctClass.hasAnnotation(SkipInjections.class))
+        if (this.shouldIgnoreClass(javaClass))
         {
             return;
         }
@@ -66,9 +66,14 @@ public class AggregationManager
             final Collection<Method> listeners = this.listeners.get(aggregator);
             for (final Method listener : listeners)
             {
-                aggregator.call(beanContext, ctClass, javaClass, object,listener);
+                aggregator.call(beanContext, ctClass, javaClass, object, listener);
             }
         }
+    }
+
+    private boolean shouldIgnoreClass(final Class<?> clazz)
+    {
+        return clazz.isAnnotationPresent(SkipInjections.class) || ! ComponentManagerImpl.instance.getProfileManager().isActive(clazz);
     }
 
     private Object getInstance(final AbstractBeanContext beanContext, final Class<?> clazz)

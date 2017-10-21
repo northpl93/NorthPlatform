@@ -28,11 +28,10 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import pl.north93.zgame.api.global.component.ComponentDescription;
 import pl.north93.zgame.api.global.component.annotations.SkipInjections;
+import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.zgame.api.global.component.impl.general.ComponentBundle;
 import pl.north93.zgame.api.global.component.impl.general.ComponentManagerImpl;
 import pl.north93.zgame.api.global.component.impl.general.JarComponentLoader;
-import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
-import pl.north93.zgame.api.global.component.impl.profile.ProfileManagerImpl;
 
 public class ClassloaderScanningTask
 {
@@ -117,7 +116,7 @@ public class ClassloaderScanningTask
         {
             final Class<?> clazz = entry.getKey();
             final CtClass ctClass = entry.getValue();
-            if (this.shouldSkipClass(clazz)) // pomijamy klase jesli trzeba
+            if (clazz.isAnnotationPresent(SkipInjections.class)) // pomijamy klase jesli trzeba
             {
                 continue;
             }
@@ -132,6 +131,7 @@ public class ClassloaderScanningTask
             final AbstractBeanContext beanContext = this.manager.getOwningContext(clazz);
 
             // dodajemy pozostale zadania do kolejki zeby wykonaly sie w miare mozliwosci
+            this.pendingTasks.add(new ProfileScanningTask(this, clazz, ctClass, beanContext));
             this.pendingTasks.add(new StaticScanningTask(this, clazz, ctClass, beanContext));
             this.pendingTasks.add(new ConstructorScanningTask(this, clazz, ctClass, beanContext));
             this.pendingTasks.add(new MethodScanningTask(this, clazz, ctClass, beanContext));
@@ -233,15 +233,6 @@ public class ClassloaderScanningTask
         }
 
         return null;
-    }
-
-    // sprawdza czy dana klase nalezy wywalic z skanowania
-    private boolean shouldSkipClass(final Class<?> clazz)
-    {
-        final ProfileManagerImpl profileManager = this.manager.getProfileManager();
-        return clazz.isAnnotationPresent(SkipInjections.class) ||
-                       ! profileManager.isActive(clazz.getPackage()) ||
-                       ! profileManager.isActive(clazz);
     }
 
     public Reflections getReflections()

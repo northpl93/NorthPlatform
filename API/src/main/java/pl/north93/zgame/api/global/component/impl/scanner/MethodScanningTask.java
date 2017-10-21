@@ -31,7 +31,7 @@ class MethodScanningTask extends AbstractScanningTask
     }
 
     @Override
-    boolean tryComplete()
+    boolean tryComplete0()
     {
         final Iterator<CtMethod> iterator = this.methods.iterator();
         while (iterator.hasNext())
@@ -41,6 +41,7 @@ class MethodScanningTask extends AbstractScanningTask
             {
                 if (this.shouldBeSkipped(method))
                 {
+                    iterator.remove(); // usuwamy klasy ktore trzeba ominac
                     continue;
                 }
 
@@ -69,9 +70,10 @@ class MethodScanningTask extends AbstractScanningTask
         return this.methods.isEmpty();
     }
 
+    // sprawdza czy dana metoda powinna zostac pominieta - czy jest nieaktywna
     private boolean shouldBeSkipped(final CtMethod method) throws ClassNotFoundException
     {
-        return ! this.classloaderScanner.getManager().getProfileManager().isActive(method);
+        return ! this.classloaderScanner.getManager().getProfileManager().isActive(this.clazz.getClassLoader(), method);
     }
 
     @Override

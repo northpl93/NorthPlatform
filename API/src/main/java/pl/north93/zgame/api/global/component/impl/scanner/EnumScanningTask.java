@@ -12,7 +12,7 @@ class EnumScanningTask extends AbstractScanningTask
     }
 
     @Override
-    boolean tryComplete()
+    boolean tryComplete0()
     {
         final Object[] enumConstants;
         try

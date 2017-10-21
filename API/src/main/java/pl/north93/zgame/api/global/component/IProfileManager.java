@@ -2,6 +2,8 @@ package pl.north93.zgame.api.global.component;
 
 import java.util.Collection;
 
+import pl.north93.zgame.api.global.component.exceptions.ProfileNotFoundException;
+
 /**
  * Menadzer profili umozliwia okreslenie czy dane fragmenty kodu
  * powinny byc wykonywane w zaleznosci od zewnetrznych czynnikow.
@@ -10,9 +12,11 @@ import java.util.Collection;
  */
 public interface IProfileManager
 {
-    void addProfile(String name);
+    void addProfile(DefinedProfile profile);
 
-    Collection<String> getActiveProfiles();
+    Collection<DefinedProfile> getActiveProfiles();
 
-    boolean isActive(String name);
+    DefinedProfile getProfile(String name) throws ProfileNotFoundException;
+
+    boolean isActive(String profileName) throws ProfileNotFoundException;
 }

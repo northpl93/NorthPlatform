@@ -33,7 +33,7 @@ class StaticScanningTask extends AbstractScanningTask
     }
 
     @Override
-    boolean tryComplete()
+    boolean tryComplete0()
     {
         final Iterator<CtField> iterator = this.staticFields.iterator();
         while (iterator.hasNext())
