@@ -3,11 +3,14 @@ package pl.north93.zgame.api.global.component;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.component.annotations.SkipInjections;
+
 /**
  * Klasa reprezentujaca profil.
  * Pelna lista profili musi byc znana, inaczej zostanie rzucony wyjatek.
  * Profil moze byc wlaczony lub wylaczony.
  */
+@SkipInjections
 public abstract class DefinedProfile
 {
     private final String name;

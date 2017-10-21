@@ -19,7 +19,7 @@ class ProfileScanningTask extends AbstractScanningTask
     @Override
     boolean tryComplete0()
     {
-        if (! DefinedProfile.class.isAssignableFrom(this.clazz) || this.clazz == DefinedProfile.class)
+        if (! DefinedProfile.class.isAssignableFrom(this.clazz))
         {
             // nic wiecej nie robimy
             return true;
