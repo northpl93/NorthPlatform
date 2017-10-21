@@ -40,6 +40,7 @@ class IconImpl implements IIcon
     private        IconPosition         position;
     private        ItemStack            itemStack;
     private        IconNameLocation     iconNameLocation;
+    private        boolean              small;
     private        TranslatableString[] name;
     // dane implementacyjne
     private        ArmorStand           armorStand;
@@ -49,6 +50,7 @@ class IconImpl implements IIcon
     {
         this.holoContext = holoContext;
         this.iconNameLocation = IconNameLocation.BELOW;
+        this.small = true; // by default
     }
 
     @Override
@@ -86,6 +88,19 @@ class IconImpl implements IIcon
     }
 
     @Override
+    public boolean isSmall()
+    {
+        return this.small;
+    }
+
+    @Override
+    public void setSmall(final boolean small)
+    {
+        this.small = small;
+        this.updateSize();
+    }
+
+    @Override
     public void setNameLocation(final IconNameLocation location)
     {
         this.iconNameLocation = location;
@@ -103,6 +118,12 @@ class IconImpl implements IIcon
     {
         this.name = name;
         this.updateName();
+    }
+
+    @Override
+    public ArmorStand getBackingArmorStand()
+    {
+        return this.armorStand;
     }
 
     // aktualizuje item na glowie
@@ -134,6 +155,18 @@ class IconImpl implements IIcon
 
         final CraftArmorStand armorStand = (CraftArmorStand) this.armorStand;
         armorStand.getHandle().setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+    }
+
+    // aktualizuje parametr small
+    private void updateSize()
+    {
+        if (this.armorStand == null)
+        {
+            // nic nie musimy aktualizowac
+            return;
+        }
+
+        this.armorStand.setSmall(this.small);
     }
 
     // aktualizuje hologram z nazwa
@@ -189,6 +222,7 @@ class IconImpl implements IIcon
 
         // konfigurujemy armorstand
         this.setupArmorStand();
+        this.updateSize();
 
         // ustawia poczatkowa lokacje ArmorStanda
         this.refreshLocation();
@@ -229,7 +263,12 @@ class IconImpl implements IIcon
     public boolean isLookingAt(final Location location)
     {
         final Location armorStandLocation = this.armorStand.getLocation();
-        armorStandLocation.add(0, -0.4, 0); // przesuwamy troche centralny punkt w dol
+
+        // przesuwamy troche centralny punkt w dol jesli armorstand jest maly
+        if (this.small)
+        {
+            armorStandLocation.add(0, -0.4, 0);
+        }
 
         final Vector toEntity = armorStandLocation.toVector().subtract(location.toVector());
         final Vector direction = location.getDirection();
@@ -246,7 +285,6 @@ class IconImpl implements IIcon
         this.armorStand.setAI(false);
         this.armorStand.setGravity(false);
         this.armorStand.setVisible(false);
-        this.armorStand.setSmall(true);
         this.armorStand.setMarker(true);
         this.armorStand.setSilent(true);
         this.armorStand.setInvulnerable(true);

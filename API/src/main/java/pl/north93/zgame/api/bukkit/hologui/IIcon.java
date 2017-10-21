@@ -1,5 +1,6 @@
 package pl.north93.zgame.api.bukkit.hologui;
 
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 
 import pl.north93.zgame.api.global.messages.TranslatableString;
@@ -22,9 +23,20 @@ public interface IIcon
 
     void setPosition(IconPosition position);
 
+    boolean isSmall();
+
+    void setSmall(boolean small);
+
     void setNameLocation(IconNameLocation location);
 
     TranslatableString[] getDisplayName();
 
     void setDisplayName(TranslatableString... name);
+
+    /**
+     * Zwraca ArmorStand uzywany przez ta ikone.
+     *
+     * @return ArmorStand uzywany przez ikone.
+     */
+    ArmorStand getBackingArmorStand();
 }
