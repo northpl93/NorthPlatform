@@ -33,6 +33,11 @@ public abstract class TranslatableString
     {
         return concat(this, other);
     }
+
+    public TranslatableString withVars(final Vars<Object> vars)
+    {
+        return withVars(this, vars);
+    }
     
     public String getValue(Messageable messageable)
     {
@@ -186,5 +191,17 @@ public abstract class TranslatableString
     public static TranslatableString custom(final Map<Locale, String> translations)
     {
         return new CustomTranslatableString(translations);
+    }
+
+    /**
+     * Zwraca obiekt {@link TranslatableString} ktory zawiera predefiniowane
+     * podane zmienne.
+     *
+     * @param vars Zmienne do predefiniowania.
+     * @return TranslatableString z predefiniowanymi wartosciami
+     */
+    public static TranslatableString withVars(final TranslatableString translatableString, final Vars<Object> vars)
+    {
+        return new PredefinedVarsTranslatableString(translatableString, vars);
     }
 }
