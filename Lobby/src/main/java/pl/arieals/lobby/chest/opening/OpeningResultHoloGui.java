@@ -3,31 +3,24 @@ package pl.arieals.lobby.chest.opening;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.globalshops.shared.Item;
+import pl.arieals.globalshops.shared.Rarity;
 import pl.arieals.lobby.chest.BaseOpeningHoloGui;
 import pl.arieals.lobby.chest.loot.ILoot;
 import pl.arieals.lobby.chest.loot.ItemShardLoot;
 import pl.arieals.lobby.chest.loot.LootResult;
-import pl.arieals.lobby.chest.loot.ShopIconFinder;
 import pl.north93.zgame.api.bukkit.hologui.IHoloContext;
 import pl.north93.zgame.api.bukkit.hologui.IIcon;
 import pl.north93.zgame.api.bukkit.hologui.IconNameLocation;
 import pl.north93.zgame.api.bukkit.hologui.IconPosition;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.TranslatableString;
 
 class OpeningResultHoloGui extends BaseOpeningHoloGui
 {
-    @Inject
-    private ShopIconFinder shopIconFinder;
-
     private final LootResult lootResult;
 
     OpeningResultHoloGui(final LootResult result)
@@ -38,15 +31,47 @@ class OpeningResultHoloGui extends BaseOpeningHoloGui
     @Override
     protected void openGui0(final IHoloContext context)
     {
-        this.setupLootIcons(context, this.lootResult);
+        this.setupLootIcons(context);
+        this.playLegendarySound(context);
 
         this.shopIcon.setPosition(new IconPosition(3, 60, 1.5));
         this.closeIcon.setPosition(new IconPosition(3, -60, 1.5));
     }
 
-    private void setupLootIcons(final IHoloContext holoContext, final LootResult result)
+    // odtwarza dzwiek legendy
+    private void playLegendarySound(final IHoloContext context)
     {
-        final Collection<ILoot> loot = result.getLoot();
+        if (! this.containsLegendaryItem())
+        {
+            return;
+        }
+
+        final Player player = context.getPlayer();
+        player.playSound(player.getLocation(), Sound.ENTITY_ENDERDRAGON_GROWL, 1, 1.5f); // volume, pitch
+    }
+
+    // sprawdza czy loot w tym gui zawiera legendarny przedmiot
+    private boolean containsLegendaryItem()
+    {
+        final Collection<ILoot> loot = this.lootResult.getLoot();
+        for (final ILoot iLoot : loot)
+        {
+            if (iLoot instanceof ItemShardLoot)
+            {
+                final Rarity rarity = ((ItemShardLoot) iLoot).getItem().getRarity();
+                if (rarity == Rarity.LEGENDARY)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // glowna metoda wejsciowa konfigurujaca ikonki lootu
+    private void setupLootIcons(final IHoloContext holoContext)
+    {
+        final Collection<ILoot> loot = this.lootResult.getLoot();
         if (loot.isEmpty())
         {
             return;
@@ -65,21 +90,13 @@ class OpeningResultHoloGui extends BaseOpeningHoloGui
         }
     }
 
+    // tworzy ikone dla konkretnego lootu w konretnej lokalizacji
     private void createIcon(final IHoloContext holoContext, final ILoot loot, final int position, final IconNameLocation nameLocation)
     {
         final IIcon icon = holoContext.createIcon();
         icon.setPosition(new IconPosition(4.5, position, 1.5));
         icon.setNameLocation(nameLocation);
-
-        if (loot instanceof ItemShardLoot)
-        {
-            final ItemShardLoot shardLoot = (ItemShardLoot) loot;
-            final Item item = shardLoot.getItem();
-
-            icon.setType(this.shopIconFinder.getItemStack(item));
-            icon.setDisplayName(this.getName(item), TranslatableString.constant(shardLoot.getShards() + " odlamkow"));
-        }
-
+        loot.setupIcon(icon);
         holoContext.addIcon(icon);
     }
 
@@ -94,30 +111,6 @@ class OpeningResultHoloGui extends BaseOpeningHoloGui
             // probujemy dac graczowi kolejna skrzynke, a przy okazji resetujemy gui
             this.openingController.nextChest(context.getPlayer());
         }
-    }
-
-    private TranslatableString getName(final Item item)
-    {
-        final TranslatableString name;
-        switch (item.getRarity())
-        {
-            case NORMAL:
-                name = TranslatableString.constant(ChatColor.WHITE.toString());
-                break;
-            case RARE:
-                name = TranslatableString.constant(ChatColor.AQUA.toString());
-                break;
-            case EPIC:
-                name = TranslatableString.constant(ChatColor.LIGHT_PURPLE.toString());
-                break;
-            case LEGENDARY:
-                name = TranslatableString.constant(ChatColor.GOLD.toString());
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown rarity: " + item.getRarity());
-        }
-
-        return name.concat(TranslatableString.constant(ChatColor.BOLD.toString())).concat(item.getName());
     }
 
     @Override

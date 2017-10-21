@@ -1,4 +1,4 @@
-package pl.arieals.lobby.cmd;
+package pl.arieals.lobby.chest.cmd;
 
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;

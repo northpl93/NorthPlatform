@@ -6,9 +6,9 @@ import org.bukkit.entity.ArmorStand;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-class ChestSpawnAnimation extends ChestAnimation
+public final class ChestSpawnAnimation extends ChestAnimation
 {
-    private static final double MAX_DISTANCE = 3;
+    private static final double MAX_DISTANCE = 2;
     private static final double STEP_DISTANCE = 0.10;
     private double currentDistance;
 
@@ -27,11 +27,6 @@ class ChestSpawnAnimation extends ChestAnimation
         }
 
         this.processAnimation();
-    }
-
-    @Override
-    void clicked()
-    {
     }
 
     private void endAnimation()

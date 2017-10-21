@@ -11,14 +11,15 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
 import pl.arieals.lobby.chest.loot.LootResult;
 
-class OpeningSession implements IOpeningSession
+class OpeningSessionImpl implements IOpeningSession
 {
     private final Player           player;
     private final HubWorld         hub;
     private final HubOpeningConfig openingConfig;
+    private int chests;
     private CompletableFuture<LootResult> lastResults;
 
-    public OpeningSession(final Player player, final HubWorld hub, final HubOpeningConfig openingConfig)
+    public OpeningSessionImpl(final Player player, final HubWorld hub, final HubOpeningConfig openingConfig)
     {
         this.player = player;
         this.hub = hub;
@@ -35,6 +36,17 @@ class OpeningSession implements IOpeningSession
     public HubWorld getHub()
     {
         return this.hub;
+    }
+
+    @Override
+    public int getChestsAmount()
+    {
+        return this.chests;
+    }
+
+    public void setChests(final int chests)
+    {
+        this.chests = chests;
     }
 
     @Override

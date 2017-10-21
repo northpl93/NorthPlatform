@@ -10,8 +10,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -26,8 +24,6 @@ public final class HubOpeningConfig
     private String      chestType;
     @XmlElement
     private XmlLocation playerLocation;
-    @XmlElement
-    private XmlLocation chestLocation;
 
     public String getChestType()
     {
@@ -39,15 +35,10 @@ public final class HubOpeningConfig
         return this.playerLocation;
     }
 
-    public XmlLocation getChestLocation()
-    {
-        return this.chestLocation;
-    }
-
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("chestType", this.chestType).append("playerLocation", this.playerLocation).append("chestLocation", this.chestLocation).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("chestType", this.chestType).append("playerLocation", this.playerLocation).toString();
     }
 }
 
@@ -74,7 +65,6 @@ class HubOpeningConfigCache
             {
                 throw new RuntimeException("Hub.Opening.xml doesn't exists in " + hubOpeningFile.getParent());
             }
-            Bukkit.broadcastMessage(hubOpeningFile.getAbsolutePath() + " HubOpeningConfigCache");
             return JAXB.unmarshal(hubOpeningFile, HubOpeningConfig.class);
         });
     }

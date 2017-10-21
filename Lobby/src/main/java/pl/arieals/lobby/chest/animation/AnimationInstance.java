@@ -1,23 +1,24 @@
 package pl.arieals.lobby.chest.animation;
 
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftArmorStand;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 
-class AnimationInstance
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import pl.north93.zgame.api.bukkit.hologui.IIcon;
+
+public final class AnimationInstance
 {
-    private final Player     owner;
-    private final Location   location;
-    private final ArmorStand armorStand;
+    private final Player owner;
+    private final IIcon  icon;
     private ChestAnimation   currentAnimation;
     private boolean destroyed;
 
-    AnimationInstance(final Player owner, final Location location, final ArmorStand armorStand)
+    AnimationInstance(final Player owner, final IIcon icon)
     {
         this.owner = owner;
-        this.location = location;
-        this.armorStand = armorStand;
+        this.icon = icon;
     }
 
     public void setAnimation(final ChestAnimation chestAnimation)
@@ -30,9 +31,14 @@ class AnimationInstance
         return this.owner;
     }
 
+    public IIcon getIcon()
+    {
+        return this.icon;
+    }
+
     public ArmorStand getArmorStand()
     {
-        return this.armorStand;
+        return this.icon.getBackingArmorStand();
     }
 
     public void tick()
@@ -50,9 +56,6 @@ class AnimationInstance
     public void setDestroyed()
     {
         this.destroyed = true;
-
-        // zabijamy armor stand bez efektu
-        ((CraftArmorStand) this.armorStand).getHandle().die();
     }
 
     public boolean isDestroyed()
@@ -60,8 +63,9 @@ class AnimationInstance
         return this.destroyed;
     }
 
-    public void handleClick()
+    @Override
+    public String toString()
     {
-        this.currentAnimation.clicked();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("owner", this.owner).append("icon", this.icon).append("currentAnimation", this.currentAnimation).append("destroyed", this.destroyed).toString();
     }
 }

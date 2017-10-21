@@ -2,6 +2,7 @@ package pl.arieals.lobby.chest.loot;
 
 import org.bukkit.entity.Player;
 
+import pl.north93.zgame.api.bukkit.hologui.IIcon;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
 /**
@@ -16,6 +17,13 @@ public interface ILoot
      * @return Nazwa tego lootu.
      */
     TranslatableString getName();
+
+    /**
+     * Konfiguruje ikone tego lootu.
+     *
+     * @param icon Ikona do skonfigurowania.
+     */
+    void setupIcon(IIcon icon);
 
     /**
      * Aplikuje ten loot podanemu graczowi.

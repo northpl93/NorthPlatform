@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -15,7 +16,12 @@ import org.diorite.utils.math.IWeightedRandomChoice;
 import pl.arieals.globalshops.server.IGlobalShops;
 import pl.arieals.globalshops.server.IPlayerContainer;
 import pl.arieals.globalshops.shared.Item;
+import pl.north93.zgame.api.bukkit.hologui.IHoloContext;
+import pl.north93.zgame.api.bukkit.hologui.IIcon;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.zgame.api.global.messages.PluralForm;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
 /**
@@ -24,7 +30,11 @@ import pl.north93.zgame.api.global.messages.TranslatableString;
 public class ItemShardLoot implements ILoot
 {
     @Inject
-    private IGlobalShops globalShops;
+    private IGlobalShops   globalShops;
+    @Inject
+    private ShopIconFinder shopIconFinder;
+    @Inject @Messages("ChestOpening")
+    private MessagesBox    messages;
 
     private final Item item;
     private final int  shards;
@@ -44,6 +54,48 @@ public class ItemShardLoot implements ILoot
     public TranslatableString getName()
     {
         return this.item.getName();
+    }
+
+    @Override
+    public void setupIcon(final IIcon icon)
+    {
+        final IHoloContext holoContext = icon.getHoloContext();
+
+        icon.setType(this.shopIconFinder.getItemStack(this.item));
+        icon.setDisplayName(this.getName(this.item), this.getShardsText(holoContext.getPlayer(), this.shards));
+    }
+
+    // zwraca pokolorowana tlumaczalna nazwe przedmiotu
+    private TranslatableString getName(final Item item)
+    {
+        final TranslatableString name;
+        switch (item.getRarity())
+        {
+            case NORMAL:
+                name = TranslatableString.constant(ChatColor.WHITE.toString());
+                break;
+            case RARE:
+                name = TranslatableString.constant(ChatColor.AQUA.toString());
+                break;
+            case EPIC:
+                name = TranslatableString.constant(ChatColor.LIGHT_PURPLE.toString());
+                break;
+            case LEGENDARY:
+                name = TranslatableString.constant(ChatColor.GOLD.toString());
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown rarity: " + item.getRarity());
+        }
+
+        return name.concat(TranslatableString.constant(ChatColor.BOLD.toString())).concat(item.getName());
+    }
+
+    private TranslatableString getShardsText(final Player player, final int shards)
+    {
+        final String locale = player.spigot().getLocale();
+        final String shardsKey = PluralForm.transformKey("shards", shards);
+
+        return TranslatableString.constant(this.messages.getMessage(locale, shardsKey, shards));
     }
 
     /**

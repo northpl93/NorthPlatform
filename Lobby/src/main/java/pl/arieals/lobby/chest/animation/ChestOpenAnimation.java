@@ -9,7 +9,7 @@ import pl.arieals.lobby.chest.opening.ChestOpeningController;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
-class ChestOpenAnimation extends AbstractChestRotationAnimation
+public final class ChestOpenAnimation extends AbstractChestRotationAnimation
 {
     private static final double START_SPEED  = 0.5;
     private static final double SPEED_GROVER = 0.04;
@@ -47,11 +47,6 @@ class ChestOpenAnimation extends AbstractChestRotationAnimation
         this.setRotation((float) this.currentRotation);
 
         this.currentSpeed += SPEED_GROVER;
-    }
-
-    @Override
-    void clicked()
-    {
     }
 
     private void endAnimation()

@@ -3,6 +3,9 @@ package pl.arieals.lobby.chest.animation;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 abstract class ChestAnimation
 {
     protected final AnimationInstance instance;
@@ -24,5 +27,9 @@ abstract class ChestAnimation
 
     abstract void tick();
 
-    abstract void clicked();
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
+    }
 }

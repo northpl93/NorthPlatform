@@ -37,13 +37,13 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 public class ChestOpeningController
 {
     @Inject
-    private BukkitApiCore            apiCore;
+    private BukkitApiCore    apiCore;
     @Inject
-    private MiniGameServer           miniGameServer;
+    private MiniGameServer   miniGameServer;
     @Inject
-    private ChestService             chestService;
+    private ChestService     chestService;
     @Inject
-    private ChestLootService         lootService;
+    private ChestLootService lootService;
 
     @Bean
     private ChestOpeningController()
@@ -60,7 +60,7 @@ public class ChestOpeningController
         final HubWorld hubWorld = this.getThisHubServer().getHubWorld(player);
 
         final HubOpeningConfig config = HubOpeningConfigCache.INSTANCE.getConfig(hubWorld); // pobieramy zachowany config
-        final OpeningSession openingSession = new OpeningSession(player, hubWorld, config); // tworzymy sesje
+        final OpeningSessionImpl openingSession = new OpeningSessionImpl(player, hubWorld, config); // tworzymy sesje
 
         this.updateSession(player, openingSession);
         this.apiCore.callEvent(new OpenOpeningGuiEvent(openingSession));
@@ -70,7 +70,7 @@ public class ChestOpeningController
 
     public void closeOpeningGui(final Player player)
     {
-        final OpeningSession session = this.getSession(player);
+        final OpeningSessionImpl session = this.getSession(player);
         if (session == null)
         {
             // gracz nie ma aktywnej sesji otwierania
@@ -85,6 +85,27 @@ public class ChestOpeningController
     }
 
     /**
+     * Zwraca ilosc posiadanych przez gracza skrzynek aktualnego typu
+     * pobranego z sesji otwierania.
+     * Jesli gracz aktualnie nie otwiera skrzynek to zostanie zwrocony null.
+     *
+     * @param player Gracz ktoremu sprawdzamy ilosc skrzynek.
+     * @return Ilosc skrzynek lub null.
+     */
+    public @Nullable Integer getChests(final Player player)
+    {
+        final OpeningSessionImpl session = this.getSession(player);
+        if (session == null)
+        {
+            // wywolano metode bez aktywnej sesji, nic nie robimy dalej
+            return null;
+        }
+
+        final ChestType chestType = this.chestService.getType(session.getConfig().getChestType());
+        return this.chestService.getChests(player, chestType);
+    }
+
+    /**
      * Usuwa aktualna animacje skrzynki, i jesli gracz posiada skrzynke
      * danego typu (pobrany z sesji) ueuchamia animacje.
      *
@@ -92,17 +113,19 @@ public class ChestOpeningController
      */
     public void nextChest(final Player player)
     {
-        final OpeningSession session = this.getSession(player);
+        final OpeningSessionImpl session = this.getSession(player);
         if (session == null)
         {
             // wywolano metode bez aktywnej sesji, nic nie robimy dalej
             return;
         }
 
-        final NextChestEvent event = new NextChestEvent(player, session);
-
         final ChestType chestType = this.chestService.getType(session.getConfig().getChestType());
-        event.setCancelled(! this.chestService.hasChest(player, chestType));
+        final int chests = this.chestService.getChests(player, chestType);
+        session.setChests(chests); // aktualizujemy ilosc posiadanych skrzynek w sesji
+
+        final NextChestEvent event = new NextChestEvent(player, session);
+        event.setCancelled(chests <= 0); // jak nie ma skrzynek to anulujemy event
 
         this.apiCore.callEvent(event);
         if (event.isCancelled())
@@ -121,7 +144,7 @@ public class ChestOpeningController
      */
     public boolean beginChestOpening(final Player player)
     {
-        final OpeningSession session = this.getSession(player);
+        final OpeningSessionImpl session = this.getSession(player);
         if (session == null)
         {
             // wywolano metode bez aktywnej sesji, nic nie robimy dalej
@@ -144,7 +167,7 @@ public class ChestOpeningController
      */
     public void showOpeningResults(final Player player)
     {
-        final OpeningSession session = this.getSession(player);
+        final OpeningSessionImpl session = this.getSession(player);
         if (session == null)
         {
             // wywolano metode bez aktywnej sesji, nic nie robimy dalej
@@ -173,7 +196,7 @@ public class ChestOpeningController
         }
     }
 
-    private void updateSession(final Player player, final OpeningSession session)
+    private void updateSession(final Player player, final OpeningSessionImpl session)
     {
         Preconditions.checkNotNull(player);
         final Main pluginMain = this.apiCore.getPluginMain();
@@ -187,14 +210,15 @@ public class ChestOpeningController
         }
     }
 
-    public @Nullable OpeningSession getSession(final Player player)
+    public @Nullable
+    OpeningSessionImpl getSession(final Player player)
     {
         final List<MetadataValue> metadata = player.getMetadata("lobby/chestOpeningSession");
         if (metadata.isEmpty())
         {
             return null;
         }
-        return (OpeningSession) metadata.get(0).value();
+        return (OpeningSessionImpl) metadata.get(0).value();
     }
 
     // zwraca obiekt LocalHub reprezentujacy ten serwer hostujacy huby.

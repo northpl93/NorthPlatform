@@ -2,55 +2,38 @@ package pl.arieals.lobby.chest.animation;
 
 import javax.annotation.Nullable;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import net.minecraft.server.v1_10_R1.EntityArmorStand;
 import net.minecraft.server.v1_10_R1.MinecraftServer;
-import net.minecraft.server.v1_10_R1.WorldServer;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.inventory.ItemStack;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.bukkit.entityhider.EntityVisibility;
-import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
+import pl.north93.zgame.api.bukkit.hologui.IIcon;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
-public class ChestAnimationController
+public final class ChestAnimationController
 {
     private final ChestAnimationThread   animationThread;
-    private final IEntityHider           entityHider;
     private final Set<AnimationInstance> animations = new HashSet<>();
 
     @Bean
-    private ChestAnimationController(final BukkitApiCore apiCore, final IEntityHider entityHider)
+    private ChestAnimationController()
     {
-        this.entityHider = entityHider;
-
         // uruchamiamy watek animacji
         this.animationThread = new ChestAnimationThread();
         this.animationThread.start();
-
-        apiCore.registerEvents(new AnimationListener(this));
     }
 
-    public void createAnimation(final Player player, final Location location)
+    public void createAnimation(final Player player, final IIcon icon)
     {
         synchronized (this.animations)
         {
-            final AnimationInstance animationInstance = this.create(player, location);
+            final AnimationInstance animationInstance = this.create(player, icon);
             this.animations.add(animationInstance);
         }
 
@@ -80,17 +63,17 @@ public class ChestAnimationController
     }
 
     /**
-     * Zwraca instancje animacji na podstawie entity bedacego czescia animacji.
-     * Przydatne przy sprawdzaniu czy gracz kliknal na skrzynke.
+     * Zwraca instancje animacji na podstawie ikony do ktorej
+     * jest przypisana animacja.
      *
-     * @param entity Entity do sprawdzenia.
-     * @return Instancja animacji jesli podane entity do niej nalezy.
+     * @param icon Ikona do sprawdzenia.
+     * @return Instancja animacji jesli podana ikona do niej nalezy.
      */
-    public @Nullable AnimationInstance getInstanceByEntity(final Entity entity)
+    public @Nullable AnimationInstance getInstanceByIcon(final IIcon icon)
     {
         for (final AnimationInstance animation : this.animations)
         {
-            if (animation.getArmorStand() == entity)
+            if (animation.getIcon() == icon)
             {
                 return animation;
             }
@@ -99,37 +82,13 @@ public class ChestAnimationController
         return null;
     }
 
-    // tworzy nowa instancje animacji widoczna dla danego
-    // gracza
-    private AnimationInstance create(final Player player, final Location location)
+    // tworzy nowa instancje animacji na podstawie ikony
+    private AnimationInstance create(final Player player, final IIcon icon)
     {
-        final CraftWorld craftWorld = (CraftWorld) location.getWorld();
-        final WorldServer worldServer = craftWorld.getHandle();
-
-        final EntityArmorStand entityArmorStand = new EntityArmorStand(worldServer);
-        final ArmorStand armorStand = (ArmorStand) entityArmorStand.getBukkitEntity();
-        this.setupVisibility(player, armorStand); // konfigurujemy widocznosc tego entity
-
-        armorStand.setSilent(true); // bez dzwiekow
-        armorStand.setVisible(false);
-        armorStand.setAI(false);
-        armorStand.setGravity(false);
-        armorStand.setHelmet(new ItemStack(Material.CHEST));
-
-        entityArmorStand.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-        worldServer.addEntity(entityArmorStand, CreatureSpawnEvent.SpawnReason.CUSTOM);
-
-        final AnimationInstance animationInstance = new AnimationInstance(player, location, armorStand);
+        final AnimationInstance animationInstance = new AnimationInstance(player, icon);
         animationInstance.setAnimation(new ChestSpawnAnimation(animationInstance));
 
         return animationInstance;
-    }
-
-    private void setupVisibility(final Player player, final Entity entity)
-    {
-        final Set<Entity> entities = Collections.singleton(entity);
-        this.entityHider.setVisibility(EntityVisibility.HIDDEN, entities);
-        this.entityHider.setVisibility(player, EntityVisibility.VISIBLE, entities);
     }
 
     private class ChestAnimationThread extends Thread

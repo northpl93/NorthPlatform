@@ -10,12 +10,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.lobby.chest.animation.ChestAnimationController;
 import pl.arieals.lobby.chest.loot.LootResult;
 import pl.arieals.lobby.chest.opening.event.BeginChestOpeningEvent;
 import pl.arieals.lobby.chest.opening.event.CloseOpeningGuiEvent;
@@ -24,21 +22,29 @@ import pl.arieals.lobby.chest.opening.event.OpenOpeningGuiEvent;
 import pl.arieals.lobby.chest.opening.event.PresentOpeningResultsEvent;
 import pl.north93.zgame.api.bukkit.entityhider.EntityVisibility;
 import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
+import pl.north93.zgame.api.bukkit.hologui.ActionBarKeeper;
 import pl.north93.zgame.api.bukkit.hologui.IHoloContext;
 import pl.north93.zgame.api.bukkit.hologui.IHoloGuiManager;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.zgame.api.global.messages.PluralForm;
+import pl.north93.zgame.api.global.messages.TranslatableString;
+import pl.north93.zgame.api.global.utils.Vars;
 
 public class HubOpeningListener implements AutoListener
 {
     @Inject
-    private ChestOpeningController   chestOpeningController;
+    private ChestOpeningController chestOpeningController;
     @Inject
-    private IEntityHider             entityHider;
+    private IEntityHider           entityHider;
     @Inject
-    private IHoloGuiManager          holoGuiManager;
+    private IHoloGuiManager        holoGuiManager;
     @Inject
-    private ChestAnimationController chestAnimationController;
+    private ActionBarKeeper        actionBarKeeper;
+    @Inject @Messages("ChestOpening")
+    private MessagesBox            messages;
 
     @EventHandler
     public void onStartOpening(final OpenOpeningGuiEvent event)
@@ -53,27 +59,8 @@ public class HubOpeningListener implements AutoListener
         final Location location = event.getSession().getPlayerLocation();
         player.teleport(location);
 
-        // wywolujemy pierwsza skrzynke (jesli gracz ja ma)
+        // wywolujemy pierwsza skrzynke (jesli gracz ja ma) i przy okazji GUI
         this.chestOpeningController.nextChest(player);
-
-        // otwieramy graczu UI skrzynek
-        this.holoGuiManager.openGui(player, location, new OpeningHoloGui());
-    }
-
-    @EventHandler
-    public void onShiftPress(final PlayerToggleSneakEvent event)
-    {
-        if (! event.isSneaking())
-        {
-            return;
-        }
-
-        final Player player = event.getPlayer();
-        if (this.chestOpeningController.isCurrentlyInOpening(player))
-        {
-            // konczymy otwieranie
-            this.chestOpeningController.closeOpeningGui(player);
-        }
     }
 
     @EventHandler
@@ -81,8 +68,8 @@ public class HubOpeningListener implements AutoListener
     {
         final Player player = event.getSession().getPlayer();
 
-        // niszczymy animacje
-        this.chestAnimationController.destroyAnimation(player);
+        // usuwamy action bar z iloscia skrzynek jesli gracz go mial
+        this.actionBarKeeper.reset(player);
 
         // zamykamy interfejs holograficzny
         this.holoGuiManager.closeGui(player);
@@ -102,11 +89,8 @@ public class HubOpeningListener implements AutoListener
             // jesli kontekst gracza to null lub jesli gracz nie ma otwartego dobrego
             // gui to je otwieramy
             final Location guiLocation = event.getOpeningSession().getPlayerLocation();
-            this.holoGuiManager.openGui(player, guiLocation, new OpeningHoloGui());
+            this.holoGuiManager.openGui(player, guiLocation, new OpeningHoloGui(event.getOpeningSession()));
         }
-
-        // upewniamy sie ze animacja zostala zniszczona
-        this.chestAnimationController.destroyAnimation(player);
     }
 
     @EventHandler
@@ -115,19 +99,29 @@ public class HubOpeningListener implements AutoListener
         final Player player = event.getPlayer();
         final IOpeningSession session = event.getOpeningSession();
 
-        // todo jesli event zostal anulowany wyswietlamy ze nie ma skrzynki.
+        final Integer chests = this.chestOpeningController.getChests(player);
+        assert chests != null; // null moze byc tylko gdy gracz nie posiada sesji
 
-        // tworzymy nowa animacje
-        final Location location = session.getConfig().getChestLocation().toBukkit(player.getWorld());
-        this.chestAnimationController.createAnimation(player, location);
+        if (event.isCancelled())
+        {
+            // gracz nie ma skrzynek
+            this.actionBarKeeper.setActionBar(player, TranslatableString.of(this.messages, "@actionbar.no_chests"));
+            return;
+        }
+
+        // ustawiamy action bar z iloscia skrzynek
+        final String chestsWord = PluralForm.transformKey("@chests", chests);
+        final Vars<Object> vars = Vars.<Object>of("num", chests).and("word", TranslatableString.of(this.messages, chestsWord));
+        final TranslatableString translatableString = TranslatableString.of(this.messages, "@actionbar.you_have_chests$num,word").withVars(vars);
+
+        this.actionBarKeeper.setActionBar(player, translatableString);
     }
 
     @EventHandler
-    public void onOpeningBegin(final BeginChestOpeningEvent event)
+    public void onChestOpeningStarted(final BeginChestOpeningEvent event)
     {
-        // gdy kliknelismy skrzynke i zaczelismy otwieranie
-        // to zamykamy gui
-        this.holoGuiManager.closeGui(event.getPlayer());
+        // gdy gracz zacznie otwierac skrzynke to usuwamy action bar
+        this.actionBarKeeper.reset(event.getPlayer());
     }
 
     @EventHandler
@@ -166,6 +160,22 @@ public class HubOpeningListener implements AutoListener
         // gdy gracz wychodzi z serwera to wymuszamy zakonczenie openingu
         this.chestOpeningController.closeOpeningGui(event.getPlayer());
     }
+
+    /*@EventHandler
+    public void onShiftPress(final PlayerToggleSneakEvent event)
+    {
+        if (! event.isSneaking())
+        {
+            return;
+        }
+
+        final Player player = event.getPlayer();
+        if (this.chestOpeningController.isCurrentlyInOpening(player))
+        {
+            // konczymy otwieranie
+            this.chestOpeningController.closeOpeningGui(player);
+        }
+    }*/
 
     @Override
     public String toString()

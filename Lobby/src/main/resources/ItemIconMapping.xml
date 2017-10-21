@@ -17,12 +17,12 @@
 
     <!-- elytra -->
     <mapping groupId="elytra_effects">
-        <gui>elytra/elytrarace_shop_effects</gui>
+        <gui>elytrarace/elytrarace_shop_effects</gui>
     </mapping>
     <mapping groupId="elytra_hats">
-        <gui>elytra/elytrarace_shop_hats</gui>
+        <gui>elytrarace/elytrarace_shop_hats</gui>
     </mapping>
     <mapping groupId="elytra_heads">
-        <gui>elytra/elytrarace_shop_heads</gui>
+        <gui>elytrarace/elytrarace_shop_heads</gui>
     </mapping>
 </iconMappings>
