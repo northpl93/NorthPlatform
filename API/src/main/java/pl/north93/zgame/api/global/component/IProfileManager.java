@@ -18,5 +18,5 @@ public interface IProfileManager
 
     DefinedProfile getProfile(String name) throws ProfileNotFoundException;
 
-    boolean isActive(String profileName) throws ProfileNotFoundException;
+    boolean isProfileActive(String profileName) throws ProfileNotFoundException;
 }

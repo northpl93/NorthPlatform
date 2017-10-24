@@ -22,16 +22,17 @@ import pl.north93.zgame.api.global.component.IProfileManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Profile;
 import pl.north93.zgame.api.global.component.exceptions.ProfileNotFoundException;
 import pl.north93.zgame.api.global.component.impl.general.ComponentManagerImpl;
-import pl.north93.zgame.api.global.utils.lang.ClassUtils;
 
 public class ProfileManagerImpl implements IProfileManager
 {
     private final ComponentManagerImpl componentManager;
+    private final PackageChecker       packageChecker;
     private final Set<DefinedProfile> profiles = new HashSet<>();
 
     public ProfileManagerImpl(final ComponentManagerImpl componentManager)
     {
         this.componentManager = componentManager;
+        this.packageChecker = new PackageChecker(this);
         this.registerDefaultProfiles();
     }
 
@@ -69,46 +70,21 @@ public class ProfileManagerImpl implements IProfileManager
     }
 
     @Override
-    public boolean isActive(final String name)
+    public boolean isProfileActive(final String name)
     {
         return this.getProfile(name).isEnabled();
     }
 
-    public boolean isPackageActive(final ClassLoader classLoader, final String pack)
-    {
-        if (pack == null)
-        {
-            return true;
-        }
-        final Boolean result = ClassUtils.walkPackageInfo(classLoader, pack, packageInfo ->
-        {
-            final Profile profile = packageInfo.getAnnotation(Profile.class);
-            if (profile != null && ! this.isActive(profile.value()))
-            {
-                return false;
-            }
-
-            return null; // kontynuujemy
-        });
-
-        if (result == null)
-        {
-            return true;
-        }
-
-        return result;
-    }
-
     public boolean isActive(final Class<?> clazz)
     {
-        if (! this.isPackageActive(clazz.getClassLoader(), clazz.getPackage().getName()))
+        if (! this.packageChecker.isPackageActive(clazz.getClassLoader(), clazz.getPackage().getName()))
         {
             // paczka do ktorej nalezy klasa jest nieaktywna
             return false;
         }
 
         final Profile annotation = clazz.getAnnotation(Profile.class);
-        return annotation == null || this.isActive(annotation.value());
+        return annotation == null || this.isProfileActive(annotation.value());
     }
 
     public boolean isActive(final Member member)
@@ -121,19 +97,19 @@ public class ProfileManagerImpl implements IProfileManager
         }
 
         final Profile annotation = annotatedMember.getAnnotation(Profile.class);
-        return annotation == null || this.isActive(annotation.value());
+        return annotation == null || this.isProfileActive(annotation.value());
     }
 
     public boolean isActive(final ClassLoader classLoader, final CtClass ctClass) throws ClassNotFoundException
     {
-        if (! this.isPackageActive(classLoader, ctClass.getPackageName()))
+        if (! this.packageChecker.isPackageActive(classLoader, ctClass.getPackageName()))
         {
             // paczka jest nieaktywna
             return false;
         }
 
         final Profile profile = (Profile) ctClass.getAnnotation(Profile.class);
-        return profile == null || this.isActive(profile.value());
+        return profile == null || this.isProfileActive(profile.value());
     }
 
     public boolean isActive(final ClassLoader classLoader, final CtBehavior ctElement) throws ClassNotFoundException
@@ -145,7 +121,7 @@ public class ProfileManagerImpl implements IProfileManager
         }
 
         final Profile profile = (Profile) ctElement.getAnnotation(Profile.class);
-        return profile == null || this.isActive(profile.value());
+        return profile == null || this.isProfileActive(profile.value());
     }
 
     @Override
