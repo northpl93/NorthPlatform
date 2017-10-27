@@ -3,7 +3,9 @@ package pl.north93.zgame.api.bukkit.utils.nms;
 import net.minecraft.server.v1_10_R1.PacketDataSerializer;
 import net.minecraft.server.v1_10_R1.Vector3f;
 
+import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
+import org.bukkit.inventory.ItemStack;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -76,6 +78,18 @@ public class EntityMetaPacketHelper
                     {
                         serializer.writeByte(3);
                         serializer.a((String) object);
+                    }
+                },
+        SLOT
+                {
+                    @Override
+                    void write(final PacketDataSerializer serializer, final Object object)
+                    {
+                        serializer.writeByte(5);
+
+                        final ItemStack bukkitStack = (ItemStack) object;
+                        // a(n.m.s.ItemStack)
+                        serializer.a(CraftItemStack.asNMSCopy(bukkitStack));
                     }
                 },
         BOOLEAN

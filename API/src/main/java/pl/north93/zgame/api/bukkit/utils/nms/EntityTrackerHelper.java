@@ -9,6 +9,8 @@ import net.minecraft.server.v1_10_R1.Entity;
 import net.minecraft.server.v1_10_R1.EntityPlayer;
 import net.minecraft.server.v1_10_R1.EntityTrackerEntry;
 
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftEntity;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 
@@ -27,6 +29,12 @@ public class EntityTrackerHelper
         {
             throw new RuntimeException(e);
         }
+    }
+
+    public static Entity toNmsEntity(final org.bukkit.entity.Entity bukkitEntity)
+    {
+        final CraftEntity craftEntity = (CraftEntity) bukkitEntity;
+        return craftEntity.getHandle();
     }
 
     /**
