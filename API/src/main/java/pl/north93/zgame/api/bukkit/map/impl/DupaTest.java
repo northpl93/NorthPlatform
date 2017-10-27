@@ -16,7 +16,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.map.MapPalette;
 
 import pl.north93.zgame.api.bukkit.map.IBoard;
 import pl.north93.zgame.api.bukkit.map.IMapCanvas;
@@ -73,32 +72,14 @@ public class DupaTest extends NorthCommand
             {
                 try
                 {
-                    //final BufferedImage read = ImageIO.read(this.getClass().getClassLoader().getResource("test.png"));
                     final BufferedImage read = ImageIO.read(new File("C:\\Users\\Michał\\Desktop\\Ranking_demo2.png"));
-                    final byte[] bytes = MapPalette.imageToBytes(read);
-
-                    for (int x2 = 0; x2 < read.getWidth(null); ++x2) {
-                        for (int y2 = 0; y2 < read.getHeight(null); ++y2) {
-                            canvas.setPixel(x2, y2, bytes[y2 * read.getWidth(null) + x2]);
-                        }
-                    }
+                    canvas.putImage(0, 0, read);
+                    canvas.writeDebugImage(new File("C:\\Users\\Michał\\Desktop\\test.png"));
                 }
                 catch (IOException e)
                 {
                     e.printStackTrace();
                 }
-
-                /*for (int x = 0; x < canvas.getWidth(); x++)
-                {
-                    for (int y = 0; y < canvas.getHeight(); y++)
-                    {
-                        if (y % 5 == 0)
-                        {
-                            canvas.setPixel(x, y, (byte) 70);
-                        }
-
-                    }
-                }*/
             }
         });
     }

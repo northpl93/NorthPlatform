@@ -1,15 +1,21 @@
 package pl.north93.zgame.api.bukkit.map.impl;
 
-import static java.text.MessageFormat.format;
+import javax.imageio.ImageIO;
 
-
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
-import org.bukkit.Bukkit;
+import org.bukkit.map.MapPalette;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.map.IMapCanvas;
 
-public class MapCanvasImpl implements IMapCanvas
+class MapCanvasImpl implements IMapCanvas
 {
     private static final int SINGLE_MAP_SIDE = 128;
     private final int xSize, ySize;
@@ -45,18 +51,34 @@ public class MapCanvasImpl implements IMapCanvas
     }
 
     @Override
-    public int size()
-    {
-        return 0;
-    }
-
-    @Override
     public void setPixel(final int x, final int y, final byte color)
     {
         if (x < 0 || y < 0 || x >= this.xSize || y >= this.ySize)
             return;
 
-        this.buffer[y * this.ySize + x] = color;
+        this.buffer[this.calculateIndex(x, y)] = color;
+    }
+
+    @Override
+    public void putImage(final int modifierX, final int modifierY, final BufferedImage image)
+    {
+        final int width = image.getWidth();
+        final int height = image.getHeight();
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                final byte color = (byte) MapColor.find(new Color(image.getRGB(x, y), true));
+                this.setPixel(modifierX + x, modifierY + y, color);
+            }
+        }
+    }
+
+    @Override
+    public byte getPixel(final int x, final int y)
+    {
+        return this.buffer[this.calculateIndex(x, y)];
     }
 
     @Override
@@ -71,26 +93,53 @@ public class MapCanvasImpl implements IMapCanvas
         final byte[] subMap = new byte[SINGLE_MAP_SIDE * SINGLE_MAP_SIDE];
 
         // szukamy punktu poczatkowego skad zaczynamy kopiowac
-        final int startPoint = this.ySize * 128 * yMap + 64 * xMap;
+        final int startPoint = this.calculateIndex(xMap * 128, yMap * 128);
 
-        Bukkit.broadcastMessage(format("xMap={0},yMap={1}  startPoint={2}", xMap, yMap, startPoint));
-
-
-        for (int lines = 0, destLoc = 0; lines < 128; lines++, destLoc += 128)
+        for (int lines = 0, destLoc = 0; lines < SINGLE_MAP_SIDE; lines++, destLoc += SINGLE_MAP_SIDE)
         {
-            // szukamy startu aktualnej linijki.
-            // kazda linijka ma 128 pixele, pie
-            final int currentLineStart = startPoint + (lines * this.ySize);
-            Bukkit.broadcastMessage(format("currentLineStart={0}", currentLineStart));
-            System.arraycopy(this.buffer, currentLineStart, subMap, destLoc, 128);
+            // szukamy startu aktualnej linijki. kazda linijka ma 128 pixele
+            final int currentLineStart = startPoint + (lines * this.xSize);
+            System.arraycopy(this.buffer, currentLineStart, subMap, destLoc, SINGLE_MAP_SIDE);
         }
 
         return new MapCanvasImpl(SINGLE_MAP_SIDE, SINGLE_MAP_SIDE, subMap);
     }
 
     @Override
+    public void writeDebugImage(final File location)
+    {
+        final BufferedImage image = new BufferedImage(this.xSize, this.ySize, BufferedImage.TYPE_INT_RGB);
+        for (int x = 0; x < this.xSize; x++)
+        {
+            for (int y = 0; y < this.ySize; y++)
+            {
+                image.setRGB(x, y, MapPalette.getColor(this.getPixel(x, y)).getRGB());
+            }
+        }
+        try
+        {
+            ImageIO.write(image, "png", location);
+        }
+        catch (final IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public boolean equals(final IMapCanvas other)
     {
         return Arrays.equals(this.buffer, other.getBytes());
+    }
+
+    private int calculateIndex(final int x, final int y)
+    {
+        return y * this.xSize + x;
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("xSize", this.xSize).append("ySize", this.ySize).toString();
     }
 }

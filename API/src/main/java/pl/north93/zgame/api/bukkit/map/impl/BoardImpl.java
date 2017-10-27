@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import pl.north93.zgame.api.bukkit.map.IBoard;
 import pl.north93.zgame.api.bukkit.map.IMapRenderer;
 
-public class BoardImpl implements IBoard
+class BoardImpl implements IBoard
 {
     private final MapController mapController;
     private final int width, height;

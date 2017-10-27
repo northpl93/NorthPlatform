@@ -18,7 +18,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import javafx.collections.ObservableMap;
 import pl.north93.zgame.api.bukkit.map.IMap;
 
-public class MapImpl implements IMap
+class MapImpl implements IMap
 {
     private final MapController controller;
     private final BoardImpl     board;
@@ -54,8 +54,8 @@ public class MapImpl implements IMap
      * Sprawdza czy ta mapa jest sledzona przez podanego gracza.
      * Inaczej mowiac czy jest w zasiegu danego gracza.
      *
-     * @param player
-     * @return
+     * @param player Gracz ktorego sprawdzamy.
+     * @return True jesli mapa jest widoczna u danego gracza.
      */
     public boolean isTrackedBy(final Player player)
     {
