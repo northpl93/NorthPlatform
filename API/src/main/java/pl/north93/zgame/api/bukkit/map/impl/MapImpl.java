@@ -5,10 +5,14 @@ import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.observeT
 import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.toNmsEntity;
 
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 import net.minecraft.server.v1_10_R1.EntityPlayer;
 import net.minecraft.server.v1_10_R1.EntityTrackerEntry;
 
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 
@@ -59,7 +63,7 @@ class MapImpl implements IMap
      */
     public boolean isTrackedBy(final Player player)
     {
-        final EntityTrackerEntry trackerEntry = getTrackerEntry(toNmsEntity(player));
+        final EntityTrackerEntry trackerEntry = getTrackerEntry(toNmsEntity(this.itemFrame));
         for (final EntityPlayer trackedPlayer : trackerEntry.trackedPlayers)
         {
             if (trackedPlayer.getBukkitEntity() == player)
@@ -70,10 +74,27 @@ class MapImpl implements IMap
         return false;
     }
 
+    /**
+     * Zwraca liste graczy sledzacych ta mape.
+     *
+     * @return lista graczy sledzacych ta mape.
+     */
+    public Collection<Player> getTrackingPlayers()
+    {
+        final EntityTrackerEntry trackerEntry = getTrackerEntry(toNmsEntity(this.itemFrame));
+        return trackerEntry.trackedPlayers.stream().map(EntityPlayer::getBukkitEntity).collect(Collectors.toSet());
+    }
+
     private void setupTracker()
     {
         final ObservableMap<EntityPlayer, Boolean> tracker = observeTracker(toNmsEntity(this.itemFrame));
         tracker.addListener(this.controller.trackerListener(this));
+
+        // renderujemy mape wszystkim juz obecnym graczom
+        for (final Player player : this.getTrackingPlayers())
+        {
+            this.controller.handlePlayerEnter(this, (CraftPlayer) player);
+        }
     }
 
     @Override

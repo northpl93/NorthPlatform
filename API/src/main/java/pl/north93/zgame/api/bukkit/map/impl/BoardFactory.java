@@ -1,10 +1,13 @@
 package pl.north93.zgame.api.bukkit.map.impl;
 
+import javax.annotation.Nullable;
+
 import java.util.function.Consumer;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemFrame;
 
@@ -46,8 +49,6 @@ final class BoardFactory
             int itemFrameY = Math.abs(maxY - location.getBlockY());
 
             maps[itemFrameX][itemFrameY] = createMap(board, location);
-            //Bukkit.broadcastMessage(format("x={0},y={1},z={2}", location.getX(), location.getY(), location.getZ()));
-            //Bukkit.broadcastMessage(format("itemFrameX={0},itemFrameY={1}  x={2},y={3},z={4}", itemFrameX, itemFrameY, location.getX(), location.getY(), location.getZ()));
         });
 
         return board;
@@ -58,8 +59,26 @@ final class BoardFactory
         final World world = location.getWorld();
         world.getBlockAt(location).setType(Material.AIR);
 
-        final ItemFrame itemFrame = (ItemFrame) world.spawnEntity(location, EntityType.ITEM_FRAME);
+        ItemFrame itemFrame = getFrameAt(location);
+        if (itemFrame == null)
+        {
+            itemFrame = (ItemFrame) world.spawnEntity(location, EntityType.ITEM_FRAME);
+        }
+
         return new MapImpl(mapController, board, itemFrame);
+    }
+
+    private static @Nullable ItemFrame getFrameAt(final Location loc)
+    {
+        final Location frameLocation = new Location(loc.getWorld(), loc.getBlockX() + 0.5, loc.getBlockY() + 0.5, loc.getZ() + 0.5);
+        for (final Entity entity : frameLocation.getWorld().getNearbyEntities(frameLocation, 0.5, 0.5, 0.5))
+        {
+            if (entity instanceof ItemFrame)
+            {
+                return (ItemFrame) entity;
+            }
+        }
+        return null;
     }
 
     private static void walkWall(final Location loc1, final Location loc2, final Consumer<Location> locationConsumer)

@@ -72,9 +72,11 @@ public class DupaTest extends NorthCommand
             {
                 try
                 {
+                    Bukkit.broadcastMessage("renderer started");
                     final BufferedImage read = ImageIO.read(new File("C:\\Users\\Michał\\Desktop\\Ranking_demo2.png"));
                     canvas.putImage(0, 0, read);
                     canvas.writeDebugImage(new File("C:\\Users\\Michał\\Desktop\\test.png"));
+                    Bukkit.broadcastMessage("renderer ended");
                 }
                 catch (IOException e)
                 {

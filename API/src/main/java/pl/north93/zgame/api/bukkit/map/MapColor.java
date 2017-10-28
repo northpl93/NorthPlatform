@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.bukkit.map.impl;
+package pl.north93.zgame.api.bukkit.map;
 
 import java.awt.*;
 
@@ -7,18 +7,17 @@ import gnu.trove.map.hash.TCharIntHashMap;
 
 /**
  * Klasa mapujaca kolor RGB na minecraftowy kolor mapy.
- *
+ * <p>
  * Skopiowane z:
  * /PluginUtils/src/main/java/pl/rafsze/utils/bukkit/gui/map
  */
-class MapColor {
-
+public class MapColor
+{
     private static final Color[] colors;
 
-    static {
-
-        final Color[] baseColors = new Color[] {
-
+    static
+    {
+        final Color[] baseColors = new Color[]{
                 new Color(0, 0, 0, 0),
                 new Color(127, 178, 56),
                 new Color(247, 233, 163),
@@ -59,7 +58,8 @@ class MapColor {
 
         colors = new Color[baseColors.length * 4];
 
-        for ( int i = 0; i < baseColors.length; i++ ) {
+        for (int i = 0; i < baseColors.length; i++)
+        {
 
             Color base = baseColors[i];
             colors[i * 4 + 0] = new Color(base.getRed() * 180 / 255, base.getGreen() * 180 / 255, base.getBlue() * 180 / 255);
@@ -72,27 +72,27 @@ class MapColor {
     public static final int TRANSPARENT = 0;
 
     // Chat colors constants
-    public static final int BLACK = find(new Color(0, 0, 0));
-    public static final int DARK_BLUE = find(new Color(0, 0, 170));
-    public static final int DARK_GREEN = find(new Color(0, 170, 0));
-    public static final int DARK_AQUA = find(new Color(0, 170, 170));
-    public static final int DARK_RED = find(new Color(170, 0, 0));
-    public static final int DARK_PURPLE = find(new Color(170, 0, 170));
-    public static final int GOLD = find(new Color(255, 128, 0));
-    public static final int GRAY = find(new Color(170, 170, 170));
-    public static final int DARK_GRAY = find(new Color(85, 85, 85));
-    public static final int BLUE = find(new Color(64, 96, 255));
-    public static final int GREEN = find(new Color(0, 255, 0));
-    public static final int AQUA = find(new Color(0, 255, 255));
-    public static final int RED = find(new Color(255, 0, 0));
+    public static final int BLACK        = find(new Color(0, 0, 0));
+    public static final int DARK_BLUE    = find(new Color(0, 0, 170));
+    public static final int DARK_GREEN   = find(new Color(0, 170, 0));
+    public static final int DARK_AQUA    = find(new Color(0, 170, 170));
+    public static final int DARK_RED     = find(new Color(170, 0, 0));
+    public static final int DARK_PURPLE  = find(new Color(170, 0, 170));
+    public static final int GOLD         = find(new Color(255, 128, 0));
+    public static final int GRAY         = find(new Color(170, 170, 170));
+    public static final int DARK_GRAY    = find(new Color(85, 85, 85));
+    public static final int BLUE         = find(new Color(64, 96, 255));
+    public static final int GREEN        = find(new Color(0, 255, 0));
+    public static final int AQUA         = find(new Color(0, 255, 255));
+    public static final int RED          = find(new Color(255, 0, 0));
     public static final int LIGHT_PURPLE = find(new Color(255, 0, 255));
-    public static final int YELLOW = find(new Color(255, 255, 0));
-    public static final int WHITE = find(new Color(255, 255, 255));
+    public static final int YELLOW       = find(new Color(255, 255, 0));
+    public static final int WHITE        = find(new Color(255, 255, 255));
 
-    private static final TCharIntMap byChatCode = new TCharIntHashMap(32, 0.5f, '\0', -1);
+    private static final TCharIntMap byChatCode = new TCharIntHashMap(32, 0.5f, '\0', - 1);
 
-    static {
-
+    static
+    {
         byChatCode.put('0', BLACK);
         byChatCode.put('1', DARK_BLUE);
         byChatCode.put('2', DARK_GREEN);
@@ -117,28 +117,28 @@ class MapColor {
         byChatCode.put('F', WHITE);
     }
 
-    public static int byChatCode(char code) {
-
+    public static int byChatCode(char code)
+    {
         return byChatCode.get(code);
     }
 
-    public static int find(Color color) {
-
-        if ( color.getAlpha() < 128 ) {
-
+    public static int find(Color color)
+    {
+        if (color.getAlpha() < 128)
+        {
             return 0;
         }
 
         int result = 0;
         double distance = Double.MAX_VALUE;
 
-        for ( int i = 4; i < colors.length; i++ ) {
-
+        for (int i = 4; i < colors.length; i++)
+        {
             Color c = colors[i];
             double d = distance(color, c);
 
-            if ( d < distance ) {
-
+            if (d < distance)
+            {
                 distance = d;
                 result = i;
             }
@@ -147,9 +147,9 @@ class MapColor {
         return result;
     }
 
-    private static double distance(Color c1, Color c2) {
-
-        double ra = ( c1.getRed() + c2.getRed() ) / 2.0;
+    private static double distance(Color c1, Color c2)
+    {
+        double ra = (c1.getRed() + c2.getRed()) / 2.0;
 
         int rd = c1.getRed() - c2.getRed();
         int gd = c1.getGreen() - c2.getGreen();

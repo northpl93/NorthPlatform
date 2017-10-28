@@ -100,6 +100,12 @@ class PlayerMapData
         this.mapping.put(map, container);
         return container;
     }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("player", this.player).append("mapping", this.mapping).append("latestId", this.latestId).toString();
+    }
 }
 
 final class MapContainer

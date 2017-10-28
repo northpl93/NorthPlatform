@@ -4,12 +4,16 @@ import java.util.List;
 
 import net.minecraft.server.v1_10_R1.EntityPlayer;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import io.netty.channel.Channel;
 import javafx.collections.MapChangeListener;
@@ -22,13 +26,16 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 class MapController
 {
     @Inject
-    private BukkitApiCore   apiCore;
+    private BukkitApiCore     apiCore;
     @Inject
-    private IBukkitExecutor bukkitExecutor;
+    private IBukkitExecutor   bukkitExecutor;
+
+    private final RendererScheduler rendererScheduler;
 
     @Bean
     private MapController()
     {
+        this.rendererScheduler = new RendererScheduler(this);
     }
 
     public void handlePlayerEnter(final MapImpl map, final CraftPlayer player)
@@ -41,13 +48,18 @@ class MapController
 
         if (! playerMapData.hasAnyServerCanvas(map))
         {
-            // odpalamy rendering mapy i nie robimy dalej sprawdzen czy trzeba zaktualizowac
-            // bo trzeba na pewno
-            map.getBoard().renderFor(player);
+            final BoardImpl board = map.getBoard();
+            if (board.getRenderer() != null && ! this.rendererScheduler.isRendererScheduled(board, player))
+            {
+                // odpalamy rendering calej tablicy jesli renderer nie jest nullem
+                // i jeszcze nie zaplanowalismy renderowania
+                this.doRenderingFor(player, board);
+            }
+
+            // w obydwu przypadkach czekamy na zakonczenie renderowania
             return;
         }
-
-        if (playerMapData.isClientCanvasMatchesServer(map))
+        else if (playerMapData.isClientCanvasMatchesServer(map))
         {
             // canvas bedacy u klienta pasuje do tego na serwerze
             return;
@@ -68,8 +80,15 @@ class MapController
         channel.writeAndFlush(helper.complete());
     }
 
-    public void updateFullBoard(final Player player, final BoardImpl board, final MapCanvasImpl mapCanvas)
+    public void doRenderingFor(final Player player, final BoardImpl board)
     {
+        this.rendererScheduler.abortIfRenderingInProgress(board, player);
+        this.rendererScheduler.scheduleRenderer(player, board);
+    }
+
+    public void pushNewCanvasToBoardForPlayer(final Player player, final BoardImpl board, final MapCanvasImpl mapCanvas)
+    {
+        Bukkit.broadcastMessage("new canvas pushed to " + player.getName());
         final PlayerMapData playerMapData = this.getPlayerMapData(player);
 
         for (int i = 0; i < board.getWidth(); i++)
@@ -113,5 +132,11 @@ class MapController
                 this.handlePlayerEnter(map, player);
             }
         });
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

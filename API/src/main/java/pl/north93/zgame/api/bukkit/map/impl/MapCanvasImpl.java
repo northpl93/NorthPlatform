@@ -14,6 +14,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.map.IMapCanvas;
+import pl.north93.zgame.api.bukkit.map.MapColor;
 
 class MapCanvasImpl implements IMapCanvas
 {
@@ -76,6 +77,12 @@ class MapCanvasImpl implements IMapCanvas
     }
 
     @Override
+    public void fill(final byte color)
+    {
+        Arrays.fill(this.buffer, color);
+    }
+
+    @Override
     public byte getPixel(final int x, final int y)
     {
         return this.buffer[this.calculateIndex(x, y)];
@@ -126,10 +133,36 @@ class MapCanvasImpl implements IMapCanvas
         }
     }
 
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
-    public boolean equals(final IMapCanvas other)
+    protected Object clone() throws CloneNotSupportedException
     {
-        return Arrays.equals(this.buffer, other.getBytes());
+        final byte[] bytes = new byte[this.buffer.length];
+        System.arraycopy(this.buffer, 0, bytes, 0, this.buffer.length);
+
+        return new MapCanvasImpl(this.xSize, this.ySize, bytes);
+    }
+
+    @Override
+    public boolean equals(final Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass())
+        {
+            return false;
+        }
+
+        final MapCanvasImpl mapCanvas = (MapCanvasImpl) o;
+        return Arrays.equals(this.buffer, mapCanvas.buffer);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Arrays.hashCode(this.buffer);
     }
 
     private int calculateIndex(final int x, final int y)

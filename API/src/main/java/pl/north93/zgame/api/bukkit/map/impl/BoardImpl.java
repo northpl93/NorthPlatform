@@ -1,5 +1,10 @@
 package pl.north93.zgame.api.bukkit.map.impl;
 
+import javax.annotation.Nullable;
+
+import java.util.Collection;
+import java.util.HashSet;
+
 import org.bukkit.entity.Player;
 
 import pl.north93.zgame.api.bukkit.map.IBoard;
@@ -33,10 +38,29 @@ class BoardImpl implements IBoard
     }
 
     @Override
+    public Collection<Player> getPlayersInRange()
+    {
+        final HashSet<Player> players = new HashSet<>();
+        for (final MapImpl[] yMaps : this.maps)
+        {
+            for (final MapImpl map : yMaps)
+            {
+                players.addAll(map.getTrackingPlayers());
+            }
+        }
+        return players;
+    }
+
+    @Override
     public void setRenderer(final IMapRenderer renderer)
     {
         this.renderer = renderer;
-        // todo force re-render?
+        this.getPlayersInRange().forEach(this::renderFor);
+    }
+
+    public @Nullable IMapRenderer getRenderer()
+    {
+        return this.renderer;
     }
 
     @Override
@@ -47,8 +71,6 @@ class BoardImpl implements IBoard
 
     public void renderFor(final Player player)
     {
-        final MapCanvasImpl canvas = MapCanvasImpl.createFromMaps(this.width, this.height);
-        this.renderer.render(canvas, player);
-        this.mapController.updateFullBoard(player, this, canvas);
+        this.mapController.doRenderingFor(player, this);
     }
 }
