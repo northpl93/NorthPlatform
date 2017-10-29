@@ -20,7 +20,7 @@ import pl.arieals.skyblock.quests.server.api.IServerQuestsManager;
 import pl.arieals.skyblock.quests.shared.api.IQuest;
 import pl.arieals.skyblock.quests.shared.api.ITrackedStatistic;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.data.StorageConnector;
+import pl.north93.zgame.api.global.storage.StorageConnector;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 
 public class ServerQuestsManagerImpl implements IServerQuestsManager

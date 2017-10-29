@@ -11,7 +11,7 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.data.StorageConnector;
+import pl.north93.zgame.api.global.storage.StorageConnector;
 
 public class UnbanAll extends NorthCommand
 {

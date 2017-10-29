@@ -4,8 +4,7 @@ components:
     mainClass: "pl.north93.zgame.api.bukkit.server.impl.BukkitServerManagerImpl"
     description: "Core component that manages the server instance."
     dependencies:
-      - API.Database.Redis.Observer
-      - API.Database.Redis.RPC
+      - API.MinecraftNetwork.NetworkManager
     platforms:
       - BUKKIT
 

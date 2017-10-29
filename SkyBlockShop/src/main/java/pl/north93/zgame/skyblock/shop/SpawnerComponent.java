@@ -1,7 +1,7 @@
 package pl.north93.zgame.skyblock.shop;
 
 
-import static pl.north93.zgame.api.global.cfg.ConfigUtils.loadConfigFile;
+import static pl.north93.zgame.api.global.utils.ConfigUtils.loadConfigFile;
 
 
 import java.io.File;

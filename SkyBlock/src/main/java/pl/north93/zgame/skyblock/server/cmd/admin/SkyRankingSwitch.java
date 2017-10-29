@@ -8,8 +8,7 @@ import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 
@@ -35,33 +34,32 @@ public class SkyRankingSwitch extends NorthCommand
             sender.sendRawMessage("&c/skyrankingswitch <nick> - wlacza/wylacza ranking dla wyspy danego usera");
             return;
         }
-        final String target = args.asString(0);
-        final SkyPlayer skyPlayer;
-        final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getPlayers().unsafe().getOnline(target);
-        if (onlinePlayer.isAvailable())
-        {
-            skyPlayer = SkyPlayer.get(onlinePlayer);
-        }
-        else
-        {
-            skyPlayer = SkyPlayer.get(this.networkManager.getPlayers().unsafe().getOffline(target));
-        }
 
-        if (! skyPlayer.hasIsland())
+        final String targetNick = args.asString(0);
+        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(targetNick))
         {
-            sender.sendRawMessage("&cUzytkownik " + target + " nie ma wyspy!");
-            return;
-        }
+            final SkyPlayer skyPlayer = SkyPlayer.get(t.getPlayer());
 
-        final Boolean newRanking = ! this.server.getIslandDao().getIsland(skyPlayer.getIslandId()).getShowInRanking();
-        this.server.getSkyBlockManager().setShowInRanking(skyPlayer.getIslandId(), newRanking);
-        if (newRanking)
-        {
-            sender.sendRawMessage("&cWyspa uzytkownika " + target + " zostala dodana do rankingu.");
+            if (! skyPlayer.hasIsland())
+            {
+                sender.sendRawMessage("&cUzytkownik " + targetNick + " nie ma wyspy!");
+                return;
+            }
+
+            final Boolean newRanking = ! this.server.getIslandDao().getIsland(skyPlayer.getIslandId()).getShowInRanking();
+            this.server.getSkyBlockManager().setShowInRanking(skyPlayer.getIslandId(), newRanking);
+            if (newRanking)
+            {
+                sender.sendRawMessage("&cWyspa uzytkownika " + targetNick + " zostala dodana do rankingu.");
+            }
+            else
+            {
+                sender.sendRawMessage("&cWyspa uzytkownika " + targetNick + " zostala usunieta z rankingu.");
+            }
         }
-        else
+        catch (final Exception e)
         {
-            sender.sendRawMessage("&cWyspa uzytkownika " + target + " zostala usunieta z rankingu.");
+            e.printStackTrace();
         }
     }
 

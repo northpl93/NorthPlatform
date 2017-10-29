@@ -12,7 +12,6 @@ import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
@@ -31,18 +30,20 @@ class PlayersManagerImpl implements IPlayersManager
 {
     /*default*/ static PlayersManagerImpl INSTANCE;
     private final NetworkManager      networkManager;
-    private final IPlayersData        playersData;
+    private final PlayerCacheImpl     playerCache;
+    private final PlayersDataManager  playersDataManager;
     private final IObservationManager observer;
     private final IRpcManager         rpcManager;
     private final Unsafe              unsafe;
 
-    public PlayersManagerImpl(final NetworkManager networkManager, final IPlayersData playersData, final IObservationManager observer, final IRpcManager rpcManager)
+    public PlayersManagerImpl(final NetworkManager networkManager, final IObservationManager observer, final IRpcManager rpcManager)
     {
         INSTANCE = this;
         this.rpcManager = rpcManager;
         this.networkManager = networkManager;
-        this.playersData = playersData;
         this.observer = observer;
+        this.playerCache = new PlayerCacheImpl();
+        this.playersDataManager = new PlayersDataManager(this);
         this.unsafe = new PlayersManagerUnsafeImpl();
     }
 
@@ -60,7 +61,7 @@ class PlayersManagerImpl implements IPlayersManager
     {
         Preconditions.checkNotNull(playerId);
 
-        return this.playersData.uuidToUsername(playerId);
+        return this.playersDataManager.uuidToUsername(playerId);
     }
 
     @Override
@@ -68,7 +69,7 @@ class PlayersManagerImpl implements IPlayersManager
     {
         Preconditions.checkNotNull(nick);
 
-        return this.playersData.usernameToUuid(nick);
+        return this.playersDataManager.usernameToUuid(nick);
     }
 
     @Override
@@ -114,7 +115,7 @@ class PlayersManagerImpl implements IPlayersManager
             onlinePlayerValue.unlock();
         }
 
-        final Value<IOfflinePlayer> offlinePlayerValue = this.playersData.getOfflinePlayerValue(identity.getUuid());
+        final Value<IOfflinePlayer> offlinePlayerValue = this.playersDataManager.getOfflinePlayerValue(identity.getUuid());
         if (offlinePlayerValue == null)
         {
             return false;
@@ -127,7 +128,7 @@ class PlayersManagerImpl implements IPlayersManager
             if (player != null)
             {
                 modifierOffline.accept(player);
-                this.playersData.savePlayer(player);
+                this.playersDataManager.savePlayer(player);
                 return true;
             }
         }
@@ -165,7 +166,7 @@ class PlayersManagerImpl implements IPlayersManager
         final Identity completeIdentity = this.completeIdentity(identity);
 
         final Value<IOnlinePlayer> onlinePlayer = this.onlinePlayerValue(completeIdentity.getNick());
-        final Value<IOfflinePlayer> offlinePlayer = this.playersData.getOfflinePlayerValue(completeIdentity.getUuid());
+        final Value<IOfflinePlayer> offlinePlayer = this.playersDataManager.getOfflinePlayerValue(completeIdentity.getUuid());
 
         final Lock lock = this.getMultiLock(onlinePlayer, offlinePlayer);
         lock.lock();
@@ -179,11 +180,17 @@ class PlayersManagerImpl implements IPlayersManager
         }
         if (offlinePlayer.isAvailable())
         {
-            return new PlayerTransactionImpl(offlinePlayer, lock, this.playersData::savePlayer);
+            return new PlayerTransactionImpl(offlinePlayer, lock, this.playersDataManager::savePlayer);
         }
 
         lock.unlock();
         throw new PlayerNotFoundException(completeIdentity.getNick());
+    }
+
+    @Override
+    public IPlayerCache getCache()
+    {
+        return this.playerCache;
     }
 
     @Override
@@ -223,14 +230,20 @@ class PlayersManagerImpl implements IPlayersManager
         @Override
         public IOfflinePlayer getOffline(final String nick)
         {
-            return PlayersManagerImpl.this.playersData.getOfflinePlayer(nick);
+            return PlayersManagerImpl.this.playersDataManager.getOfflinePlayer(nick);
         }
 
         @Override
         public IOfflinePlayer getOffline(final UUID uuid)
         {
-            return PlayersManagerImpl.this.playersData.getOfflinePlayer(uuid);
+            return PlayersManagerImpl.this.playersDataManager.getOfflinePlayer(uuid);
         }
+    }
+
+    @Override
+    public IPlayersDataManager getInternalData()
+    {
+        return this.playersDataManager;
     }
 
     private Value<IOnlinePlayer> onlinePlayerValue(final UUID uuid)

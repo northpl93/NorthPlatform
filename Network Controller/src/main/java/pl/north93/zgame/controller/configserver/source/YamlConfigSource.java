@@ -5,7 +5,7 @@ import java.io.File;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.cfg.ConfigUtils;
+import pl.north93.zgame.api.global.utils.ConfigUtils;
 
 public class YamlConfigSource<T> implements IConfigSource<T>
 {

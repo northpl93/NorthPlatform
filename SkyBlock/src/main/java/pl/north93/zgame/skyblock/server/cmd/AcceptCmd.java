@@ -10,11 +10,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
-import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
-import pl.north93.zgame.skyblock.shared.api.player.SkyPlayer;
 
 public class AcceptCmd extends NorthCommand
 {
@@ -56,18 +52,6 @@ public class AcceptCmd extends NorthCommand
 
     private UUID islandIdFromOwnerName(final String owner)
     {
-        final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getPlayers().unsafe().getOnline(owner);
-        if (onlinePlayer.isAvailable())
-        {
-            return SkyPlayer.get(onlinePlayer).getIslandId();
-        }
-
-        final IOfflinePlayer offlinePlayer = this.networkManager.getPlayers().unsafe().getOffline(owner);
-        if (offlinePlayer != null)
-        {
-            return SkyPlayer.get(offlinePlayer).getIslandId();
-        }
-
-        return null;
+        return this.networkManager.getPlayers().getUuidFromNick(owner);
     }
 }

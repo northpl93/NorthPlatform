@@ -28,9 +28,6 @@ import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 import pl.north93.zgame.api.bungee.BungeeApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.data.UsernameCache.UsernameDetails;
-import pl.north93.zgame.api.global.data.players.IPlayersData;
-import pl.north93.zgame.api.global.data.players.impl.NameSizeMistakeException;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.metadata.MetaKey;
@@ -41,6 +38,8 @@ import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.Identity;
+import pl.north93.zgame.api.global.network.players.NameSizeMistakeException;
+import pl.north93.zgame.api.global.network.players.UsernameDetails;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class PlayerListener implements Listener
@@ -51,8 +50,6 @@ public class PlayerListener implements Listener
     private BungeeApiCore   bungeeApiCore;
     @Inject @Messages("Messages")
     private MessagesBox     apiMessages;
-    @Inject
-    private IPlayersData    playersDao;
     @Inject
     private INetworkManager networkManager;
 
@@ -74,7 +71,7 @@ public class PlayerListener implements Listener
                     return;
                 }
 
-                final Optional<UsernameDetails> details = this.bungeeApiCore.getUsernameCache().getUsernameDetails(nick);
+                final Optional<UsernameDetails> details = this.networkManager.getPlayers().getCache().getNickDetails(nick);
 
                 if (! details.isPresent())
                 {
@@ -122,8 +119,11 @@ public class PlayerListener implements Listener
                 final Value<OnlinePlayerImpl> player;
                 try
                 {
-                    player = this.playersDao.loadPlayer(conn.getUniqueId(), conn.getName(), conn.isOnlineMode(), this.bungeeApiCore.getProxyConfig().getUniqueName());
-                    player.expire(5);
+                    final IPlayersManager.IPlayersDataManager dataManager = this.networkManager.getPlayers().getInternalData();
+                    final String proxyName = this.bungeeApiCore.getProxyConfig().getUniqueName();
+
+                    player = dataManager.loadPlayer(conn.getUniqueId(), conn.getName(), conn.isOnlineMode(), proxyName);
+                    player.expire(5); // po 5 sekundach logowanie wygasnie
                 }
                 catch (final NameSizeMistakeException e)
                 {
@@ -184,7 +184,7 @@ public class PlayerListener implements Listener
                 }
 
                 final String hostAddress = conn.getAddress().getHostString();
-                this.playersDao.logPlayerJoin(cache.getUuid(), cache.getNick(), cache.isPremium(), hostAddress, cache.getProxyId());
+                this.networkManager.getPlayers().getInternalData().logPlayerJoin(cache.getUuid(), cache.getNick(), cache.isPremium(), hostAddress, cache.getProxyId());
             }
             finally
             {
@@ -213,7 +213,7 @@ public class PlayerListener implements Listener
                 this.bungeeApiCore.getLogger().warning("onlinePlayer==null in onLeave. " + event);
                 return;
             }
-            this.playersDao.savePlayer(onlinePlayer);
+            this.networkManager.getPlayers().getInternalData().savePlayer(onlinePlayer);
             player.delete();
         }
         finally

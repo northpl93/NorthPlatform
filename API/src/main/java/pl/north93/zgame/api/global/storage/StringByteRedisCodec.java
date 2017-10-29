@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.data;
+package pl.north93.zgame.api.global.storage;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;

@@ -1,9 +1,7 @@
-package pl.north93.zgame.api.global.data;
+package pl.north93.zgame.api.global.network.impl;
 
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
-
-import static org.diorite.utils.DioriteUtils.getCrackedUuid;
 
 
 import java.io.IOException;
@@ -26,15 +24,17 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.Document;
 
-import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.storage.StorageConnector;
+import pl.north93.zgame.api.global.network.players.IPlayersManager;
+import pl.north93.zgame.api.global.network.players.UsernameDetails;
 import pl.north93.zgame.api.global.redis.observable.Cache;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 
-public class UsernameCache extends Component
+class PlayerCacheImpl implements IPlayersManager.IPlayerCache
 {
-    private final JsonParser               json = new JsonParser();
+    private final JsonParser json = new JsonParser();
     @Inject
     private StorageConnector               storage;
     @Inject
@@ -42,8 +42,7 @@ public class UsernameCache extends Component
     private Cache<String, UsernameDetails> localCache;
     private MongoCollection<Document>      mongoCache;
 
-    @Override
-    protected void enableComponent()
+    public PlayerCacheImpl()
     {
         this.mongoCache = this.storage.getMainDatabase().getCollection("username_cache");
         this.localCache = this.observationManager.cacheBuilder(String.class, UsernameDetails.class)
@@ -55,62 +54,9 @@ public class UsernameCache extends Component
     }
 
     @Override
-    protected void disableComponent()
+    public Optional<UsernameDetails> getNickDetails(final String username)
     {
-    }
-
-    public static class UsernameDetails
-    {
-        private String  validSpelling;
-        private UUID    uuid;
-        private Boolean isPremium;
-        private Date    fetchTime;
-
-        public UsernameDetails() // serialization
-        {
-        }
-
-        public UsernameDetails(final String validSpelling, final Boolean isPremium, final Date fetchTime)
-        {
-            this.validSpelling = validSpelling;
-            this.uuid = getCrackedUuid(validSpelling);
-            this.isPremium = isPremium;
-            this.fetchTime = fetchTime;
-        }
-
-        public UsernameDetails(final String validSpelling, final UUID uuid, final boolean isPremium, final Date fetchTime)
-        {
-            this.validSpelling = validSpelling;
-            this.uuid = uuid;
-            this.isPremium = isPremium;
-            this.fetchTime = fetchTime;
-        }
-
-        public String getValidSpelling()
-        {
-            return this.validSpelling;
-        }
-
-        public UUID getUuid()
-        {
-            return this.uuid;
-        }
-
-        public boolean isPremium()
-        {
-            return this.isPremium;
-        }
-
-        public Date getFetchTime()
-        {
-            return this.fetchTime;
-        }
-
-        @Override
-        public String toString()
-        {
-            return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("validSpelling", this.validSpelling).append("isPremium", this.isPremium).toString();
-        }
+        return Optional.ofNullable(this.localCache.get(username.toLowerCase(Locale.ENGLISH)));
     }
 
     private UsernameDetails fillCache(final String username)
@@ -125,21 +71,21 @@ public class UsernameCache extends Component
             {
                 return new UsernameDetails(results.getString("validSpelling"), results.get("uuid", UUID.class), true, fetchTime);
             }
-            return new UsernameDetails(username, false, fetchTime);
+            return new UsernameDetails(username, fetchTime);
         }
 
-        final Optional<UsernameDetails> usernameDetails = this.queryMojangApi(username);
+        final Optional<UsernameDetails> usernameDetails = this.queryMojangForProfileByUsername(username);
         if (usernameDetails.isPresent())
         {
             final UsernameDetails fromMojang = usernameDetails.get();
             final Document document = new Document();
-            document.put("validSpelling", fromMojang.validSpelling);
-            if (fromMojang.isPremium)
+            document.put("validSpelling", fromMojang.getValidSpelling());
+            if (fromMojang.isPremium())
             {
-                document.put("uuid", fromMojang.uuid);
+                document.put("uuid", fromMojang.getUuid());
             }
-            document.put("isPremium", fromMojang.isPremium);
-            document.put("fetchTime", fromMojang.fetchTime);
+            document.put("isPremium", fromMojang.isPremium());
+            document.put("fetchTime", fromMojang.getFetchTime());
             this.mongoCache.updateOne(new Document("validSpelling", usernamePattern), new Document("$set", document), new UpdateOptions().upsert(true));
             return fromMojang;
         }
@@ -147,14 +93,14 @@ public class UsernameCache extends Component
         return null;
     }
 
-    private Optional<UsernameDetails> queryMojangApi(final String username)
+    private Optional<UsernameDetails> queryMojangForProfileByUsername(final String username)
     {
         try
         {
             final String response = IOUtils.toString(new URL("https://api.mojang.com/users/profiles/minecraft/" + username));
             if (StringUtils.isEmpty(response))
             {
-                return Optional.of(new UsernameDetails(username, false, new Date()));
+                return Optional.of(new UsernameDetails(username, new Date()));
             }
             final JsonObject jsonObject = this.json.parse(response).getAsJsonObject();
 
@@ -172,14 +118,9 @@ public class UsernameCache extends Component
         }
     }
 
-    public Optional<UsernameDetails> getUsernameDetails(final String username)
-    {
-        return Optional.ofNullable(this.localCache.get(username.toLowerCase(Locale.ENGLISH)));
-    }
-
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("localCache", this.localCache).append("json", this.json).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

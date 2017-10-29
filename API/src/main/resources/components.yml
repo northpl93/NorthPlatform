@@ -24,7 +24,7 @@ components:
     description: "Unified system for inter-component communication."
 
   - name: API.Database.StorageConnector
-    mainClass: "pl.north93.zgame.api.global.data.StorageConnector"
+    mainClass: "pl.north93.zgame.api.global.storage.StorageConnector"
     description: "Provides connection with Redis and MongoDB databases."
 
   - name: API.Database.Redis.MessagePackSerializer
@@ -68,13 +68,6 @@ components:
       - API.Database.Redis.Observer
       - API.Database.Redis.RPC
 
-  - name: API.MinecraftNetwork.UsernameCache
-    mainClass: "pl.north93.zgame.api.global.data.UsernameCache"
-    description: "Caches Mojang's API data."
-    dependencies:
-      - API.Database.StorageConnector
-      - API.Database.Redis.Observer
-
   - name: API.MinecraftNetwork.NetworkManager
     mainClass: "pl.north93.zgame.api.global.network.impl.NetworkManager"
     description: "Provides core functions to manage Minecraft's network."
@@ -86,20 +79,10 @@ components:
       - API.Database.Redis.Subscriber
       - API.Database.Redis.Observer
       - API.Database.Redis.RPC
-      - API.MinecraftNetwork.PlayersStorage
+      - API.MinecraftNetwork.PermissionsManager
 
   - name: API.MinecraftNetwork.PermissionsManager
     mainClass: "pl.north93.zgame.api.global.permissions.PermissionsManager"
     description: "Manages player's permissions."
     dependencies:
       - API.Config.Client
-
-  - name: API.MinecraftNetwork.PlayersStorage
-    mainClass: "pl.north93.zgame.api.global.data.players.impl.PlayersDataImpl"
-    description: "Manages player's data and provides api for loading it."
-    dependencies:
-      - API.Database.StorageConnector
-      - API.Database.Redis.MessagePackSerializer
-      - API.Database.Redis.Observer
-      - API.MinecraftNetwork.PermissionsManager
-      - API.MinecraftNetwork.UsernameCache

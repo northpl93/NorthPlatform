@@ -1,6 +1,6 @@
 package pl.north93.zgame.api.bungee;
 
-import static pl.north93.zgame.api.global.cfg.ConfigUtils.loadConfigFile;
+import static pl.north93.zgame.api.global.utils.ConfigUtils.loadConfigFile;
 import static pl.north93.zgame.api.global.redis.RedisKeys.PROXY_INSTANCE;
 
 

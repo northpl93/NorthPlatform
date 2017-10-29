@@ -1,6 +1,6 @@
 package pl.north93.zgame.webauth.controller;
 
-import static pl.north93.zgame.api.global.cfg.ConfigUtils.loadConfigFile;
+import static pl.north93.zgame.api.global.utils.ConfigUtils.loadConfigFile;
 
 
 import org.apache.commons.lang3.builder.ToStringBuilder;

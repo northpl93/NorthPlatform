@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.data.players.impl;
+package pl.north93.zgame.api.global.network.players;
 
 public class NameSizeMistakeException extends Exception
 {

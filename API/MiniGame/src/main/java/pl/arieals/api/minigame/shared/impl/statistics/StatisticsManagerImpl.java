@@ -21,7 +21,7 @@ import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.data.StorageConnector;
+import pl.north93.zgame.api.global.storage.StorageConnector;
 
 public class StatisticsManagerImpl implements IStatisticsManager
 {

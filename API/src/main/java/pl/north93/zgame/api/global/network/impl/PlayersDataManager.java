@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.data.players.impl;
+package pl.north93.zgame.api.global.network.impl;
 
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
@@ -15,45 +15,44 @@ import java.util.regex.Pattern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.UpdateOptions;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.Document;
 
-import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.data.StorageConnector;
-import pl.north93.zgame.api.global.data.UsernameCache;
-import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.metadata.MetaStore;
-import pl.north93.zgame.api.global.network.impl.OfflinePlayerImpl;
-import pl.north93.zgame.api.global.network.impl.OnlinePlayerImpl;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
+import pl.north93.zgame.api.global.network.players.IPlayersManager;
+import pl.north93.zgame.api.global.network.players.NameSizeMistakeException;
+import pl.north93.zgame.api.global.network.players.UsernameDetails;
 import pl.north93.zgame.api.global.permissions.Group;
 import pl.north93.zgame.api.global.permissions.PermissionsManager;
 import pl.north93.zgame.api.global.redis.observable.Cache;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.api.global.storage.StorageConnector;
 
-public class PlayersDataImpl extends Component implements IPlayersData
+class PlayersDataManager implements IPlayersManager.IPlayersDataManager
 {
+    private PlayersManagerImpl          playersManager;
     @Inject
-    private UsernameCache       usernameCache;
+    private StorageConnector            storageConnector;
     @Inject
-    private StorageConnector    storageConnector;
+    private PermissionsManager          permissionsManager;
     @Inject
-    private PermissionsManager  permissionsManager;
-    @Inject
-    private IObservationManager observationManager;
+    private IObservationManager         observationManager;
     // // // // // // // // // // // // // // //
     private Cache<UUID, String>         uuid2nick;
     private Cache<String, UUID>         nick2uuid;
     private Cache<UUID, IOfflinePlayer> offlinePlayersData;
 
-    @Override
-    protected void enableComponent()
+    public PlayersDataManager(final PlayersManagerImpl playersManager)
     {
+        this.playersManager = playersManager;
         this.uuid2nick = this.observationManager.cacheBuilder(UUID.class, String.class)
                                                 .name("uuid2nick:")
                                                 .keyMapper(uuid -> new ObjectKey(uuid.toString()))
@@ -71,16 +70,6 @@ public class PlayersDataImpl extends Component implements IPlayersData
                                                          .keyMapper(uuid -> new ObjectKey(uuid.toString()))
                                                          .provider(this::loadOfflinePlayer)
                                                          .build();
-    }
-
-    @Override
-    protected void disableComponent()
-    {
-        if (this.getApiCore().getId().equals("controller"))
-        {
-            this.uuid2nick.clear();
-            this.nick2uuid.clear();
-        }
     }
 
     @Override
@@ -269,13 +258,11 @@ public class PlayersDataImpl extends Component implements IPlayersData
         database.updateOne(new Document("uuid", player.getUuid()), new Document("$set", playerData), new UpdateOptions().upsert(true));
     }
 
-    @Override
     public UUID usernameToUuid(final String username)
     {
         return this.nick2uuid.get(username.toLowerCase(Locale.ENGLISH));
     }
 
-    @Override
     public String uuidToUsername(final UUID playerUuid)
     {
         return this.uuid2nick.get(playerUuid);
@@ -283,10 +270,10 @@ public class PlayersDataImpl extends Component implements IPlayersData
 
     private UUID findUuidFromNick(final String nick)
     {
-        final Optional<UsernameCache.UsernameDetails> usernameDetails = this.usernameCache.getUsernameDetails(nick);
+        final Optional<UsernameDetails> usernameDetails = this.playersManager.getCache().getNickDetails(nick);
         if (usernameDetails.isPresent())
         {
-            final UsernameCache.UsernameDetails details = usernameDetails.get();
+            final UsernameDetails details = usernameDetails.get();
             if (details.isPremium())
             {
                 return details.getUuid();
@@ -312,5 +299,11 @@ public class PlayersDataImpl extends Component implements IPlayersData
             return result.getString("latestKnownUsername");
         }
         return null;
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

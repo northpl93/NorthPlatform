@@ -3,7 +3,6 @@ package pl.north93.zgame.skyblock.shared.api.player;
 import java.util.UUID;
 
 import pl.north93.zgame.api.global.metadata.MetaKey;
-import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
@@ -32,12 +31,6 @@ public abstract class SkyPlayer
     public static SkyPlayer get(final Value<IOnlinePlayer> onlinePlayer)
     {
         return new OnlineSkyPlayer(onlinePlayer);
-    }
-
-    @Deprecated
-    public static SkyPlayer get(final IOfflinePlayer offlinePlayer)
-    {
-        return new OfflineSkyPlayer(offlinePlayer);
     }
 
     public static SkyPlayer get(final IPlayer player)

@@ -18,7 +18,7 @@ import pl.north93.zgame.api.economy.ITransaction;
 import pl.north93.zgame.api.economy.impl.netcontroller.EconomyControllerComponent;
 import pl.north93.zgame.api.economy.impl.shared.EconomyManagerImpl;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.data.StorageConnector;
+import pl.north93.zgame.api.global.storage.StorageConnector;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.permissions.PermissionsManager;
 import pl.north93.zgame.itemshop.shared.DataEntry;

@@ -1,6 +1,6 @@
-package pl.north93.zgame.api.global.data;
+package pl.north93.zgame.api.global.storage;
 
-import static pl.north93.zgame.api.global.cfg.ConfigUtils.loadConfigFile;
+import static pl.north93.zgame.api.global.utils.ConfigUtils.loadConfigFile;
 
 
 import java.util.concurrent.TimeUnit;
@@ -20,7 +20,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.cfg.ConnectionConfig;
 import pl.north93.zgame.api.global.component.Component;
 
 public class StorageConnector extends Component

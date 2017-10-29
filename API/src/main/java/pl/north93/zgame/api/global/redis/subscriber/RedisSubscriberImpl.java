@@ -14,8 +14,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.data.StorageConnector;
-import pl.north93.zgame.api.global.data.StringByteRedisCodec;
+import pl.north93.zgame.api.global.storage.StorageConnector;
+import pl.north93.zgame.api.global.storage.StringByteRedisCodec;
 
 public class RedisSubscriberImpl extends Component implements RedisSubscriber
 {

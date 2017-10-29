@@ -9,8 +9,7 @@ import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.skyblock.server.SkyBlockServer;
 import pl.north93.zgame.skyblock.server.management.IslandHostManager;
 import pl.north93.zgame.skyblock.server.world.Island;
@@ -58,24 +57,23 @@ public class WtfIsland extends NorthCommand
         }
         else
         {
-            final SkyPlayer skyPlayer;
-            final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getPlayers().unsafe().getOnline(target);
-            if (onlinePlayer.isAvailable())
+            try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(target))
             {
-                skyPlayer = SkyPlayer.get(onlinePlayer);
-            }
-            else
-            {
-                skyPlayer = SkyPlayer.get(this.networkManager.getPlayers().unsafe().getOffline(target));
-            }
+                final SkyPlayer skyPlayer = SkyPlayer.get(t.getPlayer());
 
-            if (skyPlayer.hasIsland())
-            {
-                island = this.server.getIslandDao().getIsland(skyPlayer.getIslandId());
+                if (skyPlayer.hasIsland())
+                {
+                    island = this.server.getIslandDao().getIsland(skyPlayer.getIslandId());
+                }
+                else
+                {
+                    sender.sendRawMessage("&c" + target + " nie ma wyspy.");
+                    return;
+                }
             }
-            else
+            catch (final Exception e)
             {
-                sender.sendRawMessage("&c" + target + " nie ma wyspy.");
+                e.printStackTrace();
                 return;
             }
         }

@@ -28,4 +28,3 @@ components:
       - API.Database.StorageConnector
       - NetworkController.Core
       - API.MinecraftNetwork.NetworkManager
-      - API.MinecraftNetwork.PlayersStorage

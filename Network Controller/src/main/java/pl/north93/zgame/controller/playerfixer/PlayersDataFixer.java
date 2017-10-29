@@ -13,8 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.data.StorageConnector;
-import pl.north93.zgame.api.global.data.players.IPlayersData;
+import pl.north93.zgame.api.global.storage.StorageConnector;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
@@ -32,8 +31,6 @@ public class PlayersDataFixer extends Component implements Runnable
     private StorageConnector storage;
     @Inject
     private INetworkManager  networkManager;
-    @Inject
-    private IPlayersData     playersData;
 
     @Override
     protected void enableComponent()
@@ -79,7 +76,7 @@ public class PlayersDataFixer extends Component implements Runnable
             return;
         }
 
-        this.playersData.savePlayer(cache);
+        this.networkManager.getPlayers().getInternalData().savePlayer(cache);
         player.delete();
 
         final String msg = "[PlayersDataFixer] Flushed data of player {0} because he isn't online in bungee";

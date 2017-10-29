@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.cfg;
+package pl.north93.zgame.api.global.storage;
 
 import org.diorite.cfg.annotations.CfgComment;
 import org.diorite.cfg.annotations.CfgComments;

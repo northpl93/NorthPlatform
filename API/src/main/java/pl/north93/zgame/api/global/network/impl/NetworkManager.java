@@ -7,7 +7,6 @@ import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.config.IConfig;
 import pl.north93.zgame.api.global.config.NetConfig;
-import pl.north93.zgame.api.global.data.players.IPlayersData;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
 import pl.north93.zgame.api.global.network.NetworkMeta;
@@ -23,8 +22,6 @@ class NetworkManager extends Component implements INetworkManager
     private IObservationManager  observationManager;
     @Inject
     private IRpcManager          rpcManager;
-    @Inject
-    private IPlayersData         playersData;
     @Inject @NetConfig(type = NetworkMeta.class, id = "networkMeta")
     private IConfig<NetworkMeta> networkConfig;
     private ProxiesManagerImpl   proxiesManager;
@@ -38,7 +35,7 @@ class NetworkManager extends Component implements INetworkManager
         this.proxiesManager = new ProxiesManagerImpl(this.rpcManager, this.observationManager);
         this.daemonsManager = new DaemonsManagerImpl(this.rpcManager, this.observationManager);
         this.serversManager = new ServersManagerImpl(this.observationManager);
-        this.playersManager = new PlayersManagerImpl(this, this.playersData, this.observationManager, this.rpcManager);
+        this.playersManager = new PlayersManagerImpl(this, this.observationManager, this.rpcManager);
     }
 
     @Override

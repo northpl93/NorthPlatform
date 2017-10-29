@@ -1,6 +1,6 @@
 package pl.north93.zgame.restful.security;
 
-import static pl.north93.zgame.api.global.cfg.ConfigUtils.loadConfigFile;
+import static pl.north93.zgame.api.global.utils.ConfigUtils.loadConfigFile;
 import static spark.Spark.before;
 import static spark.Spark.halt;
 
