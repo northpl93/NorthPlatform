@@ -115,7 +115,7 @@ class PlayersManagerImpl implements IPlayersManager
             onlinePlayerValue.unlock();
         }
 
-        final Value<IOfflinePlayer> offlinePlayerValue = this.playersDataManager.getOfflinePlayerValue(identity.getUuid());
+        final Value<IOfflinePlayer> offlinePlayerValue = this.playersDataManager.getOfflinePlayerValue(completeIdentity.getUuid());
         if (offlinePlayerValue == null)
         {
             return false;
