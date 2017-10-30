@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemFrame;
@@ -56,13 +56,14 @@ final class BoardFactory
 
     private static MapImpl createMap(final BoardImpl board, final Location location)
     {
-        final World world = location.getWorld();
+        final CraftWorld world = (CraftWorld) location.getWorld();
         world.getBlockAt(location).setType(Material.AIR);
 
         ItemFrame itemFrame = getFrameAt(location);
         if (itemFrame == null)
         {
             itemFrame = (ItemFrame) world.spawnEntity(location, EntityType.ITEM_FRAME);
+            itemFrame.setInvulnerable(true);
         }
 
         return new MapImpl(mapController, board, itemFrame);

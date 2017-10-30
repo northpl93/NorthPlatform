@@ -1,9 +1,14 @@
 package pl.north93.zgame.api.bukkit.map.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Location;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.map.IMapManager;
 import pl.north93.zgame.api.global.component.Component;
@@ -11,6 +16,16 @@ import pl.north93.zgame.api.global.component.Component;
 public class MapManagerImpl extends Component implements IMapManager
 {
     private final List<BoardImpl> boards = new ArrayList<>();
+
+    @Override
+    protected void enableComponent()
+    {
+    }
+
+    @Override
+    protected void disableComponent()
+    {
+    }
 
     @Override
     public BoardImpl createBoard(final Location leftCorner, final Location rightCorner)
@@ -21,14 +36,14 @@ public class MapManagerImpl extends Component implements IMapManager
     }
 
     @Override
-    protected void enableComponent()
+    public Collection<BoardImpl> getBoards()
     {
-
+        return Collections.unmodifiableCollection(this.boards);
     }
 
     @Override
-    protected void disableComponent()
+    public String toString()
     {
-
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

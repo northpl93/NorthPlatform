@@ -2,6 +2,8 @@ package pl.north93.zgame.api.bukkit.map.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.common.base.Preconditions;
 
@@ -17,7 +19,9 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 class RendererScheduler
 {
     @Inject
-    private IBukkitExecutor          executor;
+    private Logger                         logger;
+    @Inject
+    private IBukkitExecutor                executor;
     private final MapController            mapController;
     private final List<InProgressRenderer> renderers = new ArrayList<>();
 
@@ -43,7 +47,14 @@ class RendererScheduler
         final BoardImpl board = inProgressRenderer.getBoard();
 
         final MapCanvasImpl canvas = MapCanvasImpl.createFromMaps(board.getWidth(), board.getHeight());
-        inProgressRenderer.getRenderer().render(canvas, player);
+        try
+        {
+            inProgressRenderer.getRenderer().render(canvas, player);
+        }
+        catch (final Exception e)
+        {
+            this.logger.log(Level.SEVERE, "An exception has been throw in map renderer", e);
+        }
 
         synchronized (this)
         {

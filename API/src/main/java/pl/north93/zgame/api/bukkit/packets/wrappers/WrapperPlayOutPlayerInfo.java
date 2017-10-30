@@ -19,7 +19,7 @@ import com.mojang.authlib.GameProfile;
  * PlayerInfoData. Dlatego recznie zdobywam jej konstruktor
  * przez MethodHandle i uzywam go w #addPlayerData.
  */
-public class WrapperPacketPlayOutPlayerInfo extends AbstractWrapper<PacketPlayOutPlayerInfo>
+public class WrapperPlayOutPlayerInfo extends AbstractWrapper<PacketPlayOutPlayerInfo>
 {
     private static final MethodHandle get_field_action = unreflectGetter(PacketPlayOutPlayerInfo.class, "a");
     private static final MethodHandle set_field_action = unreflectSetter(PacketPlayOutPlayerInfo.class, "a");
@@ -40,7 +40,7 @@ public class WrapperPacketPlayOutPlayerInfo extends AbstractWrapper<PacketPlayOu
         }
     }
 
-    public WrapperPacketPlayOutPlayerInfo(final PacketPlayOutPlayerInfo packet)
+    public WrapperPlayOutPlayerInfo(final PacketPlayOutPlayerInfo packet)
     {
         super(packet);
     }

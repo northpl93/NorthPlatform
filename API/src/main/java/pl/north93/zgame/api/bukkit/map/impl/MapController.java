@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.minecraft.server.v1_10_R1.EntityPlayer;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -88,7 +87,6 @@ class MapController
 
     public void pushNewCanvasToBoardForPlayer(final Player player, final BoardImpl board, final MapCanvasImpl mapCanvas)
     {
-        Bukkit.broadcastMessage("new canvas pushed to " + player.getName());
         final PlayerMapData playerMapData = this.getPlayerMapData(player);
 
         for (int i = 0; i < board.getWidth(); i++)

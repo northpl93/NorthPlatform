@@ -4,5 +4,5 @@ import org.bukkit.entity.Player;
 
 public interface IMapRenderer
 {
-    void render(IMapCanvas canvas, Player player);
+    void render(IMapCanvas canvas, Player player) throws Exception;
 }

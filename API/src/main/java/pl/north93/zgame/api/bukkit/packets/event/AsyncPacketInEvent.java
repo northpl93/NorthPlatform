@@ -39,6 +39,11 @@ public final class AsyncPacketInEvent extends Event implements Cancellable
         this.packet = packet;
     }
 
+    public boolean isType(final Class<? extends Packet> packetType)
+    {
+        return this.packet.getClass() == packetType;
+    }
+
     @Override
     public boolean isCancelled()
     {

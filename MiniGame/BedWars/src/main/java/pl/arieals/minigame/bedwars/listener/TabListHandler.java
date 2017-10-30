@@ -27,7 +27,7 @@ import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEv
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
-import pl.north93.zgame.api.bukkit.packets.wrappers.WrapperPacketPlayOutPlayerInfo;
+import pl.north93.zgame.api.bukkit.packets.wrappers.WrapperPlayOutPlayerInfo;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class TabListHandler implements Listener
@@ -89,7 +89,7 @@ public class TabListHandler implements Listener
 
         if (playerData == null || playerData.isEliminated())
         {
-            final WrapperPacketPlayOutPlayerInfo removeWrapper = new WrapperPacketPlayOutPlayerInfo(new PacketPlayOutPlayerInfo(EnumPlayerInfoAction.REMOVE_PLAYER));
+            final WrapperPlayOutPlayerInfo removeWrapper = new WrapperPlayOutPlayerInfo(new PacketPlayOutPlayerInfo(EnumPlayerInfoAction.REMOVE_PLAYER));
             removeWrapper.addPlayerData(new GameProfile(player.getUniqueId(), null), 0, null, null);
 
             for (final Player arenaPlayer : arena.getPlayersManager().getPlayers())

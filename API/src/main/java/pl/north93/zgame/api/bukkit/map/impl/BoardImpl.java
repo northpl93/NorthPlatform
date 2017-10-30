@@ -69,6 +69,21 @@ class BoardImpl implements IBoard
         return this.maps[x][y];
     }
 
+    public boolean isEntityBelongsToBoard(final int entityId)
+    {
+        for (final MapImpl[] yMaps : this.maps)
+        {
+            for (final MapImpl map : yMaps)
+            {
+                if (map.getFrameEntityId() == entityId)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void renderFor(final Player player)
     {
         this.mapController.doRenderingFor(player, this);

@@ -2,9 +2,10 @@ package pl.north93.zgame.api.bukkit.map.impl;
 
 import javax.imageio.ImageIO;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
 
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
@@ -68,20 +69,32 @@ public class DupaTest extends NorthCommand
         board.setRenderer(new IMapRenderer()
         {
             @Override
-            public void render(final IMapCanvas canvas, final Player player)
+            public void render(final IMapCanvas canvas, final Player player) throws Exception
             {
-                try
-                {
-                    Bukkit.broadcastMessage("renderer started");
-                    final BufferedImage read = ImageIO.read(new File("C:\\Users\\Michał\\Desktop\\Ranking_demo2.png"));
-                    canvas.putImage(0, 0, read);
-                    canvas.writeDebugImage(new File("C:\\Users\\Michał\\Desktop\\test.png"));
-                    Bukkit.broadcastMessage("renderer ended");
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
+                final BufferedImage image = ImageIO.read(new File("C:\\Users\\Michał\\Desktop\\TEMPLATE.png"));
+                final Graphics2D graphics = image.createGraphics();
+
+                final InputStream fontStream = this.getClass().getClassLoader().getResourceAsStream("Minecraftia-Regular.ttf");
+                final Font font = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(20.8f);
+                graphics.setFont(font);
+
+                graphics.setColor(new Color(242, 235, 39));
+                graphics.drawString("123456812345678 - 999 999 999", 187, 115);
+
+                graphics.drawString("123456812345678 - 999 999 999", 187, 144);
+
+                graphics.drawString("123456812345678 - 999 999 999", 187, 173);
+
+                graphics.dispose();
+
+                canvas.putImage(0, 0, image);
+                canvas.writeDebugImage(new File("C:\\Users\\Michał\\Desktop\\test.png"));
+
+                /*Bukkit.broadcastMessage("renderer started");
+                final BufferedImage read = ImageIO.read(new File("C:\\Users\\Michał\\Desktop\\Ranking_demo2.png"));
+                canvas.putImage(0, 0, read);
+                canvas.writeDebugImage(new File("C:\\Users\\Michał\\Desktop\\test.png"));
+                Bukkit.broadcastMessage("renderer ended");*/
             }
         });
     }
