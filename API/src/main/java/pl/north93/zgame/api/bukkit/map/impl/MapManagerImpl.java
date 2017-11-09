@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.bukkit.map.IBoard;
 import pl.north93.zgame.api.bukkit.map.IMapManager;
 import pl.north93.zgame.api.global.component.Component;
 
@@ -39,6 +40,16 @@ public class MapManagerImpl extends Component implements IMapManager
     public Collection<BoardImpl> getBoards()
     {
         return Collections.unmodifiableCollection(this.boards);
+    }
+
+    @Override
+    public void removeBoard(final IBoard board)
+    {
+        final BoardImpl boardImpl = (BoardImpl) board;
+        if (this.boards.remove(boardImpl))
+        {
+            boardImpl.cleanup();
+        }
     }
 
     @Override

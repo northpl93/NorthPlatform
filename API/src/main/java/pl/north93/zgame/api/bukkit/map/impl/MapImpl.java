@@ -12,6 +12,7 @@ import net.minecraft.server.v1_10_R1.EntityPlayer;
 import net.minecraft.server.v1_10_R1.EntityTrackerEntry;
 
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftItemFrame;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
@@ -95,6 +96,15 @@ class MapImpl implements IMap
         {
             this.controller.handlePlayerEnter(this, (CraftPlayer) player);
         }
+    }
+
+    /**
+     * Zabija ramke nalezaca do tej mapy.
+     */
+    public void cleanup()
+    {
+        final CraftItemFrame itemFrame = (CraftItemFrame) this.itemFrame;
+        itemFrame.getHandle().die();
     }
 
     @Override

@@ -88,4 +88,21 @@ class BoardImpl implements IBoard
     {
         this.mapController.doRenderingFor(player, this);
     }
+
+    /**
+     * Niszczy ta tablice i upewnia sie, ze juz nie bedzie dalo
+     * sie jej uzyc.
+     */
+    public void cleanup()
+    {
+        this.renderer = null;
+        for (int x = 0; x < this.width; x++)
+        {
+            for (int y = 0; y < this.height; y++)
+            {
+                this.maps[x][y].cleanup();
+                this.maps[x][y] = null; // upewniamy sie ze tablica jest bezuzyteczna
+            }
+        }
+    }
 }

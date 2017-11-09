@@ -1,4 +1,4 @@
-package pl.arieals.lobby.cmd;
+package pl.arieals.lobby.gui.bedwars;
 
 import org.bukkit.entity.Player;
 

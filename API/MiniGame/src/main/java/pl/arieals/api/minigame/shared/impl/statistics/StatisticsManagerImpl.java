@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -13,8 +16,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.Document;
 
+import pl.arieals.api.minigame.shared.api.statistics.IRanking;
 import pl.arieals.api.minigame.shared.api.statistics.IRecord;
 import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
+import pl.arieals.api.minigame.shared.api.statistics.IStatisticDbComposer;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticUnit;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
@@ -42,12 +47,37 @@ public class StatisticsManagerImpl implements IStatisticsManager
     }
 
     @Override
+    public <UNIT extends IStatisticUnit> CompletableFuture<IRanking> getRanking(final IStatistic<UNIT> statistic, final int size)
+    {
+        final MongoCollection<Document> collection = this.getCollection();
+        final IStatisticDbComposer<UNIT> dbComposer = statistic.getDbComposer();
+
+        final Document query = new Document("statId", statistic.getId());
+        final FindIterable<Document> documents = dbComposer.bestRecordQuery(collection.find(query))
+                                                           .limit(size);
+
+        final CompletableFuture<IRanking> future = new CompletableFuture<>();
+        this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
+        {
+            final Stream<Document> stream = StreamSupport.stream(documents.spliterator(), false);
+            final List<IRecord<UNIT>> result = stream.map(document -> this.documentToUnit(statistic, document))
+                                                     .collect(Collectors.toList());
+
+            future.complete(new RankingImpl<>(size, result));
+        });
+
+        return future;
+    }
+
+    @Override
     public <UNIT extends IStatisticUnit> CompletableFuture<IRecord<UNIT>> getBestRecord(final IStatistic<UNIT> statistic)
     {
         final MongoCollection<Document> collection = this.getCollection();
+        final IStatisticDbComposer<UNIT> dbComposer = statistic.getDbComposer();
 
         final Document query = new Document("statId", statistic.getId());
-        final FindIterable<Document> documents = statistic.getDbComposer().bestRecordQuery(collection.find(query));
+        final FindIterable<Document> documents = dbComposer.bestRecordQuery(collection.find(query))
+                                                           .limit(1);
 
         final CompletableFuture<IRecord<UNIT>> future = new CompletableFuture<>();
         this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->

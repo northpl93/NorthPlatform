@@ -162,6 +162,20 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+
+                <!-- nie filtrujemy ttfow bo sie rozwala -->
+                <excludes>
+                    <exclude>**/*.ttf</exclude>
+                </excludes>
+            </resource>
+
+            <!-- ale dodajemy je do jara... -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.ttf</include>
+                </includes>
             </resource>
         </resources>
 

@@ -1,12 +1,5 @@
 package pl.north93.zgame.api.bukkit.map.impl;
 
-import javax.imageio.ImageIO;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.InputStream;
-
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -19,9 +12,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import pl.north93.zgame.api.bukkit.map.IBoard;
-import pl.north93.zgame.api.bukkit.map.IMapCanvas;
 import pl.north93.zgame.api.bukkit.map.IMapManager;
-import pl.north93.zgame.api.bukkit.map.IMapRenderer;
+import pl.north93.zgame.api.bukkit.map.renderer.SimpleTranslatedRenderer;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
@@ -66,36 +58,6 @@ public class DupaTest extends NorthCommand
         final Location rightCorner = BukkitUtil.toLocation(player.getWorld(), cuboidRegion.getPos2());
 
         final IBoard board = this.mapManager.createBoard(leftCorner, rightCorner);
-        board.setRenderer(new IMapRenderer()
-        {
-            @Override
-            public void render(final IMapCanvas canvas, final Player player) throws Exception
-            {
-                final BufferedImage image = ImageIO.read(new File("C:\\Users\\Michał\\Desktop\\TEMPLATE.png"));
-                final Graphics2D graphics = image.createGraphics();
-
-                final InputStream fontStream = this.getClass().getClassLoader().getResourceAsStream("Minecraftia-Regular.ttf");
-                final Font font = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(20.8f);
-                graphics.setFont(font);
-
-                graphics.setColor(new Color(242, 235, 39));
-                graphics.drawString("123456812345678 - 999 999 999", 187, 115);
-
-                graphics.drawString("123456812345678 - 999 999 999", 187, 144);
-
-                graphics.drawString("123456812345678 - 999 999 999", 187, 173);
-
-                graphics.dispose();
-
-                canvas.putImage(0, 0, image);
-                canvas.writeDebugImage(new File("C:\\Users\\Michał\\Desktop\\test.png"));
-
-                /*Bukkit.broadcastMessage("renderer started");
-                final BufferedImage read = ImageIO.read(new File("C:\\Users\\Michał\\Desktop\\Ranking_demo2.png"));
-                canvas.putImage(0, 0, read);
-                canvas.writeDebugImage(new File("C:\\Users\\Michał\\Desktop\\test.png"));
-                Bukkit.broadcastMessage("renderer ended");*/
-            }
-        });
+        board.setRenderer(new SimpleTranslatedRenderer());
     }
 }

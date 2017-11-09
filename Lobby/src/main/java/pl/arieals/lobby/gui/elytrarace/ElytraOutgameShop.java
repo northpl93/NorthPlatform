@@ -1,8 +1,7 @@
-package pl.arieals.lobby.cmd;
+package pl.arieals.lobby.gui.elytrarace;
 
 import org.bukkit.entity.Player;
 
-import pl.arieals.lobby.gui.elytrarace.ElytraShopMain;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
