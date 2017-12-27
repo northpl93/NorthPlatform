@@ -1,0 +1,6 @@
+components:
+  - name: AntyCheat
+    mainClass: "pl.north93.zgame.antycheat.AntyCheatComponent"
+    description: "Anti Cheat module."
+    platforms:
+      - BUKKIT
