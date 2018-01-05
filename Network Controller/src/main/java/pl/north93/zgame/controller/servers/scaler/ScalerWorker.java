@@ -44,7 +44,7 @@ public class ScalerWorker implements Runnable
     {
         try
         {
-            // aktualizuje stan listy operacji
+            // aktualizuje stan listy operacji, miedzy innymi usuwa z listy zakonczone operacje
             group.getOperations();
 
             // jesli grupa ma wylaczone aktualnie automatyczne wydawanie decyzji to nic dalej nie robimy

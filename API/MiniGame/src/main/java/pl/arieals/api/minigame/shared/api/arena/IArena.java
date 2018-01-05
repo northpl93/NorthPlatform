@@ -47,6 +47,11 @@ public interface IArena
      */
     String getWorldId();
 
+    /**
+     * Zwraca aktualny stan gry na danej arenie.
+     *
+     * @return aktualny stan gry na danej arenie.
+     */
     GamePhase getGamePhase();
 
     default int getPlayersCount()

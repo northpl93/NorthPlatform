@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -35,6 +37,29 @@ public abstract class AbstractArenasValue implements IScalingValue
                                   .filter(server -> server.getServersGroup().getName().equals(managedServersGroup.getName()))
                                   .map(Server::getUuid)
                                   .collect(Collectors.toSet());
+    }
+
+    // sprawdza czy dana arena jest wolna, czyli zdatna do wejscia dla graczy.
+    protected boolean isArenaFree(final IArena arena)
+    {
+        final GamePhase gamePhase = arena.getGamePhase();
+
+        if (gamePhase == GamePhase.INITIALISING || gamePhase == GamePhase.LOBBY)
+        {
+            // jesli arena sie uruchamia lub czeka na start to uznajemy ja za wolna
+            // to moze nie byc prawda, ale te stany i tak trwaja krotko.
+            return true;
+        }
+
+        //noinspection SimplifiableIfStatement
+        if (arena.isDynamic() && gamePhase == GamePhase.STARTED)
+        {
+            // jesli arena jest dynamiczna i gra jest w trakcie to sprawdzamy ilosc graczy
+            // jak sa wolne sloty to takze uznajemy arene za wolna
+            return arena.getMaxPlayers() > arena.getPlayersCount();
+        }
+
+        return false;
     }
 
     @Override

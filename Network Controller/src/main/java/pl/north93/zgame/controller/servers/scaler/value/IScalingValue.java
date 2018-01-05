@@ -16,6 +16,9 @@ public interface IScalingValue
 
     /**
      * Oblicza wartosc dla danej grupy serwerow i ja zwraca.
+     * <p>
+     * Wartosc jest cachowana podczas jednego cyklu generowania decyzji.
+     * {@link pl.north93.zgame.controller.servers.scaler.ValueFetchCache}
      *
      * @param managedServersGroup Grupa serwerow dla ktorej obliczamy wartosc.
      * @return Obliczona wartosc.

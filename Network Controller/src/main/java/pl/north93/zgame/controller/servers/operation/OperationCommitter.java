@@ -21,6 +21,7 @@ public class OperationCommitter
         this.operations = operations;
     }
 
+    // sprawdza czy mozna anulowac jakas przeciwna operacje do obecnie commitowanej.
     public boolean commit(final AutoScalerOperation newOperation)
     {
         final Iterator<AutoScalerOperation> operationIterator = this.operations.iterator();
@@ -29,29 +30,29 @@ public class OperationCommitter
         {
             final AutoScalerOperation alreadyStartedOperation = operationIterator.next();
 
+            // jak operacje jest przeciwna i udalo sie ja anulowac to usuwamy ja z listy operacji
+            // i zwracamy true (chociaz tak na prawde commit nowej operacji nie nastapil)
             if (newOperation.isOpposite(alreadyStartedOperation) && alreadyStartedOperation.tryCancel())
             {
-                this.logger.log(Level.INFO, "Replacing opposite operation {0} by {1}", new Object[]{alreadyStartedOperation, newOperation});
-
+                this.logger.log(Level.INFO, "Instead committing {0} I cancelled {1}", new Object[]{newOperation,alreadyStartedOperation});
                 operationIterator.remove();
-                return this.addAndStart(newOperation);
+                return true;
             }
         }
 
         return this.addAndStart(newOperation);
     }
 
+    // probuje rozpoczac operacje i jak sie uda to dodaje do listy operacji
     private boolean addAndStart(final AutoScalerOperation operation)
     {
         this.logger.log(Level.INFO, "Starting operation {0}", operation);
+        operation.start();
 
-        try
+        // nie udalo sie uruchomic operacji wiec jej nawet nie dodajemy do listy
+        if (operation.getCachedState() == ScalerOperationState.FAILED)
         {
-            operation.start();
-        }
-        catch (final Exception e)
-        {
-            this.logger.log(Level.SEVERE, "Failed to start operation", e);
+            this.logger.log(Level.WARNING, "Failed to start operation {0}", operation);
             return false;
         }
 

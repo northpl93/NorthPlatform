@@ -33,30 +33,33 @@ public class RemoveServerOperation extends AutoScalerOperation
     }
 
     @Override
-    protected void startOperation()
+    protected boolean startOperation()
     {
         final Server serverToShutdown = this.getServerToShutdown();
         if (serverToShutdown == null)
         {
-            // operacja zostanie oznaczona jako FAILED w checkState
-            return;
+            // sygnalizujemy ze nie udalo sie nam rozpoczac operacji
+            // bo nie znaleziono zadnego serwera do wylaczenia
+            return false;
         }
 
         this.ourServer = this.networkManager.getServers().unsafe().getServerDto(serverToShutdown.getUuid());
 
         final IServerRpc serverRpc = this.networkManager.getServers().getServerRpc(serverToShutdown);
         serverRpc.setShutdownScheduled();
+
+        return true;
     }
 
     @Override
     protected ScalerOperationState checkState()
     {
-        if (this.ourServer == null)
+        if (this.ourServer == null) // teoretycznie nigdy nie wystapi bo anulujemy w startOperation
         {
             return ScalerOperationState.FAILED;
         }
 
-        if (this.ourServer.isAvailable())
+        if (this.ourServer.isAvailable()) // ciagle jest klucz w redisie; serwer dziala lub sie wylacza
         {
             return ScalerOperationState.IN_PROGRESS;
         }

@@ -14,10 +14,28 @@ public abstract class AutoScalerOperation
         Preconditions.checkArgument(this.state == ScalerOperationState.NOT_STARTED, "Operation already started.");
 
         this.state = ScalerOperationState.IN_PROGRESS;
-        this.startOperation();
+        try
+        {
+            if (! this.startOperation())
+            {
+                this.state = ScalerOperationState.FAILED;
+            }
+        }
+        catch (final Exception e)
+        {
+            // cos nieprzewidzianego podczas startowania zadania; logujemy i oznaczamy jako FAILED
+            e.printStackTrace();
+            this.state = ScalerOperationState.FAILED;
+        }
     }
 
-    protected abstract void startOperation();
+    /**
+     * Próbuje rozpoczac akcje auto-skalera.
+     * W razie niepowodzenia zwraca false, wtedy cala akcja zostaje uznana za nieudana.
+     *
+     * @return Czy udalo sie rozpoczac akcje autoscalera.
+     */
+    protected abstract boolean startOperation();
 
     /**
      * Zwraca zcachowany stan tej operacji.
@@ -30,7 +48,9 @@ public abstract class AutoScalerOperation
     }
 
     /**
-     * Wymusza sprawdzenie czy operacja osiagnela zadany efekt i zwraca nowy stan.
+     * Aktualizuje stan operacji i go zwraca.
+     * W przypadku gdy osiagnieto juz jakikolwiek zakonczony stan to nie zostanie
+     * wykonane sprawdzenie.
      *
      * @return stan operacji.
      */
@@ -38,13 +58,20 @@ public abstract class AutoScalerOperation
     {
         if (this.state.isEnded())
         {
-            // jesli zadanie sie zakonczyla (w jakikolwiek sposob) to juz nie aktualizujemy stanu.
+            // jesli zadanie sie zakonczylo (w jakikolwiek sposob) to juz nie aktualizujemy stanu.
             return this.state;
         }
 
         return this.state = this.checkState();
     }
 
+    /**
+     * Uruchamia logikę sprawdzającą stan tej operacji.
+     * Metoda będzie wykonywana ciągle w {@link #refreshState()}, aż nie zostanie zwrócony jakikolwiek zakończony stan.
+     *
+     * @see ScalerOperationState#isEnded()
+     * @return Stan operacji auto-skalera.
+     */
     protected abstract ScalerOperationState checkState();
 
     public final boolean tryCancel()

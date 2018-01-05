@@ -3,6 +3,7 @@ package pl.north93.zgame.controller.servers.groups;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,18 +31,19 @@ public class LocalManagedServersGroup extends AbstractLocalServersGroup<ManagedS
     }
 
     /**
-     * Zwraca liste operacji bedacych w trakcie w tej grupie serwerow.
+     * Zwraca KOPIE liste operacji bedacych w trakcie w tej grupie serwerow.
      *
      * Zsynchronizowane na this poniewaz operuje na wewnetrznej liscie operacji.
      *
      * @return operacje bedace w trakcie.
      */
-    public synchronized Set<AutoScalerOperation> getOperations()
+    public Set<AutoScalerOperation> getOperations()
     {
-        return this.getOperations0();
+        return Collections.unmodifiableSet(this.getOperations0());
     }
 
-    private Set<AutoScalerOperation> getOperations0()
+    // aktualizuje liste operacji i ja zwraca
+    private synchronized Set<AutoScalerOperation> getOperations0()
     {
         this.operations.removeIf(operation -> operation.refreshState().isEnded());
         return this.operations;
@@ -77,7 +79,7 @@ public class LocalManagedServersGroup extends AbstractLocalServersGroup<ManagedS
     {
         Preconditions.checkArgument(operation.getCachedState() == ScalerOperationState.NOT_STARTED);
 
-        final Set<AutoScalerOperation> operations = this.getOperations();
+        final Set<AutoScalerOperation> operations = this.getOperations0();
         final OperationCommitter committer = new OperationCommitter(operations);
 
         final boolean success = committer.commit(operation);

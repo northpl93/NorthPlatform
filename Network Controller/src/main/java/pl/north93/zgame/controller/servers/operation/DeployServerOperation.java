@@ -31,7 +31,7 @@ public class DeployServerOperation extends AutoScalerOperation
     }
 
     @Override
-    protected void startOperation()
+    protected boolean startOperation()
     {
         final UUID serverId = UUID.randomUUID();
         final ServersGroupDto group = this.serversGroup.getAsDto();
@@ -39,7 +39,8 @@ public class DeployServerOperation extends AutoScalerOperation
         final DaemonDto bestDaemon = this.getBestDaemon();
         if (bestDaemon == null)
         {
-            throw new IllegalStateException("Not found any daemon for deployment.");
+            // brak demona do deploymentu
+            return false;
         }
 
         final ServerDto serverDto = new ServerDto(serverId, true, group.getServersType(), ServerState.CREATING, group.getJoiningPolicy(), "", 0, group);
@@ -52,6 +53,8 @@ public class DeployServerOperation extends AutoScalerOperation
 
         // wysylamy do wszystkich bungeecordow info o nowym serwerze
         this.networkManager.getProxies().addServer(serverDto);
+
+        return true;
     }
 
     @Override
@@ -89,8 +92,8 @@ public class DeployServerOperation extends AutoScalerOperation
         final Set<DaemonDto> daemons = this.networkManager.getDaemons().all();
         return daemons.stream()
                       .filter(DaemonDto::isAcceptingServers)
-                      .sorted(new DaemonComparator())
-                      .findFirst().orElse(null);
+                      .min(new DaemonComparator())
+                      .orElse(null);
     }
 
     private Value<ServerDto> uploadServer(final ServerDto serverDto)
