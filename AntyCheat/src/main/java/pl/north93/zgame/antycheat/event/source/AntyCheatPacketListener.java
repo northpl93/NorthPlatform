@@ -9,9 +9,10 @@ import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
-import pl.north93.zgame.antycheat.event.impl.PlayerMoveTimelineEvent;
+import pl.north93.zgame.antycheat.event.impl.ClientMoveTimelineEvent;
 import pl.north93.zgame.antycheat.event.impl.PluginMessageTimelineEvent;
 import pl.north93.zgame.antycheat.timeline.impl.TimelineManager;
+import pl.north93.zgame.antycheat.utils.location.RichEntityLocation;
 import pl.north93.zgame.api.bukkit.packets.event.AsyncPacketInEvent;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -31,7 +32,7 @@ public class AntyCheatPacketListener implements AutoListener
         {
             final PacketPlayInFlying packetPlayInFlying = (PacketPlayInFlying) packet;
 
-            final PlayerMoveTimelineEvent moveTimelineEvent = this.createMoveTimelineEvent(player, packetPlayInFlying);
+            final ClientMoveTimelineEvent moveTimelineEvent = this.createMoveTimelineEvent(player, packetPlayInFlying);
             this.timelineManager.pushEventForPlayer(player, moveTimelineEvent);
         }
         else if (packet instanceof PacketPlayInCustomPayload)
@@ -47,10 +48,10 @@ public class AntyCheatPacketListener implements AutoListener
     }
 
     // tworzy PlayerMoveTimelineEvent na podstawie obiektu gracza i pakietów od movementu
-    private PlayerMoveTimelineEvent createMoveTimelineEvent(final Player player, final PacketPlayInFlying packetPlayInFlying)
+    private ClientMoveTimelineEvent createMoveTimelineEvent(final Player player, final PacketPlayInFlying packetPlayInFlying)
     {
         final boolean oldOnGround = ((CraftPlayer) player).getHandle().onGround;
-        final Location oldLocation = player.getLocation();
+        final RichEntityLocation oldLocation = new RichEntityLocation(player, player.getLocation());
 
         final boolean newOnGround = packetPlayInFlying.a();
         final Location newLocation = new Location(
@@ -61,6 +62,6 @@ public class AntyCheatPacketListener implements AutoListener
                 packetPlayInFlying.a(oldLocation.getYaw()),
                 packetPlayInFlying.b(oldLocation.getPitch()));
 
-        return new PlayerMoveTimelineEvent(player, oldLocation, oldOnGround, newLocation, newOnGround);
+        return new ClientMoveTimelineEvent(player, oldLocation, oldOnGround, new RichEntityLocation(player, newLocation), newOnGround);
     }
 }

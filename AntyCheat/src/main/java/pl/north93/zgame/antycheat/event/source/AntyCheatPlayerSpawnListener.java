@@ -1,9 +1,8 @@
 package pl.north93.zgame.antycheat.event.source;
 
-import com.destroystokyo.paper.event.player.PlayerInitialSpawnEvent;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import pl.north93.zgame.antycheat.event.impl.PlayerSpawnTimelineEvent;
@@ -18,7 +17,7 @@ public class AntyCheatPlayerSpawnListener implements AutoListener
     private TimelineManager timelineManager;
 
     @EventHandler
-    public void onInitialSpawn(final PlayerInitialSpawnEvent event)
+    public void onJoin(final PlayerJoinEvent event)
     {
         final Player player = event.getPlayer();
         final PlayerSpawnTimelineEvent timelineEvent = new PlayerSpawnTimelineEvent(player, SpawnReason.SERVER_JOIN);

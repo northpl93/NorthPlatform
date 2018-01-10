@@ -1,40 +1,49 @@
-package pl.north93.zgame.antycheat.cheat.movement;
+package pl.north93.zgame.antycheat.cheat.movement.check;
 
 import static pl.north93.zgame.antycheat.utils.DistanceUtils.entityDistanceToGround;
 
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import pl.north93.zgame.antycheat.analysis.FalsePositiveProbability;
 import pl.north93.zgame.antycheat.analysis.SingleAnalysisResult;
 import pl.north93.zgame.antycheat.analysis.event.EventAnalyser;
 import pl.north93.zgame.antycheat.analysis.event.EventAnalyserConfig;
-import pl.north93.zgame.antycheat.event.impl.PlayerMoveTimelineEvent;
+import pl.north93.zgame.antycheat.cheat.movement.MovementViolation;
+import pl.north93.zgame.antycheat.event.impl.ClientMoveTimelineEvent;
 import pl.north93.zgame.antycheat.timeline.PlayerData;
 import pl.north93.zgame.antycheat.timeline.PlayerTickInfo;
+import pl.north93.zgame.antycheat.utils.location.RichEntityLocation;
 
 /**
  * Weryfikuje czy klient wysyla poprawny parametr on ground w pakietach ruchu.
  * Lapie: fly na ziemi, no-fall, spider.
  */
-public class OnGroundManipulationChecker implements EventAnalyser<PlayerMoveTimelineEvent>
+public class OnGroundManipulationChecker implements EventAnalyser<ClientMoveTimelineEvent>
 {
     private static final String ON_GROUND_TRUE_INCONSISTENCY  = "Player send onGround=true while he's effectively in air.";
     private static final String ON_GROUND_FALSE_INCONSISTENCY = "Player send onGround=false while he's effectively on ground.";
+    /**
+     * Odleglosc w jakiej gracz jest uznawany za stojacego na ziemi.
+     * Uzywane w {@link #isOnGround(double)}.
+     */
     private static final double IS_ON_GROUND_EPSILON = 0.1;
+    /**
+     * Wysokosc od jakiej gracz uznawany jest za uzywajacego no-fly, spidera.
+     */
+    private static final double NO_FALL_EDGE_HEIGHT = 1.5;
 
     @Override
     public void configure(final EventAnalyserConfig config)
     {
-        config.whitelistEvent(PlayerMoveTimelineEvent.class);
+        config.whitelistEvent(ClientMoveTimelineEvent.class);
     }
 
     @Override
-    public SingleAnalysisResult analyse(final PlayerData data, final PlayerTickInfo tickInfo, final PlayerMoveTimelineEvent event)
+    public SingleAnalysisResult analyse(final PlayerData data, final PlayerTickInfo tickInfo, final ClientMoveTimelineEvent event)
     {
         final Player player = data.getPlayer();
-        final Location toLocation = event.getTo();
+        final RichEntityLocation toLocation = event.getTo();
 
         if (event.isFromOnGround() && ! event.isToOnGround())
         {
@@ -49,11 +58,12 @@ public class OnGroundManipulationChecker implements EventAnalyser<PlayerMoveTime
     }
 
     // = = = Sprawdzanie gdy klient mówi że startuje z ziemi
-    private SingleAnalysisResult checkFlying(final Player player, final PlayerTickInfo tickInfo, final Location location)
+    private SingleAnalysisResult checkFlying(final Player player, final PlayerTickInfo tickInfo, final RichEntityLocation location)
     {
-        final double toGround = entityDistanceToGround(player, location);
+        final double toGround = location.getDistanceToGround();
         if (! this.isOnGround(toGround))
         {
+            // gracz nie jest na ziemi, wszystko ok
             return SingleAnalysisResult.EMPTY;
         }
 
@@ -95,9 +105,9 @@ public class OnGroundManipulationChecker implements EventAnalyser<PlayerMoveTime
     }
 
     // = = = Sprawdzanie gdy klient mówi że ląduje
-    private SingleAnalysisResult checkLanding(final Player player, final Location location)
+    private SingleAnalysisResult checkLanding(final Player player, final RichEntityLocation location)
     {
-        final double toGround = entityDistanceToGround(player, location);
+        final double toGround = location.getDistanceToGround();
         if (! this.isInAir(toGround))
         {
             return SingleAnalysisResult.EMPTY;
@@ -106,25 +116,33 @@ public class OnGroundManipulationChecker implements EventAnalyser<PlayerMoveTime
         final SingleAnalysisResult analysisResult = SingleAnalysisResult.create();
 
         final FalsePositiveProbability falsePositiveProbability;
-        if (toGround > 1.5)
+        if (location.isStandsOnEntity())
         {
-            // gdy klient wysyla do nas informacje o ladowaniu bedac powyzej 1.5 klocka
+            // gdy stoimy na jakims entity (lódka) to na 100% uznajemy to za false-positive
+            falsePositiveProbability = FalsePositiveProbability.DEFINITELY;
+        }
+        else if (toGround > NO_FALL_EDGE_HEIGHT)
+        {
+            // gdy klient wysyla do nas informacje o ladowaniu bedac powyzej ilus tam klockow
             // to prawie na pewno jest to no-fall lub spider.
             falsePositiveProbability = FalsePositiveProbability.LOW;
         }
         else
         {
-            final double toGroundWithBiggerAABB = entityDistanceToGround(player, location, 0.5);
+            final double toGroundWithBiggerAABB = entityDistanceToGround(player, location, 0.4);
             if (this.isInAir(toGroundWithBiggerAABB))
             {
                 // wiekszy AABB ciagle jest w powietrzu, teraz sprawdzamy false-positive
                 // takze zwiazane z parkourowaniem
                 if (toGround == 0.5D || toGround == 1D)
                 {
+                    // te dwie wartosci czesto wystepuja przy parkourowaniu dlatego
+                    // uznajemy je za false-positive
                     falsePositiveProbability = FalsePositiveProbability.HIGH;
                 }
                 else
                 {
+                    // w pozostalych przypadkach zostajemy przy bezpiecznym poziomie medium
                     falsePositiveProbability = FalsePositiveProbability.MEDIUM;
                 }
             }

@@ -3,17 +3,12 @@ package pl.north93.zgame.antycheat.timeline.impl;
 import static org.diorite.utils.SimpleEnum.SMALL_LOAD_FACTOR;
 
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
-
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -32,9 +27,9 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
     private final TimelineManager timelineManager;
     private final PlayerDataImpl  data;
     private final int             ticksToTrack;
-    private final List<TimelineEvent>           queuedEvents;
-    private final Multimap<Tick, TimelineEvent> events;
-    private final Map<Tick, PlayerTickInfo>     tickInfo;
+    private final List<TimelineEvent>       queuedEvents;
+    private final LinkedEventsQueue         events;
+    private final Map<Tick, PlayerTickInfo> tickInfo;
 
     public TimelineImpl(final TimelineManager timelineManager, final Player player, final int ticksToTrack)
     {
@@ -43,7 +38,7 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
         this.ticksToTrack = ticksToTrack;
 
         this.queuedEvents = new LinkedList<>();
-        this.events = LinkedHashMultimap.create(ticksToTrack, 2);
+        this.events = new LinkedEventsQueue(timelineManager);
         this.tickInfo = new HashMap<>(ticksToTrack, SMALL_LOAD_FACTOR);
     }
 
@@ -78,15 +73,15 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
     }
 
     @Override
-    public Collection<TimelineEvent> getEvents()
+    public Collection<TimelineEvent> getEvents() // najlepiej cachowac ta metode bo nie jest zbyt szybka
     {
-        return this.events.values();
+        return this.events.getEvents();
     }
 
     @Override
-    public Collection<TimelineEvent> getEvents(final Tick tick)
+    public Collection<TimelineEvent> getEvents(final Tick tick) // najlepiej cachowac ta metode bo nie jest zbyt szybka
     {
-        return this.events.get(tick);
+        return this.events.getEventsInTick(tick);
     }
 
     @Override
@@ -96,21 +91,19 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
         switch (scope)
         {
             case TICK:
-                return new TimelineWalkerImpl(new ArrayList<>(this.events.get(currentTick)));
+                return this.events.createWalkerInTickRangeWithCursorAtEnd(currentTick, currentTick);
             case SECOND:
-                final ArrayList<TimelineEvent> timelineEvents = new ArrayList<>();
-                final int ticksToGet = Math.min(19, this.getTrackedTicks() - 1);
-                Bukkit.broadcastMessage("ticksToGet=" + ticksToGet);
-                for (int i = ticksToGet; i > 0; i--)
-                {
-                    final TickImpl pastTick = this.timelineManager.getPreviousTick(currentTick, i);
-                    timelineEvents.addAll(this.events.get(pastTick));
-                }
-                return new TimelineWalkerImpl(timelineEvents);
+                return this.createWalkerForTicks(currentTick, 20);
             case ALL:
-                return new TimelineWalkerImpl(new ArrayList<>(this.events.values()));
+                return this.events.createWalkerInFullRange(true);
         }
         return null;
+    }
+
+    private TimelineWalker createWalkerForTicks(final Tick lastTick, final int ticks)
+    {
+        final TickImpl firstTick = this.timelineManager.getPreviousTick(lastTick, Math.min(ticks - 1, this.getTrackedTicks()));
+        return this.events.createWalkerInTickRangeWithCursorAtEnd(firstTick, lastTick);
     }
 
     /**
@@ -129,7 +122,7 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
         }
         else
         {
-            this.events.put(currentTick, timelineEvent);
+            this.events.putEvent(currentTick, timelineEvent);
         }
     }
 
@@ -140,7 +133,10 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
     {
         final Tick currentTick = this.getCurrentTick();
 
-        this.events.putAll(currentTick, this.queuedEvents);
+        for (final TimelineEvent queuedEvent : this.queuedEvents)
+        {
+            this.events.putEvent(currentTick, queuedEvent);
+        }
         this.queuedEvents.clear();
     }
 
@@ -154,13 +150,13 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
         final Tick currentTick = this.getCurrentTick();
         this.flushOldData(currentTick);
 
-        final TimelineWalker secondWalker = this.createWalkerForScope(TimelineAnalyserConfig.Scope.SECOND);
-        final boolean afterSpawn = secondWalker.previous(PlayerSpawnTimelineEvent.class) != null;
+        final TimelineWalker walker = this.createWalkerForTicks(currentTick, 30);
+        final boolean afterSpawn = walker.previous(PlayerSpawnTimelineEvent.class) != null /*|| player.getTicksLived() < 30*/;
 
-        final boolean reliable = ! this.events.get(currentTick).isEmpty();
+        final boolean anyEventsInTick = this.events.hasEventsInTick(currentTick);
         final int ping = player.spigot().getPing();
 
-        final PlayerTickInfoImpl playerTickInfo = new PlayerTickInfoImpl(player, currentTick, afterSpawn, reliable, ping);
+        final PlayerTickInfoImpl playerTickInfo = new PlayerTickInfoImpl(player, currentTick, afterSpawn, anyEventsInTick, ping);
         this.tickInfo.put(currentTick, playerTickInfo);
     }
 
@@ -175,7 +171,7 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
         {
             final TickImpl tickToRemove = this.timelineManager.getPreviousTick(currentTick, this.ticksToTrack + i);
 
-            this.events.removeAll(tickToRemove);
+            this.events.clearEventsInTick(tickToRemove);
             this.tickInfo.remove(tickToRemove);
         }
     }

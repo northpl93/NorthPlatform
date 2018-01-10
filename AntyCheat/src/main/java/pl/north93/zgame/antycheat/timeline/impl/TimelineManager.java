@@ -1,6 +1,7 @@
 package pl.north93.zgame.antycheat.timeline.impl;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import org.bukkit.Bukkit;
@@ -81,6 +82,24 @@ public class TimelineManager
         return this.tickManager.getTick(tick.getTickId() - previous);
     }
 
+    public TickImpl getNextTick(final Tick tick)
+    {
+        final TickImpl currentTick = this.getCurrentTick();
+        final int currentTickId = currentTick.getTickId();
+        final int tickToGet = tick.getTickId() + 1;
+
+        if (tickToGet > currentTickId)
+        {
+            return null;
+        }
+        else if (tickToGet == currentTickId)
+        {
+            return currentTick;
+        }
+
+        return this.tickManager.getTick(tickToGet);
+    }
+
     /**
      * Zwraca linię wydarzeń powiązaną z danym graczem.
      *
@@ -124,7 +143,14 @@ public class TimelineManager
         @Override
         public void tickEnd()
         {
+            final long startTime = System.nanoTime();
             TimelineManager.this.postTick();
+            final long totalTime = System.nanoTime() - startTime;
+            if (totalTime >= 1_000_000)
+            {
+                // todo debug remove
+                System.out.println("post tick took " + totalTime + "ns (" + TimeUnit.NANOSECONDS.toMillis(totalTime) + "ms)");
+            }
         }
     }
 }

@@ -37,6 +37,26 @@ public class AABB
         return new AABB(this.minX + x, this.minY + y, this.minZ + z, this.maxX + x, this.maxY + y, this.maxZ + z);
     }
 
+    public boolean intersects(final double x1, final double y1, final double z1, final double x2, final double y2, final double z2)
+    {
+        return this.minX < x2 && this.maxX > x1 && this.minY < y2 && this.maxY > y1 && this.minZ < z2 && this.maxZ > z1;
+    }
+
+    public boolean intersects(final AABB other)
+    {
+        return this.intersects(other.minX, other.minY, other.minZ, other.maxX, other.maxY, other.maxZ);
+    }
+
+    public boolean nonIntersects(final double x1, final double y1, final double z1, final double x2, final double y2, final double z2)
+    {
+        return this.minX > x2 && this.maxX < x1 && this.minY > y2 && this.maxY < y1 && this.minZ > z2 && this.maxZ < z1;
+    }
+
+    public boolean nonIntersects(final AABB other)
+    {
+        return this.nonIntersects(other.minX, other.minY, other.minZ, other.maxX, other.maxY, other.maxZ);
+    }
+
     /**
      * Adds a coordinate to the bounding box, extending it if the point lies outside the current ranges.
      *
@@ -79,15 +99,5 @@ public class AABB
         }
 
         return new AABB(d0, d1, d2, d3, d4, d5);
-    }
-
-    public boolean intersects(final double x1, final double y1, final double z1, final double x2, final double y2, final double z2)
-    {
-        return this.minX < x2 && this.maxX > x1 && this.minY < y2 && this.maxY > y1 && this.minZ < z2 && this.maxZ > z1;
-    }
-
-    public boolean intersects(final AABB other)
-    {
-        return this.intersects(other.minX, other.minY, other.minZ, other.maxX, other.maxY, other.maxZ);
     }
 }
