@@ -74,6 +74,8 @@ public class BungeeApiCore extends ApiCore
     @Override
     protected void stop()
     {
+        // anulujemy wszystkie taski naszych komponentów bo w bungee moga sie wykonywac nawet po zatrzymaniu pluginu
+        ProxyServer.getInstance().getScheduler().cancel(this.bungeePlugin);
     }
 
     @Override
