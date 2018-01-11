@@ -39,6 +39,12 @@ public abstract class ServersGroupConfig
         return this.joiningPolicy;
     }
 
+    public void mergeConfigIntoThis(final ServersGroupConfig config)
+    {
+        this.serversType = config.serversType;
+        this.joiningPolicy = config.joiningPolicy;
+    }
+
     @Override
     public String toString()
     {

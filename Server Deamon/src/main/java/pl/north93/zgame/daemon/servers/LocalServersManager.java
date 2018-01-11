@@ -66,7 +66,7 @@ public class LocalServersManager
         }
     }
 
-    public ServerPatternConfig getPattern(final String patternId)
+    public @Nullable ServerPatternConfig getPattern(final String patternId)
     {
         final AutoScalingConfig autoScalingConfig = this.config.get();
         return findInCollection(autoScalingConfig.getPatterns(), ServerPatternConfig::getPatternName, patternId);
@@ -96,10 +96,12 @@ public class LocalServersManager
         }
         serverValue.delete();
 
+        // informujemy bungeecordy o usunietym serwerze
+        // to powinno byc bezpieczne bo serwer juz nie dziala wiec sila rzeczy graczy na nim nie ma
+        this.networkManager.getProxies().removeServer(server);
+
         // zwracamy port uzywany przez serwer do puli
         this.portManagement.returnPort(server.getConnectPort());
-
-        // todo notify bungeecords about deleted server
     }
 
     public void deployServer(final UUID serverId, final String patternId)

@@ -41,6 +41,16 @@ public class ManagedServersGroupConfig extends ServersGroupConfig
     }
 
     @Override
+    public void mergeConfigIntoThis(final ServersGroupConfig config)
+    {
+        super.mergeConfigIntoThis(config);
+
+        final ManagedServersGroupConfig managedConfig = (ManagedServersGroupConfig) config;
+        this.pattern = managedConfig.pattern;
+        this.rules = managedConfig.rules;
+    }
+
+    @Override
     public String toString()
     {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("pattern", this.pattern).append("rules", this.rules).toString();

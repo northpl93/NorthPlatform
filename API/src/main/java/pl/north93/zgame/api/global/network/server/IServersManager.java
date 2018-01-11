@@ -49,8 +49,17 @@ public interface IServersManager
      */
     Set<Server> inGroup(String group);
 
+    /**
+     * Zwraca listę wszystkich grup serwerów będących aktualnie aktywnych w sieci.
+     * @return wszystkie grupy serwerów.
+     */
     Set<? extends IServersGroup> getServersGroups();
 
+    /**
+     * Zwraca grupę serwerów o podanej nazwie.
+     * @param name Nazwa grupy serwerów.
+     * @return Grupa serwerów o podanej nazwie.
+     */
     IServersGroup getServersGroup(String name);
 
     Unsafe unsafe();

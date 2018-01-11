@@ -5,6 +5,7 @@ import java.util.UUID;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
+import pl.north93.zgame.api.global.network.daemon.config.ServersGroupConfig;
 import pl.north93.zgame.api.global.network.impl.ServerDto;
 import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.network.server.ServerType;
@@ -23,27 +24,52 @@ public class LocalUnManagedServersGroup extends AbstractLocalServersGroup<UnMana
         super(dto, config);
     }
 
-    private void insertServer(final ServerDto serverDto)
+    @Override
+    public void init()
     {
-        final Value<ServerDto> value = this.networkManager.getServers().unsafe().getServerDto(serverDto.getUuid());
-        value.set(serverDto);
+        for (final UnManagedServer serverConfig : this.config.getServers())
+        {
+            this.insertServer(serverConfig);
+        }
     }
 
     @Override
-    public void init()
+    public void mergeConfig(final ServersGroupConfig config)
+    {
+        super.mergeConfig(config);
+        final UnManagedServersGroupConfig updatedConfig = this.getConfig();
+
+        for (final UnManagedServer unManagedServer : updatedConfig.getServers())
+        {
+            if (this.getServerValue(unManagedServer.getServerId()).isAvailable())
+            {
+                // serwer jest juz utworzony w redisie
+                continue;
+            }
+
+            this.insertServer(unManagedServer);
+        }
+    }
+
+    // tworzy nowa instancje obiektu serwera na podstawie configu i wrzuca ja do redisa
+    private void insertServer(final UnManagedServer unManagedServer)
     {
         final ServersGroupDto groupDto = this.getAsDto();
         final ServerType serversType = this.config.getServersType();
         final JoiningPolicy joiningPolicy = this.config.getJoiningPolicy();
 
-        for (final UnManagedServer serverConfig : this.config.getServers())
-        {
-            final UUID serverId = serverConfig.getServerId();
-            final String connectIp = serverConfig.getConnectIp();
-            final Integer connectPort = serverConfig.getConnectPort();
+        final UUID serverId = unManagedServer.getServerId();
+        final String connectIp = unManagedServer.getConnectIp();
+        final Integer connectPort = unManagedServer.getConnectPort();
 
-            final ServerDto serverDto = new ServerDto(serverId, false, serversType, ServerState.CREATING, joiningPolicy, connectIp, connectPort, groupDto);
-            this.insertServer(serverDto);
-        }
+        final ServerDto serverDto = new ServerDto(serverId, false, serversType, ServerState.CREATING, joiningPolicy, connectIp, connectPort, groupDto);
+
+        final Value<ServerDto> value = this.getServerValue(serverDto.getUuid());
+        value.set(serverDto);
+    }
+
+    private Value<ServerDto> getServerValue(final UUID serverId)
+    {
+        return this.networkManager.getServers().unsafe().getServerDto(serverId);
     }
 }

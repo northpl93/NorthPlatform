@@ -9,7 +9,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.redis.observable.Lock;
-import pl.north93.zgame.api.global.redis.observable.Value;
 
 class CachedHashValueImpl<T> extends CachedValue<T>
 {
@@ -145,16 +144,6 @@ class CachedHashValueImpl<T> extends CachedValue<T>
     public void setExpire(final T newValue, final long time, final TimeUnit timeUnit)
     {
         throw new UnsupportedOperationException("Expire is not supported in hash value.");
-    }
-
-    @Override
-    public Value<T> setIfUnavailable(final Supplier<T> defaultValue)
-    {
-        if (! this.isAvailable())
-        {
-            this.set(defaultValue.get());
-        }
-        return this;
     }
 
     @Override

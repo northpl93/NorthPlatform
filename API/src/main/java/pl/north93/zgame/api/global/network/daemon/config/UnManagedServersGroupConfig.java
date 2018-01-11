@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -37,6 +38,36 @@ public class UnManagedServersGroupConfig extends ServersGroupConfig
     public ServersGroupType getType()
     {
         return ServersGroupType.UN_MANAGED;
+    }
+
+    @Override
+    public void mergeConfigIntoThis(final ServersGroupConfig config)
+    {
+        super.mergeConfigIntoThis(config);
+
+        final UnManagedServersGroupConfig unManagedConfig = (UnManagedServersGroupConfig) config;
+
+        for (final UnManagedServer newServer : unManagedConfig.servers)
+        {
+            if (this.containsServer(newServer.getServerId()))
+            {
+                continue;
+            }
+
+            this.servers.add(newServer);
+        }
+    }
+
+    private boolean containsServer(final UUID uuid)
+    {
+        for (final UnManagedServer server : this.servers)
+        {
+            if (server.getServerId().equals(uuid))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

@@ -43,7 +43,7 @@ public class LocalServerConsole
         }
         catch (final IOException e)
         {
-            logger.log(Level.SEVERE, "Failed to execute server command", e);
+            logger.log(Level.SEVERE, "Failed to execute server command: " + consoleCommand, e);
         }
     }
 
@@ -62,7 +62,7 @@ public class LocalServerConsole
         }
         catch (final IOException e)
         {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to create process for " + instance.getServerId(), e);
         }
 
         return new LocalServerConsole(instance, process);

@@ -14,13 +14,16 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.config.ConfigUpdatedNetEvent;
 import pl.north93.zgame.api.global.config.IConfig;
 import pl.north93.zgame.api.global.config.NetConfig;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.server.group.ServersGroupDto;
+import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 import pl.north93.zgame.api.global.redis.observable.Hash;
 import pl.north93.zgame.api.global.network.daemon.config.AutoScalingConfig;
 import pl.north93.zgame.api.global.network.daemon.config.ServersGroupConfig;
+import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.controller.servers.scaler.value.IScalingValue;
 
 public class LocalGroupsManager
@@ -60,19 +63,32 @@ public class LocalGroupsManager
         return this.localGroups.values();
     }
 
+    @NetEventSubscriber(ConfigUpdatedNetEvent.class)
+    public void onConfigUpdated(final ConfigUpdatedNetEvent event)
+    {
+        if (! event.getConfigName().equals("autoscaler"))
+        {
+            return;
+        }
+
+        this.logger.log(Level.INFO, "Triggered reload of autoscaler config...");
+        this.loadGroups();
+    }
+
     public void loadGroups()
     {
         final AutoScalingConfig config = this.config.get();
 
         for (final ServersGroupConfig groupConfig : config.getServersGroups())
         {
-            if (this.getGroup(groupConfig.getName()) != null)
+            final ILocalServersGroup group = this.getGroup(groupConfig.getName());
+            if (group == null)
             {
-                // nie dodajemy kolejny raz
+                this.createGroupFromConfig(groupConfig);
                 continue;
             }
 
-            this.createGroupFromConfig(groupConfig);
+            this.mergeGroupConfig(group, groupConfig);
         }
     }
 
@@ -87,6 +103,24 @@ public class LocalGroupsManager
         localGroup.init();
 
         this.logger.log(Level.INFO, "Created {0} group with name {1}", new Object[]{config.getType(), config.getName()});
+    }
+
+    private void mergeGroupConfig(final ILocalServersGroup localServersGroup, final ServersGroupConfig config)
+    {
+        // wywolujemy zmergowanie configu
+        localServersGroup.mergeConfig(config);
+
+        final Hash<ServersGroupDto> serversGroups = this.networkManager.getServers().unsafe().getServersGroups();
+        final Value<ServersGroupDto> groupDtoValue = serversGroups.getAsValue(localServersGroup.getName());
+
+        // aktualizujemy obiekt w redisie.
+        groupDtoValue.update(old ->
+        {
+            // tworzymy nowy obiekt z zaktualizowanymi wlasciwosciami: typ serwerow, polityka wchodzenia
+            return new ServersGroupDto(old.getName(), old.getType(), config.getServersType(), config.getJoiningPolicy());
+        });
+
+        this.logger.log(Level.INFO, "Updated config of group {0}", localServersGroup.getName());
     }
 
     @Override

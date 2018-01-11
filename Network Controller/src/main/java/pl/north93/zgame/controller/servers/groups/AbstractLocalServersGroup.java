@@ -1,5 +1,7 @@
 package pl.north93.zgame.controller.servers.groups;
 
+import com.google.common.base.Preconditions;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -29,6 +31,15 @@ abstract class AbstractLocalServersGroup<CONFIG extends ServersGroupConfig> impl
     public CONFIG getConfig()
     {
         return this.config;
+    }
+
+    @Override
+    public void mergeConfig(final ServersGroupConfig config)
+    {
+        Preconditions.checkState(this.config.getName().equals(config.getName()));
+        Preconditions.checkState(this.config.getType() == config.getType());
+
+        this.config.mergeConfigIntoThis(config);
     }
 
     @Override

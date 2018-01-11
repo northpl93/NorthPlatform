@@ -10,10 +10,9 @@ import com.lambdaworks.redis.api.sync.RedisCommands;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.storage.StorageConnector;
 import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
-import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.api.global.storage.StorageConnector;
 
 class CachedValueImpl<T> extends CachedValue<T>
 {
@@ -211,16 +210,6 @@ class CachedValueImpl<T> extends CachedValue<T>
             redis.psetex(this.objectKey.getKey(), time, serialized);
         }
         this.observationManager.getValueSubHandler().update(this, serialized);
-    }
-
-    @Override
-    public Value<T> setIfUnavailable(final Supplier<T> defaultValue)
-    {
-        if (! this.isAvailable())
-        {
-            this.set(defaultValue.get());
-        }
-        return this;
     }
 
     @Override

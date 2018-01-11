@@ -1,5 +1,6 @@
 package pl.north93.zgame.api.global.redis.observable;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -12,6 +13,15 @@ public interface Value<T>
      * @return value content.
      */
     T get();
+
+    /**
+     * Returns value content as {@link Optional}.
+     * @return value content as optional.
+     */
+    default Optional<T> getOptional()
+    {
+        return Optional.ofNullable(this.get());
+    }
 
     /**
      * Returns value content ignoring cache.
@@ -69,8 +79,6 @@ public interface Value<T>
      * @param newValue new value which will be uploaded to redis.
      */
     void setExpire(T newValue, long time, TimeUnit timeUnit);
-
-    Value<T> setIfUnavailable(Supplier<T> defaultValue);
 
     /**
      * Deletes this value from redis and local cache.

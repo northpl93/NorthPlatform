@@ -3,6 +3,7 @@ package pl.north93.zgame.api.bungee.proxy.impl;
 import java.net.InetSocketAddress;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -53,7 +54,15 @@ class ProxyServerListImpl implements IProxyServerList
         final Map<String, ServerInfo> servers = this.proxyServer.getConfig().getServers();
         final String proxyName = proxyData.getProxyName();
 
-        servers.get(proxyName).getPlayers().forEach(ProxiedPlayer::disconnect);
+        final ServerInfo serverInfo = servers.get(proxyName);
+        if (serverInfo == null)
+        {
+            // z jakiegos powodu serwer juz nie istnieje, zabezpieczenie przed ewentualnym NPE
+            this.logger.log(Level.WARNING, "Tried to removeServer({0}), but server doesnt exist", proxyData.getProxyName());
+            return;
+        }
+
+        serverInfo.getPlayers().forEach(ProxiedPlayer::disconnect);
         servers.remove(proxyName);
     }
 

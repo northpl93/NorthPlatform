@@ -1,6 +1,9 @@
 package pl.north93.zgame.daemon.servers;
 
+import javax.annotation.Nullable;
+
 import java.io.File;
+import java.util.UUID;
 
 import pl.north93.zgame.api.global.network.impl.ServerDto;
 import pl.north93.zgame.api.global.redis.observable.Value;
@@ -29,6 +32,11 @@ public class LocalServerInstance
         return this.serverDto;
     }
 
+    public @Nullable UUID getServerId()
+    {
+        return this.serverDto.getOptional().map(ServerDto::getUuid).orElse(null);
+    }
+
     public File getWorkspace()
     {
         return this.workspace;
@@ -42,5 +50,15 @@ public class LocalServerInstance
     public LocalServerConsole getConsole()
     {
         return this.console;
+    }
+
+    /**
+     * Sprawdza czy proces serwera zostal zatrzymany.
+     *
+     * @return True jesli proces serwera nie jest uruchomiony.
+     */
+    public boolean isStopped()
+    {
+        return ! this.console.getProcess().isAlive();
     }
 }
