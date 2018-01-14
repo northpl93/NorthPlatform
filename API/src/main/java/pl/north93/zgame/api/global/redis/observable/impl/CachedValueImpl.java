@@ -262,12 +262,6 @@ class CachedValueImpl<T> extends CachedValue<T>
     }
 
     @Override
-    protected void finalize() throws Throwable
-    {
-        this.observationManager.getValueSubHandler().removeListener(this);
-    }
-
-    @Override
     public String toString()
     {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("clazz", this.clazz).append("objectKey", this.objectKey).append("cache", this.cache).toString();

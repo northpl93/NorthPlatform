@@ -44,9 +44,10 @@ public class Heal extends NorthCommand
         {
             player = (Player) sender.unwrapped();
         }
-        player.setFoodLevel(20);
         player.setHealth(20);
+        player.setFoodLevel(20);
         player.setSaturation(20);
+        player.setExhaustion(0);
 
         sender.sendMessage(this.messages, "command.heal.healed");
     }
