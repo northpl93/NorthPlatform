@@ -22,6 +22,19 @@ public class AABB
         this(nms.a, nms.b, nms.c, nms.d, nms.e, nms.f);
     }
 
+    /**
+     * Tworzy nowy AABB na podstawie NMSowego z danym offsetem.
+     *
+     * @param nms NMSowy AxisAlignedBB.
+     * @param offsetX Wartość dodana na osi X.
+     * @param offsetY Wartość dodana na osi Y.
+     * @param offsetZ Wartość dodana na osi Z.
+     */
+    public AABB(final AxisAlignedBB nms, final double offsetX, final double offsetY, final double offsetZ)
+    {
+        this(nms.a + offsetX, nms.b + offsetY, nms.c + offsetZ, nms.d + offsetX, nms.e + offsetY, nms.f + offsetZ);
+    }
+
     public AxisAlignedBB toNms()
     {
         return new AxisAlignedBB(this.minX, this.minY,  this.minZ, this.maxX, this.maxY, this.maxZ);

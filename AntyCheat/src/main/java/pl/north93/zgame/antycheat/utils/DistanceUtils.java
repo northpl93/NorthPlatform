@@ -19,7 +19,7 @@ public final class DistanceUtils
      * Nie uwzglednia cieczy.
      *
      * @param entity Entity dla ktorego obliczamy odleglosc.
-     * @param location Lokacja w ktorej znajduje sie entity.
+     * @param position Lokacja w ktorej znajduje sie entity.
      * @param growAABBSurface O ile powiekszyc wartosci X i Z bounding boxa.
      * @return Odleglosc entity w danej lokalizacji od gruntu.
      */

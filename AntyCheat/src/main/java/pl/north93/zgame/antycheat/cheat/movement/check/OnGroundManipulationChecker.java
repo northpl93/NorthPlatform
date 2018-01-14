@@ -29,9 +29,15 @@ public class OnGroundManipulationChecker implements EventAnalyser<ClientMoveTime
      */
     private static final double IS_ON_GROUND_EPSILON = 0.1;
     /**
-     * Wysokosc od jakiej gracz uznawany jest za uzywajacego no-fly, spidera.
+     * Wysokosc od jakiej gracz uznawany jest za na pewno uzywajacego no-fly, spidera.
      */
-    private static final double NO_FALL_EDGE_HEIGHT = 1.5;
+    private static final double NO_FALL_EDGE_HEIGHT = 1.25;
+    /**
+     * Gdy gracz znajduje sie przy scianie to powiekszony AABB powoduje ze odleglosc do ziemi jest ujemna.
+     * Wykorzystujemy ten fakt aby lepiej lapac spidera.
+     * Podczas parkourowania czasami wystepuja tu male wartosci ujemne, dlatego nie dajemy tu 0.
+     */
+    private static final double TO_GROUND_BIGGER_AABB_SPIDER = - 0.5D;
 
     @Override
     public void configure(final EventAnalyserConfig config)
@@ -129,8 +135,14 @@ public class OnGroundManipulationChecker implements EventAnalyser<ClientMoveTime
         }
         else
         {
-            final double toGroundWithBiggerAABB = entityDistanceToGround(player, location, 0.4);
-            if (this.isInAir(toGroundWithBiggerAABB))
+            final double toGroundWithBiggerAABB = entityDistanceToGround(player, location, 0.3);
+            //Bukkit.broadcastMessage("toGround=" + toGround + " withBigger=" + toGroundWithBiggerAABB);
+            if (toGroundWithBiggerAABB < TO_GROUND_BIGGER_AABB_SPIDER)
+            {
+                // gracz jest przy scianie; bardzo prawdopodobne ze korzysta z spidera
+                falsePositiveProbability = FalsePositiveProbability.LOW;
+            }
+            else if (this.isInAir(toGroundWithBiggerAABB))
             {
                 // wiekszy AABB ciagle jest w powietrzu, teraz sprawdzamy false-positive
                 // takze zwiazane z parkourowaniem
