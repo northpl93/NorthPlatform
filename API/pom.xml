@@ -213,6 +213,8 @@
                                     <exclude>org.spigotmc:spigot-server</exclude>
                                     <exclude>net.md-5:*</exclude>
 
+                                    <exclude>org.yaml:snakeyaml</exclude>
+
                                     <exclude>com.google.code.findbugs:annotations</exclude>
                                     <exclude>de.schlichtherle:truezip</exclude>
                                     <exclude>net.sf.trove4j:trove4j</exclude>

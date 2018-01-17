@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <components>
+        <component>
+            <name>MiniGame.ElytraRace</name>
+            <mainClass>pl.arieals.minigame.elytrarace.ElytraRaceComponent</mainClass>
+            <description>Elytra Race plugin.</description>
+            <dependencies>
+                <dependency>MiniGameApi.Server</dependency>
+                <dependency>API.EntityHider</dependency>
+                <dependency>GlobalShops.Server</dependency>
+            </dependencies>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>
