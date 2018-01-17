@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <!-- Lista komponentów dla platformy BUNGEE -->
+    <components>
+        <component>
+            <name>API.ProxyServerManager</name>
+            <mainClass>pl.north93.zgame.api.bungee.proxy.impl.ProxyServerManagerImpl</mainClass>
+            <description>Core component that manages the proxy instance.</description>
+            <dependencies>
+                <dependency>API.Database.Redis.Observer</dependency>
+                <dependency>API.Database.Redis.RPC</dependency>
+            </dependencies>
+            <platforms>
+                <platform>BUNGEE</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>

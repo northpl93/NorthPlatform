@@ -1,13 +1,13 @@
 package pl.north93.zgame.api.bukkit.utils.nms;
 
-import net.minecraft.server.v1_10_R1.EntityFallingBlock;
-import net.minecraft.server.v1_10_R1.IBlockData;
-import net.minecraft.server.v1_10_R1.World;
+import net.minecraft.server.v1_12_R1.EntityFallingBlock;
+import net.minecraft.server.v1_12_R1.IBlockData;
+import net.minecraft.server.v1_12_R1.World;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_10_R1.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -55,17 +55,17 @@ public class NorthFallingBlock extends EntityFallingBlock
     }
 
     @Override
-    public void m()
+    public void B_() // todo upewnic sie ze zmieniono na dobra metode (m()) przy update 1.10->1.12
     {
         if (this.derped)
         {
             return; // nothing
         }
-        super.m();
+        super.B_();
     }
 
     @Override
-    public void e(final float f, final float f1)
+    public void e(final float f, final float f1) // dodo upewnic sie ze dobra metoda po update
     {
         if (this.derped)
         {

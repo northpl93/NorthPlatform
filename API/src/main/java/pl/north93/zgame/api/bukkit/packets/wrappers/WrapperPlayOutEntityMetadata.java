@@ -2,7 +2,7 @@ package pl.north93.zgame.api.bukkit.packets.wrappers;
 
 import java.lang.invoke.MethodHandle;
 
-import net.minecraft.server.v1_10_R1.PacketPlayOutEntityMetadata;
+import net.minecraft.server.v1_12_R1.PacketPlayOutEntityMetadata;
 
 public class WrapperPlayOutEntityMetadata extends AbstractWrapper<PacketPlayOutEntityMetadata>
 {

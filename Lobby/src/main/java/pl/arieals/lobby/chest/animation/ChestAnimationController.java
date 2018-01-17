@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import net.minecraft.server.v1_10_R1.MinecraftServer;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
 
 import org.bukkit.entity.Player;
 

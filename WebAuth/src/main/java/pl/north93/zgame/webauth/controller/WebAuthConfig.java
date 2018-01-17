@@ -1,25 +1,24 @@
 package pl.north93.zgame.webauth.controller;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.cfg.annotations.CfgComment;
-import org.diorite.cfg.annotations.defaults.CfgIntDefault;
-import org.diorite.cfg.annotations.defaults.CfgStringDefault;
-
-@CfgComment("Konfiguracja komendy do logowania przez przegladarke")
+@XmlRootElement(name = "webauth")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class WebAuthConfig
 {
-    @CfgComment("Adres URL do logowania")
-    @CfgStringDefault("http://example.com/{0}")
+    @XmlElement
     private String loginUrl;
 
-    @CfgComment("Dlugosc generowanego klucza")
-    @CfgIntDefault(32)
+    @XmlElement
     private int    keyLength;
 
-    @CfgComment("Czas w sekundach po ktorych klucz wygasa")
-    @CfgIntDefault(5 * 60)
+    @XmlElement
     private int    expireTime;
 
     public String getLoginUrl()

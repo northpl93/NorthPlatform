@@ -1,28 +1,40 @@
 package pl.north93.zgame.api.global.component;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.cfg.annotations.defaults.CfgBooleanDefault;
-import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
-
 import pl.north93.zgame.api.global.Platform;
 
+@XmlRootElement(name = "component")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ComponentDescription
 {
+    @XmlElement
     private String       mainClass;
-    @CfgDelegateDefault("{ArrayList}")
-    private List<String> packages;
+    @XmlElementWrapper(name = "packages")
+    @XmlElement(name = "package")
+    private List<String> packages = new ArrayList<>();
+    @XmlElement
     private String       name;
-    @CfgBooleanDefault(true)
-    private boolean      enabled;
+    @XmlElement
+    private boolean      enabled = true;
+    @XmlElement
     private String       description;
-    @CfgDelegateDefault("{ArrayList}")
-    private List<String> dependencies;
-    @CfgDelegateDefault("defaultPlatforms")
-    private Platform[]   platforms;
+    @XmlElementWrapper(name = "dependencies")
+    @XmlElement(name = "dependency")
+    private List<String> dependencies = new ArrayList<>();
+    @XmlElementWrapper(name = "platforms")
+    @XmlElement(name = "platform")
+    private Platform[]   platforms = Platform.values(); // deault all platforms
 
     public String getMainClass()
     {

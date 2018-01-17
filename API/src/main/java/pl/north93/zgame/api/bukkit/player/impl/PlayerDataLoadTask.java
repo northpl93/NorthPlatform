@@ -59,7 +59,7 @@ class PlayerDataLoadTask implements Runnable
         }
 
         // aktualizujemy jezyk gracza; mozemy to zrobic bezpiecznie tutaj
-        updateLocale(this.player, northPlayer.getLocale());
+        updateLocale(this.player, northPlayer.getMyLocale());
 
         // zmieniamy display name; mozna to zrobic bezpiecznie tutaj
         if (iOnlinePlayer.hasDisplayName())

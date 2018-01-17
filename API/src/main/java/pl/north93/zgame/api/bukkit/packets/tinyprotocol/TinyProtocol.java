@@ -35,32 +35,25 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.ChannelPromise;
 
-/**
- * Represents a very tiny alternative to ProtocolLib.
- * <p>
- * It now supports intercepting packets during login and status ping (such as OUT_SERVER_PING)!
- *
- * @author Kristian
- */
 public abstract class TinyProtocol {
     private static final AtomicInteger ID = new AtomicInteger(0);
 
     // Used in order to lookup a channel
-    private static final MethodInvoker          getPlayerHandle = getMethod("{obc}.entity.CraftPlayer", "getHandle");
-    private static final FieldAccessor<Object>  getConnection   = getField("{nms}.EntityPlayer", "playerConnection", Object.class);
-    private static final FieldAccessor<Object>  getManager      = getField("{nms}.PlayerConnection", "networkManager", Object.class);
-    private static final FieldAccessor<Channel> getChannel      = getField("{nms}.NetworkManager", Channel.class, 0);
+    private static final MethodInvoker getPlayerHandle = Reflection.getMethod("{obc}.entity.CraftPlayer", "getHandle");
+    private static final FieldAccessor<Object> getConnection = Reflection.getField("{nms}.EntityPlayer", "playerConnection", Object.class);
+    private static final FieldAccessor<Object> getManager = Reflection.getField("{nms}.PlayerConnection", "networkManager", Object.class);
+    private static final FieldAccessor<Channel> getChannel = Reflection.getField("{nms}.NetworkManager", Channel.class, 0);
 
     // Looking up ServerConnection
-    private static final Class<Object> minecraftServerClass = getUntypedClass("{nms}.MinecraftServer");
-    private static final Class<Object> serverConnectionClass = getUntypedClass("{nms}.ServerConnection");
-    private static final FieldAccessor<Object> getMinecraftServer = getField("{obc}.CraftServer", minecraftServerClass, 0);
-    private static final FieldAccessor<Object> getServerConnection = getField(minecraftServerClass, serverConnectionClass, 0);
-    private static final MethodInvoker getNetworkMarkers = getTypedMethod(serverConnectionClass, null, List.class, serverConnectionClass);
+    private static final Class<Object> minecraftServerClass = Reflection.getUntypedClass("{nms}.MinecraftServer");
+    private static final Class<Object> serverConnectionClass = Reflection.getUntypedClass("{nms}.ServerConnection");
+    private static final FieldAccessor<Object> getMinecraftServer = Reflection.getField("{obc}.CraftServer", minecraftServerClass, 0);
+    private static final FieldAccessor<Object> getServerConnection = Reflection.getField(minecraftServerClass, serverConnectionClass, 0);
+    private static final MethodInvoker getNetworkMarkers = Reflection.getTypedMethod(serverConnectionClass, null, List.class, serverConnectionClass);
 
     // Packets we have to intercept
-    private static final Class<?> PACKET_LOGIN_IN_START = getMinecraftClass("PacketLoginInStart");
-    private static final FieldAccessor<GameProfile> getGameProfile = getField(PACKET_LOGIN_IN_START, GameProfile.class, 0);
+    private static final Class<?> PACKET_LOGIN_IN_START = Reflection.getMinecraftClass("PacketLoginInStart");
+    private static final FieldAccessor<GameProfile> getGameProfile = Reflection.getField(PACKET_LOGIN_IN_START, GameProfile.class, 0);
 
     // Speedup channel lookup
     private Map<String, Channel> channelLookup = new MapMaker().weakValues().makeMap();
@@ -107,7 +100,6 @@ public abstract class TinyProtocol {
             // Damn you, late bind
             plugin.getLogger().info("[TinyProtocol] Delaying server channel injection due to late bind.");
 
-            // Damn you, late bind
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -130,7 +122,7 @@ public abstract class TinyProtocol {
                     synchronized (networkManagers) {
                         // Stop injecting channels
                         if (!closed) {
-                            injectChannelInternal(channel);
+                            channel.eventLoop().submit(() -> injectChannelInternal(channel));
                         }
                     }
                 } catch (Exception e) {
@@ -207,7 +199,7 @@ public abstract class TinyProtocol {
 
         // Find the correct list, or implicitly throw an exception
         for (int i = 0; looking; i++) {
-            List<Object> list = getField(serverConnection.getClass(), List.class, i).get(serverConnection);
+            List<Object> list = Reflection.getField(serverConnection.getClass(), List.class, i).get(serverConnection);
 
             for (Object item : list) {
                 if (!ChannelFuture.class.isInstance(item))
@@ -257,12 +249,12 @@ public abstract class TinyProtocol {
      * <p>
      * Note that this is not executed on the main thread.
      *
-     * @param reciever - the receiving player, NULL for early login/status packets.
+     * @param receiver - the receiving player, NULL for early login/status packets.
      * @param channel - the channel that received the packet. Never NULL.
      * @param packet - the packet being sent.
      * @return The packet to send instead, or NULL to cancel the transmission.
      */
-    public Object onPacketOutAsync(Player reciever, Channel channel, Object packet) {
+    public Object onPacketOutAsync(Player receiver, Channel channel, Object packet) {
         return packet;
     }
 
@@ -283,7 +275,7 @@ public abstract class TinyProtocol {
     /**
      * Send a packet to a particular player.
      * <p>
-     * Note that {@link #onPacketOutAsync(Player, Object)} will be invoked with this packet.
+     * Note that {@link #onPacketOutAsync(Player, Channel, Object)} will be invoked with this packet.
      *
      * @param player - the destination player.
      * @param packet - the packet to send.
@@ -295,7 +287,7 @@ public abstract class TinyProtocol {
     /**
      * Send a packet to a particular client.
      * <p>
-     * Note that {@link #onPacketOutAsync(Player, Object)} will be invoked with this packet.
+     * Note that {@link #onPacketOutAsync(Player, Channel, Object)} will be invoked with this packet.
      *
      * @param channel - client identified by a channel.
      * @param packet - the packet to send.
@@ -307,7 +299,7 @@ public abstract class TinyProtocol {
     /**
      * Pretend that a given packet has been received from a player.
      * <p>
-     * Note that {@link #onPacketInAsync(Player, Object)} will be invoked with this packet.
+     * Note that {@link #onPacketInAsync(Player, Channel, Object)} will be invoked with this packet.
      *
      * @param player - the player that sent the packet.
      * @param packet - the packet that will be received by the server.
@@ -319,7 +311,7 @@ public abstract class TinyProtocol {
     /**
      * Pretend that a given packet has been received from a given client.
      * <p>
-     * Note that {@link #onPacketInAsync(Player, Object)} will be invoked with this packet.
+     * Note that {@link #onPacketInAsync(Player, Channel, Object)} will be invoked with this packet.
      *
      * @param channel - client identified by a channel.
      * @param packet - the packet that will be received by the server.
@@ -353,6 +345,7 @@ public abstract class TinyProtocol {
     /**
      * Add a custom channel handler to the given channel.
      *
+     * @param channel - the channel to inject.
      * @return The intercepted channel, or NULL if it has already been injected.
      */
     public void injectChannel(Channel channel) {
@@ -362,6 +355,7 @@ public abstract class TinyProtocol {
     /**
      * Add a custom channel handler to the given channel.
      *
+     * @param channel - the channel to inject.
      * @return The packet interceptor.
      */
     private PacketInterceptor injectChannelInternal(Channel channel) {
@@ -429,14 +423,7 @@ public abstract class TinyProtocol {
 
             @Override
             public void run() {
-                try
-                {
-                    channel.pipeline().remove(handlerName);
-                }
-                catch (final Exception exc)
-                {
-                    TinyProtocol.this.plugin.getLogger().warning("Exception occurred during handler remove. (" + exc.getMessage() + ")");
-                }
+                channel.pipeline().remove(handlerName);
             }
 
         });

@@ -2,12 +2,11 @@ package pl.north93.zgame.api.bukkit.player.impl;
 
 import java.util.Locale;
 
-import com.destroystokyo.paper.event.player.PlayerLocaleChangeEvent;
-
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerLocaleChangeEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -25,7 +24,7 @@ public class LanguageKeeper implements Listener
     public void onClientSettings(final PlayerLocaleChangeEvent event)
     {
         final INorthPlayer northPlayer = this.bukkitPlayers.getPlayer(event.getPlayer());
-        updateLocale(event.getPlayer(), northPlayer.getLocale());
+        updateLocale(event.getPlayer(), northPlayer.getMyLocale());
     }
 
     public static void updateLocale(final Player player, final Locale locale)

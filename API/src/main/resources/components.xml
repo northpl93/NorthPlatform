@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <!-- Dołączenie pozostałych plików -->
+    <includes>
+        <include>components_bukkit.xml</include>
+        <include>components_bungee.xml</include>
+    </includes>
+
+    <!-- Zeby skanowanie nie trwalo wieki wykluczamy pakiety libek -->
+    <excludedPackages>
+        <excludedPackage>rx</excludedPackage>
+        <excludedPackage>org</excludedPackage>
+        <excludedPackage>javax</excludedPackage>
+        <excludedPackage>javassist</excludedPackage>
+        <excludedPackage>it</excludedPackage>
+        <excludedPackage>io</excludedPackage>
+        <excludedPackage>com</excludedPackage>
+    </excludedPackages>
+
+    <!-- Lista komponentów dla platformy STANDALONE -->
+    <components>
+        <component>
+            <name>API.Commands</name>
+            <mainClass>pl.north93.zgame.api.global.commands.impl.CommandsManagerDecorator</mainClass>
+            <description>Provides unified commands API.</description>
+        </component>
+
+        <component>
+            <name>API.URI</name>
+            <mainClass>pl.north93.zgame.api.global.uri.impl.UriManagerImpl</mainClass>
+            <description>Unified system for inter-component communication.</description>
+        </component>
+
+        <component>
+            <name>API.Database.StorageConnector</name>
+            <mainClass>pl.north93.zgame.api.global.storage.StorageConnector</mainClass>
+            <description>Provides connection with Redis and MongoDB databases.</description>
+        </component>
+
+        <component>
+            <name>API.Database.Redis.MessagePackSerializer</name>
+            <mainClass>pl.north93.zgame.api.global.redis.messaging.impl.TemplateManagerImpl</mainClass>
+            <description>Provides serialization to Message Pack format.</description>
+        </component>
+
+        <component>
+            <name>API.Database.Redis.Subscriber</name>
+            <mainClass>pl.north93.zgame.api.global.redis.subscriber.RedisSubscriberImpl</mainClass>
+            <description>Provides subscription API for redis database.</description>
+            <dependencies>
+                <dependency>API.Database.StorageConnector</dependency>
+            </dependencies>
+        </component>
+
+        <component>
+            <name>API.Database.Redis.Observer</name>
+            <mainClass>pl.north93.zgame.api.global.redis.observable.impl.ObservationManagerImpl</mainClass>
+            <description>Provides value observation API for redis database.</description>
+            <dependencies>
+                <dependency>API.Database.StorageConnector</dependency>
+                <dependency>API.Database.Redis.MessagePackSerializer</dependency>
+                <dependency>API.Database.Redis.Subscriber</dependency>
+            </dependencies>
+        </component>
+
+        <component>
+            <name>API.Database.Redis.RPC</name>
+            <mainClass>pl.north93.zgame.api.global.redis.rpc.impl.RpcManagerImpl</mainClass>
+            <description>Provides remote procedure call infrastructure.</description>
+            <dependencies>
+                <dependency>API.Database.StorageConnector</dependency>
+                <dependency>API.Database.Redis.MessagePackSerializer</dependency>
+                <dependency>API.Database.Redis.Subscriber</dependency>
+            </dependencies>
+        </component>
+
+        <component>
+            <name>API.Database.Redis.Event</name>
+            <mainClass>pl.north93.zgame.api.global.redis.event.impl.EventManagerImpl</mainClass>
+            <description>Simple redis-driven events framework.</description>
+            <dependencies>
+                <dependency>API.Database.StorageConnector</dependency>
+                <dependency>API.Database.Redis.MessagePackSerializer</dependency>
+                <dependency>API.Database.Redis.Subscriber</dependency>
+            </dependencies>
+        </component>
+
+        <component>
+            <name>API.Config.Client</name>
+            <mainClass>pl.north93.zgame.api.global.config.client.ConfigClientImpl</mainClass>
+            <description>Configuration system client.</description>
+            <dependencies>
+                <dependency>API.Database.Redis.Observer</dependency>
+                <dependency>API.Database.Redis.RPC</dependency>
+            </dependencies>
+        </component>
+
+        <component>
+            <name>API.MinecraftNetwork.PermissionsManager</name>
+            <mainClass>pl.north93.zgame.api.global.permissions.PermissionsManager</mainClass>
+            <description>Manages player's permissions.</description>
+            <dependencies>
+                <dependency>API.Config.Client</dependency>
+            </dependencies>
+        </component>
+
+        <component>
+            <name>API.MinecraftNetwork.NetworkManager</name>
+            <mainClass>pl.north93.zgame.api.global.network.impl.NetworkManager</mainClass>
+            <description>Provides core functions to manage Minecraft's network.</description>
+            <packages>
+                <package>pl.north93.zgame.api.global.network</package>
+            </packages>
+            <dependencies>
+                <dependency>API.Database.Redis.Observer</dependency>
+                <dependency>API.Database.Redis.RPC</dependency>
+                <dependency>API.MinecraftNetwork.PermissionsManager</dependency>
+            </dependencies>
+        </component>
+    </components>
+</bundle>

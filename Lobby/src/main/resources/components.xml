@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <components>
+        <component>
+            <name>Lobby.Features</name>
+            <mainClass>pl.arieals.lobby.LobbyFeatures</mainClass>
+            <description>Base features of lobby.</description>
+            <dependencies>
+                <dependency>API.GuiManager</dependency>
+                <dependency>GlobalShops.Server</dependency>
+                <dependency>MiniGameApi.Server</dependency>
+            </dependencies>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>

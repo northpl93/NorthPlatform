@@ -13,7 +13,7 @@ public interface IComponentManager
 
     default void doComponentScan(ClassLoader classLoader)
     {
-        this.doComponentScan("components.yml", classLoader);
+        this.doComponentScan("components.xml", classLoader);
     }
 
     /**

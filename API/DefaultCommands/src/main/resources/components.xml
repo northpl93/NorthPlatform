@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <components>
+        <component>
+            <name>API.DefaultCommands</name>
+            <mainClass>pl.north93.zgame.api.defaultcommands.DefaultCommands</mainClass>
+            <description>Provides base commands.</description>
+            <dependencies>
+                <dependency>API.Commands</dependency>
+                <dependency>API.MinecraftNetwork.NetworkManager</dependency>
+            </dependencies>
+        </component>
+
+        <component>
+            <name>API.BukkitCommands</name>
+            <mainClass>pl.north93.zgame.api.bukkitcommands.BukkitCommands</mainClass>
+            <description>Provides base commands for Bukkit server.</description>
+            <dependencies>
+                <dependency>API.Commands</dependency>
+                <dependency>API.MinecraftNetwork.NetworkManager</dependency>
+                <dependency>API.MinecraftNetwork.PermissionsManager</dependency>
+            </dependencies>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>

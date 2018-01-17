@@ -5,8 +5,8 @@ import java.util.Map;
 import org.diorite.utils.reflections.DioriteReflectionUtils;
 import org.diorite.utils.reflections.FieldAccessor;
 
-import net.minecraft.server.v1_10_R1.Entity;
-import net.minecraft.server.v1_10_R1.EntityTypes;
+import net.minecraft.server.v1_12_R1.Entity;
+import net.minecraft.server.v1_12_R1.EntityTypes;
 
 public class GoldHunterEntityUtils
 {

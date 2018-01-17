@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <components>
+        <component>
+            <name>MiniGameApi.Server</name>
+            <mainClass>pl.arieals.api.minigame.server.MiniGameServer</mainClass>
+            <description>MiniGames API.</description>
+            <packages>
+                <package>pl.arieals.api.minigame.server</package>
+                <package>pl.arieals.api.minigame.shared</package>
+            </packages>
+            <dependencies>
+                <dependency>API.Database.Redis.RPC</dependency>
+                <dependency>API.Database.Redis.Event</dependency>
+                <dependency>API.Economy</dependency>
+            </dependencies>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+
+        <component>
+            <name>MiniGameApi.Controller</name>
+            <mainClass>pl.arieals.api.minigame.controller.MiniGameController</mainClass>
+            <description>MiniGames API Controller.</description>
+            <packages>
+                <package>pl.arieals.api.minigame.controller</package>
+                <package>pl.arieals.api.minigame.shared</package>
+            </packages>
+            <dependencies>
+                <dependency>API.Database.Redis.RPC</dependency>
+                <dependency>API.Database.Redis.Event</dependency>
+                <dependency>NetworkController.ConfigServer</dependency>
+                <dependency>NetworkController.ServersManager</dependency>
+            </dependencies>
+            <platforms>
+                <platform>STANDALONE</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>

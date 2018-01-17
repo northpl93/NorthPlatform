@@ -2,10 +2,10 @@ package pl.arieals.api.minigame.server.gamehost.world.impl.blocker;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.server.v1_10_R1.Chunk;
-import net.minecraft.server.v1_10_R1.ChunkCoordIntPair;
-import net.minecraft.server.v1_10_R1.ChunkProviderServer;
-import net.minecraft.server.v1_10_R1.IChunkLoader;
+import net.minecraft.server.v1_12_R1.Chunk;
+import net.minecraft.server.v1_12_R1.ChunkCoordIntPair;
+import net.minecraft.server.v1_12_R1.ChunkProviderServer;
+import net.minecraft.server.v1_12_R1.IChunkLoader;
 
 import org.diorite.utils.reflections.DioriteReflectionUtils;
 import org.diorite.utils.reflections.FieldAccessor;
@@ -44,7 +44,7 @@ public class WrappedChunkProviderServer extends ChunkProviderServer
     }
 
     @Override
-    public void saveChunk(final Chunk chunk)
+    public void saveChunk(final Chunk chunk, boolean unloaded)
     {
         // do nothing
     }

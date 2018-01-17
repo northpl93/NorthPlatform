@@ -8,12 +8,12 @@ import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.toNmsEnt
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import net.minecraft.server.v1_10_R1.EntityPlayer;
-import net.minecraft.server.v1_10_R1.EntityTrackerEntry;
+import net.minecraft.server.v1_12_R1.EntityPlayer;
+import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftItemFrame;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftItemFrame;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 

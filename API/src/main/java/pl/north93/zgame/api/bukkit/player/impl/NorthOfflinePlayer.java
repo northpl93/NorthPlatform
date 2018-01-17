@@ -47,12 +47,6 @@ class NorthOfflinePlayer implements OfflinePlayer
     }
 
     @Override
-    public void setBanned(final boolean b)
-    {
-        throw new UnsupportedOperationException("NorthOfflinePlayer is immutable.");
-    }
-
-    @Override
     public boolean isWhitelisted()
     {
         return true;

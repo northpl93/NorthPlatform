@@ -1,6 +1,6 @@
 package pl.north93.zgame.api.bukkit.player;
 
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import pl.north93.zgame.api.global.messages.Messageable;

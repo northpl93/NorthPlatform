@@ -1,17 +1,18 @@
 package pl.north93.zgame.api.economy.impl.server;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.cfg.annotations.defaults.CfgBooleanDefault;
-import org.diorite.cfg.annotations.defaults.CfgStringDefault;
-
+@XmlRootElement(name = "vault")
 public class VaultConfig
 {
-    @CfgBooleanDefault(false)
+    @XmlElement
     private boolean enableVaultIntegration;
 
-    @CfgStringDefault("setup")
+    @XmlElement
     private String  currencyName;
 
     public boolean isEnableVaultIntegration()

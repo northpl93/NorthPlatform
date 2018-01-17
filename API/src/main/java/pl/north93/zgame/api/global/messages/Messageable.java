@@ -10,7 +10,7 @@ public interface Messageable
      *
      * @return język.
      */
-    Locale getLocale();
+    Locale getMyLocale();
 
     /**
      * Wysyła surową wiadomość do gracza. Bez tłumaczenia.
@@ -40,7 +40,7 @@ public interface Messageable
      */
     default void sendMessage(final MessagesBox messagesBox, final String key)
     {
-        this.sendRawMessage(messagesBox.getMessage(this.getLocale(), key), true);
+        this.sendRawMessage(messagesBox.getMessage(this.getMyLocale(), key), true);
     }
 
     /**
@@ -53,6 +53,6 @@ public interface Messageable
      */
     default void sendMessage(final MessagesBox messagesBox, final String key, final Object... params)
     {
-        this.sendRawMessage(messagesBox.getMessage(this.getLocale(), key), params);
+        this.sendRawMessage(messagesBox.getMessage(this.getMyLocale(), key), params);
     }
 }

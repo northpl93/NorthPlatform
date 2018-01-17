@@ -1,6 +1,6 @@
 package pl.north93.zgame.antycheat.timeline.impl;
 
-import net.minecraft.server.v1_10_R1.MinecraftServer;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
 
 import com.google.common.base.Preconditions;
 

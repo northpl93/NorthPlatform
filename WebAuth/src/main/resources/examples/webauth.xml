@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- Konfiguracja komendy do logowania przez przegladarke -->
+<webauth>
+    <!-- Adres URL do logowania -->
+    <loginUrl>http://example.com/{0}</loginUrl>
+
+    <!-- Dlugosc generowanego klucza -->
+    <keyLength>32</keyLength>
+
+    <!-- Czas w sekundach po ktorych klucz wygasa -->
+    <expireTime>300</expireTime>
+</webauth>

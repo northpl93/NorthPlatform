@@ -1,11 +1,11 @@
 package pl.north93.zgame.antycheat.event.source;
 
-import net.minecraft.server.v1_10_R1.Packet;
-import net.minecraft.server.v1_10_R1.PacketPlayInCustomPayload;
-import net.minecraft.server.v1_10_R1.PacketPlayInFlying;
+import net.minecraft.server.v1_12_R1.Packet;
+import net.minecraft.server.v1_12_R1.PacketPlayInCustomPayload;
+import net.minecraft.server.v1_12_R1.PacketPlayInFlying;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 

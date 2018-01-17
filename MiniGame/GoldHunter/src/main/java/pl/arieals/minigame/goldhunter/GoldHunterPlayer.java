@@ -9,7 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemFlag;
@@ -22,7 +22,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import com.google.common.base.Preconditions;
 
-import net.minecraft.server.v1_10_R1.EntityPlayer;
+import net.minecraft.server.v1_12_R1.EntityPlayer;
 import pl.arieals.minigame.goldhunter.classes.CharacterClass;
 import pl.arieals.minigame.goldhunter.classes.CharacterClassManager;
 import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;

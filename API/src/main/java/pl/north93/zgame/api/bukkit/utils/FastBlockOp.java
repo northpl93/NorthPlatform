@@ -1,15 +1,15 @@
 package pl.north93.zgame.api.bukkit.utils;
 
-import net.minecraft.server.v1_10_R1.Chunk;
-import net.minecraft.server.v1_10_R1.ChunkSection;
-import net.minecraft.server.v1_10_R1.IBlockData;
-import net.minecraft.server.v1_10_R1.PlayerChunk;
-import net.minecraft.server.v1_10_R1.WorldServer;
+import net.minecraft.server.v1_12_R1.Chunk;
+import net.minecraft.server.v1_12_R1.ChunkSection;
+import net.minecraft.server.v1_12_R1.IBlockData;
+import net.minecraft.server.v1_12_R1.PlayerChunk;
+import net.minecraft.server.v1_12_R1.WorldServer;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_10_R1.CraftChunk;
-import org.bukkit.craftbukkit.v1_10_R1.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
+import org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers;
 
 public class FastBlockOp
 {
@@ -34,7 +34,8 @@ public class FastBlockOp
 
         final IBlockData newBlockData = CraftMagicNumbers.getBlock(material).fromLegacyData(data);
         // ta metoda ma inne parametry w normalnym spigocie!!! NorthSpigot ma dodatkowy swiat i chunk
-        chunksection.setType(nmsChunk.world, nmsChunk, relX, relY, relZ, newBlockData);
+        //chunksection.setType(nmsChunk.world, nmsChunk, relX, relY, relZ, newBlockData);
+        chunksection.setType(relX, relY, relZ, newBlockData); // todo gdy zaaplikuje do northspigota patcha z eventem od modyfikacji bloku to trzeba poprawic
 
         final int mapIndex = relZ << 4 | relX;
         final int actual = nmsChunk.heightMap[mapIndex];

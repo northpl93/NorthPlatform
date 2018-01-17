@@ -46,7 +46,7 @@ public abstract class TranslatableString
     
     public String getValue(Messageable messageable, Vars<Object> params)
     {
-        return getValue(messageable.getLocale(), params);
+        return getValue(messageable.getMyLocale(), params);
     }
     
     public String getValue(Player player)
@@ -56,7 +56,7 @@ public abstract class TranslatableString
     
     public String getValue(Player player, Vars<Object> params)
     {
-        return getValue(player.spigot().getLocale(), params);
+        return getValue(player.getLocale(), params);
     }
     
     public String getValue(String locale)

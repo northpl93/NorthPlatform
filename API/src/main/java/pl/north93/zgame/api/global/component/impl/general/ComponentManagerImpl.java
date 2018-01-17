@@ -5,10 +5,10 @@ import static java.text.MessageFormat.format;
 import static pl.north93.zgame.api.global.utils.lang.CollectionUtils.findInCollection;
 
 
+import javax.xml.bind.JAXB;
+
 import java.io.File;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,8 +27,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.reflections.Reflections;
-
-import org.diorite.cfg.system.TemplateCreator;
 
 import javassist.ClassPool;
 import javassist.LoaderClassPath;
@@ -183,9 +181,9 @@ public class ComponentManagerImpl implements IComponentManager
     }
 
     @Override
-    public void doComponentScan(final String componentsYml, final ClassLoader classLoader)
+    public void doComponentScan(final String componentsXml, final ClassLoader classLoader)
     {
-        final ComponentsConfig componentsConfig = this.loadComponentsConfig(componentsYml, classLoader);
+        final ComponentsConfig componentsConfig = this.loadComponentsConfig(componentsXml, classLoader);
         if (componentsConfig == null)
         {
             return;
@@ -229,15 +227,14 @@ public class ComponentManagerImpl implements IComponentManager
         }
     }
 
-    private ComponentsConfig loadComponentsConfig(final String componentsYml, final ClassLoader classLoader)
+    private ComponentsConfig loadComponentsConfig(final String componentsXml, final ClassLoader classLoader)
     {
-        final InputStream stream = classLoader.getResourceAsStream(componentsYml);
+        final InputStream stream = classLoader.getResourceAsStream(componentsXml);
         if (stream == null)
         {
             return null;
         }
-        final Reader reader = new InputStreamReader(stream);
-        return TemplateCreator.getTemplate(ComponentsConfig.class).load(reader, classLoader);
+        return JAXB.unmarshal(stream, ComponentsConfig.class);
     }
 
     private void scanClassloaderWithoutComponents(final ClassLoader classLoader, final Set<String> excludedPackages, final List<ComponentDescription> components)

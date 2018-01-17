@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!-- Ogolna konfiguracja sieci, trzymana w kontrolerze sieci -->
+<network>
+    <!-- Kto może wchodzić na serwer. Dostępne: EVERYONE, ONLY_ADMIN, NOBODY -->
+    <joiningPolicy>EVERYONE</joiningPolicy>
+
+    <!-- Wyświetlana maksymalna ilość graczy -->
+    <displayMaxPlayers>1000</displayMaxPlayers>
+
+    <!-- Wiadomość na liście serwerów -->
+    <serverListMotd>Network Platform by NorthPL93</serverListMotd>
+
+    <!-- Domyślna grupa serwerów z którą zostanie połączony gracz -->
+    <defaultServersGroup>default</defaultServersGroup>
+</network>

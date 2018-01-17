@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import com.mojang.authlib.properties.Property;
 
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

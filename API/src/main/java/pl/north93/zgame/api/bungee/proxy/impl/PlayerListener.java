@@ -235,7 +235,7 @@ public class PlayerListener implements Listener
 
             final IOnlinePlayer onlinePlayer = (IOnlinePlayer) transaction.getPlayer();
             onlinePlayer.setServerId(UUID.fromString(event.getPlayer().getServer().getInfo().getName()));
-            this.updateLocale(event.getPlayer(), onlinePlayer.getLocale());
+            this.updateLocale(event.getPlayer(), onlinePlayer.getMyLocale());
         }
         catch (final Exception e)
         {

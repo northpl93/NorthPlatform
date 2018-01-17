@@ -7,11 +7,11 @@ import static pl.north93.zgame.api.global.utils.lang.JavaUtils.instanceOf;
 
 import java.util.Optional;
 
-import net.minecraft.server.v1_10_R1.EntityPlayer;
-import net.minecraft.server.v1_10_R1.EntityTrackerEntry;
+import net.minecraft.server.v1_12_R1.EntityPlayer;
+import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
 
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

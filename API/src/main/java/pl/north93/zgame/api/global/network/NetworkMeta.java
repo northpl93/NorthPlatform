@@ -1,52 +1,31 @@
 package pl.north93.zgame.api.global.network;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.cfg.annotations.CfgComment;
-import org.diorite.cfg.annotations.CfgComments;
-import org.diorite.cfg.annotations.CfgFooterComment;
-import org.diorite.cfg.annotations.defaults.CfgCustomDefault;
-import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
-import org.diorite.cfg.annotations.defaults.CfgIntDefault;
-import org.diorite.cfg.annotations.defaults.CfgStringDefault;
-
 /**
- * Używane do wczytywania konfiguracji z yaml i do wysyłanie przez msg pack
+ * Używane do wczytywania konfiguracji z xml i do wysyłanie przez msg pack
  */
-@CfgComments({"Konfiguracja sieci"})
-@CfgFooterComment("Koniec konfiguracji!")
-@CfgDelegateDefault("{new}")
+@XmlRootElement(name = "network")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class NetworkMeta
 {
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    @CfgCustomDefault(JoiningPolicy.class)
-    public @interface CfgJoiningPolicyDefault
-    {
-        JoiningPolicy value();
-    }
-
-    @CfgComment("Kto może wchodzić na serwer. Dostępne: EVERYONE, ONLY_ADMIN, NOBODY")
-    @CfgJoiningPolicyDefault(JoiningPolicy.EVERYONE)
+    @XmlElement
     public JoiningPolicy joiningPolicy; // kto może wchodzić na serwer
 
-    @CfgComment("Wyświetlana maksymalna ilość graczy")
-    @CfgIntDefault(1000)
+    @XmlElement
     public Integer displayMaxPlayers; // wyswietlana maksymalna liczba graczy
 
-    @CfgComment("Wiadomość na liście serwerów")
-    @CfgStringDefault("Network Platform by NorthPL93")
+    @XmlElement
     public String serverListMotd; // Wiadomosc dnia na liscie serwerow
 
-    @CfgComment("Domyślna grupa serwerów z którą zostanie połączony gracz")
-    @CfgStringDefault("default")
-    public String defaultServersGroup;
+    @XmlElement
+    public String defaultServersGroup; // nazwa domyślnej grupy serwerów, konfigurowane w autoscaler.xml
 
     @Override
     public String toString()

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<rest>
+    <!-- Czy wymagany jest token do uzywania API -->
+    <isSecurityEnabled>false</isSecurityEnabled>
+
+    <!-- Lista tokenow ktore przyjmuje API -->
+    <tokens>
+        <token>example1</token>
+        <token>example1</token>
+    </tokens>
+</rest>

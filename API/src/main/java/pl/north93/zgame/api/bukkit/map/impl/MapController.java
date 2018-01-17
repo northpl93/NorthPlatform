@@ -2,10 +2,10 @@ package pl.north93.zgame.api.bukkit.map.impl;
 
 import java.util.List;
 
-import net.minecraft.server.v1_10_R1.EntityPlayer;
+import net.minecraft.server.v1_12_R1.EntityPlayer;
 
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;

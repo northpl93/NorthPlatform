@@ -7,22 +7,22 @@ import java.io.File;
 import java.util.Locale;
 import java.util.Map;
 
-import net.minecraft.server.v1_10_R1.BlockPosition;
-import net.minecraft.server.v1_10_R1.EntityTracker;
-import net.minecraft.server.v1_10_R1.EnumDifficulty;
-import net.minecraft.server.v1_10_R1.EnumGamemode;
-import net.minecraft.server.v1_10_R1.IDataManager;
-import net.minecraft.server.v1_10_R1.MinecraftServer;
-import net.minecraft.server.v1_10_R1.ServerNBTManager;
-import net.minecraft.server.v1_10_R1.WorldData;
-import net.minecraft.server.v1_10_R1.WorldServer;
-import net.minecraft.server.v1_10_R1.WorldSettings;
-import net.minecraft.server.v1_10_R1.WorldType;
+import net.minecraft.server.v1_12_R1.BlockPosition;
+import net.minecraft.server.v1_12_R1.EntityTracker;
+import net.minecraft.server.v1_12_R1.EnumDifficulty;
+import net.minecraft.server.v1_12_R1.EnumGamemode;
+import net.minecraft.server.v1_12_R1.IDataManager;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
+import net.minecraft.server.v1_12_R1.ServerNBTManager;
+import net.minecraft.server.v1_12_R1.WorldData;
+import net.minecraft.server.v1_12_R1.WorldServer;
+import net.minecraft.server.v1_12_R1.WorldSettings;
+import net.minecraft.server.v1_12_R1.WorldType;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
-import org.bukkit.craftbukkit.v1_10_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
 import org.bukkit.generator.ChunkGenerator;
 
 import org.apache.commons.lang.Validate;
@@ -99,7 +99,7 @@ class NmsWorldHelper
             }
         } while (used);
 
-        final IDataManager sdm = new ServerNBTManager(this.getWorldContainer(), name, true, this.console.getDataConverterManager());
+        final IDataManager sdm = new ServerNBTManager(this.getWorldContainer(), name, true, this.console.dataConverterManager);
         WorldData worlddata = sdm.getWorldData();
 
         if (worlddata == null)
@@ -121,7 +121,7 @@ class NmsWorldHelper
         {
             internal.scoreboard = this.handle.getScoreboardManager().getMainScoreboard().getHandle();
             internal.tracker = new EntityTracker(internal);
-            internal.addIWorldAccess(new net.minecraft.server.v1_10_R1.WorldManager(this.console, internal));
+            internal.addIWorldAccess(new net.minecraft.server.v1_12_R1.WorldManager(this.console, internal));
             internal.worldData.setDifficulty(EnumDifficulty.EASY);
             internal.setSpawnFlags(true, true);
             internal.keepSpawnInMemory = false;

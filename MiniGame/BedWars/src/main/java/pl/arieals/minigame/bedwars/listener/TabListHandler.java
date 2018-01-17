@@ -7,8 +7,8 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.minecraft.server.v1_10_R1.PacketPlayOutPlayerInfo;
-import net.minecraft.server.v1_10_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
+import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
+import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
 
 import com.mojang.authlib.GameProfile;
 

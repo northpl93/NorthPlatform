@@ -76,12 +76,12 @@ public class BukkitCommandsManager implements ICommandsManager
         }
 
         @Override
-        public Locale getLocale()
+        public Locale getMyLocale()
         {
             if (this.wrappedSender instanceof Player)
             {
                 final Player player = (Player) this.wrappedSender;
-                return Locale.forLanguageTag(player.spigot().getLocale());
+                return Locale.forLanguageTag(player.getLocale());
             }
             return Locale.getDefault();
         }

@@ -1,6 +1,5 @@
 package pl.north93.zgame.restful.security;
 
-import static pl.north93.zgame.api.global.utils.ConfigUtils.loadConfigFile;
 import static spark.Spark.before;
 import static spark.Spark.halt;
 
@@ -10,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.utils.ConfigUtils;
 
 public class ApiSecurity
 {
@@ -19,7 +19,7 @@ public class ApiSecurity
 
     public ApiSecurity()
     {
-        this.apiConfig = loadConfigFile(ApiConfig.class, this.api.getFile("rest-api.yml"));
+        this.apiConfig = ConfigUtils.loadConfig(ApiConfig.class, "rest-api.xml");
     }
 
     public void setupSecurity()

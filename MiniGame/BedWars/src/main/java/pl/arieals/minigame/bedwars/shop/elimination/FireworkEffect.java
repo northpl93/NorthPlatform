@@ -6,11 +6,11 @@ import static org.bukkit.FireworkEffect.builder;
 import static org.diorite.utils.math.DioriteRandomUtils.getRandomInt;
 
 
-import net.minecraft.server.v1_10_R1.EntityFireworks;
+import net.minecraft.server.v1_12_R1.EntityFireworks;
 
 import org.bukkit.Color;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;

@@ -1,25 +1,32 @@
 package pl.north93.zgame.datashare.api.cfg;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.cfg.annotations.CfgComment;
-
+@XmlAccessorType(XmlAccessType.FIELD)
 public class DataSharingGroupConfig
 {
-    @CfgComment("Wewnętrzna nazwa tej grupy")
+    @XmlElement
     private String          name;
-    @CfgComment("Grupy serwerów należące do tej grupy udostępniania danych")
+    @XmlElementWrapper(name = "serversGroups")
+    @XmlElement(name = "serversGroup")
     private List<String>    serversGroups;
-    @CfgComment("Serwery należące do tej grupy udostępniania danych")
+    @XmlElementWrapper(name = "servers")
+    @XmlElement(name = "server")
     private List<String>    servers;
-    @CfgComment("Czy w tej grupie współdzielić czat?")
+    @XmlElement
     private boolean         shareChat;
-    @CfgComment("Konfiguracja automatycznych wiadomości w tej grupie")
+    @XmlElement
     private AnnouncerConfig announcer;
-    @CfgComment("Lista danych które należy synchronizować")
+    @XmlElementWrapper(name = "dataUnits")
+    @XmlElement(name = "dataUnit")
     private List<String>    dataUnits;
 
     public String getName()

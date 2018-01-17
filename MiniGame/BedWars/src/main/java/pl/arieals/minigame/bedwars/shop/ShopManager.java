@@ -15,7 +15,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import net.minecraft.server.v1_10_R1.NBTTagCompound;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

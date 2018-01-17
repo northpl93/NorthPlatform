@@ -7,11 +7,11 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
-import net.minecraft.server.v1_10_R1.AxisAlignedBB;
-import net.minecraft.server.v1_10_R1.EntityItem;
+import net.minecraft.server.v1_12_R1.AxisAlignedBB;
+import net.minecraft.server.v1_12_R1.EntityItem;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -98,7 +98,7 @@ public class GeneratorController
         int count = 0;
         for (final EntityItem entity : items)
         {
-            count += entity.getItemStack().count;
+            count += entity.getItemStack().getCount();
         }
 
         return count;

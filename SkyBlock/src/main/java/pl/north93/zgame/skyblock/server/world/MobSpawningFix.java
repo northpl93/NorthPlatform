@@ -3,10 +3,10 @@ package pl.north93.zgame.skyblock.server.world;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.server.v1_10_R1.BlockPosition;
-import net.minecraft.server.v1_10_R1.Chunk;
-import net.minecraft.server.v1_10_R1.SpawnerCreature;
-import net.minecraft.server.v1_10_R1.World;
+import net.minecraft.server.v1_12_R1.BlockPosition;
+import net.minecraft.server.v1_12_R1.Chunk;
+import net.minecraft.server.v1_12_R1.SpawnerCreature;
+import net.minecraft.server.v1_12_R1.World;
 
 import javassist.ClassMap;
 import javassist.ClassPool;
@@ -26,15 +26,15 @@ public class MobSpawningFix
         final CtClass originalClass = classPool.getCtClass(SpawnerCreature.class.getName());
         final CtClass patchClass = classPool.getCtClass(MobSpawningFix.class.getName());
 
-        final CtMethod originalMethod = originalClass.getMethod("getRandomPosition", "(Lnet/minecraft/server/v1_10_R1/World;II)Lnet/minecraft/server/v1_10_R1/BlockPosition;");
-        final CtMethod patchMethod = patchClass.getMethod("getRandomPosition", "(Lnet/minecraft/server/v1_10_R1/World;II)Lnet/minecraft/server/v1_10_R1/BlockPosition;");
+        final CtMethod originalMethod = originalClass.getMethod("getRandomPosition", "(Lnet/minecraft/server/v1_12_R1/World;II)Lnet/minecraft/server/v1_12_R1/BlockPosition;");
+        final CtMethod patchMethod = patchClass.getMethod("getRandomPosition", "(Lnet/minecraft/server/v1_12_R1/World;II)Lnet/minecraft/server/v1_12_R1/BlockPosition;");
 
 
         final ClassMap classMap = new ClassMap();
-        classMap.put("pl.north93.zgame.skyblock.server.world.MobSpawningFix", "net.minecraft.server.v1_10_R1.SpawnerCreature");
+        classMap.put("pl.north93.zgame.skyblock.server.world.MobSpawningFix", "net.minecraft.server.v1_12_R1.SpawnerCreature");
 
         originalMethod.setBody(patchMethod, classMap);
-        client.redefineClass("net.minecraft.server.v1_10_R1.SpawnerCreature", originalClass.toBytecode());
+        client.redefineClass("net.minecraft.server.v1_12_R1.SpawnerCreature", originalClass.toBytecode());
     }
 
     private static BlockPosition getRandomPosition(final World world, final int chunkX, final int chunkZ)

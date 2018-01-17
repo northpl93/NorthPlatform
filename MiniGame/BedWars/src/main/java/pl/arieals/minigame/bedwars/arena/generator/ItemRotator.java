@@ -3,7 +3,7 @@ package pl.arieals.minigame.bedwars.arena.generator;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArenas;
 
 
-import net.minecraft.server.v1_10_R1.MinecraftServer;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.GamePhase;

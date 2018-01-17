@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<economy>
+    <currencies>
+        <currency>
+            <!-- Nazwa wewnętrzna waluty -->
+            <name>example</name>
+
+            <!-- Startowa ilość waluty -->
+            <startValue>0</startValue>
+        </currency>
+    </currencies>
+</economy>

@@ -1,6 +1,6 @@
 package pl.north93.zgame.antycheat.utils;
 
-import net.minecraft.server.v1_10_R1.AxisAlignedBB;
+import net.minecraft.server.v1_12_R1.AxisAlignedBB;
 
 public class AABB
 {

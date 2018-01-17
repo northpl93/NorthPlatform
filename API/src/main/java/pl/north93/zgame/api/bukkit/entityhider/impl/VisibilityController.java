@@ -30,7 +30,7 @@ class VisibilityController
      *
      * @return Funkcja sprawdzajaca widocznosc entity.
      */
-    Function<net.minecraft.server.v1_10_R1.Entity, Boolean> getHideFunction()
+    Function<net.minecraft.server.v1_12_R1.Entity, Boolean> getHideFunction()
     {
         return entity -> ! this.isEntityVisible(entity.getBukkitEntity());
     }

@@ -1,15 +1,18 @@
 package pl.north93.zgame.api.standalone.cfg;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.cfg.annotations.CfgComment;
-import org.diorite.cfg.annotations.defaults.CfgStringDefault;
-
+@XmlRootElement(name = "environment")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class EnvironmentCfg
 {
-    @CfgComment("Identyfikator tej instancji API")
-    @CfgStringDefault("unknown")
+    @XmlElement
     private String id;
 
     public EnvironmentCfg()

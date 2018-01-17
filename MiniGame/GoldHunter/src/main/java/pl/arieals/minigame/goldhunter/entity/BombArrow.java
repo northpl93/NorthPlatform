@@ -4,7 +4,7 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 
-import net.minecraft.server.v1_10_R1.EntityLiving;
+import net.minecraft.server.v1_12_R1.EntityLiving;
 
 public class BombArrow extends HomingArrow
 {

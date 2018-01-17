@@ -1,24 +1,27 @@
 package pl.north93.zgame.restful.security;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.cfg.annotations.CfgCollectionStyle;
-import org.diorite.cfg.annotations.CfgCollectionStyle.CollectionStyle;
-import org.diorite.cfg.annotations.CfgComment;
-import org.diorite.cfg.annotations.defaults.CfgBooleanDefault;
-import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
-
+/**
+ * Konfiguracja RESTowego API.
+ */
+@XmlRootElement(name = "rest")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ApiConfig
 {
-    @CfgComment("Czy wymagany jest token do uzywania API")
-    @CfgBooleanDefault(false)
+    @XmlElement
     private boolean      isSecurityEnabled;
-    @CfgComment("Lista tokenow ktore przyjmuje API")
-    @CfgCollectionStyle(CollectionStyle.ALWAYS_NEW_LINE)
-    @CfgDelegateDefault("{ArrayList}")
+    @XmlElementWrapper(name = "tokens")
+    @XmlElement(name = "token")
     private List<String> tokens;
 
     public boolean isSecurityEnabled()

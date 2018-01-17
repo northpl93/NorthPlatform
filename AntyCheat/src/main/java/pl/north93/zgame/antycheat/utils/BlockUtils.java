@@ -2,15 +2,15 @@ package pl.north93.zgame.antycheat.utils;
 
 import java.util.function.Consumer;
 
-import net.minecraft.server.v1_10_R1.AxisAlignedBB;
-import net.minecraft.server.v1_10_R1.IBlockData;
-import net.minecraft.server.v1_10_R1.WorldServer;
+import net.minecraft.server.v1_12_R1.AxisAlignedBB;
+import net.minecraft.server.v1_12_R1.IBlockData;
+import net.minecraft.server.v1_12_R1.WorldServer;
 
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_10_R1.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers;
 
 public class BlockUtils
 {
@@ -22,11 +22,11 @@ public class BlockUtils
      */
     public static AABB getExactBlockAABB(final Block block)
     {
-        final net.minecraft.server.v1_10_R1.Block nmsBlock = CraftMagicNumbers.getBlock(block);
+        final net.minecraft.server.v1_12_R1.Block nmsBlock = CraftMagicNumbers.getBlock(block);
         final IBlockData nmsBlockData = nmsBlock.getBlockData();
         final WorldServer nmsWorld = ((CraftWorld) block.getWorld()).getHandle();
 
-        final AxisAlignedBB nmsAabb = nmsBlockData.c(nmsWorld, null);
+        final AxisAlignedBB nmsAabb = nmsBlockData.d(nmsWorld, null);
         if (nmsAabb == null)
         {
             return new AABB(0, 0, 0, 0, 0, 0);

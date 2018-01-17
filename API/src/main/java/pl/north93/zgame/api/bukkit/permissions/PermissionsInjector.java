@@ -9,7 +9,7 @@ import org.bukkit.permissions.ServerOperator;
 
 public final class PermissionsInjector
 {
-    private static final Class<?> humanEntityClass = clazz("org.bukkit.craftbukkit.v1_10_R1.entity.CraftHumanEntity");
+    private static final Class<?> humanEntityClass = clazz("org.bukkit.craftbukkit.v1_12_R1.entity.CraftHumanEntity");
     private static final Field    permField;
     private static final Field    opableField;
 

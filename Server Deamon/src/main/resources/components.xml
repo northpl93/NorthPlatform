@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <components>
+        <component>
+            <name>Daemon</name>
+            <mainClass>pl.north93.zgame.daemon.DaemonComponent</mainClass>
+            <description>Minecraft servers daemon.</description>
+            <dependencies>
+                <dependency>API.Database.Redis.Observer</dependency>
+            </dependencies>
+            <platforms>
+                <platform>STANDALONE</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>

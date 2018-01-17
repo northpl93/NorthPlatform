@@ -1,38 +1,30 @@
 package pl.north93.zgame.api.global.storage;
 
-import org.diorite.cfg.annotations.CfgComment;
-import org.diorite.cfg.annotations.CfgComments;
-import org.diorite.cfg.annotations.CfgFooterComment;
-import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
-import org.diorite.cfg.annotations.defaults.CfgIntDefault;
-import org.diorite.cfg.annotations.defaults.CfgStringDefault;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
-@CfgComments({"Konfiguracja połączeń: MongoDB i Redis"})
-@CfgFooterComment("Koniec konfiguracji!")
-@CfgDelegateDefault("{new}")
+@XmlRootElement(name = "connection")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ConnectionConfig
 {
-    @CfgComment("Host bazy danych i port")
-    @CfgStringDefault("mongodb://user:password@127.0.0.1:27017/?authSource=server")
+    @XmlElement
     private String mongoDbConnect;
 
-    @CfgComment("Baza danych z której ma korzystać API")
-    @CfgStringDefault("server")
+    @XmlElement
     private String mongoMainDatabase;
 
-    @CfgComment("Host redisa")
-    @CfgStringDefault("localhost")
+    @XmlElement
     private String redisHost;
 
-    @CfgComment("Port redisa")
-    @CfgIntDefault(6379)
+    @XmlElement
     private int redisPort;
 
-    @CfgIntDefault(5000)
+    @XmlElement
     private int redisTimeout;
 
-    @CfgComment("Hasło do redisa")
-    @CfgStringDefault("password")
+    @XmlElement
     private String redisPassword;
 
     public String getMongoDbConnect()

@@ -1,6 +1,6 @@
 package pl.north93.zgame.api.bukkit.packets;
 
-import net.minecraft.server.v1_10_R1.Packet;
+import net.minecraft.server.v1_12_R1.Packet;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;

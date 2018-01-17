@@ -1,6 +1,7 @@
 package pl.north93.zgame.controller.configserver.source;
 
-import javax.xml.bind.JAXB;
+import static pl.north93.zgame.api.global.utils.ConfigUtils.loadConfig;
+
 
 import java.io.File;
 
@@ -27,7 +28,7 @@ public class XmlConfigSource<T> implements IConfigSource<T>
     @Override
     public T load()
     {
-        return JAXB.unmarshal(this.file, this.type);
+        return loadConfig(this.type, this.file);
     }
 
     @Override

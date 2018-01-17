@@ -1,19 +1,20 @@
 package pl.north93.zgame.api.economy.cfg;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.cfg.annotations.CfgComment;
-import org.diorite.cfg.annotations.defaults.CfgDoubleDefault;
-
 import pl.north93.zgame.api.economy.ICurrency;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class CurrencyConfig implements ICurrency
 {
-    @CfgComment("Nazwa wewnętrzna waluty")
-    private String  name;
-    @CfgComment("Startowa ilość waluty")
-    @CfgDoubleDefault(0)
+    @XmlElement
+    private String name;
+    @XmlElement
     private Double startValue;
 
     public CurrencyConfig()

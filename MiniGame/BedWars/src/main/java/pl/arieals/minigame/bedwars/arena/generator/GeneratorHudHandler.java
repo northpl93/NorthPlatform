@@ -5,12 +5,12 @@ import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.getTrack
 
 import java.util.ArrayList;
 
-import net.minecraft.server.v1_10_R1.EntityPlayer;
-import net.minecraft.server.v1_10_R1.EntityTrackerEntry;
-import net.minecraft.server.v1_10_R1.Vector3f;
+import net.minecraft.server.v1_12_R1.EntityPlayer;
+import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
+import net.minecraft.server.v1_12_R1.Vector3f;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftArmorStand;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftArmorStand;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

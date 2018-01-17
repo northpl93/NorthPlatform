@@ -2,8 +2,8 @@ package pl.north93.zgame.api.bukkit.packets.wrappers;
 
 import java.lang.invoke.MethodHandle;
 
-import net.minecraft.server.v1_10_R1.ItemStack;
-import net.minecraft.server.v1_10_R1.PacketPlayOutSetSlot;
+import net.minecraft.server.v1_12_R1.ItemStack;
+import net.minecraft.server.v1_12_R1.PacketPlayOutSetSlot;
 
 public class WrapperPlayOutSetSlot extends AbstractWrapper<PacketPlayOutSetSlot>
 {

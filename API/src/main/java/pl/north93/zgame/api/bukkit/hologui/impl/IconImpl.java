@@ -3,15 +3,15 @@ package pl.north93.zgame.api.bukkit.hologui.impl;
 import java.util.Collections;
 import java.util.Set;
 
-import net.minecraft.server.v1_10_R1.EntityArmorStand;
-import net.minecraft.server.v1_10_R1.WorldServer;
+import net.minecraft.server.v1_12_R1.EntityArmorStand;
+import net.minecraft.server.v1_12_R1.WorldServer;
 
 import com.google.common.base.Preconditions;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftArmorStand;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftArmorStand;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.CreatureSpawnEvent;

@@ -28,7 +28,7 @@ public class TranslatedLine implements IHologramLine
     @Override
     public String render(final IHologram hologram, final Player player)
     {
-        final String locale = player.spigot().getLocale();
+        final String locale = player.getLocale();
         return translateAlternateColorCodes(this.messagesBox.getMessage(locale, this.msgKey, this.args));
     }
 

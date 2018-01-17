@@ -1,6 +1,6 @@
 package pl.north93.zgame.webauth.controller;
 
-import static pl.north93.zgame.api.global.utils.ConfigUtils.loadConfigFile;
+import static pl.north93.zgame.api.global.utils.ConfigUtils.loadConfig;
 
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -19,7 +19,7 @@ public class WebAuthControllerComponent extends Component
     @Override
     protected void enableComponent()
     {
-        final WebAuthConfig config = loadConfigFile(WebAuthConfig.class, this.getApiCore().getFile("webauth.yml"));
+        final WebAuthConfig config = loadConfig(WebAuthConfig.class, "webauth.xml");
         this.rpcManager.addRpcImplementation(IWebAuthManager.class, new WebAuthManagerImpl(config));
     }
 

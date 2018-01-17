@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftItem;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftItem;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

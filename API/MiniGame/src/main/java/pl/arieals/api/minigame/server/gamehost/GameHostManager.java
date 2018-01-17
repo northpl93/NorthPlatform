@@ -6,13 +6,13 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
-import net.minecraft.server.v1_10_R1.DedicatedPlayerList;
-import net.minecraft.server.v1_10_R1.EntityHuman;
-import net.minecraft.server.v1_10_R1.IPlayerFileData;
-import net.minecraft.server.v1_10_R1.NBTTagCompound;
+import net.minecraft.server.v1_12_R1.DedicatedPlayerList;
+import net.minecraft.server.v1_12_R1.EntityHuman;
+import net.minecraft.server.v1_12_R1.IPlayerFileData;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
 
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_10_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;

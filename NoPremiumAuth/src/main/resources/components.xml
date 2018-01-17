@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <components>
+        <component>
+            <name>NoPremiumAuth.Server</name>
+            <mainClass>pl.north93.zgame.auth.server.AuthServerComponent</mainClass>
+            <description>Manages no-premium authentication on server.</description>
+            <packages>
+                <package>pl.north93.zgame.auth.server</package>
+                <package>pl.north93.zgame.auth.sharedimpl</package>
+            </packages>
+            <dependencies>
+                <dependency>API.Database.Redis.Observer</dependency>
+                <dependency>API.MinecraftNetwork.NetworkManager</dependency>
+            </dependencies>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+
+        <component>
+            <name>NoPremiumAuth.Proxy</name>
+            <mainClass>pl.north93.zgame.auth.bungee.AuthProxyComponent</mainClass>
+            <description>Manages no-premium authentication on proxy.</description>
+            <packages>
+                <package>pl.north93.zgame.auth.bungee</package>
+                <package>pl.north93.zgame.auth.sharedimpl</package>
+            </packages>
+            <dependencies>
+                <dependency>API.MinecraftNetwork.NetworkManager</dependency>
+            </dependencies>
+            <platforms>
+                <platform>BUNGEE</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>

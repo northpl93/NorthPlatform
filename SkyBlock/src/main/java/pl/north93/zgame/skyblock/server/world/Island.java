@@ -9,18 +9,18 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import net.minecraft.server.v1_10_R1.BiomeBase;
-import net.minecraft.server.v1_10_R1.Chunk;
-import net.minecraft.server.v1_10_R1.PacketPlayOutMapChunk;
-import net.minecraft.server.v1_10_R1.PlayerConnection;
+import net.minecraft.server.v1_12_R1.BiomeBase;
+import net.minecraft.server.v1_12_R1.Chunk;
+import net.minecraft.server.v1_12_R1.PacketPlayOutMapChunk;
+import net.minecraft.server.v1_12_R1.PlayerConnection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_10_R1.CraftChunk;
-import org.bukkit.craftbukkit.v1_10_R1.block.CraftBlock;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
+import org.bukkit.craftbukkit.v1_12_R1.block.CraftBlock;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;

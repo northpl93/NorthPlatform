@@ -4,7 +4,7 @@ package pl.north93.zgame.skyblock.server.listeners.islandhost;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

@@ -1,6 +1,5 @@
 package pl.north93.zgame.api.bungee;
 
-import static pl.north93.zgame.api.global.utils.ConfigUtils.loadConfigFile;
 import static pl.north93.zgame.api.global.redis.RedisKeys.PROXY_INSTANCE;
 
 
@@ -18,6 +17,7 @@ import pl.north93.zgame.api.bungee.connection.ConnectionManager;
 import pl.north93.zgame.api.bungee.connection.NorthReconnectHandler;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
+import pl.north93.zgame.api.global.utils.ConfigUtils;
 
 public class BungeeApiCore extends ApiCore
 {
@@ -54,9 +54,9 @@ public class BungeeApiCore extends ApiCore
     }
 
     @Override
-    protected void init() throws Exception
+    protected void init()
     {
-        this.config = loadConfigFile(ProxyInstanceConfig.class, this.getFile("proxy_instance.yml"));
+        this.config = ConfigUtils.loadConfig(ProxyInstanceConfig.class, "proxy_instance.xml");
     }
 
     @Override
@@ -64,7 +64,7 @@ public class BungeeApiCore extends ApiCore
     {
         if (! ProxyServer.getInstance().getConfig().isIpForward())
         {
-            this.getLogger().severe("Set ip_forward to true in config.yml");
+            this.getLogger().severe("Set ip_forward to true in bungee's config.yml");
             ProxyServer.getInstance().stop();
         }
         this.connectionManager = new ConnectionManager();

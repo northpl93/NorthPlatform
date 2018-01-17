@@ -1,8 +1,9 @@
 package pl.north93.zgame.api.bukkit.player.impl;
 
+import javax.annotation.Nullable;
+
 import java.net.InetSocketAddress;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -22,15 +23,19 @@ import org.bukkit.Note;
 import org.bukkit.Particle;
 import org.bukkit.Server;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.Statistic;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
+import org.bukkit.advancement.Advancement;
+import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
+import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -44,6 +49,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MainHand;
+import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.map.MapView;
 import org.bukkit.metadata.MetadataValue;
@@ -55,9 +61,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.Vector;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -113,10 +116,10 @@ class NorthPlayer implements INorthPlayer
     }
 
     @Override
-    public Locale getLocale()
+    public Locale getMyLocale()
     {
         final IOnlinePlayer playerData = this.playerData.get();
-        return playerData.getLocale();
+        return playerData.getMyLocale();
     }
 
     @Override
@@ -308,6 +311,18 @@ class NorthPlayer implements INorthPlayer
     }
 
     @Override
+    public void playSound(final Location location, final Sound sound, final SoundCategory soundCategory, final float v, final float v1)
+    {
+        this.bukkitPlayer.playSound(location, sound, soundCategory, v, v1);
+    }
+
+    @Override
+    public void playSound(final Location location, final String s, final SoundCategory soundCategory, final float v, final float v1)
+    {
+        this.bukkitPlayer.playSound(location, s, soundCategory, v, v1);
+    }
+
+    @Override
     public void stopSound(final Sound sound)
     {
         this.bukkitPlayer.stopSound(sound);
@@ -317,6 +332,18 @@ class NorthPlayer implements INorthPlayer
     public void stopSound(final String s)
     {
         this.bukkitPlayer.stopSound(s);
+    }
+
+    @Override
+    public void stopSound(final Sound sound, final SoundCategory soundCategory)
+    {
+        this.bukkitPlayer.stopSound(sound, soundCategory);
+    }
+
+    @Override
+    public void stopSound(final String s, final SoundCategory soundCategory)
+    {
+        this.bukkitPlayer.stopSound(s, soundCategory);
     }
 
     @Override
@@ -366,21 +393,34 @@ class NorthPlayer implements INorthPlayer
     }
 
     @Override
-    public void sendMessage(final BaseComponent baseComponent)
+    public void sendActionBar(final String s)
     {
-        this.bukkitPlayer.sendMessage(baseComponent);
+        this.bukkitPlayer.sendActionBar(s);
     }
 
     @Override
-    public void sendMessage(final BaseComponent... baseComponents)
+    public void sendActionBar(final char c, final String s)
     {
-        this.bukkitPlayer.sendMessage(baseComponents);
+        this.bukkitPlayer.sendActionBar(c, s);
     }
 
     @Override
-    public void sendMessage(final ChatMessageType chatMessageType, final BaseComponent... baseComponents)
+    public void sendMessage(final BaseComponent component)
     {
-        this.bukkitPlayer.sendMessage(chatMessageType, baseComponents);
+        this.bukkitPlayer.sendMessage(component);
+    }
+
+    @Override
+    public void sendMessage(final BaseComponent... components)
+    {
+        this.bukkitPlayer.sendMessage(components);
+    }
+
+    @Override
+    @Deprecated
+    public void sendMessage(final ChatMessageType position, final BaseComponent... components)
+    {
+        this.bukkitPlayer.sendMessage(position, components);
     }
 
     @Override
@@ -469,18 +509,21 @@ class NorthPlayer implements INorthPlayer
     }
 
     @Override
+    @Deprecated
     public void awardAchievement(final Achievement achievement)
     {
         this.bukkitPlayer.awardAchievement(achievement);
     }
 
     @Override
+    @Deprecated
     public void removeAchievement(final Achievement achievement)
     {
         this.bukkitPlayer.removeAchievement(achievement);
     }
 
     @Override
+    @Deprecated
     public boolean hasAchievement(final Achievement achievement)
     {
         return this.bukkitPlayer.hasAchievement(achievement);
@@ -643,9 +686,21 @@ class NorthPlayer implements INorthPlayer
     }
 
     @Override
-    public void giveExp(final int i)
+    public void giveExp(final int amount)
     {
-        this.bukkitPlayer.giveExp(i);
+        this.bukkitPlayer.giveExp(amount);
+    }
+
+    @Override
+    public void giveExp(final int i, final boolean b)
+    {
+        this.bukkitPlayer.giveExp(i, b);
+    }
+
+    @Override
+    public int applyMending(final int i)
+    {
+        return this.bukkitPlayer.applyMending(i);
     }
 
     @Override
@@ -757,28 +812,35 @@ class NorthPlayer implements INorthPlayer
     }
 
     @Override
+    @Deprecated
     public void hidePlayer(final Player player)
     {
         this.bukkitPlayer.hidePlayer(player);
     }
 
     @Override
+    public void hidePlayer(final Plugin plugin, final Player player)
+    {
+        this.bukkitPlayer.hidePlayer(plugin, player);
+    }
+
+    @Override
+    @Deprecated
     public void showPlayer(final Player player)
     {
         this.bukkitPlayer.showPlayer(player);
     }
 
     @Override
-    public boolean canSee(final Player player)
+    public void showPlayer(final Plugin plugin, final Player player)
     {
-        return this.bukkitPlayer.canSee(player);
+        this.bukkitPlayer.showPlayer(plugin, player);
     }
 
     @Override
-    @Deprecated
-    public boolean isOnGround()
+    public boolean canSee(final Player player)
     {
-        return this.bukkitPlayer.isOnGround();
+        return this.bukkitPlayer.canSee(player);
     }
 
     @Override
@@ -829,6 +891,12 @@ class NorthPlayer implements INorthPlayer
     public void setResourcePack(final String s)
     {
         this.bukkitPlayer.setResourcePack(s);
+    }
+
+    @Override
+    public void setResourcePack(final String s, final byte[] bytes)
+    {
+        this.bukkitPlayer.setResourcePack(s, bytes);
     }
 
     @Override
@@ -884,6 +952,12 @@ class NorthPlayer implements INorthPlayer
     public void sendTitle(final String s, final String s1)
     {
         this.bukkitPlayer.sendTitle(s, s1);
+    }
+
+    @Override
+    public void sendTitle(final String s, final String s1, final int i, final int i1, final int i2)
+    {
+        this.bukkitPlayer.sendTitle(s, s1, i, i1, i2);
     }
 
     @Override
@@ -962,6 +1036,18 @@ class NorthPlayer implements INorthPlayer
     public <T> void spawnParticle(final Particle particle, final double v, final double v1, final double v2, final int i, final double v3, final double v4, final double v5, final double v6, final T t)
     {
         this.bukkitPlayer.spawnParticle(particle, v, v1, v2, i, v3, v4, v5, v6, t);
+    }
+
+    @Override
+    public AdvancementProgress getAdvancementProgress(final Advancement advancement)
+    {
+        return this.bukkitPlayer.getAdvancementProgress(advancement);
+    }
+
+    @Override
+    public String getLocale()
+    {
+        return this.bukkitPlayer.getLocale();
     }
 
     @Override
@@ -1085,6 +1171,12 @@ class NorthPlayer implements INorthPlayer
     }
 
     @Override
+    public InventoryView openMerchant(final Merchant merchant, final boolean b)
+    {
+        return this.bukkitPlayer.openMerchant(merchant, b);
+    }
+
+    @Override
     public void closeInventory()
     {
         this.bukkitPlayer.closeInventory();
@@ -1114,6 +1206,24 @@ class NorthPlayer implements INorthPlayer
     public void setItemOnCursor(final ItemStack itemStack)
     {
         this.bukkitPlayer.setItemOnCursor(itemStack);
+    }
+
+    @Override
+    public boolean hasCooldown(final Material material)
+    {
+        return this.bukkitPlayer.hasCooldown(material);
+    }
+
+    @Override
+    public int getCooldown(final Material material)
+    {
+        return this.bukkitPlayer.getCooldown(material);
+    }
+
+    @Override
+    public void setCooldown(final Material material, final int i)
+    {
+        this.bukkitPlayer.setCooldown(material, i);
     }
 
     @Override
@@ -1159,6 +1269,46 @@ class NorthPlayer implements INorthPlayer
     }
 
     @Override
+    public Entity releaseLeftShoulderEntity()
+    {
+        return this.bukkitPlayer.releaseLeftShoulderEntity();
+    }
+
+    @Override
+    public Entity releaseRightShoulderEntity()
+    {
+        return this.bukkitPlayer.releaseRightShoulderEntity();
+    }
+
+    @Override
+    @Deprecated
+    public Entity getShoulderEntityLeft()
+    {
+        return this.bukkitPlayer.getShoulderEntityLeft();
+    }
+
+    @Override
+    @Deprecated
+    public void setShoulderEntityLeft(final Entity entity)
+    {
+        this.bukkitPlayer.setShoulderEntityLeft(entity);
+    }
+
+    @Override
+    @Deprecated
+    public Entity getShoulderEntityRight()
+    {
+        return this.bukkitPlayer.getShoulderEntityRight();
+    }
+
+    @Override
+    @Deprecated
+    public void setShoulderEntityRight(final Entity entity)
+    {
+        this.bukkitPlayer.setShoulderEntityRight(entity);
+    }
+
+    @Override
     public double getEyeHeight()
     {
         return this.bukkitPlayer.getEyeHeight();
@@ -1177,36 +1327,15 @@ class NorthPlayer implements INorthPlayer
     }
 
     @Override
-    @Deprecated
-    public List<Block> getLineOfSight(final HashSet<Byte> hashSet, final int i)
-    {
-        return this.bukkitPlayer.getLineOfSight(hashSet, i);
-    }
-
-    @Override
     public List<Block> getLineOfSight(final Set<Material> set, final int i)
     {
         return this.bukkitPlayer.getLineOfSight(set, i);
     }
 
     @Override
-    @Deprecated
-    public Block getTargetBlock(final HashSet<Byte> hashSet, final int i)
-    {
-        return this.bukkitPlayer.getTargetBlock(hashSet, i);
-    }
-
-    @Override
     public Block getTargetBlock(final Set<Material> set, final int i)
     {
         return this.bukkitPlayer.getTargetBlock(set, i);
-    }
-
-    @Override
-    @Deprecated
-    public List<Block> getLastTwoTargetBlocks(final HashSet<Byte> hashSet, final int i)
-    {
-        return this.bukkitPlayer.getLastTwoTargetBlocks(hashSet, i);
     }
 
     @Override
@@ -1258,23 +1387,9 @@ class NorthPlayer implements INorthPlayer
     }
 
     @Override
-    @Deprecated
-    public int _INVALID_getLastDamage()
-    {
-        return this.bukkitPlayer._INVALID_getLastDamage();
-    }
-
-    @Override
     public void setLastDamage(final double v)
     {
         this.bukkitPlayer.setLastDamage(v);
-    }
-
-    @Override
-    @Deprecated
-    public void _INVALID_setLastDamage(final int i)
-    {
-        this.bukkitPlayer._INVALID_setLastDamage(i);
     }
 
     @Override
@@ -1293,6 +1408,12 @@ class NorthPlayer implements INorthPlayer
     public Player getKiller()
     {
         return this.bukkitPlayer.getKiller();
+    }
+
+    @Override
+    public void setKiller(@Nullable final Player player)
+    {
+        this.bukkitPlayer.setKiller(player);
     }
 
     @Override
@@ -1470,6 +1591,24 @@ class NorthPlayer implements INorthPlayer
     }
 
     @Override
+    public double getHeight()
+    {
+        return this.bukkitPlayer.getHeight();
+    }
+
+    @Override
+    public double getWidth()
+    {
+        return this.bukkitPlayer.getWidth();
+    }
+
+    @Override
+    public boolean isOnGround()
+    {
+        return this.bukkitPlayer.isOnGround();
+    }
+
+    @Override
     public World getWorld()
     {
         return this.bukkitPlayer.getWorld();
@@ -1554,15 +1693,35 @@ class NorthPlayer implements INorthPlayer
     }
 
     @Override
+    @Deprecated
     public Entity getPassenger()
     {
         return this.bukkitPlayer.getPassenger();
     }
 
     @Override
+    @Deprecated
     public boolean setPassenger(final Entity entity)
     {
         return this.bukkitPlayer.setPassenger(entity);
+    }
+
+    @Override
+    public List<Entity> getPassengers()
+    {
+        return this.bukkitPlayer.getPassengers();
+    }
+
+    @Override
+    public boolean addPassenger(final Entity entity)
+    {
+        return this.bukkitPlayer.addPassenger(entity);
+    }
+
+    @Override
+    public boolean removePassenger(final Entity entity)
+    {
+        return this.bukkitPlayer.removePassenger(entity);
     }
 
     @Override
@@ -1647,18 +1806,6 @@ class NorthPlayer implements INorthPlayer
     public Entity getVehicle()
     {
         return this.bukkitPlayer.getVehicle();
-    }
-
-    @Override
-    public void setCustomName(final String s)
-    {
-        this.bukkitPlayer.setCustomName(s);
-    }
-
-    @Override
-    public String getCustomName()
-    {
-        return this.bukkitPlayer.getCustomName();
     }
 
     @Override
@@ -1752,9 +1899,21 @@ class NorthPlayer implements INorthPlayer
     }
 
     @Override
+    public PistonMoveReaction getPistonMoveReaction()
+    {
+        return this.bukkitPlayer.getPistonMoveReaction();
+    }
+
+    @Override
     public Location getOrigin()
     {
         return this.bukkitPlayer.getOrigin();
+    }
+
+    @Override
+    public boolean fromMobSpawner()
+    {
+        return this.bukkitPlayer.fromMobSpawner();
     }
 
     @Override
@@ -1872,16 +2031,21 @@ class NorthPlayer implements INorthPlayer
     }
 
     @Override
-    public void damage(final double v)
+    public String getCustomName()
     {
-        this.bukkitPlayer.damage(v);
+        return this.bukkitPlayer.getCustomName();
     }
 
     @Override
-    @Deprecated
-    public void _INVALID_damage(final int i)
+    public void setCustomName(final String s)
     {
-        this.bukkitPlayer._INVALID_damage(i);
+        this.bukkitPlayer.setCustomName(s);
+    }
+
+    @Override
+    public void damage(final double v)
+    {
+        this.bukkitPlayer.damage(v);
     }
 
     @Override
@@ -1891,23 +2055,9 @@ class NorthPlayer implements INorthPlayer
     }
 
     @Override
-    @Deprecated
-    public void _INVALID_damage(final int i, final Entity entity)
-    {
-        this.bukkitPlayer._INVALID_damage(i, entity);
-    }
-
-    @Override
     public double getHealth()
     {
         return this.bukkitPlayer.getHealth();
-    }
-
-    @Override
-    @Deprecated
-    public int _INVALID_getHealth()
-    {
-        return this.bukkitPlayer._INVALID_getHealth();
     }
 
     @Override
@@ -1918,12 +2068,6 @@ class NorthPlayer implements INorthPlayer
 
     @Override
     @Deprecated
-    public void _INVALID_setHealth(final int i)
-    {
-        this.bukkitPlayer._INVALID_setHealth(i);
-    }
-
-    @Override
     public double getMaxHealth()
     {
         return this.bukkitPlayer.getMaxHealth();
@@ -1931,12 +2075,6 @@ class NorthPlayer implements INorthPlayer
 
     @Override
     @Deprecated
-    public int _INVALID_getMaxHealth()
-    {
-        return this.bukkitPlayer._INVALID_getMaxHealth();
-    }
-
-    @Override
     public void setMaxHealth(final double v)
     {
         this.bukkitPlayer.setMaxHealth(v);
@@ -1944,12 +2082,6 @@ class NorthPlayer implements INorthPlayer
 
     @Override
     @Deprecated
-    public void _INVALID_setMaxHealth(final int i)
-    {
-        this.bukkitPlayer._INVALID_setMaxHealth(i);
-    }
-
-    @Override
     public void resetMaxHealth()
     {
         this.bukkitPlayer.resetMaxHealth();
@@ -2007,13 +2139,6 @@ class NorthPlayer implements INorthPlayer
     public boolean isBanned()
     {
         return this.bukkitPlayer.isBanned();
-    }
-
-    @Override
-    @Deprecated
-    public void setBanned(final boolean b)
-    {
-        this.bukkitPlayer.setBanned(b);
     }
 
     @Override
@@ -2101,8 +2226,15 @@ class NorthPlayer implements INorthPlayer
     }
 
     @Override
-    public String toString()
+    public int getProtocolVersion()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("bukkitPlayer", this.bukkitPlayer).append("playerData", this.playerData).toString();
+        return this.bukkitPlayer.getProtocolVersion();
+    }
+
+    @Override
+    @Nullable
+    public InetSocketAddress getVirtualHost()
+    {
+        return this.bukkitPlayer.getVirtualHost();
     }
 }

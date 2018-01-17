@@ -1,13 +1,13 @@
 package pl.arieals.api.minigame.server.gamehost.scheduler;
 
-import static net.minecraft.server.v1_10_R1.MinecraftServer.currentTick;
+import static net.minecraft.server.v1_12_R1.MinecraftServer.currentTick;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_10_R1.scheduler.CraftScheduler;
+import org.bukkit.craftbukkit.v1_12_R1.scheduler.CraftScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;

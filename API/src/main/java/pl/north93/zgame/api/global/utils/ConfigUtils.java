@@ -1,52 +1,61 @@
 package pl.north93.zgame.api.global.utils;
 
+import javax.xml.bind.JAXB;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.diorite.cfg.system.Template;
-import org.diorite.cfg.system.TemplateCreator;
-import org.diorite.utils.DioriteUtils;
+import org.apache.commons.io.FileUtils;
 
-public class ConfigUtils
+import pl.north93.zgame.api.global.API;
+import pl.north93.zgame.api.global.exceptions.ConfigurationException;
+import pl.north93.zgame.api.global.utils.lang.ClassUtils;
+
+public final class ConfigUtils
 {
-    public static <T> T loadConfigFile(final Class<T> clazz, final File f)
+    public static <T> T loadConfig(final Class<T> configClass, final String configName)
     {
-        T config;
+        final ClassLoader classLoader = ClassUtils.getCallerClass().getClassLoader();
+        return loadConfig(classLoader, configClass, API.getApiCore().getFile(configName));
+    }
 
-        final Template<T> cfgTemp = TemplateCreator.getTemplate(clazz);
-        if (f.exists())
+    public static <T> T loadConfig(final Class<T> configClass, final File configFile)
+    {
+        final ClassLoader classLoader = ClassUtils.getCallerClass().getClassLoader();
+        return loadConfig(classLoader, configClass, configFile);
+    }
+
+    private static <T> T loadConfig(final ClassLoader callerLoader, final Class<T> configClass, final File configFile)
+    {
+        final Logger logger = API.getApiCore().getLogger();
+        if (configFile.exists())
         {
-            try
-            {
-                config = cfgTemp.load(f);
-                if (config == null)
-                {
-                    config = cfgTemp.fillDefaults(clazz.newInstance());
-                }
-            }
-            catch (final IOException e)
-            {
-                throw new RuntimeException("IO exception when loading config file: " + f, e);
-            }
-            catch (InstantiationException | IllegalAccessException e)
-            {
-                throw new RuntimeException("Reflection exception when loading config file: " + f, e);
-            }
-        }
-        else
-        {
-            try
-            {
-                config = cfgTemp.fillDefaults(clazz.newInstance());
-                DioriteUtils.createFile(f);
-                cfgTemp.dump(f, config, false);
-            }
-            catch (final IOException | InstantiationException | IllegalAccessException e)
-            {
-                throw new RuntimeException("Can't create configuration file!", e);
-            }
+            logger.log(Level.INFO, "Loading config from file {0}", configFile);
+            return JAXB.unmarshal(configFile, configClass);
         }
 
-        return config;
+        final String configName = configFile.getName();
+        final URL exampleConfig = callerLoader.getResource("examples/" + configName);
+        if (exampleConfig == null)
+        {
+            System.out.println(callerLoader);
+            System.out.println("examples/" + configName);
+            throw new ConfigurationException("Not found config and it's example definition " + configName);
+        }
+
+        try
+        {
+            FileUtils.copyURLToFile(exampleConfig, configFile);
+        }
+        catch (final IOException e)
+        {
+            throw new ConfigurationException("Failed to copy default config " + configName, e);
+        }
+
+        logger.log(Level.INFO, "Successfully copied default config {0}!", configName);
+        return JAXB.unmarshal(exampleConfig, configClass);
     }
 }

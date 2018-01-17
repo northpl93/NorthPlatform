@@ -7,16 +7,16 @@ import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.observeT
 import java.util.HashSet;
 import java.util.Set;
 
-import net.minecraft.server.v1_10_R1.EntityArmorStand;
-import net.minecraft.server.v1_10_R1.EntityPlayer;
-import net.minecraft.server.v1_10_R1.EntityTrackerEntry;
-import net.minecraft.server.v1_10_R1.WorldServer;
+import net.minecraft.server.v1_12_R1.EntityArmorStand;
+import net.minecraft.server.v1_12_R1.EntityPlayer;
+import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
+import net.minecraft.server.v1_12_R1.WorldServer;
 
 import com.google.common.base.Preconditions;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftArmorStand;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftArmorStand;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 

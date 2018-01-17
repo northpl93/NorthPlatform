@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!-- Plik uzywany w trybie standalone do konfiguracji instancji API -->
+<environment>
+    <!-- Nazwa tej instancji -->
+    <id>test1</id>
+</environment>

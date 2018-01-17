@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <components>
+        <component>
+            <name>NetworkController.Core</name>
+            <mainClass>pl.north93.zgame.controller.core.NetworkControllerCore</mainClass>
+            <description>Manages Minecraft network.</description>
+            <dependencies>
+                <dependency>API.Database.StorageConnector</dependency>
+                <dependency>NetworkController.ConfigServer</dependency>
+            </dependencies>
+        </component>
+
+        <component>
+            <name>NetworkController.ConfigServer</name>
+            <mainClass>pl.north93.zgame.controller.configserver.ConfigServerComponent</mainClass>
+            <description>Server side of API.Config</description>
+            <dependencies>
+                <dependency>API.Database.Redis.RPC</dependency>
+                <dependency>API.Database.Redis.Observer</dependency>
+            </dependencies>
+        </component>
+
+        <component>
+            <name>NetworkController.ServersManager</name>
+            <mainClass>pl.north93.zgame.controller.servers.NetworkServersManager</mainClass>
+            <description>Manages all servers in network.</description>
+            <dependencies>
+                <dependency>API.Database.StorageConnector</dependency>
+                <dependency>NetworkController.Core</dependency>
+                <dependency>NetworkController.ConfigServer</dependency>
+            </dependencies>
+        </component>
+
+        <component>
+            <name>NetworkController.PlayersDataFixer</name>
+            <mainClass>pl.north93.zgame.controller.playerfixer.PlayersDataFixer</mainClass>
+            <description>Removes abandoned player's data.</description>
+            <dependencies>
+                <dependency>API.Database.StorageConnector</dependency>
+                <dependency>API.MinecraftNetwork.NetworkManager</dependency>
+                <dependency>NetworkController.Core</dependency>
+            </dependencies>
+        </component>
+    </components>
+</bundle>

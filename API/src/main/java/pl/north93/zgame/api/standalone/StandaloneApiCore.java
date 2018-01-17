@@ -1,8 +1,5 @@
 package pl.north93.zgame.api.standalone;
 
-import static pl.north93.zgame.api.global.utils.ConfigUtils.loadConfigFile;
-
-
 import java.io.File;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
@@ -12,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
+import pl.north93.zgame.api.global.utils.ConfigUtils;
 import pl.north93.zgame.api.global.utils.NorthFormatter;
 import pl.north93.zgame.api.standalone.cfg.EnvironmentCfg;
 
@@ -67,8 +65,8 @@ public class StandaloneApiCore extends ApiCore
     protected void init() throws Exception
     {
         this.logger.info("Initialising standalone application");
-        final String fileLoc = System.getProperty("northplatform.environmentFile", "environment.yml");
-        this.environmentCfg = loadConfigFile(EnvironmentCfg.class, this.getFile(fileLoc));
+        final String fileLoc = System.getProperty("northplatform.environmentFile", "environment.xml");
+        this.environmentCfg = ConfigUtils.loadConfig(EnvironmentCfg.class, this.getFile(fileLoc));
         this.debug("Using environment file: " + fileLoc + " Loaded content: " + this.environmentCfg);
     }
 

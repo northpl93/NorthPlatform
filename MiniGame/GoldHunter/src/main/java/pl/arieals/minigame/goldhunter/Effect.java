@@ -9,7 +9,6 @@ import org.bukkit.boss.BossBar;
 
 import com.google.common.base.Preconditions;
 
-import net.minecraft.server.v1_10_R1.MinecraftServer;
 import pl.arieals.minigame.goldhunter.utils.CatchException;
 import pl.arieals.minigame.goldhunter.utils.TimeStringUtils;
 import pl.north93.zgame.api.bukkit.tick.ITickable;

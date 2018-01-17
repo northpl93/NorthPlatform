@@ -8,7 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.diorite.utils.math.DioriteMathUtils;
 
-import net.minecraft.server.v1_10_R1.MinecraftServer;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;

@@ -1,13 +1,13 @@
 package pl.arieals.minigame.goldhunter.abilities;
 
 import org.apache.logging.log4j.Logger;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.event.EventHandler;
 
-import net.minecraft.server.v1_10_R1.EntityPlayer;
-import net.minecraft.server.v1_10_R1.PacketPlayInAbilities;
-import net.minecraft.server.v1_10_R1.PacketPlayOutAbilities;
-import net.minecraft.server.v1_10_R1.PlayerAbilities;
+import net.minecraft.server.v1_12_R1.EntityPlayer;
+import net.minecraft.server.v1_12_R1.PacketPlayInAbilities;
+import net.minecraft.server.v1_12_R1.PacketPlayOutAbilities;
+import net.minecraft.server.v1_12_R1.PlayerAbilities;
 import pl.arieals.minigame.goldhunter.AbilityHandler;
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;

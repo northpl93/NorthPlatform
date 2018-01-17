@@ -1,72 +1,42 @@
 package pl.north93.zgame.api.global.permissions;
 
-import static org.diorite.cfg.annotations.CfgCollectionStyle.CollectionStyle.ALWAYS_NEW_LINE;
-
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.cfg.annotations.CfgCollectionStyle;
-import org.diorite.cfg.annotations.CfgComment;
-import org.diorite.cfg.annotations.CfgComments;
-import org.diorite.cfg.annotations.CfgFooterComment;
-import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
-import org.diorite.cfg.annotations.defaults.CfgStringDefault;
-import org.diorite.cfg.system.Template;
-import org.diorite.cfg.system.TemplateCreator;
-
 /**
  * Używane do przechowywania informacji o rangach w Redisie i w konfiguracji;
  */
-@CfgComments({"Konfiguracja grup i uprawnień"})
-@CfgFooterComment("Koniec konfiguracji!")
-@CfgDelegateDefault("{new}")
+@XmlRootElement(name = "groups")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class GroupsContainer
 {
-    private static List<GroupEntry> getDefaultGroups()
-    {
-        final Template<GroupEntry> template = TemplateCreator.getTemplate(GroupEntry.class, true);
-        final ArrayList<GroupEntry> list = new ArrayList<>(2);
-
-        {
-            final GroupEntry groupDefault = template.fillDefaults(new GroupEntry());
-            groupDefault.inheritance = new ArrayList<>();
-            groupDefault.permissions = new ArrayList<>();
-            groupDefault.permissions.add("permission1");
-            groupDefault.permissions.add("permission2");
-            list.add(groupDefault);
-        }
-
-        return list;
-    }
-
-    @CfgComment("Domyślna grupa dla graczy bez ustawionej grupy")
-    @CfgStringDefault("default")
+    @XmlElement
     public String defaultGroup;
 
-    @CfgComment("Konfiguracja wszystkich grup i ich uprawnień")
-    @CfgDelegateDefault("getDefaultGroups")
+    @XmlElement(name = "group")
     public ArrayList<GroupEntry> groups;
 
     public static class GroupEntry
     {
-        @CfgComment("Nazwa grupy. Nie może być zmieniana, ponieważ doprowadzi to do utracenia rangi przez graczy i powrót do domyślnej.")
-        @CfgStringDefault("default")
+        @XmlElement
         public String            name;
-        @CfgComment("Wiadomość która pojawi się gdy gracz wejdzie na serwer. Puste pole oznacza brak wiadomości.")
-        @CfgStringDefault("")
+        @XmlElement
         public String            joinMessage;
-        @CfgComment("Format wyświetlanych wiadomości na czacie")
-        @CfgStringDefault("[Gracz] %s: %s")
+        @XmlElement
         public String            chatFormat;
-        @CfgComment("Lista uprawnień danej grupy")
-        @CfgCollectionStyle(ALWAYS_NEW_LINE)
+        @XmlElementWrapper(name = "permissions")
+        @XmlElement(name = "permission")
         public ArrayList<String> permissions;
-        @CfgComment("Lista grup po której ta dziedziczy uprawnienia")
-        @CfgCollectionStyle(ALWAYS_NEW_LINE)
+        @XmlElementWrapper(name = "inheritances")
+        @XmlElement(name = "inheritance")
         public ArrayList<String> inheritance;
 
         @Override

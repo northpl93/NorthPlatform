@@ -221,7 +221,7 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     }
 
     @Override
-    public Locale getLocale()
+    public Locale getMyLocale()
     {
         final MetaKey metaKey = MetaKey.get("lang");
         if (this.meta.contains(metaKey))

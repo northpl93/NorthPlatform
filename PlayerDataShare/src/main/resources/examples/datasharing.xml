@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dataSharing>
+    <sharingGroups>
+
+        <sharingGroup>
+            <!-- Wewnętrzna nazwa tej grupy -->
+            <name>test</name>
+
+            <!-- Grupy serwerów należące do tej grupy udostępniania danych -->
+            <serversGroups>
+                <serversGroup>default</serversGroup>
+            </serversGroups>
+
+            <!-- Serwery należące do tej grupy udostępniania danych -->
+            <servers>
+            </servers>
+
+            <!-- Czy w tej grupie współdzielić czat? -->
+            <shareChat>true</shareChat>
+
+            <!-- Konfiguracja automatycznych wiadomości w tej grupie -->
+            <announcer>
+                <enabled>true</enabled>
+                <time>60</time>
+                <messages>
+                    <message>Testowa wiadomośc co 60 sekund</message>
+                </messages>
+            </announcer>
+
+            <!-- Lista danych które należy synchronizować -->
+            <dataUnits>
+            </dataUnits>
+        </sharingGroup>
+
+    </sharingGroups>
+</dataSharing>

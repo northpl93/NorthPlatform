@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!-- Konfiguracja połączenia z bazami danych, wymagane w każdej instancji API -->
+<connection>
+    <!-- URL do połączenia się z MongoDB -->
+    <mongoDbConnect>mongodb://user:password@127.0.0.1:27017/?authSource=server</mongoDbConnect>
+
+    <!-- Baza danych z której ma korzystać API -->
+    <mongoMainDatabase>server</mongoMainDatabase>
+
+    <!-- Host redisa -->
+    <redisHost>localhost</redisHost>
+
+    <!-- Port redisa -->
+    <redisPort>6379</redisPort>
+
+    <redisTimeout>5000</redisTimeout>
+
+    <!-- Hasło do redisa -->
+    <redisPassword>password</redisPassword>
+</connection>

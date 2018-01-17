@@ -6,10 +6,10 @@ import static java.lang.invoke.MethodType.methodType;
 import java.lang.invoke.MethodHandle;
 import java.util.List;
 
-import net.minecraft.server.v1_10_R1.EnumGamemode;
-import net.minecraft.server.v1_10_R1.IChatBaseComponent;
-import net.minecraft.server.v1_10_R1.PacketPlayOutPlayerInfo;
-import net.minecraft.server.v1_10_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
+import net.minecraft.server.v1_12_R1.EnumGamemode;
+import net.minecraft.server.v1_12_R1.IChatBaseComponent;
+import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
+import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
 
 import com.mojang.authlib.GameProfile;
 
@@ -30,7 +30,7 @@ public class WrapperPlayOutPlayerInfo extends AbstractWrapper<PacketPlayOutPlaye
     {
         try
         {
-            final Class<?> clazz = Class.forName("net.minecraft.server.v1_10_R1.PacketPlayOutPlayerInfo$PlayerInfoData");
+            final Class<?> clazz = Class.forName("net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo$PlayerInfoData");
             data_constructor = lookup.findConstructor(clazz, methodType(void.class, PacketPlayOutPlayerInfo.class, GameProfile.class, int.class, EnumGamemode.class, IChatBaseComponent.class))
                                      .asType(methodType(Object.class, PacketPlayOutPlayerInfo.class, GameProfile.class, int.class, EnumGamemode.class, IChatBaseComponent.class));
         }

@@ -5,20 +5,20 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 import java.util.Map;
 
-import net.minecraft.server.v1_10_R1.Entity;
-import net.minecraft.server.v1_10_R1.EntityHuman;
-import net.minecraft.server.v1_10_R1.EntityPlayer;
-import net.minecraft.server.v1_10_R1.EntitySkeleton;
-import net.minecraft.server.v1_10_R1.EntityTypes;
-import net.minecraft.server.v1_10_R1.PathfinderGoalFloat;
-import net.minecraft.server.v1_10_R1.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_10_R1.PathfinderGoalNearestAttackableTarget;
-import net.minecraft.server.v1_10_R1.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_10_R1.PathfinderGoalRandomStroll;
-import net.minecraft.server.v1_10_R1.World;
+import net.minecraft.server.v1_12_R1.Entity;
+import net.minecraft.server.v1_12_R1.EntityHuman;
+import net.minecraft.server.v1_12_R1.EntityPlayer;
+import net.minecraft.server.v1_12_R1.EntitySkeleton;
+import net.minecraft.server.v1_12_R1.EntityTypes;
+import net.minecraft.server.v1_12_R1.PathfinderGoalFloat;
+import net.minecraft.server.v1_12_R1.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_12_R1.PathfinderGoalNearestAttackableTarget;
+import net.minecraft.server.v1_12_R1.PathfinderGoalRandomLookaround;
+import net.minecraft.server.v1_12_R1.PathfinderGoalRandomStroll;
+import net.minecraft.server.v1_12_R1.World;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.event.entity.CreatureSpawnEvent;

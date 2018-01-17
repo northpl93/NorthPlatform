@@ -1,29 +1,29 @@
 package pl.north93.zgame.datashare.api.cfg;
 
-import static org.diorite.cfg.annotations.CfgCollectionStyle.CollectionStyle.ALWAYS_NEW_LINE;
-
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.cfg.annotations.CfgCollectionStyle;
-import org.diorite.cfg.annotations.CfgComment;
-
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AnnouncerConfig
 {
-    @CfgComment("Czy wlaczony")
-    private Boolean      enabled;
-    @CfgComment("Czas w sekundach pomiedzy wiadomosciami")
-    private Integer      time;
-    @CfgCollectionStyle(ALWAYS_NEW_LINE)
-    @CfgComment("Lista wiadomosci")
+    @XmlElement
+    private Boolean      enabled; // Czy wlaczony
+    @XmlElement
+    private Integer      time; // Czas w sekundach pomiedzy wiadomosciami
+    @XmlElementWrapper(name = "messages")
+    @XmlElement(name = "message")
     @MsgPackCustomTemplate(ArrayListTemplate.class)
-    private List<String> messages;
+    private List<String> messages; // Lista wiadomosci
 
     public AnnouncerConfig()
     {

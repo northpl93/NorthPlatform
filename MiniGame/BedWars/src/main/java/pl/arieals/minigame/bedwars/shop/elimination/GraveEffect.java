@@ -6,14 +6,14 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import net.minecraft.server.v1_10_R1.EntityArmorStand;
-import net.minecraft.server.v1_10_R1.Vector3f;
+import net.minecraft.server.v1_12_R1.EntityArmorStand;
+import net.minecraft.server.v1_12_R1.Vector3f;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

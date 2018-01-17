@@ -1,6 +1,6 @@
 package pl.north93.zgame.api.bukkit.map.impl;
 
-import net.minecraft.server.v1_10_R1.PacketPlayOutEntityMetadata;
+import net.minecraft.server.v1_12_R1.PacketPlayOutEntityMetadata;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;

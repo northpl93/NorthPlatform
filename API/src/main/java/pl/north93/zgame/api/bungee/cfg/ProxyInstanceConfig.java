@@ -1,19 +1,18 @@
 package pl.north93.zgame.api.bungee.cfg;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.cfg.annotations.CfgComments;
-import org.diorite.cfg.annotations.CfgFooterComment;
-import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
-import org.diorite.cfg.annotations.defaults.CfgStringDefault;
-
-@CfgComments({"Konfiguracja instancji BungeeCorda"})
-@CfgFooterComment("Koniec konfiguracji!")
-@CfgDelegateDefault("{new}")
+@XmlRootElement(name = "proxyInstance")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ProxyInstanceConfig
 {
-    @CfgStringDefault("bungee1")
+    @XmlElement
     private String uniqueName;
 
     public String getUniqueName()

@@ -1,7 +1,6 @@
 package pl.north93.zgame.api.economy.impl.server;
 
-import static pl.north93.zgame.api.global.utils.ConfigUtils.loadConfigFile;
-
+import javax.xml.bind.JAXB;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -26,7 +25,7 @@ public class EconomyServerComponent extends Component
     @Override
     protected void enableComponent()
     {
-        this.config = loadConfigFile(VaultConfig.class, this.getApiCore().getFile("vault.yml"));
+        this.config = JAXB.unmarshal(this.getApiCore().getFile("vault.xml"), VaultConfig.class);
         if (this.config.isEnableVaultIntegration())
         {
             this.enableIntegration();

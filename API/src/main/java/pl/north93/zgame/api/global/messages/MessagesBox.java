@@ -1,9 +1,7 @@
 package pl.north93.zgame.api.global.messages;
 
 import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -13,7 +11,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class MessagesBox
 {
-    private static final Map<String, MessagesBox> CACHE = new HashMap<>();
     private static final UTF8Control CONTROL = new UTF8Control();
     private final ClassLoader loader;
     private final String      fileName;
@@ -81,7 +78,7 @@ public class MessagesBox
 
     public void sendMessage(final Messageable messageable, final String key, final MessageLayout layout, final Object... params)
     {
-        final String message = this.getMessage(messageable.getLocale(), key, (Object[]) params);
+        final String message = this.getMessage(messageable.getMyLocale(), key, (Object[]) params);
         for (final String line : layout.processMessage(message))
         {
             messageable.sendRawMessage(line, true);
@@ -96,7 +93,7 @@ public class MessagesBox
     // nie powinno jebnac na innych platformach niz Bukkit o ile nie wykonamy tej metody
     public void sendMessage(final org.bukkit.entity.Player player, final String key, final MessageLayout layout, final Object... params)
     {
-        final String message = this.getMessage(player.spigot().getLocale(), key, (Object[]) params);
+        final String message = this.getMessage(player.getLocale(), key, (Object[]) params);
         player.sendMessage(layout.processMessage(message));
     }
 

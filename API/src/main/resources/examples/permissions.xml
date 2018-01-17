@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<groups>
+    <defaultGroup>default</defaultGroup>
+
+    <group>
+        <!-- Nazwa grupy. Nie może być zmieniana, ponieważ doprowadzi to do utracenia rangi przez graczy i powrót do domyślnej. -->
+        <name>default</name>
+
+        <!-- Wiadomość która pojawi się gdy gracz wejdzie na serwer. Puste pole oznacza brak wiadomości. -->
+        <joinMessage>Test</joinMessage>
+
+        <!-- Format wyświetlanych wiadomości na czacie -->
+        <chatFormat>[Gracz] %s: %s</chatFormat>
+
+        <permissions>
+            <permission>test1</permission>
+        </permissions>
+
+        <!-- Lista grup po której ta dziedziczy uprawnienia -->
+        <inheritances>
+            <inheritance>other</inheritance>
+        </inheritances>
+    </group>
+</groups>

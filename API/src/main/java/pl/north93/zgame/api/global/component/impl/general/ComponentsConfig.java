@@ -1,23 +1,34 @@
 package pl.north93.zgame.api.global.component.impl.general;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
-
 import pl.north93.zgame.api.global.component.ComponentDescription;
 
+@XmlRootElement(name = "bundle")
+@XmlAccessorType(XmlAccessType.FIELD)
 class ComponentsConfig
 {
-    @CfgDelegateDefault("{ArrayList}")
-    private List<String>               include;
-    @CfgDelegateDefault("{HashSet}")
-    private Set<String>                excludedPackages;
-    @CfgDelegateDefault("{ArrayList}")
-    private List<ComponentDescription> components;
+    @XmlElementWrapper(name = "includes")
+    @XmlElement(name = "include")
+    private List<String>               include = new ArrayList<>();
+    @XmlElementWrapper(name = "excludedPackages")
+    @XmlElement(name = "excludedPackage")
+    private Set<String>                excludedPackages = new HashSet<>();
+    @XmlElementWrapper(name = "components")
+    @XmlElement(name = "component")
+    private List<ComponentDescription> components = new ArrayList<>();
 
     public List<String> getInclude()
     {

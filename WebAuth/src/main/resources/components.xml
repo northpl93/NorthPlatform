@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <components>
+        <component>
+            <name>WebAuth.Controller</name>
+            <mainClass>pl.north93.zgame.webauth.controller.WebAuthControllerComponent</mainClass>
+            <description>Creates tokens and handles api calls.</description>
+            <dependencies>
+                <dependency>API.Database.Redis.RPC</dependency>
+                <dependency>API.Database.Redis.Observer</dependency>
+                <dependency>API.MinecraftNetwork.NetworkManager</dependency>
+                <dependency>RestfulApi</dependency>
+            </dependencies>
+            <platforms>
+                <platform>STANDALONE</platform>
+            </platforms>
+        </component>
+
+        <component>
+            <name>WebAuth.Server</name>
+            <mainClass>pl.north93.zgame.webauth.server.WebAuthServerComponent</mainClass>
+            <description>Provides web authentication command.</description>
+            <dependencies>
+                <dependency>API.Database.Redis.RPC</dependency>
+            </dependencies>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>

@@ -53,11 +53,11 @@ public class Kick extends NorthCommand
             final String kickMessage;
             if (StringUtils.isEmpty(reason))
             {
-                kickMessage = this.messages.getMessage(player.getLocale(), "kick.by_command.without_reason");
+                kickMessage = this.messages.getMessage(player.getMyLocale(), "kick.by_command.without_reason");
             }
             else
             {
-                kickMessage = MessageFormat.format(this.messages.getMessage(player.getLocale(), "kick.by_command.with_reason"), reason);
+                kickMessage = MessageFormat.format(this.messages.getMessage(player.getMyLocale(), "kick.by_command.with_reason"), reason);
             }
 
             player.kick(kickMessage);

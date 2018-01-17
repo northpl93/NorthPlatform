@@ -3,17 +3,17 @@ package pl.north93.zgame.skyplayerexp.server.compass;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 
-import net.minecraft.server.v1_10_R1.Packet;
-import net.minecraft.server.v1_10_R1.PacketPlayInBlockPlace;
-import net.minecraft.server.v1_10_R1.PacketPlayInClientCommand;
-import net.minecraft.server.v1_10_R1.PacketPlayOutSetSlot;
-import net.minecraft.server.v1_10_R1.PlayerConnection;
+import net.minecraft.server.v1_12_R1.Packet;
+import net.minecraft.server.v1_12_R1.PacketPlayInBlockPlace;
+import net.minecraft.server.v1_12_R1.PacketPlayInClientCommand;
+import net.minecraft.server.v1_12_R1.PacketPlayOutSetSlot;
+import net.minecraft.server.v1_12_R1.PlayerConnection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -110,7 +110,7 @@ public class CompassManager implements Listener, ICompassManager
                 return;
             }
 
-            final net.minecraft.server.v1_10_R1.ItemStack itemStack = wrapper.getItemStack();
+            final net.minecraft.server.v1_12_R1.ItemStack itemStack = wrapper.getItemStack();
             if (itemStack != null && itemStack.getItem().getName().equals("compass"))
             {
                 return;

@@ -80,7 +80,7 @@ public class BungeeCommandsManager implements ICommandsManager
         }
 
         @Override
-        public Locale getLocale()
+        public Locale getMyLocale()
         {
             if (this.sender instanceof ProxiedPlayer)
             {

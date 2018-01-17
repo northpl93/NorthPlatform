@@ -6,21 +6,21 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-import net.minecraft.server.v1_10_R1.EntityLiving;
-import net.minecraft.server.v1_10_R1.InventoryEnderChest;
-import net.minecraft.server.v1_10_R1.MobEffect;
-import net.minecraft.server.v1_10_R1.MobEffectList;
-import net.minecraft.server.v1_10_R1.NBTCompressedStreamTools;
-import net.minecraft.server.v1_10_R1.NBTTagCompound;
-import net.minecraft.server.v1_10_R1.NBTTagList;
-import net.minecraft.server.v1_10_R1.ServerStatisticManager;
-import net.minecraft.server.v1_10_R1.Statistic;
-import net.minecraft.server.v1_10_R1.StatisticManager;
-import net.minecraft.server.v1_10_R1.StatisticWrapper;
+import net.minecraft.server.v1_12_R1.EntityLiving;
+import net.minecraft.server.v1_12_R1.InventoryEnderChest;
+import net.minecraft.server.v1_12_R1.MobEffect;
+import net.minecraft.server.v1_12_R1.MobEffectList;
+import net.minecraft.server.v1_12_R1.NBTCompressedStreamTools;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
+import net.minecraft.server.v1_12_R1.NBTTagList;
+import net.minecraft.server.v1_12_R1.ServerStatisticManager;
+import net.minecraft.server.v1_12_R1.Statistic;
+import net.minecraft.server.v1_12_R1.StatisticManager;
+import net.minecraft.server.v1_12_R1.StatisticWrapper;
 
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftInventory;
-import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftInventoryPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryPlayer;
 import org.bukkit.entity.Player;
 
 import pl.north93.zgame.api.global.component.annotations.SkipInjections;
@@ -68,7 +68,7 @@ public final class VersionDepend
 
     public static byte[] serializePlayerEnderchest(final Player player)
     {
-        final NBTTagList tagList = ((InventoryEnderChest) ((CraftInventory) player.getEnderChest()).getInventory()).h();
+        final NBTTagList tagList = ((InventoryEnderChest) ((CraftInventory) player.getEnderChest()).getInventory()).i();
         final NBTTagCompound tagCompound = new NBTTagCompound();
         tagCompound.set("", tagList);
 

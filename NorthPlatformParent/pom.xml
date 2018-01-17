@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <spigot.location>lib/spigot-1.10.2.jar</spigot.location>
+        <spigot.location>lib/spigot-1.12.2.jar</spigot.location>
 
         <bungee-api.version>1.12-SNAPSHOT</bungee-api.version>
 
@@ -27,17 +27,17 @@
         <module>../Network Controller</module>
         <module>../Pets</module>
         <module>../Server Deamon</module>
-        <module>../SkyBlock</module>
+        <!--<module>../SkyBlock</module>-->
         <module>../PlayerDataShare</module>
         <module>../RestfulApi</module>
         <module>../NoPremiumAuth</module>
         <module>../API/Economy</module>
         <module>../WebAuth</module>
         <module>../TimeGroups</module>
-        <module>../SkyBlockShop</module>
+        <!--<module>../SkyBlockShop</module>-->
         <module>../ItemShop</module>
-        <module>../SkyBlockPlayerExperience</module>
-        <module>../SkyBlock.Quests</module>
+        <!--<module>../SkyBlockPlayerExperience</module>-->
+        <!--<module>../SkyBlock.Quests</module>-->
         <module>../API/MiniGame</module>
         <module>../MiniGame/GoldHunter</module>
         <module>../MiniGame/ElytraRace</module>

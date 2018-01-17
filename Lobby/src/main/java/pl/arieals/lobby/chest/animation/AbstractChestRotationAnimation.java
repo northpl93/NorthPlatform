@@ -1,8 +1,8 @@
 package pl.arieals.lobby.chest.animation;
 
-import net.minecraft.server.v1_10_R1.Vector3f;
+import net.minecraft.server.v1_12_R1.Vector3f;
 
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.ArmorStand;
 
 import io.netty.buffer.ByteBuf;

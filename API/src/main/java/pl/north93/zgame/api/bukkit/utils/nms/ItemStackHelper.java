@@ -3,12 +3,12 @@ package pl.north93.zgame.api.bukkit.utils.nms;
 import static org.diorite.utils.reflections.DioriteReflectionUtils.getField;
 
 
-import net.minecraft.server.v1_10_R1.ItemStack;
-import net.minecraft.server.v1_10_R1.NBTTagCompound;
+import net.minecraft.server.v1_12_R1.ItemStack;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
 
 import com.mojang.authlib.GameProfile;
 
-import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import org.diorite.utils.reflections.DioriteReflectionUtils;
@@ -16,7 +16,7 @@ import org.diorite.utils.reflections.FieldAccessor;
 
 public final class ItemStackHelper
 {
-    private static final FieldAccessor<GameProfile> craftMetaSkull_profile = getField("org.bukkit.craftbukkit.v1_10_R1.inventory.CraftMetaSkull", "profile", GameProfile.class);
+    private static final FieldAccessor<GameProfile> craftMetaSkull_profile = getField("org.bukkit.craftbukkit.v1_12_R1.inventory.CraftMetaSkull", "profile", GameProfile.class);
     private static final FieldAccessor<ItemStack> craftItemStack_handle = DioriteReflectionUtils.getField(CraftItemStack.class, "handle", ItemStack.class);
 
     private ItemStackHelper()
@@ -62,7 +62,14 @@ public final class ItemStackHelper
         {
             return null;
         }
-        return handle.a(storageName, create); // if(this.tag != null && this.tag.hasKeyOfType(s, 10)) {
+        if (create)
+        {
+            return handle.c(storageName); // if (this.tag != null && this.tag.hasKeyOfType(s, 10)) {
+        }
+        else
+        {
+            return handle.d(storageName); // this.tag != null && this.tag.hasKeyOfType(s, 10) ? this.tag.getCompound(s) : null;
+        }
     }
 
     /**

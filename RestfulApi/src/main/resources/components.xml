@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <excludedPackages>
+        <excludePackage>spark</excludePackage>
+        <excludePackage>org</excludePackage>
+        <excludePackage>javax</excludePackage>
+    </excludedPackages>
+
+    <components>
+        <component>
+            <name>RestfulApi</name>
+            <mainClass>pl.north93.zgame.restful.RestfulComponent</mainClass>
+            <description>Provides REST API for network management.</description>
+            <dependencies>
+                <dependency>API.Database.StorageConnector</dependency>
+                <dependency>API.Database.Redis.MessagePackSerializer</dependency>
+                <dependency>API.Database.Redis.RPC</dependency>
+                <dependency>API.Database.Redis.Subscriber</dependency>
+            </dependencies>
+            <platforms>
+                <platform>STANDALONE</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>

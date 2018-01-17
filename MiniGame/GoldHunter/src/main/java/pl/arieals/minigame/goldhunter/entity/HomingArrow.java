@@ -1,15 +1,15 @@
 package pl.arieals.minigame.goldhunter.entity;
 
 import org.apache.logging.log4j.Logger;
-import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
-import net.minecraft.server.v1_10_R1.EntityLiving;
-import net.minecraft.server.v1_10_R1.EntityTippedArrow;
-import net.minecraft.server.v1_10_R1.ItemStack;
-import net.minecraft.server.v1_10_R1.NBTTagCompound;
+import net.minecraft.server.v1_12_R1.EntityLiving;
+import net.minecraft.server.v1_12_R1.EntityTippedArrow;
+import net.minecraft.server.v1_12_R1.ItemStack;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -43,6 +43,12 @@ public class HomingArrow extends EntityTippedArrow
         a(shooter, shooter.pitch, shooter.yaw, 0.0F, force * 3.0F, 1.0F);
     }
 
+    // w 1.10 ta metoda istniala w klasie strzaly z NMS
+    public final boolean isInGround()
+    {
+        return this.inGround;
+    }
+
     @Override
     protected ItemStack j()
     {
@@ -62,9 +68,9 @@ public class HomingArrow extends EntityTippedArrow
     }
     
     @Override
-    public final void m() // onTick
+    public final void B_() // onTick
     {
-        super.m();
+        super.B_();
         
         try
         {

@@ -12,15 +12,15 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import net.minecraft.server.v1_10_R1.ChunkProviderServer;
-import net.minecraft.server.v1_10_R1.RegionFile;
-import net.minecraft.server.v1_10_R1.RegionFileCache;
-import net.minecraft.server.v1_10_R1.WorldServer;
+import net.minecraft.server.v1_12_R1.ChunkProviderServer;
+import net.minecraft.server.v1_12_R1.RegionFile;
+import net.minecraft.server.v1_12_R1.RegionFileCache;
+import net.minecraft.server.v1_12_R1.WorldServer;
 
 import com.google.common.collect.Queues;
 
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -34,7 +34,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 class ChunkLoadingTask implements Runnable
 {
-    private static final FieldAccessor chunkProvider = DioriteReflectionUtils.getField(net.minecraft.server.v1_10_R1.World.class, "chunkProvider");
+    private static final FieldAccessor chunkProvider = DioriteReflectionUtils.getField(net.minecraft.server.v1_12_R1.World.class, "chunkProvider");
     private static final int MIN_MEMORY = 15; // ponizej 15% przestajemy doczytywac chunki i czekamy na GC
     private final Queue<QueuedLoadingTask> tasks = Queues.synchronizedQueue(new ArrayDeque<>());
     private QueuedLoadingTask activeTask;

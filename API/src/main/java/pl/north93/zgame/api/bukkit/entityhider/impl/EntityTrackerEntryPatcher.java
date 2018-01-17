@@ -1,6 +1,6 @@
 package pl.north93.zgame.api.bukkit.entityhider.impl;
 
-import net.minecraft.server.v1_10_R1.EntityTrackerEntry;
+import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
 
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -23,10 +23,10 @@ class EntityTrackerEntryPatcher
         classPool.appendClassPath(new LoaderClassPath(EntityTrackerEntryPatcher.class.getClassLoader()));
 
         final CtClass targetClass = classPool.getCtClass(EntityTrackerEntry.class.getName());
-        final CtMethod targetMethod = targetClass.getMethod("c", "(Lnet/minecraft/server/v1_10_R1/EntityPlayer;)Z");
+        final CtMethod targetMethod = targetClass.getMethod("c", "(Lnet/minecraft/server/v1_12_R1/EntityPlayer;)Z");
 
         targetMethod.setBody(PATCH);
-        client.redefineClass("net.minecraft.server.v1_10_R1.EntityTrackerEntry", targetClass.toBytecode());
+        client.redefineClass("net.minecraft.server.v1_12_R1.EntityTrackerEntry", targetClass.toBytecode());
     }
 
     private static final String PATCH =

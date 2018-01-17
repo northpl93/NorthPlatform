@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <components>
+        <component>
+            <name>GlobalShops.Controller</name>
+            <mainClass>pl.arieals.globalshops.controller.GlobalShopsController</mainClass>
+            <description>Controller part of global shops system. Publishes data to redis.</description>
+            <packages>
+                <package>pl.arieals.globalshops.shared</package>
+                <package>pl.arieals.globalshops.controller</package>
+            </packages>
+            <dependencies>
+                <dependency>NetworkController.ConfigServer</dependency>
+            </dependencies>
+            <platforms>
+                <platform>STANDALONE</platform>
+            </platforms>
+        </component>
+
+        <component>
+            <name>GlobalShops.Server</name>
+            <mainClass>pl.arieals.globalshops.server.impl.GlobalShopsServer</mainClass>
+            <description>Bukkit part of GlobalShops API.</description>
+            <packages>
+                <package>pl.arieals.globalshops.shared</package>
+                <package>pl.arieals.globalshops.server</package>
+            </packages>
+            <dependencies>
+                <dependency>API.Config.Client</dependency>
+            </dependencies>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>

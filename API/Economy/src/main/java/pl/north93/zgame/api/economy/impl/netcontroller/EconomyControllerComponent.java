@@ -1,6 +1,5 @@
 package pl.north93.zgame.api.economy.impl.netcontroller;
 
-import static pl.north93.zgame.api.global.utils.ConfigUtils.loadConfigFile;
 import static spark.Spark.get;
 
 
@@ -16,6 +15,7 @@ import pl.north93.zgame.api.economy.impl.netcontroller.rest.OperationInfo;
 import pl.north93.zgame.api.economy.impl.shared.EconomyManagerImpl;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.utils.ConfigUtils;
 
 public class EconomyControllerComponent extends Component
 {
@@ -27,7 +27,7 @@ public class EconomyControllerComponent extends Component
     @Override
     protected void enableComponent()
     {
-        this.config = loadConfigFile(EconomyConfig.class, this.getApiCore().getFile("economy.yml"));
+        this.config = ConfigUtils.loadConfig(EconomyConfig.class, "economy.xml");
         this.economyManager.setConfig(this.config);
 
         get("player/:nick/money/:currency/add/:amount", (request, response) ->

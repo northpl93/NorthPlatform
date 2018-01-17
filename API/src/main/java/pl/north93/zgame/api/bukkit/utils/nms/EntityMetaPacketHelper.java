@@ -1,9 +1,9 @@
 package pl.north93.zgame.api.bukkit.utils.nms;
 
-import net.minecraft.server.v1_10_R1.PacketDataSerializer;
-import net.minecraft.server.v1_10_R1.Vector3f;
+import net.minecraft.server.v1_12_R1.PacketDataSerializer;
+import net.minecraft.server.v1_12_R1.Vector3f;
 
-import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 

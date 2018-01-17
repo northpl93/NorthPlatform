@@ -40,7 +40,7 @@ public interface IScoreboardContext
 
     default String getLocale()
     {
-        return this.getPlayer().spigot().getLocale();
+        return this.getPlayer().getLocale();
     }
 
     void update(); // force update

@@ -1,6 +1,6 @@
 package pl.north93.zgame.api.global.storage;
 
-import static pl.north93.zgame.api.global.utils.ConfigUtils.loadConfigFile;
+import static pl.north93.zgame.api.global.utils.ConfigUtils.loadConfig;
 
 
 import java.util.concurrent.TimeUnit;
@@ -33,7 +33,7 @@ public class StorageConnector extends Component
     @Override
     protected void enableComponent()
     {
-        final ConnectionConfig config = loadConfigFile(ConnectionConfig.class, this.getApiCore().getFile("connection.yml"));
+        final ConnectionConfig config = loadConfig(ConnectionConfig.class, "connection.xml");
 
         final RedisURI connectionUri = RedisURI.Builder.redis(config.getRedisHost(), config.getRedisPort())
                                                .withPassword(config.getRedisPassword())

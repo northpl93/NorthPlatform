@@ -1,8 +1,0 @@
-components:
-  - name: Daemon
-    mainClass: "pl.north93.zgame.daemon.DaemonComponent"
-    description: "Minecraft servers daemon."
-    dependencies:
-      - API.Database.Redis.Observer
-    platforms:
-      - STANDALONE

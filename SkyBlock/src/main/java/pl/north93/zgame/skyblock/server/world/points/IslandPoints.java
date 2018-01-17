@@ -3,7 +3,7 @@ package pl.north93.zgame.skyblock.server.world.points;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import net.minecraft.server.v1_10_R1.Chunk;
+import net.minecraft.server.v1_12_R1.Chunk;
 
 import com.boydti.fawe.FaweAPI;
 import com.boydti.fawe.example.MappedFaweQueue;
@@ -13,7 +13,7 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_10_R1.CraftChunk;
+import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

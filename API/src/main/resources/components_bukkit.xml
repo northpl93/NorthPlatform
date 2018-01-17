@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <!-- Lista komponentów dla platformy BUKKIT -->
+    <components>
+        <component>
+            <name>API.BukkitServerManager</name>
+            <mainClass>pl.north93.zgame.api.bukkit.server.impl.BukkitServerManagerImpl</mainClass>
+            <description>Core component that manages the server instance.</description>
+            <dependencies>
+                <dependency>API.MinecraftNetwork.NetworkManager</dependency>
+            </dependencies>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+
+        <component>
+            <name>API.BukkitPlayers</name>
+            <mainClass>pl.north93.zgame.api.bukkit.player.impl.BukkitPlayerManagerImpl</mainClass>
+            <description>Useful utils to manage players using Bukkit APIs</description>
+            <dependencies>
+                <dependency>API.MinecraftNetwork.NetworkManager</dependency>
+            </dependencies>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+
+        <component>
+            <name>API.TickableManager</name>
+            <mainClass>pl.north93.zgame.api.bukkit.tick.impl.TickableManagerImpl</mainClass>
+            <description>An simple api to calls methods on every server tick</description>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+
+        <component>
+            <name>API.Scoreboard</name>
+            <mainClass>pl.north93.zgame.api.bukkit.scoreboard.impl.ScoreboardManagerImpl</mainClass>
+            <description>Scoreboard API.</description>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+
+        <component>
+            <name>API.EntityHider</name>
+            <mainClass>pl.north93.zgame.api.bukkit.entityhider.impl.EntityHiderImpl</mainClass>
+            <description>Allows hide or show entities to specified players.</description>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+
+        <component>
+            <name>API.Map</name>
+            <mainClass>pl.north93.zgame.api.bukkit.map.impl.MapManagerImpl</mainClass>
+            <description>Custom map rendering API.</description>
+            <packages>
+                <package>pl.north93.zgame.api.bukkit.map</package>
+            </packages>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+
+        <component>
+            <name>API.GuiManager</name>
+            <mainClass>pl.north93.zgame.api.bukkit.gui.impl.GuiTracker</mainClass>
+            <description>GUI api.</description>
+            <dependencies>
+                <dependency>API.TickableManager</dependency>
+            </dependencies>
+            <packages>
+                <package>pl.north93.zgame.api.bukkit.gui</package>
+            </packages>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+
+        <component>
+            <name>API.HoloGui</name>
+            <mainClass>pl.north93.zgame.api.bukkit.hologui.impl.HoloGuiManagerImpl</mainClass>
+            <description>Holographic GUI.</description>
+            <packages>
+                <package>pl.north93.zgame.api.bukkit.hologui</package>
+            </packages>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>

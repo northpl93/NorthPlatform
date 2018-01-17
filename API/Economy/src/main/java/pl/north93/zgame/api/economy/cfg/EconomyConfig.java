@@ -1,29 +1,27 @@
 package pl.north93.zgame.api.economy.cfg;
 
-import java.util.Arrays;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.cfg.annotations.CfgComment;
-import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
-
-@CfgComment("Konfiguracja ekonomii")
+@XmlRootElement(name = "economy")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class EconomyConfig
 {
-    @CfgDelegateDefault("getDefaultCurrencies")
+    @XmlElementWrapper(name = "currencies")
+    @XmlElement(name = "currency")
     private List<CurrencyConfig> currencies;
 
     public List<CurrencyConfig> getCurrencies()
     {
         return this.currencies;
-    }
-
-    private static List<CurrencyConfig> getDefaultCurrencies()
-    {
-        //noinspection ArraysAsListWithZeroOrOneArgument
-        return Arrays.asList(new CurrencyConfig("example", 0D));
     }
 
     @Override

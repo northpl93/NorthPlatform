@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.server.v1_10_R1.Chunk;
-import net.minecraft.server.v1_10_R1.MinecraftServer;
+import net.minecraft.server.v1_12_R1.Chunk;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
-import org.bukkit.craftbukkit.v1_10_R1.CraftChunk;
+import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;

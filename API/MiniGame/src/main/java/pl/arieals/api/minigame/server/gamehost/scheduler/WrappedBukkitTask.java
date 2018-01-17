@@ -1,6 +1,6 @@
 package pl.arieals.api.minigame.server.gamehost.scheduler;
 
-import org.bukkit.craftbukkit.v1_10_R1.scheduler.CraftTask;
+import org.bukkit.craftbukkit.v1_12_R1.scheduler.CraftTask;
 import org.bukkit.scheduler.BukkitTask;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;

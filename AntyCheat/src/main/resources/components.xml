@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <components>
+        <component>
+            <name>AntyCheat</name>
+            <mainClass>pl.north93.zgame.antycheat.AntyCheatComponent</mainClass>
+            <description>Anti Cheat module.</description>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>
