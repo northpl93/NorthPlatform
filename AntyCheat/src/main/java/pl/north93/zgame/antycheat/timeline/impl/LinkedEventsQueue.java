@@ -1,11 +1,17 @@
 package pl.north93.zgame.antycheat.timeline.impl;
 
+import static pl.north93.zgame.antycheat.timeline.impl.LinkedEventsQueue.IteratorStatus.AFTER;
+import static pl.north93.zgame.antycheat.timeline.impl.LinkedEventsQueue.IteratorStatus.BEFORE;
+import static pl.north93.zgame.antycheat.timeline.impl.LinkedEventsQueue.IteratorStatus.IN;
+
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import com.google.common.collect.ImmutableList;
 
@@ -18,7 +24,8 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
 class LinkedEventsQueue
 {
     private final TimelineManager timelineManager;
-    private final Map<Tick, EventEntry> firstEventInTick = new HashMap<>(32);
+    private final Map<Tick, EventEntry> firstEventInTick = new HashMap<>(64);
+    private final Map<Tick, EventEntry> lastEventInTick = new HashMap<>(64);
     private EventEntry first;
     private EventEntry last;
 
@@ -39,6 +46,7 @@ class LinkedEventsQueue
         {
             final EventEntry eventEntry = new EventEntry(null, tick, event);
             this.firstEventInTick.put(tick, eventEntry);
+            this.lastEventInTick.put(tick, eventEntry);
             this.first = eventEntry;
             this.last = eventEntry;
         }
@@ -55,6 +63,7 @@ class LinkedEventsQueue
             {
                 this.firstEventInTick.put(tick, eventEntry);
             }
+            this.lastEventInTick.put(tick, eventEntry);
             this.last.next = eventEntry;
             this.last = eventEntry;
         }
@@ -75,6 +84,7 @@ class LinkedEventsQueue
         }
 
         this.firstEventInTick.remove(tick);
+        this.lastEventInTick.remove(tick);
 
         final EventEntry first = firstAndLast.getLeft();
         final EventEntry last = firstAndLast.getRight();
@@ -105,8 +115,7 @@ class LinkedEventsQueue
 
     /*default*/ synchronized TimelineWalkerImpl createWalkerInFullRange(final boolean cursorAtEnd)
     {
-        final EventEntry cursor = cursorAtEnd ? this.last : this.first;
-        return new TimelineWalkerImpl(this.first, this.last, cursor);
+        return new TimelineWalkerImpl(this.first, this.last, cursorAtEnd);
     }
 
     /**
@@ -132,19 +141,54 @@ class LinkedEventsQueue
         return ImmutableList.copyOf(fullRange);
     }
 
+    /*default*/ synchronized void clear()
+    {
+        this.first = null;
+        this.last = null;
+        this.firstEventInTick.clear();
+        this.lastEventInTick.clear();
+    }
+
     private synchronized TimelineWalkerImpl createWalkerInTickRange(final Tick firstTick, final Tick lastTick, final boolean cursorAtEnd)
     {
         final Pair<EventEntry, EventEntry> range = this.getFirstAndLastEventInTickRange(firstTick, lastTick);
         if (range == null)
         {
-            return new TimelineWalkerImpl(null, null, null);
+            return new TimelineWalkerImpl(null, null, false);
         }
 
-        final EventEntry cursor = cursorAtEnd ? range.getRight() : range.getLeft();
-        return new TimelineWalkerImpl(range.getLeft(), range.getRight(), cursor);
+        return new TimelineWalkerImpl(range.getLeft(), range.getRight(), cursorAtEnd);
     }
 
     private synchronized @Nullable Pair<EventEntry, EventEntry> getFirstAndLastEventInTickRange(final Tick firstTick, final Tick lastTick)
+    {
+        if (firstTick.getTickId() > lastTick.getTickId())
+        {
+            return null; // brak danych
+        }
+
+        final EventEntry firstEvent = this.firstEventInTick.get(firstTick);
+        if (firstEvent == null)
+        {
+            final TickImpl nextTick = this.timelineManager.getNextTick(firstTick);
+            if (nextTick == null)
+            {
+                // próbujemy wybiegac w przyszlosc, nie wykonujemy kolejnego rekurencyjnego calla
+                return null;
+            }
+            return this.getFirstAndLastEventInTickRange(nextTick, lastTick);
+        }
+
+        final EventEntry lastEvent = this.lastEventInTick.get(lastTick);
+        if (lastEvent == null)
+        {
+            return this.getFirstAndLastEventInTickRange(firstTick, this.timelineManager.getPreviousTick(lastTick, 1));
+        }
+
+        return Pair.of(firstEvent, lastEvent);
+    }
+
+    /*private synchronized @Nullable Pair<EventEntry, EventEntry> getFirstAndLastEventInTickRange(final Tick firstTick, final Tick lastTick)
     {
         Tick checkedFirstTick = firstTick;
         EventEntry firstEventEntry;
@@ -170,7 +214,7 @@ class LinkedEventsQueue
         }
 
         return Pair.of(firstEventEntry, lastEventEntry);
-    }
+    }*/
 
     private synchronized @Nullable Pair<EventEntry, EventEntry> getFirstAndLastEventInTick(final Tick tick)
     {
@@ -182,12 +226,20 @@ class LinkedEventsQueue
         private final LinkedEventsQueue.EventEntry lowerBound;
         private final LinkedEventsQueue.EventEntry upperBound;
         private LinkedEventsQueue.EventEntry cursor;
+        private IteratorStatus status;
 
-        public TimelineWalkerImpl(final LinkedEventsQueue.EventEntry lowerBound, final LinkedEventsQueue.EventEntry upperBound, final LinkedEventsQueue.EventEntry cursor)
+        public TimelineWalkerImpl(final LinkedEventsQueue.EventEntry lowerBound, final LinkedEventsQueue.EventEntry upperBound, final boolean atEnd)
         {
             this.lowerBound = lowerBound;
             this.upperBound = upperBound;
-            this.cursor = cursor;
+            if (atEnd)
+            {
+                this.status = AFTER;
+            }
+            else
+            {
+                this.status = IteratorStatus.BEFORE;
+            }
         }
 
         private boolean isEmpty()
@@ -200,7 +252,7 @@ class LinkedEventsQueue
         {
             if (this.isEmpty())
             {
-                return null;
+                throw new NoSuchElementException();
             }
 
             return (this.cursor = this.lowerBound).event;
@@ -211,21 +263,22 @@ class LinkedEventsQueue
         {
             if (this.isEmpty())
             {
-                return null;
+                throw new NoSuchElementException();
             }
 
             return (this.cursor = this.upperBound).event;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
-        public TimelineEvent next(final Class<? extends TimelineEvent> type)
+        public <T extends TimelineEvent> T next(final Class<T> type)
         {
             while (this.hasNext())
             {
                 final TimelineEvent timelineEvent = this.next();
                 if (type.isAssignableFrom(timelineEvent.getClass()))
                 {
-                    return timelineEvent;
+                    return (T) timelineEvent;
                 }
             }
             return null;
@@ -234,24 +287,41 @@ class LinkedEventsQueue
         @Override
         public boolean hasPrevious()
         {
-            return this.cursor != this.lowerBound;
+            return ! this.isEmpty() && this.status != BEFORE;
         }
 
         @Override
         public TimelineEvent previous()
         {
-            return (this.cursor = this.cursor.previous).event;
+            if (! this.hasPrevious())
+            {
+                throw new NoSuchElementException();
+            }
+            else if (this.status == AFTER)
+            {
+                this.cursor = this.upperBound;
+                this.status = IN;
+            }
+
+            final TimelineEvent event = this.cursor.event;
+            this.cursor = this.cursor.previous;
+            if (this.cursor == null || this.cursor.next == this.lowerBound)
+            {
+                this.status = BEFORE;
+            }
+            return event;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
-        public TimelineEvent previous(final Class<? extends TimelineEvent> type)
+        public <T extends TimelineEvent> T previous(final Class<T> type)
         {
             while (this.hasPrevious())
             {
                 final TimelineEvent timelineEvent = this.previous();
                 if (type.isAssignableFrom(timelineEvent.getClass()))
                 {
-                    return timelineEvent;
+                    return (T) timelineEvent;
                 }
             }
             return null;
@@ -260,13 +330,29 @@ class LinkedEventsQueue
         @Override
         public boolean hasNext()
         {
-            return this.cursor != this.upperBound;
+            return ! this.isEmpty() && this.status != AFTER;
         }
 
         @Override
         public TimelineEvent next()
         {
-            return (this.cursor = this.cursor.next).event;
+            if (! this.hasNext())
+            {
+                throw new NoSuchElementException();
+            }
+            else if (this.status == BEFORE)
+            {
+                this.cursor = this.lowerBound;
+                this.status = IN;
+            }
+
+            final TimelineEvent event = this.cursor.event;
+            this.cursor = this.cursor.next;
+            if (this.cursor == null || this.cursor.previous == this.upperBound)
+            {
+                this.status = AFTER;
+            }
+            return event;
         }
     }
 
@@ -283,5 +369,10 @@ class LinkedEventsQueue
             this.tick = tick;
             this.event = event;
         }
+    }
+
+    enum IteratorStatus
+    {
+        BEFORE, IN, AFTER
     }
 }

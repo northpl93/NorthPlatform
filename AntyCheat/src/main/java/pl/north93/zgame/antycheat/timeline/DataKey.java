@@ -1,6 +1,7 @@
 package pl.north93.zgame.antycheat.timeline;
 
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -8,13 +9,18 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public final class DataKey<T>
 {
-    private final String name;
-    private final Supplier<T> creator;
+    private final String                  name;
+    private final Function<PlayerData, T> creator;
 
-    public DataKey(final String name, final Supplier<T> creator)
+    public DataKey(final String name, final Function<PlayerData, T> creator)
     {
         this.name = name;
         this.creator = creator;
+    }
+
+    public DataKey(final String name, final Supplier<T> creator)
+    {
+        this(name, data -> creator.get());
     }
 
     public String getName()
@@ -22,7 +28,7 @@ public final class DataKey<T>
         return this.name;
     }
 
-    public Supplier<T> getCreator()
+    public Function<PlayerData, T> getCreator()
     {
         return this.creator;
     }

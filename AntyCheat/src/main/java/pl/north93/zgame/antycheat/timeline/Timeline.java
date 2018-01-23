@@ -21,9 +21,13 @@ public interface Timeline
 
     PlayerTickInfo getPlayerTickInfo(Tick tick);
 
+    PlayerTickInfo getPreviousPlayerTickInfo(Tick tick, int previous);
+
     Collection<TimelineEvent> getEvents();
 
     Collection<TimelineEvent> getEvents(Tick tick);
+
+    TimelineWalker createWalkerForTick(Tick tick);
 
     TimelineWalker createWalkerForScope(TimelineAnalyserConfig.Scope scope);
 }

@@ -9,15 +9,26 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public final class EventAnalyserConfig
 {
     private final Set<Class<?>> eventWhitelist = new HashSet<>();
+    private final Set<Class<?>> fireBefore     = new HashSet<>();
 
     public void whitelistEvent(final Class<?> event)
     {
         this.eventWhitelist.add(event);
     }
 
+    public void fireBefore(final Class<?> event)
+    {
+        this.fireBefore.add(event);
+    }
+
     public Set<Class<?>> getEventWhitelist()
     {
         return this.eventWhitelist;
+    }
+
+    public Set<Class<?>> getFireBefore()
+    {
+        return this.fireBefore;
     }
 
     @Override

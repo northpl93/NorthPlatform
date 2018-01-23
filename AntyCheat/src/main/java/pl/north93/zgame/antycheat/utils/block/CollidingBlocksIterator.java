@@ -1,4 +1,4 @@
-package pl.north93.zgame.antycheat.utils;
+package pl.north93.zgame.antycheat.utils.block;
 
 import java.util.Iterator;
 
@@ -8,6 +8,8 @@ import org.bukkit.block.Block;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import pl.north93.zgame.antycheat.utils.AABB;
 
 /**
  * Iteruje po wszystkich blokach kolidujących z danym AABB.
@@ -19,6 +21,7 @@ public final class CollidingBlocksIterator implements Iterator<Block>
 {
     private final World world;
     private final int   maxX, maxY, maxZ;
+    private boolean done;
     private int x, y, z;
 
     public CollidingBlocksIterator(final World world, final AABB aabb)
@@ -35,7 +38,7 @@ public final class CollidingBlocksIterator implements Iterator<Block>
     @Override
     public boolean hasNext()
     {
-        return this.x < this.maxX || this.y < this.maxY || this.z < this.maxZ;
+        return ! this.done;
     }
 
     @Override
@@ -53,6 +56,10 @@ public final class CollidingBlocksIterator implements Iterator<Block>
         else if (this.z < this.maxZ)
         {
             this.z++;
+        }
+        else
+        {
+            this.done = true;
         }
         return block;
     }

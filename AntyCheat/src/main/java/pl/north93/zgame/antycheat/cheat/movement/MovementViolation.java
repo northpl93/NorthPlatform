@@ -10,6 +10,10 @@ public enum MovementViolation implements Violation
      */
     ON_GROUND_INCONSISTENCY,
     /**
+     * Zbyt duże rotacje gracza wokół własnej osi. Oznacza DERPa lub killaure.
+     */
+    IMPOSSIBLE_ROTATION,
+    /**
      * Manipulacja wysokością skoku, podnoszenie się podczas opadania.
      */
     SURVIVAL_FLY

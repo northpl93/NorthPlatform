@@ -1,5 +1,7 @@
 package pl.north93.zgame.antycheat.analysis.impl;
 
+import javax.annotation.Nonnull;
+
 import java.util.Set;
 
 import pl.north93.zgame.antycheat.analysis.SingleAnalysisResult;
@@ -9,7 +11,7 @@ import pl.north93.zgame.antycheat.timeline.PlayerData;
 import pl.north93.zgame.antycheat.timeline.PlayerTickInfo;
 import pl.north93.zgame.antycheat.timeline.TimelineEvent;
 
-/*default*/ class RegisteredEventAnalyser
+/*default*/ class RegisteredEventAnalyser implements Comparable<RegisteredEventAnalyser>
 {
     private final EventAnalyser<TimelineEvent> eventAnalyser;
     private final EventAnalyserConfig          config;
@@ -50,5 +52,26 @@ import pl.north93.zgame.antycheat.timeline.TimelineEvent;
         }
 
         return false;
+    }
+
+    private Class<? extends EventAnalyser> getAnalyserClass()
+    {
+        return this.eventAnalyser.getClass();
+    }
+
+    @Override
+    public int compareTo(@Nonnull final RegisteredEventAnalyser o)
+    {
+        if (this.config.getFireBefore().contains(o.getAnalyserClass()))
+        {
+            return -1;
+        }
+
+        if (o.config.getFireBefore().contains(this.getAnalyserClass()))
+        {
+            return 1;
+        }
+
+        return 0;
     }
 }

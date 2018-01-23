@@ -70,4 +70,22 @@ public final class EntityUtils
         final AABB aabbOfEntityInLocation = getAABBOfEntityInLocation(entity, IPosition.fromBukkit(entity.getLocation()));
         return standsOnEntity(entity, aabbOfEntityInLocation);
     }
+
+    /**
+     * Oblicza maksymalną wysokość jaką osiągnie entity po zaaplikowaniu velocity na Y
+     * o podanej wartości.
+     *
+     * @param vel Startowe velocity na osi Y.
+     * @return Maksymalna wysokość jaką osiągnie entity od punktu zaaplikowania velocity.
+     */
+    public static double maxHeightByStartVelocity(double vel)
+    {
+        double height = 0;
+        while (vel > 0)
+        {
+            height += vel;
+            vel = (vel-0.08)*0.98;
+        }
+        return height;
+    }
 }

@@ -8,6 +8,7 @@ import net.minecraft.server.v1_12_R1.WorldServer;
 
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
+import org.bukkit.entity.Entity;
 
 import pl.north93.zgame.antycheat.utils.AABB;
 
@@ -25,6 +26,22 @@ public final class WorldHandle
     public static WorldHandle of(final World world)
     {
         return new WorldHandle(world);
+    }
+
+    /**
+     * Zwraca Bukkitowy obiekt danego entity.
+     *
+     * @param id ID entity.
+     * @return Entity lub null.
+     */
+    public Entity getBukkitEntityById(final int id)
+    {
+        final net.minecraft.server.v1_12_R1.Entity entity = this.worldServer.getEntity(id);
+        if (entity == null)
+        {
+            return null;
+        }
+        return entity.getBukkitEntity();
     }
 
     /**

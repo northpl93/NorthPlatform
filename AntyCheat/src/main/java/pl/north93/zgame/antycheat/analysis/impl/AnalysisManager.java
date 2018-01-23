@@ -2,6 +2,7 @@ package pl.north93.zgame.antycheat.analysis.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -32,6 +33,7 @@ public class AnalysisManager
     public void registerEventAnalyser(final EventAnalyser<TimelineEvent> analyser)
     {
         this.eventAnalysers.add(new RegisteredEventAnalyser(analyser));
+        Collections.sort(this.eventAnalysers);
     }
 
     @Aggregator(TimelineAnalyser.class) // automatyczna agregacja
@@ -71,9 +73,11 @@ public class AnalysisManager
 
     private void fireTimelineAnalysers(final Timeline timeline, final Tick currentTick)
     {
+        final PlayerData data = timeline.getData();
+
         for (final RegisteredTimelineAnalyser timelineAnalyser : this.timelineAnalysers)
         {
-            final SingleAnalysisResult analysisResult = timelineAnalyser.tryFire(timeline, currentTick);
+            final SingleAnalysisResult analysisResult = timelineAnalyser.tryFire(data, currentTick);
             this.print(analysisResult);
             // todo zrobic cos z tym analysis result
         }

@@ -8,11 +8,11 @@ public interface TimelineWalker extends Iterator<TimelineEvent>
 
     TimelineEvent last();
 
-    TimelineEvent next(Class<? extends TimelineEvent> type);
+    <T extends TimelineEvent> T next(Class<T> type);
 
     boolean hasPrevious();
 
     TimelineEvent previous();
 
-    TimelineEvent previous(Class<? extends TimelineEvent> type);
+    <T extends TimelineEvent> T previous(Class<T> type);
 }

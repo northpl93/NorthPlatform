@@ -13,9 +13,12 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.tuple.Pair;
 
 import pl.north93.zgame.antycheat.analysis.timeline.TimelineAnalyserConfig;
 import pl.north93.zgame.antycheat.event.impl.PlayerSpawnTimelineEvent;
+import pl.north93.zgame.antycheat.event.impl.TeleportTimelineEvent;
+import pl.north93.zgame.antycheat.timeline.PlayerProperties;
 import pl.north93.zgame.antycheat.timeline.PlayerTickInfo;
 import pl.north93.zgame.antycheat.timeline.Tick;
 import pl.north93.zgame.antycheat.timeline.Timeline;
@@ -34,7 +37,7 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
     public TimelineImpl(final TimelineManager timelineManager, final Player player, final int ticksToTrack)
     {
         this.timelineManager = timelineManager;
-        this.data = new PlayerDataImpl(player);
+        this.data = new PlayerDataImpl(player, this);
         this.ticksToTrack = ticksToTrack;
 
         this.queuedEvents = new LinkedList<>();
@@ -73,15 +76,31 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
     }
 
     @Override
+    public PlayerTickInfo getPreviousPlayerTickInfo(final Tick tick, final int previous)
+    {
+        final TickImpl previousTick = this.timelineManager.getPreviousTick(tick, previous);
+        return this.getPlayerTickInfo(previousTick);
+    }
+
+    @Override
     public Collection<TimelineEvent> getEvents() // najlepiej cachowac ta metode bo nie jest zbyt szybka
     {
-        return this.events.getEvents();
+        //final List<TimelineEvent> d1 = this.tickInfo.keySet().stream().map(tick -> this.getEvents(tick)).flatMap(Collection::stream).collect(Collectors.toList());
+
+        final Collection<TimelineEvent> d2 = this.events.getEvents();
+        return d2;
     }
 
     @Override
     public Collection<TimelineEvent> getEvents(final Tick tick) // najlepiej cachowac ta metode bo nie jest zbyt szybka
     {
         return this.events.getEventsInTick(tick);
+    }
+
+    @Override
+    public TimelineWalker createWalkerForTick(final Tick tick)
+    {
+        return this.events.createWalkerInTickRangeWithCursorAtEnd(tick, tick);
     }
 
     @Override
@@ -94,6 +113,8 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
                 return this.events.createWalkerInTickRangeWithCursorAtEnd(currentTick, currentTick);
             case SECOND:
                 return this.createWalkerForTicks(currentTick, 20);
+            case FIVE_SECONDS:
+                return this.createWalkerForTicks(currentTick, 100);
             case ALL:
                 return this.events.createWalkerInFullRange(true);
         }
@@ -132,6 +153,7 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
     public synchronized void tickBegin()
     {
         final Tick currentTick = this.getCurrentTick();
+        //Bukkit.broadcastMessage("velY: " + this.getOwner().getVelocity().getY());
 
         for (final TimelineEvent queuedEvent : this.queuedEvents)
         {
@@ -146,18 +168,42 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
     public synchronized void endTick()
     {
         final Player player = this.getOwner();
+        final PlayerProperties playerProperties = new PlayerProperties(player);
 
         final Tick currentTick = this.getCurrentTick();
         this.flushOldData(currentTick);
 
         final TimelineWalker walker = this.createWalkerForTicks(currentTick, 30);
-        final boolean afterSpawn = walker.previous(PlayerSpawnTimelineEvent.class) != null /*|| player.getTicksLived() < 30*/;
+        final Pair<Boolean, Boolean> dataFromWalker = this.preparePlayerTickInfoFromTimeline(walker);
+
+        final boolean afterSpawn = dataFromWalker.getLeft();
+        final boolean afterTeleport = dataFromWalker.getRight();
 
         final boolean anyEventsInTick = this.events.hasEventsInTick(currentTick);
-        final int ping = player.spigot().getPing();
 
-        final PlayerTickInfoImpl playerTickInfo = new PlayerTickInfoImpl(player, currentTick, afterSpawn, anyEventsInTick, ping);
+        final PlayerTickInfoImpl playerTickInfo = new PlayerTickInfoImpl(player, currentTick, playerProperties, afterSpawn, afterTeleport, anyEventsInTick);
         this.tickInfo.put(currentTick, playerTickInfo);
+    }
+
+    private Pair<Boolean, Boolean> preparePlayerTickInfoFromTimeline(final TimelineWalker timelineWalker)
+    {
+        boolean afterSpawn = false;
+        boolean afterTeleport = false;
+
+        while (timelineWalker.hasPrevious())
+        {
+            final Class<? extends TimelineEvent> aClass = timelineWalker.previous().getClass();
+            if (aClass == PlayerSpawnTimelineEvent.class)
+            {
+                afterSpawn = true;
+            }
+            else if (aClass == TeleportTimelineEvent.class)
+            {
+                afterTeleport = true;
+            }
+        }
+
+        return Pair.of(afterSpawn, afterTeleport);
     }
 
     /**

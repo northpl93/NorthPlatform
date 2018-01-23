@@ -48,4 +48,11 @@ public final class DistanceUtils
     {
         return entityDistanceToGround(entity, location, 0);
     }
+
+    public static double xzDistance(final IPosition p1, final IPosition p2)
+    {
+        final double xD = Math.abs(p1.getX() - p2.getX());
+        final double zD = Math.abs(p1.getZ() - p2.getZ());
+        return Math.sqrt(xD * xD + zD * zD);
+    }
 }

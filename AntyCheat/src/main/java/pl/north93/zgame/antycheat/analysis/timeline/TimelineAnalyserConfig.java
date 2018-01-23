@@ -20,6 +20,7 @@ public final class TimelineAnalyserConfig
     {
         TICK,
         SECOND,
+        FIVE_SECONDS,
         ALL
     }
 }

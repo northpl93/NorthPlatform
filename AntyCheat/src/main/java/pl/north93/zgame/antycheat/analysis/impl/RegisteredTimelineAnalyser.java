@@ -3,8 +3,8 @@ package pl.north93.zgame.antycheat.analysis.impl;
 import pl.north93.zgame.antycheat.analysis.SingleAnalysisResult;
 import pl.north93.zgame.antycheat.analysis.timeline.TimelineAnalyser;
 import pl.north93.zgame.antycheat.analysis.timeline.TimelineAnalyserConfig;
+import pl.north93.zgame.antycheat.timeline.PlayerData;
 import pl.north93.zgame.antycheat.timeline.Tick;
-import pl.north93.zgame.antycheat.timeline.Timeline;
 import pl.north93.zgame.antycheat.timeline.TimelineWalker;
 
 /*default*/ class RegisteredTimelineAnalyser
@@ -21,39 +21,31 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
         timelineAnalyser.configure(this.config);
     }
 
-    public SingleAnalysisResult tryFire(final Timeline timeline, final Tick currentTick)
+    public SingleAnalysisResult tryFire(final PlayerData data, final Tick currentTick)
     {
         if (! this.shouldFire(currentTick))
         {
             return null;
         }
 
-        final TimelineWalker walker = timeline.createWalkerForScope(this.config.getScope());
-        return this.timelineAnalyser.analyse(timeline.getOwner(), timeline, walker);
+        final TimelineWalker walker = data.getTimeline().createWalkerForScope(this.config.getScope());
+        return this.timelineAnalyser.analyse(data, walker);
     }
 
     private boolean shouldFire(final Tick currentTick)
     {
-        final TimelineAnalyserConfig.Scope scope = this.config.getScope();
-        if (scope == TimelineAnalyserConfig.Scope.TICK)
+        switch (this.config.getScope())
         {
-            return true;
-        }
-        else if (scope == TimelineAnalyserConfig.Scope.SECOND)
-        {
-            if (currentTick.getTickId() % ONE_SECOND == 0)
-            {
+            case TICK:
                 return true;
-            }
+            case SECOND:
+                return currentTick.getTickId() % ONE_SECOND == 0;
+            case FIVE_SECONDS:
+                return currentTick.getTickId() % (5 * ONE_SECOND) == 0;
+            case ALL:
+                return currentTick.getTickId() % (10 * ONE_SECOND) == 0;
+            default:
+                throw new IllegalStateException(this.config.getScope().name());
         }
-        else if (scope == TimelineAnalyserConfig.Scope.ALL)
-        {
-            if (currentTick.getTickId() % (10 * ONE_SECOND) == 0)
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

@@ -3,6 +3,7 @@ package pl.north93.zgame.antycheat.cheat.movement.check;
 import static pl.north93.zgame.antycheat.utils.DistanceUtils.entityDistanceToGround;
 
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import pl.north93.zgame.antycheat.analysis.FalsePositiveProbability;
@@ -13,6 +14,7 @@ import pl.north93.zgame.antycheat.cheat.movement.MovementViolation;
 import pl.north93.zgame.antycheat.event.impl.ClientMoveTimelineEvent;
 import pl.north93.zgame.antycheat.timeline.PlayerData;
 import pl.north93.zgame.antycheat.timeline.PlayerTickInfo;
+import pl.north93.zgame.antycheat.utils.block.BlockFlag;
 import pl.north93.zgame.antycheat.utils.location.RichEntityLocation;
 
 /**
@@ -23,11 +25,6 @@ public class OnGroundManipulationChecker implements EventAnalyser<ClientMoveTime
 {
     private static final String ON_GROUND_TRUE_INCONSISTENCY  = "Player send onGround=true while he's effectively in air.";
     private static final String ON_GROUND_FALSE_INCONSISTENCY = "Player send onGround=false while he's effectively on ground.";
-    /**
-     * Odleglosc w jakiej gracz jest uznawany za stojacego na ziemi.
-     * Uzywane w {@link #isOnGround(double)}.
-     */
-    private static final double IS_ON_GROUND_EPSILON = 0.1;
     /**
      * Wysokosc od jakiej gracz uznawany jest za na pewno uzywajacego no-fly, spidera.
      */
@@ -76,23 +73,34 @@ public class OnGroundManipulationChecker implements EventAnalyser<ClientMoveTime
         final SingleAnalysisResult analysisResult = SingleAnalysisResult.create();
 
         final FalsePositiveProbability falsePositiveProbability;
-        if (tickInfo.isShortAfterSpawn())
+        if (tickInfo.isShortAfterSpawn() || tickInfo.isShortAfterTeleport())
         {
-            // krótko po spawnie klient wysyła śmieci w pakietach
+            // krótko po spawnie i teleporcie klient wysyła śmieci w pakietach
+            falsePositiveProbability = FalsePositiveProbability.DEFINITELY;
+        }
+        else if (BlockFlag.isFlagSet(location.getFlags(), BlockFlag.LIQUID))
+        {
+            // gdy jestesmy w wodzie i probujemy wyjsc to klient wysyla tu totalny syf
+            // a i tak w wodzie ten check za bardzo nie ma sensu...
             falsePositiveProbability = FalsePositiveProbability.DEFINITELY;
         }
         else
         {
-            final double toGroundWithSmallerAABB = entityDistanceToGround(player, location, -0.2);
+            final double toGroundWithSmallerAABB = entityDistanceToGround(player, location, -0.25);
             if (this.isOnGround(toGroundWithSmallerAABB))
             {
-                if (toGround == 0 && toGroundWithSmallerAABB == 0)
+                if (BlockFlag.isFlagSet(location.getFlags(), BlockFlag.STAIRS))
                 {
-                    falsePositiveProbability = FalsePositiveProbability.LOW;
+                    falsePositiveProbability = FalsePositiveProbability.HIGH;
+                }
+                else if (toGround != 0 || toGroundWithSmallerAABB != 0)
+                {
+                    Bukkit.broadcastMessage("" + toGround);
+                    falsePositiveProbability = FalsePositiveProbability.HIGH;
                 }
                 else
                 {
-                    falsePositiveProbability = FalsePositiveProbability.HIGH;
+                    falsePositiveProbability = FalsePositiveProbability.MEDIUM;
                 }
             }
             else
@@ -107,7 +115,7 @@ public class OnGroundManipulationChecker implements EventAnalyser<ClientMoveTime
 
     private boolean isOnGround(final double toGround)
     {
-        return toGround <= IS_ON_GROUND_EPSILON;
+        return toGround == 0;
     }
 
     // = = = Sprawdzanie gdy klient mówi że ląduje
@@ -127,20 +135,22 @@ public class OnGroundManipulationChecker implements EventAnalyser<ClientMoveTime
             // gdy stoimy na jakims entity (lódka) to na 100% uznajemy to za false-positive
             falsePositiveProbability = FalsePositiveProbability.DEFINITELY;
         }
-        else if (toGround > NO_FALL_EDGE_HEIGHT)
-        {
-            // gdy klient wysyla do nas informacje o ladowaniu bedac powyzej ilus tam klockow
-            // to prawie na pewno jest to no-fall lub spider.
-            falsePositiveProbability = FalsePositiveProbability.LOW;
-        }
         else
         {
-            final double toGroundWithBiggerAABB = entityDistanceToGround(player, location, 0.3);
+            final double toGroundWithBiggerAABB = entityDistanceToGround(player, location, 0.25);
             //Bukkit.broadcastMessage("toGround=" + toGround + " withBigger=" + toGroundWithBiggerAABB);
             if (toGroundWithBiggerAABB < TO_GROUND_BIGGER_AABB_SPIDER)
             {
-                // gracz jest przy scianie; bardzo prawdopodobne ze korzysta z spidera
-                falsePositiveProbability = FalsePositiveProbability.LOW;
+                // gracz jest przy scianie; bardzo prawdopodobne ze korzysta z spidera,
+                // ale gdy jestesmy w wodzie to tu pojawia sie duzy spam false-positive
+                if (BlockFlag.isFlagSet(location.getFlags(), BlockFlag.LIQUID))
+                {
+                    falsePositiveProbability = FalsePositiveProbability.DEFINITELY;
+                }
+                else
+                {
+                    falsePositiveProbability = FalsePositiveProbability.LOW;
+                }
             }
             else if (this.isInAir(toGroundWithBiggerAABB))
             {
@@ -151,6 +161,12 @@ public class OnGroundManipulationChecker implements EventAnalyser<ClientMoveTime
                     // te dwie wartosci czesto wystepuja przy parkourowaniu dlatego
                     // uznajemy je za false-positive
                     falsePositiveProbability = FalsePositiveProbability.HIGH;
+                }
+                else if (toGround > NO_FALL_EDGE_HEIGHT)
+                {
+                    // gdy klient wysyla do nas informacje o ladowaniu bedac powyzej ilus tam klockow
+                    // to prawie na pewno jest to no-fall lub spider.
+                    falsePositiveProbability = FalsePositiveProbability.LOW;
                 }
                 else
                 {
