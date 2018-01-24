@@ -78,9 +78,24 @@ public final class RichEntityLocation implements IPosition
         return this.velocity;
     }
 
+    /**
+     * Oblicza wektor wskazujący od tej lokalizacji do tej podanej w argumencie.
+     *
+     * @param position Lokalizacja na którą wskazuje wektor.
+     * @return Wektor od tej lokalizacji do tej podanej w argumencie.
+     */
     public Vector vectorToOther(final IPosition position)
     {
         return new Vector(position.getX() - this.getX(), position.getY() - this.getY(), position.getZ() - this.getZ());
+    }
+
+    public double distance(final IPosition other)
+    {
+        final double x = this.getX() - other.getX();
+        final double y = this.getY() - other.getY();
+        final double z = this.getZ() - other.getZ();
+
+        return Math.sqrt(x * x + y * y + z * z);
     }
 
     // = = = Metody zwracające zcachowane dane i generujące cache = = = //
@@ -157,5 +172,11 @@ public final class RichEntityLocation implements IPosition
     public float getPitch()
     {
         return this.location.getPitch();
+    }
+
+    @Override
+    public Vector getDirection()
+    {
+        return this.location.getDirection();
     }
 }

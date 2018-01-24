@@ -2,6 +2,7 @@ package pl.north93.zgame.antycheat.utils.location;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -26,6 +27,8 @@ public interface IPosition
     float getYaw();
 
     float getPitch();
+
+    Vector getDirection();
 
     default Location toBukkit()
     {
@@ -81,6 +84,12 @@ class BukkitLocationWrapper implements IPosition
     public float getPitch()
     {
         return this.location.getPitch();
+    }
+
+    @Override
+    public Vector getDirection()
+    {
+        return this.location.getDirection();
     }
 
     @Override

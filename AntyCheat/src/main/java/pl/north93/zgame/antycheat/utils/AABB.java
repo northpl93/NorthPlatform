@@ -2,7 +2,9 @@ package pl.north93.zgame.antycheat.utils;
 
 import net.minecraft.server.v1_12_R1.AxisAlignedBB;
 
-public class AABB
+import org.bukkit.util.Vector;
+
+public final class AABB
 {
     public final double minX, minY, minZ;
     public final double maxX, maxY, maxZ;
@@ -60,6 +62,23 @@ public class AABB
         return this.intersects(other.minX, other.minY, other.minZ, other.maxX, other.maxY, other.maxZ);
     }
 
+    public boolean intersects(final Vector position)
+    {
+        if (position.getX() < this.minX || position.getX() > this.maxX)
+        {
+            return false;
+        }
+        else if (position.getY() < this.minY || position.getY() > this.maxY)
+        {
+            return false;
+        }
+        else if (position.getZ() < this.minZ || position.getZ() > this.maxZ)
+        {
+            return false;
+        }
+        return true;
+    }
+
     public boolean nonIntersects(final double x1, final double y1, final double z1, final double x2, final double y2, final double z2)
     {
         return this.minX > x2 && this.maxX < x1 && this.minY > y2 && this.maxY < y1 && this.minZ > z2 && this.maxZ < z1;
@@ -68,6 +87,24 @@ public class AABB
     public boolean nonIntersects(final AABB other)
     {
         return this.nonIntersects(other.minX, other.minY, other.minZ, other.maxX, other.maxY, other.maxZ);
+    }
+
+    public Vector minPointVector()
+    {
+        return new Vector(this.minX, this.minY, this.minZ);
+    }
+
+    public Vector maxPointVector()
+    {
+        return new Vector(this.maxX, this.maxY, this.maxZ);
+    }
+
+    public Vector middlePointVector()
+    {
+        final double x = (this.maxX - this.minX) * 0.5;
+        final double y = (this.maxY - this.minY) * 0.5;
+        final double z = (this.maxZ - this.minZ) * 0.5;
+        return new Vector(x, y, z);
     }
 
     /**

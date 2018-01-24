@@ -39,7 +39,12 @@ public class MovementManipulationChecker implements EventAnalyser<ClientMoveTime
 
         final JumpController jumpController = JumpController.get(data);
 
-        if (BlockFlag.isFlagSet(flags, BlockFlag.COBWEB))
+        if (tickInfo.getProperties().isGliding())
+        {
+            // lot na elytrze
+            jumpController.forceReset();
+        }
+        else if (BlockFlag.isFlagSet(flags, BlockFlag.COBWEB))
         {
             // pajeczyna
             jumpController.forceReset();
@@ -73,6 +78,7 @@ public class MovementManipulationChecker implements EventAnalyser<ClientMoveTime
             return true;
         }
 
+        // gdy gracz ma włączone legitne latanie to nic tu nie weryfikujemy
         return player.isFlying();
     }
 

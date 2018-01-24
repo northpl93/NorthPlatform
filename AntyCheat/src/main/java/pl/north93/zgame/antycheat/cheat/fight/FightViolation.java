@@ -7,5 +7,9 @@ public enum FightViolation implements Violation
     /**
      * Wszystkie naruszenia związane z częstotliwością bicia.
      */
-    HIT_RATIO
+    HIT_RATIO,
+    /**
+     * Wszystkie naruszenia związane z obranym celem ataku.
+     */
+    HIT_TARGET
 }

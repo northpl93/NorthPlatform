@@ -262,7 +262,7 @@ public class JumpController
         }
 
         final double horizontalDistanceFromStart = DistanceUtils.xzDistance(this.startLocation, to);
-        final double expectedHorizontalDistance = 2.6 + maxHeight * 0.1;
+        final double expectedHorizontalDistance = this.calculateMaxRisingHorizontalDistance(tickInfo, startVector, maxHeight);
 
         // sprawdzamy czy gracz sie wysunął się zbyt daleko na osiach xz
         final double horizontalExceeded = horizontalDistanceFromStart - expectedHorizontalDistance;
@@ -270,27 +270,29 @@ public class JumpController
         {
             result.addViolation(MovementViolation.SURVIVAL_FLY, HORIZONTAL_RISING_EXCEEDED, FalsePositiveProbability.LOW);
         }
-        else if (horizontalExceeded > 0)
+        else if (horizontalExceeded > 0.5)
         {
             result.addViolation(MovementViolation.SURVIVAL_FLY, HORIZONTAL_RISING_EXCEEDED, FalsePositiveProbability.MEDIUM);
+        }
+        else if (horizontalExceeded > 0.25)
+        {
+            result.addViolation(MovementViolation.SURVIVAL_FLY, HORIZONTAL_RISING_EXCEEDED, FalsePositiveProbability.HIGH);
         }
 
         // porównujemy wektor ruchu w tym evencie do początkowego wektora ruchu
         final Vector currentMovementVector = event.getFrom().vectorToOther(to);
         final double cosineSimilarity = cosineSimilarity(startVector.clone().normalize(), currentMovementVector.normalize());
-        if (to.getDistanceToGround() >= 0.1 && maxHeightExceeded < -0.15)
+        if (to.getDistanceToGround() >= 0.1 && maxHeightExceeded < - 0.15)
         {
-            if (to.getDistanceToGround() >= 0.25 && cosineSimilarity <= 0.1)
+            if (cosineSimilarity <= 0.1 && to.getDistanceToGround() >= 0.25 && maxHeightExceeded < - 0.25)
             {
-                // dodatkowo zwiekszamy wymagana wysokosc zeby uniknac bolesnych false-positives
-                result.addViolation(MovementViolation.SURVIVAL_FLY, INCONSISTENCY_START_VECTOR, FalsePositiveProbability.LOW);
-            }
-            else if (cosineSimilarity <= 0.2)
-            {
+                // dodatkowo zwiekszamy wymagania zeby uniknac bolesnych false-positives
                 result.addViolation(MovementViolation.SURVIVAL_FLY, INCONSISTENCY_START_VECTOR, FalsePositiveProbability.MEDIUM);
             }
-            else if (cosineSimilarity < 0.35)
+            else if (cosineSimilarity < 0.15)
             {
+                //Bukkit.broadcastMessage(currentMovementVector.toString());
+                //Bukkit.broadcastMessage("" + cosineSimilarity);
                 result.addViolation(MovementViolation.SURVIVAL_FLY, INCONSISTENCY_START_VECTOR, FalsePositiveProbability.HIGH);
             }
             //Bukkit.broadcastMessage(ChatColor.RED + "v:" + cosineSimilarity + " maxHeightExceeded:" + maxHeightExceeded);
@@ -326,6 +328,19 @@ public class JumpController
         }
 
         return velocity;
+    }
+
+    private double calculateMaxRisingHorizontalDistance(final PlayerTickInfo tickInfo, final Vector startVelocity, final double maxHeight)
+    {
+        final double normalJump = (tickInfo.getProperties().isSprinting() ? 2.6 : 1.4) + maxHeight * 0.1; // policzone z dupy
+
+        final double maxDistanceX = EntityUtils.maxHeightByStartVelocity(Math.abs(startVelocity.getX()));
+        final double maxDistanceZ = EntityUtils.maxHeightByStartVelocity(Math.abs(startVelocity.getZ()));
+
+        final double vectorCrossProductXZ = Math.sqrt(maxDistanceX * maxDistanceX + maxDistanceZ * maxDistanceZ);
+        final double distanceFromVelocity = vectorCrossProductXZ + maxHeight * 0.1;
+
+        return Math.max(normalJump, distanceFromVelocity);
     }
 
     // pobiera z linii czasu ostatnie ustawione dla gracza velocity

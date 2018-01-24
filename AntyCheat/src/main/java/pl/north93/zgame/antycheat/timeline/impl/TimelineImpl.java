@@ -173,7 +173,7 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
         final Tick currentTick = this.getCurrentTick();
         this.flushOldData(currentTick);
 
-        final TimelineWalker walker = this.createWalkerForTicks(currentTick, 30);
+        final TimelineWalker walker = this.createWalkerForTicks(currentTick, 50);
         final Pair<Boolean, Boolean> dataFromWalker = this.preparePlayerTickInfoFromTimeline(walker);
 
         final boolean afterSpawn = dataFromWalker.getLeft();
