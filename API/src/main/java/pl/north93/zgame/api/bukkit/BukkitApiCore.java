@@ -54,18 +54,6 @@ public class BukkitApiCore extends ApiCore
         return this.pluginMain.getServer();
     }
 
-    /**
-     * Synchronizuje podany runnable do wątku serwera przy użyciu Schedulera.
-     *
-     * @deprecated Przeniesiono do {@link pl.north93.zgame.api.bukkit.server.IBukkitExecutor#sync(Runnable)}.
-     * @param runnable do zsynchronizowania.
-     */
-    @Deprecated
-    public final void sync(final Runnable runnable)
-    {
-        this.pluginMain.getServer().getScheduler().runTask(this.pluginMain, runnable);
-    }
-
     @Override
     public Logger getLogger()
     {

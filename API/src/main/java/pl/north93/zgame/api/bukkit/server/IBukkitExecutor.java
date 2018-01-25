@@ -19,6 +19,10 @@ public interface IBukkitExecutor
      */
     void async(Runnable runnable);
 
+    void syncLater(int ticks, Runnable runnable);
+
+    void asyncLater(int ticks, Runnable runnable);
+
     /**
      * Wykonuje kod w pierwszym argumencie asynchronicznie,
      * wynik przekazuje do drugiego i wykonuje go synchronicznie.

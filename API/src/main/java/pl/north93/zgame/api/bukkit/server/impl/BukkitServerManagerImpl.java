@@ -156,6 +156,18 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
     }
 
     @Override
+    public void syncLater(final int ticks, final Runnable runnable)
+    {
+        Bukkit.getScheduler().runTaskLater(this.apiCore.getPluginMain(), runnable, ticks);
+    }
+
+    @Override
+    public void asyncLater(final int ticks, final Runnable runnable)
+    {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(this.apiCore.getPluginMain(), runnable, ticks);
+    }
+
+    @Override
     public <T> void mixed(final Supplier<T> async, final Consumer<T> synced)
     {
         this.async(() ->

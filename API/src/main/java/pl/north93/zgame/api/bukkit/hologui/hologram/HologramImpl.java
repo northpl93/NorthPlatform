@@ -12,12 +12,15 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
+import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 final class HologramImpl implements IHologram
 {
     @Inject
     private IEntityHider              entityHider;
+    @Inject
+    private IBukkitExecutor           bukkitExecutor;
 
     private final IHologramVisibility hologramVisibility;
     private final Location            location;
@@ -94,6 +97,11 @@ final class HologramImpl implements IHologram
     public void setupVisibility(final ArmorStand armorStand)
     {
         this.hologramVisibility.setup(this.entityHider, armorStand);
+    }
+
+    public IBukkitExecutor getBukkitExecutor()
+    {
+        return this.bukkitExecutor;
     }
 
     @Override

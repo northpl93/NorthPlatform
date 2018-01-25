@@ -2,6 +2,7 @@ package pl.north93.zgame.api.global.redis.rpc.impl;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -14,8 +15,12 @@ class RpcResponseLock
 
     public Object getResponse(final int timeout) throws Exception
     {
-        final Object result = this.future.get(timeout, TimeUnit.MILLISECONDS);
-        if (! this.future.isDone())
+        final Object result;
+        try
+        {
+            result = this.future.get(timeout, TimeUnit.MILLISECONDS);
+        }
+        catch (final TimeoutException exception)
         {
             throw new RpcTimeoutException(); // response is not provided after some time
         }

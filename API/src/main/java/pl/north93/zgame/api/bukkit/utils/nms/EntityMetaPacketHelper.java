@@ -34,7 +34,7 @@ public class EntityMetaPacketHelper
         this.buffer = UnpooledByteBufAllocator.DEFAULT.buffer(32);
         this.pds = new PacketDataSerializer(this.buffer);
 
-        this.pds.writeByte(0x39); // PacketPlayOutEntityMetadata id PAMIETAC ZEBY TU ZMIENIC PRZY AKTUSLIZACJI MINECRAFTA
+        this.pds.d(0x3C); // writeVarInt PacketPlayOutEntityMetadata id PAMIETAC ZEBY TU ZMIENIC PRZY AKTUSLIZACJI MINECRAFTA
         this.pds.d(entityId); // writeVarInt
     }
 
@@ -76,7 +76,7 @@ public class EntityMetaPacketHelper
                     @Override
                     void write(final PacketDataSerializer serializer, final Object object)
                     {
-                        serializer.writeByte(3);
+                        serializer.d(3);
                         serializer.a((String) object);
                     }
                 },
@@ -85,7 +85,7 @@ public class EntityMetaPacketHelper
                     @Override
                     void write(final PacketDataSerializer serializer, final Object object)
                     {
-                        serializer.writeByte(5);
+                        serializer.d(5);
 
                         final ItemStack bukkitStack = (ItemStack) object;
                         // a(n.m.s.ItemStack)
@@ -97,7 +97,7 @@ public class EntityMetaPacketHelper
                     @Override
                     void write(final PacketDataSerializer serializer, final Object object)
                     {
-                        serializer.writeByte(6);
+                        serializer.d(6);
                         serializer.writeBoolean((Boolean) object);
                     }
                 },
@@ -108,7 +108,7 @@ public class EntityMetaPacketHelper
                     {
                         final Vector3f vector = (Vector3f) object;
 
-                        serializer.writeByte(7);
+                        serializer.d(7);
                         serializer.writeFloat(vector.getX());
                         serializer.writeFloat(vector.getY());
                         serializer.writeFloat(vector.getZ());

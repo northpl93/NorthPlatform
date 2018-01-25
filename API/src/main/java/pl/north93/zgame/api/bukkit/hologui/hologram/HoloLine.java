@@ -25,9 +25,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.nms.EntityMetaPacketHelper;
-import pl.north93.zgame.api.global.API;
 
 final class HoloLine
 {
@@ -129,8 +127,7 @@ final class HoloLine
         final EntityPlayer key = change.getKey();
         if (change.wasAdded() && change.getValueRemoved() == null && this.lastLine != null)
         {
-            final BukkitApiCore apiCore = (BukkitApiCore) API.getApiCore();
-            apiCore.sync(() -> this.sendUpdateTo(key));
+            this.hologram.getBukkitExecutor().sync(() -> this.sendUpdateTo(key));
         }
     }
 

@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.subscriber.SubscriptionHandler;
@@ -20,6 +21,8 @@ public class PlayerDataListener implements SubscriptionHandler
 {
     @Inject
     private BukkitApiCore            apiCore;
+    @Inject
+    private IBukkitExecutor          bukkitExecutor;
     @Inject
     private PlayerDataShareServer    shareServer;
     @Inject
@@ -38,7 +41,7 @@ public class PlayerDataListener implements SubscriptionHandler
             return;
         }
 
-        this.apiCore.sync(() ->
+        this.bukkitExecutor.sync(() ->
         {
             if (player.isDataLoaded())
             {
