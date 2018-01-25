@@ -47,15 +47,16 @@ public class PortManagement
 
     public void setupNetwork(final Value<ServerDto> serverDtoValue, final JavaArguments arguments)
     {
-        final String host = this.config.listenHost;
+        final String listenHost = this.config.listenHost;
+        final String externalHost = this.config.externalHost;
         final int port = this.getFreePort();
 
-        arguments.addProgramVar("--host " + host);
+        arguments.addProgramVar("--host " + listenHost);
         arguments.addProgramVar("--port " + port);
 
         serverDtoValue.update(serverDto ->
         {
-            serverDto.setConnectIp(host);
+            serverDto.setConnectIp(externalHost);
             serverDto.setConnectPort(port);
         });
     }

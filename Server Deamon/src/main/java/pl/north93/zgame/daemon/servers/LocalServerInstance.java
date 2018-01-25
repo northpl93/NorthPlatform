@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.UUID;
 
+import pl.north93.zgame.api.global.network.daemon.config.ServerPatternConfig;
 import pl.north93.zgame.api.global.network.impl.ServerDto;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.utils.JavaArguments;
@@ -14,16 +15,18 @@ import pl.north93.zgame.api.global.utils.JavaArguments;
  */
 public class LocalServerInstance
 {
-    private final Value<ServerDto>   serverDto;
-    private final File               workspace;
-    private final JavaArguments      arguments;
-    private final LocalServerConsole console;
+    private final Value<ServerDto>    serverDto;
+    private final File                workspace;
+    private final JavaArguments       arguments;
+    private final ServerPatternConfig pattern;
+    private final LocalServerConsole  console;
 
-    public LocalServerInstance(final Value<ServerDto> serverDto, final File workspace, final JavaArguments arguments)
+    public LocalServerInstance(final Value<ServerDto> serverDto, final File workspace, final JavaArguments arguments, final ServerPatternConfig pattern)
     {
         this.serverDto = serverDto;
         this.workspace = workspace;
         this.arguments = arguments;
+        this.pattern = pattern;
         this.console = LocalServerConsole.createProcess(this);
     }
 
@@ -50,6 +53,16 @@ public class LocalServerInstance
     public LocalServerConsole getConsole()
     {
         return this.console;
+    }
+
+    /**
+     * Zwraca pattern według którego ta instancja została utworzona.
+     *
+     * @return Pattern według którego utworzono tą instancję.
+     */
+    public ServerPatternConfig getPattern()
+    {
+        return this.pattern;
     }
 
     /**

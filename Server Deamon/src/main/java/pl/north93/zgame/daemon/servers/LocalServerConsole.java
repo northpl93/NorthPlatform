@@ -37,8 +37,8 @@ public class LocalServerConsole
     {
         try
         {
-            final OutputStream outputStream = this.process.getOutputStream();
             final String line = consoleCommand + '\n';
+            final OutputStream outputStream = this.process.getOutputStream();
             outputStream.write(line.getBytes(StandardCharsets.UTF_8));
         }
         catch (final IOException e)

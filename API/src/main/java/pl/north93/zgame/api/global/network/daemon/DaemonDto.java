@@ -35,19 +35,9 @@ public class DaemonDto
         return this.name;
     }
 
-    public void setName(final String name)
-    {
-        this.name = name;
-    }
-
     public String getHostName()
     {
         return this.hostName;
-    }
-
-    public void setHostName(final String hostName)
-    {
-        this.hostName = hostName;
     }
 
     public Integer getMaxRam()
@@ -55,19 +45,9 @@ public class DaemonDto
         return this.maxRam;
     }
 
-    public void setMaxRam(final Integer maxRam)
-    {
-        this.maxRam = maxRam;
-    }
-
     public Integer getRamUsed()
     {
         return this.ramUsed;
-    }
-
-    public void setRamUsed(final Integer ramUsed)
-    {
-        this.ramUsed = ramUsed;
     }
 
     public Integer getServerCount()
@@ -75,19 +55,9 @@ public class DaemonDto
         return this.serverCount;
     }
 
-    public void setServerCount(final Integer serverCount)
-    {
-        this.serverCount = serverCount;
-    }
-
     public Boolean isAcceptingServers()
     {
         return this.isAcceptingServers;
-    }
-
-    public void setAcceptingServers(final Boolean acceptingServers)
-    {
-        this.isAcceptingServers = acceptingServers;
     }
 
     @Override

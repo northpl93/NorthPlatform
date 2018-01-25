@@ -11,19 +11,23 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.daemon.DaemonDto;
 import pl.north93.zgame.api.global.network.daemon.DaemonRpc;
+import pl.north93.zgame.api.global.network.daemon.config.ServerPatternConfig;
 import pl.north93.zgame.api.global.network.impl.ServerDto;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.network.server.group.ServersGroupDto;
 import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.controller.servers.groups.LocalGroupsManager;
 import pl.north93.zgame.controller.servers.groups.LocalManagedServersGroup;
 
 public class DeployServerOperation extends AutoScalerOperation
 {
-    @Inject
-    private INetworkManager networkManager;
     private final LocalManagedServersGroup serversGroup;
-    private Value<ServerDto> ourServer;
+    private Value<ServerDto>   ourServer;
+    @Inject
+    private INetworkManager    networkManager;
+    @Inject
+    private LocalGroupsManager localGroupsManager;
 
     public DeployServerOperation(final LocalManagedServersGroup serversGroup)
     {
@@ -36,7 +40,16 @@ public class DeployServerOperation extends AutoScalerOperation
         final UUID serverId = UUID.randomUUID();
         final ServersGroupDto group = this.serversGroup.getAsDto();
 
-        final DaemonDto bestDaemon = this.getBestDaemon();
+        final String pattern = this.serversGroup.getConfig().getPattern();
+        final ServerPatternConfig patternConfig = this.localGroupsManager.getServerPatternConfig(pattern);
+        if (patternConfig == null)
+        {
+            // brak patternu o takim ID, prawdopodobnie blad w konfiguracji.
+            // anulujemy tworzenie serwera zeby w daemonie nie walilo bledami
+            return false;
+        }
+
+        final DaemonDto bestDaemon = this.getBestDaemon(patternConfig);
         if (bestDaemon == null)
         {
             // brak demona do deploymentu
@@ -49,7 +62,7 @@ public class DeployServerOperation extends AutoScalerOperation
 
         final DaemonRpc daemonRpc = this.networkManager.getDaemons().getRpc(bestDaemon);
         // wysylamy do demona polecenie
-        daemonRpc.deployServer(serverId, this.serversGroup.getConfig().getPattern());
+        daemonRpc.deployServer(serverId, pattern);
 
         // wysylamy do wszystkich bungeecordow info o nowym serwerze
         this.networkManager.getProxies().addServer(serverDto);
@@ -87,13 +100,22 @@ public class DeployServerOperation extends AutoScalerOperation
         return ScalerOperationState.IN_PROGRESS;
     }
 
-    private DaemonDto getBestDaemon()
+    // pobiera najmniej obciazony daemon który moze uruchomic nowa instancje danego patternu,
+    // lub null jak nie znajdzie takiego
+    private DaemonDto getBestDaemon(final ServerPatternConfig patternConfig)
     {
         final Set<DaemonDto> daemons = this.networkManager.getDaemons().all();
         return daemons.stream()
-                      .filter(DaemonDto::isAcceptingServers)
+                      .filter(daemonDto -> this.isDaemonCapable(daemonDto, patternConfig))
                       .min(new DaemonComparator())
                       .orElse(null);
+    }
+
+    // sprawdza czy podany daemon moze uruchomic instancje o podanym patternie
+    private boolean isDaemonCapable(final DaemonDto daemon, final ServerPatternConfig patternConfig)
+    {
+        final int freeRam = daemon.getMaxRam() - daemon.getRamUsed();
+        return daemon.isAcceptingServers() && freeRam >= patternConfig.getMaxMemory();
     }
 
     private Value<ServerDto> uploadServer(final ServerDto serverDto)

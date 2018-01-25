@@ -112,18 +112,10 @@ public class LocalServersManager
         final File workspace = this.filesManager.getWorkspace(serverId);
 
         final JavaArguments java = new JavaArguments();
+        this.setupJavaOptimizations(java);
+
         java.setJar(this.filesManager.getEngineFile(pattern.getEngineName()).getAbsolutePath());
-        java.addJavaArg("XX:+UnlockExperimentalVMOptions"); // aikars
         java.addJavaArg("XX:+AlwaysPreTouch"); // na starcie alokuje pamiec w systemie, zapobiega wpadkom
-        java.addJavaArg("XX:+UseG1GC");
-        java.addJavaArg("XX:+UseStringDeduplication");
-        java.addJavaArg("XX:MaxGCPauseMillis=40"); // tick time=50ms
-        java.addJavaArg("XX:TargetSurvivorRatio=90"); // aikars
-        java.addJavaArg("XX:G1NewSizePercent=50"); // aikars=50
-        java.addJavaArg("XX:+AggressiveOpts");
-        java.addJavaArg("XX:InlineSmallCode=2048"); // increase max code size to inline. Default=1000
-        java.addJavaArg("XX:MaxInlineSize=70"); // Default=35
-        java.addJavaArg("XX:MaxTrivialSize=12"); // Default=6
         java.addEnvVar("jline.terminal", "jline.UnsupportedTerminal"); // Disable fancy terminal
         java.addEnvVar("northplatform.serverid", serverId.toString());
         java.addProgramVar("--server-name " + serverId);
@@ -138,12 +130,26 @@ public class LocalServersManager
         // aktualizacja stanu serwera
         serverDto.update((Consumer<ServerDto>) dto -> dto.setServerState(ServerState.STARTING));
 
-        final LocalServerInstance instance = new LocalServerInstance(serverDto, workspace, java);
+        final LocalServerInstance instance = new LocalServerInstance(serverDto, workspace, java, pattern);
         synchronized (this.instances)
         {
             this.instances.put(serverId, instance);
         }
 
         this.logger.log(Level.INFO, "Deployment operation of {0} completed.", serverId);
+    }
+
+    private void setupJavaOptimizations(final JavaArguments java)
+    {
+        java.addJavaArg("XX:+UnlockExperimentalVMOptions"); // aikars
+        java.addJavaArg("XX:+UseG1GC");
+        java.addJavaArg("XX:+UseStringDeduplication");
+        java.addJavaArg("XX:MaxGCPauseMillis=40"); // tick time=50ms
+        java.addJavaArg("XX:TargetSurvivorRatio=90"); // aikars
+        java.addJavaArg("XX:G1NewSizePercent=50"); // aikars=50
+        java.addJavaArg("XX:+AggressiveOpts");
+        java.addJavaArg("XX:InlineSmallCode=2048"); // increase max code size to inline. Default=1000
+        java.addJavaArg("XX:MaxInlineSize=70"); // Default=35
+        java.addJavaArg("XX:MaxTrivialSize=12"); // Default=6
     }
 }

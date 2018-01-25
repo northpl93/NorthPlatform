@@ -9,6 +9,7 @@ import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.daemon.DaemonDto;
+import pl.north93.zgame.api.global.network.event.NetworkKickAllNetEvent;
 import pl.north93.zgame.api.global.network.event.NetworkShutdownNetEvent;
 import pl.north93.zgame.api.global.network.proxy.ProxyDto;
 import pl.north93.zgame.api.global.redis.event.IEventManager;
@@ -31,11 +32,11 @@ public class Network extends NorthCommand
     {
         if (args.length() == 0)
         {
-            sender.sendRawMessage("/network - pomoc");
-            sender.sendRawMessage("  proxies - lista połączonych serwerów proxy");
-            sender.sendRawMessage("  daemons - lista połączonych demonów");
-            sender.sendRawMessage("  stopall - wyłącza wszystkie komponenty sieci");
-            sender.sendRawMessage("  kickall - wyrzuca wszystkich graczy");
+            sender.sendRawMessage("&e/network - pomoc");
+            sender.sendRawMessage("&e  proxies - lista połączonych serwerów proxy");
+            sender.sendRawMessage("&e  daemons - lista połączonych demonów");
+            sender.sendRawMessage("&e  kickall - wyrzuca wszystkich graczy");
+            sender.sendRawMessage("&e  stopall - wyłącza wszystkie komponenty sieci");
             return;
         }
 
@@ -46,9 +47,9 @@ public class Network extends NorthCommand
                 sender.sendRawMessage("&cPołączone serwery proxy");
                 for (final ProxyDto proxyInstanceInfo : this.networkManager.getProxies().all())
                 {
-                    sender.sendRawMessage("|- " + proxyInstanceInfo.getId());
-                    sender.sendRawMessage("  |- Liczba graczy: " + proxyInstanceInfo.getOnlinePlayers());
-                    sender.sendRawMessage("  |- Nazwa hosta: " + proxyInstanceInfo.getHostname());
+                    sender.sendRawMessage("&e|- " + proxyInstanceInfo.getId());
+                    sender.sendRawMessage("&e  |- Liczba graczy: " + proxyInstanceInfo.getOnlinePlayers());
+                    sender.sendRawMessage("&e  |- Nazwa hosta: " + proxyInstanceInfo.getHostname());
                 }
             }
             else if ("daemons".equals(args.asString(0)))
@@ -56,11 +57,11 @@ public class Network extends NorthCommand
                 sender.sendRawMessage("&cPołączone demony");
                 for (final DaemonDto daemon : this.networkManager.getDaemons().all())
                 {
-                    sender.sendRawMessage("|- " + daemon.getName());
-                    sender.sendRawMessage("  |- Nazwa hosta: " + daemon.getHostName());
-                    sender.sendRawMessage("  |- Maksymalna ilość ramu: " + daemon.getMaxRam() + "MB");
-                    sender.sendRawMessage("  |- Użyty ram: " + daemon.getRamUsed() + "MB (" + daemon.getRamUsed() / daemon.getMaxRam() * 100 + "%)");
-                    sender.sendRawMessage("  |- Ilość serwerów hostowanych: " + daemon.getServerCount());
+                    sender.sendRawMessage("&e|- " + daemon.getName());
+                    sender.sendRawMessage("&e  |- Nazwa hosta: " + daemon.getHostName());
+                    sender.sendRawMessage("&e  |- Maksymalna ilość ramu: " + daemon.getMaxRam() + "MB");
+                    sender.sendRawMessage("&e  |- Użyty ram: " + daemon.getRamUsed() + "MB (" + daemon.getRamUsed() / daemon.getMaxRam() * 100 + "%)");
+                    sender.sendRawMessage("&e  |- Ilość serwerów hostowanych: " + daemon.getServerCount());
                 }
             }
             else if ("stopall".equals(args.asString(0)))
@@ -71,7 +72,7 @@ public class Network extends NorthCommand
             else if ("kickall".equals(args.asString(0)))
             {
                 sender.sendRawMessage("&cZa chwile wszyscy gracze zostaną rozłączeni...");
-                //this.networkManager.broadcastNetworkAction(NetworkAction.KICK_ALL);
+                this.eventManager.callEvent(new NetworkKickAllNetEvent());
             }
             else
             {
@@ -79,8 +80,6 @@ public class Network extends NorthCommand
             }
 
         }
-
-        // TODO
     }
 
     @Override

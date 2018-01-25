@@ -59,8 +59,8 @@ public class WorkspaceSetup
 
         final File pluginsApi = new File(plugins, "API");
         DioriteUtils.createDirectory(pluginsApi);
-        final File connectionYml = this.apiCore.getFile("connection.yml");
-        FileUtils.copyFileToDirectory(connectionYml, pluginsApi);
+        final File connectionXml = this.apiCore.getFile("connection.xml");
+        FileUtils.copyFileToDirectory(connectionXml, pluginsApi);
     }
 
     private void copyComponents(final File workspace, final ServerPatternConfig pattern) throws IOException

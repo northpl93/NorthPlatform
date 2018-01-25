@@ -1,5 +1,8 @@
 package pl.north93.zgame.controller.servers.groups;
 
+import static pl.north93.zgame.api.global.utils.lang.CollectionUtils.findInCollection;
+
+
 import javax.annotation.Nullable;
 
 import java.util.Collection;
@@ -18,6 +21,7 @@ import pl.north93.zgame.api.global.config.ConfigUpdatedNetEvent;
 import pl.north93.zgame.api.global.config.IConfig;
 import pl.north93.zgame.api.global.config.NetConfig;
 import pl.north93.zgame.api.global.network.INetworkManager;
+import pl.north93.zgame.api.global.network.daemon.config.ServerPatternConfig;
 import pl.north93.zgame.api.global.network.server.group.ServersGroupDto;
 import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 import pl.north93.zgame.api.global.redis.observable.Hash;
@@ -48,14 +52,20 @@ public class LocalGroupsManager
         this.scalingValues.put(value.getId(), value);
     }
 
-    public @Nullable IScalingValue getScalingValue(final String id)
+    public @Nullable IScalingValue getScalingValue(final String valueId)
     {
-        return this.scalingValues.get(id);
+        return this.scalingValues.get(valueId);
     }
 
-    public @Nullable ILocalServersGroup getGroup(final String id)
+    public @Nullable ILocalServersGroup getGroup(final String groupId)
     {
-        return this.localGroups.get(id);
+        return this.localGroups.get(groupId);
+    }
+
+    public @Nullable ServerPatternConfig getServerPatternConfig(final String patternId)
+    {
+        final AutoScalingConfig autoScalingConfig = this.config.get();
+        return findInCollection(autoScalingConfig.getPatterns(), ServerPatternConfig::getPatternName, patternId);
     }
 
     public Collection<ILocalServersGroup> getLocalGroups()

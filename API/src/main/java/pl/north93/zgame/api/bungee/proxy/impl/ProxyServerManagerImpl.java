@@ -4,14 +4,17 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import pl.north93.zgame.api.bungee.BungeeApiCore;
 import pl.north93.zgame.api.bungee.proxy.IProxyServerList;
 import pl.north93.zgame.api.bungee.proxy.IProxyServerManager;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
+import pl.north93.zgame.api.global.network.event.NetworkKickAllNetEvent;
 import pl.north93.zgame.api.global.network.proxy.IProxyRpc;
 import pl.north93.zgame.api.global.network.proxy.ProxyDto;
+import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 import pl.north93.zgame.api.global.redis.observable.Hash;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 
@@ -46,6 +49,15 @@ class ProxyServerManagerImpl extends Component implements IProxyServerManager
     {
         final Hash<ProxyDto> hash = this.networkManager.getProxies().unsafe().getHash();
         hash.delete(this.getApiCore().getId());
+    }
+
+    @NetEventSubscriber(NetworkKickAllNetEvent.class)
+    public void onNetKickAllEvent(final NetworkKickAllNetEvent event) // nasluchuje na event rozlaczenia wszystkich graczy
+    {
+        for (final ProxiedPlayer proxiedPlayer : ProxyServer.getInstance().getPlayers())
+        {
+            proxiedPlayer.disconnect();
+        }
     }
 
     @Override

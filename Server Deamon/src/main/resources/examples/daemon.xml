@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <daemon>
+    <!-- Host do którego beda laczyly sie BungeeCordy -->
     <externalHost>127.0.0.1</externalHost>
+
+    <!-- Host na którym beda nasluchiwaly serwery -->
     <listenHost>0.0.0.0</listenHost>
+
+    <!-- Początek zakresu portów do instalowania serwerow -->
     <portRangeStart>25590</portRangeStart>
+
+    <!-- Maksymalna ilość pamięci w MB którą użyją zainstalowane serwery -->
     <maxMemory>2048</maxMemory>
 </daemon>
