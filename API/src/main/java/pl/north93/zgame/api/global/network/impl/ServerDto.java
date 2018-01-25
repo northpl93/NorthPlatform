@@ -27,6 +27,7 @@ public class ServerDto implements Server, ServerProxyData
     private Integer       connectPort;
     private Boolean       isLaunchedViaDaemon;
     private ServerType    serverType;
+    private Integer       playersCount;
     private ServerState   serverState;
     private Boolean       shutdown;
     private JoiningPolicy joiningPolicy;
@@ -44,6 +45,7 @@ public class ServerDto implements Server, ServerProxyData
         this.connectPort = connectPort;
         this.isLaunchedViaDaemon = isLaunchedViaDaemon;
         this.serverType = serverType;
+        this.playersCount = 0;
         this.serverState = serverState;
         this.joiningPolicy = joiningPolicy;
         this.serversGroup = serversGroup;
@@ -72,6 +74,12 @@ public class ServerDto implements Server, ServerProxyData
     public ServerState getServerState()
     {
         return this.serverState;
+    }
+
+    @Override
+    public int getPlayersCount()
+    {
+        return this.playersCount;
     }
 
     @Override
@@ -114,6 +122,11 @@ public class ServerDto implements Server, ServerProxyData
     public int getConnectPort()
     {
         return this.connectPort;
+    }
+
+    public void setPlayersCount(final Integer playersCount)
+    {
+        this.playersCount = playersCount;
     }
 
     public void setServerState(final ServerState serverState)

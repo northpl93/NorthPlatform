@@ -42,6 +42,14 @@ public interface Server extends ServerProxyData
     ServerState getServerState();
 
     /**
+     * Zwraca ilość graczy będących online na tym serwerze.
+     * Ta wartość aktualizowana jest co jakiś czas, więc na należy na niej zbytnio polegać.
+     *
+     * @return Ilość graczy na tym serwerze.
+     */
+    int getPlayersCount();
+
+    /**
      * Sprawdza czy ten serwer jest zaplanowany do wylaczenia.
      *
      * @return czy serwer zaplanowany do wylaczenia.

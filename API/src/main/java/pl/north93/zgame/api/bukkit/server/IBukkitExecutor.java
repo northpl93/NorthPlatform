@@ -39,6 +39,14 @@ public interface IBukkitExecutor
     void syncTimer(int every, Runnable runnable);
 
     /**
+     * Wykonuje kod asynchronicznie co podaną ilość ticków.
+     *
+     * @param every Co ile tickow wykonywac kod.
+     * @param runnable Runnable do zaplanowania.
+     */
+    void asyncTimer(int every, Runnable runnable);
+
+    /**
      * Wymusza uruchomienie kodu na glownym watku serwera.
      * Jesli juz w nim jestesmy to po prostu wykona kod.
      *

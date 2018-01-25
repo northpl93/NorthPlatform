@@ -46,6 +46,7 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
     @Override
     protected void enableComponent()
     {
+        this.asyncTimer(10, this::updatePlayersCount);
         this.sync(() ->
         {
             // po pelnym uruchomieniu serwera zmianiamy stan na wlaczony i wykonujemy event
@@ -61,6 +62,15 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
         if (! this.serverValue.isAvailable())
         {
             throw new RuntimeException("Not found server data in redis. Ensure that controller is running and serverId is valid.");
+        }
+    }
+
+    private void updatePlayersCount()
+    {
+        final int players = Bukkit.getOnlinePlayers().size();
+        if (this.getServer().getPlayersCount() != players)
+        {
+            this.serverValue.update((Consumer<ServerDto>) serverDto -> serverDto.setPlayersCount(players));
         }
     }
 
@@ -162,6 +172,12 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
     public void syncTimer(final int every, final Runnable runnable)
     {
         Bukkit.getScheduler().runTaskTimer(this.apiCore.getPluginMain(), runnable, every, every);
+    }
+
+    @Override
+    public void asyncTimer(final int every, final Runnable runnable)
+    {
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this.apiCore.getPluginMain(), runnable, every, every);
     }
 
     @Override
