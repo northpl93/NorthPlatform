@@ -1,7 +1,6 @@
 package pl.north93.zgame.antycheat.timeline.impl;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import org.bukkit.Bukkit;
@@ -9,9 +8,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
+import co.aikar.timings.Timing;
 import pl.north93.zgame.antycheat.analysis.impl.AnalysisManager;
 import pl.north93.zgame.antycheat.timeline.Tick;
 import pl.north93.zgame.antycheat.timeline.TimelineEvent;
+import pl.north93.zgame.antycheat.utils.AntyCheatTimings;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -137,19 +138,18 @@ public class TimelineManager
         @Override
         public void tickBegin()
         {
-            TimelineManager.this.preTick();
+            try (final Timing timing = AntyCheatTimings.PRE_TICK.startTiming())
+            {
+                TimelineManager.this.preTick();
+            }
         }
 
         @Override
         public void tickEnd()
         {
-            final long startTime = System.nanoTime();
-            TimelineManager.this.postTick();
-            final long totalTime = System.nanoTime() - startTime;
-            if (totalTime >= 1_000_000)
+            try (final Timing timing = AntyCheatTimings.POST_TICK.startTiming())
             {
-                // todo debug remove
-                System.out.println("post tick took " + totalTime + "ns (" + TimeUnit.NANOSECONDS.toMillis(totalTime) + "ms)");
+                TimelineManager.this.postTick();
             }
         }
     }

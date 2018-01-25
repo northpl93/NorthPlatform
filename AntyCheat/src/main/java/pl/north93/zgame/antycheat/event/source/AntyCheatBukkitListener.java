@@ -1,6 +1,5 @@
 package pl.north93.zgame.antycheat.event.source;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -59,7 +58,7 @@ public class AntyCheatBukkitListener implements AutoListener
     {
         final Player player = event.getPlayer();
         final VelocityAppliedTimelineEvent timelineEvent = new VelocityAppliedTimelineEvent(player, event.getVelocity());
-        Bukkit.broadcastMessage(event.getVelocity().toString());
+
         this.timelineManager.pushEventForPlayer(player, timelineEvent);
     }
 }

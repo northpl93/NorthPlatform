@@ -21,10 +21,11 @@ import pl.north93.zgame.antycheat.utils.location.RichEntityLocation;
 
 public class JumpController
 {
-    private static final String RISING_IN_FALL_STAGE       = "Player is rising in FALL stage.";
-    private static final String MAX_HEIGHT_EXCEEDED        = "Player exceeded max jump height.";
-    private static final String HORIZONTAL_RISING_EXCEEDED = "Player exceeded rising horizontal distance.";
-    private static final String INCONSISTENCY_START_VECTOR = "Player ignored their start vector.";
+    private static final String RISING_IN_FALL_STAGE        = "Player is rising in FALL stage.";
+    private static final String MAX_HEIGHT_EXCEEDED         = "Player exceeded max jump height.";
+    private static final String HORIZONTAL_RISING_EXCEEDED  = "Player exceeded rising horizontal distance.";
+    private static final String HORIZONTAL_FALLING_EXCEEDED = "Player exceeded falling horizontal distance.";
+    private static final String INCONSISTENCY_START_VECTOR  = "Player ignored their start vector.";
     private static final double MIN_HEIGHT_TO_EXCEED = 0.26;
     private static final DataKey<JumpController> KEY = new DataKey<>("jumpController", JumpController::new);
 
@@ -161,7 +162,7 @@ public class JumpController
             else if (this.jumpStage == JumpStage.RISE)
             {
                 // na razie wszystko jest dobrze. teraz weryfikujemy czy gracz może skakać na taką wysokość.
-                this.verifyPlayerHeightRising(tickInfo, event, result);
+                this.verifyPlayerRisingStage(event, result);
 
                 // resetujemy ilosc pakietów o opadaniu. Bo się w końcu unosimy.
                 this.startFallingPackets = 0;
@@ -180,6 +181,7 @@ public class JumpController
             if (this.jumpStage == JumpStage.FALL)
             {
                 // ok, sprawdzamy wysokosc/szybkosc
+                this.verifyPlayerFallingStage(event, result);
             }
             else if (this.jumpStage == JumpStage.RISE)
             {
@@ -236,11 +238,10 @@ public class JumpController
         return true;
     }
 
-    // weryfikuje wysokość na etapie unoszenia się gracza
-    private void verifyPlayerHeightRising(final PlayerTickInfo tickInfo, final ClientMoveTimelineEvent event, final SingleAnalysisResult result)
+    // weryfikuje etap unoszenia się gracza
+    private void verifyPlayerRisingStage(final ClientMoveTimelineEvent event, final SingleAnalysisResult result)
     {
         final RichEntityLocation to = event.getTo();
-
         final Vector startVector = this.deduceStartVelocity(event.getOwner());
 
         final double jumpHeight = to.getY() - this.startLocation.getY();
@@ -262,7 +263,7 @@ public class JumpController
         }
 
         final double horizontalDistanceFromStart = DistanceUtils.xzDistance(this.startLocation, to);
-        final double expectedHorizontalDistance = this.calculateMaxRisingHorizontalDistance(tickInfo, startVector, maxHeight);
+        final double expectedHorizontalDistance = this.calculateMaxRisingHorizontalDistance(startVector, maxHeight);
 
         // sprawdzamy czy gracz sie wysunął się zbyt daleko na osiach xz
         final double horizontalExceeded = horizontalDistanceFromStart - expectedHorizontalDistance;
@@ -299,6 +300,32 @@ public class JumpController
         }
     }
 
+    private void verifyPlayerFallingStage(final ClientMoveTimelineEvent event, final SingleAnalysisResult result)
+    {
+        final RichEntityLocation to = event.getTo();
+        final Vector startVector = this.deduceStartVelocity(event.getOwner());
+
+        final double fallenDistance = this.startLocation.getY() - to.getY();
+
+        final double horizontalDistanceFromStart = DistanceUtils.xzDistance(this.startLocation, to);
+        final double expectedHorizontalDistance = this.calculateMaxFallingHorizontalDistance(startVector, fallenDistance);
+
+        final double horizontalExceeded = horizontalDistanceFromStart - expectedHorizontalDistance;
+        if (horizontalExceeded > 4)
+        {
+            result.addViolation(MovementViolation.SURVIVAL_FLY, HORIZONTAL_FALLING_EXCEEDED, FalsePositiveProbability.LOW);
+        }
+        else if (horizontalExceeded > 2)
+        {
+            result.addViolation(MovementViolation.SURVIVAL_FLY, HORIZONTAL_FALLING_EXCEEDED, FalsePositiveProbability.MEDIUM);
+        }
+        else if (horizontalExceeded > 0.5)
+        {
+            result.addViolation(MovementViolation.SURVIVAL_FLY, HORIZONTAL_FALLING_EXCEEDED, FalsePositiveProbability.HIGH);
+        }
+        //Bukkit.broadcastMessage("exptected:" + expectedHorizontalDistance + " distance:" + horizontalDistanceFromStart);
+    }
+
     // staramy sie obliczyc wektor z jakim wystartował gracz
     private Vector deduceStartVelocity(final Player player)
     {
@@ -330,9 +357,10 @@ public class JumpController
         return velocity;
     }
 
-    private double calculateMaxRisingHorizontalDistance(final PlayerTickInfo tickInfo, final Vector startVelocity, final double maxHeight)
+    private double calculateMaxRisingHorizontalDistance(final Vector startVelocity, final double maxHeight)
     {
-        final double normalJump = (tickInfo.getProperties().isSprinting() ? 2.6 : 1.4) + maxHeight * 0.1; // policzone z dupy
+        final boolean sprintingWhileStarted = this.startTickInfo.getProperties().isSprinting();
+        final double normalJump = (sprintingWhileStarted ? 2.5 : 1.5) + maxHeight * 0.1; // policzone z dupy
 
         final double maxDistanceX = EntityUtils.maxHeightByStartVelocity(Math.abs(startVelocity.getX()));
         final double maxDistanceZ = EntityUtils.maxHeightByStartVelocity(Math.abs(startVelocity.getZ()));
@@ -341,6 +369,19 @@ public class JumpController
         final double distanceFromVelocity = vectorCrossProductXZ + maxHeight * 0.1;
 
         return Math.max(normalJump, distanceFromVelocity);
+    }
+
+    private double calculateMaxFallingHorizontalDistance(final Vector startVelocity, final double fallDistance)
+    {
+        final Vector lookingDirection = this.startLocation.getDirection().multiply(0.1);
+        final double velX = Math.max(lookingDirection.getX(), Math.abs(startVelocity.getX()));
+        final double velZ = Math.max(lookingDirection.getZ(), Math.abs(startVelocity.getZ()));
+
+        final double maxDistanceX = EntityUtils.maxDistanceByStartVelocity(velX);
+        final double maxDistanceZ = EntityUtils.maxDistanceByStartVelocity(velZ);
+
+        final double vectorCrossProductXZ = Math.sqrt(maxDistanceX * maxDistanceX + maxDistanceZ * maxDistanceZ);
+        return vectorCrossProductXZ + fallDistance * 0.8;
     }
 
     // pobiera z linii czasu ostatnie ustawione dla gracza velocity
