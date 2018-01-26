@@ -27,12 +27,12 @@ import org.bson.Document;
 import org.diorite.utils.network.DioriteURLUtils;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.storage.StorageConnector;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.UsernameDetails;
 import pl.north93.zgame.api.global.redis.observable.Cache;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
+import pl.north93.zgame.api.global.storage.StorageConnector;
 
 class PlayerCacheImpl implements IPlayersManager.IPlayerCache
 {
@@ -58,7 +58,7 @@ class PlayerCacheImpl implements IPlayersManager.IPlayerCache
     @Override
     public Optional<UsernameDetails> getNickDetails(final String username)
     {
-        return Optional.ofNullable(this.localCache.get(username.toLowerCase(Locale.ROOT)));
+        return this.localCache.get(username.toLowerCase(Locale.ROOT));
     }
 
     private UsernameDetails fillCache(final String username)

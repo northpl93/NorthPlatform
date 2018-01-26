@@ -3,6 +3,8 @@ package pl.north93.zgame.api.economy.impl.shared;
 import static pl.north93.zgame.api.global.utils.lang.CollectionUtils.findInCollection;
 
 
+import java.util.Optional;
+
 import com.google.common.base.Preconditions;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -56,8 +58,8 @@ public class EconomyManagerImpl implements IEconomyManager
     @Override
     public IAccountAccessor getUnsafeAccessor(final ICurrency currency, final Identity identity)
     {
-        final IPlayer player = this.networkManager.getPlayers().unsafe().get(identity);
-        return new PlayerAccessor(player, currency);
+        final Optional<IPlayer> optionalPlayer = this.networkManager.getPlayers().unsafe().get(identity);
+        return optionalPlayer.map(player -> new PlayerAccessor(player, currency)).orElse(null);
     }
 
     @Override

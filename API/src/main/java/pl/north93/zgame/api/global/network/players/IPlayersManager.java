@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.global.network.players;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -11,20 +13,23 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 /**
  * Glowny interfejs reprezentujacy system zarzadzajacy danymi graczy.
  */
+@ParametersAreNonnullByDefault
 public interface IPlayersManager
 {
-    String getNickFromUuid(UUID playerId);
+    Optional<String> getNickFromUuid(UUID playerId);
 
-    UUID getUuidFromNick(String nick);
+    Optional<UUID> getUuidFromNick(String nick);
 
     /**
      * Uzupełnia dane Identity brakującym nickiem lub UUID.
      * W wypadku gdy obydwa są nullem zostanie rzucony wyjątek.
      *
+     * @throws IllegalArgumentException W przypadku gdy jednocześnie nick i UUID są nullem.
+     * @throws PlayerNotFoundException W przypadku gdy nie udało się uzupełnić Identity.
      * @param identity Identity do uzupełnienia.
      * @return Identity uzupełnione brakującym nickiem lub UUID.
      */
-    Identity completeIdentity(Identity identity);
+    Identity completeIdentity(Identity identity) throws PlayerNotFoundException;
 
     boolean isOnline(Identity identity);
 
@@ -104,15 +109,20 @@ public interface IPlayersManager
      */
     interface Unsafe
     {
-        IPlayer get(Identity identity); // do not modify returned instance. It will be not saved!
+        Optional<IPlayer> get(Identity identity); // do not modify returned instance. It will be not saved!
+
+        default IPlayer getNullable(final Identity identity) // metoda pomocnicza do tej wyżej
+        {
+            return this.get(identity).orElse(null);
+        }
 
         Value<IOnlinePlayer> getOnline(String nick);
 
-        Value<IOnlinePlayer> getOnline(UUID uuid);
+        Optional<Value<IOnlinePlayer>> getOnline(UUID uuid);
 
-        IOfflinePlayer getOffline(String nick); // do not modify returned instance. It will be not saved!
+        Optional<IOfflinePlayer> getOffline(String nick); // do not modify returned instance. It will be not saved!
 
-        IOfflinePlayer getOffline(UUID nick); // do not modify returned instance. It will be not saved!
+        Optional<IOfflinePlayer> getOffline(UUID nick); // do not modify returned instance. It will be not saved!
     }
 
     IPlayersDataManager getInternalData();
@@ -126,13 +136,13 @@ public interface IPlayersManager
 
         Value<OnlinePlayerImpl> loadPlayer(UUID uuid, String name, Boolean premium, String proxyId) throws NameSizeMistakeException;
 
-        Value<IOfflinePlayer> getOfflinePlayerValue(UUID uuid);
+        Optional<Value<IOfflinePlayer>> getOfflinePlayerValue(UUID uuid);
 
-        Value<IOfflinePlayer> getOfflinePlayerValue(String nick);
+        Optional<Value<IOfflinePlayer>> getOfflinePlayerValue(String nick);
 
-        IOfflinePlayer getOfflinePlayer(UUID uuid);
+        Optional<IOfflinePlayer> getOfflinePlayer(UUID uuid);
 
-        IOfflinePlayer getOfflinePlayer(String nick);
+        Optional<IOfflinePlayer> getOfflinePlayer(String nick);
 
         void savePlayer(IPlayer player);
     }

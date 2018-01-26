@@ -28,6 +28,7 @@ import pl.arieals.api.minigame.shared.impl.ArenaManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
+import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
@@ -124,7 +125,8 @@ public class ArenaClientImpl implements IArenaClient
         final Server server = this.networkManager.getServers().withUuid(arena.getServerId());
         for (final PlayerJoinInfo player : players)
         {
-            this.networkManager.getPlayers().unsafe().getOnline(player.getUuid()).get().connectTo(server);
+            final IPlayersManager.Unsafe unsafe = this.networkManager.getPlayers().unsafe();
+            unsafe.getOnline(player.getUuid()).ifPresent(playerValue -> playerValue.get().connectTo(server));
         }
         return true;
     }

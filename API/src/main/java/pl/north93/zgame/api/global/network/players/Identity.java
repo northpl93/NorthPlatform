@@ -1,7 +1,5 @@
 package pl.north93.zgame.api.global.network.players;
 
-import javax.annotation.Nullable;
-
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
@@ -48,19 +46,30 @@ public final class Identity
         return new Identity(uuid, nick, displayName);
     }
 
-    public @Nullable UUID getUuid()
+    public UUID getUuid()
     {
         return this.uuid;
     }
 
-    public @Nullable String getNick()
+    public String getNick()
     {
         return this.nick;
     }
 
-    public @Nullable String getDisplayName()
+    public String getDisplayName()
     {
         return this.displayName;
+    }
+
+    /**
+     * Sprawdza czy to Identity jest poprawny, czyli czy ma ustawione UUID lub nick.
+     * Jesli zarówno nick i UUID sa null to tu zostanie zwrócone false.
+     *
+     * @return True jeśli to Identity jest poprawne.
+     */
+    public boolean isValid()
+    {
+        return this.uuid != null || this.nick != null;
     }
 
     @Override

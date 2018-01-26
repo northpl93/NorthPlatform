@@ -19,7 +19,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
-import pl.arieals.api.minigame.server.lobby.hub.LocalHub;
+import pl.arieals.api.minigame.server.lobby.hub.LocalHubServer;
 import pl.arieals.lobby.chest.ChestService;
 import pl.arieals.lobby.chest.ChestType;
 import pl.arieals.lobby.chest.loot.ChestLootService;
@@ -222,7 +222,7 @@ public class ChestOpeningController
     }
 
     // zwraca obiekt LocalHub reprezentujacy ten serwer hostujacy huby.
-    private LocalHub getThisHubServer()
+    private LocalHubServer getThisHubServer()
     {
         final LobbyManager serverManager = this.miniGameServer.getServerManager();
         return serverManager.getLocalHub();

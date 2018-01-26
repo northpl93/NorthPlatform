@@ -88,7 +88,7 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
     @Override
     public Value<OnlinePlayerImpl> loadPlayer(final UUID uuid, final String name, final Boolean premium, final String proxyId) throws NameSizeMistakeException
     {
-        final IOfflinePlayer offlinePlayer;
+        final Optional<IOfflinePlayer> offlinePlayer;
         if (premium)
         {
             offlinePlayer = this.getOfflinePlayer(uuid);
@@ -96,18 +96,18 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
         else
         {
             offlinePlayer = this.getOfflinePlayer(name);
-            if (offlinePlayer != null && ! offlinePlayer.getLatestNick().equals(name))
+            if (offlinePlayer.isPresent() && ! offlinePlayer.get().getLatestNick().equals(name))
             {
-                throw new NameSizeMistakeException(offlinePlayer.getLatestNick());
+                throw new NameSizeMistakeException(offlinePlayer.get().getLatestNick());
             }
         }
         final OnlinePlayerImpl player = new OnlinePlayerImpl();
 
         player.setUuid(uuid);
         player.setNick(name);
-        if (offlinePlayer != null)
+        if (offlinePlayer.isPresent())
         {
-            player.transferDataFrom(offlinePlayer);
+            player.transferDataFrom(offlinePlayer.get());
 
             // check if group is expired
             if (player.isGroupExpired())
@@ -135,41 +135,32 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
     }
 
     @Override
-    public Value<IOfflinePlayer> getOfflinePlayerValue(final UUID uuid)
+    public Optional<Value<IOfflinePlayer>> getOfflinePlayerValue(final UUID uuid)
     {
         if (uuid == null)
         {
-            return null;
+            return Optional.empty();
         }
-        return this.offlinePlayersData.getValue(uuid);
+        return Optional.of(this.offlinePlayersData.getValue(uuid));
     }
 
     @Override
-    public Value<IOfflinePlayer> getOfflinePlayerValue(final String nick)
+    public Optional<Value<IOfflinePlayer>> getOfflinePlayerValue(final String nick)
     {
-        final UUID uuid = this.nick2uuid.get(nick.toLowerCase(Locale.ROOT));
-        if (uuid == null)
-        {
-            return null;
-        }
-        return this.getOfflinePlayerValue(uuid);
+        return this.nick2uuid.get(nick.toLowerCase(Locale.ROOT)).flatMap(this::getOfflinePlayerValue);
     }
 
     @Override
-    public IOfflinePlayer getOfflinePlayer(final UUID uuid)
+    public Optional<IOfflinePlayer> getOfflinePlayer(final UUID uuid)
     {
         return this.offlinePlayersData.get(uuid);
     }
 
     @Override
-    public IOfflinePlayer getOfflinePlayer(final String nick)
+    public Optional<IOfflinePlayer> getOfflinePlayer(final String nick)
     {
-        final UUID uuid = this.nick2uuid.get(nick.toLowerCase(Locale.ROOT));
-        if (uuid == null)
-        {
-            return null;
-        }
-        return this.getOfflinePlayer(uuid);
+        final Optional<UUID> uuid = this.nick2uuid.get(nick.toLowerCase(Locale.ROOT));
+        return uuid.flatMap(this::getOfflinePlayer);
     }
 
     private IOfflinePlayer loadOfflinePlayer(final UUID uuid) // used by online mode
@@ -258,12 +249,12 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
         database.updateOne(new Document("uuid", player.getUuid()), new Document("$set", playerData), new UpdateOptions().upsert(true));
     }
 
-    public UUID usernameToUuid(final String username)
+    public Optional<UUID> usernameToUuid(final String username)
     {
         return this.nick2uuid.get(username.toLowerCase(Locale.ROOT));
     }
 
-    public String uuidToUsername(final UUID playerUuid)
+    public Optional<String> uuidToUsername(final UUID playerUuid)
     {
         return this.uuid2nick.get(playerUuid);
     }

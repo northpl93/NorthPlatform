@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.global.redis.observable.impl;
 
+import javax.annotation.Nonnull;
+
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -60,14 +63,15 @@ class CacheImpl<K, V> implements Cache<K, V>
     }
 
     @Override
-    public V get(final K key)
+    public Optional<V> get(final K key)
     {
         final ObjectKey objectKey = this.keyMapper.apply(key);
         final Value<V> vValue = this.observationManager.get(this.valueClass, new ObjectKey(this.prefix, objectKey));
-        return this.provider != null ? vValue.getOr(() -> this.provider.apply(key)) : vValue.get();
+        return Optional.ofNullable(this.provider != null ? vValue.getOr(() -> this.provider.apply(key)) : vValue.get());
     }
 
     @Override
+    @Nonnull
     public Value<V> getValue(final K key)
     {
         final ObjectKey objectKey = this.keyMapper.apply(key);

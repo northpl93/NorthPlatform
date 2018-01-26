@@ -81,7 +81,7 @@ public class ChestService
      */
     public int getChests(final Player player, final ChestType type)
     {
-        final IPlayer cachedPlayer = this.networkManager.getPlayers().unsafe().get(Identity.of(player));
+        final IPlayer cachedPlayer = this.networkManager.getPlayers().unsafe().getNullable(Identity.of(player));
         final ChestData chestData = new ChestData(cachedPlayer);
 
         return chestData.getChests(type);

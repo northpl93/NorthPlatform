@@ -5,6 +5,7 @@ import javax.xml.bind.JAXB;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import net.minecraft.server.v1_12_R1.DedicatedPlayerList;
 import net.minecraft.server.v1_12_R1.EntityHuman;
@@ -41,8 +42,11 @@ import pl.arieals.api.minigame.server.gamehost.world.impl.MapTemplateManager;
 import pl.arieals.api.minigame.server.gamehost.world.impl.WorldManager;
 import pl.arieals.api.minigame.shared.api.IGameHostRpc;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
+import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.arena.netevent.IArenaNetEvent;
 import pl.arieals.api.minigame.shared.api.cfg.MiniGameConfig;
+import pl.arieals.api.minigame.shared.api.location.GameNetworkLocation;
+import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.exceptions.ConfigurationException;
@@ -113,6 +117,13 @@ public class GameHostManager implements IServerManager
     public void tpToHub(final Collection<Player> players, final String hubId)
     {
         this.gameHostHubsManager.tpToHub(players, hubId);
+    }
+
+    @Override
+    public INetworkLocation getLocation(final Player player)
+    {
+        final UUID arenaId = this.arenaManager.getArenaAssociatedWith(player.getUniqueId()).map(IArena::getId).orElse(null);
+        return new GameNetworkLocation(this.apiCore.getServerId(), arenaId, this.miniGameConfig.getGameIdentity());
     }
 
     /**

@@ -3,7 +3,12 @@ package pl.north93.zgame.api.global.network.impl;
 import static pl.north93.zgame.api.global.redis.RedisKeys.PLAYERS;
 
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import java.util.Locale;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -26,6 +31,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 
+@ParametersAreNonnullByDefault
 class PlayersManagerImpl implements IPlayersManager
 {
     /*default*/ static PlayersManagerImpl INSTANCE;
@@ -57,7 +63,7 @@ class PlayersManagerImpl implements IPlayersManager
     }
 
     @Override
-    public String getNickFromUuid(final UUID playerId)
+    public Optional<String> getNickFromUuid(final UUID playerId)
     {
         Preconditions.checkNotNull(playerId);
 
@@ -65,7 +71,7 @@ class PlayersManagerImpl implements IPlayersManager
     }
 
     @Override
-    public UUID getUuidFromNick(final String nick)
+    public Optional<UUID> getUuidFromNick(final String nick)
     {
         Preconditions.checkNotNull(nick);
 
@@ -77,12 +83,14 @@ class PlayersManagerImpl implements IPlayersManager
     {
         if (identity.getNick() != null)
         {
-            return this.onlinePlayerValue(identity.getNick()).isAvailable();
+            return this.nickToOnlinePlayerValue(identity.getNick()).isAvailable();
         }
         else if (identity.getUuid() != null)
         {
-            final String nickFromUuid = this.getNickFromUuid(identity.getUuid());
-            return this.onlinePlayerValue(nickFromUuid).isAvailable();
+            return this.getNickFromUuid(identity.getUuid())
+                       .map(this::nickToOnlinePlayerValue)
+                       .map(Value::isAvailable)
+                       .orElse(false);
         }
         return false;
     }
@@ -97,52 +105,29 @@ class PlayersManagerImpl implements IPlayersManager
     @Override
     public boolean access(final Identity identity, final Consumer<IOnlinePlayer> modifierOnline, final Consumer<IOfflinePlayer> modifierOffline)
     {
-        final Identity completeIdentity = this.completeIdentity(identity);
-        final Value<IOnlinePlayer> onlinePlayerValue = this.onlinePlayerValue(completeIdentity.getNick());
-        try
+        try (final IPlayerTransaction transaction = this.transaction(identity))
         {
-            onlinePlayerValue.lock();
-            final IOnlinePlayer player = onlinePlayerValue.get();
-            if (player != null)
+            if (transaction.isOnline())
             {
-                modifierOnline.accept(player);
-                onlinePlayerValue.set(player);
-                return true;
+                modifierOnline.accept((IOnlinePlayer) transaction.getPlayer());
             }
-        }
-        finally
-        {
-            onlinePlayerValue.unlock();
-        }
+            else
+            {
+                modifierOffline.accept((IOfflinePlayer) transaction.getPlayer());
+            }
 
-        final Value<IOfflinePlayer> offlinePlayerValue = this.playersDataManager.getOfflinePlayerValue(completeIdentity.getUuid());
-        if (offlinePlayerValue == null)
+            return true;
+        }
+        catch (final PlayerNotFoundException e)
         {
             return false;
         }
-
-        try
-        {
-            offlinePlayerValue.lock();
-            final IOfflinePlayer player = offlinePlayerValue.get();
-            if (player != null)
-            {
-                modifierOffline.accept(player);
-                this.playersDataManager.savePlayer(player);
-                return true;
-            }
-        }
-        finally
-        {
-            offlinePlayerValue.unlock();
-        }
-        return false;
     }
 
     @Override
     public void ifOnline(final String nick, final Consumer<IOnlinePlayer> onlineAction)
     {
-        final Value<IOnlinePlayer> onlinePlayerValue = this.onlinePlayerValue(nick);
+        final Value<IOnlinePlayer> onlinePlayerValue = this.nickToOnlinePlayerValue(nick);
         try
         {
             onlinePlayerValue.lock();
@@ -157,7 +142,7 @@ class PlayersManagerImpl implements IPlayersManager
     @Override
     public void ifOnline(final UUID uuid, final Consumer<IOnlinePlayer> onlineAction)
     {
-        this.ifOnline(this.getNickFromUuid(uuid), onlineAction);
+        this.getNickFromUuid(uuid).ifPresent(nick -> this.ifOnline(nick, onlineAction));
     }
 
     @Override
@@ -165,20 +150,20 @@ class PlayersManagerImpl implements IPlayersManager
     {
         final Identity completeIdentity = this.completeIdentity(identity);
 
-        final Value<IOnlinePlayer> onlinePlayer = this.onlinePlayerValue(completeIdentity.getNick());
-        final Value<IOfflinePlayer> offlinePlayer = this.playersDataManager.getOfflinePlayerValue(completeIdentity.getUuid());
+        final Value<IOnlinePlayer> onlinePlayer = Optional.ofNullable(completeIdentity.getNick()).map(this::nickToOnlinePlayerValue).orElse(null);
+        final Value<IOfflinePlayer> offlinePlayer = Optional.ofNullable(completeIdentity.getUuid()).flatMap(this.playersDataManager::getOfflinePlayerValue).orElse(null);
 
         final Lock lock = this.getMultiLock(onlinePlayer, offlinePlayer);
         lock.lock();
 
-        if (onlinePlayer.isAvailable())
+        if (onlinePlayer != null && onlinePlayer.isAvailable())
         {
             return new PlayerTransactionImpl(onlinePlayer, lock, player ->
             {
                 onlinePlayer.set((IOnlinePlayer) player);
             });
         }
-        if (offlinePlayer.isAvailable())
+        if (offlinePlayer != null && offlinePlayer.isAvailable())
         {
             return new PlayerTransactionImpl(offlinePlayer, lock, this.playersDataManager::savePlayer);
         }
@@ -201,40 +186,50 @@ class PlayersManagerImpl implements IPlayersManager
 
     class PlayersManagerUnsafeImpl implements Unsafe
     {
+        @SuppressWarnings("unchecked")
         @Override
-        public IPlayer get(final Identity identity)
+        public Optional<IPlayer> get(final Identity identity)
         {
-            final Identity completed = PlayersManagerImpl.this.completeIdentity(identity);
-
-            final Value<IOnlinePlayer> online = this.getOnline(completed.getNick());
-            if (online.isCached() || online.isAvailable())
+            final Identity completed;
+            try
             {
-                return online.get();
+                completed = PlayersManagerImpl.this.completeIdentity(identity);
+            }
+            catch (final PlayerNotFoundException e)
+            {
+                return Optional.empty();
             }
 
-            return this.getOffline(completed.getNick());
+            final Optional<IPlayer> online = Optional.ofNullable(completed.getNick()).map(this::getOnline).map(Value::get);
+            if (online.isPresent())
+            {
+                return online;
+            }
+
+            return (Optional) this.getOffline(completed.getUuid());
         }
 
         @Override
         public Value<IOnlinePlayer> getOnline(final String nick)
         {
-            return PlayersManagerImpl.this.onlinePlayerValue(nick);
+            return PlayersManagerImpl.this.nickToOnlinePlayerValue(nick);
         }
 
         @Override
-        public Value<IOnlinePlayer> getOnline(final UUID uuid)
+        public Optional<Value<IOnlinePlayer>> getOnline(final UUID uuid)
         {
-            return PlayersManagerImpl.this.onlinePlayerValue(uuid);
+            return PlayersManagerImpl.this.uuidToOnlinePlayerValue(uuid);
         }
 
         @Override
-        public IOfflinePlayer getOffline(final String nick)
+        public Optional<IOfflinePlayer> getOffline(final String nick)
         {
             return PlayersManagerImpl.this.playersDataManager.getOfflinePlayer(nick);
         }
 
         @Override
-        public IOfflinePlayer getOffline(final UUID uuid)
+        @Nullable
+        public Optional<IOfflinePlayer> getOffline(final UUID uuid)
         {
             return PlayersManagerImpl.this.playersDataManager.getOfflinePlayer(uuid);
         }
@@ -246,24 +241,41 @@ class PlayersManagerImpl implements IPlayersManager
         return this.playersDataManager;
     }
 
-    private Value<IOnlinePlayer> onlinePlayerValue(final UUID uuid)
+    private Optional<Value<IOnlinePlayer>> uuidToOnlinePlayerValue(final UUID uuid)
     {
-        return this.onlinePlayerValue(this.getNickFromUuid(uuid));
+        Preconditions.checkNotNull(uuid);
+        return this.getNickFromUuid(uuid).map(this::nickToOnlinePlayerValue);
     }
 
-    private Value<IOnlinePlayer> onlinePlayerValue(final String nick)
+    @SuppressWarnings("unchecked")
+    @Nonnull
+    private Value<IOnlinePlayer> nickToOnlinePlayerValue(final String nick)
     {
-        //noinspection unchecked
+        Preconditions.checkNotNull(nick);
         return (Value) this.observer.get(OnlinePlayerImpl.class, PLAYERS + nick.toLowerCase(Locale.ROOT));
     }
 
-    private Lock getMultiLock(final Value<IOnlinePlayer> onlineData, final Value<IOfflinePlayer> offlineData)
+    private Lock getMultiLock(final @Nullable Value<IOnlinePlayer> onlineData, final @Nullable Value<IOfflinePlayer> offlineData)
     {
-        return this.observer.getMultiLock(onlineData.getLock(), offlineData.getLock());
+        if (onlineData != null && offlineData != null)
+        {
+            return this.observer.getMultiLock(onlineData.getLock(), offlineData.getLock());
+        }
+        else if (onlineData != null)
+        {
+            return onlineData.getLock();
+        }
+        else if (offlineData != null)
+        {
+            return offlineData.getLock();
+        }
+
+        return this.observer.getMultiLock(new Lock[]{});
     }
 
     @Override
-    public Identity completeIdentity(final Identity identity)
+    @Nonnull
+    public Identity completeIdentity(final Identity identity) throws PlayerNotFoundException
     {
         final UUID currentUuid = identity.getUuid();
         final String currentNick = identity.getNick();
@@ -278,11 +290,16 @@ class PlayersManagerImpl implements IPlayersManager
             // mamy calkowicie puste identity, nic z nim nie zrobimy
             throw new IllegalArgumentException("Both nick and uuid are null");
         }
-
-        final UUID uuid = currentUuid == null ? this.getUuidFromNick(currentNick) : currentUuid;
-        final String nick = currentNick == null ? this.getNickFromUuid(currentUuid) : currentNick;
-
-        return Identity.create(uuid, nick, identity.getDisplayName());
+        else if (currentNick != null)
+        {
+            final UUID uuid = this.getUuidFromNick(currentNick).orElseThrow(() -> new PlayerNotFoundException(identity));
+            return Identity.create(uuid, currentNick, identity.getDisplayName());
+        }
+        else
+        {
+            final String nick = this.getNickFromUuid(currentUuid).orElse(null);
+            return Identity.create(currentUuid, nick, identity.getDisplayName());
+        }
     }
 
     @Override

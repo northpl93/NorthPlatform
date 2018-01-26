@@ -23,10 +23,9 @@ import pl.north93.zgame.api.global.config.IConfig;
 import pl.north93.zgame.api.global.config.NetConfig;
 
 /**
- * Reprezentuje huba znajdujacego sie lokalnie na serwerze
- * hostujacym huby.
+ * Reprezentuje lokalny serwer hostujący huby.
  */
-public class LocalHub implements IHubServer
+public class LocalHubServer implements IHubServer
 {
     @Inject
     private BukkitApiCore         apiCore;

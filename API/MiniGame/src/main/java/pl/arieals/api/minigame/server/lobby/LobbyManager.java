@@ -10,9 +10,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.IServerManager;
-import pl.arieals.api.minigame.server.lobby.hub.LocalHub;
+import pl.arieals.api.minigame.server.lobby.hub.LocalHubServer;
 import pl.arieals.api.minigame.server.lobby.listener.PlayerJoinLobbyServerListener;
 import pl.arieals.api.minigame.shared.api.hub.RemoteHub;
+import pl.arieals.api.minigame.shared.api.location.HubNetworkLocation;
+import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
 import pl.arieals.api.minigame.shared.impl.HubsManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -20,17 +22,17 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 public class LobbyManager implements IServerManager
 {
     @Inject
-    private Logger        logger;
+    private Logger         logger;
     @Inject
-    private BukkitApiCore apiCore;
+    private BukkitApiCore  apiCore;
     @Inject
-    private HubsManager   hubsManager;
-    private LocalHub      localHub;
+    private HubsManager    hubsManager;
+    private LocalHubServer localHub;
 
     @Override
     public void start()
     {
-        this.localHub = new LocalHub();
+        this.localHub = new LocalHubServer();
         this.hubsManager.setHub(new RemoteHub(this.localHub));
         this.localHub.refreshConfiguration();
 
@@ -56,12 +58,19 @@ public class LobbyManager implements IServerManager
         }
     }
 
+    @Override
+    public INetworkLocation getLocation(final Player player)
+    {
+        final String hubId = this.getLocalHub().getHubWorld(player).getHubId();
+        return new HubNetworkLocation(this.apiCore.getServerId(), hubId);
+    }
+
     /**
      * Zwraca instancje reprezentujaca i zarzadzajaca tym serwerem z hubami.
      *
      * @return LocalHub.
      */
-    public LocalHub getLocalHub()
+    public LocalHubServer getLocalHub()
     {
         return this.localHub;
     }

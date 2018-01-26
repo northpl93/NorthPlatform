@@ -67,7 +67,7 @@ public class Handler
     private void handle(final String nick, final DataEntry entry)
     {
         final Map<String, String> properties = entry.getProperties();
-        final UUID playerId = this.networkManager.getPlayers().getUuidFromNick(nick);
+        final UUID playerId = this.networkManager.getPlayers().getUuidFromNick(nick).orElse(null);
 
         switch (entry.getDataType())
         {

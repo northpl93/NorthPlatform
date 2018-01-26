@@ -16,7 +16,7 @@ import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.network.players.IPlayer;
+import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
@@ -40,23 +40,15 @@ public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
     @Override
     public OfflinePlayer getBukkitOfflinePlayer(final UUID uuid)
     {
-        final IPlayer player = this.networkManager.getPlayers().unsafe().getOffline(uuid);
-        if (player == null)
-        {
-            return null;
-        }
-        return new NorthOfflinePlayer(player);
+        final IPlayersManager.Unsafe unsafe = this.networkManager.getPlayers().unsafe();
+        return unsafe.getOffline(uuid).map(NorthOfflinePlayer::new).orElse(null);
     }
 
     @Override
     public OfflinePlayer getBukkitOfflinePlayer(final String nick)
     {
-        final IPlayer player = this.networkManager.getPlayers().unsafe().getOffline(nick);
-        if (player == null)
-        {
-            return null;
-        }
-        return new NorthOfflinePlayer(player);
+        final IPlayersManager.Unsafe unsafe = this.networkManager.getPlayers().unsafe();
+        return unsafe.getOffline(nick).map(NorthOfflinePlayer::new).orElse(null);
     }
 
     @Override

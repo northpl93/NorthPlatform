@@ -1,5 +1,9 @@
 package pl.north93.zgame.api.global.redis.observable;
 
+import javax.annotation.Nonnull;
+
+import java.util.Optional;
+
 public interface Cache<K, V>
 {
     int size();
@@ -8,8 +12,9 @@ public interface Cache<K, V>
 
     void put(K key, V value);
 
-    V get(K key);
+    Optional<V> get(K key);
 
+    @Nonnull
     Value<V> getValue(K key);
 
     void clear();
