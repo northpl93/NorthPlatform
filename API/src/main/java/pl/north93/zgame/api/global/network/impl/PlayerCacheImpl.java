@@ -24,6 +24,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.Document;
 
+import org.diorite.utils.network.DioriteURLUtils;
+
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.storage.StorageConnector;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
@@ -56,7 +58,7 @@ class PlayerCacheImpl implements IPlayersManager.IPlayerCache
     @Override
     public Optional<UsernameDetails> getNickDetails(final String username)
     {
-        return Optional.ofNullable(this.localCache.get(username.toLowerCase(Locale.ENGLISH)));
+        return Optional.ofNullable(this.localCache.get(username.toLowerCase(Locale.ROOT)));
     }
 
     private UsernameDetails fillCache(final String username)
@@ -97,7 +99,8 @@ class PlayerCacheImpl implements IPlayersManager.IPlayerCache
     {
         try
         {
-            final String response = IOUtils.toString(new URL("https://api.mojang.com/users/profiles/minecraft/" + username));
+            final String url = "https://api.mojang.com/users/profiles/minecraft/" + DioriteURLUtils.encodeUTF8(username);
+            final String response = IOUtils.toString(new URL(url));
             if (StringUtils.isEmpty(response))
             {
                 return Optional.of(new UsernameDetails(username, new Date()));

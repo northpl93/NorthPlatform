@@ -40,7 +40,7 @@ class PlayerTransactionImpl implements IPlayerTransaction
     }
 
     @Override
-    public void close() throws Exception
+    public void close()
     {
         this.checkClosed();
         this.isClosed = true;

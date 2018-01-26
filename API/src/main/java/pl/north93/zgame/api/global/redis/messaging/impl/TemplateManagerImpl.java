@@ -4,6 +4,8 @@ import static java.lang.reflect.Modifier.isAbstract;
 
 
 import java.lang.reflect.ParameterizedType;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,8 +36,10 @@ import pl.north93.zgame.api.global.redis.messaging.templates.BooleanTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.ByteArrayTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.DateTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.DoubleTemplate;
+import pl.north93.zgame.api.global.redis.messaging.templates.DurationTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.FloatTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.HashSetTemplate;
+import pl.north93.zgame.api.global.redis.messaging.templates.InstantTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.IntegerTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.LongTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.MapTemplate;
@@ -72,6 +76,8 @@ public class TemplateManagerImpl extends Component implements TemplateManager
         this.registerTemplate(String.class, new StringTemplate());
         this.registerTemplate(UUID.class, new UuidTemplate());
         this.registerTemplate(Date.class, new DateTemplate());
+        this.registerTemplate(Instant.class, new InstantTemplate());
+        this.registerTemplate(Duration.class, new DurationTemplate());
         this.registerTemplate(byte[].class, new ByteArrayTemplate());
     }
 

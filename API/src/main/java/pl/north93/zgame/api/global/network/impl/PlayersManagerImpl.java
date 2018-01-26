@@ -262,7 +262,8 @@ class PlayersManagerImpl implements IPlayersManager
         return this.observer.getMultiLock(onlineData.getLock(), offlineData.getLock());
     }
 
-    private Identity completeIdentity(final Identity identity)
+    @Override
+    public Identity completeIdentity(final Identity identity)
     {
         final UUID currentUuid = identity.getUuid();
         final String currentNick = identity.getNick();

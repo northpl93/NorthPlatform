@@ -17,6 +17,15 @@ public interface IPlayersManager
 
     UUID getUuidFromNick(String nick);
 
+    /**
+     * Uzupełnia dane Identity brakującym nickiem lub UUID.
+     * W wypadku gdy obydwa są nullem zostanie rzucony wyjątek.
+     *
+     * @param identity Identity do uzupełnienia.
+     * @return Identity uzupełnione brakującym nickiem lub UUID.
+     */
+    Identity completeIdentity(Identity identity);
+
     boolean isOnline(Identity identity);
 
     default boolean isOnline(String nick)

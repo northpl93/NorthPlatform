@@ -85,8 +85,8 @@ public class StatTrackManager
 
     public IStatistic<NumberUnit> getStatistic(final TrackedStatistic statistic, final TrackedWeapon weapon)
     {
-        final String statName = statistic.name().toLowerCase(Locale.ENGLISH);
-        final String weaponName = weapon.name().toLowerCase(Locale.ENGLISH);
+        final String statName = statistic.name().toLowerCase(Locale.ROOT);
+        final String weaponName = weapon.name().toLowerCase(Locale.ROOT);
         final String statId = "bedwars/stattrak/" + statName + "/" + weaponName;
         return new HigherNumberBetterStatistic(statId);
     }

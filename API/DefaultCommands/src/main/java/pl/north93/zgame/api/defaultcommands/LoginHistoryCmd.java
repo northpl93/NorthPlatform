@@ -35,7 +35,7 @@ public class LoginHistoryCmd extends NorthCommand
     {
         if (args.length() == 2)
         {
-            switch (args.asString(0).toLowerCase(Locale.ENGLISH))
+            switch (args.asString(0).toLowerCase(Locale.ROOT))
             {
                 case "ip":
                     this.ipHistory(sender, args.asString(1));

@@ -2,11 +2,19 @@ package pl.north93.zgame.api.global.network.players;
 
 public interface IPlayerTransaction extends AutoCloseable
 {
+    IPlayer getPlayer();
+
     /**
      * Checks if player in this transaction is online.
      * @return true if player is online.
      */
     boolean isOnline();
 
-    IPlayer getPlayer();
+    default boolean isOffline()
+    {
+        return ! this.isOnline();
+    }
+
+    @Override
+    void close();
 }

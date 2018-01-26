@@ -13,7 +13,7 @@ public enum PluralForm
 
     public String getName()
     {
-        return this.name().toLowerCase(Locale.ENGLISH);
+        return this.name().toLowerCase(Locale.ROOT);
     }
 
     /**

@@ -33,6 +33,7 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
+import pl.north93.zgame.api.global.network.event.PlayerQuitNetEvent;
 import pl.north93.zgame.api.global.network.impl.OnlinePlayerImpl;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
@@ -40,6 +41,7 @@ import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.players.NameSizeMistakeException;
 import pl.north93.zgame.api.global.network.players.UsernameDetails;
+import pl.north93.zgame.api.global.redis.event.IEventManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class PlayerListener implements Listener
@@ -52,6 +54,8 @@ public class PlayerListener implements Listener
     private MessagesBox     apiMessages;
     @Inject
     private INetworkManager networkManager;
+    @Inject
+    private IEventManager   eventManager;
 
     @EventHandler
     public void onLogin(final PreLoginEvent event)
@@ -202,7 +206,8 @@ public class PlayerListener implements Listener
     @EventHandler
     public void onLeave(final PlayerDisconnectEvent event)
     {
-        final Value<IOnlinePlayer> player = this.bungeeApiCore.getNetworkManager().getPlayers().unsafe().getOnline(event.getPlayer().getName());
+        final ProxiedPlayer proxyPlayer = event.getPlayer();
+        final Value<IOnlinePlayer> player = this.bungeeApiCore.getNetworkManager().getPlayers().unsafe().getOnline(proxyPlayer.getName());
 
         try
         {
@@ -213,6 +218,8 @@ public class PlayerListener implements Listener
                 this.bungeeApiCore.getLogger().warning("onlinePlayer==null in onLeave. " + event);
                 return;
             }
+
+            this.eventManager.callEvent(new PlayerQuitNetEvent((OnlinePlayerImpl) onlinePlayer));
             this.networkManager.getPlayers().getInternalData().savePlayer(onlinePlayer);
             player.delete();
         }

@@ -21,6 +21,7 @@ public class MetaStoreTemplate implements Template<MetaStore>
         for (final Map.Entry<MetaKey, Object> entry : internalMap.entrySet())
         {
             packer.packString(entry.getKey().getKey());
+            packer.packBoolean(entry.getKey().isPersist());
             dynamicObjectTemplate.serializeObject(templateManager, packer, entry.getValue());
         }
     }
@@ -35,7 +36,8 @@ public class MetaStoreTemplate implements Template<MetaStore>
 
         for (int i = 0; i < size; i++)
         {
-            internalMap.put(MetaKey.get(unpacker.unpackString()), dynamicObjectTemplate.deserializeObject(templateManager, unpacker));
+            final MetaKey metaKey = MetaKey.get(unpacker.unpackString(), unpacker.unpackBoolean());
+            internalMap.put(metaKey, dynamicObjectTemplate.deserializeObject(templateManager, unpacker));
         }
 
         return metaStore;

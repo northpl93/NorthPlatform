@@ -46,7 +46,7 @@ public class StatTrackListener implements Listener
         final ArrayList<TrackedWeapon> enabledWeapons = new ArrayList<>(4);
         for (final TrackedWeapon trackedWeapon : TrackedWeapon.values())
         {
-            final Item item = this.globalShops.getItem(bedWarsPerks, "stattrack_" + trackedWeapon.name().toLowerCase(Locale.ENGLISH));
+            final Item item = this.globalShops.getItem(bedWarsPerks, "stattrack_" + trackedWeapon.name().toLowerCase(Locale.ROOT));
             if (! playerContainer.hasBoughtItem(item))
             {
                 continue;

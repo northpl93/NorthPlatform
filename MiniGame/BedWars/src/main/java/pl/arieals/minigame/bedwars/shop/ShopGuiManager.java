@@ -118,7 +118,7 @@ public final class ShopGuiManager
         final BwShopEntry shopEntry = this.shopManager.getShopEntry(name);
         final ItemStack priceItem = shopEntry.getPrice().createItemStack();
 
-        final String currencyKey = "currency." + priceItem.getType().name().toLowerCase(Locale.ENGLISH);
+        final String currencyKey = "currency." + priceItem.getType().name().toLowerCase(Locale.ROOT);
         final String priceMsgKey = PluralForm.transformKey(currencyKey, priceItem.getAmount());
         final String price = this.shopMessages.getMessage(locale, priceMsgKey, priceItem.getAmount());
 

@@ -128,7 +128,7 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
         player.setProxyId(proxyId);
         player.setPremium(premium);
 
-        this.nick2uuid.put(name.toLowerCase(Locale.ENGLISH), uuid);
+        this.nick2uuid.put(name.toLowerCase(Locale.ROOT), uuid);
         this.uuid2nick.put(uuid, name);
 
         return this.observationManager.of(player);
@@ -147,7 +147,7 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
     @Override
     public Value<IOfflinePlayer> getOfflinePlayerValue(final String nick)
     {
-        final UUID uuid = this.nick2uuid.get(nick.toLowerCase(Locale.ENGLISH));
+        final UUID uuid = this.nick2uuid.get(nick.toLowerCase(Locale.ROOT));
         if (uuid == null)
         {
             return null;
@@ -164,7 +164,7 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
     @Override
     public IOfflinePlayer getOfflinePlayer(final String nick)
     {
-        final UUID uuid = this.nick2uuid.get(nick.toLowerCase(Locale.ENGLISH));
+        final UUID uuid = this.nick2uuid.get(nick.toLowerCase(Locale.ROOT));
         if (uuid == null)
         {
             return null;
@@ -260,7 +260,7 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
 
     public UUID usernameToUuid(final String username)
     {
-        return this.nick2uuid.get(username.toLowerCase(Locale.ENGLISH));
+        return this.nick2uuid.get(username.toLowerCase(Locale.ROOT));
     }
 
     public String uuidToUsername(final UUID playerUuid)

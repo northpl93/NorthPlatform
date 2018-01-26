@@ -91,7 +91,7 @@ public class Team
      */
     public String getName()
     {
-        return this.getColor().name().toLowerCase(Locale.ENGLISH);
+        return this.getColor().name().toLowerCase(Locale.ROOT);
     }
 
     /**
