@@ -1,9 +1,10 @@
 package pl.north93.zgame.antycheat.cheat.movement.check;
 
 import static pl.north93.zgame.antycheat.utils.DistanceUtils.entityDistanceToGround;
+import static pl.north93.zgame.antycheat.utils.EntityUtils.isStandsOn;
 
 
-import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import pl.north93.zgame.antycheat.analysis.FalsePositiveProbability;
@@ -84,6 +85,11 @@ public class OnGroundManipulationChecker implements EventAnalyser<ClientMoveTime
             // a i tak w wodzie ten check za bardzo nie ma sensu...
             falsePositiveProbability = FalsePositiveProbability.DEFINITELY;
         }
+        else if (isStandsOn(player, location, Material.SLIME_BLOCK))
+        {
+            // gdy gracz stoi na slimeblocku to wysyla ze jest w powietrzu. Obliczony dystans wynosi wtedy 0.
+            falsePositiveProbability = FalsePositiveProbability.DEFINITELY;
+        }
         else
         {
             final double toGroundWithSmallerAABB = entityDistanceToGround(player, location, -0.25);
@@ -95,7 +101,6 @@ public class OnGroundManipulationChecker implements EventAnalyser<ClientMoveTime
                 }
                 else if (toGround != 0 || toGroundWithSmallerAABB != 0)
                 {
-                    Bukkit.broadcastMessage("" + toGround);
                     falsePositiveProbability = FalsePositiveProbability.HIGH;
                 }
                 else
@@ -115,7 +120,7 @@ public class OnGroundManipulationChecker implements EventAnalyser<ClientMoveTime
 
     private boolean isOnGround(final double toGround)
     {
-        return toGround == 0;
+        return toGround == 0; // todo powaznie rozwazyc toGround <= 0.1
     }
 
     // = = = Sprawdzanie gdy klient mówi że ląduje
@@ -167,6 +172,12 @@ public class OnGroundManipulationChecker implements EventAnalyser<ClientMoveTime
                     // gdy klient wysyla do nas informacje o ladowaniu bedac powyzej ilus tam klockow
                     // to prawie na pewno jest to no-fall lub spider.
                     falsePositiveProbability = FalsePositiveProbability.LOW;
+                }
+                else if (isStandsOn(player, location, Material.SLIME_BLOCK))
+                {
+                    // gdy gracz ma pod nogami slime block to wysyla dziwne rzeczy, dlatego bezpiecznie
+                    // dajemy tu poziom HIGH.
+                    falsePositiveProbability = FalsePositiveProbability.HIGH;
                 }
                 else
                 {

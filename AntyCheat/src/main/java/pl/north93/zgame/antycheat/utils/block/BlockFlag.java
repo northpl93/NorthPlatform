@@ -10,6 +10,9 @@ public enum BlockFlag
     /* Flaga oznaczająca że blok jest schodami */
     STAIRS,
 
+    /* Flaga oznaczająca blok który jest połówką */
+    HALF,
+
     /* Flaga oznaczająca blok po którym można się wspinać */
     CLIMBABLE,
 
@@ -36,6 +39,11 @@ public enum BlockFlag
         }
 
         // POJEDYNCZE FLAGI
+        setFlags(Material.STEP, BlockFlag.HALF);
+        setFlags(Material.WOOD_STEP, BlockFlag.HALF);
+        setFlags(Material.STONE_SLAB2, BlockFlag.HALF);
+        setFlags(Material.PURPUR_SLAB, BlockFlag.HALF);
+
         setFlags(Material.VINE, BlockFlag.CLIMBABLE);
         setFlags(Material.LADDER, BlockFlag.CLIMBABLE);
 

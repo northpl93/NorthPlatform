@@ -5,9 +5,12 @@ import java.util.List;
 import net.minecraft.server.v1_12_R1.EntityBoat;
 import net.minecraft.server.v1_12_R1.EntityShulker;
 
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 
+import pl.north93.zgame.antycheat.utils.block.CollidingBlocksIterator;
 import pl.north93.zgame.antycheat.utils.location.IPosition;
 
 public final class EntityUtils
@@ -69,6 +72,24 @@ public final class EntityUtils
     {
         final AABB aabbOfEntityInLocation = getAABBOfEntityInLocation(entity, IPosition.fromBukkit(entity.getLocation()));
         return standsOnEntity(entity, aabbOfEntityInLocation);
+    }
+
+    public static boolean isStandsOn(final Entity entity, final IPosition position, final Material material)
+    {
+        final AABB entityAabb = getAABBOfEntityInLocation(entity, position);
+        final AABB underEntity = new AABB(entityAabb.minX, entityAabb.minY - 1, entityAabb.minZ, entityAabb.maxX, entityAabb.minY, entityAabb.maxZ);
+
+        final CollidingBlocksIterator iterator = new CollidingBlocksIterator(entity.getWorld(), underEntity);
+        while (iterator.hasNext())
+        {
+            final Block block = iterator.next();
+            if (block.getType().equals(material))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

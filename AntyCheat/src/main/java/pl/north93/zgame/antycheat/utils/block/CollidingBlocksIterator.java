@@ -1,8 +1,10 @@
 package pl.north93.zgame.antycheat.utils.block;
 
+import static org.diorite.utils.math.DioriteMathUtils.floor;
+
+
 import java.util.Iterator;
 
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
@@ -20,46 +22,40 @@ import pl.north93.zgame.antycheat.utils.AABB;
 public final class CollidingBlocksIterator implements Iterator<Block>
 {
     private final World world;
-    private final int   maxX, maxY, maxZ;
-    private boolean done;
+    private final int   baseX, baseY, baseZ;
+    private final int   sizeX, sizeY, sizeZ;
     private int x, y, z;
 
     public CollidingBlocksIterator(final World world, final AABB aabb)
     {
         this.world = world;
-        this.x = Location.locToBlock(aabb.minX);
-        this.y = Location.locToBlock(aabb.minY);
-        this.z = Location.locToBlock(aabb.minZ);
-        this.maxX = Location.locToBlock(aabb.maxX);
-        this.maxY = Location.locToBlock(aabb.maxY);
-        this.maxZ = Location.locToBlock(aabb.maxZ);
+        this.baseX = floor(aabb.minX);
+        this.baseY = floor(aabb.minY);
+        this.baseZ = floor(aabb.minZ);
+        this.sizeX = Math.abs(floor(aabb.maxX) - this.baseX) + 1;
+        this.sizeY = Math.abs(floor(aabb.maxY) - this.baseY) + 1;
+        this.sizeZ = Math.abs(floor(aabb.maxZ) - this.baseZ) + 1;
+        this.x = this.y = this.z = 0;
     }
 
     @Override
     public boolean hasNext()
     {
-        return ! this.done;
+        return this.x < this.sizeX && this.y < this.sizeY && this.z < this.sizeZ;
     }
 
     @Override
     public Block next()
     {
-        final Block block = this.world.getBlockAt(this.x, this.y, this.z);
-        if (this.x < this.maxX)
+        final Block block = this.world.getBlockAt(this.baseX + this.x, this.baseY + this.y, this.baseZ + this.z);
+        if (++ this.x >= this.sizeX)
         {
-            this.x++;
-        }
-        else if (this.y < this.maxY)
-        {
-            this.y++;
-        }
-        else if (this.z < this.maxZ)
-        {
-            this.z++;
-        }
-        else
-        {
-            this.done = true;
+            this.x = 0;
+            if (++ this.y >= this.sizeY)
+            {
+                this.y = 0;
+                ++ this.z;
+            }
         }
         return block;
     }
@@ -67,6 +63,6 @@ public final class CollidingBlocksIterator implements Iterator<Block>
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("world", this.world).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("world", this.world).append("x", this.x).append("y", this.y).append("z", this.z).toString();
     }
 }
