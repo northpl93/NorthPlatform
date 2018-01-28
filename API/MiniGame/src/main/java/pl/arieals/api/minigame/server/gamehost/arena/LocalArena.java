@@ -29,7 +29,6 @@ import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDataChangedNetEvent;
 import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDeletedNetEvent;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.StaticTimer;
 
 public class LocalArena implements IArena
@@ -305,19 +304,19 @@ public class LocalArena implements IArena
      */
     public void delete()
     {
-        final BukkitApiCore apiCore = this.gameHostManager.getApiCore();
-        apiCore.getLogger().log(Level.INFO, "Removing arena {0}", this.getId());
+        final Logger logger = this.gameHostManager.getApiCore().getLogger();
+        logger.log(Level.INFO, "Removing arena {0}", this.getId());
 
         this.arenaManager.removeArena(this.getId());
 
-        final UUID serverId = apiCore.getServerId();
+        final UUID serverId = this.gameHostManager.getServerId();
         this.gameHostManager.publishArenaEvent(new ArenaDeletedNetEvent(this.getId(), serverId, this.getMiniGame()));
 
         this.gameHostManager.getArenaManager().getArenas().remove(this);
 
         if (! this.world.delete())
         {
-            apiCore.getLogger().log(Level.WARNING, "Failed to unload world of arena {0}", this.getId());
+            logger.log(Level.WARNING, "Failed to unload world of arena {0}", this.getId());
         }
     }
 

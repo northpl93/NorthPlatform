@@ -17,6 +17,10 @@ public interface INetworkLocation
      */
     LocationType getType();
 
+    boolean equals(Object other);
+
+    int hashCode();
+
     enum LocationType
     {
         HUB,

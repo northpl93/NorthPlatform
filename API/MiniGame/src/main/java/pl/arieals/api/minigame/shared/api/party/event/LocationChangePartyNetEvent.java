@@ -4,13 +4,17 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
-import pl.arieals.api.minigame.shared.impl.PartyImpl;
+import pl.arieals.api.minigame.shared.impl.party.PartyDataImpl;
 
-public class PartyLocationChangeNetEvent extends PartyNetEvent
+public class LocationChangePartyNetEvent extends PartyNetEvent
 {
     private INetworkLocation location;
 
-    public PartyLocationChangeNetEvent(final PartyImpl party, final INetworkLocation location)
+    public LocationChangePartyNetEvent()
+    {
+    }
+
+    public LocationChangePartyNetEvent(final PartyDataImpl party, final INetworkLocation location)
     {
         super(party);
         this.location = location;

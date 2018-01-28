@@ -1,9 +1,13 @@
 package pl.arieals.api.minigame.shared.api.party;
 
+import java.util.Collection;
 import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
 import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
+import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.Identity;
 
 public interface IPartyManager
@@ -17,6 +21,13 @@ public interface IPartyManager
     IParty getPartyByPlayer(Identity identity) throws PlayerNotFoundException;
 
     /**
+     * Zwraca wszystkie utworzone party w sieci.
+     *
+     * @return Niemodyfikowalna lista wszystkich party w sieci.
+     */
+    Collection<IParty> getAllParties();
+
+    /**
      * Tworzy nowe party z podanym właścicielem i daną lokalizacją sieciową.
      *
      * @param ownerIdentity Identity właściciela party.
@@ -25,35 +36,21 @@ public interface IPartyManager
      */
     IParty createParty(Identity ownerIdentity, INetworkLocation location) throws PlayerNotFoundException, PlayerAlreadyHasPartyException;
 
-    void changePartyOwner(UUID partyId, Identity newOwnerIdentity, INetworkLocation location);
+    <T> T access(UUID partyId, Function<IPartyAccess, T> atomicFunction);
 
-    default void changePartyOwner(IParty party, Identity newOwnerIdentity, INetworkLocation location)
-    {
-        this.changePartyOwner(party.getId(), newOwnerIdentity, location);
-    }
+    void access(UUID partyId, Consumer<IPartyAccess> atomicFunction);
 
-    void changePartyLocation(UUID partyId, INetworkLocation location);
+    void access(IPlayer player, Consumer<IPartyAccess> atomicFunction);
 
-    /**
-     * Tworzy u podanego gracza zaproszenie do danego party.
-     *
-     * @param partyId
-     * @param playerIdentity
-     * @throws PlayerNotFoundException
-     * @throws PlayerAlreadyHasPartyException
-     */
-    void invitePlayer(UUID partyId, Identity playerIdentity) throws PlayerNotFoundException, PlayerAlreadyHasPartyException;
+    <T> T access(IPlayer player, Function<IPartyAccess, T> atomicFunction);
 
     /**
-     * Zwraca zaproszenie które aktualnie posiada gracz.
+     * Zwraca ostatnie zaproszenie które otrzymał gracz i jest aktualne.
+     * Gdy gracz nie posiada zaproszenia zostanie zwrócony null.
      *
-     * @param playerIdentity
-     * @return
-     * @throws PlayerNotFoundException
+     * @param playerIdentity Identity dla którego pobieramy zaproszenie.
+     * @return Ostatnie zaproszenie danego gracza lub null.
+     * @throws PlayerNotFoundException Gdy nie udało się powiązać Identity z graczem.
      */
-    PartyInvite getInvite(Identity playerIdentity) throws PlayerNotFoundException;
-
-    void addPlayerToParty(UUID partyId, Identity playerIdentity) throws PlayerNotFoundException, PlayerAlreadyHasPartyException;
-
-    void deleteParty(UUID partyId);
+    PartyInvite getLatestInvite(Identity playerIdentity) throws PlayerNotFoundException;
 }

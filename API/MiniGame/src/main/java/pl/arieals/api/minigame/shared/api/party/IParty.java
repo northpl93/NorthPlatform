@@ -5,6 +5,10 @@ import java.util.UUID;
 
 import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
 
+/**
+ * Interfejs udostępiniający dane Party w trybie tylko do odczytu.
+ * Aby uzyskać dostęp do atomowej edycji danych należy użyć {@link IPartyAccess}.
+ */
 public interface IParty
 {
     UUID getId();
@@ -16,7 +20,15 @@ public interface IParty
         return this.getOwnerId().equals(playerId);
     }
 
+    Set<PartyInvite> getInvites();
+
+    boolean isInvited(UUID playerId);
+
     Set<UUID> getPlayers();
+
+    boolean isAdded(UUID playerId);
+
+    boolean isAddedOrInvited(UUID playerId);
 
     /**
      * Zwraca aktualną lokację w której znajduje się kapitan party.

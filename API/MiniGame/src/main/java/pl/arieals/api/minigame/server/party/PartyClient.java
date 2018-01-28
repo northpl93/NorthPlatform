@@ -1,6 +1,15 @@
 package pl.arieals.api.minigame.server.party;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 import org.bukkit.entity.Player;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import org.diorite.utils.math.DioriteRandomUtils;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
@@ -8,6 +17,7 @@ import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.arieals.api.minigame.shared.api.party.IPartyManager;
 import pl.arieals.api.minigame.shared.api.party.PartyInvite;
 import pl.arieals.api.minigame.shared.api.party.PlayerAlreadyHasPartyException;
+import pl.arieals.api.minigame.shared.api.party.event.LeavePartyNetEvent.LeavePartyReason;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
@@ -27,27 +37,12 @@ public class PartyClient
 
     public IParty getPlayerParty(final Player player)
     {
-        try
-        {
-            return this.partyManager.getPartyByPlayer(Identity.of(player));
-        }
-        catch (final PlayerNotFoundException e)
-        {
-            throw new RuntimeException(e);
-        }
+        return this.partyManager.getPartyByPlayer(Identity.of(player));
     }
 
     public PartyInvite getPlayerInvite(final Player player)
     {
-        try
-        {
-            return this.partyManager.getInvite(Identity.of(player));
-        }
-        catch (final PlayerNotFoundException e)
-        {
-            e.printStackTrace();
-            return null;
-        }
+        return this.partyManager.getLatestInvite(Identity.of(player));
     }
 
     public ClientResponse invite(final Player inviter, final String invited)
@@ -62,20 +57,23 @@ public class PartyClient
             return ClientResponse.NO_OWNER;
         }
 
-        try
+        return this.partyManager.access(party.getId(), partyAccess ->
         {
-            this.partyManager.invitePlayer(party.getId(), Identity.create(null, invited, null));
-        }
-        catch (final PlayerNotFoundException e)
-        {
-            return ClientResponse.NO_PLAYER;
-        }
-        catch (final PlayerAlreadyHasPartyException e)
-        {
-            return ClientResponse.ALREADY_IN_PARTY;
-        }
+            try
+            {
+                partyAccess.invitePlayer(Identity.create(null, invited, null));
+            }
+            catch (final PlayerNotFoundException e)
+            {
+                return ClientResponse.NO_PLAYER;
+            }
+            catch (final PlayerAlreadyHasPartyException e)
+            {
+                return ClientResponse.ALREADY_IN_PARTY;
+            }
 
-        return ClientResponse.OK;
+            return ClientResponse.OK;
+        });
     }
 
     public ClientResponse accept(final Player player)
@@ -86,21 +84,66 @@ public class PartyClient
             return ClientResponse.NO_INVITE;
         }
 
-        try
+        return this.partyManager.access(invite.getPartyId(), partyAccess ->
         {
-            this.partyManager.addPlayerToParty(invite.getPartyId(), Identity.of(player));
-        }
-        catch (final PlayerNotFoundException e)
+            try
+            {
+                partyAccess.addPlayer(Identity.of(player));
+            }
+            catch (final PlayerAlreadyHasPartyException e)
+            {
+                return ClientResponse.ALREADY_IN_PARTY;
+            }
+
+            return ClientResponse.OK;
+        });
+    }
+
+    public ClientResponse leave(final Player player)
+    {
+        final Identity identity = Identity.of(player);
+
+        final IParty party = this.partyManager.getPartyByPlayer(identity);
+        if (party == null)
         {
-            e.printStackTrace();
-            return ClientResponse.ERROR;
-        }
-        catch (final PlayerAlreadyHasPartyException e)
-        {
-            return ClientResponse.ALREADY_IN_PARTY;
+            return ClientResponse.NO_PARTY;
         }
 
-        return ClientResponse.OK;
+        return this.partyManager.access(party.getId(), partyAccess ->
+        {
+            if (partyAccess.isOwner(player.getUniqueId()))
+            {
+                final Set<UUID> players = party.getPlayers();
+                if (players.size() == 1)
+                {
+                    partyAccess.removePlayer(identity, LeavePartyReason.SELF);
+                    partyAccess.delete();
+                }
+                else
+                {
+                    final Set<UUID> newPlayers = new HashSet<>(players);
+                    newPlayers.remove(player.getUniqueId());
+
+                    final Identity newOwner = Identity.create(DioriteRandomUtils.getRandom(newPlayers), null, null);
+                    partyAccess.changeOwner(newOwner);
+                    partyAccess.removePlayer(identity, LeavePartyReason.SELF);
+                }
+            }
+            else
+            {
+                partyAccess.removePlayer(identity, LeavePartyReason.SELF);
+            }
+
+            return ClientResponse.OK;
+        });
+    }
+
+    public void changePartyLocation(final IParty party, final INetworkLocation location)
+    {
+        this.partyManager.access(party.getId(), partyAccess ->
+        {
+            partyAccess.changeLocation(location);
+        });
     }
 
     private IParty createPartyIfNeeded(final Player player)
@@ -120,5 +163,11 @@ public class PartyClient
         {
             return null;
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

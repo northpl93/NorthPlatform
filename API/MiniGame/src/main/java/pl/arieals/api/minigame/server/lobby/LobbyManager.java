@@ -1,6 +1,7 @@
 package pl.arieals.api.minigame.server.lobby;
 
 import java.util.Collection;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,6 +48,12 @@ public class LobbyManager implements IServerManager
     public void stop()
     {
         this.hubsManager.removeHub(this.localHub.getServerId());
+    }
+
+    @Override
+    public UUID getServerId()
+    {
+        return this.apiCore.getServerId();
     }
 
     @Override

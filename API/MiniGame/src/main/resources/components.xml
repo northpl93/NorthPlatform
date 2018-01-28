@@ -37,5 +37,18 @@
                 <platform>STANDALONE</platform>
             </platforms>
         </component>
+
+        <component>
+            <name>MiniGameApi.Bungee</name>
+            <mainClass>pl.arieals.api.minigame.bungee.MiniGameBungee</mainClass>
+            <description>MiniGames API Bungee.</description>
+            <packages>
+                <package>pl.arieals.api.minigame.bungee</package>
+                <package>pl.arieals.api.minigame.shared</package>
+            </packages>
+            <platforms>
+                <platform>BUNGEE</platform>
+            </platforms>
+        </component>
     </components>
 </bundle>

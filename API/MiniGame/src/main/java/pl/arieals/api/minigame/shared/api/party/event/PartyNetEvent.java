@@ -4,14 +4,18 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.shared.api.party.IParty;
-import pl.arieals.api.minigame.shared.impl.PartyImpl;
+import pl.arieals.api.minigame.shared.impl.party.PartyDataImpl;
 import pl.north93.zgame.api.global.redis.event.INetEvent;
 
 public abstract class PartyNetEvent implements INetEvent
 {
-    private PartyImpl party;
+    private PartyDataImpl party;
 
-    public PartyNetEvent(final PartyImpl party)
+    public PartyNetEvent() // serialization
+    {
+    }
+
+    public PartyNetEvent(final PartyDataImpl party)
     {
         this.party = party;
     }

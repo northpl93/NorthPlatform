@@ -114,6 +114,12 @@ public class GameHostManager implements IServerManager
     }
 
     @Override
+    public UUID getServerId()
+    {
+        return this.apiCore.getServerId();
+    }
+
+    @Override
     public void tpToHub(final Collection<Player> players, final String hubId)
     {
         this.gameHostHubsManager.tpToHub(players, hubId);

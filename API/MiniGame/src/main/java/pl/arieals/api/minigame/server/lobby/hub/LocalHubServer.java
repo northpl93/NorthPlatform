@@ -1,5 +1,7 @@
 package pl.arieals.api.minigame.server.lobby.hub;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -84,6 +86,16 @@ public class LocalHubServer implements IHubServer
     }
 
     /**
+     * Zwraca niemodyfikowalną listę lokalnych hubów.
+     *
+     * @return Lista lokalnych hubów.
+     */
+    public Collection<HubWorld> getLocalWorlds()
+    {
+        return Collections.unmodifiableCollection(this.hubWorlds.values());
+    }
+
+    /**
      * Teleportuje podanego gracza na hub o podanym ID znajdujacego sie
      * na tym serwerze. Wywoluje eventy itd.
      *
@@ -124,7 +136,7 @@ public class LocalHubServer implements IHubServer
         final HubsConfig hubsConfig = this.hubsConfig.get();
         if (hubsConfig == null)
         {
-            this.apiCore.getLogger().log(Level.WARNING, "HubsConfig is null in LocalHub#refreshConfiguration()! Did controller is set up properly?");
+            this.apiCore.getLogger().log(Level.WARNING, "HubsConfig is null in LocalHubServer#refreshConfiguration()! Did controller is set up properly?");
             return;
         }
 

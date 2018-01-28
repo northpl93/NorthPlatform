@@ -5,6 +5,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import java.util.Objects;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -41,6 +43,27 @@ public final class GameIdentity
     public String getVariantId()
     {
         return this.variantId;
+    }
+
+    @Override
+    public boolean equals(final Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass())
+        {
+            return false;
+        }
+        final GameIdentity that = (GameIdentity) o;
+        return Objects.equals(this.gameId, that.gameId) && Objects.equals(this.variantId, that.variantId);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(this.gameId, this.variantId);
     }
 
     @Override

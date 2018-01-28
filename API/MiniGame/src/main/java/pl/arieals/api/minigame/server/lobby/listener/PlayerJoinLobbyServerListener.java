@@ -6,9 +6,12 @@ import static java.text.MessageFormat.format;
 import java.util.Collection;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -16,6 +19,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.api.minigame.server.lobby.event.PlayerSwitchedHubEvent;
+import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
 import pl.arieals.api.minigame.server.lobby.hub.SelectHubServerJoinAction;
 import pl.north93.zgame.api.bukkit.player.event.PlayerDataLoadedEvent;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -27,7 +31,7 @@ public class PlayerJoinLobbyServerListener implements Listener
     private MiniGameServer gameServer;
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void teleportPlayerToDefaultHub(final PlayerDataLoadedEvent event)
+    public void teleportPlayerToDefaultHubOnJoin(final PlayerDataLoadedEvent event)
     {
         if (this.containsLobbySwitchAction(event.getJoinActions()))
         {
@@ -48,6 +52,23 @@ public class PlayerJoinLobbyServerListener implements Listener
             }
         }
         return false;
+    }
+
+    @EventHandler
+    public void callSwitchedHubEventWhenTeleport(final PlayerTeleportEvent event)
+    {
+        final Location from = event.getFrom();
+        final Location to = event.getTo();
+
+        if (event.getCause() == TeleportCause.PLUGIN || from.getWorld() == to.getWorld())
+        {
+            return;
+        }
+
+        final LobbyManager serverManager = this.gameServer.getServerManager();
+        final HubWorld hubWorld = serverManager.getLocalHub().getHubWorld(to.getWorld());
+
+        Bukkit.getPluginManager().callEvent(new PlayerSwitchedHubEvent(event.getPlayer(), hubWorld));
     }
 
     @EventHandler

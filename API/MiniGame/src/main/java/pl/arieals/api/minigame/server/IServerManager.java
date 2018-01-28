@@ -1,6 +1,7 @@
 package pl.arieals.api.minigame.server;
 
 import java.util.Collection;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
@@ -11,6 +12,8 @@ public interface IServerManager
     void start();
 
     void stop();
+
+    UUID getServerId();
 
     void tpToHub(Collection<Player> players, String hubId);
 

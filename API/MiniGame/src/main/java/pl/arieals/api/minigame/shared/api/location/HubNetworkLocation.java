@@ -1,5 +1,6 @@
 package pl.arieals.api.minigame.shared.api.location;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -38,6 +39,27 @@ public final class HubNetworkLocation implements INetworkLocation
     public String getHubId()
     {
         return this.hubId;
+    }
+
+    @Override
+    public boolean equals(final Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass())
+        {
+            return false;
+        }
+        final HubNetworkLocation that = (HubNetworkLocation) o;
+        return Objects.equals(this.serverId, that.serverId) && Objects.equals(this.hubId, that.hubId);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(this.serverId, this.hubId);
     }
 
     @Override
