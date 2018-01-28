@@ -2,6 +2,7 @@ package pl.north93.zgame.api.bukkitcommands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -42,7 +43,7 @@ public class TpHereCmd extends NorthCommand
         final Player originBukkitPlayer = Bukkit.getPlayer(origin);
         if (originBukkitPlayer != null)
         {
-            originBukkitPlayer.teleport(((Player) sender.unwrapped()).getLocation());
+            originBukkitPlayer.teleport(((Player) sender.unwrapped()).getLocation(), TeleportCause.COMMAND);
             return;
         }
 
@@ -57,7 +58,7 @@ public class TpHereCmd extends NorthCommand
             }
 
             final Server destinationServer = this.networkManager.getServers().withUuid(playerSender.getServerId());
-            player.connectTo(destinationServer, new TeleportToPlayer(playerSender.getUuid()));
+            player.connectTo(destinationServer, new TeleportToPlayer(playerSender.getUuid(), true));
         });
     }
 

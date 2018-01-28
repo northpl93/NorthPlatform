@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -13,15 +14,17 @@ import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 
 public class TeleportToPlayer implements IServerJoinAction
 {
-    private UUID playerId;
+    private UUID    playerId;
+    private boolean byCommand;
 
     public TeleportToPlayer()
     {
     }
 
-    public TeleportToPlayer(final UUID playerId)
+    public TeleportToPlayer(final UUID playerId, final boolean byCommand)
     {
         this.playerId = playerId;
+        this.byCommand = byCommand;
     }
 
     @Override
@@ -30,7 +33,8 @@ public class TeleportToPlayer implements IServerJoinAction
         final Player player = Bukkit.getPlayer(this.playerId);
         if (player != null)
         {
-            bukkitPlayer.teleport(player.getLocation());
+            final TeleportCause cause = this.byCommand ? TeleportCause.COMMAND : TeleportCause.PLUGIN;
+            bukkitPlayer.teleport(player.getLocation(), cause);
         }
     }
 
