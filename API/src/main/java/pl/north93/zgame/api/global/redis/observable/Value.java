@@ -99,9 +99,13 @@ public interface Value<T>
 
     /**
      * Set a timeout on key.
-     * @param seconds time of key liveness
+     * Pass here -1 to persist (remove timeout) value.
+     *
+     * @param seconds time of key liveness, or -1 to remove timeout.
+     * @return True if expire successfully changed/removed.
+     *         False if value doesn't exists or expire remove failed.
      */
-    void expire(int seconds);
+    boolean expire(int seconds);
 
     /**
      * Returns TTL of this key.

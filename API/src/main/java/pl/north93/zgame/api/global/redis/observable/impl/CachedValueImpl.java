@@ -236,16 +236,16 @@ class CachedValueImpl<T> extends CachedValue<T>
     }
 
     @Override
-    public void expire(final int seconds)
+    public boolean expire(final int seconds)
     {
         final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
         if (seconds == -1)
         {
-            redis.persist(this.objectKey.getKey());
+            return redis.persist(this.objectKey.getKey());
         }
         else
         {
-            redis.expire(this.objectKey.getKey(), seconds);
+            return redis.expire(this.objectKey.getKey(), seconds);
         }
     }
 

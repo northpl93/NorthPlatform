@@ -51,7 +51,7 @@ public class OfflinePlayerImpl implements IOfflinePlayer
         this.isBanned = onlinePlayer.isBanned();
         this.group = onlinePlayer.getGroup();
         this.groupExpireAt = onlinePlayer.getGroupExpireAt();
-        this.meta = onlinePlayer.getMetaStore();
+        this.meta = onlinePlayer.getMetaStore().prepareForPersist();
     }
 
     @Override

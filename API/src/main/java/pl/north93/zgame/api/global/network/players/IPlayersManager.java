@@ -43,6 +43,18 @@ public interface IPlayersManager
         return this.isOnline(Identity.create(uuid, null, null));
     }
 
+    IPlayerTransaction transaction(Identity identity) throws PlayerNotFoundException;
+
+    default IPlayerTransaction transaction(UUID playerId) throws PlayerNotFoundException
+    {
+        return this.transaction(Identity.create(playerId, null, null));
+    }
+
+    default IPlayerTransaction transaction(String playerName) throws PlayerNotFoundException
+    {
+        return this.transaction(Identity.create(null, playerName, null));
+    }
+
     boolean access(Identity identity, Consumer<IPlayer> modifier);
 
     default boolean access(String nick, Consumer<IPlayer> modifier)
@@ -70,18 +82,6 @@ public interface IPlayersManager
     void ifOnline(String nick, Consumer<IOnlinePlayer> onlineAction);
 
     void ifOnline(UUID uuid, Consumer<IOnlinePlayer> onlineAction);
-
-    IPlayerTransaction transaction(Identity identity) throws PlayerNotFoundException;
-
-    default IPlayerTransaction transaction(UUID playerId) throws PlayerNotFoundException
-    {
-        return this.transaction(Identity.create(playerId, null, null));
-    }
-
-    default IPlayerTransaction transaction(String playerName) throws PlayerNotFoundException
-    {
-        return this.transaction(Identity.create(null, playerName, null));
-    }
 
     IPlayerCache getCache();
 

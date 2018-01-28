@@ -166,7 +166,7 @@ class CachedHashValueImpl<T> extends CachedValue<T>
     }
 
     @Override
-    public void expire(final int seconds)
+    public boolean expire(final int seconds)
     {
         throw new UnsupportedOperationException("Expire is not supported in hash value.");
     }

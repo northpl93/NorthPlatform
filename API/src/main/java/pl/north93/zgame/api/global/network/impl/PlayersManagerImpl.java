@@ -35,18 +35,16 @@ import pl.north93.zgame.api.global.redis.rpc.Targets;
 class PlayersManagerImpl implements IPlayersManager
 {
     /*default*/ static PlayersManagerImpl INSTANCE;
-    private final NetworkManager      networkManager;
     private final PlayerCacheImpl     playerCache;
     private final PlayersDataManager  playersDataManager;
     private final IObservationManager observer;
     private final IRpcManager         rpcManager;
     private final Unsafe              unsafe;
 
-    public PlayersManagerImpl(final NetworkManager networkManager, final IObservationManager observer, final IRpcManager rpcManager)
+    public PlayersManagerImpl(final IObservationManager observer, final IRpcManager rpcManager)
     {
         INSTANCE = this;
         this.rpcManager = rpcManager;
-        this.networkManager = networkManager;
         this.observer = observer;
         this.playerCache = new PlayerCacheImpl();
         this.playersDataManager = new PlayersDataManager(this);
@@ -93,6 +91,33 @@ class PlayersManagerImpl implements IPlayersManager
                        .orElse(false);
         }
         return false;
+    }
+
+    @Override
+    public IPlayerTransaction transaction(final Identity identity) throws PlayerNotFoundException
+    {
+        final Identity completeIdentity = this.completeIdentity(identity);
+
+        final Value<IOnlinePlayer> onlinePlayer = Optional.ofNullable(completeIdentity.getNick()).map(this::nickToOnlinePlayerValue).orElse(null);
+        final Value<IOfflinePlayer> offlinePlayer = Optional.ofNullable(completeIdentity.getUuid()).flatMap(this.playersDataManager::getOfflinePlayerValue).orElse(null);
+
+        final Lock lock = this.getMultiLock(onlinePlayer, offlinePlayer);
+        lock.lock();
+
+        if (onlinePlayer != null && onlinePlayer.isAvailable())
+        {
+            return new PlayerTransactionImpl(onlinePlayer, lock, player ->
+            {
+                onlinePlayer.set((IOnlinePlayer) player);
+            });
+        }
+        if (offlinePlayer != null && offlinePlayer.isAvailable())
+        {
+            return new PlayerTransactionImpl(offlinePlayer, lock, this.playersDataManager::savePlayer);
+        }
+
+        lock.unlock();
+        throw new PlayerNotFoundException(completeIdentity.getNick());
     }
 
     @SuppressWarnings("unchecked")
@@ -143,33 +168,6 @@ class PlayersManagerImpl implements IPlayersManager
     public void ifOnline(final UUID uuid, final Consumer<IOnlinePlayer> onlineAction)
     {
         this.getNickFromUuid(uuid).ifPresent(nick -> this.ifOnline(nick, onlineAction));
-    }
-
-    @Override
-    public IPlayerTransaction transaction(final Identity identity) throws PlayerNotFoundException
-    {
-        final Identity completeIdentity = this.completeIdentity(identity);
-
-        final Value<IOnlinePlayer> onlinePlayer = Optional.ofNullable(completeIdentity.getNick()).map(this::nickToOnlinePlayerValue).orElse(null);
-        final Value<IOfflinePlayer> offlinePlayer = Optional.ofNullable(completeIdentity.getUuid()).flatMap(this.playersDataManager::getOfflinePlayerValue).orElse(null);
-
-        final Lock lock = this.getMultiLock(onlinePlayer, offlinePlayer);
-        lock.lock();
-
-        if (onlinePlayer != null && onlinePlayer.isAvailable())
-        {
-            return new PlayerTransactionImpl(onlinePlayer, lock, player ->
-            {
-                onlinePlayer.set((IOnlinePlayer) player);
-            });
-        }
-        if (offlinePlayer != null && offlinePlayer.isAvailable())
-        {
-            return new PlayerTransactionImpl(offlinePlayer, lock, this.playersDataManager::savePlayer);
-        }
-
-        lock.unlock();
-        throw new PlayerNotFoundException(completeIdentity.getNick());
     }
 
     @Override

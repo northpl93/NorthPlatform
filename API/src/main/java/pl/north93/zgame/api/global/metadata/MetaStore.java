@@ -104,6 +104,29 @@ public final class MetaStore
         return this.metadata;
     }
 
+    /**
+     * Tworzy nowy MetaStore z usuniętymi wsystkimi kluczami które nie są trwałe.
+     *
+     * @see MetaKey#isPersist()
+     * @return Nowa instancja MetaStore z samymi trwałymi kluczami.
+     */
+    public MetaStore prepareForPersist()
+    {
+        final MetaStore newMetaStore = new MetaStore();
+        for (final Map.Entry<MetaKey, Object> entry : this.metadata.entrySet())
+        {
+            final MetaKey key = entry.getKey();
+            if (! key.isPersist())
+            {
+                continue;
+            }
+
+            newMetaStore.set(key, entry.getValue());
+        }
+
+        return newMetaStore;
+    }
+
     @Override
     public String toString()
     {

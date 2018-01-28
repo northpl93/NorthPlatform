@@ -4,33 +4,33 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.network.impl.OnlinePlayerImpl;
-import pl.north93.zgame.api.global.network.players.IPlayer;
+import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
+import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.redis.event.INetEvent;
 
 /**
- * Sieciowy event wywoływany w momencie gdy gracz wychodzi z sieci.
- * A dokładniej to gdy odłącza się od BungeeCorda.
+ * Event wywoływany gdy gracz wchodzi do sieci.
  */
-public class PlayerQuitNetEvent implements INetEvent
+public class PlayerJoinNetEvent implements INetEvent
 {
     private OnlinePlayerImpl player;
 
-    public PlayerQuitNetEvent()
+    public PlayerJoinNetEvent()
     {
     }
 
-    public PlayerQuitNetEvent(final OnlinePlayerImpl player)
+    public PlayerJoinNetEvent(final OnlinePlayerImpl player)
     {
         this.player = player;
     }
 
     /**
-     * Zwraca obiekt gracza w stanie przed zapisaniem do bazy.
-     * Mimo że to jest IOnlinePlayer to należy go traktować już jako offline.
+     * Zwraca obiekt gracza w stanie po załadowaniu z bazy.
+     * Nie można go modyfikować, w tym celu należy otworzyć transakcję w {@link IPlayersManager}.
      *
-     * @return Niemodyfikowalny obiekt gracza.
+     * @return Niemodyfikowalny obiekt gracza w stanie po załadowaniu z bazy.
      */
-    public IPlayer getPlayer()
+    public IOnlinePlayer getPlayer()
     {
         return this.player;
     }

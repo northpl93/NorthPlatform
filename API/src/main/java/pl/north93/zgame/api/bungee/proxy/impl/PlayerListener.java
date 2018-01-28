@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -33,6 +34,7 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
+import pl.north93.zgame.api.global.network.event.PlayerJoinNetEvent;
 import pl.north93.zgame.api.global.network.event.PlayerQuitNetEvent;
 import pl.north93.zgame.api.global.network.impl.OnlinePlayerImpl;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
@@ -200,7 +202,19 @@ public class PlayerListener implements Listener
     @EventHandler
     public void postJoin(final PostLoginEvent event)
     {
-        this.networkManager.getPlayers().unsafe().getOnline(event.getPlayer().getName()).expire(-1);
+        final IPlayersManager.Unsafe unsafe = this.networkManager.getPlayers().unsafe();
+        final Value<IOnlinePlayer> onlineValue = unsafe.getOnline(event.getPlayer().getName());
+
+        if (! onlineValue.expire(-1))
+        {
+            // nastapilo przedawnienie logowania, rozlaczamy gracza aby uniknac dalszego
+            // bugowania sie systemu.
+            event.getPlayer().disconnect();
+            return;
+        }
+
+        // wywolujemy sieciowy event dolaczenia gracza
+        this.eventManager.callEvent(new PlayerJoinNetEvent((OnlinePlayerImpl) onlineValue.get()));
     }
 
     @EventHandler
@@ -232,11 +246,14 @@ public class PlayerListener implements Listener
     @EventHandler
     public void onServerChange(final ServerSwitchEvent event)
     {
+        final Logger logger = this.bungeeApiCore.getLogger();
+
         final IPlayersManager playersManager = this.bungeeApiCore.getNetworkManager().getPlayers();
         try (final IPlayerTransaction transaction = playersManager.transaction(Identity.of(event.getPlayer())))
         {
             if (! transaction.isOnline())
             {
+                logger.log(Level.WARNING, "Player {0} is offline in onServerChange", transaction.getPlayer().getUuid());
                 return;
             }
 
@@ -246,7 +263,7 @@ public class PlayerListener implements Listener
         }
         catch (final Exception e)
         {
-            this.bungeeApiCore.getLogger().log(Level.SEVERE, "Can't set player's serverId in onServerChange", e);
+            logger.log(Level.SEVERE, "Can't set player's serverId in onServerChange", e);
         }
     }
 

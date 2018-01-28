@@ -40,4 +40,22 @@ public final class JavaUtils
             throw new RuntimeException(e);
         }
     }
+
+    @FunctionalInterface
+    public interface ExceptionalRunnable
+    {
+        void run() throws Exception;
+    }
+
+    public static void hideException(final ExceptionalRunnable code)
+    {
+        try
+        {
+            code.run();
+        }
+        catch (final Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 }

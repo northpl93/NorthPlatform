@@ -1,5 +1,6 @@
 package pl.north93.zgame.api.bukkit.player.impl;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -61,13 +62,13 @@ public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
     @Override
     public INorthPlayer getPlayer(final UUID uuid)
     {
-        return this.getPlayer(Bukkit.getPlayer(uuid));
+        return Optional.ofNullable(Bukkit.getPlayer(uuid)).map(this::getPlayer).orElse(null);
     }
 
     @Override
     public INorthPlayer getPlayer(final String nick)
     {
-        return this.getPlayer(Bukkit.getPlayer(nick));
+        return Optional.ofNullable(Bukkit.getPlayer(nick)).map(this::getPlayer).orElse(null);
     }
 
     private INorthPlayer wrapNorthPlayer(final Player player, final Value<IOnlinePlayer> playerData)

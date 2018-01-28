@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import pl.north93.zgame.api.global.network.players.Identity;
 
-public class PlayerNotFoundException extends Exception
+public class PlayerNotFoundException extends RuntimeException
 {
     public PlayerNotFoundException(final String nick)
     {
