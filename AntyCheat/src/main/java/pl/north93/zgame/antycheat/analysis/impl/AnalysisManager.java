@@ -8,6 +8,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
+import pl.north93.zgame.antycheat.analysis.FalsePositiveProbability;
 import pl.north93.zgame.antycheat.analysis.SingleAnalysisResult;
 import pl.north93.zgame.antycheat.analysis.event.EventAnalyser;
 import pl.north93.zgame.antycheat.analysis.timeline.TimelineAnalyser;
@@ -93,6 +94,11 @@ public class AnalysisManager
         final Collection<SingleAnalysisResult.ViolationEntry> violations = singleAnalysisResult.getViolations();
         for (final SingleAnalysisResult.ViolationEntry violation : violations)
         {
+            if (violation.getFalsePositiveProbability() == FalsePositiveProbability.DEFINITELY)
+            {
+                // ukrywamy definitely
+                continue;
+            }
             Bukkit.broadcastMessage(ChatColor.RED + "Violation:" + ChatColor.YELLOW + violation.getViolation().name() + ChatColor.RED + " FalsePositiveP:" + ChatColor.YELLOW + violation.getFalsePositiveProbability());
             Bukkit.broadcastMessage(ChatColor.RED + "Desc:" + ChatColor.GRAY + violation.getDescription());
         }
