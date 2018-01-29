@@ -2,7 +2,7 @@ package pl.north93.zgame.api.bukkitcommands;
 
 import org.bukkit.entity.Player;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.global.commands.Arguments;
