@@ -47,13 +47,13 @@ public class NickCmd extends NorthCommand
                 if (args.asString(1).equalsIgnoreCase("reset"))
                 {
                     t.getPlayer().setDisplayName(null);
-                    sender.sendRawMessage("&eZresetowano nazwe wyswietlana dla: " + t.getPlayer().getLatestNick());
+                    sender.sendMessage("&eZresetowano nazwe wyswietlana dla: " + t.getPlayer().getLatestNick());
                 }
                 else
                 {
                     final String newName = args.asText(1);
                     t.getPlayer().setDisplayName(newName);
-                    sender.sendRawMessage("&eNiestandardowa nazwa " + t.getPlayer().getLatestNick() + " zmieniona na: " + newName);
+                    sender.sendMessage("&eNiestandardowa nazwa " + t.getPlayer().getLatestNick() + " zmieniona na: " + newName);
                 }
             }
             catch (final PlayerNotFoundException e)
@@ -75,20 +75,20 @@ public class NickCmd extends NorthCommand
             if (t.isOnline())
             {
                 final IOnlinePlayer onlinePlayer = (IOnlinePlayer) player;
-                sender.sendRawMessage("&ePrawdziwy nick: " +  onlinePlayer.getNick() + " (" +  onlinePlayer.getLatestNick() + "&e)");
+                sender.sendMessage("&ePrawdziwy nick: " +  onlinePlayer.getNick() + " (" +  onlinePlayer.getLatestNick() + "&e)");
             }
             else
             {
-                sender.sendRawMessage("&ePrawdziwy (ostatni znany) nick: " +  player.getLatestNick());
+                sender.sendMessage("&ePrawdziwy (ostatni znany) nick: " +  player.getLatestNick());
             }
 
             if (player.hasDisplayName())
             {
-                sender.sendRawMessage("&eNiestandardowa nazwa: " + player.getDisplayName());
+                sender.sendMessage("&eNiestandardowa nazwa: " + player.getDisplayName());
             }
             else
             {
-                sender.sendRawMessage("&eBrak niestandardowej nazwy.");
+                sender.sendMessage("&eBrak niestandardowej nazwy.");
             }
         }
         catch (final PlayerNotFoundException e)

@@ -35,10 +35,10 @@ public class ChestAdmin extends NorthCommand
         if (args.isEmpty())
         {
             final String types = this.chestService.getChestTypes().stream().map(ChestType::getName).collect(Collectors.joining(", "));
-            sender.sendRawMessage("&cDostepne typy skrzynek: " + types);
-            sender.sendRawMessage("&c* add <gracz> <typ> <ilosc>");
-            sender.sendRawMessage("&c* check <gracz> <typ>");
-            sender.sendRawMessage("&c* reset <gracz> <typ>");
+            sender.sendMessage("&cDostepne typy skrzynek: " + types);
+            sender.sendMessage("&c* add <gracz> <typ> <ilosc>");
+            sender.sendMessage("&c* check <gracz> <typ>");
+            sender.sendMessage("&c* reset <gracz> <typ>");
             return;
         }
 
@@ -52,11 +52,11 @@ public class ChestAdmin extends NorthCommand
 
                 final ChestType type = this.chestService.getType(chestType);
                 this.chestService.addChests(player, type, amount);
-                sender.sendRawMessage(format("&aDodano {0} {1} skrzynek {2}", player.getName(), amount, type.getName()));
+                sender.sendMessage(format("&aDodano {0} {1} skrzynek {2}", player.getName(), amount, type.getName()));
             }
             else
             {
-                sender.sendRawMessage("&cZbyt malo argumentow; <gracz> <typ> <ilosc>");
+                sender.sendMessage("&cZbyt malo argumentow; <gracz> <typ> <ilosc>");
             }
         }
         else if ("check".equalsIgnoreCase(args.asString(0)))
@@ -68,11 +68,11 @@ public class ChestAdmin extends NorthCommand
 
                 final ChestType type = this.chestService.getType(chestType);
                 final int chests = this.chestService.getChests(player, type);
-                sender.sendRawMessage(format("&aIlosc skrzynek {0} to {1}", player.getName(), chests));
+                sender.sendMessage(format("&aIlosc skrzynek {0} to {1}", player.getName(), chests));
             }
             else
             {
-                sender.sendRawMessage("&cZbyt malo argumentow; <gracz> <typ>");
+                sender.sendMessage("&cZbyt malo argumentow; <gracz> <typ>");
             }
         }
         else if ("reset".equalsIgnoreCase(args.asString(0)))
@@ -84,16 +84,16 @@ public class ChestAdmin extends NorthCommand
 
                 final ChestType type = this.chestService.getType(chestType);
                 this.chestService.setChests(player, type, 0);
-                sender.sendRawMessage(format("&aZresetowano ilosc skrzynek {0} gracza {1}", chestType, player.getName()));
+                sender.sendMessage(format("&aZresetowano ilosc skrzynek {0} gracza {1}", chestType, player.getName()));
             }
             else
             {
-                sender.sendRawMessage("&cZbyt malo argumentow; <gracz> <typ>");
+                sender.sendMessage("&cZbyt malo argumentow; <gracz> <typ>");
             }
         }
         else
         {
-            sender.sendRawMessage("&cNiepoprawny argument");
+            sender.sendMessage("&cNiepoprawny argument");
         }
     }
 

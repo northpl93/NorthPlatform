@@ -39,7 +39,7 @@ public class BedWarsUpgrade extends NorthCommand
         }
 
         final String call = format("/minigame/bedwars/upgrade/{0}/{1}/buy", args.asString(0), player.getUniqueId());
-        sender.sendRawMessage("&aInvoking {0}...", call);
+        sender.sendMessage("&aInvoking {0}...", call);
         this.uriManager.call(call);
     }
 

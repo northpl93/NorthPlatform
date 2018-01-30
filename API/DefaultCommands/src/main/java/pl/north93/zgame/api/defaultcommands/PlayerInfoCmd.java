@@ -50,17 +50,17 @@ public class PlayerInfoCmd extends NorthCommand
 
     private void printOnlinePlayer(final NorthCommandSender sender,  final IOnlinePlayer onlinePlayer)
     {
-        sender.sendRawMessage("Nick: " + onlinePlayer.getNick() + " (online)");
-        sender.sendRawMessage("UUID: " + onlinePlayer.getUuid());
-        sender.sendRawMessage("Połączenie: " + onlinePlayer.getProxyId() + " <-> " + onlinePlayer.getServerId());
-        sender.sendRawMessage("Ranga: " + onlinePlayer.getGroup().getName());
+        sender.sendMessage("Nick: " + onlinePlayer.getNick() + " (online)");
+        sender.sendMessage("UUID: " + onlinePlayer.getUuid());
+        sender.sendMessage("Połączenie: " + onlinePlayer.getProxyId() + " <-> " + onlinePlayer.getServerId());
+        sender.sendMessage("Ranga: " + onlinePlayer.getGroup().getName());
     }
 
     private void printOfflinePlayer(final NorthCommandSender sender, final IOfflinePlayer offlinePlayer)
     {
-        sender.sendRawMessage("Latest known username: " + offlinePlayer.getLatestNick());
-        sender.sendRawMessage("UUID: " + offlinePlayer.getUuid());
-        sender.sendRawMessage("Ranga: " + offlinePlayer.getGroup().getName());
+        sender.sendMessage("Latest known username: " + offlinePlayer.getLatestNick());
+        sender.sendMessage("UUID: " + offlinePlayer.getUuid());
+        sender.sendMessage("Ranga: " + offlinePlayer.getGroup().getName());
     }
 
     @Override

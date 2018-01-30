@@ -5,7 +5,6 @@ import java.util.Locale;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -16,6 +15,7 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.ICommandsManager;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
+import pl.north93.zgame.api.global.messages.MessageLayout;
 
 public class BungeeCommandsManager implements ICommandsManager
 {
@@ -90,15 +90,11 @@ public class BungeeCommandsManager implements ICommandsManager
         }
 
         @Override
-        public void sendRawMessage(final String message, final boolean colorText)
+        public void sendMessage(final String message, final MessageLayout layout)
         {
-            if (colorText)
+            for (final String line : layout.processMessage(message))
             {
-                this.sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message)));
-            }
-            else
-            {
-                this.sender.sendMessage(TextComponent.fromLegacyText(message));
+                this.sender.sendMessage(TextComponent.fromLegacyText(line));
             }
         }
 

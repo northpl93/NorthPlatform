@@ -29,13 +29,13 @@ public class UnbanAll extends NorthCommand
     {
         if (args.length() != 1 || !args.asString(0).equals("potwierdz"))
         {
-            sender.sendRawMessage("&cTa komenda odbanuje WSZYSTKICH zbanowanych graczy. Wpisz /unbanall potwierdz zeby kontynuowac.");
+            sender.sendMessage("&cTa komenda odbanuje WSZYSTKICH zbanowanych graczy. Wpisz /unbanall potwierdz zeby kontynuowac.");
             return;
         }
 
         final MongoCollection<Document> players = this.storage.getMainDatabase().getCollection("players");
         final UpdateResult result = players.updateMany(new Document(), new Document("$set", new Document("banned", false)));
-        sender.sendRawMessage("&cOdbanowano " + result.getModifiedCount() + " graczy! (cache moze ich nie wpuszczac jeszcze przez jakis czas)");
+        sender.sendMessage("&cOdbanowano " + result.getModifiedCount() + " graczy! (cache moze ich nie wpuszczac jeszcze przez jakis czas)");
     }
 
     @Override

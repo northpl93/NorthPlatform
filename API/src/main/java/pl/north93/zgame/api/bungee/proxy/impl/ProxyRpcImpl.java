@@ -7,10 +7,10 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import pl.north93.zgame.api.bukkit.utils.ChatUtils;
 import pl.north93.zgame.api.bungee.BungeeApiCore;
 import pl.north93.zgame.api.bungee.proxy.IProxyServerManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.network.proxy.IProxyRpc;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.network.server.joinaction.JoinActionsContainer;
@@ -30,16 +30,14 @@ class ProxyRpcImpl implements IProxyRpc
     }
 
     @Override
-    public void sendMessage(final String nick, final String message, final Boolean colorText)
+    public void sendMessage(final String nick, final String message, final MessageLayout layout)
     {
         final ProxiedPlayer player = this.proxy.getPlayer(nick);
-        if (colorText)
+        final String[] lines = layout.processMessage(message);
+        for (final String line : lines)
         {
-            player.sendMessage(TextComponent.fromLegacyText(ChatUtils.translateAlternateColorCodes(message)));
-            return;
+            player.sendMessage(TextComponent.fromLegacyText(line));
         }
-
-        player.sendMessage(TextComponent.fromLegacyText(message));
     }
 
     @Override

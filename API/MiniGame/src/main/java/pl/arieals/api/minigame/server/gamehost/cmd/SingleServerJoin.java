@@ -53,8 +53,8 @@ public class SingleServerJoin extends NorthCommand
 
         if (serverManager.getArenaManager().getArenaAssociatedWith(player.getUniqueId()).isPresent())
         {
-            sender.sendRawMessage("&cJuz jestes powiazany z jakas arena.");
-            sender.sendRawMessage("&cPrzeczytaj instrukcje w klasie SingleServerJoin");
+            sender.sendMessage("&cJuz jestes powiazany z jakas arena.");
+            sender.sendMessage("&cPrzeczytaj instrukcje w klasie SingleServerJoin");
             return;
         }
 
@@ -69,11 +69,11 @@ public class SingleServerJoin extends NorthCommand
             }
 
             localArena.getPlayersManager().playerConnected(player);
-            sender.sendRawMessage("&aUdalo sie dodac do " + localArena.getId());
+            sender.sendMessage("&aUdalo sie dodac do " + localArena.getId());
             return;
         }
 
-        sender.sendRawMessage("&cNie udalo sie cie dodac do zadnej areny");
+        sender.sendMessage("&cNie udalo sie cie dodac do zadnej areny");
     }
 
     @Override

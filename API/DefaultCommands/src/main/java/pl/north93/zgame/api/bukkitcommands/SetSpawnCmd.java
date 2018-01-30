@@ -22,7 +22,7 @@ public class SetSpawnCmd extends NorthCommand
         final Player player = (Player) sender.unwrapped();
         final World world = player.getWorld();
         final Location location = player.getLocation();
-        sender.sendRawMessage("&aSpawn swiata " + world.getName() + " ustawiony!");
+        sender.sendMessage("&aSpawn swiata " + world.getName() + " ustawiony!");
         world.setSpawnLocation((int)location.getX(), (int)location.getY(), (int)location.getZ());
     }
 }

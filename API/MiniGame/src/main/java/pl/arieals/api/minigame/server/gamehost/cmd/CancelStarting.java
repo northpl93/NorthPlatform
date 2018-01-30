@@ -45,24 +45,24 @@ public class CancelStarting extends NorthCommand
         final LocalArena arena = getArena(player);
         if (arena == null)
         {
-            sender.sendRawMessage("&cBrak areny powiazanej z graczem.");
+            sender.sendMessage("&cBrak areny powiazanej z graczem.");
             return;
         }
 
         if (arena.getGamePhase() != GamePhase.LOBBY)
         {
-            sender.sendRawMessage("&cAnulowac start mozna tylko w gamephase lobby.");
+            sender.sendMessage("&cAnulowac start mozna tylko w gamephase lobby.");
             return;
         }
 
         if (arena.getStartScheduler().isStartScheduled())
         {
-            sender.sendRawMessage("&aAnulowano start. (uzyj ponownie aby wznowic)");
+            sender.sendMessage("&aAnulowano start. (uzyj ponownie aby wznowic)");
             arena.getStartScheduler().cancelStarting();
         }
         else
         {
-            sender.sendRawMessage("&aWznowiono odliczanie do startu.");
+            sender.sendMessage("&aWznowiono odliczanie do startu.");
             arena.getStartScheduler().scheduleStart();
         }
     }

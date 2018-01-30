@@ -84,7 +84,7 @@ public class MessagesBox
         final String message = this.getMessage(messageable.getMyLocale(), key, (Object[]) params);
         for (final String line : layout.processMessage(message))
         {
-            messageable.sendRawMessage(line, true);
+            messageable.sendMessage(line, true);
         }
     }
 

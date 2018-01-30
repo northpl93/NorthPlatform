@@ -32,11 +32,11 @@ public class Network extends NorthCommand
     {
         if (args.length() == 0)
         {
-            sender.sendRawMessage("&e/network - pomoc");
-            sender.sendRawMessage("&e  proxies - lista połączonych serwerów proxy");
-            sender.sendRawMessage("&e  daemons - lista połączonych demonów");
-            sender.sendRawMessage("&e  kickall - wyrzuca wszystkich graczy");
-            sender.sendRawMessage("&e  stopall - wyłącza wszystkie komponenty sieci");
+            sender.sendMessage("&e/network - pomoc");
+            sender.sendMessage("&e  proxies - lista połączonych serwerów proxy");
+            sender.sendMessage("&e  daemons - lista połączonych demonów");
+            sender.sendMessage("&e  kickall - wyrzuca wszystkich graczy");
+            sender.sendMessage("&e  stopall - wyłącza wszystkie komponenty sieci");
             return;
         }
 
@@ -44,39 +44,39 @@ public class Network extends NorthCommand
         {
             if ("proxies".equals(args.asString(0)))
             {
-                sender.sendRawMessage("&cPołączone serwery proxy");
+                sender.sendMessage("&cPołączone serwery proxy");
                 for (final ProxyDto proxyInstanceInfo : this.networkManager.getProxies().all())
                 {
-                    sender.sendRawMessage("&e|- " + proxyInstanceInfo.getId());
-                    sender.sendRawMessage("&e  |- Liczba graczy: " + proxyInstanceInfo.getOnlinePlayers());
-                    sender.sendRawMessage("&e  |- Nazwa hosta: " + proxyInstanceInfo.getHostname());
+                    sender.sendMessage("&e|- " + proxyInstanceInfo.getId());
+                    sender.sendMessage("&e  |- Liczba graczy: " + proxyInstanceInfo.getOnlinePlayers());
+                    sender.sendMessage("&e  |- Nazwa hosta: " + proxyInstanceInfo.getHostname());
                 }
             }
             else if ("daemons".equals(args.asString(0)))
             {
-                sender.sendRawMessage("&cPołączone demony");
+                sender.sendMessage("&cPołączone demony");
                 for (final DaemonDto daemon : this.networkManager.getDaemons().all())
                 {
-                    sender.sendRawMessage("&e|- " + daemon.getName());
-                    sender.sendRawMessage("&e  |- Nazwa hosta: " + daemon.getHostName());
-                    sender.sendRawMessage("&e  |- Maksymalna ilość ramu: " + daemon.getMaxRam() + "MB");
-                    sender.sendRawMessage("&e  |- Użyty ram: " + daemon.getRamUsed() + "MB (" + daemon.getRamUsed() / daemon.getMaxRam() * 100 + "%)");
-                    sender.sendRawMessage("&e  |- Ilość serwerów hostowanych: " + daemon.getServerCount());
+                    sender.sendMessage("&e|- " + daemon.getName());
+                    sender.sendMessage("&e  |- Nazwa hosta: " + daemon.getHostName());
+                    sender.sendMessage("&e  |- Maksymalna ilość ramu: " + daemon.getMaxRam() + "MB");
+                    sender.sendMessage("&e  |- Użyty ram: " + daemon.getRamUsed() + "MB (" + daemon.getRamUsed() / daemon.getMaxRam() * 100 + "%)");
+                    sender.sendMessage("&e  |- Ilość serwerów hostowanych: " + daemon.getServerCount());
                 }
             }
             else if ("stopall".equals(args.asString(0)))
             {
-                sender.sendRawMessage("&cZa chwile wszystkie komponenty sieci zostaną wyłączone...");
+                sender.sendMessage("&cZa chwile wszystkie komponenty sieci zostaną wyłączone...");
                 this.eventManager.callEvent(new NetworkShutdownNetEvent());
             }
             else if ("kickall".equals(args.asString(0)))
             {
-                sender.sendRawMessage("&cZa chwile wszyscy gracze zostaną rozłączeni...");
+                sender.sendMessage("&cZa chwile wszyscy gracze zostaną rozłączeni...");
                 this.eventManager.callEvent(new NetworkKickAllNetEvent());
             }
             else
             {
-                sender.sendRawMessage("&cZly argument!");
+                sender.sendMessage("&cZly argument!");
             }
 
         }

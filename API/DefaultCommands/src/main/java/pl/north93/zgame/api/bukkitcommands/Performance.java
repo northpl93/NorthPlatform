@@ -40,12 +40,12 @@ public class Performance extends NorthCommand
         final int freePercentOfAllocated = (int) (free / (double)allocated * 100);
         final int freePercentOfMax = (int) (free / (double)max * 100);
 
-        sender.sendRawMessage("&7Uptime: &6" + DateUtil.formatDateDiff(ManagementFactory.getRuntimeMXBean().getStartTime()));
-        sender.sendRawMessage("&7TPS (1m,5m,15m): &6" + this.formatTps(recentTps[0]) + " " + this.formatTps(recentTps[1]) + " " + this.formatTps(recentTps[2]));
-        sender.sendRawMessage("&7Max memory: &6{0}MB", max);
-        sender.sendRawMessage("&7Allocated memory: &6{0}MB &7(&6{1}% &7of max)", allocated, allocatedPercent);
-        sender.sendRawMessage("&7Free memory: &6{0}MB &7(&6{1}% &7of allocated, &6{2}% &7of max)", free, freePercentOfAllocated, freePercentOfMax);
-        sender.sendRawMessage("&7Worlds:");
+        sender.sendMessage("&7Uptime: &6" + DateUtil.formatDateDiff(ManagementFactory.getRuntimeMXBean().getStartTime()));
+        sender.sendMessage("&7TPS (1m,5m,15m): &6" + this.formatTps(recentTps[0]) + " " + this.formatTps(recentTps[1]) + " " + this.formatTps(recentTps[2]));
+        sender.sendMessage("&7Max memory: &6{0}MB", max);
+        sender.sendMessage("&7Allocated memory: &6{0}MB &7(&6{1}% &7of max)", allocated, allocatedPercent);
+        sender.sendMessage("&7Free memory: &6{0}MB &7(&6{1}% &7of allocated, &6{2}% &7of max)", free, freePercentOfAllocated, freePercentOfMax);
+        sender.sendMessage("&7Worlds:");
 
         final List<World> worlds = Bukkit.getWorlds();
         for (final World w : worlds)
@@ -75,7 +75,7 @@ public class Performance extends NorthCommand
                 ex.printStackTrace();
             }
 
-            sender.sendRawMessage(" &7T:&6" + worldType + " &7N:&6" + w.getName() + " &7Chunks:&6" + w.getLoadedChunks().length + " &7Entities:&6" + w.getEntities().size() + " &7Tiles:&6" + tileEntities);
+            sender.sendMessage(" &7T:&6" + worldType + " &7N:&6" + w.getName() + " &7Chunks:&6" + w.getLoadedChunks().length + " &7Entities:&6" + w.getEntities().size() + " &7Tiles:&6" + tileEntities);
         }
     }
 

@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
@@ -234,13 +235,12 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     /**
      * Wysyła wiadomość do gracza.
      * @param message treść wiadomości.
-     * @param colorText czy ma kolorować treść
      */
     @Override
-    public void sendRawMessage(final String message, final boolean colorText)
+    public void sendMessage(final String message, final MessageLayout layout)
     {
         final IProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
-        proxyRpc.sendMessage(this.nick, message, colorText);
+        proxyRpc.sendMessage(this.nick, message, layout);
     }
 
     /**

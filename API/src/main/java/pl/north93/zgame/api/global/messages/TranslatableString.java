@@ -94,7 +94,7 @@ public abstract class TranslatableString
         String message = getValue(messageable, params);
         for ( String line : messageLayout.processMessage(message) )
         {
-            messageable.sendRawMessage(line, true);
+            messageable.sendMessage(line, true);
         }
     }
     

@@ -1,5 +1,6 @@
 package pl.north93.zgame.api.global.network.proxy;
 
+import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.network.server.joinaction.JoinActionsContainer;
 import pl.north93.zgame.api.global.redis.rpc.annotation.DoNotWaitForResponse;
@@ -9,7 +10,7 @@ public interface IProxyRpc
     Boolean isOnline(String nick); // sprawdza czy gracz jest online na tym proxy
 
     @DoNotWaitForResponse
-    void sendMessage(String nick, String message, Boolean colorText);
+    void sendMessage(String nick, String message, MessageLayout layout);
 
     @DoNotWaitForResponse
     void kick(String nick, String kickMessage);

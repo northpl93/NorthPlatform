@@ -28,7 +28,7 @@ public class FlyCmd extends NorthCommand
             player = Bukkit.getPlayer(args.asString(0));
             if (player == null)
             {
-                sender.sendRawMessage("&cNie ma takiego gracza!");
+                sender.sendMessage("&cNie ma takiego gracza!");
                 return;
             }
         }
@@ -37,12 +37,12 @@ public class FlyCmd extends NorthCommand
         if (flying)
         {
             player.setAllowFlight(false);
-            sender.sendRawMessage("&cLatanie wylaczone dla " + player.getName());
+            sender.sendMessage("&cLatanie wylaczone dla " + player.getName());
         }
         else
         {
             player.setAllowFlight(true);
-            sender.sendRawMessage("&cLatanie wlaczone dla " + player.getName());
+            sender.sendMessage("&cLatanie wlaczone dla " + player.getName());
         }
     }
 }

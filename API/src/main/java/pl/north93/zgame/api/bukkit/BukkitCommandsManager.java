@@ -23,6 +23,7 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.ICommandsManager;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
+import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.UTF8Control;
 
 public class BukkitCommandsManager implements ICommandsManager
@@ -87,15 +88,11 @@ public class BukkitCommandsManager implements ICommandsManager
         }
 
         @Override
-        public void sendRawMessage(final String message, final boolean colorText)
+        public void sendMessage(final String message, final MessageLayout layout)
         {
-            if (colorText)
+            for (final String line : layout.processMessage(message))
             {
-                this.wrappedSender.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
-            }
-            else
-            {
-                this.wrappedSender.sendMessage(message);
+                this.wrappedSender.sendMessage(line);
             }
         }
 

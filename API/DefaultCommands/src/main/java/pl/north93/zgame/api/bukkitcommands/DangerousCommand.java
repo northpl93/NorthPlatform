@@ -15,6 +15,6 @@ public class DangerousCommand extends NorthCommand {
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        sender.sendRawMessage("&6Niebezpieczne zablokowane komendy: " + String.join(", ", this.getAliases()) + ".");
+        sender.sendMessage("&6Niebezpieczne zablokowane komendy: " + String.join(", ", this.getAliases()) + ".");
     }
 }

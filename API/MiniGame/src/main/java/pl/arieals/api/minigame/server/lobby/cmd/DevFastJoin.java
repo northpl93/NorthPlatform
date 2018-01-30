@@ -43,17 +43,17 @@ public class DevFastJoin extends NorthCommand
 
         final Player player = (Player) sender.unwrapped();
 
-        sender.sendRawMessage("&aSzybkie laczenie z dowolna wolna arena");
+        sender.sendMessage("&aSzybkie laczenie z dowolna wolna arena");
 
         final List<PlayerJoinInfo> players = Collections.singletonList(new PlayerJoinInfo(player.getUniqueId(), false, false));
 
         if (this.arenaClient.connect(ArenaQuery.create(), players))
         {
-            sender.sendRawMessage("&aZnaleziono arene, laczenie...");
+            sender.sendMessage("&aZnaleziono arene, laczenie...");
         }
         else
         {
-            sender.sendRawMessage("&cNie znaleziono zadnej wolnej areny");
+            sender.sendMessage("&cNie znaleziono zadnej wolnej areny");
         }
     }
 }

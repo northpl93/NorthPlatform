@@ -33,8 +33,8 @@ public class GlobalShopsDev extends NorthCommand
     {
         if (args.length() == 0)
         {
-            sender.sendRawMessage("&cUsage: buy <itemId>/myitems <groupId>/item <id>/group <id>/activate <itemId>");
-            sender.sendRawMessage("&ceg /globalshopsdev myitems testGroup");
+            sender.sendMessage("&cUsage: buy <itemId>/myitems <groupId>/item <id>/group <id>/activate <itemId>");
+            sender.sendMessage("&ceg /globalshopsdev myitems testGroup");
         }
         else if (args.length() == 2)
         {
@@ -44,32 +44,32 @@ public class GlobalShopsDev extends NorthCommand
                 final Item item = this.globalShops.getItem(args.asString(1));
                 if (item == null)
                 {
-                    sender.sendRawMessage("&cno item");
+                    sender.sendMessage("&cno item");
                     return;
                 }
 
-                sender.sendRawMessage("&cItem id: " + item.getId());
-                sender.sendRawMessage("&cItem group: " + item.getGroup());
+                sender.sendMessage("&cItem id: " + item.getId());
+                sender.sendMessage("&cItem group: " + item.getGroup());
             }
             else */if (arg0.equalsIgnoreCase("group"))
             {
                 final ItemsGroup group = this.globalShops.getGroup(args.asString(1));
                 if (group == null)
                 {
-                    sender.sendRawMessage("&cno group");
+                    sender.sendMessage("&cno group");
                     return;
                 }
 
-                sender.sendRawMessage("&cGroup id: " + group.getId());
-                sender.sendRawMessage("&cGroup type: " + group.getGroupType());
-                sender.sendRawMessage("&cItems: " + group.getItems().stream().map(Item::getId).collect(Collectors.joining(",")));
+                sender.sendMessage("&cGroup id: " + group.getId());
+                sender.sendMessage("&cGroup type: " + group.getGroupType());
+                sender.sendMessage("&cItems: " + group.getItems().stream().map(Item::getId).collect(Collectors.joining(",")));
             }
             else if (arg0.equalsIgnoreCase("myitems"))
             {
                 final ItemsGroup group = this.globalShops.getGroup(args.asString(1));
                 if (group == null)
                 {
-                    sender.sendRawMessage("&cno group");
+                    sender.sendMessage("&cno group");
                     return;
                 }
 
@@ -77,14 +77,14 @@ public class GlobalShopsDev extends NorthCommand
                 final IPlayerContainer container = this.globalShops.getPlayer(player);
 
                 final Collection<Item> boughtItems = container.getBoughtItems(group);
-                sender.sendRawMessage(boughtItems.stream().map(Item::getId).collect(Collectors.joining(",")));
+                sender.sendMessage(boughtItems.stream().map(Item::getId).collect(Collectors.joining(",")));
             }
             /*else if (arg0.equalsIgnoreCase("buy"))
             {
                 final Item item = this.globalShops.getItem(args.asString(1));
                 if (item == null)
                 {
-                    sender.sendRawMessage("&cno item");
+                    sender.sendMessage("&cno item");
                     return;
                 }
 
@@ -92,14 +92,14 @@ public class GlobalShopsDev extends NorthCommand
                 final IPlayerContainer container = this.globalShops.getPlayer(player);
 
                 container.addItem(item);
-                sender.sendRawMessage("&aok");
+                sender.sendMessage("&aok");
             }
             else if (arg0.equalsIgnoreCase("activate"))
             {
                 final Item item = this.globalShops.getItem(args.asString(1));
                 if (item == null)
                 {
-                    sender.sendRawMessage("&cno item");
+                    sender.sendMessage("&cno item");
                     return;
                 }
 
@@ -107,7 +107,7 @@ public class GlobalShopsDev extends NorthCommand
                 final IPlayerContainer container = this.globalShops.getPlayer(player);
 
                 container.markAsActive(item);
-                sender.sendRawMessage("&aok");
+                sender.sendMessage("&aok");
             }*/
         }
     }

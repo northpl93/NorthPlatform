@@ -40,9 +40,9 @@ public class BwConfigGenerator extends NorthCommand
 
         if (args.length() == 0)
         {
-            sender.sendRawMessage("&aKonfiguracja generatorow. Aktualnie: " + config.getGenerators().size());
-            sender.sendRawMessage("&a/bwgenerator add <type> - dodaje generator w miejscu patrzenia");
-            sender.sendRawMessage("&a/bwgenerator fix - poprawia lokacje generatora (miejsce patrzenia)");
+            sender.sendMessage("&aKonfiguracja generatorow. Aktualnie: " + config.getGenerators().size());
+            sender.sendMessage("&a/bwgenerator add <type> - dodaje generator w miejscu patrzenia");
+            sender.sendMessage("&a/bwgenerator fix - poprawia lokacje generatora (miejsce patrzenia)");
             return;
         }
 
@@ -61,12 +61,12 @@ public class BwConfigGenerator extends NorthCommand
                 }
 
                 bwGenerator.setLocation(new XmlLocation(fixLocation.getX(), fixLocation.getY(), fixLocation.getZ(), 0, 0));
-                sender.sendRawMessage("&aok, poprawiono generator typu " + bwGenerator.getType());
+                sender.sendMessage("&aok, poprawiono generator typu " + bwGenerator.getType());
                 this.save(arena, config);
                 return;
             }
 
-            sender.sendRawMessage("&cBrak generatora w poblizu");
+            sender.sendMessage("&cBrak generatora w poblizu");
             return;
         }
 
@@ -77,12 +77,12 @@ public class BwConfigGenerator extends NorthCommand
 
             final BwGenerator newGen = new BwGenerator(type, new XmlLocation(targetBlock.getX() + 0.5, targetBlock.getY(), targetBlock.getZ() + 0.5, 0, 0));
             config.getGenerators().add(newGen);
-            sender.sendRawMessage("&aok, dodano generator typu " + type);
+            sender.sendMessage("&aok, dodano generator typu " + type);
             this.save(arena, config);
             return;
         }
 
-        sender.sendRawMessage("&cSprawdz argumenty");
+        sender.sendMessage("&cSprawdz argumenty");
     }
 
     private void save(final LocalArena arena, final BwArenaConfig bwConfig)

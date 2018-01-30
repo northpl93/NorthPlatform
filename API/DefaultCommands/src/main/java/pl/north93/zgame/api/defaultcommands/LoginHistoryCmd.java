@@ -44,18 +44,18 @@ public class LoginHistoryCmd extends NorthCommand
                     this.nickHistory(sender, args.asString(1));
                     break;
                 default:
-                    sender.sendRawMessage("&c/loginhistory ip/nick <ip/nick> np. /loginhistory nick NorthPL93");
+                    sender.sendMessage("&c/loginhistory ip/nick <ip/nick> np. /loginhistory nick NorthPL93");
             }
         }
         else
         {
-            sender.sendRawMessage("&c/loginhistory ip/nick <ip/nick> np. /loginhistory nick NorthPL93");
+            sender.sendMessage("&c/loginhistory ip/nick <ip/nick> np. /loginhistory nick NorthPL93");
         }
     }
 
     private void ipHistory(final NorthCommandSender sender, final String ip)
     {
-        sender.sendRawMessage("&cHistoria logowania sie adresu IP {0} (max 17 wyników)", ip);
+        sender.sendMessage("&cHistoria logowania sie adresu IP {0} (max 17 wyników)", ip);
         final MongoCollection<Document> history = this.storage.getMainDatabase().getCollection("join_history");
         final FindIterable<Document> results = history.find(new Document("ip", ip)).sort(new Document("at", -1)).limit(17);
         for (final Document result : results)
@@ -63,14 +63,14 @@ public class LoginHistoryCmd extends NorthCommand
             final String nick = result.getString("nick");
             final String bungee = result.getString("bungee");
             final Long at = result.getLong("at");
-            sender.sendRawMessage("&8[&7{0}&8] &7{1} &8@ &7{2}", dt.format(new Date(at)), nick, bungee);
+            sender.sendMessage("&8[&7{0}&8] &7{1} &8@ &7{2}", dt.format(new Date(at)), nick, bungee);
         }
-        sender.sendRawMessage("&cU góry najnowsze");
+        sender.sendMessage("&cU góry najnowsze");
     }
 
     private void nickHistory(final NorthCommandSender sender, final String nick)
     {
-        sender.sendRawMessage("&cHistoria logowania sie nicku {0} (max 17 wyników)", nick);
+        sender.sendMessage("&cHistoria logowania sie nicku {0} (max 17 wyników)", nick);
         final MongoCollection<Document> history = this.storage.getMainDatabase().getCollection("join_history");
         final FindIterable<Document> results = history.find(new Document("nick", nick)).sort(new Document("at", -1)).limit(17);
         for (final Document result : results)
@@ -78,9 +78,9 @@ public class LoginHistoryCmd extends NorthCommand
             final String ip = result.getString("ip");
             final String bungee = result.getString("bungee");
             final Long at = result.getLong("at");
-            sender.sendRawMessage("&8[&7{0}&8] &7{1} &8@ &7{2} &8@ &7{3}", dt.format(new Date(at)), ip, nick, bungee);
+            sender.sendMessage("&8[&7{0}&8] &7{1} &8@ &7{2} &8@ &7{3}", dt.format(new Date(at)), ip, nick, bungee);
         }
-        sender.sendRawMessage("&cU góry najnowsze");
+        sender.sendMessage("&cU góry najnowsze");
     }
 
     @Override

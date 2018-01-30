@@ -30,7 +30,7 @@ public class GroupBroadcastCmd extends NorthCommand
         final DataSharingGroup myGroup = this.dataShareServer.getMyGroup();
         if (args.length() == 0)
         {
-            sender.sendRawMessage("&cTa komenda wysyła wiadomość w aktualnej grupie serwerów (" + myGroup.getName() + ")");
+            sender.sendMessage("&cTa komenda wysyła wiadomość w aktualnej grupie serwerów (" + myGroup.getName() + ")");
         }
         else
         {

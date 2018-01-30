@@ -66,6 +66,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
+import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
@@ -119,6 +120,16 @@ class NorthPlayer implements INorthPlayer
     {
         final IOnlinePlayer playerData = this.playerData.get();
         return playerData.getMyLocale();
+    }
+
+    @Override
+    public void sendMessage(final String message, final MessageLayout layout)
+    {
+        final String[] messages = layout.processMessage(message);
+        for (final String line : messages)
+        {
+            this.sendMessage(line);
+        }
     }
 
     @Override
@@ -1929,7 +1940,7 @@ class NorthPlayer implements INorthPlayer
     @Override
     public void sendMessage(final String s)
     {
-        this.bukkitPlayer.sendMessage(s);
+        this.sendMessage(s, MessageLayout.DEFAULT);
     }
 
     @Override

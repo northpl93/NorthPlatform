@@ -28,7 +28,7 @@ public class UnbanCommand extends NorthCommand
     {
         if (args.length() != 1)
         {
-            sender.sendRawMessage("&c/unban nick");
+            sender.sendMessage("&c/unban nick");
             return;
         }
         this.networkManager.getPlayers().access(args.asString(0), player ->
@@ -37,7 +37,7 @@ public class UnbanCommand extends NorthCommand
             player.getMetaStore().remove(BAN_EXPIRE);
         });
 
-        sender.sendRawMessage("&cUzytkownik odbanowany");
+        sender.sendMessage("&cUzytkownik odbanowany");
     }
 
     @Override

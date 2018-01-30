@@ -39,7 +39,7 @@ public class DupaTest extends NorthCommand
 
         if (selection == null)
         {
-            sender.sendRawMessage(ChatColor.RED + "Zaznacz teren boostera worldeditem.");
+            sender.sendMessage(ChatColor.RED + "Zaznacz teren boostera worldeditem.");
             return;
         }
 

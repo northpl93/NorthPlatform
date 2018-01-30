@@ -35,7 +35,7 @@ public class TpHereCmd extends NorthCommand
     {
         if (args.length() != 1)
         {
-            sender.sendRawMessage("&c/tphere <nick>");
+            sender.sendMessage("&c/tphere <nick>");
             return;
         }
 
@@ -53,7 +53,7 @@ public class TpHereCmd extends NorthCommand
             final IOnlinePlayer player = this.networkManager.getPlayers().unsafe().getOnline(origin).get();
             if (player == null || playerSender == null)
             {
-                sender.sendRawMessage("&cGracz jest offline");
+                sender.sendMessage("&cGracz jest offline");
                 return;
             }
 

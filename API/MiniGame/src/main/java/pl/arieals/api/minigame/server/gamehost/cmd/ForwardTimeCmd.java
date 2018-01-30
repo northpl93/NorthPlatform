@@ -48,7 +48,7 @@ public class ForwardTimeCmd extends NorthCommand
 
         if (arena.getGamePhase() != GamePhase.STARTED)
         {
-            sender.sendRawMessage("&cTa komenda dziala tylko gdy arena jest w gamephase STARTED.");
+            sender.sendMessage("&cTa komenda dziala tylko gdy arena jest w gamephase STARTED.");
             return;
         }
 
@@ -56,14 +56,14 @@ public class ForwardTimeCmd extends NorthCommand
         {
             final Long seconds = args.asLong(0);
 
-            sender.sendRawMessage("&aAktualny czas areny: &e{0}&a. Dodawanie &e{1} &asekund.", arena.getTimer(), seconds);
+            sender.sendMessage("&aAktualny czas areny: &e{0}&a. Dodawanie &e{1} &asekund.", arena.getTimer(), seconds);
             arena.forwardTime(seconds, TimeUnit.SECONDS);
-            sender.sendRawMessage("&aZakonczono symulacje. Nowy czas areny: &e{0}", arena.getTimer());
+            sender.sendMessage("&aZakonczono symulacje. Nowy czas areny: &e{0}", arena.getTimer());
 
         }
         else
         {
-            sender.sendRawMessage("&a/forwardtime <czas w sekundach>");
+            sender.sendMessage("&a/forwardtime <czas w sekundach>");
         }
     }
 

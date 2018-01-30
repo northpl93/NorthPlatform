@@ -27,13 +27,13 @@ public class ListArenasCmd extends NorthCommand
     {
         for (final RemoteArena arena : this.arenaManager.getAllArenas())
         {
-            sender.sendRawMessage("&e- " + arena.getId());
-            sender.sendRawMessage("&e |- serverId:" + arena.getServerId());
-            sender.sendRawMessage("&e |- gamePhase:" + arena.getGamePhase());
-            sender.sendRawMessage("&e |- players:");
+            sender.sendMessage("&e- " + arena.getId());
+            sender.sendMessage("&e |- serverId:" + arena.getServerId());
+            sender.sendMessage("&e |- gamePhase:" + arena.getGamePhase());
+            sender.sendMessage("&e |- players:");
             for (final UUID uuid : arena.getPlayers())
             {
-                sender.sendRawMessage("&e   *" + uuid);
+                sender.sendMessage("&e   *" + uuid);
             }
         }
     }

@@ -24,15 +24,15 @@ public class ListComponents extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        sender.sendRawMessage("&aAktualnie załadowane moduły API:");
+        sender.sendMessage("&aAktualnie załadowane moduły API:");
         final IComponentManager componentManager = this.apiCore.getComponentManager();
         for (final IComponentBundle component : componentManager.getComponents())
         {
             final String prettyPackages = component.getBasePackages().stream().collect(Collectors.joining(", "));
-            sender.sendRawMessage(" &3" + component.getName() + " [" + prettyPackages + "]");
-            sender.sendRawMessage("  &c- Builtin: " + (component.isBuiltinComponent() ? "&atrue" : "&cfalse"));
-            sender.sendRawMessage("  &c- Enabled: " + (component.getStatus().isEnabled() ? "&atrue" : "&cfalse"));
-            sender.sendRawMessage("  &c- Description: " + component.getDescription().getDescription());
+            sender.sendMessage(" &3" + component.getName() + " [" + prettyPackages + "]");
+            sender.sendMessage("  &c- Builtin: " + (component.isBuiltinComponent() ? "&atrue" : "&cfalse"));
+            sender.sendMessage("  &c- Enabled: " + (component.getStatus().isEnabled() ? "&atrue" : "&cfalse"));
+            sender.sendMessage("  &c- Description: " + component.getDescription().getDescription());
         }
     }
 }

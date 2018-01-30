@@ -64,4 +64,7 @@ public interface INorthPlayer extends Player, Messageable
      * @param actions obiekty akcji do wykonania po wejsciu na serwer.
      */
     void connectTo(String serversGroupName, IServerJoinAction... actions);
+
+    @Override // trzeba bylo dodac zeby nie bylo bledu kompilacji
+    void sendMessage(final String message);
 }

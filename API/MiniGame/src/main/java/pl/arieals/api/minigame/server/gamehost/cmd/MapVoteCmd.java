@@ -56,11 +56,11 @@ public class MapVoteCmd extends NorthCommand
 
         if (mapVote.vote(player, args.asInt(0)))
         {
-            sender.sendRawMessage("&cUdalo sie zaglosowac!");
+            sender.sendMessage("&cUdalo sie zaglosowac!");
         }
         else
         {
-            sender.sendRawMessage("&cNie mozna bylo zaglosowac");
+            sender.sendMessage("&cNie mozna bylo zaglosowac");
         }
     }
 }

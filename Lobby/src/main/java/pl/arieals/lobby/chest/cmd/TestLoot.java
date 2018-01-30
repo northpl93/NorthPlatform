@@ -66,7 +66,7 @@ public class TestLoot extends NorthCommand
                 }
             }
 
-            sender.sendRawMessage(Arrays.toString(rarities));
+            sender.sendMessage(Arrays.toString(rarities));
         }).start();
     }
 }

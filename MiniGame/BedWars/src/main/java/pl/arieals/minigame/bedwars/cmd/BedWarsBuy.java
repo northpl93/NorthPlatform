@@ -33,7 +33,7 @@ public class BedWarsBuy extends NorthCommand
 
         if (args.length() != 1)
         {
-            sender.sendRawMessage("&cJako argument podaj internalName z configu lub gui-zeby uruchomic gui");
+            sender.sendMessage("&cJako argument podaj internalName z configu lub gui-zeby uruchomic gui");
             return;
         }
 
@@ -44,7 +44,7 @@ public class BedWarsBuy extends NorthCommand
         }
 
         final boolean result = this.manager.buy(player, args.asString(0));
-        sender.sendRawMessage("&aWynik metody buy:" + result);
+        sender.sendMessage("&aWynik metody buy:" + result);
     }
 
     @Override
