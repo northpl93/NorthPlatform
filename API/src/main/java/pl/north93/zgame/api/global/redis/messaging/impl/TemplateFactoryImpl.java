@@ -32,10 +32,9 @@ public class TemplateFactoryImpl implements TemplateFactory
     @Override
     public <T> Template<T> createTemplate(final TemplateManager templateManager, final Class<T> clazz)
     {
-        if (clazz.isEnum()) // DynamicTemplate can invoke createTemplate with enum class
+        if (Enum.class.isAssignableFrom(clazz)) // DynamicTemplate can invoke createTemplate with enum class
         {
-            //noinspection unchecked
-            return (Template<T>) new EnumTemplate(clazz);
+            return this.handleEnum(clazz);
         }
 
         final List<ITemplateElement> elements = new LinkedList<>();
@@ -101,6 +100,22 @@ public class TemplateFactoryImpl implements TemplateFactory
         }
 
         return new TemplateImpl<>(clazz, elements);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> Template<T> handleEnum(final Class<T> clazz)
+    {
+        final Class<?> enumClass;
+        if (clazz.getSuperclass() == Enum.class)
+        {
+            enumClass = clazz;
+        }
+        else
+        {
+            enumClass = clazz.getSuperclass();
+        }
+
+        return (Template<T>) new EnumTemplate(enumClass);
     }
 
     @Override
