@@ -78,8 +78,9 @@ public class MovementManipulationChecker implements EventAnalyser<ClientMoveTime
             return true;
         }
 
-        // gdy gracz ma włączone legitne latanie to nic tu nie weryfikujemy
-        return player.isFlying();
+        // gdy gracz może włączyć legitne latanie to nic nie weryfikujemy
+        // kiedyś trzeba to przerobić żeby wyłączało weryfikację tylko gdy gracz ma włączone fly
+        return player.getAllowFlight();
     }
 
     private void debugFlags(final long flags)
