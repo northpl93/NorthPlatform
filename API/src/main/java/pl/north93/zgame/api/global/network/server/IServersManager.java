@@ -23,6 +23,17 @@ public interface IServersManager
     Server withUuid(UUID uuid);
 
     /**
+     * Zwraca instancję Server serwera o podanym UUID w stringu.
+     * @param proxyName uuid serwera w stringu.
+     * @return instancja serwera
+     */
+    default Server withProxyName(final String proxyName)
+    {
+        final UUID serverId = UUID.fromString(proxyName);
+        return this.withUuid(serverId);
+    }
+
+    /**
      * Zwraca interfejs zdalnego wywolywania procedur dla serwera
      * o podanym unikalnym identyfikatorze.
      * @param uuid uuid serwera ktorego zwrocic interfejs RPC.

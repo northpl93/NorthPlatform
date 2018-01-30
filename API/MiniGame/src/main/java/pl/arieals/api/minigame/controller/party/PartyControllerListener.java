@@ -4,12 +4,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import org.diorite.utils.math.DioriteRandomUtils;
 
-import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.arieals.api.minigame.shared.api.party.IPartyManager;
-import pl.arieals.api.minigame.shared.api.party.event.InviteToPartyNetEvent;
-import pl.arieals.api.minigame.shared.api.party.event.JoinPartyNetEvent;
 import pl.arieals.api.minigame.shared.api.party.event.LeavePartyNetEvent.LeavePartyReason;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -21,6 +21,9 @@ import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 
+/**
+ * Listenery odpowiedzialne za działanie Party po stronie kontrolera sieci.
+ */
 public class PartyControllerListener
 {
     @Inject
@@ -33,35 +36,6 @@ public class PartyControllerListener
     @Bean
     private PartyControllerListener()
     {
-    }
-
-    @NetEventSubscriber(InviteToPartyNetEvent.class)
-    public void onPartyInvited(final InviteToPartyNetEvent event)
-    {
-        this.networkManager.getPlayers().ifOnline(event.getPlayerId(), player ->
-        {
-            final IParty party = event.getParty();
-
-            this.partyMessages.sendMessage(player, "invite.info", this.uuidToNick(party.getOwnerId()));
-            this.partyMessages.sendMessage(player, "invite.click");
-        });
-    }
-
-    @NetEventSubscriber(JoinPartyNetEvent.class)
-    public void onPartyJoined(final JoinPartyNetEvent event)
-    {
-        this.networkManager.getPlayers().ifOnline(event.getPlayerId(), player ->
-        {
-            final IParty party = event.getParty();
-
-            this.partyMessages.sendMessage(player, "join");
-
-            for (final UUID uuid : party.getPlayers())
-            {
-                final String messageKey = party.isOwner(uuid) ? "list.leader" : "list.player";
-                this.partyMessages.sendMessage(player, messageKey, this.uuidToNick(uuid));
-            }
-        });
     }
 
     @NetEventSubscriber(PlayerQuitNetEvent.class)
@@ -102,8 +76,9 @@ public class PartyControllerListener
         });
     }
 
-    private String uuidToNick(final UUID uuid)
+    @Override
+    public String toString()
     {
-        return this.networkManager.getPlayers().getNickFromUuid(uuid).orElse(uuid.toString());
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

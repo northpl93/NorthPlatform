@@ -21,14 +21,17 @@ import pl.arieals.api.minigame.shared.api.party.event.LeavePartyNetEvent.LeavePa
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
+import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.Identity;
 
 public class PartyClient
 {
     @Inject
-    private IPartyManager  partyManager;
+    private INetworkManager networkManager;
     @Inject
-    private MiniGameServer miniGameServer;
+    private IPartyManager   partyManager;
+    @Inject
+    private MiniGameServer  miniGameServer;
 
     @Bean
     private PartyClient()
@@ -135,6 +138,48 @@ public class PartyClient
             }
 
             return ClientResponse.OK;
+        });
+    }
+
+    public ClientResponse kick(final Player player, final String nick)
+    {
+        final Identity identity = Identity.of(player);
+
+        final IParty party = this.partyManager.getPartyByPlayer(identity);
+        if (party == null)
+        {
+            return ClientResponse.NO_PARTY;
+        }
+
+        if (! party.isOwner(player.getUniqueId()))
+        {
+            return ClientResponse.NO_OWNER;
+        }
+
+        final Identity target;
+        try
+        {
+            final Identity uncompleted = Identity.create(null, nick, null);
+            target = this.networkManager.getPlayers().completeIdentity(uncompleted);
+        }
+        catch (final PlayerNotFoundException ignored)
+        {
+            return ClientResponse.NO_PLAYER;
+        }
+
+        return this.partyManager.access(party.getId(), partyAccess ->
+        {
+            if (partyAccess.isOwner(target.getUuid()))
+            {
+                return ClientResponse.ERROR;
+            }
+
+            if (partyAccess.removePlayer(target, LeavePartyReason.KICK))
+            {
+                return ClientResponse.OK;
+            }
+
+            return ClientResponse.NO_PLAYER;
         });
     }
 

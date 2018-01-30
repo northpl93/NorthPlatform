@@ -36,11 +36,24 @@ public interface IPartyAccess extends IParty
      * Tworzy zaproszenie do party dla danego gracza i przypisuje mu je jako ostatnio otrzymane.
      * Wysyła także event sieciowy {@link InviteToPartyNetEvent}.
      *
+     * Gdy gracz posiada już jako ostatnie zaproszenie do tego party to nie zostanie utworzone nowe.
+     *
      * @param playerIdentity Identity gracza którego zapraszamy.
-     * @throws PlayerNotFoundException Gdy nie udało się powiązać Identity z graczem.
+     * @throws PlayerNotFoundException Gdy nie udało się powiązać Identity z graczem lub gdy jest offline.
      * @throws PlayerAlreadyHasPartyException Gdy dany gracz jest już w innym Party.
+     * @return True jeśli zaproszenie zostało utworzone, false jeśli gracz już jest zaproszony.
      */
-    void invitePlayer(Identity playerIdentity) throws PlayerNotFoundException, PlayerAlreadyHasPartyException;
+    boolean invitePlayer(Identity playerIdentity) throws PlayerNotFoundException, PlayerAlreadyHasPartyException;
+
+    /**
+     * Usuwa zaproszenie do tego party konkretnego gracza.
+     * Jesli gracz nie jest zaproszony lub juz jest w tym party to zostanie zwrócone false.
+     *
+     * @param playerIdentity Identity gracza któremu usuwamy zaproszenie.
+     * @return True jeśli uda się usunąć zaproszenie, false gdy nie ma zaproszenia.
+     * @throws PlayerNotFoundException Gdy nie udało się powiązać Identity z graczem.
+     */
+    boolean revokeInvite(Identity playerIdentity) throws PlayerNotFoundException;
 
     /**
      * Dodaje podanego gracza do tego Party.
@@ -49,12 +62,12 @@ public interface IPartyAccess extends IParty
      * Wysyła także event sieciowy {@link JoinPartyNetEvent}.
      *
      * @param playerIdentity Gracz którego dodajemy do Party. (nie musi mieć zaproszenia)
-     * @throws PlayerNotFoundException Gdy nie udało się powiązać Identity z graczem.
+     * @throws PlayerNotFoundException Gdy nie udało się powiązać Identity z graczem lub gdy jest offline.
      * @throws PlayerAlreadyHasPartyException Gdy dany gracz jest już w innym Party.
      */
     void addPlayer(Identity playerIdentity) throws PlayerNotFoundException, PlayerAlreadyHasPartyException;
 
-    void removePlayer(Identity playerIdentity, LeavePartyReason reason) throws PlayerNotFoundException;
+    boolean removePlayer(Identity playerIdentity, LeavePartyReason reason) throws PlayerNotFoundException;
 
     void delete();
 }

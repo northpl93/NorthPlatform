@@ -1,5 +1,7 @@
 package pl.arieals.api.minigame.shared.impl.party;
 
+import javax.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
@@ -141,13 +143,7 @@ public class PartyManagerImpl implements IPartyManager
     public PartyInvite getLatestInvite(final Identity playerIdentity) throws PlayerNotFoundException
     {
         final IPlayer unsafePlayer = this.networkManager.getPlayers().unsafe().get(playerIdentity).orElseThrow(() -> new PlayerNotFoundException(playerIdentity));
-        final PartyInvite partyInvite = (PartyInvite) unsafePlayer.getMetaStore().get(PARTY_INVITE);
-        if (partyInvite == null || partyInvite.isExpired())
-        {
-            return null;
-        }
-
-        return partyInvite;
+        return this.getLatestInviteFromPlayer(unsafePlayer);
     }
 
     /*default*/ IPlayerTransaction openTransaction(final Identity ownerIdentity)
@@ -160,11 +156,13 @@ public class PartyManagerImpl implements IPartyManager
         this.eventManager.callEvent(partyNetEvent);
     }
 
+    @Nullable
     /*default*/ PartyDataImpl getParty(final UUID partyId)
     {
         return this.parties.get(partyId.toString());
     }
 
+    @Nullable
     /*default*/ IParty getPartyFromPlayer(final IPlayer player)
     {
         final UUID partyId = (UUID) player.getMetaStore().get(PARTY_META);
@@ -190,6 +188,18 @@ public class PartyManagerImpl implements IPartyManager
             return;
         }
         metaStore.set(PARTY_META, partyId);
+    }
+
+    @Nullable
+    /*default*/ PartyInvite getLatestInviteFromPlayer(final IPlayer player)
+    {
+        final PartyInvite invite = (PartyInvite) player.getMetaStore().get(PARTY_INVITE);
+        if (invite == null || invite.isExpired())
+        {
+            return null;
+        }
+
+        return invite;
     }
 
     /*default*/ void setPartyInvite(final IPlayer player, final PartyInvite invite)

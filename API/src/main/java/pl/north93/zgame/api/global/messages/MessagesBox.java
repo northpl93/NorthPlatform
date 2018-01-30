@@ -9,6 +9,9 @@ import java.util.ResourceBundle;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+
 public class MessagesBox
 {
     private static final UTF8Control CONTROL = new UTF8Control();
@@ -99,6 +102,22 @@ public class MessagesBox
 
     // nie powinno jebnac na innych platformach niz Bukkit o ile nie wykonamy tej metody
     public void sendMessage(final org.bukkit.entity.Player player, final String key, final Object... params)
+    {
+        this.sendMessage(player, key, MessageLayout.DEFAULT, params);
+    }
+
+    // nie powinno jebnac na innych platformach niz Bungee o ile nie wykonamy tej metody
+    public void sendMessage(final ProxiedPlayer player, final String key, final MessageLayout layout, final Object... params)
+    {
+        final String message = this.getMessage(player.getLocale(), key, (Object[]) params);
+        for (final String messageLine : layout.processMessage(message))
+        {
+            player.sendMessage(TextComponent.fromLegacyText(messageLine));
+        }
+    }
+
+    // nie powinno jebnac na innych platformach niz Bungee o ile nie wykonamy tej metody
+    public void sendMessage(final ProxiedPlayer player, final String key, final Object... params)
     {
         this.sendMessage(player, key, MessageLayout.DEFAULT, params);
     }

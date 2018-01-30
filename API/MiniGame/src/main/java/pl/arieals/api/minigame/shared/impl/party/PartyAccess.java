@@ -65,7 +65,7 @@ import pl.north93.zgame.api.global.network.players.Identity;
     }
 
     @Override
-    public void invitePlayer(final Identity playerIdentity) throws PlayerNotFoundException, PlayerAlreadyHasPartyException
+    public boolean invitePlayer(final Identity playerIdentity) throws PlayerNotFoundException, PlayerAlreadyHasPartyException
     {
         Preconditions.checkState(this.isNotDeleted(), "Party is deleted");
 
@@ -82,12 +82,39 @@ import pl.north93.zgame.api.global.network.players.Identity;
                 throw new PlayerAlreadyHasPartyException();
             }
 
-            final PartyInvite invite = new PartyInvite(this.getId(), player.getUuid(), Instant.now(), Duration.ofSeconds(100));
+            final PartyInvite latestPlayerInvite = this.partyManager.getLatestInviteFromPlayer(player);
+            if (latestPlayerInvite != null && latestPlayerInvite.getPartyId().equals(this.getId()))
+            {
+                return false;
+            }
 
-            this.partyManager.setPartyInvite(player, invite);
-            this.partyData.addInvite(invite);
+            final PartyInvite newInvite = new PartyInvite(this.getId(), player.getUuid(), Instant.now(), Duration.ofSeconds(100));
+
+            this.partyManager.setPartyInvite(player, newInvite);
+            this.partyData.addInvite(newInvite);
 
             this.partyManager.callNetEvent(new InviteToPartyNetEvent(this.partyData, player.getUuid()));
+            return true;
+        }
+    }
+
+    @Override
+    public boolean revokeInvite(final Identity playerIdentity) throws PlayerNotFoundException
+    {
+        Preconditions.checkState(this.isNotDeleted(), "Party is deleted");
+
+        try (final IPlayerTransaction t = this.partyManager.openTransaction(playerIdentity))
+        {
+            final IPlayer player = t.getPlayer();
+
+            if (this.isInvited(player.getUuid()))
+            {
+                this.partyData.removeInviteOfPlayer(player.getUuid());
+                this.partyManager.setPartyInvite(player, null);
+                return true;
+            }
+
+            return false;
         }
     }
 
@@ -99,6 +126,10 @@ import pl.north93.zgame.api.global.network.players.Identity;
         try (final IPlayerTransaction t = this.partyManager.openTransaction(playerIdentity))
         {
             final IPlayer player = t.getPlayer();
+            if (t.isOffline())
+            {
+                throw new PlayerNotFoundException(player.getLatestNick());
+            }
 
             if (this.partyManager.playerHasParty(player))
             {
@@ -114,7 +145,7 @@ import pl.north93.zgame.api.global.network.players.Identity;
     }
 
     @Override
-    public void removePlayer(final Identity playerIdentity, final LeavePartyReason reason) throws PlayerNotFoundException
+    public boolean removePlayer(final Identity playerIdentity, final LeavePartyReason reason) throws PlayerNotFoundException
     {
         Preconditions.checkState(this.isNotDeleted(), "Party is deleted");
 
@@ -129,10 +160,11 @@ import pl.north93.zgame.api.global.network.players.Identity;
             }
             else
             {
-                throw new IllegalArgumentException("Tried to remove player who isn't in party");
+                return false;
             }
 
             this.partyManager.setPartyId(player, null);
+            return true;
         }
     }
 

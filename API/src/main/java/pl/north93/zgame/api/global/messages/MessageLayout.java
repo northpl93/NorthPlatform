@@ -3,7 +3,9 @@ package pl.north93.zgame.api.global.messages;
 import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColorCodes;
 
 
-import org.apache.commons.lang.StringUtils;
+import java.util.Arrays;
+
+import org.apache.commons.lang3.StringUtils;
 
 import pl.north93.zgame.api.bukkit.utils.ChatUtils;
 
@@ -20,7 +22,7 @@ public enum MessageLayout
                 @Override
                 public String[] processMessage(final String message)
                 {
-                    return new String[] { translateAlternateColorCodes(message) };
+                    return StringUtils.split(translateAlternateColorCodes(message), '\n');
                 }
             },
     /**
@@ -31,7 +33,13 @@ public enum MessageLayout
                 @Override
                 public String[] processMessage(final String message)
                 {
-                    return new String[] {"", translateAlternateColorCodes(message), ""};
+                    final String[] splitted = DEFAULT.processMessage(message);
+
+                    final String[] output = new String[splitted.length + 2];
+                    Arrays.fill(output, "");
+                    System.arraycopy(splitted, 0, output, 1, splitted.length);
+
+                    return output;
                 }
             },
     /**
@@ -52,6 +60,20 @@ public enum MessageLayout
                         split[i] = ChatUtils.centerMessage(split[i]);
                     }
                     return split;
+                }
+            },
+    SEPARATED_CENTER
+            {
+                @Override
+                public String[] processMessage(final String message)
+                {
+                    final String[] centered = CENTER.processMessage(message);
+
+                    final String[] output = new String[centered.length + 2];
+                    Arrays.fill(output, "");
+                    System.arraycopy(centered, 0, output, 1, centered.length);
+
+                    return output;
                 }
             };
 

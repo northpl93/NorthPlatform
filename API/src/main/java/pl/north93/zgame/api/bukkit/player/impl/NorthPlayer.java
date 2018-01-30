@@ -65,7 +65,6 @@ import org.bukkit.util.Vector;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
-import pl.north93.zgame.api.bukkit.utils.ChatUtils;
 import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
@@ -120,19 +119,6 @@ class NorthPlayer implements INorthPlayer
     {
         final IOnlinePlayer playerData = this.playerData.get();
         return playerData.getMyLocale();
-    }
-
-    @Override
-    public void sendRawMessage(final String message, final boolean colorText)
-    {
-        if (colorText)
-        {
-            this.bukkitPlayer.sendMessage(ChatUtils.translateAlternateColorCodes(message));
-        }
-        else
-        {
-            this.bukkitPlayer.sendMessage(message);
-        }
     }
 
     @Override

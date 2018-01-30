@@ -1,6 +1,7 @@
 package pl.arieals.lobby.party;
 
 import java.util.Locale;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
@@ -11,19 +12,24 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.zgame.api.global.network.INetworkManager;
 
 public class PartyCmd extends NorthCommand
 {
     @Inject
-    private PartyClient partyClient;
+    private PartyClient     partyClient;
+    @Inject
+    private INetworkManager networkManager;
     @Inject @Messages("Party")
-    private MessagesBox messages;
+    private MessagesBox     messages;
 
     public PartyCmd()
     {
         super("party", "grupa");
+        this.setAsync(true);
     }
 
     @Override
@@ -33,7 +39,7 @@ public class PartyCmd extends NorthCommand
 
         if (args.isEmpty())
         {
-            // todo
+            this.help(player);
             return;
         }
 
@@ -55,6 +61,8 @@ public class PartyCmd extends NorthCommand
                 case "opusc":
                     this.leave(player);
                     break;
+                default:
+                    this.help(player);
             }
         }
         else if (args.length() == 2)
@@ -70,11 +78,13 @@ public class PartyCmd extends NorthCommand
                 case "wyrzuc":
                     this.kick(player, parameter);
                     break;
+                default:
+                    this.help(player);
             }
         }
         else
         {
-
+            this.help(player);
         }
     }
 
@@ -92,11 +102,9 @@ public class PartyCmd extends NorthCommand
                 break;
 
             case OK:
-
+                // komunikat obsluzony w evencie w bungee
                 break;
         }
-
-        player.sendMessage(response.name());
     }
 
     private void leave(final Player player)
@@ -105,12 +113,13 @@ public class PartyCmd extends NorthCommand
         switch (response)
         {
             case NO_PARTY:
+                this.messages.sendMessage(player, "error.no_party");
                 break;
 
             case OK:
+                this.messages.sendMessage(player, "leave.success");
                 break;
         }
-        player.sendMessage(response.name());
     }
 
     private void list(final Player player)
@@ -118,18 +127,42 @@ public class PartyCmd extends NorthCommand
         final IParty party = this.partyClient.getPlayerParty(player);
         if (party == null)
         {
-            player.sendMessage("no party");
             // nie ma party
+            this.messages.sendMessage(player, "error.no_party");
             return;
         }
 
-        player.sendMessage(party.getPlayers().toString());
+        this.messages.sendMessage(player, "separator");
+        this.messages.sendMessage(player, "header", MessageLayout.CENTER);
+        player.sendMessage();
+
+        for (final UUID playerId : party.getPlayers())
+        {
+            final String messageKey = party.isOwner(playerId) ? "list.leader" : "list.player";
+            this.messages.sendMessage(player, messageKey, MessageLayout.CENTER, this.uuidToNick(playerId));
+        }
+
+        this.messages.sendMessage(player, "list.leave", MessageLayout.SEPARATED_CENTER);
+        this.messages.sendMessage(player, "separator");
     }
 
     private void invite(final Player player, final String nick)
     {
         final ClientResponse response = this.partyClient.invite(player, nick);
-        player.sendMessage(response.name());
+        switch (response)
+        {
+            case NO_OWNER:
+                this.messages.sendMessage(player, "error.no_owner");
+                break;
+            case NO_PLAYER:
+                this.messages.sendMessage(player, "error.no_player");
+                break;
+            case ALREADY_IN_PARTY:
+                break;
+            case OK:
+                this.messages.sendMessage(player, "invite.send_success");
+                break;
+        }
     }
 
     private void kick(final Player player, final String nick)
@@ -139,6 +172,34 @@ public class PartyCmd extends NorthCommand
             return;
         }
 
+        final ClientResponse response = this.partyClient.kick(player, nick);
+        switch (response)
+        {
+            case NO_PARTY:
+                break;
+            case NO_OWNER:
+                this.messages.sendMessage(player, "error.no_owner");
+                break;
+            case NO_PLAYER:
+                this.messages.sendMessage(player, "error.no_player");
+                break;
+            case ERROR:
+                break;
+            case OK:
+                break;
+        }
+    }
 
+    private void help(final Player player)
+    {
+        this.messages.sendMessage(player, "separator");
+        this.messages.sendMessage(player, "help.header", MessageLayout.CENTER);
+        this.messages.sendMessage(player, "help.content");
+        this.messages.sendMessage(player, "separator");
+    }
+
+    private String uuidToNick(final UUID uuid)
+    {
+        return this.networkManager.getPlayers().getNickFromUuid(uuid).orElse(uuid.toString());
     }
 }

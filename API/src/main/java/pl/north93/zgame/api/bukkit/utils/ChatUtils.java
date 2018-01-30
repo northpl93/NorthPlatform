@@ -2,8 +2,6 @@ package pl.north93.zgame.api.bukkit.utils;
 
 import java.util.regex.Pattern;
 
-import org.bukkit.ChatColor;
-
 public class ChatUtils
 {
     public  static final char    COLOR_CHAR          = '§';
@@ -37,7 +35,7 @@ public class ChatUtils
         {
             return "";
         }
-        message = ChatColor.translateAlternateColorCodes('&', message);
+        message = ChatUtils.translateAlternateColorCodes(message);
 
         int messagePxSize = 0;
         boolean previousCode = false;

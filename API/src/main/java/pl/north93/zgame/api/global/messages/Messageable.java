@@ -13,12 +13,12 @@ public interface Messageable
     Locale getMyLocale();
 
     /**
-     * Wysyła surową wiadomość do gracza. Bez tłumaczenia.
+     * Wysyła surową wiadomość do gracza.
+     * Nie zostaną przeprowadzone na niej żadne operacje.
      *
      * @param message treść wiadomości.
-     * @param colorText czy wiadomość ma być automatycznie pokolorowana.
      */
-    void sendRawMessage(String message, boolean colorText);
+    void sendRawMessage(String message);
 
     /**
      * Wysyła surową wiadomość do gracza. Bez tłumaczenia.
@@ -29,7 +29,7 @@ public interface Messageable
      */
     default void sendRawMessage(final String message, final Object... params)
     {
-        this.sendRawMessage(MessageFormat.format(message, params), true);
+        this.sendRawMessage(MessageFormat.format(message, params));
     }
 
     /**

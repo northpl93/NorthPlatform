@@ -157,7 +157,7 @@ public class ConcurrentIdentityHashMap<K, V> extends AbstractMap<K, V> implement
      */
     private static final int                 RESIZE_STAMP_BITS         = 16;
     /**
-     * The maximum number of threads that can help resize.
+     * The maximum number of threads that can help.content resize.
      * Must fit in 32 - RESIZE_STAMP_BITS bits.
      */
     private static final int                 MAX_RESIZERS              = (1 << (32 - RESIZE_STAMP_BITS)) - 1;
@@ -5734,7 +5734,7 @@ public class ConcurrentIdentityHashMap<K, V> extends AbstractMap<K, V> implement
      * simplify checks that each variant differs in the right way from
      * others. The null screenings exist because compilers cannot tell
      * that we've already null-checked task arguments, so we force
-     * simplest hoisted bypass to help avoid convoluted traps.
+     * simplest hoisted bypass to help.content avoid convoluted traps.
      */
     @SuppressWarnings({"serial", "ClassHasNoToStringMethod"})
     static final class ForEachKeyTask<K, V> extends BulkTask<K, V, Void>
