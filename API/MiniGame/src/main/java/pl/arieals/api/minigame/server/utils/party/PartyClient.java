@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.server.party;
+package pl.arieals.api.minigame.server.utils.party;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +24,9 @@ import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.Identity;
 
+/**
+ * Klasa pomocnicza służąca do interakcji gracza z API party.
+ */
 public class PartyClient
 {
     @Inject

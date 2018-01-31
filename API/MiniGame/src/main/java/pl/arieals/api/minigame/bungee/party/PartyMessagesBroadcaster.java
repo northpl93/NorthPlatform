@@ -2,7 +2,12 @@ package pl.arieals.api.minigame.bungee.party;
 
 import java.util.UUID;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
 import pl.arieals.api.minigame.shared.api.party.IParty;
@@ -20,7 +25,11 @@ import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerType;
 import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 
-public class PartyBungeeListener implements Listener
+/**
+ * Klasa w BungeeCordowej części komponentu odpowiedzialna
+ * za rozgłaszanie wiadomości dotyczących grup.
+ */
+public class PartyMessagesBroadcaster implements Listener
 {
     @Inject
     private INetworkManager networkManager;
@@ -30,7 +39,7 @@ public class PartyBungeeListener implements Listener
     private MessagesBox     partyMessages;
 
     @Bean
-    private PartyBungeeListener(final BungeeApiCore apiCore)
+    private PartyMessagesBroadcaster(final BungeeApiCore apiCore)
     {
         apiCore.registerListeners(this);
     }
@@ -57,7 +66,13 @@ public class PartyBungeeListener implements Listener
         this.partyMessages.sendMessage(proxiedPlayer, "header", MessageLayout.CENTER);
         proxiedPlayer.sendMessage();
         this.partyMessages.sendMessage(proxiedPlayer, "invite.info", MessageLayout.CENTER, this.uuidToNick(party.getOwnerId()));
-        this.partyMessages.sendMessage(proxiedPlayer, "invite.cmd", MessageLayout.CENTER);
+
+        final String cmdClickMessage = this.partyMessages.getMessage(proxiedPlayer.getLocale(), "invite.cmd");
+        for (final String line : MessageLayout.CENTER.processMessage(cmdClickMessage))
+        {
+            proxiedPlayer.sendMessage(new ComponentBuilder(line).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party accept")).create());
+        }
+
         proxiedPlayer.sendMessage();
         this.partyMessages.sendMessage(proxiedPlayer, "separator");
     }
@@ -72,6 +87,7 @@ public class PartyBungeeListener implements Listener
         }
 
         final IParty party = event.getParty();
+        this.announceJoinToParty(party, proxiedPlayer);
 
         this.partyMessages.sendMessage(proxiedPlayer, "separator");
         this.partyMessages.sendMessage(proxiedPlayer, "header", MessageLayout.CENTER);
@@ -88,8 +104,31 @@ public class PartyBungeeListener implements Listener
         this.partyMessages.sendMessage(proxiedPlayer, "separator");
     }
 
+    // rozsyła członkom party info o wejściu gracza
+    private void announceJoinToParty(final IParty party, final ProxiedPlayer joiningProxiedPlayer)
+    {
+        for (final UUID uuid : party.getPlayers())
+        {
+            if (uuid.equals(joiningProxiedPlayer.getUniqueId()))
+            {
+                continue;
+            }
+
+            this.networkManager.getPlayers().ifOnline(uuid, onlinePlayer ->
+            {
+                this.partyMessages.sendMessage(onlinePlayer, "join.broadcast", joiningProxiedPlayer.getDisplayName());
+            });
+        }
+    }
+
     private String uuidToNick(final UUID uuid)
     {
         return this.networkManager.getPlayers().getNickFromUuid(uuid).orElse(uuid.toString());
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

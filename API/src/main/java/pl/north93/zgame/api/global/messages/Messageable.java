@@ -84,6 +84,7 @@ public interface Messageable
      *
      * @param messagesBox obiekt przechowujący wiadomości.
      * @param key nazwa klucza wiadomości.
+     * @param layout Wygląd wiadomości.
      * @param params parametry.
      */
     default void sendMessage(final MessagesBox messagesBox, final String key, final MessageLayout layout, final Object... params)
@@ -91,6 +92,14 @@ public interface Messageable
         this.sendMessage(messagesBox.getMessage(this.getMyLocale(), key, params), layout);
     }
 
+    /**
+     * Wysyła przetłumaczoną wiadomość do gracza ostylowaną przez domyślny MessageLayout.
+     * Obsługuje parametry według MessageFormat.
+     *
+     * @param messagesBox obiekt przechowujący wiadomości.
+     * @param key nazwa klucza wiadomości.
+     * @param params parametry.
+     */
     default void sendMessage(final MessagesBox messagesBox, final String key, final Object... params)
     {
         this.sendMessage(messagesBox, key, MessageLayout.DEFAULT, params);

@@ -1,12 +1,15 @@
-package pl.arieals.lobby.party;
+package pl.arieals.api.minigame.server.lobby.cmd;
 
 import java.util.Locale;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
-import pl.arieals.api.minigame.server.party.ClientResponse;
-import pl.arieals.api.minigame.server.party.PartyClient;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import pl.arieals.api.minigame.server.utils.party.ClientResponse;
+import pl.arieals.api.minigame.server.utils.party.PartyClient;
 import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
@@ -17,6 +20,9 @@ import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
 
+/**
+ * Komenda do obsługi party w komponencie lobby
+ */
 public class PartyCmd extends NorthCommand
 {
     @Inject
@@ -176,6 +182,7 @@ public class PartyCmd extends NorthCommand
         switch (response)
         {
             case NO_PARTY:
+                this.messages.sendMessage(player, "error.no_party");
                 break;
             case NO_OWNER:
                 this.messages.sendMessage(player, "error.no_owner");
@@ -201,5 +208,11 @@ public class PartyCmd extends NorthCommand
     private String uuidToNick(final UUID uuid)
     {
         return this.networkManager.getPlayers().getNickFromUuid(uuid).orElse(uuid.toString());
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }
