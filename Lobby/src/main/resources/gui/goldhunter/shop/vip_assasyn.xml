@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="5" title="@main.window_title">
+	<container pos="0,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+	<container pos="8,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+    <container pos="1,0" size="7,5">
+        <content>
+
+            <button pos="3,0">
+            	<icon id="LEATHER_HELMET" name="@main.vip.assasyn.name" />
+            </button>
+            
+            <button pos="2,2">
+            	<icon id="WATCH" name="@vip.assasyn.timefolder.name$color" lore="@vip.assasyn.timefolder.lore$color,count,max"/>
+            	<metadata key="guiName" value="vip_assasyn_czas" />
+            	<metadata key="folder" value="true" />
+            	<metadata key="item1" value="vip.assasyn.time:1" />
+            	<metadata key="item2" value="vip.assasyn.time:2" />
+            	<metadata key="item3" value="vip.assasyn.time:3" />
+            	<metadata key="item4" value="vip.assasyn.time:4" />
+            	<metadata key="item5" value="vip.assasyn.time:5" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="3,2">
+            	<icon id="COMPASS" name="@vip.assasyn.time2folder.name$color" lore="@vip.assasyn.time2folder.lore$color,count,max"/>
+            	<metadata key="guiName" value="vip_assasyn_czas2" />
+            	<metadata key="folder" value="true" />
+            	<metadata key="item1" value="vip.assasyn.time2:1" />
+            	<metadata key="item2" value="vip.assasyn.time2:2" />
+            	<metadata key="item3" value="vip.assasyn.time2:3" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="5,2">
+            	<icon id="IRON_HELMET" name="@vip.assasyn.armor1.name$color" lore="@vip.assasyn.armor1.lore$color,status,price"/>
+            	<metadata key="item" value="vip.assasyn.ironboots" />
+            	<onClick>buy</onClick>
+            </button>
+            
+            <button pos="6,2">
+            	<icon id="WOOD" name="@vip.assasyn.budulecfolder.name$color" lore="@vip.assasyn.budulecfolder.lore$color,count,max" />
+            	<metadata key="guiName" value="vip_assasyn_budulec" />
+            	<metadata key="folder" value="true" />
+            	<metadata key="item1" value="vip.assasyn.budulec:1" />
+            	<metadata key="item2" value="vip.assasyn.budulec:2" />
+            	<metadata key="item3" value="vip.assasyn.budulec:3" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="6,4">
+            	<icon id="minecraft:iron_door" name="@main.return" />
+            	<metadata key="guiName" value="vip" />
+            	<onClick>open</onClick>
+            </button>
+        </content>
+    </container>
+</gui>

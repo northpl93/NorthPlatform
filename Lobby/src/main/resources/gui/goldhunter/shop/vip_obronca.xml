@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="5" title="@main.window_title">
+	<container pos="0,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+	<container pos="8,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+    <container pos="1,0" size="7,5">
+        <content>
+
+            <button pos="3,0">
+            	<icon id="DIAMOND_CHESTPLATE" name="@main.vip.obronca.name" />
+            </button>
+            
+            <button pos="0,2">
+            	<icon id="DIAMOND_CHESTPLATE" name="@buy.vip.obronca.name$color" lore="@buy.vip.obronca.lore$color,status,price"/>
+          		<metadata key="item" value="class.vip.defender" />
+          		<onClick>buy</onClick>
+            </button>
+            
+            <button pos="2,2">
+            	<icon id="WATCH" name="@vip.obronca.timefolder.name$color" lore="@vip.obronca.timefolder.lore$color,count,max"/>
+            	<metadata key="guiName" value="vip_obronca_czas" />
+            	<metadata key="folder" value="true" />
+            	<metadata key="item1" value="vip.defender.time:1" />
+            	<metadata key="item2" value="vip.defender.time:2" />
+            	<metadata key="item3" value="vip.defender.time:3" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="3,2">
+            	<icon id="SMOOTH_BRICK" name="@vip.obronca.murfolder.name$color" lore="@vip.obronca.murfolder.lore$color,count,max"/>
+            	<metadata key="guiName" value="vip_obronca_ability" />
+            	<metadata key="folder" value="true" />
+            	<metadata key="item1" value="vip.defender.ability:1" />
+            	<metadata key="item2" value="vip.defender.ability:2" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="5,2">
+            	<icon id="IRON_HELMET" name="@vip.obronca.armor1.name$color" lore="@vip.obronca.armor1.lore$color,status,price"/>
+            	<metadata key="item" value="vip.defender.diamondchest" />
+            	<onClick>buy</onClick>
+            </button>
+            
+            <button pos="6,2">
+            	<icon id="WOOD" name="@vip.obronca.budulecfolder.name$color" lore="@vip.obronca.budulecfolder.lore$color,count,max" />
+            	<metadata key="guiName" value="vip_obronca_budulec" />
+            	<metadata key="folder" value="true" />
+            	<metadata key="item1" value="vip.defender.budulec:1" />
+            	<metadata key="item2" value="vip.defender.budulec:2" />
+            	<metadata key="item3" value="vip.defender.budulec:3" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="6,4">
+            	<icon id="minecraft:iron_door" name="@main.return" />
+            	<metadata key="guiName" value="vip" />
+            	<onClick>open</onClick>
+            </button>
+        </content>
+    </container>
+</gui>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="5" title="@main.window_title">
+	<container pos="0,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+	<container pos="8,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+    <container pos="1,0" size="7,5">
+        <content>
+            <button pos="3,0">
+                <icon id="CHEST" name="@shop_name" />
+            </button>
+
+            <button pos="0,2">
+            	<icon id="BOW" name="@main.lucznik" />
+            	<metadata key="guiName" value="lucznik" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="1,2">
+            	<icon id="IRON_SWORD" name="@main.wojownik" />
+            	<metadata key="guiName" value="wojownik" />
+            	<onClick>open</onClick>
+            </button>
+        </content>
+    </container>
+</gui>

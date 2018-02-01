@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="5" title="@main.window_title">
+	<container pos="0,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+	<container pos="8,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+    <container pos="1,0" size="7,5">
+        <content>
+            <button pos="3,0">
+                <icon id="CHEST" name="@shopname" />
+            </button>
+
+            <button pos="0,2">
+            	<icon id="BOW" name="@main.lucznik.name" lore="@main.lucznik.lore" />
+            	<metadata key="guiName" value="lucznik" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="1,2">
+            	<icon id="IRON_SWORD" name="@main.wojownik.name" lore="@main.wojownik.lore" />
+            	<metadata key="guiName" value="wojownik" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="2,2">
+            	<icon id="FISHING_ROD" name="@main.zwiadowca.name" lore="@main.zwiadowca.lore" />
+            	<metadata key="guiName" value="zwiadowca" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="3,2">
+            	<icon id="minecraft:dye" name="@main.medyk.name" lore="@main.medyk.lore" />
+            	<metadata key="guiName" value="medyk" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="4,2">
+            	<icon id="COBBLESTONE" name="@main.technik.name" lore="@main.technik.lore" />
+            	<metadata key="guiName" value="technik" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="5,2">
+            	<icon id="EMERALD" name="@main.vip.name" lore="@main.vip.lore" />
+            	<metadata key="guiName" value="vip" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="6,2">
+            	<icon id="DIAMOND" name="@main.svip.name" lore="@main.svip.lore" />
+            	<metadata key="guiName" value="svip" />
+            	<onClick>open</onClick>
+            </button>
+        </content>
+    </container>
+</gui>

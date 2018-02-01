@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="5" title="@main.window_title">
+	<container pos="0,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+	<container pos="8,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+    <container pos="1,0" size="7,5">
+        <content>
+            <button pos="3,0">
+                <icon id="FISHING_ROD" name="@main.zwiadowca.name" />
+            </button>
+
+            <button pos="1,2">
+            	<icon id="minecraft:gunpowder" name="@main.zwiadowca.procarz.name" lore="@main.zwiadowca.procarz.lore" />
+            	<metadata key="guiName" value="zwiadowca_procarz" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="5,2">
+            	<icon id="LEATHER_BOOTS" name="@main.zwiadowca.sprinter.name" lore="@main.zwiadowca.sprinter.lore" />
+            	<metadata key="guiName" value="zwiadowca_sprinter" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="6,4">
+            	<icon id="minecraft:iron_door" name="@main.return" />
+            	<metadata key="guiName" value="main" />
+            	<onClick>open</onClick>
+            </button>
+        </content>
+    </container>
+</gui>

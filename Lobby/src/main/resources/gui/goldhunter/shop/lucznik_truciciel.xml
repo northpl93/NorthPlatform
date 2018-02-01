@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="5" title="@main.window_title">
+	<container pos="0,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+	<container pos="8,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+    <container pos="1,0" size="7,5">
+        <content>
+
+            <button pos="3,0">
+            	<icon id="minecraft:tipped_arrow" name="@main.lucznik.truciciel.name">
+            		<potionMeta>
+            			<potionData type="POISON" />
+            		</potionMeta>
+            	</icon>
+            </button>
+            
+            <button pos="1,2">
+            	<icon id="WATCH" name="@lucznik.truciciel.timefolder.name$color" lore="@lucznik.truciciel.timefolder.lore$color,count,max"/>
+            	<metadata key="guiName" value="lucznik_truciciel_czas" />
+            	<metadata key="folder" value="true" />
+            	<metadata key="item1" value="archer.poison.time:1" />
+            	<metadata key="item2" value="archer.poison.time:2" />
+            	<metadata key="item3" value="archer.poison.time:3" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="2,2">
+            	<icon id="minecraft:enchanted_book" name="@lucznik.truciciel.ench1.name$color" lore="@lucznik.truciciel.ench1.lore$color,status,price"/>
+            	<metadata key="item" value="archer.poison.enchant" />
+            	<onClick>buy</onClick>
+            </button>
+            
+            <button pos="4,2">
+            	<icon id="CHAINMAIL_CHESTPLATE" name="@lucznik.truciciel.helmet1.name$color" lore="@lucznik.truciciel.helmet1.lore$color,status,price"/>
+            	<metadata key="item" value="archer.poison.chainchest" />
+            	<onClick>buy</onClick>
+            </button>
+            
+            <button pos="5,2">
+            	<icon id="WOOD" name="@lucznik.truciciel.budulecfolder.name$color" lore="@lucznik.truciciel.budulecfolder.lore$color,count,max" />
+            	<metadata key="guiName" value="lucznik_truciciel_budulec" />
+            	<metadata key="folder" value="true" />
+            	<metadata key="item1" value="archer.poison.budulec:1" />
+            	<metadata key="item2" value="archer.poison.budulec:2" />
+            	<metadata key="item3" value="archer.poison.budulec:3" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="6,4">
+            	<icon id="minecraft:iron_door" name="@main.return" />
+            	<metadata key="guiName" value="lucznik" />
+            	<onClick>open</onClick>
+            </button>
+        </content>
+    </container>
+</gui>

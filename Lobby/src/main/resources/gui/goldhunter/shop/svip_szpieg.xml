@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="5" title="@main.window_title">
+	<container pos="0,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+	<container pos="8,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+    <container pos="1,0" size="7,5">
+        <content>
+
+            <button pos="3,0">
+            	<icon id="NAME_TAG" name="@main.svip.szpieg.name" />
+            </button>
+            
+            <button pos="1,2">
+            	<icon id="WATCH" name="@svip.szpieg.timefolder.name$color" lore="@svip.szpieg.timefolder.lore$color,count,max"/>
+            	<metadata key="guiName" value="svip_szpieg_czas" />
+            	<metadata key="folder" value="true" />
+            	<metadata key="item1" value="svip.spy.time:1" />
+            	<metadata key="item2" value="svip.spy.time:2" />
+            	<metadata key="item3" value="svip.spy.time:3" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="2,2">
+            	<icon id="COMPASS" name="@svip.szpieg.time2folder.name$color" lore="@svip.szpieg.time2folder.lore$color,count,max"/>
+            	<metadata key="guiName" value="svip_szpieg_czas2" />
+            	<metadata key="folder" value="true" />
+            	<metadata key="item1" value="svip.spy.time2:1" />
+            	<metadata key="item2" value="svip.spy.time2:2" />
+            	<metadata key="item3" value="svip.spy.time2:3" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="4,2">
+            	<icon id="IRON_HELMET" name="@svip.szpieg.armor1.name$color" lore="@svip.szpieg.armor1.lore$color,status,price"/>
+            	<metadata key="item" value="svip.spy.ironboots" />
+            	<onClick>buy</onClick>
+            </button>
+            
+            <button pos="5,2">
+            	<icon id="WOOD" name="@svip.szpieg.budulecfolder.name$color" lore="@svip.szpieg.budulecfolder.lore$color,count,max" />
+            	<metadata key="guiName" value="svip_szpieg_budulec" />
+            	<metadata key="folder" value="true" />
+            	<metadata key="item1" value="svip.spy.budulec:1" />
+            	<metadata key="item2" value="svip.spy.budulec:2" />
+            	<metadata key="item3" value="svip.spy.budulec:3" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="6,4">
+            	<icon id="minecraft:iron_door" name="@main.return" />
+            	<metadata key="guiName" value="svip" />
+            	<onClick>open</onClick>
+            </button>
+        </content>
+    </container>
+</gui>

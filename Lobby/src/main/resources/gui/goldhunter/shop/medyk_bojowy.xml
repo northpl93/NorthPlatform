@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="5" title="@main.window_title">
+	<container pos="0,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+	<container pos="8,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+    <container pos="1,0" size="7,5">
+        <content>
+
+            <button pos="3,0">
+            	<icon id="minecraft:magma_cream" name="@main.medyk.bojowy.name" />
+            </button>
+            
+            <button pos="2,2">
+            	<icon id="WATCH" name="@medyk.bojowy.timefolder.name$color" lore="@medyk.bojowy.timefolder.lore$color,count,max"/>
+            	<metadata key="guiName" value="medyk_bojowy_czas" />
+            	<metadata key="folder" value="true" />
+            	<metadata key="item1" value="medic.battle.time:1" />
+            	<metadata key="item2" value="medic.battle.time:2" />
+            	<metadata key="item3" value="medic.battle.time:3" />
+            	<metadata key="item4" value="medic.battle.time:4" />
+            	<metadata key="item5" value="medic.battle.time:5" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="4,2">
+            	<icon id="WOOD" name="@medyk.bojowy.budulecfolder.name$color" lore="@medyk.bojowy.budulecfolder.lore$color,count,max" />
+            	<metadata key="guiName" value="medyk_bojowy_budulec" />
+            	<metadata key="folder" value="true" />
+            	<metadata key="item3" value="medic.battle.budulec:1" />
+            	<metadata key="item3" value="medic.battle.budulec:2" />
+            	<metadata key="item3" value="medic.battle.budulec:3" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="6,4">
+            	<icon id="minecraft:iron_door" name="@main.return" />
+            	<metadata key="guiName" value="medyk" />
+            	<onClick>open</onClick>
+            </button>
+        </content>
+    </container>
+</gui>

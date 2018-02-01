@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="5" title="@main.window_title">
+	<container pos="0,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+	<container pos="8,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+    <container pos="1,0" size="7,5">
+        <content>
+            <button pos="3,0">
+                <icon id="WOOD" name="@wojownik.berserker.budulecfolder.name" />
+            </button>
+
+            <button pos="1,2">
+            	<icon id="WOOD" name="@wojownik.berserker.budulec1.name$color" lore="@wojownik.berserker.budulec1.lore$color,status,price" />
+            	<metadata key="item" value="warrior.berserker.budulec" />
+            	<metadata key="level" value="1" />
+            	<onClick>buy</onClick>
+            </button>
+            
+            <button pos="3,2">
+            	<icon id="WOOD" name="@wojownik.berserker.budulec1.name$color" lore="@wojownik.berserker.budulec1.lore$color,status,price" />
+            	<metadata key="item" value="warrior.berserker.budulec" />
+            	<metadata key="level" value="2" />
+            	<onClick>buy</onClick>
+            </button>
+            
+            <button pos="5,2">
+            	<icon id="WOOD" name="@wojownik.berserker.budulec1.name$color" lore="@wojownik.berserker.budulec1.lore$color,status,price" />
+            	<metadata key="item" value="warrior.berserker.budulec" />
+            	<metadata key="level" value="3" />
+            	<onClick>buy</onClick>
+            </button>
+            
+            <button pos="6,4">
+            	<icon id="minecraft:iron_door" name="@main.return" />
+            	<metadata key="guiName" value="lucznik_truciciel" />
+            	<onClick>open</onClick>
+            </button>
+        </content>
+    </container>
+</gui>
