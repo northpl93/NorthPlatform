@@ -13,7 +13,7 @@
 	
 	<equipment>
 		<chestplate>
-			<item ifbuyed="vip.defender.ironchest" id="minecraft:diamond_chestplate" />
+			<item ifbuyed="vip.defender.diamondchest" id="minecraft:diamond_chestplate" />
 			<item id="minecraft:iron_chestplate" /> 
 		</chestplate>
 		

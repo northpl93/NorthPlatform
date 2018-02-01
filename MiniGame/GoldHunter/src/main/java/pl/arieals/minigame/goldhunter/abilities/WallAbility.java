@@ -16,10 +16,6 @@ public class WallAbility implements AbilityHandler
     @GoldHunterLogger
     private static Logger logger;
     
-    private static final int WALL_WIDTH = 3;
-    private static final int WALL_HEIGHT = 4;
-    private static final int WALL_DEPTH = 2;
-    
     @Override
     public boolean onUse(GoldHunterPlayer player, Location target)
     {
@@ -31,11 +27,25 @@ public class WallAbility implements AbilityHandler
             target = player.getPlayer().getEyeLocation().add(dir);
         }
         
-        buildWall(player.getPlayer().getLocation().getDirection(), target);
+        switch ( player.getShopItemLevel("vip.defender.ability") )
+        {
+        case 0:
+            buildWall(player.getPlayer().getLocation().getDirection(), target, 3, 4, 1);
+            break;
+            
+        case 1:
+            buildWall(player.getPlayer().getLocation().getDirection(), target, 5, 5, 1);
+            break;
+            
+        case 2:
+            buildWall(player.getPlayer().getLocation().getDirection(), target, 5, 5, 2);
+            break;
+        }
+        
         return true;
     }
     
-    private void buildWall(Vector lookDirection, Location target)
+    private void buildWall(Vector lookDirection, Location target, int wallWidth, int wallHeight, int wallDepth)
     {
         Vector min;
         Vector max;
@@ -59,23 +69,23 @@ public class WallAbility implements AbilityHandler
         
         if ( lookDeg >= -45 && lookDeg < 45 )
         {
-            min = new Vector(-WALL_WIDTH, 1, 0);
-            max = new Vector(WALL_WIDTH + 1, WALL_HEIGHT + 1, WALL_DEPTH);
+            min = new Vector(-wallWidth, 1, 0);
+            max = new Vector(wallWidth + 1, wallHeight + 1, wallDepth);
         }
         else if ( lookDeg >= 45 && lookDeg < 135 )
         {
-            min = new Vector(-WALL_DEPTH + 1, 1, -WALL_WIDTH);
-            max = new Vector(1, WALL_HEIGHT + 1, WALL_WIDTH + 1);
+            min = new Vector(-wallDepth + 1, 1, -wallWidth);
+            max = new Vector(1, wallHeight + 1, wallWidth + 1);
         }
         else if ( lookDeg >= -135 && lookDeg < -45 )
         {
-            min = new Vector(WALL_DEPTH, 1, -WALL_WIDTH);
-            max = new Vector(0, WALL_HEIGHT + 1, WALL_WIDTH + 1);
+            min = new Vector(wallDepth, 1, -wallWidth);
+            max = new Vector(0, wallHeight + 1, wallWidth + 1);
         }
         else
         {
-            min = new Vector(-WALL_WIDTH - 1, 1, -WALL_DEPTH);
-            max = new Vector(WALL_WIDTH, WALL_HEIGHT + 1, 0);
+            min = new Vector(-wallWidth - 1, 1, -wallDepth);
+            max = new Vector(wallWidth, wallHeight + 1, 0);
         }
         
         buildCuboid(target, min, max);

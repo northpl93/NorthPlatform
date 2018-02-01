@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>	
 <gui height="3" title="@select_class.title" >
 	<container pos="0,0" size="1,3" >
 		<background id="160" data="14" />

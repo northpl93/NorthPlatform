@@ -23,6 +23,9 @@ import org.bukkit.potion.PotionEffectType;
 import com.google.common.base.Preconditions;
 
 import net.minecraft.server.v1_12_R1.EntityPlayer;
+import pl.arieals.globalshops.server.IGlobalShops;
+import pl.arieals.globalshops.shared.Item;
+import pl.arieals.globalshops.shared.ItemsGroup;
 import pl.arieals.minigame.goldhunter.classes.CharacterClass;
 import pl.arieals.minigame.goldhunter.classes.CharacterClassManager;
 import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
@@ -47,6 +50,8 @@ public class GoldHunterPlayer implements ITickable
     private static CharacterClassManager classManager;
     @Inject
     private static ITickableManager tickableManager;
+    @Inject
+    private static IGlobalShops globalShops;
     @Inject
     @Messages("GoldHunter")
     private static MessagesBox messages;
@@ -192,8 +197,15 @@ public class GoldHunterPlayer implements ITickable
     
     public int getShopItemLevel(String shopItemName)
     {
-        // TODO:
-        return 2;
+        try
+        {
+            ItemsGroup group = globalShops.getGroup("GoldHunterShop");
+            Item item = globalShops.getItem(group, shopItemName);
+            return globalShops.getPlayer(player).getBoughtItemLevel(item);
+        } catch ( Throwable e )
+        {
+            return 0;
+        }
     }
     
     public int getKills()
@@ -231,18 +243,12 @@ public class GoldHunterPlayer implements ITickable
     
     public boolean hasBuyed(String shopItemName, int shopItemLevel)
     {
-        // TODO:
-        if ( shopItemLevel > 2 )
-        {
-            return false;
-        }
-        
-        return true;
+        return getShopItemLevel(shopItemName) >= shopItemLevel;
     }
     
     public int getAbilityLevel(SpecialAbilityType ability)
     {
-        return getShopItemLevel("ability." + ability.name().toLowerCase());
+        return getShopItemLevel(ability.getShopItemName());
     }
     
     public CharacterClass getCurrentClass()

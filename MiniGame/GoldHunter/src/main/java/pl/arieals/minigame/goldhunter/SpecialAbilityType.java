@@ -20,48 +20,55 @@ import pl.arieals.minigame.goldhunter.abilities.WallAbility;
 public enum SpecialAbilityType
 {
     // lucznik
-    POISON_ARROW(new PoisonArrowAbility(), 50 * 20, 45 * 20, 40 * 20, 35 * 20),
-    BOMB_ARROW(new BombArrowAbility(), 50 * 20, 45 * 20, 40 * 20, 35 * 20),
+    POISON_ARROW(new PoisonArrowAbility(), "archer.poison.time", 50 * 20, 45 * 20, 40 * 20, 35 * 20),
+    BOMB_ARROW(new BombArrowAbility(), "archer.bomb.time", 50 * 20, 45 * 20, 40 * 20, 35 * 20),
     
     // wojownik
-    CALL_OF_BLOOD(new CallOfBloodAbility(), 50 * 20, 45 * 20, 40 * 20, 35 * 20),
-    SHIELD_ATTACK(new ShieldAttackAbility(), 50 * 20, 45 * 20, 40 * 20, 35 * 20),
+    CALL_OF_BLOOD(new CallOfBloodAbility(), "warrior.berserker.time", 50 * 20, 45 * 20, 40 * 20, 35 * 20),
+    SHIELD_ATTACK(new ShieldAttackAbility(), "warrior.knight.time", 50 * 20, 45 * 20, 40 * 20, 35 * 20),
     
     // zwiadowca
-    DOUBLE_JUMP(new DoubleJumpAbility(), 23 * 20, 20 * 20, 17 * 20, 14 * 20),
-    DAZZLE(new DazzleAbility(), 40 * 20, 35 * 20, 30 * 20, 25 * 20),
+    DOUBLE_JUMP(new DoubleJumpAbility(), "scout.sprinter.time", 23 * 20, 20 * 20, 17 * 20, 14 * 20),
+    DAZZLE(new DazzleAbility(), "scout.slinger.time", 40 * 20, 35 * 20, 30 * 20, 25 * 20),
     
     // Medyk
-    BATTLECRY(new BattlecryAbility(), 55 * 20, 50 * 20, 45 * 20, 40 * 20),
-    SIRENS_TEARS(new SirenTearsAbility(), 50 * 20, 45 * 20, 40 * 20, 35 * 20),
+    BATTLECRY(new BattlecryAbility(), "medic.battle.time", 55 * 20, 50 * 20, 45 * 20, 40 * 20),
+    SIRENS_TEARS(new SirenTearsAbility(), "medic.healer.time", 50 * 20, 45 * 20, 40 * 20, 35 * 20),
     
     // Technik
-    BRIDGE(new BrigdeAbility(), 50 * 20, 45 * 20, 40 * 20, 35 * 20),
+    BRIDGE(new BrigdeAbility(), "engineer.architect.time", 50 * 20, 45 * 20, 40 * 20, 35 * 20),
     // TODO: dozownik
     
-    SHADOW(new ShadowAbility(), 50 * 20, 45 * 20, 40 * 20, 35 * 2),
-    WALL(new WallAbility(), 50 * 20, 45 * 20, 40 * 20, 35 * 2),
+    SHADOW(new ShadowAbility(), "vip.assasyn.time", 50 * 20, 45 * 20, 40 * 20, 35 * 2),
+    WALL(new WallAbility(), "vip.defender.time", 50 * 20, 45 * 20, 40 * 20, 35 * 2),
     
-    BETRAYAL(new BetrayalAbility(), 50 * 20, 45 * 20, 40 * 20, 35 * 2),
-    REDEMPTION(new RedemptionAbility(), 55 * 20, 50 * 20, 45 * 20, 40 * 20),
+    BETRAYAL(new BetrayalAbility(), "svip.spy.time", 50 * 20, 45 * 20, 40 * 20, 35 * 2),
+    REDEMPTION(new RedemptionAbility(), "svip.paladin.time", 55 * 20, 50 * 20, 45 * 20, 40 * 20),
     ;
     
     private static final Map<String, SpecialAbilityType> byName = new HashMap<>();
     
     private final AbilityHandler handler;
+    private final String shopItemName;
     private final int[] loadingTimes;
     
-    private SpecialAbilityType(AbilityHandler handler, int... loadingTimesInSeconds)
+    private SpecialAbilityType(AbilityHandler handler, String shopItem, int... loadingTimesInSeconds)
     {
         Preconditions.checkNotNull(handler);
         
         this.handler = handler;
+        this.shopItemName = shopItem;
         this.loadingTimes = loadingTimesInSeconds;
     }
     
     public AbilityHandler getHandler()
     {
         return handler;
+    }
+    
+    public String getShopItemName()
+    {
+        return shopItemName;
     }
     
     public int[] getLoadingTimes()

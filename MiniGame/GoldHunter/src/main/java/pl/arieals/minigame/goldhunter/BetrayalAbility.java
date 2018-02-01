@@ -8,7 +8,8 @@ public class BetrayalAbility implements AbilityHandler
     public boolean onUse(GoldHunterPlayer player)
     {
         player.getAbilityTracker().suspendAbilityLoading();
-        player.getEffectTracker().addEffect(new BetrayalEffect(), 200).onComplete(player.getAbilityTracker()::resetAbilityLoading);
+        player.getEffectTracker().addEffect(new BetrayalEffect(), 300 + 100 * player.getShopItemLevel("svip.spy.time2"))
+                .onComplete(player.getAbilityTracker()::resetAbilityLoading);
         return true;
     }
 }

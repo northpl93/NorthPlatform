@@ -33,7 +33,7 @@
 		</inv>		
 	<!-- BUDULEC -->		
 		<inv slot="8" >
-			<item ifbuyed="warrior.berserker..budulec:3" id="minecraft:planks" count="40" />
+			<item ifbuyed="warrior.berserker.budulec:3" id="minecraft:planks" count="40" />
 			<item ifbuyed="warrior.berserker.budulec:2" id="minecraft:planks" count="35" />
 			<item ifbuyed="warrior.berserker.budulec:1" id="minecraft:planks" count="30" />
 			<item id="minecraft:planks" count="25" />

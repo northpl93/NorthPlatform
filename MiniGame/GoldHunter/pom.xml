@@ -19,5 +19,10 @@
             <artifactId>minigame</artifactId>
             <version>1.0-INDEV</version>
         </dependency>
+        <dependency>
+        	<groupId>pl.arieals</groupId>
+        	<artifactId>globalshops</artifactId>
+        	<version>1.0-INDEV</version>
+        </dependency>
     </dependencies>
 </project>
