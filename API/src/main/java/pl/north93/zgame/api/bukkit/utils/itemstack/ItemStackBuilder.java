@@ -65,7 +65,8 @@ public class ItemStackBuilder
 
     public ItemStackBuilder lore(final String... lore)
     {
-        this.lore = Arrays.stream(lore).map(line -> ChatColor.translateAlternateColorCodes('&', line)).collect(Collectors.toList());
+        this.lore = Arrays.stream(lore).flatMap(line -> Arrays.stream(line.split("\n"))).map(line -> ChatColor.translateAlternateColorCodes('&', line))
+                .collect(Collectors.toList());
         return this;
     }
 

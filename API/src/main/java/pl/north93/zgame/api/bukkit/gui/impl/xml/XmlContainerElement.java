@@ -41,8 +41,8 @@ public class XmlContainerElement extends XmlGuiElement
         String[] split = size.split(",");
         
         GuiContainerElement result = new GuiContainerElement(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
-        result.setBackground(background.toGuiIcon(renderContext, this.getVariables()));
-        result.setBorder(border.toGuiIcon(renderContext, this.getVariables()));
+        result.setBackground(background != null ? background.toGuiIcon(renderContext, this.getVariables()) : null);
+        result.setBorder(border != null ? border.toGuiIcon(renderContext, this.getVariables()) : null);
         
         return result;
     }

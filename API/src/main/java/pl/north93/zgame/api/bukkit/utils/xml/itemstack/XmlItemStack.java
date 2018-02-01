@@ -24,7 +24,7 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlEnchant;
 
 @XmlRootElement(name = "item")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({XmlItemMeta.class, XmlSkullMeta.class})
+@XmlSeeAlso({XmlItemMeta.class, XmlSkullMeta.class, XmlPotionMeta.class})
 public class XmlItemStack
 {
     @XmlAttribute(required = true)

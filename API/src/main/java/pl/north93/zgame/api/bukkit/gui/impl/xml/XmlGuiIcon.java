@@ -1,11 +1,12 @@
 package pl.north93.zgame.api.bukkit.gui.impl.xml;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import java.util.List;
-
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import pl.north93.zgame.api.bukkit.gui.ConfigGuiIcon;
@@ -19,6 +20,11 @@ import pl.north93.zgame.api.global.messages.TranslatableString;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlGuiIcon extends XmlItemStack
 {
+    public XmlGuiIcon()
+    {
+        super(Material.AIR.name(), 0);
+    }
+    
     public IGuiIcon toGuiIcon(RenderContext renderContext, List<XmlVariable> variables)
     {
         final MessagesBox messages = renderContext.getMessagesBox();

@@ -64,9 +64,10 @@ public class GuiContent extends GuiContainerElement
             for ( int j = 0; j < renderedCanvas.getHeight(); j++ )
             {
                 IGuiIcon icon = renderedCanvas.getGuiIconInSlot(i, j);
+                GuiElement element = renderedCanvas.getGuiElementInSlot(i, j);
                 if ( icon != null )
                 {
-                    inv.setItem(j * 9 + i, icon.toItemStack(gui.getMessagesBox(), player, gui.getVariables()));
+                    inv.setItem(j * 9 + i, icon.toItemStack(gui.getMessagesBox(), player, gui.getVariables().and(element.getLocalVariables())));
                 }
             }
         }
