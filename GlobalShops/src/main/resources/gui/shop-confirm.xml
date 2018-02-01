@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="1" title="@shop.confirm.title">
+	<button pos="2,0">
+		<icon id="minecraft:stained_hardened_clay" data="5" name="@shop.confirm.accept" />
+		<onClick>accept</onClick>
+	</button>	
+	<button pos="6,0">
+		<icon id="minecraft:stained_hardened_clay" data="14" name="@shop.confirm.deny" />
+		<onClick>deny</onClick>
+	</button>
+</gui>
