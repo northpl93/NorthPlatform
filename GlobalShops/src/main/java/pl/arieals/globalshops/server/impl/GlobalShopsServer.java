@@ -61,9 +61,11 @@ public class GlobalShopsServer extends Component implements IGlobalShops
 
     private synchronized void updateGroups0(final ItemsDataContainer container)
     {
+    	System.out.println("update groups0");
         this.groups.clear();
         for (final ItemsGroupCfg itemsGroupCfg : container.getGroups())
         {
+        	System.out.println(itemsGroupCfg);
             final ItemsGroup itemsGroup = new ItemsGroup(itemsGroupCfg);
             this.groups.put(itemsGroup.getId(), itemsGroup);
         }

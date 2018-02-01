@@ -11,6 +11,10 @@ public enum BuyResult
      */
     NO_MONEY,
     /**
+     * Brak wymaganych przedmiotow
+     */
+    NOT_SATISFIED_DEPENDENCIES,
+    /**
      * Osiagniety maksymany poziom przedmiotu.
      */
     MAX_LEVEL

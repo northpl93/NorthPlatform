@@ -5,6 +5,8 @@ import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
 
+import com.google.common.base.Preconditions;
+
 import pl.arieals.globalshops.server.BuyResult;
 import pl.arieals.globalshops.server.IPlayerContainer;
 import pl.arieals.globalshops.server.IPlayerExperienceService;
@@ -33,16 +35,38 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
     {
         final ItemCheckBuyEvent event = new ItemCheckBuyEvent(playerContainer.getBukkitPlayer(), playerContainer, item, level);
 
+        if ( level > item.getMaxLevel() )
+        {
+        	logger.log(Level.WARNING, "Player attempt to buy item {0} at level: {1} where max level is {2}", new Object[] { item, level, item.getMaxLevel() });
+        	// XXX: should we do something with this?
+        }
+        
         if (playerContainer.hasMaxLevel(item))
         {
             event.setResult(BuyResult.MAX_LEVEL);
         }
 
-        // todo money check
+        if ( !checkDependencies(playerContainer, item, level) )
+        {
+        	event.setResult(BuyResult.NOT_SATISFIED_DEPENDENCIES);
+        }
+        // TODO: money check
 
         return this.apiCore.callEvent(event).getResult();
     }
 
+    private boolean checkDependencies(final IPlayerContainer playerContainer, final Item item, final int level)
+    {
+    	if ( !playerContainer.hasBoughtItemAtLevel(item, level - 1) )
+    	{
+    		return false;
+    	}
+    	
+    	// TODO:
+    	
+    	return true;
+    }
+    
     @Override
     public void processClick(final IPlayerContainer playerContainer, final Item item)
     {
@@ -54,7 +78,7 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
             }
             else
             {
-                this.buyItem(playerContainer, item);
+                this.buyItem(playerContainer, item, 1);
             }
         }
         else
@@ -63,6 +87,13 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
         }
     }
 
+    @Override
+    public void processClick(IPlayerContainer playerContainer, Item item, int level)
+    {
+    	Preconditions.checkState(item.getGroup().getGroupType() == GroupType.MULTI_BUY);
+    	this.buyItem(playerContainer, item, level);
+    }
+    
     private void markActive(final IPlayerContainer playerContainer, final Item item)
     {
         playerContainer.markAsActive(item);
@@ -71,63 +102,57 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
         this.logger.log(Level.INFO, "Player {0} marked {1} as active in group {2}", new Object[]{playerName, item.getId(), item.getGroup().getId()});
     }
 
-    private void buyItem(final IPlayerContainer playerContainer, final Item item)
-    {
-        final Player bukkitPlayer = playerContainer.getBukkitPlayer();
-        final BuyResult buyResult = this.checkCanBuy(playerContainer, item, 1);
-
-        if (buyResult != BuyResult.CAN_BUY)
-        {
-            this.logger.log(Level.INFO, "Buy cancelled for player {0} item {1}", new Object[]{bukkitPlayer.getName(), item.getId()});
-            return;
-        }
-
-        final ItemBuyEvent buyEvent = this.apiCore.callEvent(new ItemBuyEvent(bukkitPlayer, item, 1));
-        if (buyEvent.isCancelled())
-        {
-            return;
-        }
-
-        final boolean success = playerContainer.addItem(item);
-        if (! success)
-        {
-            this.logger.log(Level.WARNING, "Player {0} failed to buy {1}", new Object[]{bukkitPlayer.getName(), item.getId()});
-            return;
-        }
-
-        // todo bierzemy kase
-        this.logger.log(Level.INFO, "Player {0} bought {1}", new Object[]{bukkitPlayer.getName(), item.getId()});
-
-        // oznaczamy dany item jako aktywny
-        this.markActive(playerContainer, item);
-    }
-
     private void upgradeItem(final IPlayerContainer playerContainer, final Item item)
     {
-        final int nextLevel = playerContainer.getBoughtItemLevel(item) + 1;
+        int nextLevel = playerContainer.getBoughtItemLevel(item) + 1;
+        buyItem(playerContainer, item, nextLevel);
+    }
+    
+    private void buyItem(final IPlayerContainer playerContainer, final Item item, int level)
+    {
+    	Preconditions.checkArgument(level > 0);
+    	Preconditions.checkState(item.getGroup().getGroupType() == GroupType.MULTI_BUY || level == 1);
+    	
         final Player bukkitPlayer = playerContainer.getBukkitPlayer();
 
-        final BuyResult buyResult = this.checkCanBuy(playerContainer, item, nextLevel);
+        final BuyResult buyResult = this.checkCanBuy(playerContainer, item, level);
         if (buyResult != BuyResult.CAN_BUY)
         {
-            this.logger.log(Level.INFO, "Upgrade cancelled with reason {0} for player {1} item {2} level {3}", new Object[]{buyResult, bukkitPlayer.getName(), item.getId(), nextLevel});
+            this.logger.log(Level.INFO, "Upgrade cancelled with reason {0} for player {1} item {2} level {3}", new Object[]{buyResult, bukkitPlayer.getName(), item.getId(), level});
             return;
         }
 
-        final ItemBuyEvent buyEvent = this.apiCore.callEvent(new ItemBuyEvent(bukkitPlayer, item, nextLevel));
-        if (buyEvent.isCancelled())
+        ConfirmGui.openConfirmGui(playerContainer.getBukkitPlayer()).onComplete(() ->
         {
-            return;
-        }
-
-        final boolean success = playerContainer.addItem(item, nextLevel);
-        if (! success)
-        {
-            this.logger.log(Level.WARNING, "Player {0} failed to buy {1} level {2} (success false)", new Object[]{bukkitPlayer.getName(), item.getId(), nextLevel});
-            return;
-        }
-
-        // todo bierzemy kase
-        this.logger.log(Level.INFO, "Player {0} bought {1} level {2}", new Object[]{bukkitPlayer.getName(), item.getId(), nextLevel});
+        	// sprawdzamy czy gracz może nadal kupić ten przedmiot ( mogło się coś w między czasie zmienić )
+        	final BuyResult buyResult2 = this.checkCanBuy(playerContainer, item, level);
+            if (buyResult2 != BuyResult.CAN_BUY)
+            {
+            	// TODO: send message
+                this.logger.log(Level.INFO, "Upgrade cancelled with reason {0} for player {1} item {2} level {3}", new Object[]{buyResult2, bukkitPlayer.getName(), item.getId(), level});
+                return;
+            }
+            
+	        final ItemBuyEvent buyEvent = this.apiCore.callEvent(new ItemBuyEvent(bukkitPlayer, item, level));
+	        if (buyEvent.isCancelled())
+	        {
+	            return;
+	        }
+	
+	        final boolean success = playerContainer.addItem(item, level);
+	        if (! success)
+	        {
+	            this.logger.log(Level.WARNING, "Player {0} failed to buy {1} level {2} (success false)", new Object[]{bukkitPlayer.getName(), item.getId(), level});
+	            return;
+	        }
+	
+	        // todo bierzemy kase
+	        this.logger.log(Level.INFO, "Player {0} bought {1} level {2}", new Object[]{bukkitPlayer.getName(), item.getId(), level});
+	        
+	        if ( item.getGroup().getGroupType() == GroupType.SINGLE_PICK )
+	        {
+	        	markActive(playerContainer, item);
+	        }
+        });
     }
 }

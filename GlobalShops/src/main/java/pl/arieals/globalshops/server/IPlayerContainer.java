@@ -3,6 +3,7 @@ package pl.arieals.globalshops.server;
 import javax.annotation.Nullable;
 
 import java.util.Collection;
+import java.util.Map;
 
 import org.bukkit.entity.Player;
 
@@ -25,6 +26,13 @@ public interface IPlayerContainer
      * @return lista kupionych przedmiotow z grupy.
      */
     Collection<Item> getBoughtItems(ItemsGroup group);
+    
+    /**
+     * 
+     * @param group grupa z ktorej wylistowac kupione przedmioty.
+     * @return mapa zawierajaca obecny poziom dla danego przedmiotu.
+     */
+    Map<Item, Integer> getBoughtItemsLevel(ItemsGroup group);
 
     /**
      * Sprawdza czy gracz ma kupiony dany przedmiot na dowolnym poziomie.
@@ -34,6 +42,15 @@ public interface IPlayerContainer
      */
     boolean hasBoughtItem(Item item);
 
+    /**
+     * Sprawdza czy gracz ma kupiony dany przedmiot na danym poziomie. 
+     *
+     * @param item przedmiot do sprawdzenia.
+     * @param level poziom przedmiotu do sprawdzenia.
+     * @return true jeżeli gracz posiada dany przedmiot na danym poziomie.
+     */
+    boolean hasBoughtItemAtLevel(Item item, int level);
+    
     /**
      * Zwraca poziom danego przedmiotu.
      * W przypadku gdy przedmiot nie jest kupiony zwroci 0.

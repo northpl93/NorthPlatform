@@ -18,4 +18,13 @@ public interface IPlayerExperienceService
      * @param item
      */
     void processClick(IPlayerContainer playerContainer, Item item);
+    
+    /**
+     * Obsluguje klikniecie przedmiotu w gui na danym poziomie.
+     * 
+     * @param playerContainer
+     * @param item
+     * @param level
+     */
+    void processClick(IPlayerContainer playerContainer, Item item, int level);
 }

@@ -18,6 +18,6 @@ public class GlobalShopsController extends Component
     @Override
     protected void disableComponent()
     {
-
+    	
     }
 }

@@ -4,6 +4,7 @@ import static java.text.MessageFormat.format;
 
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -53,12 +54,25 @@ class PlayerContainerImpl implements IPlayerContainer
                    .map(id -> this.getItemFromInternalId(group, id))
                    .collect(Collectors.toList());
     }
+    
+    @Override
+    public Map<Item, Integer> getBoughtItemsLevel(ItemsGroup group)
+    {
+    	// TODO;
+    	return null;
+    }
 
     @Override
     public boolean hasBoughtItem(final Item item)
     {
         final PlayerData data = this.playerData.get();
         return data.getBoughtItems().containsKey(this.itemToInternalId(item));
+    }
+    
+    @Override
+    public boolean hasBoughtItemAtLevel(Item item, int level)
+    {
+    	return getBoughtItemLevel(item) >= level;
     }
 
     @Override
@@ -96,7 +110,7 @@ class PlayerContainerImpl implements IPlayerContainer
     {
         Preconditions.checkNotNull(item, "Item can't be null");
         Preconditions.checkState(level > 0, "Level must be grater than 0.");
-        Preconditions.checkState(item.getMaxLevel() <= level, "Level must be smaller or equal to item's max level.");
+        Preconditions.checkState(level <= item.getMaxLevel(), "Level must be smaller or equal to item's max level.");
 
         final boolean success = this.service.addItem(this.player, item.getGroup().getId(), item.getId(), level);
         this.playerData.reset();

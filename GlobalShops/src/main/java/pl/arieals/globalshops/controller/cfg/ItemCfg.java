@@ -27,6 +27,8 @@ public final class ItemCfg
     private List<ItemName>    names = new ArrayList<>(0);
     @XmlElement(name = "itemData")
     private List<ItemDataCfg> itemData = new ArrayList<>(0);
+    @XmlElement(name = "dependency")
+    private List<ItemDependencyCfg> dependecies = new ArrayList<>(0);
 
     public String getId()
     {
@@ -52,4 +54,9 @@ public final class ItemCfg
     {
         return this.itemData;
     }
+    
+    public List<ItemDependencyCfg> getDependecies()
+	{
+		return dependecies;
+	}
 }
