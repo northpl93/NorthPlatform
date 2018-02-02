@@ -2,13 +2,18 @@ package pl.north93.zgame.api.bukkit.gui.impl;
 
 import java.util.Optional;
 
+import net.minecraft.server.v1_12_R1.EntityPlayer;
+
+import com.google.common.base.Preconditions;
+
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-
-import com.google.common.base.Preconditions;
 
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.GuiContent;
@@ -55,14 +60,39 @@ public class GuiTrackerEntry
     public void openNewGui(Gui newGui)
     {
         GuiContent content = newGui.getContent();
-        
+
         Inventory inv = Bukkit.createInventory(null, 9 * content.getHeight(), content.getTitle().getValue(player, newGui.getVariables()));
         content.renderToInventory(player, inv);
+        this.cleanupOldInventory();
         player.openInventory(inv);
         
         currentGui = newGui;
         currentInventory = inv;
         guiTracker.addGuiViewer(currentGui, this);
+    }
+
+    /**
+     * Gdy otwieramy GUI przez openInventory, a gracz ma juz otwarte inne GUI to
+     * bukkit dziwnie to obsluguje i udaje odebranie pakietu zamknięcia okna.
+     * Gdy nastąpi to w wątku innym niż wątek serwera to wyleci wyjątek CancelledPacketHandleException.
+     *
+     * Omijamy to ręcznie zamykając poprzednie okno po stronie serwera i oszukując tym samym Bukkita
+     * przy tworzeniu nowego inventory.
+     */
+    private void cleanupOldInventory()
+    {
+        final CraftPlayer craftPlayer = (CraftPlayer) this.player;
+        final EntityPlayer entityPlayer = craftPlayer.getHandle();
+
+        final CraftInventoryView craftInventoryView = (CraftInventoryView) craftPlayer.getOpenInventory();
+        if (craftInventoryView.getHandle() == entityPlayer.defaultContainer)
+        {
+            // gracz nie ma otwartego gui lub ma otwarty swój ekwipunek
+            return;
+        }
+
+        CraftEventFactory.handleInventoryCloseEvent(entityPlayer);
+        entityPlayer.r(); // skopiowane z EntityPlayer#closeInventory()
     }
     
     public void refreshInventory()
