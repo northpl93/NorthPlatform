@@ -45,13 +45,19 @@ class StaticScanningTask extends AbstractScanningTask
                 continue;
             }
 
-            final Field field = toJavaField(this.clazz, next);
-            if (field == null)
+            final Field field;
+            
+            try
             {
-                // gdy field jest nullem to znaczy, ze klasy nie dalo sie zaladowac
-                // wiec ja pomijamy
+                field = toJavaField(this.clazz, next);
+            }
+            catch ( Throwable e )
+            {
+                System.err.println("Dependency inject for class " + clazz.getName() + " fails, because the class cannot be loaded");
+                e.printStackTrace();
                 return true;
             }
+            
             field.setAccessible(true);
 
             final BeanQuery query = new BeanQuery().type(field.getType());

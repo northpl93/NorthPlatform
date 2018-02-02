@@ -8,6 +8,7 @@ import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtField;
 import javassist.CtMethod;
+import pl.north93.zgame.api.global.utils.lang.SneakyThrow;
 
 /**
  * Narzędzia do zamieniania obiektów z Javassista na Javowe wersje.
@@ -20,8 +21,9 @@ public class CtUtils
         {
             return clazz.getDeclaredField(ctField.getName());
         }
-        catch (final Throwable e)
+        catch ( Throwable e )
         {
+            SneakyThrow.sneaky(e);
             return null;
         }
     }
