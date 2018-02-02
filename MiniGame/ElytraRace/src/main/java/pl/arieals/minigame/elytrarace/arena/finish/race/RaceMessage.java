@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
@@ -114,7 +115,8 @@ public class RaceMessage
 
         if (this.record != null)
         {
-            final String recordOwner = this.network.getPlayers().getNickFromUuid(this.record.getHolder().getUniqueId());
+            final UUID uniqueId = this.record.getHolder().getUniqueId();
+            final String recordOwner = this.network.getPlayers().getNickFromUuid(uniqueId).orElse(uniqueId.toString());
             final String formattedRecord = this.timeFormat.format(new Date(this.record.getValue().getValue().toMillis()));
             this.messages.sendMessage(player, "finish.race.record", MessageLayout.CENTER, recordOwner, formattedRecord);
         }

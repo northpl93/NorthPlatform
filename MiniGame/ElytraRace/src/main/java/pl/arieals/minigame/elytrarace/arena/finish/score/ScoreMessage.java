@@ -6,6 +6,7 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
@@ -108,7 +109,8 @@ public class ScoreMessage
         this.messages.sendMessage(player, "finish.score.your_points", MessageLayout.CENTER, getPlayerData(player, ElytraScorePlayer.class).getPoints());
         if (this.record != null)
         {
-            final String recordOwner = this.network.getPlayers().getNickFromUuid(this.record.getHolder().getUniqueId());
+            final UUID uniqueId = this.record.getHolder().getUniqueId();
+            final String recordOwner = this.network.getPlayers().getNickFromUuid(uniqueId).orElse(uniqueId.toString());
             this.messages.sendMessage(player, "finish.score.record", MessageLayout.CENTER, recordOwner, this.record.getValue().getValue());
         }
     }
