@@ -2,7 +2,6 @@ package pl.north93.zgame.api.bukkit.player.impl;
 
 import java.util.Locale;
 
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,7 +28,7 @@ public class LanguageKeeper implements Listener
 
     public static void updateLocale(final Player player, final Locale locale)
     {
-        ((CraftPlayer) player).getHandle().locale = locale.toLanguageTag();
+        INorthPlayer.asCraftPlayer(player).getHandle().locale = locale.toLanguageTag();
     }
 
     @Override

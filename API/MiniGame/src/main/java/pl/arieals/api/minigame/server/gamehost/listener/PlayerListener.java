@@ -1,6 +1,7 @@
 package pl.arieals.api.minigame.server.gamehost.listener;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
+import static pl.north93.zgame.api.bukkit.player.INorthPlayer.asCraftPlayer;
 import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.getTrackerEntry;
 import static pl.north93.zgame.api.global.utils.lang.JavaUtils.instanceOf;
 
@@ -11,7 +12,6 @@ import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
 
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -70,7 +70,7 @@ public class PlayerListener implements Listener
      */
     private void fixLobbyVisibility(final LocalArena arena, final Player player)
     {
-        final EntityPlayer joiningPlayer = ((CraftPlayer) player).getHandle();
+        final EntityPlayer joiningPlayer = asCraftPlayer(player).getHandle();
         final EntityTrackerEntry joiningTrackerEntry = getTrackerEntry(joiningPlayer);
         if (joiningTrackerEntry == null)
         {
@@ -79,7 +79,7 @@ public class PlayerListener implements Listener
 
         for (final Player arenaPlayer : arena.getPlayersManager().getPlayers())
         {
-            final EntityPlayer arenaEntityPlayer = ((CraftPlayer) arenaPlayer).getHandle();
+            final EntityPlayer arenaEntityPlayer = asCraftPlayer(arenaPlayer).getHandle();
             final EntityTrackerEntry arenaTrackerEntry = getTrackerEntry(arenaEntityPlayer);
             if (arenaTrackerEntry == null)
             {

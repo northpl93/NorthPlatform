@@ -1,12 +1,14 @@
 package pl.north93.zgame.antycheat.event.source;
 
+import static pl.north93.zgame.api.bukkit.player.INorthPlayer.asCraftPlayer;
+
+
 import net.minecraft.server.v1_12_R1.Packet;
 import net.minecraft.server.v1_12_R1.PacketPlayInCustomPayload;
 import net.minecraft.server.v1_12_R1.PacketPlayInFlying;
 import net.minecraft.server.v1_12_R1.PacketPlayInUseEntity;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -66,7 +68,7 @@ public class AntyCheatPacketListener implements AutoListener
     // tworzy PlayerMoveTimelineEvent na podstawie obiektu gracza i pakietów od movementu
     private ClientMoveTimelineEvent createMoveTimelineEvent(final Player player, final PacketPlayInFlying packetPlayInFlying)
     {
-        final boolean oldOnGround = ((CraftPlayer) player).getHandle().onGround;
+        final boolean oldOnGround = asCraftPlayer(player).getHandle().onGround;
         final RichEntityLocation oldLocation = new RichEntityLocation(player, player.getLocation());
 
         final boolean newOnGround = packetPlayInFlying.a();

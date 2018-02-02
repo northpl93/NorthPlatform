@@ -13,7 +13,6 @@ import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
 
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftItemFrame;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 
@@ -22,6 +21,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javafx.collections.ObservableMap;
 import pl.north93.zgame.api.bukkit.map.IMap;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 class MapImpl implements IMap
 {
@@ -94,7 +94,7 @@ class MapImpl implements IMap
         // renderujemy mape wszystkim juz obecnym graczom
         for (final Player player : this.getTrackingPlayers())
         {
-            this.controller.handlePlayerEnter(this, (CraftPlayer) player);
+            this.controller.handlePlayerEnter(this, INorthPlayer.asCraftPlayer(player));
         }
     }
 

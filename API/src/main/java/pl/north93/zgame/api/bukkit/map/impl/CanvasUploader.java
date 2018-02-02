@@ -9,12 +9,13 @@ import org.bukkit.entity.Player;
 
 import io.netty.channel.Channel;
 import pl.north93.zgame.api.bukkit.map.IMapCanvas;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 final class CanvasUploader
 {
     public static void doUpload(final Player player, final int mapId, final IMapCanvas old, final IMapCanvas newCanvas)
     {
-        final CraftPlayer craftPlayer = (CraftPlayer) player;
+        final CraftPlayer craftPlayer = INorthPlayer.asCraftPlayer(player);
 
         final PacketPlayOutMap packet = new PacketPlayOutMap(mapId, (byte) 4, false, Collections.emptyList(), newCanvas.getBytes(), 0, 0, 128, 128);
 

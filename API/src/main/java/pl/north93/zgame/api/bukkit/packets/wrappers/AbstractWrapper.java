@@ -7,11 +7,12 @@ import java.lang.reflect.Field;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.Packet;
 
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 public abstract class AbstractWrapper<T extends Packet>
 {
@@ -30,7 +31,7 @@ public abstract class AbstractWrapper<T extends Packet>
 
     public final void sendTo(final Player player)
     {
-        final EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+        final EntityPlayer entityPlayer = INorthPlayer.asCraftPlayer(player).getHandle();
         entityPlayer.playerConnection.sendPacket(this.packet);
     }
 
