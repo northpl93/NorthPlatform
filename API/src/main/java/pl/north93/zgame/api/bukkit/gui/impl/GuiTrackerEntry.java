@@ -19,6 +19,7 @@ import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.GuiContent;
 import pl.north93.zgame.api.bukkit.gui.HotbarEntry;
 import pl.north93.zgame.api.bukkit.gui.HotbarMenu;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 public class GuiTrackerEntry
 {
@@ -81,7 +82,7 @@ public class GuiTrackerEntry
      */
     private void cleanupOldInventory()
     {
-        final CraftPlayer craftPlayer = (CraftPlayer) this.player;
+        final CraftPlayer craftPlayer = INorthPlayer.asCraftPlayer(this.player);
         final EntityPlayer entityPlayer = craftPlayer.getHandle();
 
         final CraftInventoryView craftInventoryView = (CraftInventoryView) craftPlayer.getOpenInventory();

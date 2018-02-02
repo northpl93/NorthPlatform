@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -69,6 +70,16 @@ public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
     public INorthPlayer getPlayer(final String nick)
     {
         return Optional.ofNullable(Bukkit.getPlayer(nick)).map(this::getPlayer).orElse(null);
+    }
+
+    @Override
+    public CraftPlayer getCraftPlayer(final Player player)
+    {
+        if (player instanceof CraftPlayer)
+        {
+            return (CraftPlayer) player;
+        }
+        return ((INorthPlayer) player).getCraftPlayer();
     }
 
     private INorthPlayer wrapNorthPlayer(final Player player, final Value<IOnlinePlayer> playerData)

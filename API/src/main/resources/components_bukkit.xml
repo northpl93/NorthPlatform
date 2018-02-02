@@ -21,6 +21,9 @@
             <dependencies>
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>
             </dependencies>
+            <packages>
+                <package>pl.north93.zgame.api.bukkit.player</package>
+            </packages>
             <platforms>
                 <platform>BUKKIT</platform>
             </platforms>

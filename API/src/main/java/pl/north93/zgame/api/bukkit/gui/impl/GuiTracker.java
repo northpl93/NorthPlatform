@@ -19,7 +19,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
@@ -138,7 +137,7 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
     
     public GuiTrackerEntry getEntry(Player player)
     {
-        return entriesByPlayer.get(player);
+        return entriesByPlayer.computeIfAbsent(player, p -> new GuiTrackerEntry(this, p));
     }
     
     public Collection<GuiTrackerEntry> getEntries(Gui gui)
@@ -151,18 +150,12 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
         return entriesByHotbar.get(hotbarMenu);
     }
     
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerJoin(PlayerJoinEvent event)
-    {
-        entriesByPlayer.put(event.getPlayer(), new GuiTrackerEntry(this, event.getPlayer()));
-    }
-    
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event)
     {
         GuiTrackerEntry entry = entriesByPlayer.remove(event.getPlayer());
         
-        if ( entry.getCurrentHotbarMenu() != null )
+        if ( entry != null && entry.getCurrentHotbarMenu() != null )
         {
             entry.closeHotbarMenu();
         }

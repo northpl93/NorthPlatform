@@ -2234,4 +2234,21 @@ class NorthPlayer implements INorthPlayer
     {
         return this.bukkitPlayer.getVirtualHost();
     }
+
+    @Override
+    public int hashCode()
+    {
+        return this.bukkitPlayer.hashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj)
+    {
+        if (obj instanceof NorthPlayer)
+        {
+            final NorthPlayer otherNorthPlayer = (NorthPlayer) obj;
+            return this.bukkitPlayer.equals(otherNorthPlayer.bukkitPlayer);
+        }
+        return this.bukkitPlayer.equals(obj); // prawdopodobnie przyszla instancja CraftPlayer
+    }
 }

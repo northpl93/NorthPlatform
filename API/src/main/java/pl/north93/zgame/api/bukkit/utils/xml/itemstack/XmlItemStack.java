@@ -172,7 +172,7 @@ public class XmlItemStack
         if ( material == null )
         {
             // Print error stack trace without throw an exception
-            new IllegalArgumentException("Cannot recognize item by id: '" + this.id).printStackTrace();
+            new IllegalArgumentException("Cannot recognize item by id: " + this.id).printStackTrace();
             return null;
         }
         

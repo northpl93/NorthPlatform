@@ -1,8 +1,14 @@
 package pl.north93.zgame.api.bukkit.player;
 
+import static pl.north93.zgame.api.bukkit.player.Helper.bukkitPlayers;
+
+
+import java.util.UUID;
+
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messageable;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.server.Server;
@@ -20,6 +26,34 @@ import pl.north93.zgame.api.global.permissions.Group;
  */
 public interface INorthPlayer extends Player, Messageable
 {
+    static INorthPlayer get(final UUID playerId)
+    {
+        return bukkitPlayers.getPlayer(playerId);
+    }
+
+    static INorthPlayer get(final String nick)
+    {
+        return bukkitPlayers.getPlayer(nick);
+    }
+
+    static INorthPlayer wrap(final Player player)
+    {
+        return bukkitPlayers.getPlayer(player);
+    }
+
+    /**
+     * Zamienia podaną instancję gracza na instancję CraftPlayer.
+     * Ta metoda jest przydatna i bezpieczniejsza niż castowanie ponieważ nie wiadomo
+     * czy Player jest CraftPlayerem czy NorthPlayerem.
+     *
+     * @param player Instancja gracza do zamienienia w CraftPlayer.
+     * @return CraftPlayer danego gracza.
+     */
+    static CraftPlayer asCraftPlayer(final Player player)
+    {
+        return bukkitPlayers.getCraftPlayer(player);
+    }
+
     /**
      * Zwraca instance CraftPlayera wrapowanego gracza.
      * Przydatne poniewaz castowanie sie tu nie uda.
@@ -67,4 +101,10 @@ public interface INorthPlayer extends Player, Messageable
 
     @Override // trzeba bylo dodac zeby nie bylo bledu kompilacji
     void sendMessage(final String message);
+}
+
+final class Helper
+{
+    @Inject
+    static IBukkitPlayers bukkitPlayers;
 }

@@ -3,6 +3,7 @@ package pl.north93.zgame.api.bukkit.player;
 import java.util.UUID;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -39,4 +40,12 @@ public interface IBukkitPlayers
      * @see #getPlayer(String)
      */
     INorthPlayer getPlayer(String nick);
+
+    /**
+     * Zwraca instancję CraftPlayera wydobytą z danego Playera.
+     *
+     * @param player Player z którego zdobywamy CraftPlayera.
+     * @return Instancja CraftPlayer danego gracza.
+     */
+    CraftPlayer getCraftPlayer(Player player);
 }
