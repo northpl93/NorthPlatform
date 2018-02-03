@@ -8,6 +8,7 @@
             <dependencies>
                 <dependency>MiniGameApi.Server</dependency>
                 <dependency>API.TickableManager</dependency>
+                <dependency>GlobalShops.Server</dependency>
             </dependencies>
             <platforms>
                 <platform>BUKKIT</platform>
