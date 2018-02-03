@@ -1,12 +1,14 @@
 package pl.arieals.minigame.goldhunter.entity;
 
-import java.util.Map;
+import java.util.Set;
 
 import org.diorite.utils.reflections.DioriteReflectionUtils;
 import org.diorite.utils.reflections.FieldAccessor;
 
 import net.minecraft.server.v1_12_R1.Entity;
 import net.minecraft.server.v1_12_R1.EntityTypes;
+import net.minecraft.server.v1_12_R1.MinecraftKey;
+import net.minecraft.server.v1_12_R1.RegistryMaterials;
 
 public class GoldHunterEntityUtils
 {
@@ -17,10 +19,11 @@ public class GoldHunterEntityUtils
     
     private static void registerCustomEntity(Class<? extends Entity> entityClass, int typeId)
     {
-        FieldAccessor<Map<Class<? extends Entity>, String>> d = DioriteReflectionUtils.getField(EntityTypes.class, "d");
-        FieldAccessor<Map<Class<? extends Entity>, Integer>> f = DioriteReflectionUtils.getField(EntityTypes.class, "f");
+        FieldAccessor<RegistryMaterials<MinecraftKey, Class<? extends Entity>>> b = DioriteReflectionUtils.getField(EntityTypes.class, "b");
+        FieldAccessor<Set<MinecraftKey>> d = DioriteReflectionUtils.getField(EntityTypes.class, "d");
         
-        d.get(null).put(entityClass, entityClass.getSimpleName());
-        f.get(null).put(entityClass, typeId);
+        MinecraftKey key = new MinecraftKey("goldhunter", entityClass.getSimpleName());
+        b.get(null).a(typeId, key, entityClass);
+        d.get(null).add(key);
     }
 }
