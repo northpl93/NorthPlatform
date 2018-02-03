@@ -20,6 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 import com.google.common.base.Preconditions;
 
@@ -416,6 +417,9 @@ public class GoldHunterPlayer implements ITickable
         effectTracker.clearEffects();
         
         player.getActivePotionEffects().forEach(e -> player.removePotionEffect(e.getType()));
+        
+        player.setFallDistance(0);
+        player.setVelocity(new Vector(0, 0, 0));
         
         noFallDamageTicks = 0;
         doubleJumpActive = false;
