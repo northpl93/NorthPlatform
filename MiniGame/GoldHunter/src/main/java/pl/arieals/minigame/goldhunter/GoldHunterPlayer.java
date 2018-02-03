@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
@@ -325,7 +326,7 @@ public class GoldHunterPlayer implements ITickable
         {
             ItemMeta meta = is.getItemMeta();
             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
-            meta.spigot().setUnbreakable(true);
+            meta.setUnbreakable(true);
             is.setItemMeta(meta);
         }
     }
@@ -401,7 +402,7 @@ public class GoldHunterPlayer implements ITickable
         Preconditions.checkState(isIngame());
         logger.debug("{} respawn", this);
         
-        player.setHealth(player.getMaxHealth());
+        player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
         player.setFoodLevel(20);
         
         currentClass = selectedClass;
@@ -478,12 +479,12 @@ public class GoldHunterPlayer implements ITickable
     
     public String getMessage(String msgKey, Object... args)
     {
-        return messages.getMessage(player.spigot().getLocale(), msgKey, args);
+        return messages.getMessage(player.getLocale(), msgKey, args);
     }
     
     public String[] getMessageLines(String msgKey, Object... args)
     {
-        return messages.getMessage(player.spigot().getLocale(), msgKey, args).split("\n");
+        return messages.getMessage(player.getLocale(), msgKey, args).split("\n");
     }
     
     public void sendSeparatedMessage(String msgKey, Object... args)

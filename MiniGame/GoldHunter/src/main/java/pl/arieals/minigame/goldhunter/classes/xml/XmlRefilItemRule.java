@@ -10,10 +10,7 @@ import pl.north93.zgame.api.bukkit.utils.xml.itemstack.XmlItemStack;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlRefilItemRule extends XmlItemStack
 {
-    private String id;
-    
-    private int data;
-    
+
     @XmlElement(name = "default_slot")
     private int defaultSlot;
     
@@ -22,11 +19,6 @@ public class XmlRefilItemRule extends XmlItemStack
     
     @XmlAttribute(name = "refil_rate")
     private int refilRate;
-    
-    public int getData()
-    {
-        return data;
-    }
     
     public int getDefaultSlot()
     {

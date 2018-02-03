@@ -23,6 +23,7 @@ public class SirenTearsEffect extends RadiusEffect
         setGreenBanner();
     }
     
+    @SuppressWarnings("deprecation")
     private void setGreenBanner()
     {
         ItemStack banner = new ItemStackBuilder().material(Material.BANNER).build();

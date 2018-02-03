@@ -10,7 +10,6 @@ import java.util.function.Consumer;
 import javax.xml.bind.JAXB;
 
 import org.apache.logging.log4j.Logger;
-import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -29,7 +28,6 @@ import pl.north93.zgame.api.bukkit.gui.IGuiManager;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public class GoldHunterArena implements IArenaData, ITickable
 {
@@ -399,7 +397,7 @@ public class GoldHunterArena implements IArenaData, ITickable
         
         // TODO: special effects, fly etc.
         
-        players.forEach(p -> p.sendSeparatedMessage("win_game", winnerTeam.getColoredBoldGenitive().getValue(p.getPlayer().spigot().getLocale()).toUpperCase()));
+        players.forEach(p -> p.sendSeparatedMessage("win_game", winnerTeam.getColoredBoldGenitive().getValue(p.getPlayer().getLocale()).toUpperCase()));
         localArena.setGamePhase(GamePhase.POST_GAME);
     }
     

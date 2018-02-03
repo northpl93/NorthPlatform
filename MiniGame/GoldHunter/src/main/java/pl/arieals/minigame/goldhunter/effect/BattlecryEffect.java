@@ -23,6 +23,7 @@ public class BattlecryEffect extends RadiusEffect
         setRedBanner();
     }
     
+    @SuppressWarnings("deprecation")
     private void setRedBanner()
     {
         ItemStack banner = new ItemStackBuilder().material(Material.BANNER).build();

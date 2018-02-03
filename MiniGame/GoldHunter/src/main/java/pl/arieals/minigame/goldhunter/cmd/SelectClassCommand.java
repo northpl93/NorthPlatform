@@ -8,13 +8,11 @@ import pl.arieals.minigame.goldhunter.classes.CharacterClassManager;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
 public class SelectClassCommand extends NorthCommand
 {
     private final CharacterClassManager classManager;
     
-    //@Bean
     public SelectClassCommand(CharacterClassManager classManager)
     {
         super("ghdebug-selectclass", "ghd-sc");
