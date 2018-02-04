@@ -1,13 +1,6 @@
 package pl.north93.zgame.auth.server;
 
-import static org.bukkit.ChatColor.translateAlternateColorCodes;
-
-
-import java.text.MessageFormat;
-import java.util.Locale;
-
 import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,6 +21,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
@@ -47,21 +41,6 @@ public class PlayerListeners implements Listener
         this.authManager = authManager;
     }
 
-    private void sendMessage(final CommandSender sender, final String message, final Object... args)
-    {
-        final Locale locale;
-        if (sender instanceof Player)
-        {
-            locale = Locale.forLanguageTag(((Player) sender).spigot().getLocale());
-        }
-        else
-        {
-            locale = Locale.getDefault();
-        }
-        final String msg = MessageFormat.format(this.messages.getMessage(locale, message), args);
-        sender.sendMessage(translateAlternateColorCodes('&', msg));
-    }
-
     @EventHandler
     public void onJoin(final PlayerJoinEvent event)
     {
@@ -72,14 +51,17 @@ public class PlayerListeners implements Listener
         }
 
         final AuthPlayer authPlayer = AuthPlayer.get(this.networkManager.getPlayers().unsafe().getOnline(player.getName()));
+
+        this.sendMessage(player, "separator");
         if (authPlayer.isRegistered())
         {
-            this.sendMessage(player, "join.login");
+            this.messages.sendMessage(player, "join.login", MessageLayout.CENTER);
         }
         else
         {
-            this.sendMessage(player, "join.register");
+            this.messages.sendMessage(player, "join.register", MessageLayout.CENTER);
         }
+        this.sendMessage(player, "separator");
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
@@ -183,6 +165,12 @@ public class PlayerListeners implements Listener
             this.sendMessage(event.getPlayer(), "error.first_login_or_register");
             event.setCancelled(true);
         }
+    }
+
+    // metoda pomocnicza do wysyłania wiadomości
+    private void sendMessage(final Player player, final String message, final Object... args)
+    {
+        this.messages.sendMessage(player, message, args);
     }
 
     @Override
