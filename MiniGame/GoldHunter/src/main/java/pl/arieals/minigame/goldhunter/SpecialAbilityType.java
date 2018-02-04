@@ -6,12 +6,14 @@ import java.util.Map;
 import com.google.common.base.Preconditions;
 
 import pl.arieals.minigame.goldhunter.abilities.BattlecryAbility;
+import pl.arieals.minigame.goldhunter.abilities.BetrayalAbility;
 import pl.arieals.minigame.goldhunter.abilities.BombArrowAbility;
 import pl.arieals.minigame.goldhunter.abilities.BrigdeAbility;
 import pl.arieals.minigame.goldhunter.abilities.CallOfBloodAbility;
 import pl.arieals.minigame.goldhunter.abilities.DazzleAbility;
 import pl.arieals.minigame.goldhunter.abilities.DoubleJumpAbility;
 import pl.arieals.minigame.goldhunter.abilities.PoisonArrowAbility;
+import pl.arieals.minigame.goldhunter.abilities.RedemptionAbility;
 import pl.arieals.minigame.goldhunter.abilities.ShadowAbility;
 import pl.arieals.minigame.goldhunter.abilities.ShieldAttackAbility;
 import pl.arieals.minigame.goldhunter.abilities.SirenTearsAbility;

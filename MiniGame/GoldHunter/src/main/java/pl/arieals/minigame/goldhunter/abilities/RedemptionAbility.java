@@ -1,4 +1,4 @@
-package pl.arieals.minigame.goldhunter;
+package pl.arieals.minigame.goldhunter.abilities;
 
 import java.util.Arrays;
 import java.util.List;
@@ -6,6 +6,9 @@ import java.util.List;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import pl.arieals.minigame.goldhunter.AbilityHandler;
+import pl.arieals.minigame.goldhunter.Effect;
+import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
 import pl.arieals.minigame.goldhunter.effect.BlindnessEffect;
 import pl.arieals.minigame.goldhunter.effect.PoisonEffect;
 
