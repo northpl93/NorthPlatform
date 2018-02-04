@@ -31,12 +31,11 @@ public class SignCommand extends NorthCommand
         }
         
         GameTeam team = null;
-        if ( args.asInt(0) != null )
+        if ( args.has(0) )
         {
-            team = GameTeam.values()[args.asInt(0)];
+            team = GameTeam.valueOf(args.asString(0).toUpperCase());
         }
         
         player.getArena().signToTeam(player, team);
-        // TODO: message
     }
 }
