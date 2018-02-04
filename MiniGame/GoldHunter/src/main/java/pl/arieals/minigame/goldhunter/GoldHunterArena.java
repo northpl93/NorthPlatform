@@ -208,6 +208,24 @@ public class GoldHunterArena implements IArenaData, ITickable
         updateLobbyScoreboardLayout();
     }
     
+    public boolean canBuild(Location location)
+    {
+        return canBuild(location.toVector().toBlockVector());
+    }
+    
+    public boolean canBuild(BlockVector location)
+    {
+        for ( Location spawnLocation : spawns.values() )
+        {
+            if ( location.distanceSquared(spawnLocation.add(0.5, 0.5, 0.5).toVector()) <= 9 )
+            {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
     public void scheduleStart()
     {
         localArena.getStartScheduler().scheduleStart();

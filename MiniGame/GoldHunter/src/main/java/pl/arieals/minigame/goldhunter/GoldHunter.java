@@ -10,24 +10,34 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
+import pl.arieals.api.minigame.server.MiniGameServer;
+import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.MiniGameApi;
+import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.goldhunter.classes.CharacterClassManager;
 import pl.arieals.minigame.goldhunter.entity.GoldHunterEntityUtils;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.DynamicBean;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
 
 public class GoldHunter
 {
+    @Inject
+    private static MiniGameServer miniGameServer;
+    
     private final BukkitApiCore apiCore;
     private final CharacterClassManager characterClassManager;
+    
+    private final GameHostManager gameHostManager;
     
     @Bean
     private GoldHunter(BukkitApiCore apiCore, CharacterClassManager characterClassManager)
     {
         this.apiCore = apiCore;
         this.characterClassManager = characterClassManager;
+        this.gameHostManager = miniGameServer.getServerManager();
     }
     
     void enable()
@@ -67,6 +77,23 @@ public class GoldHunter
         
         world.setGameRuleValue("doWeatherCycle", "false");
         world.setGameRuleValue("doDaylightCycle", "false");
+    }
+    
+    public boolean isGameWorld(World world)
+    {
+        return getArenaForWorld(world) != null;
+    }
+    
+    public GoldHunterArena getArenaForWorld(World world)
+    {
+        LocalArena localArena = gameHostManager.getArenaManager().getArena(world);
+        
+        if ( localArena == null )
+        {
+            return null;
+        }
+        
+        return localArena.getArenaData();
     }
     
     @DynamicBean
