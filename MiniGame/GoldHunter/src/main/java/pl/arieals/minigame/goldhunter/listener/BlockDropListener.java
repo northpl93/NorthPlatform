@@ -5,35 +5,18 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.BlockVector;
 
-import pl.arieals.api.minigame.server.gamehost.MiniGameApi;
 import pl.arieals.minigame.goldhunter.GoldHunter;
-import pl.arieals.minigame.goldhunter.GoldHunterArena;
 import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
-public class BlockBreakListener implements AutoListener
+public class BlockDropListener implements AutoListener
 {
-    @Inject
-    private GoldHunter goldHunter;
+    private final GoldHunter goldHunter;
     
-    @EventHandler
-    public void onBreakChest(BlockBreakEvent event)
+    public BlockDropListener(GoldHunter goldHunter)
     {
-        GoldHunterArena arena = goldHunter.getArenaForWorld(event.getBlock().getWorld());
-        if ( arena == null )
-        {
-            return;
-        }
-        
-        BlockVector chestLoc = event.getBlock().getLocation().toVector().toBlockVector();
-        if ( arena.getChests().values().contains(chestLoc) )
-        {
-            arena.breakChest(MiniGameApi.getPlayerData(event.getPlayer(), GoldHunterPlayer.class), chestLoc);
-            event.setCancelled(true);
-        }
+        this.goldHunter = goldHunter;
     }
     
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -52,6 +35,4 @@ public class BlockBreakListener implements AutoListener
             }
         }
     }
-    
-    
 }

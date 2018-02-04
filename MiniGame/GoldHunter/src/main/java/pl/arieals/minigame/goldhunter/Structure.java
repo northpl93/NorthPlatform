@@ -13,35 +13,54 @@ import com.google.common.base.Preconditions;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.global.utils.lang.CatchException;
 
-public abstract class StructureEntity implements ITickable
+public abstract class Structure implements ITickable
 {
-    private StructureEntityManager manager;
+    private StructureManager manager;
+    private boolean spawnPhase;
+    
+    protected final BlockVector baseLocation;
+    
+    protected Structure(BlockVector baseLocation)
+    {
+        Preconditions.checkNotNull(baseLocation);
+        this.baseLocation = baseLocation;
+    }
     
     protected final StructureBuilder structureBuilder()
     {
+        Preconditions.checkArgument(spawnPhase, "Structure must be in spawn phase to build a structure.");
         return new StructureBuilder();
+    }
+    
+    protected final StructureBuilder structureBuilder(BlockVector location, Material type)
+    {
+        return structureBuilder(location, type, 0);
     }
     
     protected final StructureBuilder structureBuilder(BlockVector location, Material type, int data)
     {
-        Preconditions.checkArgument(isSpawned(), "Entity must be spawned to place block.");
-        
+        Preconditions.checkArgument(spawnPhase, "Structure must be in spawn phase to build a structure.");
         return new StructureBuilder().and(location, type, data);
     }
     
-    final boolean onSpawn(StructureEntityManager manager)
+    final boolean onSpawn(StructureManager manager)
     {
         this.manager = manager;
         
         boolean result = false;
         try 
         {
+            spawnPhase = true;
             result = trySpawn();
         }
         catch ( Throwable e )
         {
             System.err.println("trySpawn() throws an exception");
             e.printStackTrace();
+        }
+        finally
+        {
+            spawnPhase = false;
         }
         
         if ( !result )
@@ -52,17 +71,23 @@ public abstract class StructureEntity implements ITickable
         return result;
     }
     
-    final void onRemove(StructureEntityManager manager)
+    final void onRemove(StructureManager manager)
     {
         Preconditions.checkState(this.manager != null);
         manager = null;
         
-        CatchException.printStackTrace(this::onDespawn, "onDespawn() throws an exception");
+        CatchException.printStackTrace(this::onRemove, "onDespawn() throws an exception");
     }
     
-    public final void destroy()
+    final void callOnDestroy(GoldHunterPlayer destroyer)
     {
-        Preconditions.checkState(isSpawned(), "Entity isn't spawned");
+        Preconditions.checkState(this.manager != null);
+        CatchException.printStackTrace(() -> onDestroy(destroyer), "onDestroy throws an exception");
+    }
+    
+    public final void removeStructure()
+    {
+        Preconditions.checkState(isSpawned(), "Structure isn't spawned");
         manager.remove(this);
     }
     
@@ -73,13 +98,13 @@ public abstract class StructureEntity implements ITickable
     
     public final GoldHunterArena getArena()
     {
-        Preconditions.checkState(isSpawned(), "Entity isn't spawned");
+        Preconditions.checkState(isSpawned(), "Structure isn't spawned");
         return manager.getArena();
     }
     
     public final World getWorld()
     {
-        Preconditions.checkState(isSpawned(), "Entity isn't spawned");
+        Preconditions.checkState(isSpawned(), "Structure isn't spawned");
         return manager.getArena().getLocalArena().getWorld().getCurrentWorld();
     }
     
@@ -88,14 +113,14 @@ public abstract class StructureEntity implements ITickable
         return true;
     }
     
-    protected void onDespawn()
+    protected void onRemove()
     {
         
     }
     
-    protected boolean onBlockDestroy(BlockVector location, GoldHunterPlayer destroyer)
+    protected void onDestroy(GoldHunterPlayer destroyer)
     {
-        return true;
+        
     }
     
     @Override
@@ -116,29 +141,29 @@ public abstract class StructureEntity implements ITickable
         return new ToStringBuilder(this).append("arena", manager.getArena().getLogger().getName()).build();
     }
     
-    protected final class StructureBuilder
+    public final class StructureBuilder
     {
         private final Map<BlockVector, StructureBuilderEntry> entries = new HashMap<>();
         
-        StructureBuilder and(BlockVector location, Material type, int data)
+        public StructureBuilder and(BlockVector location, Material type, int data)
         {
             entries.put(location, new StructureBuilderEntry(type, data));
             return this;
         }
         
-        boolean tryBuild()
+        public boolean tryBuild()
         {
             Preconditions.checkState(manager != null);
             
             for ( BlockVector location : entries.keySet() )
             {
-                if ( manager.hasBlockEntity(location) )
+                if ( !manager.canBuildStructure(location) )
                 {
                     return false;
                 }
             }
             
-            entries.entrySet().forEach(e -> manager.placeBlock(StructureEntity.this, e.getKey(), e.getValue().type, e.getValue().data));
+            entries.entrySet().forEach(e -> manager.buildStructureBlock(Structure.this, e.getKey(), e.getValue().type, e.getValue().data));
             return true;
         }
     }

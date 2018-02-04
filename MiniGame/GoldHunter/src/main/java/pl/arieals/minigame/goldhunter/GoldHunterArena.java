@@ -11,19 +11,18 @@ import javax.xml.bind.JAXB;
 
 import org.apache.logging.log4j.Logger;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.util.BlockVector;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import pl.arieals.api.minigame.server.gamehost.arena.IArenaData;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.goldhunter.scoreboard.ArenaScoreboardManager;
+import pl.arieals.minigame.goldhunter.structure.GoldChestStructure;
 import pl.north93.zgame.api.bukkit.gui.IGuiManager;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.Tick;
@@ -44,10 +43,10 @@ public class GoldHunterArena implements IArenaData, ITickable
     private final Multimap<GameTeam, GoldHunterPlayer> signedPlayers = ArrayListMultimap.create();
     
     private final ArenaScoreboardManager scoreboardManager = new ArenaScoreboardManager(this);
+    private final StructureManager structureManager = new StructureManager(this);
     
     private GoldHunterMapConfig mapConfig;
     
-    private final Multimap<GameTeam, BlockVector> chests = HashMultimap.create();
     private final Map<GameTeam, Location> spawns = new EnumMap<>(GameTeam.class);
     
     public GoldHunterArena(LocalArena localArena)
@@ -75,9 +74,19 @@ public class GoldHunterArena implements IArenaData, ITickable
         return localArena;
     }
     
+    public World getCurrentWorld()
+    {
+        return localArena.getWorld().getCurrentWorld();
+    }
+    
     public ArenaScoreboardManager getScoreboardManager()
     {
         return scoreboardManager;
+    }
+    
+    public StructureManager getStructureManager()
+    {
+        return structureManager;
     }
     
     public boolean hasGame()
@@ -103,11 +112,6 @@ public class GoldHunterArena implements IArenaData, ITickable
     public Collection<GoldHunterPlayer> getPlayersInTeam(GameTeam team)
     {
         return signedPlayers.get(team);
-    }
-    
-    public Multimap<GameTeam, BlockVector> getChests()
-    {
-        return chests;
     }
     
     public int getSignedPlayersCount()
@@ -163,12 +167,18 @@ public class GoldHunterArena implements IArenaData, ITickable
     {
         World world = localArena.getWorld().getCurrentWorld();
         
-        mapConfig.getChestsRed().forEach(l -> chests.put(GameTeam.RED, l.toBukkit(world).toVector().toBlockVector()));
-        mapConfig.getChestsBlue().forEach(l -> chests.put(GameTeam.BLUE, l.toBukkit(world).toVector().toBlockVector()));
+        mapConfig.getChestsRed().forEach(l -> addChest(l.toBukkit(world).toVector().toBlockVector(), GameTeam.RED));
+        mapConfig.getChestsBlue().forEach(l -> addChest(l.toBukkit(world).toVector().toBlockVector(), GameTeam.BLUE));
         
         updateChestsCount();
     }
 
+    private void addChest(BlockVector location, GameTeam team)
+    {
+        GoldChestStructure chest = new GoldChestStructure(location, team);
+        Preconditions.checkState(structureManager.spawn(chest));
+    }
+    
     private void setupSpawns()
     {
         World world = localArena.getWorld().getCurrentWorld();
@@ -202,7 +212,7 @@ public class GoldHunterArena implements IArenaData, ITickable
         }
         
         mapConfig = null;
-        chests.clear();
+        structureManager.clearStructures();
         spawns.clear();
         
         updateLobbyScoreboardLayout();
@@ -217,7 +227,7 @@ public class GoldHunterArena implements IArenaData, ITickable
     {
         for ( Location spawnLocation : spawns.values() )
         {
-            if ( location.distanceSquared(spawnLocation.add(0.5, 0.5, 0.5).toVector()) <= 9 )
+            if ( location.distanceSquared(spawnLocation.clone().add(0.5, 0.5, 0.5).toVector()) <= 9 )
             {
                 return false;
             }
@@ -355,48 +365,15 @@ public class GoldHunterArena implements IArenaData, ITickable
     {
         return getSignedPlayersCount() >= localArena.getPlayersManager().getMinPlayers();
     }
-
-    public void breakChest(GoldHunterPlayer player, BlockVector chestLoc)
-    {
-        logger.debug("call breakChest() with {}, {}", player, chestLoc);
-        
-        Preconditions.checkArgument(player.isIngame());
-        
-        GameTeam team = getChestTeam(chestLoc);
-        Preconditions.checkState(team != null);
-        
-        if ( localArena.getGamePhase() != GamePhase.STARTED )
-        {
-            return;
-        }
-        
-        if ( player.getTeam() == team )
-        {
-            player.sendMessage("cannot_destroy_own_chest");
-            return;
-        }
-        
-        chests.get(team).remove(chestLoc);
-        breakChestBlock(chestLoc);
-        
-        broadcastSeparatedMessageIngame("chest_destroy", player.getDisplayNameBold(), team.getColoredBoldGenitive());
-        updateChestsCount();
-    }
     
-    private void breakChestBlock(BlockVector chestLoc)
+    public void updateChestsCount()
     {
-        // TODO: particle, something effect etc.
-        chestLoc.toLocation(localArena.getWorld().getCurrentWorld()).getBlock().setType(Material.AIR);
-        SoundEffect.CHEST_DESTROY.play(this);
-    }
-    
-    private void updateChestsCount()
-    {
-        logger.debug("Current chests: RED={} BLUE={}", chests.get(GameTeam.RED).size(), chests.get(GameTeam.BLUE).size());
-        
-        int red = chests.get(GameTeam.RED).size();
-        int blue = chests.get(GameTeam.BLUE).size();
+        Collection<GoldChestStructure> chests = structureManager.getStructuresOfType(GoldChestStructure.class);
+        int red = chests.stream().filter(chest -> chest.getTeam() == GameTeam.RED).mapToInt(chest -> 1).sum();
+        int blue = chests.size() - red;
        
+        logger.debug("Current chests: RED={} BLUE={}", red, blue);
+        
         scoreboardManager.setProperties("team1Chests", red, "team2Chests", blue);
         
         if ( red == 0 )
@@ -417,20 +394,6 @@ public class GoldHunterArena implements IArenaData, ITickable
         
         players.forEach(p -> p.sendSeparatedMessage("win_game", winnerTeam.getColoredBoldGenitive().getValue(p.getPlayer().getLocale()).toUpperCase()));
         localArena.setGamePhase(GamePhase.POST_GAME);
-    }
-    
-    public GameTeam getChestTeam(BlockVector chestLoc)
-    {
-        if ( chests.get(GameTeam.RED).contains(chestLoc) )
-        {
-            return GameTeam.RED;
-        }
-        else if ( chests.get(GameTeam.BLUE).contains(chestLoc) )
-        {
-            return GameTeam.BLUE;
-        }
-        
-        return null;
     }
 
     public void broadcastDeath(GoldHunterPlayer goldHunterPlayer, GoldHunterPlayer lastDamager)
