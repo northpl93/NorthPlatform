@@ -27,7 +27,7 @@ public class SmartExecutor
             final Named namedAnn = parameter.getAnnotation(Named.class);
 
             // wstrzykujemy uzywany BeanContext
-            if (IBeanContext.class.isAssignableFrom(type))
+            if ( type == IBeanContext.class ) // TODO: temp fix, issue: Classes that extends Component aren't injected as Bean but as BeanContext.
             {
                 execArgs[i] = beanContext;
                 continue;
