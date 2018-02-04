@@ -63,6 +63,7 @@ public class GoldHunterPlayer implements ITickable
     
     private final SpecialAbilityTracker abilityTracker;
     private final EffectTracker effectTracker;
+    private final StatsTracker statsTracker;
     
     private final Player player;
     private final GoldHunterArena arena;
@@ -80,12 +81,6 @@ public class GoldHunterPlayer implements ITickable
     
     private boolean buildBridgeActive;
     
-    private int kills;
-    private int deaths;
-    
-    private GoldHunterPlayer lastDamager;
-    private int lastDamagerTicks;
-    
     private int toRefilEquipmentTicks;
     
     private boolean shadow;
@@ -96,6 +91,7 @@ public class GoldHunterPlayer implements ITickable
         this.arena = arena;
         this.abilityTracker = new SpecialAbilityTracker(this);
         this.effectTracker = new EffectTracker(this);
+        this.statsTracker = new StatsTracker(this);
         
         tickableManager.addTickableObject(this);
         tickableManager.addTickableObject(abilityTracker);
@@ -119,6 +115,11 @@ public class GoldHunterPlayer implements ITickable
     public EffectTracker getEffectTracker()
     {
         return effectTracker;
+    }
+    
+    public StatsTracker getStatsTracker()
+    {
+        return statsTracker;
     }
     
     public boolean isIngame()
@@ -208,39 +209,6 @@ public class GoldHunterPlayer implements ITickable
         {
             return 0;
         }
-    }
-    
-    public int getKills()
-    {
-        return kills;
-    }
-    
-    public int getDeaths()
-    {
-        return deaths;
-    }
-    
-    public void incrementKills()
-    {
-        kills++;
-        scoreboardContext.set("kills", deaths);
-    }
-    
-    public void incrementDeaths()
-    {
-        deaths++;
-        scoreboardContext.set("deaths", deaths);
-    }
-    
-    public GoldHunterPlayer getLastDamager()
-    {
-        return lastDamager;
-    }
-    
-    public void setLastDamager(GoldHunterPlayer lastDamager)
-    {
-        lastDamagerTicks = 100;
-        this.lastDamager = lastDamager;
     }
     
     public boolean hasBuyed(String shopItemName, int shopItemLevel)
@@ -343,11 +311,9 @@ public class GoldHunterPlayer implements ITickable
         effectTracker.clearEffects();
         abilityTracker.setNewAbilityType(null);
         
-        kills = 0;
-        deaths = 0;
+        statsTracker.clear();
         
         noFallDamageTicks = 0;
-        lastDamager = null;
         
         setDisplayTeam(null);
         
@@ -382,10 +348,7 @@ public class GoldHunterPlayer implements ITickable
         
         arena.getScoreboardManager().setIngameScoreboardLoayout(this);
         
-        kills = 0;
-        deaths = 0;
-        scoreboardContext.set("kills", kills);
-        scoreboardContext.set("deaths", deaths);
+        statsTracker.clear();
         
         player.teleport(respawn());
     }
@@ -425,8 +388,6 @@ public class GoldHunterPlayer implements ITickable
         doubleJumpActive = false;
         buildBridgeActive = false;
         
-        lastDamager = null;
-        
         toRefilEquipmentTicks = currentClass.getInventoryRefilTime();
         
         setShadow(false);
@@ -439,14 +400,9 @@ public class GoldHunterPlayer implements ITickable
         Preconditions.checkState(isIngame());
         logger.debug("{} die", this);
         
-        arena.broadcastDeath(this, lastDamager);
+        arena.broadcastDeath(this, statsTracker.getKiller());
         
-        incrementDeaths();
-        
-        if ( lastDamager != null )
-        {
-            lastDamager.incrementKills();
-        }
+        statsTracker.onDie();
         
         player.teleport(respawn());
         playDeathEffect();
@@ -518,28 +474,6 @@ public class GoldHunterPlayer implements ITickable
         if ( noFallDamageTicks > 0 )
         {
             noFallDamageTicks--;
-        }
-    }
-    
-    @Tick
-    private void updateLastDamager()
-    {
-        if ( lastDamager != null )
-        {
-            if ( lastDamager.getTeam() == null || lastDamager.getTeam().opositeTeam() != getTeam() )
-            {
-                lastDamagerTicks = 0;
-            }
-            
-            if ( lastDamagerTicks > 0 )
-            {
-                lastDamagerTicks--;
-            }
-            
-            if ( lastDamagerTicks == 0 )
-            {
-                lastDamager = null;
-            }
         }
     }
     

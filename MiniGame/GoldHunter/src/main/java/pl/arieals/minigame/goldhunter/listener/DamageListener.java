@@ -67,7 +67,7 @@ public class DamageListener implements AutoListener
             return;
         }
         
-        damaged.setLastDamager(damager);
+        damager.getStatsTracker().onDamagePlayer(damaged, event.getFinalDamage());
     }
     
     @EventHandler
@@ -104,6 +104,6 @@ public class DamageListener implements AutoListener
             return;
         }
         
-        damaged.setLastDamager(damager);
+        damager.getStatsTracker().onDamagePlayer(damaged, event.getFinalDamage());
     }
 }
