@@ -226,7 +226,7 @@ public class JumpController
     // bo inaczej lapiemy false-positive podczas energicznego skakania.
     private boolean tryEnterFallingStage()
     {
-        if (this.startFallingPackets <= 1)
+        if (this.startFallingPackets <= 2)
         {
             this.startFallingPackets++;
             return false;
