@@ -2,6 +2,7 @@ package pl.north93.zgame.api.bukkit.gui.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.WeakHashMap;
@@ -15,12 +16,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
+import pl.north93.northspigot.event.PlayerPressQEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.gui.ClickType;
 import pl.north93.zgame.api.bukkit.gui.Gui;
@@ -160,6 +165,30 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
             entry.closeHotbarMenu();
         }
     }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void closeHotBarWhenPlayerDies(final PlayerDeathEvent event)
+    {
+        final GuiTrackerEntry entry = this.getEntry(event.getEntity());
+        if ( entry.getCurrentHotbarMenu() == null )
+        {
+            return;
+        }
+
+        final List<ItemStack> drops = event.getDrops();
+        final PlayerInventory inventory = event.getEntity().getInventory();
+
+        for (int i = 0; i < 9; i++)
+        {
+            // usuwamy z dropu wszystkie itemy będące na hotbarze
+            drops.remove(inventory.getItem(i));
+        }
+
+        // dodajemy do dropu wszystkie przedmioty które gracz posiadał przed aktywowaniem hotbara
+        drops.addAll(entry.getStoredHotBarItems());
+
+        entry.closeHotbarMenu();
+    }
     
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event)
@@ -217,7 +246,19 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
             entry.getCurrentGui().click(entry.getPlayer(), clickedElement, ClickType.fromBukkitClickType(event.getClick()));
         }
     }
-    
+
+    @EventHandler
+    public void disallowDropItemByQWhenHotBarIsOpened(final PlayerPressQEvent event)
+    {
+        GuiTrackerEntry entry = getEntry(event.getPlayer());
+        if ( entry.getCurrentHotbarMenu() == null )
+        {
+            return;
+        }
+
+        event.setCancelled(true);
+    }
+
     @EventHandler
     public void onInteract(PlayerInteractEvent event)
     {

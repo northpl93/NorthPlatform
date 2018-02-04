@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.bukkit.gui.impl;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import net.minecraft.server.v1_12_R1.EntityPlayer;
@@ -163,7 +166,16 @@ public class GuiTrackerEntry
         currentHotbarMenu = null;
         restoreHotbarItems();
     }
-    
+
+    /*default*/ List<ItemStack> getStoredHotBarItems()
+    {
+        if (this.currentHotbarMenu == null)
+        {
+            return Collections.emptyList();
+        }
+        return Arrays.asList(this.storedHotbarItems);
+    }
+
     private void storeHotbarItems()
     {
         PlayerInventory inv = player.getInventory();
