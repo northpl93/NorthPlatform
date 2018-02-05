@@ -18,12 +18,17 @@ public abstract class Structure implements ITickable
     private StructureManager manager;
     private boolean spawnPhase;
     
-    protected final BlockVector baseLocation;
+    private final BlockVector baseLocation;
     
     protected Structure(BlockVector baseLocation)
     {
         Preconditions.checkNotNull(baseLocation);
         this.baseLocation = baseLocation;
+    }
+    
+    public BlockVector getBaseLocation()
+    {
+        return baseLocation.clone();
     }
     
     protected final StructureBuilder structureBuilder()

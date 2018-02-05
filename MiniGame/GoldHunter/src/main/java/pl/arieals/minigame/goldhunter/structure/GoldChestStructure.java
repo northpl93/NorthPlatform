@@ -31,7 +31,7 @@ public class GoldChestStructure extends Structure
     @Override
     protected boolean trySpawn()
     {
-        return structureBuilder(baseLocation, Material.OBSIDIAN).tryBuild();
+        return structureBuilder(getBaseLocation(), Material.OBSIDIAN).tryBuild();
     }
     
     @Override
@@ -61,4 +61,5 @@ public class GoldChestStructure extends Structure
         removeStructure();
         SoundEffect.CHEST_DESTROY.play(getArena());
     }
+
 }
