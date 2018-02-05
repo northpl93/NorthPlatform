@@ -17,6 +17,7 @@ import pl.arieals.minigame.goldhunter.abilities.RedemptionAbility;
 import pl.arieals.minigame.goldhunter.abilities.ShadowAbility;
 import pl.arieals.minigame.goldhunter.abilities.ShieldAttackAbility;
 import pl.arieals.minigame.goldhunter.abilities.SirenTearsAbility;
+import pl.arieals.minigame.goldhunter.abilities.SupplierAbility;
 import pl.arieals.minigame.goldhunter.abilities.WallAbility;
 
 public enum SpecialAbilityType
@@ -39,7 +40,7 @@ public enum SpecialAbilityType
     
     // Technik
     BRIDGE(new BrigdeAbility(), "engineer.architect.time", 50 * 20, 45 * 20, 40 * 20, 35 * 20),
-    // TODO: dozownik
+    SUPPLIER(new SupplierAbility(), "engineer.dispenser.time", 50 * 20, 45 * 20, 40 * 20, 35 * 20),
     
     SHADOW(new ShadowAbility(), "vip.assasyn.time", 50 * 20, 45 * 20, 40 * 20, 35 * 2),
     WALL(new WallAbility(), "vip.defender.time", 50 * 20, 45 * 20, 40 * 20, 35 * 2),

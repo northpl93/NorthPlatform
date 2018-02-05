@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.util.BlockVector;
+import org.bukkit.util.Vector;
 
 import com.google.common.base.Preconditions;
 
@@ -35,6 +36,16 @@ public abstract class Structure implements ITickable
     {
         Preconditions.checkArgument(spawnPhase, "Structure must be in spawn phase to build a structure.");
         return new StructureBuilder();
+    }
+    
+    protected final StructureBuilder structureBuilder(int offsetX, int offsetY, int offsetZ, Material type)
+    {
+        return new StructureBuilder().and(offsetX, offsetY, offsetZ, type, 0);
+    }
+    
+    protected final StructureBuilder structureBuilder(int offsetX, int offsetY, int offsetZ, Material type, int data)
+    {
+        return new StructureBuilder().and(offsetX, offsetY, offsetZ, type, data);
     }
     
     protected final StructureBuilder structureBuilder(BlockVector location, Material type)
@@ -149,6 +160,21 @@ public abstract class Structure implements ITickable
     public final class StructureBuilder
     {
         private final Map<BlockVector, StructureBuilderEntry> entries = new HashMap<>();
+        
+        public StructureBuilder and(int offsetX, int offsetY, int offsetZ, Material type)
+        {
+            return and(getBaseLocation().add(new Vector(offsetX, offsetY, offsetZ)).toBlockVector(), type, 0);
+        }
+        
+        public StructureBuilder and(int offsetX, int offsetY, int offsetZ, Material type, int data)
+        {
+            return and(getBaseLocation().add(new Vector(offsetX, offsetY, offsetZ)).toBlockVector(), type, data);
+        }
+        
+        public StructureBuilder and(BlockVector location, Material type)
+        {
+            return and(location, type, 0);
+        }
         
         public StructureBuilder and(BlockVector location, Material type, int data)
         {
