@@ -273,6 +273,8 @@ public class GoldHunterPlayer implements ITickable
             meta.setColor(displayTeam.getArmorColor());
             armor.setItemMeta(meta);
         }
+        
+        player.updateInventory();
     }
     
     private void hideItemsAttributesAndMakeUnbreakable()
