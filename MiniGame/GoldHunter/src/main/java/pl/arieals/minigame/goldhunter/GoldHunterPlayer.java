@@ -327,6 +327,9 @@ public class GoldHunterPlayer implements ITickable
         Preconditions.checkState(!isIngame());
         logger.debug("{} spawn in lobby", this);
         
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(new ItemStack[4]);
+        
         new LobbyHotbar(this).display(player);
         arena.getScoreboardManager().setLobbyScoreboardLayout(this);
         
