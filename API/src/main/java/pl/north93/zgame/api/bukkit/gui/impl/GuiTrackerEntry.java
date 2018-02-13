@@ -5,24 +5,27 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import net.minecraft.server.v1_12_R1.EntityPlayer;
-
-import com.google.common.base.Preconditions;
-
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
-import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryCustom;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import com.google.common.base.Preconditions;
+
+import net.minecraft.server.v1_12_R1.ContainerChest;
+import net.minecraft.server.v1_12_R1.EntityPlayer;
+import net.minecraft.server.v1_12_R1.IInventory;
+import net.minecraft.server.v1_12_R1.PacketPlayOutOpenWindow;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.GuiContent;
 import pl.north93.zgame.api.bukkit.gui.HotbarEntry;
 import pl.north93.zgame.api.bukkit.gui.HotbarMenu;
-import pl.north93.zgame.api.bukkit.player.INorthPlayer;
+import pl.north93.zgame.api.bukkit.gui.event.GuiOpenEvent;
 
 public class GuiTrackerEntry
 {
@@ -67,36 +70,74 @@ public class GuiTrackerEntry
 
         Inventory inv = Bukkit.createInventory(null, 9 * content.getHeight(), content.getTitle().getValue(player, newGui.getVariables()));
         content.renderToInventory(player, inv);
-        this.cleanupOldInventory();
-        player.openInventory(inv);
+        //this.cleanupOldInventory();
         
-        currentGui = newGui;
-        currentInventory = inv;
-        guiTracker.addGuiViewer(currentGui, this);
-    }
-
-    /**
-     * Gdy otwieramy GUI przez openInventory, a gracz ma juz otwarte inne GUI to
-     * bukkit dziwnie to obsluguje i udaje odebranie pakietu zamknięcia okna.
-     * Gdy nastąpi to w wątku innym niż wątek serwera to wyleci wyjątek CancelledPacketHandleException.
-     *
-     * Omijamy to ręcznie zamykając poprzednie okno po stronie serwera i oszukując tym samym Bukkita
-     * przy tworzeniu nowego inventory.
-     */
-    private void cleanupOldInventory()
-    {
-        final CraftPlayer craftPlayer = INorthPlayer.asCraftPlayer(this.player);
-        final EntityPlayer entityPlayer = craftPlayer.getHandle();
-
-        final CraftInventoryView craftInventoryView = (CraftInventoryView) craftPlayer.getOpenInventory();
-        if (craftInventoryView.getHandle() == entityPlayer.defaultContainer)
+        if ( tryOpenContainerAndCallOwnEvent(inv, newGui) )
         {
-            // gracz nie ma otwartego gui lub ma otwarty swój ekwipunek
-            return;
+            currentGui = newGui;
+            currentInventory = inv;
+            guiTracker.addGuiViewer(currentGui, this);
         }
-
-        CraftEventFactory.handleInventoryCloseEvent(entityPlayer);
-        entityPlayer.r(); // skopiowane z EntityPlayer#closeInventory()
+    }
+    
+    // Below is rewrite of NMS method EntityPlayer#openContainer and CraftBukkit method CraftEventFactory#callInventoryOpenEvent
+    // We call own GuiOpenEvent instead Bukkit's InventoryOpenEvent
+    private boolean tryOpenContainerAndCallOwnEvent(Inventory inv, Gui newGui)
+    {
+        Preconditions.checkState(inv.getType() == InventoryType.CHEST);
+        CraftInventoryCustom craftInv = (CraftInventoryCustom) inv;
+        EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+        
+        ContainerChest container = new ContainerChest(entityPlayer.inventory, craftInv.getInventory(), entityPlayer);
+        if ( callGuiOpenEvent(container, newGui).isCancelled() )
+        {
+            craftInv.getInventory().closeContainer(entityPlayer);
+            return false;
+        }
+        
+        closeContainerIfAnyOpenOnServerSide();
+        Preconditions.checkState(entityPlayer.defaultContainer == entityPlayer.activeContainer);
+        openContainer(container);
+        
+        return true;
+    }
+    
+    private void openContainer(ContainerChest container)
+    {
+        EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+        IInventory topInventory = container.e();
+        
+        int windowId = entityPlayer.nextContainerCounter();
+        entityPlayer.activeContainer = container;
+        entityPlayer.playerConnection.sendPacket(new PacketPlayOutOpenWindow(windowId, "minecraft:container", topInventory.getScoreboardDisplayName(), topInventory.getSize()));
+        container.windowId = windowId;
+        container.addSlotListener(entityPlayer);
+    }
+    
+    private void closeContainerIfAnyOpenOnServerSide()
+    {
+        EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+        
+        if ( entityPlayer.activeContainer != entityPlayer.defaultContainer )
+        {
+            CraftEventFactory.handleInventoryCloseEvent(entityPlayer);
+            entityPlayer.r();
+        }
+    }
+    
+    private GuiOpenEvent callGuiOpenEvent(ContainerChest container, Gui newGui)
+    {
+        EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+        entityPlayer.activeContainer.transferTo(container, entityPlayer.getBukkitEntity());
+        
+        GuiOpenEvent event = new GuiOpenEvent(container.getBukkitView(), newGui);
+        Bukkit.getPluginManager().callEvent(event);
+        if ( event.isCancelled() )
+        {
+            container.transferTo(entityPlayer.activeContainer, entityPlayer.getBukkitEntity());
+        }
+        
+        return event;
     }
     
     public void refreshInventory()
@@ -104,7 +145,12 @@ public class GuiTrackerEntry
         GuiContent content = currentGui.getContent();
         
         Inventory inv = player.getOpenInventory().getTopInventory();
-        Preconditions.checkState(inv.equals(currentInventory));
+//        Preconditions.checkState(inv.equals(currentInventory));
+        if ( !inv.equals(currentInventory) )
+        {
+            System.err.println("Current inv: " + currentInventory.toString());
+            System.err.println("Player inv: " + inv.toString());
+        }
         
         String title = content.getTitle().getValue(player, currentGui.getVariables());
         
