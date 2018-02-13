@@ -62,7 +62,7 @@ public class Gui implements IClickHandler
     
     public final void closeAll()
     {
-        guiTracker.getEntries(this).forEach(entry -> close(entry.getPlayer()));
+        getViewers().forEach(this::close);
     }
     
     public final void click(Player player, GuiElement element, ClickType type)
