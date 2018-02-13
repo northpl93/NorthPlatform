@@ -129,6 +129,11 @@ public class PartyManagerImpl implements IPartyManager
     public void access(final IPlayer player, final Consumer<IPartyAccess> atomicFunction)
     {
         final IParty party = this.getPartyFromPlayer(player);
+        if (party == null)
+        {
+            return;
+        }
+
         this.access(party.getId(), atomicFunction);
     }
 
@@ -136,6 +141,11 @@ public class PartyManagerImpl implements IPartyManager
     public <T> T access(final IPlayer player, final Function<IPartyAccess, T> atomicFunction)
     {
         final IParty party = this.getPartyFromPlayer(player);
+        if (party == null)
+        {
+            return null;
+        }
+
         return this.access(party.getId(), atomicFunction);
     }
 

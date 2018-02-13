@@ -16,6 +16,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Named;
 import pl.north93.zgame.api.global.uri.IUriCallHandler;
 import pl.north93.zgame.api.global.uri.IUriManager;
 import pl.north93.zgame.api.global.uri.UriHandler;
+import pl.north93.zgame.api.global.uri.UriInvocationContext;
 import pl.north93.zgame.api.global.uri.impl.router.NonorderedRouter;
 import pl.north93.zgame.api.global.uri.impl.router.Routed;
 
@@ -39,14 +40,7 @@ public class UriManagerImpl extends Component implements IUriManager
             calledUri = format(calledUri, parameter);
         }
 
-        final Routed routed = this.router.route(calledUri);
-        if (routed == null)
-        {
-            this.getLogger().log(Level.WARNING, "[UriManagerImpl] Not found route for {0}", uri);
-            return null;
-        }
-
-        return routed.handler().handle(calledUri, routed.params());
+        return this.invokeUri(calledUri, parameter);
     }
 
     @Override
@@ -62,24 +56,36 @@ public class UriManagerImpl extends Component implements IUriManager
             calledUri = format(uri, parameter);
         }
 
+        return this.invokeUri(calledUri, parameter);
+    }
+
+    private Object invokeUri(final String calledUri, final Object[] parameters)
+    {
         final Routed routed = this.router.route(calledUri);
         if (routed == null)
         {
-            this.getLogger().log(Level.WARNING, "[UriManagerImpl] Not found route for {0}", uri);
+            this.getLogger().log(Level.WARNING, "[UriManagerImpl] Not found route for {0}", calledUri);
             return null;
         }
 
-        return routed.handler().handle(calledUri, routed.params());
+        final UriInvocationContext context = new UriInvocationContext(calledUri, routed.params());
+        return routed.handler().handle(context);
     }
 
     @Aggregator(UriHandler.class)
     private void handleAnnotation(final @Named("MethodOwner") Object methodOwner, final Method method, final UriHandler handler)
     {
-        this.register(handler.value(), (a1, a2) ->
+        this.register(handler.value(), context ->
         {
             try
             {
-                return method.invoke(methodOwner, a1, a2);
+                if (method.getParameterCount() == 1)
+                {
+                    return method.invoke(methodOwner, context);
+                }
+
+                // todo LEGACY, zastępujemy osobne parametry jednym kontekstem. W przyszłości if i linijka poniżej do usunięcia
+                return method.invoke(methodOwner, context.getCalledUri(), context.rawParameters());
             }
             catch (final Exception e)
             {

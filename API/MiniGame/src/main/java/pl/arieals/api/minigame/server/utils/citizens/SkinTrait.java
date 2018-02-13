@@ -77,7 +77,7 @@ final class SkinHelper
         {
             newSkin = (Skin) DioriteUtils.getUnsafe().allocateInstance(Skin.class);
         }
-        catch (InstantiationException e)
+        catch (final InstantiationException e)
         {
             throw new RuntimeException(e);
         }
