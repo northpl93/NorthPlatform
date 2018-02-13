@@ -151,12 +151,7 @@ public class GuiTrackerEntry
         GuiContent content = currentGui.getContent();
         
         Inventory inv = player.getOpenInventory().getTopInventory();
-//        Preconditions.checkState(inv.equals(currentInventory));
-        if ( !inv.equals(currentInventory) )
-        {
-            System.err.println("Current inv: " + currentInventory.toString());
-            System.err.println("Player inv: " + inv.toString());
-        }
+        Preconditions.checkState(inv.equals(currentInventory));
         
         String title = content.getTitle().getValue(player, currentGui.getVariables());
         
