@@ -5,8 +5,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import net.minecraft.server.v1_12_R1.ContainerChest;
+import net.minecraft.server.v1_12_R1.EntityPlayer;
+import net.minecraft.server.v1_12_R1.IInventory;
+import net.minecraft.server.v1_12_R1.PacketPlayOutOpenWindow;
+
+import com.google.common.base.Preconditions;
+
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryCustom;
 import org.bukkit.entity.Player;
@@ -15,17 +21,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import com.google.common.base.Preconditions;
-
-import net.minecraft.server.v1_12_R1.ContainerChest;
-import net.minecraft.server.v1_12_R1.EntityPlayer;
-import net.minecraft.server.v1_12_R1.IInventory;
-import net.minecraft.server.v1_12_R1.PacketPlayOutOpenWindow;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.GuiContent;
 import pl.north93.zgame.api.bukkit.gui.HotbarEntry;
 import pl.north93.zgame.api.bukkit.gui.HotbarMenu;
 import pl.north93.zgame.api.bukkit.gui.event.GuiOpenEvent;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 public class GuiTrackerEntry
 {
@@ -47,6 +48,11 @@ public class GuiTrackerEntry
     public Player getPlayer()
     {
         return player;
+    }
+
+    private EntityPlayer getEntityPlayer()
+    {
+        return INorthPlayer.asCraftPlayer(this.player).getHandle();
     }
     
     public Gui getCurrentGui()
@@ -86,7 +92,7 @@ public class GuiTrackerEntry
     {
         Preconditions.checkState(inv.getType() == InventoryType.CHEST);
         CraftInventoryCustom craftInv = (CraftInventoryCustom) inv;
-        EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+        EntityPlayer entityPlayer = getEntityPlayer();
         
         ContainerChest container = new ContainerChest(entityPlayer.inventory, craftInv.getInventory(), entityPlayer);
         if ( callGuiOpenEvent(container, newGui).isCancelled() )
@@ -104,7 +110,7 @@ public class GuiTrackerEntry
     
     private void openContainer(ContainerChest container)
     {
-        EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+        EntityPlayer entityPlayer = getEntityPlayer();
         IInventory topInventory = container.e();
         
         int windowId = entityPlayer.nextContainerCounter();
@@ -116,7 +122,7 @@ public class GuiTrackerEntry
     
     private void closeContainerIfAnyOpenOnServerSide()
     {
-        EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+        EntityPlayer entityPlayer = getEntityPlayer();
         
         if ( entityPlayer.activeContainer != entityPlayer.defaultContainer )
         {
@@ -127,7 +133,7 @@ public class GuiTrackerEntry
     
     private GuiOpenEvent callGuiOpenEvent(ContainerChest container, Gui newGui)
     {
-        EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+        EntityPlayer entityPlayer = getEntityPlayer();
         entityPlayer.activeContainer.transferTo(container, entityPlayer.getBukkitEntity());
         
         GuiOpenEvent event = new GuiOpenEvent(container.getBukkitView(), newGui);
