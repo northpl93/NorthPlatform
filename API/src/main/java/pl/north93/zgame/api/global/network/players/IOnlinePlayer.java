@@ -14,7 +14,7 @@ public interface IOnlinePlayer extends IPlayer, ProvidingRedisKey, Messageable
     @Override
     default Identity getIdentity()
     {
-        return Identity.create(this.getUuid(), this.getNick(), this.getDisplayName());
+        return Identity.create(this.getUuid(), this.getNick());
     }
 
     /**

@@ -33,50 +33,50 @@ public interface IPlayersManager
 
     boolean isOnline(Identity identity);
 
-    default boolean isOnline(String nick)
+    default boolean isOnline(final String nick)
     {
-        return this.isOnline(Identity.create(null, nick, null));
+        return this.isOnline(Identity.create(null, nick));
     }
 
-    default boolean isOnline(UUID uuid)
+    default boolean isOnline(final UUID uuid)
     {
-        return this.isOnline(Identity.create(uuid, null, null));
+        return this.isOnline(Identity.create(uuid, null));
     }
 
     IPlayerTransaction transaction(Identity identity) throws PlayerNotFoundException;
 
-    default IPlayerTransaction transaction(UUID playerId) throws PlayerNotFoundException
+    default IPlayerTransaction transaction(final UUID playerId) throws PlayerNotFoundException
     {
-        return this.transaction(Identity.create(playerId, null, null));
+        return this.transaction(Identity.create(playerId, null));
     }
 
-    default IPlayerTransaction transaction(String playerName) throws PlayerNotFoundException
+    default IPlayerTransaction transaction(final String playerName) throws PlayerNotFoundException
     {
-        return this.transaction(Identity.create(null, playerName, null));
+        return this.transaction(Identity.create(null, playerName));
     }
 
     boolean access(Identity identity, Consumer<IPlayer> modifier);
 
-    default boolean access(String nick, Consumer<IPlayer> modifier)
+    default boolean access(final String nick, final Consumer<IPlayer> modifier)
     {
-        return this.access(Identity.create(null, nick, null), modifier);
+        return this.access(Identity.create(null, nick), modifier);
     }
 
-    default boolean access(UUID uuid, Consumer<IPlayer> modifier)
+    default boolean access(final UUID uuid, final Consumer<IPlayer> modifier)
     {
-        return this.access(Identity.create(uuid, null, null), modifier);
+        return this.access(Identity.create(uuid, null), modifier);
     }
 
     boolean access(Identity identity, Consumer<IOnlinePlayer> modifierOnline, Consumer<IOfflinePlayer> modifierOffline);
 
-    default boolean access(String nick, Consumer<IOnlinePlayer> modifierOnline, Consumer<IOfflinePlayer> modifierOffline)
+    default boolean access(final String nick, final Consumer<IOnlinePlayer> modifierOnline, final Consumer<IOfflinePlayer> modifierOffline)
     {
-        return this.access(Identity.create(null, nick, null), modifierOnline, modifierOffline);
+        return this.access(Identity.create(null, nick), modifierOnline, modifierOffline);
     }
 
-    default boolean access(UUID uuid, Consumer<IOnlinePlayer> modifierOnline, Consumer<IOfflinePlayer> modifierOffline)
+    default boolean access(final UUID uuid, final Consumer<IOnlinePlayer> modifierOnline, final Consumer<IOfflinePlayer> modifierOffline)
     {
-        return this.access(Identity.create(uuid, null, null), modifierOnline, modifierOffline);
+        return this.access(Identity.create(uuid, null), modifierOnline, modifierOffline);
     }
 
     void ifOnline(String nick, Consumer<IOnlinePlayer> onlineAction);

@@ -62,7 +62,7 @@ public class PartyControllerListener
                     final HashSet<UUID> remainderPlayers = new HashSet<>(players);
                     remainderPlayers.remove(player.getUuid());
 
-                    final Identity newOwner = Identity.create(DioriteRandomUtils.getRandom(remainderPlayers), null, null);
+                    final Identity newOwner = Identity.create(DioriteRandomUtils.getRandom(remainderPlayers), null);
                     partyAccess.changeOwner(newOwner);
 
                     // usuwamy gracza z party który juz nie jest wlascicielem

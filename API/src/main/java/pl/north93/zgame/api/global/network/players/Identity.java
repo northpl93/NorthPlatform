@@ -17,33 +17,31 @@ public final class Identity
 {
     private final UUID uuid;
     private final String nick;
-    private final String displayName;
 
-    private Identity(final UUID uuid, final String nick, final String displayName)
+    private Identity(final UUID uuid, final String nick)
     {
         this.uuid = uuid;
         this.nick = nick;
-        this.displayName = displayName;
     }
 
     public static Identity of(final Player bukkitPlayer) // nie jebnie o ile nie wykonamy na innej platformie
     {
-        return new Identity(bukkitPlayer.getUniqueId(), bukkitPlayer.getName(), bukkitPlayer.getDisplayName());
+        return new Identity(bukkitPlayer.getUniqueId(), bukkitPlayer.getName());
     }
 
     public static Identity of(final ProxiedPlayer proxiedPlayer) // nie jebnie o ile nie wykonamy na innej platformie
     {
-        return new Identity(proxiedPlayer.getUniqueId(), proxiedPlayer.getName(), proxiedPlayer.getDisplayName());
+        return new Identity(proxiedPlayer.getUniqueId(), proxiedPlayer.getName());
     }
 
     public static Identity of(final IOnlinePlayer onlinePlayer)
     {
-        return new Identity(onlinePlayer.getUuid(), onlinePlayer.getNick(), onlinePlayer.getDisplayName());
+        return new Identity(onlinePlayer.getUuid(), onlinePlayer.getNick());
     }
 
-    public static Identity create(final UUID uuid, final String nick, final String displayName)
+    public static Identity create(final UUID uuid, final String nick)
     {
-        return new Identity(uuid, nick, displayName);
+        return new Identity(uuid, nick);
     }
 
     public UUID getUuid()
@@ -54,11 +52,6 @@ public final class Identity
     public String getNick()
     {
         return this.nick;
-    }
-
-    public String getDisplayName()
-    {
-        return this.displayName;
     }
 
     /**
@@ -98,6 +91,6 @@ public final class Identity
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).append("nick", this.nick).append("displayName", this.displayName).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).append("nick", this.nick).toString();
     }
 }

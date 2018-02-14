@@ -29,11 +29,11 @@ public interface IEconomyManager
 
     default ITransaction openTransaction(ICurrency currency, UUID playerId) throws PlayerNotFoundException
     {
-        return this.openTransaction(currency, Identity.create(playerId, null, null));
+        return this.openTransaction(currency, Identity.create(playerId, null));
     }
 
     default ITransaction openTransaction(ICurrency currency, String playerName) throws PlayerNotFoundException
     {
-        return this.openTransaction(currency, Identity.create(null, playerName, null));
+        return this.openTransaction(currency, Identity.create(null, playerName));
     }
 }

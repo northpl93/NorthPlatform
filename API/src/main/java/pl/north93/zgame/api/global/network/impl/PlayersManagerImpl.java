@@ -291,12 +291,12 @@ class PlayersManagerImpl implements IPlayersManager
         else if (currentNick != null)
         {
             final UUID uuid = this.getUuidFromNick(currentNick).orElseThrow(() -> new PlayerNotFoundException(identity));
-            return Identity.create(uuid, currentNick, identity.getDisplayName());
+            return Identity.create(uuid, currentNick);
         }
         else
         {
             final String nick = this.getNickFromUuid(currentUuid).orElse(null);
-            return Identity.create(currentUuid, nick, identity.getDisplayName());
+            return Identity.create(currentUuid, nick);
         }
     }
 

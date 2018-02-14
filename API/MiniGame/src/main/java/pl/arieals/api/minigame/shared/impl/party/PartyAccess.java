@@ -181,7 +181,7 @@ import pl.north93.zgame.api.global.network.players.Identity;
 
         for (final UUID player : this.getPlayers())
         {
-            this.removePlayer(Identity.create(player, null, null), LeavePartyReason.KICK);
+            this.removePlayer(Identity.create(player, null), LeavePartyReason.KICK);
         }
 
         this.deleted = true;

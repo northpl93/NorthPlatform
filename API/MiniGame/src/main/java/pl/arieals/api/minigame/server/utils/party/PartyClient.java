@@ -67,7 +67,7 @@ public class PartyClient
         {
             try
             {
-                partyAccess.invitePlayer(Identity.create(null, invited, null));
+                partyAccess.invitePlayer(Identity.create(null, invited));
             }
             catch (final PlayerNotFoundException e)
             {
@@ -130,7 +130,7 @@ public class PartyClient
                     final Set<UUID> newPlayers = new HashSet<>(players);
                     newPlayers.remove(player.getUniqueId());
 
-                    final Identity newOwner = Identity.create(DioriteRandomUtils.getRandom(newPlayers), null, null);
+                    final Identity newOwner = Identity.create(DioriteRandomUtils.getRandom(newPlayers), null);
                     partyAccess.changeOwner(newOwner);
                     partyAccess.removePlayer(identity, LeavePartyReason.SELF);
                 }
@@ -162,7 +162,7 @@ public class PartyClient
         final Identity target;
         try
         {
-            final Identity uncompleted = Identity.create(null, nick, null);
+            final Identity uncompleted = Identity.create(null, nick);
             target = this.networkManager.getPlayers().completeIdentity(uncompleted);
         }
         catch (final PlayerNotFoundException ignored)

@@ -7,6 +7,6 @@ public interface IOfflinePlayer extends IPlayer
     @Override
     default Identity getIdentity()
     {
-        return Identity.create(this.getUuid(), null, this.getDisplayName());
+        return Identity.create(this.getUuid(), null);
     }
 }
