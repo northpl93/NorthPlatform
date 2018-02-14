@@ -107,14 +107,20 @@ import pl.north93.zgame.api.global.network.players.Identity;
         {
             final IPlayer player = t.getPlayer();
 
-            if (this.isInvited(player.getUuid()))
+            if (! this.isInvited(player.getUuid()))
             {
-                this.partyData.removeInviteOfPlayer(player.getUuid());
-                this.partyManager.setPartyInvite(player, null);
-                return true;
+                return false;
             }
 
-            return false;
+            final PartyInvite latestInvite = this.partyManager.getLatestInviteFromPlayer(player);
+            if (latestInvite != null && latestInvite.getPartyId().equals(this.getId()))
+            {
+                // Jesli ostatnie zaproszenie gracza jest do tej grupy to je usuwamy
+                this.partyManager.setPartyInvite(player, null);
+            }
+
+            this.partyData.removeInviteOfPlayer(player.getUuid());
+            return true;
         }
     }
 
