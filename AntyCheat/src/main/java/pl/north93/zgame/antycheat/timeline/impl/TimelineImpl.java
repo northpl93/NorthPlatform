@@ -64,6 +64,36 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
     }
 
     @Override
+    public TimelineWalker createWalkerForTick(final Tick tick)
+    {
+        return this.events.createWalkerInTickRangeWithCursorAtEnd(tick, tick);
+    }
+
+    @Override
+    public TimelineWalker createWalkerForScope(final TimelineAnalyserConfig.Scope scope)
+    {
+        final Tick currentTick = this.getCurrentTick();
+        switch (scope)
+        {
+            case TICK:
+                return this.events.createWalkerInTickRangeWithCursorAtEnd(currentTick, currentTick);
+            case SECOND:
+                return this.createWalkerForTicks(currentTick, 20);
+            case FIVE_SECONDS:
+                return this.createWalkerForTicks(currentTick, 100);
+            case ALL:
+                return this.events.createWalkerInFullRange(true);
+        }
+        return null;
+    }
+
+    private TimelineWalker createWalkerForTicks(final Tick lastTick, final int ticks)
+    {
+        final TickImpl firstTick = this.timelineManager.getPreviousTick(lastTick, Math.min(ticks - 1, this.getTrackedTicks()));
+        return this.events.createWalkerInTickRangeWithCursorAtEnd(firstTick, lastTick);
+    }
+
+    @Override
     public PlayerTickInfo getCurrentPlayerTickInfo()
     {
         return this.getPlayerTickInfo(this.getCurrentTick());
@@ -98,33 +128,10 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
     }
 
     @Override
-    public TimelineWalker createWalkerForTick(final Tick tick)
+    public <T extends TimelineEvent> T getPreviousEvent(final Class<T> classEvent)
     {
-        return this.events.createWalkerInTickRangeWithCursorAtEnd(tick, tick);
-    }
-
-    @Override
-    public TimelineWalker createWalkerForScope(final TimelineAnalyserConfig.Scope scope)
-    {
-        final Tick currentTick = this.getCurrentTick();
-        switch (scope)
-        {
-            case TICK:
-                return this.events.createWalkerInTickRangeWithCursorAtEnd(currentTick, currentTick);
-            case SECOND:
-                return this.createWalkerForTicks(currentTick, 20);
-            case FIVE_SECONDS:
-                return this.createWalkerForTicks(currentTick, 100);
-            case ALL:
-                return this.events.createWalkerInFullRange(true);
-        }
-        return null;
-    }
-
-    private TimelineWalker createWalkerForTicks(final Tick lastTick, final int ticks)
-    {
-        final TickImpl firstTick = this.timelineManager.getPreviousTick(lastTick, Math.min(ticks - 1, this.getTrackedTicks()));
-        return this.events.createWalkerInTickRangeWithCursorAtEnd(firstTick, lastTick);
+        final LinkedEventsQueue.TimelineWalkerImpl fullRange = this.events.createWalkerInFullRange(true);
+        return fullRange.previous(classEvent);
     }
 
     /**

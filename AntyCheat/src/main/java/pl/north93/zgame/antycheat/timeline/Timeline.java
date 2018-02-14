@@ -17,6 +17,10 @@ public interface Timeline
 
     int getTrackedTicks();
 
+    TimelineWalker createWalkerForTick(Tick tick);
+
+    TimelineWalker createWalkerForScope(TimelineAnalyserConfig.Scope scope);
+
     PlayerTickInfo getCurrentPlayerTickInfo();
 
     PlayerTickInfo getPlayerTickInfo(Tick tick);
@@ -27,7 +31,5 @@ public interface Timeline
 
     Collection<TimelineEvent> getEvents(Tick tick);
 
-    TimelineWalker createWalkerForTick(Tick tick);
-
-    TimelineWalker createWalkerForScope(TimelineAnalyserConfig.Scope scope);
+    <T extends TimelineEvent> T getPreviousEvent(Class<T> classEvent);
 }

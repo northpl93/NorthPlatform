@@ -1,8 +1,5 @@
 package pl.north93.zgame.antycheat.event.source;
 
-import static pl.north93.zgame.api.bukkit.player.INorthPlayer.asCraftPlayer;
-
-
 import net.minecraft.server.v1_12_R1.Packet;
 import net.minecraft.server.v1_12_R1.PacketPlayInCustomPayload;
 import net.minecraft.server.v1_12_R1.PacketPlayInFlying;
@@ -16,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import pl.north93.zgame.antycheat.event.impl.ClientMoveTimelineEvent;
 import pl.north93.zgame.antycheat.event.impl.InteractWithEntityTimelineEvent;
 import pl.north93.zgame.antycheat.event.impl.InteractWithEntityTimelineEvent.EntityAction;
+import pl.north93.zgame.antycheat.timeline.Timeline;
 import pl.north93.zgame.antycheat.timeline.impl.TimelineManager;
 import pl.north93.zgame.antycheat.utils.handle.WorldHandle;
 import pl.north93.zgame.antycheat.utils.location.RichEntityLocation;
@@ -68,8 +66,11 @@ public class AntyCheatPacketListener implements AutoListener
     // tworzy PlayerMoveTimelineEvent na podstawie obiektu gracza i pakietów od movementu
     private ClientMoveTimelineEvent createMoveTimelineEvent(final Player player, final PacketPlayInFlying packetPlayInFlying)
     {
-        final boolean oldOnGround = asCraftPlayer(player).getHandle().onGround;
-        final RichEntityLocation oldLocation = new RichEntityLocation(player, player.getLocation());
+        final Timeline timeline = this.timelineManager.getPlayerTimeline(player);
+        final ClientMoveTimelineEvent previousEvent = timeline.getPreviousEvent(ClientMoveTimelineEvent.class);
+
+        final boolean oldOnGround = previousEvent != null && previousEvent.isToOnGround();
+        final RichEntityLocation oldLocation = previousEvent == null ? new RichEntityLocation(player, player.getLocation()) : previousEvent.getTo();
 
         final boolean newOnGround = packetPlayInFlying.a();
         final Location newLocation = new Location(
