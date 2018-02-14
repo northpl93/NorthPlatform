@@ -4,11 +4,11 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.spigotmc.SneakyThrow;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+
+import org.spigotmc.SneakyThrow;
 
 import pl.north93.zgame.api.bukkit.gui.ClickHandler;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -105,10 +105,12 @@ public class ClickHandlerManager<T extends ClickEvent>
 
     private void callNorthUriClickEvent(final Vars<Object> vars, final String clickHandlerName, final T event)
     {
-        final Vars<Object> context = Vars.of("$playerId", (Object) event.getWhoClicked().getUniqueId())
-                                         .and("$playerName", event.getWhoClicked().getName())
-                                         .and(vars);
+        final Vars.Builder<Object> builder = Vars.builder();
 
-        NorthUriUtils.getInstance().call(clickHandlerName, context);
+        builder.and(vars);
+        builder.and("$playerId", event.getWhoClicked().getUniqueId());
+        builder.and("$playerName", event.getWhoClicked().getName());
+
+        NorthUriUtils.getInstance().call(clickHandlerName, builder.build());
     }
 }

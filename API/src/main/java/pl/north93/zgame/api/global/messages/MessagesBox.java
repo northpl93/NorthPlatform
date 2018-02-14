@@ -11,6 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import pl.north93.zgame.api.bukkit.utils.ChatUtils;
 
 public class MessagesBox
 {
@@ -46,7 +47,7 @@ public class MessagesBox
         ResourceBundle bundle = this.getBundle(locale);
         if ( bundle.containsKey(key) )
         {
-            return bundle.getString(key).replace('&', '§');
+            return ChatUtils.translateAlternateColorCodes(bundle.getString(key));
         }
         else
         {

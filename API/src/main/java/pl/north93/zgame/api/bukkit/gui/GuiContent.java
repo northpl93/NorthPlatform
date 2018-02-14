@@ -7,6 +7,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
 import pl.north93.zgame.api.global.messages.TranslatableString;
+import pl.north93.zgame.api.global.utils.Vars;
 
 public class GuiContent extends GuiContainerElement
 {
@@ -67,7 +68,8 @@ public class GuiContent extends GuiContainerElement
                 GuiElement element = renderedCanvas.getGuiElementInSlot(i, j);
                 if ( icon != null )
                 {
-                    inv.setItem(j * 9 + i, icon.toItemStack(gui.getMessagesBox(), player, gui.getVariables().and(element.getLocalVariables())));
+                    final Vars<Object> vars = element.getLocalVariables().and(gui.getVariables());
+                    inv.setItem(j * 9 + i, icon.toItemStack(gui.getMessagesBox(), player, vars));
                 }
             }
         }
