@@ -4,6 +4,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -308,14 +309,9 @@ public class GoldHunterPlayer implements ITickable
         logger.debug("{} exit game", this);
         
         team = null;
-        
-        setShadow(false);
-        effectTracker.clearEffects();
-        abilityTracker.setNewAbilityType(null);
+        currentClass = null;
         
         statsTracker.clear();
-        
-        noFallDamageTicks = 0;
         
         setDisplayTeam(null);
         
@@ -327,9 +323,7 @@ public class GoldHunterPlayer implements ITickable
         Preconditions.checkState(!isIngame());
         logger.debug("{} spawn in lobby", this);
         
-        player.getInventory().clear();
-        player.getInventory().setArmorContents(new ItemStack[4]);
-        
+        setupPlayerEntity();
         new LobbyHotbar(this).display(player);
         arena.getScoreboardManager().setLobbyScoreboardLayout(this);
         
@@ -371,33 +365,47 @@ public class GoldHunterPlayer implements ITickable
         Preconditions.checkState(isIngame());
         logger.debug("{} respawn", this);
         
-        player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-        player.setFoodLevel(20);
-        
         currentClass = selectedClass;
+        
+        setupPlayerEntity();
+        
         currentClass.applyEquipment(this);
         addLeatherHatToInventory();
         hideItemsAttributesAndMakeUnbreakable();
         
         setDisplayTeam(team);
         
-        abilityTracker.setNewAbilityType(currentClass.getSpecialAbility());
-        effectTracker.clearEffects();
+        toRefilEquipmentTicks = currentClass.getInventoryRefilTime();
+         
+        return arena.getTeamSpawn(team);
+    }
+    
+    private void setupPlayerEntity()
+    {
+        // TODO: spectator mode
+        player.setGameMode(isIngame() ? GameMode.SURVIVAL : GameMode.CREATIVE);
         
-        player.getActivePotionEffects().forEach(e -> player.removePotionEffect(e.getType()));
+        player.setAllowFlight(false);
+        player.setFlying(false);
         
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(new ItemStack[4]);
+        
+        player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+        player.setFoodLevel(20);
+        player.setFireTicks(0);
         player.setFallDistance(0);
         player.setVelocity(new Vector(0, 0, 0));
         
-        noFallDamageTicks = 0;
-        doubleJumpActive = false;
-        buildBridgeActive = false;
+        effectTracker.clearEffects();
+        abilityTracker.setNewAbilityType(currentClass != null ? currentClass.getSpecialAbility() : null);
         
-        toRefilEquipmentTicks = currentClass.getInventoryRefilTime();
-        
+        setNoFallDamageTicks(0);
+        setBuildBridgeActive(false);
         setShadow(false);
+        setDoubleJumpActive(false);
         
-        return arena.getTeamSpawn(team);
+        player.getActivePotionEffects().forEach(e -> player.removePotionEffect(e.getType()));
     }
     
     public void die()
