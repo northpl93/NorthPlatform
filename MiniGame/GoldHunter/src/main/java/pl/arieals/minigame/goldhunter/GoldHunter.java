@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.World;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -55,6 +56,16 @@ public class GoldHunter
     public GoldHunterPlayer getPlayer(Player bukkitPlayer)
     {
         return MiniGameApi.getPlayerData(bukkitPlayer, GoldHunterPlayer.class);
+    }
+    
+    public GoldHunterPlayer getPlayer(HumanEntity humanEntity)
+    {
+        if ( humanEntity instanceof Player )
+        {
+            return getPlayer((Player) humanEntity);
+        }
+        
+        return null;
     }
     
     public void runTask(Runnable runnable)
