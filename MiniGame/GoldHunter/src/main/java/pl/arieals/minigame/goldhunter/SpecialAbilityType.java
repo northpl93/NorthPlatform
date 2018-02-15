@@ -3,6 +3,8 @@ package pl.arieals.minigame.goldhunter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+
 import com.google.common.base.Preconditions;
 
 import pl.arieals.minigame.goldhunter.abilities.BattlecryAbility;
@@ -19,6 +21,8 @@ import pl.arieals.minigame.goldhunter.abilities.ShieldAttackAbility;
 import pl.arieals.minigame.goldhunter.abilities.SirenTearsAbility;
 import pl.arieals.minigame.goldhunter.abilities.SupplierAbility;
 import pl.arieals.minigame.goldhunter.abilities.WallAbility;
+import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public enum SpecialAbilityType
 {
@@ -87,6 +91,11 @@ public enum SpecialAbilityType
     public static SpecialAbilityType byName(String name)
     {
         return byName.get(name);
+    }
+    
+    public static void registerAbilityHandlerListeners()
+    {
+        
     }
     
     static {

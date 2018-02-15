@@ -1,9 +1,9 @@
 package pl.arieals.minigame.goldhunter.abilities;
 
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerFishEvent;
-import org.bukkit.event.player.PlayerFishEvent.State;
+import org.bukkit.event.entity.ProjectileHitEvent;
 
 import pl.arieals.minigame.goldhunter.AbilityHandler;
 import pl.arieals.minigame.goldhunter.GoldHunter;
@@ -26,35 +26,16 @@ public class DazzleAbility implements AbilityHandler
     }
     
     @EventHandler
-    public void onFishHookDamage(PlayerFishEvent event)
+    public void onHitByFishHook(ProjectileHitEvent event)
     {
-        if ( event.getState() != State.CAUGHT_ENTITY )
+        System.out.println(event.getEntity());
+        
+        if ( !( event.getEntity() instanceof FishHook ) || !( event.getHitEntity() instanceof Player ) )
         {
             return;
         }
         
-        if ( !( event.getCaught() instanceof Player ) )
-        {
-            return;
-        }
-        
-        GoldHunterPlayer player = goldHunter.getPlayer(event.getPlayer());
-        if ( player != null && player.getEffectTracker().removeEffect(DazzleAbilityEffect.class) )
-        {
-            GoldHunterPlayer attacked = goldHunter.getPlayer((Player) event.getCaught());
-            attacked.getEffectTracker().addEffect(new BlindnessEffect(), 50 + 10 * player.getShopItemLevel("scout.slinger.time2"));
-        }
-    }
-    /*
-    @EventHandler
-    public void onFishHookDamage(EntityDamageByEntityEvent event)
-    {
-        if ( !( event.getDamager() instanceof FishHook ) && !( event.getEntity() instanceof Player ) )
-        {
-            return;
-        }
-        
-        FishHook hook = (FishHook) event.getDamager();
+        FishHook hook = (FishHook) event.getEntity();
         
         if ( !( hook.getShooter() instanceof Player ) )
         {
@@ -62,11 +43,11 @@ public class DazzleAbility implements AbilityHandler
         }
         
         GoldHunterPlayer shooter = goldHunter.getPlayer((Player) hook.getShooter());
+        GoldHunterPlayer attacked = goldHunter.getPlayer((Player) event.getHitEntity());
         
-        if ( shooter.getEffectTracker().removeEffect(DazzleAbilityEffect.class) )
+        if ( attacked != null && shooter != null && shooter.getEffectTracker().removeEffect(DazzleAbilityEffect.class) )
         {
-            GoldHunterPlayer attacked = goldHunter.getPlayer((Player) event.getEntity());
-            attacked.getEffectTracker().addEffect(new BlindnessEffect(), 50); // TODO: add level up
+            attacked.getEffectTracker().addEffect(new BlindnessEffect(), 50 + 10 * shooter.getShopItemLevel("scout.slinger.time2"));
         }
-    } */
+    }
 }

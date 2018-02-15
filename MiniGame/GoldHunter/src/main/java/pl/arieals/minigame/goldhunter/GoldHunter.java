@@ -11,6 +11,8 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.sk89q.worldedit.bukkit.BukkitWorld;
+
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.MiniGameApi;
@@ -46,6 +48,8 @@ public class GoldHunter
         characterClassManager.initClasses();
         GoldHunterEntityUtils.registerGoldHunterEntities();
         runTask(() -> setWorldProperties(Bukkit.getWorlds().get(0)));
+        
+        registerAbilityHandlersListener();
     }
     
     void disable()
@@ -76,6 +80,14 @@ public class GoldHunter
     public BukkitTask runTask(int ticks, Runnable runnable)
     {
         return Bukkit.getScheduler().runTaskLater(apiCore.getPluginMain(), runnable, ticks);
+    }
+    
+    private void registerAbilityHandlersListener()
+    {
+        for ( SpecialAbilityType abilityType : SpecialAbilityType.values() )
+        {
+            Bukkit.getPluginManager().registerEvents(abilityType.getHandler(), apiCore.getPluginMain());
+        }
     }
     
     public void setWorldProperties(World world)
