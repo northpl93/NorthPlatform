@@ -18,7 +18,8 @@ public class DamageListener implements AutoListener
     @Inject
     private GoldHunter goldHunter;
     
-    public void onPlayerDamage(EntityDamageEvent event)
+    @EventHandler
+    public void onPlayerFallDamage(EntityDamageEvent event)
     {
         if ( !( event.getEntity() instanceof Player ) )
         {
@@ -60,7 +61,7 @@ public class DamageListener implements AutoListener
         }
         
         GoldHunterPlayer damaged = goldHunter.getPlayer((Player) event.getEntity());
-        if ( damaged == null || damager.getTeam().opositeTeam() != damaged.getTeam() )
+        if ( damaged == null || damager.getTeam() == null || damager.getTeam().opositeTeam() != damaged.getTeam() )
         {
             event.setCancelled(true);
             event.setDamage(0);
