@@ -1,7 +1,9 @@
 package pl.arieals.minigame.goldhunter;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -33,7 +35,7 @@ public class StatsTracker implements ITickable
     private int assists;
     private int deaths;
     
-    private final SortedSet<DamagerEntry> lastDamagers = new TreeSet<>();
+    private final Deque<DamagerEntry> lastDamagers = new ArrayDeque<>();
     
     private double totalDamage;
     
@@ -46,7 +48,7 @@ public class StatsTracker implements ITickable
     
     public GoldHunterPlayer getKiller()
     {
-        return Optional.ofNullable(lastDamagers.size() > 0 ? lastDamagers.first() : null).map(entry -> entry.player).orElse(null);
+        return Optional.ofNullable(lastDamagers.peekFirst()).map(entry -> entry.player).orElse(null);
     }
     
     public Collection<GoldHunterPlayer> getLastDamagers()
@@ -66,16 +68,21 @@ public class StatsTracker implements ITickable
     
     public void onDamagePlayer(GoldHunterPlayer damaged, double damageValue)
     {
-        System.out.println(damaged.getPlayer().getName() + " damaged " + damageValue);
+        logger.debug("{} damaged {} with {}", this.player, damaged, damageValue);
         
         totalDamage += damageValue;
         
-        damaged.getStatsTracker().lastDamagers.add(new DamagerEntry(player));
-        System.out.println(damaged.getStatsTracker().lastDamagers.size());
+        Deque<DamagerEntry> lastDamagers = damaged.getStatsTracker().lastDamagers;
+        lastDamagers.removeIf(entry -> entry.player == this.player);
+        lastDamagers.push(new DamagerEntry(player));
+        
+        logger.debug("{} lastdamagers: {}", damaged, lastDamagers);
     }
     
     public void onDie()
     {
+        logger.debug("{}'s StatsTracker#die()", player);
+        
         incrementDeaths();
         
         GoldHunterPlayer killer = getKiller();
@@ -86,7 +93,7 @@ public class StatsTracker implements ITickable
         
         getKillerAssistants().forEach(player -> player.getStatsTracker().incrementAssists());
         
-        cleanupLastDamagers();
+        lastDamagers.clear();
     }
     
     private void incrementKills()
@@ -151,8 +158,7 @@ public class StatsTracker implements ITickable
     @Tick
     private void cleanupLastDamagers()
     {
-        int currentTick = MinecraftServer.currentTick;
-        lastDamagers.removeIf(lastDamage -> lastDamage.tick - currentTick > 100);
+        lastDamagers.removeIf(lastDamage -> Math.abs(lastDamage.tick - MinecraftServer.currentTick) > 100);
     }
     
     private class DamagerEntry implements Comparable<DamagerEntry>
@@ -169,7 +175,7 @@ public class StatsTracker implements ITickable
         @Override
         public int compareTo(DamagerEntry other)
         {
-            return this.tick - other.tick;
+            return other.tick - this.tick;
         }
         
         @Override
@@ -186,13 +192,22 @@ public class StatsTracker implements ITickable
             }
             
             DamagerEntry other = (DamagerEntry) obj;
-            return this.player.equals(other.player);
+            return this.player.equals(other.player) && this.tick == other.tick;
         }
         
         @Override
         public int hashCode()
         {
-            return this.player.hashCode();
+            int result = 31;
+            result = 31 * result + player.hashCode();
+            result = 31 * result + Integer.hashCode(tick);
+            return result;
+        }
+        
+        @Override
+        public String toString()
+        {
+            return player.toString() + "@" + tick;
         }
     }
 }
