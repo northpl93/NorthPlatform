@@ -2,15 +2,21 @@ package pl.arieals.minigame.goldhunter.abilities;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import pl.arieals.minigame.goldhunter.AbilityHandler;
+import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ShieldAttackAbility implements AbilityHandler
 {
     private static final double ABILITY_RADIUS = 3;
     private static final double DAMAGE = 7;
+    
+    @Inject
+    private static GoldHunter goldHunter;
     
     @Override
     public boolean onUse(GoldHunterPlayer player)
@@ -22,10 +28,18 @@ public class ShieldAttackAbility implements AbilityHandler
                 continue;
             }
             
-            LivingEntity le = (LivingEntity) e;
-            le.damage(DAMAGE, player.getPlayer());
+            LivingEntity entity = (LivingEntity) e;
             
-            Vector entityPos = le.getLocation().toVector();
+            if ( entity instanceof Player )
+            {
+                GoldHunterPlayer other = goldHunter.getPlayer((Player) entity);
+                if ( other != null && other.getTeam() == player.getTeam() )
+                {
+                    continue;
+                }
+            }
+            
+            Vector entityPos = entity.getLocation().toVector();
             Vector playerPos = player.getPlayer().getLocation().toVector();
             
             Vector toTarget = entityPos.clone().subtract(playerPos).setY(0).normalize();
@@ -36,8 +50,10 @@ public class ShieldAttackAbility implements AbilityHandler
                 continue;
             }
             
-            Vector velocity = toTarget.setY(0.5);
-            le.setVelocity(velocity);
+            entity.damage(DAMAGE, player.getPlayer());
+            
+            Vector velocity = toTarget.multiply(0.819693).setY(0.56969);
+            entity.setVelocity(velocity);
         }
         
         // TODO: play particles
