@@ -2,6 +2,7 @@ package pl.north93.zgame.api.bukkit.gui;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import com.google.common.base.Preconditions;
@@ -166,10 +167,49 @@ public class Gui implements IClickHandler
         Preconditions.checkState(Gui.guiTracker == null);
         Gui.guiTracker = guiTracker;
     }
-    
+
+    // Domyślne metody pomocnicze do używania w XMLu.
+
     @ClickHandler
     public final void closeGui(GuiClickEvent event)
     {
         close(event.getWhoClicked());
+    }
+
+    @ClickHandler
+    public final void nextPage(GuiClickEvent event)
+    {
+        this.findNearPageableAnd(event.getClickedElement(), IPageable::nextPage);
+    }
+
+    @ClickHandler
+    public final void previousPage(GuiClickEvent event)
+    {
+        this.findNearPageableAnd(event.getClickedElement(), IPageable::previousPage);
+    }
+
+    @ClickHandler
+    public void jumpToPage(GuiClickEvent event)
+    {
+        final GuiElement element = event.getClickedElement();
+
+        final int page = Integer.parseInt(element.getMetadata().get("page"));
+        this.findNearPageableAnd(element, pageable -> pageable.setPage(page));
+    }
+
+    // szuka IPageable w rodzicu podanego GuiElement i wykonuje z nim consumera
+    private void findNearPageableAnd(final GuiElement guiElement, final Consumer<IPageable> pageableConsumer)
+    {
+        final GuiElement clickedParent = guiElement.getParent();
+
+        for (final GuiElement child : clickedParent.getChildren())
+        {
+            if (child instanceof IPageable)
+            {
+                final IPageable pageable = (IPageable) child;
+                pageableConsumer.accept(pageable);
+                return;
+            }
+        }
     }
 }

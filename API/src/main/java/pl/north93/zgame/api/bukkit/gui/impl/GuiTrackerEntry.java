@@ -155,7 +155,7 @@ public class GuiTrackerEntry
         
         String title = content.getTitle().getValue(player, currentGui.getVariables());
         
-        if ( inv.getSize() != content.getHeight() * content.getWidht() || !inv.getTitle().equals(title) )
+        if ( inv.getSize() != content.getHeight() * content.getWidth() || !inv.getTitle().equals(title) )
         {
             // we need to open another inv when gui size or title change
             openNewGui(currentGui);
