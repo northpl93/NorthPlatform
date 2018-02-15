@@ -44,6 +44,10 @@ public class SirenTearsEffect extends RadiusEffect
     @Override
     protected void handlePlayer(GoldHunterPlayer player)
     {
-        player.getEffectTracker().addEffect(new HealingEffect(), 100);
+        if ( getPlayer().getTeam() == player.getTeam() )
+        {
+            player.getEffectTracker().addEffectOrSetDuration(HealingEffect.class, 60, HealingEffect::new);
+    
+        }
     }
 }

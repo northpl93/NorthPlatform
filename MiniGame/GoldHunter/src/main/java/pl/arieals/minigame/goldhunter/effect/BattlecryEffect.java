@@ -44,6 +44,9 @@ public class BattlecryEffect extends RadiusEffect
     @Override
     protected void handlePlayer(GoldHunterPlayer player)
     {
-        player.getEffectTracker().addEffect(new StrengthEffect(), 60);
+        if ( getPlayer().getTeam() == player.getTeam() )
+        {
+            player.getEffectTracker().addEffectOrSetDuration(StrengthEffect.class, 60, StrengthEffect::new);
+        }
     }
 }

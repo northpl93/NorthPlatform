@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import com.google.common.base.Preconditions;
 
@@ -49,6 +50,19 @@ public class EffectTracker
         return effect.getCallback();
     }
     
+    public <E extends Effect> ISyncCallback addEffectOrSetDuration(Class<E> effectType, int duration, Supplier<E> supplier)
+    {
+        E effect = getEffect(effectType);
+        
+        if ( effect == null )
+        {
+            return addEffect(supplier.get(), duration);
+        }
+        
+        effect.setDuration(duration);
+        return effect.getCallback();
+    }
+    
     public boolean removeEffect(Class<? extends Effect> effectType)
     {
         Effect effect = activeEffects.remove(effectType);
@@ -56,7 +70,6 @@ public class EffectTracker
         {
             effect.detach();
             tickableManager.removeTickableObject(effect);
-            System.out.println("Removed tickable object");
             return true;
         }
         
