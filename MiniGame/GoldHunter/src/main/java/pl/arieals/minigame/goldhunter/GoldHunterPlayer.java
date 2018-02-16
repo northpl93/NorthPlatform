@@ -56,6 +56,8 @@ public class GoldHunterPlayer implements ITickable
     @Inject
     private static IGlobalShops globalShops;
     @Inject
+    private static ArenaBuilder arenaBuilder;
+    @Inject
     @Messages("GoldHunter")
     private static MessagesBox messages;
     @Inject
@@ -511,21 +513,19 @@ public class GoldHunterPlayer implements ITickable
         {
             Block block = underFoot.getRelative(dir.getBlockFace(), i);
             
-            buildBrigdeBlock(block);
+            if ( block.getType() == Material.AIR )
+            {
+                arenaBuilder.tryBuild(block, Material.WOOD).whenSuccess(() -> spawnBrigdeparticles(block));
+            }
         }
     }
     
-    private void buildBrigdeBlock(Block block)
+    private void spawnBrigdeparticles(Block block)
     {
-        if ( block.getType() == Material.AIR )
-        {
-            block.setType(Material.WOOD);
-            
-            double offX = ThreadLocalRandom.current().nextGaussian() * 0.13;
-            double offY = Math.abs(ThreadLocalRandom.current().nextGaussian()) * 0.13;
-            double offZ = ThreadLocalRandom.current().nextGaussian() * 0.13;
-            block.getWorld().spawnParticle(Particle.SMOKE_LARGE, block.getX() + 0.5, block.getY() + 0.5, block.getZ() + 0.5, 1, offX, offY, offZ, 0, null);
-        }
+        double offX = ThreadLocalRandom.current().nextGaussian() * 0.13;
+        double offY = Math.abs(ThreadLocalRandom.current().nextGaussian()) * 0.13;
+        double offZ = ThreadLocalRandom.current().nextGaussian() * 0.13;
+        block.getWorld().spawnParticle(Particle.SMOKE_LARGE, block.getX() + 0.5, block.getY() + 0.5, block.getZ() + 0.5, 1, offX, offY, offZ, 0, null);
     }
     
     @Tick

@@ -1,5 +1,6 @@
 package pl.arieals.minigame.goldhunter;
 
+import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 
 public enum Direction
@@ -36,9 +37,28 @@ public enum Direction
         throw new RuntimeException();
     }
     
+    public Direction oposite()
+    {
+        switch ( this )
+        {
+        case SOUTH: return NORTH;
+        case WEST: return EAST;
+        case NORTH: return SOUTH;
+        case EAST: return WEST;
+        }
+        
+        throw new RuntimeException();
+    }
+    
     public BlockFace getBlockFace()
     {
         return BlockFace.valueOf(name());
+    }
+    
+    public Location translateLocation(Location location, double offset)
+    {
+        BlockFace face = getBlockFace();
+        return location.add(offset * face.getModX(), 0, offset * face.getModZ());
     }
     
     public static Direction fromYaw(float yaw)

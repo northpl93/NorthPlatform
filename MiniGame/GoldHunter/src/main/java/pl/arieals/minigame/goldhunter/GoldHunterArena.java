@@ -233,7 +233,7 @@ public class GoldHunterArena implements IArenaData, ITickable
             }
         }
         
-        return true;
+        return !structureManager.isStructure(location);
     }
     
     public void scheduleStart()
