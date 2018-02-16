@@ -9,7 +9,6 @@ import org.bukkit.boss.BossBar;
 
 import com.google.common.base.Preconditions;
 
-import pl.arieals.minigame.goldhunter.utils.CatchException;
 import pl.arieals.minigame.goldhunter.utils.TimeStringUtils;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.Tick;
@@ -18,6 +17,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
+import pl.north93.zgame.api.global.utils.lang.CatchException;
 
 public abstract class Effect implements ITickable
 {
