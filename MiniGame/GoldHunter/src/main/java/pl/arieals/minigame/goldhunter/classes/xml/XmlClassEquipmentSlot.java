@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlElement;
 import org.bukkit.inventory.ItemStack;
 
 import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
+import pl.arieals.minigame.goldhunter.utils.ItemStackUtils;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlClassEquipmentSlot
@@ -25,6 +26,6 @@ public class XmlClassEquipmentSlot
     public ItemStack getItemStack(GoldHunterPlayer player)
     {
         return items.stream().filter(condition -> condition.check(player)).findFirst()
-                .map(condition -> condition.createItemStack()).orElse(null);
+                .map(condition -> condition.createItemStack()).map(ItemStackUtils::hideAttributesAndMakeUnbreakable).orElse(null);
     }
 }

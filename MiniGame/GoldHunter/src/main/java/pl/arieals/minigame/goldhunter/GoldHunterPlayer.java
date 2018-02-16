@@ -38,6 +38,7 @@ import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
 import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
+import pl.north93.zgame.api.bukkit.utils.region.Cuboid.CuboidDirection;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
@@ -238,6 +239,23 @@ public class GoldHunterPlayer implements ITickable
     {
         Preconditions.checkArgument(newClass != null);
         selectedClass = newClass;
+        
+        if ( player.getLocation().distanceSquared(arena.getTeamSpawn(team)) <= 9 )
+        {
+            changeClass();
+        }
+    }
+    
+    public void changeClass()
+    {
+        Preconditions.checkState(selectedClass != null);
+        
+        currentClass = selectedClass;
+        currentClass.applyEquipment(this);
+        abilityTracker.setNewAbilityType(currentClass.getSpecialAbility());
+        
+        addLeatherHatToInventory();
+        setLeatherArmorColor();
     }
     
     public IScoreboardContext getScoreboardContext()
@@ -257,7 +275,7 @@ public class GoldHunterPlayer implements ITickable
     
     public void addLeatherHatToInventory()
     {
-        player.getInventory().setHelmet(new ItemStackBuilder().material(Material.LEATHER_HELMET).build());
+        player.getInventory().setHelmet(new ItemStackBuilder().material(Material.LEATHER_HELMET).hideAttributes().unbreakable().build());
     }
     
     public void setLeatherArmorColor()
@@ -278,31 +296,6 @@ public class GoldHunterPlayer implements ITickable
         }
         
         player.updateInventory();
-    }
-    
-    private void hideItemsAttributesAndMakeUnbreakable()
-    {
-        PlayerInventory inv = player.getInventory();
-        for ( ItemStack is : inv.getArmorContents() )
-        {
-            hideItemAttributesAndMakeUnbreakable(is);
-        }
-        
-        for ( ItemStack is : inv.getContents() )
-        {
-            hideItemAttributesAndMakeUnbreakable(is);
-        }
-    }
-    
-    private void hideItemAttributesAndMakeUnbreakable(ItemStack is)
-    {
-        if ( is != null && is.getType() != Material.AIR )
-        {
-            ItemMeta meta = is.getItemMeta();
-            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
-            meta.setUnbreakable(true);
-            is.setItemMeta(meta);
-        }
     }
     
     public void exitGame()
@@ -367,15 +360,11 @@ public class GoldHunterPlayer implements ITickable
         Preconditions.checkState(isIngame());
         logger.debug("{} respawn", this);
         
-        currentClass = selectedClass;
-        
         setupPlayerEntity();
         
-        currentClass.applyEquipment(this);
-        addLeatherHatToInventory();
-        hideItemsAttributesAndMakeUnbreakable();
-        
         setDisplayTeam(team);
+         
+        changeClass();
         
         toRefilEquipmentTicks = currentClass.getInventoryRefilTime();
          
@@ -400,7 +389,7 @@ public class GoldHunterPlayer implements ITickable
         player.setVelocity(new Vector(0, 0, 0));
         
         effectTracker.clearEffects();
-        abilityTracker.setNewAbilityType(currentClass != null ? currentClass.getSpecialAbility() : null);
+        abilityTracker.setNewAbilityType(null);
         
         setNoFallDamageTicks(0);
         setBuildBridgeActive(false);
