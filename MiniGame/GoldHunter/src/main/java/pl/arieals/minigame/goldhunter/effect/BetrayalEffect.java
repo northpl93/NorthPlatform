@@ -1,4 +1,4 @@
-package pl.arieals.minigame.goldhunter.effects;
+package pl.arieals.minigame.goldhunter.effect;
 
 import pl.arieals.minigame.goldhunter.Effect;
 

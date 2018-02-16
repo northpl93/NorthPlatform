@@ -2,7 +2,7 @@ package pl.arieals.minigame.goldhunter.abilities;
 
 import pl.arieals.minigame.goldhunter.AbilityHandler;
 import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
-import pl.arieals.minigame.goldhunter.effects.BetrayalEffect;
+import pl.arieals.minigame.goldhunter.effect.BetrayalEffect;
 
 public class BetrayalAbility implements AbilityHandler
 {

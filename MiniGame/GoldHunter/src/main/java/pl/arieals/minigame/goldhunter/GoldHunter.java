@@ -11,8 +11,6 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.sk89q.worldedit.bukkit.BukkitWorld;
-
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.MiniGameApi;
