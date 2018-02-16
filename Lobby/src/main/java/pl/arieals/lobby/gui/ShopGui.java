@@ -47,7 +47,7 @@ public abstract class ShopGui extends Gui
             final Vars<Object> vars = this.generateItemVars(playerContainer, item);
             for (final Map.Entry<String, Object> var : vars.asMap().entrySet())
             {
-                this.addVariables(Vars.of(var.getKey() + "-" + item.getId(), var.getValue()));
+                this.getContent().addVariables(Vars.of(var.getKey() + "-" + item.getId(), var.getValue()));
             }
         }
     }
@@ -55,38 +55,39 @@ public abstract class ShopGui extends Gui
     private Vars<Object> generateItemVars(final IPlayerContainer playerContainer, final Item item)
     {
         final ItemsGroup group = item.getGroup();
-        Vars<Object> vars = Vars.empty();
+        final Vars.Builder<Object> builder = Vars.builder();
 
         // nazwa przedmiotu
-        vars = vars.and("name", item.getName());
+        builder.and("name", item.getName());
         //vars = vars.and("name", TranslatableString.constant(item.getName(Locale.forLanguageTag(this.player.spigot().getLocale()))));
-        vars = vars.and("nameColor", ChatColor.GREEN);
+        builder.and("nameColor", ChatColor.GREEN);
 
-        Vars<Object> loreVars = Vars.empty();
+        final Vars.Builder<Object> loreBuilder = Vars.builder();
         // rzadkosc przedmiotu
-        loreVars = loreVars.and("rarity", TranslatableString.of(generalMessages, "@rarity." + item.getRarity().name()));
+        loreBuilder.and("rarity", TranslatableString.of(generalMessages, "@rarity." + item.getRarity().name()));
 
         // shardy o obliczyc cene
-        loreVars = loreVars.and("price", "price todo");
-        loreVars = loreVars.and("shards", playerContainer.getShards(item));
+        loreBuilder.and("price", "price todo");
+        loreBuilder.and("shards", playerContainer.getShards(item));
 
+        final Vars<Object> loreVars = loreBuilder.build();
         if (group.getGroupType() == GroupType.SINGLE_PICK)
         {
             if (item.equals(playerContainer.getActiveItem(group)))
             {
                 // lore_selected
-                vars = vars.and("lore", TranslatableString.of(generalMessages, "@item.lore_selected$rarity").getValue(this.player, loreVars));
+                builder.and("lore", TranslatableString.of(generalMessages, "@item.lore_selected$rarity").getValue(this.player, loreVars));
             }
             else if (playerContainer.hasBoughtItem(item))
             {
                 // lore_select
-                vars = vars.and("lore", TranslatableString.of(generalMessages, "@item.lore_select$rarity").getValue(this.player, loreVars));
+                builder.and("lore", TranslatableString.of(generalMessages, "@item.lore_select$rarity").getValue(this.player, loreVars));
             }
             else
             {
                 // lore_buy
                 // todo sprawdzenie czy ma hajsy
-                vars = vars.and("lore", TranslatableString.of(generalMessages, "@item.lore_buy$rarity,price,shards").getValue(this.player, loreVars));
+                builder.and("lore", TranslatableString.of(generalMessages, "@item.lore_buy$rarity,price,shards").getValue(this.player, loreVars));
             }
         }
         else if (group.getGroupType() == GroupType.MULTI_BUY)
@@ -97,12 +98,12 @@ public abstract class ShopGui extends Gui
             }
             else
             {
-                vars = vars.and("lore", TranslatableString.of(generalMessages, "@item.lore_upgrade$rarity,price,shards").getValue(this.player, loreVars));
                 // lore_upgrade
+                builder.and("lore", TranslatableString.of(generalMessages, "@item.lore_upgrade$rarity,price,shards").getValue(this.player, loreVars));
             }
         }
 
-        return vars;
+        return builder.build();
     }
 
     @Override

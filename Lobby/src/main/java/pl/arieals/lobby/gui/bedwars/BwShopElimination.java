@@ -16,6 +16,6 @@ public class BwShopElimination extends ShopGui
     public BwShopElimination(final Player player)
     {
         super(messagesBox, "bedwars/bw_shop_elimination", player, "bedwars_elimination");
-        this.addVariables(Vars.of("$playerId", player.getUniqueId()));
+        this.getContent().addVariables(Vars.of("$playerId", player.getUniqueId()));
     }
 }

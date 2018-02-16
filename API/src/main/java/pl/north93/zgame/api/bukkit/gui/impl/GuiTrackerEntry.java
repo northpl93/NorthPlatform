@@ -76,8 +76,7 @@ public class GuiTrackerEntry
 
         Inventory inv = Bukkit.createInventory(null, 9 * content.getHeight(), content.getTitle().getValue(player, newGui.getVariables()));
         content.renderToInventory(player, inv);
-        //this.cleanupOldInventory();
-        
+
         if ( tryOpenContainerAndCallOwnEvent(inv, newGui) )
         {
             currentGui = newGui;

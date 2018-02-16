@@ -68,7 +68,7 @@ public class GuiContent extends GuiContainerElement
                 GuiElement element = renderedCanvas.getGuiElementInSlot(i, j);
                 if ( icon != null )
                 {
-                    final Vars<Object> vars = element.getLocalVariables().and(gui.getVariables());
+                    final Vars<Object> vars = element.getVariables();
                     inv.setItem(j * 9 + i, icon.toItemStack(gui.getMessagesBox(), player, vars));
                 }
             }

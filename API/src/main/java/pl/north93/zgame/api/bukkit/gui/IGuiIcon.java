@@ -12,5 +12,14 @@ import pl.north93.zgame.api.global.utils.Vars;
  */
 public interface IGuiIcon
 {
+    /**
+     * Metoda wywoływana podczas renderowania, ma zwrócić ItemStack który ostatecznie
+     * zostanie umieszczony w ekwipunku.
+     *
+     * @param messages Plik z wiadomościami z którego korzysta ekwipunek.
+     * @param player Gracz dla którego renderowany jest ekwipunek.
+     * @param parameters Zmienne używane w tłumaczeniach.
+     * @return Przedmiot który zostanie umieszczony w ekwipunku gracza.
+     */
     ItemStack toItemStack(MessagesBox messages, Player player, Vars<Object> parameters);
 }

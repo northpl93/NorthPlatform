@@ -29,6 +29,7 @@ public class GuiContainerElement extends GuiElement implements IPageable
     public void setSize(int width, int height)
     {
         this.width = width;
+        this.height = height;
         markDirty();
     }
 

@@ -16,6 +16,6 @@ public class ElytraShopEffects extends ShopGui
     public ElytraShopEffects(final Player player)
     {
         super(messagesBox, "elytrarace/elytrarace_shop_effects", player, "elytra_effects");
-        this.addVariables(Vars.of("$playerId", player.getUniqueId()));
+        this.getContent().addVariables(Vars.of("$playerId", player.getUniqueId()));
     }
 }

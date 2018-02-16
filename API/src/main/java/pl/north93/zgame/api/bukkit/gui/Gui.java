@@ -23,14 +23,10 @@ public class Gui implements IClickHandler
     private static GuiTracker guiTracker;
     
     private final GuiContent content;
-    
-    private Vars<Object> variables;
-
     private MessagesBox messagesBox;
     
     protected Gui(MessagesBox messagesBox, String layout)
     {
-        this.variables = Vars.empty();
         this.messagesBox = messagesBox;
         if ( StringUtils.isNotEmpty(layout) )
         {
@@ -87,20 +83,11 @@ public class Gui implements IClickHandler
     {
         return content;
     }
-    
-    public final Vars<Object> getVariables()
+
+    @Override
+    public Vars<Object> getVariables()
     {
-        return variables;
-    }
-    
-    public final void setVariables(Vars<Object> variables)
-    {
-        this.variables = variables;
-    }
-    
-    public final void addVariables(Vars<Object> variables)
-    {
-        this.variables = this.variables.and(variables);
+        return this.content.getVariables();
     }
     
     public final boolean isDirty()
@@ -161,7 +148,7 @@ public class Gui implements IClickHandler
     protected void onClose(Player player)
     {
     }
-    
+
     public static void setGuiTracker(GuiTracker guiTracker)
     {
         Preconditions.checkState(Gui.guiTracker == null);

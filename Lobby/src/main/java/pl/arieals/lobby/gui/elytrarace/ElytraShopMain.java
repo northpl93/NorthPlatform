@@ -16,6 +16,6 @@ public class ElytraShopMain extends Gui
     public ElytraShopMain(final Player player)
     {
         super(messagesBox, "elytrarace/elytrarace_shop_main");
-        this.addVariables(Vars.of("$playerId", player.getUniqueId()));
+        this.getContent().addVariables(Vars.of("$playerId", player.getUniqueId()));
     }
 }

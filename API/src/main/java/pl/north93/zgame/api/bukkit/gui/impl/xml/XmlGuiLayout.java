@@ -63,7 +63,7 @@ public class XmlGuiLayout
         GuiContent content = new GuiContent(gui, height);
         content.setTitle(TranslatableString.of(gui.getMessagesBox(), title));
 
-        final RenderContext context = new RenderContext(gui.getMessagesBox(), gui.getVariables());
+        final RenderContext context = new RenderContext(gui.getMessagesBox(), content.getVariables());
         
         for ( XmlGuiElement element : this.content )
         {

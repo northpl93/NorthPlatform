@@ -16,6 +16,6 @@ public class ElytraShopHeads extends ShopGui
     public ElytraShopHeads(final Player player)
     {
         super(messagesBox, "elytrarace/elytrarace_shop_heads", player, "elytra_heads");
-        this.addVariables(Vars.of("$playerId", player.getUniqueId()));
+        this.getContent().addVariables(Vars.of("$playerId", player.getUniqueId()));
     }
 }

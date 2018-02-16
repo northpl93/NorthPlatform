@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,10 +20,10 @@ public abstract class GuiElement implements IClickable
     
     private final List<String> clickHandlers = new ArrayList<>();
     private final Map<String, String> metadata = new HashMap<>();
-    
-    private Vars<Object> localVariables = Vars.empty();
-    // TODO: import this wariables from XML
-    
+
+    // Nie da się jeszcze ich ustawiać w XMLu, są dostępne tylko leniwe <variable>
+    private Vars<Object> variables = Vars.empty();
+
     private int posX;
     private int posY;
     
@@ -79,19 +78,24 @@ public abstract class GuiElement implements IClickable
         return parent;
     }
     
-    public Vars<Object> getLocalVariables()
+    public final Vars<Object> getVariables()
     {
-        return localVariables;
+        if (this.parent != null)
+        {
+            // pobieramy rekurencyjnie wszystkie zmienne od naszych rodziców, one też nas interesują
+            return this.variables.and(this.parent.getVariables());
+        }
+        return this.variables;
     }
     
-    public void setLocalVariables(Vars<Object> localVariables)
+    public void setVariables(Vars<Object> variables)
     {
-        this.localVariables = localVariables;
+        this.variables = variables;
     }
     
-    public void addLocalVariables(Vars<Object> localVariables)
+    public void addVariables(Vars<Object> localVariables)
     {
-        this.localVariables = this.localVariables.and(localVariables);
+        this.variables = this.variables.and(localVariables);
     }
     
     public Map<String, String> getMetadata()

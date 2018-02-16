@@ -4,11 +4,12 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.tuple.Pair;
+import com.google.common.base.Preconditions;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import com.google.common.base.Preconditions;
+import org.apache.commons.lang3.tuple.Pair;
 
 import pl.arieals.globalshops.server.BuyResult;
 import pl.arieals.globalshops.server.IGlobalShops;
@@ -82,7 +83,7 @@ public class GoldHunterShopGui extends Gui
 		}
 		
 		ItemState itemState = ItemState.getItemState(playerContainer, item);
-		element.addLocalVariables(Vars.<Object>of("color", itemState.getMainColor())
+		element.addVariables(Vars.<Object>of("color", itemState.getMainColor())
 				.and("status", itemState.getBuyText())
 				.and("price", "§lCena: TODO"));
 	}
@@ -109,7 +110,7 @@ public class GoldHunterShopGui extends Gui
 			totalCount++;
 		}
 		
-		element.addLocalVariables(Vars.<Object>of("color", getFolderColor(boughtCount, totalCount) + "")
+		element.addVariables(Vars.<Object>of("color", getFolderColor(boughtCount, totalCount) + "")
 				.and("count", boughtCount)
 				.and("max", totalCount));
 	}

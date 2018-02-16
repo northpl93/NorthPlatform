@@ -16,6 +16,6 @@ public class BwShopPerks extends ShopGui
     public BwShopPerks(final Player player)
     {
         super(messagesBox, "bedwars/bw_shop_perks", player, "bedwars_perks");
-        this.addVariables(Vars.of("$playerId", player.getUniqueId()));
+        this.getContent().addVariables(Vars.of("$playerId", player.getUniqueId()));
     }
 }

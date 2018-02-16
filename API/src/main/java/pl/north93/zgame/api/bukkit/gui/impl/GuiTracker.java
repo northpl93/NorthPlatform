@@ -1,6 +1,5 @@
 package pl.north93.zgame.api.bukkit.gui.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -284,39 +283,39 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
     @Tick
     public void updateDirtyGuis()
     {
-        for ( Gui gui : entriesByGui.keySet() )
+        entriesByGui.asMap().forEach((gui, entries) ->
         {
-            if ( !gui.isDirty() )
+            if (! gui.isDirty())
             {
-                continue;
+                return;
             }
-            
+
             gui.getContent().renderContent();
             gui.getContent().resetDirty();
-            
-            for ( GuiTrackerEntry entry : new ArrayList<>(entriesByGui.get(gui)) )
+
+            for (GuiTrackerEntry entry : entries)
             {
                 entry.refreshInventory();
             }
-        }
+        });
     }
     
     @Tick
     public void updateDirtyHotbars()
     {
-        for ( HotbarMenu hotbar : entriesByHotbar.keySet() )
+        entriesByHotbar.asMap().forEach((hotbar, entries) ->
         {
-            if ( !hotbar.isDirty() )
+            if (! hotbar.isDirty())
             {
-                continue;
+                return;
             }
-            
+
             hotbar.resetDirty();
-            
-            for ( GuiTrackerEntry entry : entriesByHotbar.get(hotbar) )
+
+            for (GuiTrackerEntry entry : entries)
             {
                 entry.refreshHotbarMenu();
             }
-        }
+        });
     }
 }
