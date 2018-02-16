@@ -1,11 +1,18 @@
 package pl.arieals.minigame.goldhunter.abilities;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import org.apache.logging.log4j.Logger;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
 
 import pl.arieals.minigame.goldhunter.AbilityHandler;
+import pl.arieals.minigame.goldhunter.ArenaBuilder;
+import pl.arieals.minigame.goldhunter.Direction;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -15,101 +22,79 @@ public class WallAbility implements AbilityHandler
     @Inject
     @GoldHunterLogger
     private static Logger logger;
+    @Inject
+    private static ArenaBuilder arenaBuilder;
     
     @Override
     public boolean onUse(GoldHunterPlayer player, Location target)
     {
         if ( target == null )
         {
-            Vector dir = player.getPlayer().getLocation().getDirection();
-            dir.multiply(5);
-            
+            Vector dir = player.getPlayer().getLocation().getDirection().multiply(5);
             target = player.getPlayer().getEyeLocation().add(dir);
         }
+        
+        Direction direction = Direction.fromYaw(player.getMinecraftPlayer().yaw);
         
         switch ( player.getShopItemLevel("vip.defender.ability") )
         {
         case 0:
-            buildWall(player.getPlayer().getLocation().getDirection(), target, 3, 4, 1);
+            buildWall(target, direction, 5, 4, 1);
             break;
             
         case 1:
-            buildWall(player.getPlayer().getLocation().getDirection(), target, 5, 5, 1);
+            buildWall(target, direction, 7, 5, 1);
             break;
             
         case 2:
-            buildWall(player.getPlayer().getLocation().getDirection(), target, 5, 5, 2);
+            buildWall(target, direction, 7, 5, 2);
             break;
+            
+        default:
+            throw new IllegalStateException();
         }
         
         return true;
     }
     
-    private void buildWall(Vector lookDirection, Location target, int wallWidth, int wallHeight, int wallDepth)
+    private void buildWall(Location loc, Direction direction, int width, int height, int depth)
     {
-        Vector min;
-        Vector max;
-        
-        lookDirection.setY(0).normalize();
-        
-        double sign = Math.signum(lookDirection.getX() / lookDirection.length());
-        double lookDeg;
-        if ( sign == 0 && lookDirection.getZ() > 0 )
-        {
-            lookDeg = 0;
-        }
-        else if ( sign == 0 && lookDirection.getZ() < 0 )
-        {
-            lookDeg = 180;
-        }
-        else
-        {
-            lookDeg = sign * Math.toDegrees(lookDirection.angle(new Vector(0, 0, 1)));
-        }
-        
-        if ( lookDeg >= -45 && lookDeg < 45 )
-        {
-            min = new Vector(-wallWidth, 1, 0);
-            max = new Vector(wallWidth + 1, wallHeight + 1, wallDepth);
-        }
-        else if ( lookDeg >= 45 && lookDeg < 135 )
-        {
-            min = new Vector(-wallDepth + 1, 1, -wallWidth);
-            max = new Vector(1, wallHeight + 1, wallWidth + 1);
-        }
-        else if ( lookDeg >= -135 && lookDeg < -45 )
-        {
-            min = new Vector(wallDepth, 1, -wallWidth);
-            max = new Vector(0, wallHeight + 1, wallWidth + 1);
-        }
-        else
-        {
-            min = new Vector(-wallWidth - 1, 1, -wallDepth);
-            max = new Vector(wallWidth, wallHeight + 1, 0);
-        }
-        
-        buildCuboid(target, min, max);
-    }
-    
-    private void buildCuboid(Location target, Vector min, Vector max)
-    {
-        logger.debug("min: {}, max: {}", min, max);
+        Block base = loc.getBlock().getRelative(direction.turnLeft().getBlockFace(), width / 2);
         
         boolean cobble = false;
-        for ( int y = min.getBlockY(); y < max.getBlockY(); y++, cobble = !cobble )
+        for ( int i = 0; i < depth; i++, cobble = !cobble )
         {
+            Block base2 = base.getRelative(direction.getBlockFace(), i);
             boolean cobble2 = cobble;
-            for ( int z = min.getBlockZ(); z < max.getBlockZ(); z++ )
+            for ( int j = 0; j < height; j++, cobble2 = !cobble2 )
             {
+                Block base3 = base2.getRelative(BlockFace.UP, j);
                 boolean cobble3 = cobble2;
-                for ( int x = min.getBlockX(); x < max.getBlockX(); x++ )
+                for ( int k = 0; k < width; k++, cobble3 = !cobble3 )
                 {
-                    target.clone().add(x, y, z).getBlock().setType(cobble3 ? Material.COBBLESTONE : Material.WOOD);
-                    // TODO: add effect
-                    cobble3 = !cobble3;
+                    Block current = base3.getRelative(direction.turnRight().getBlockFace(), k);
+                    
+                    if ( current.getType() != Material.AIR )
+                    {
+                        continue;
+                    }
+                    
+                    arenaBuilder.tryBuild(current, cobble3 ? Material.COBBLESTONE : Material.WOOD).whenSuccess(() -> playWallEffect(current, direction));
                 }
-                cobble2 = !cobble2;
             }
         }
+    }
+    
+    private void playWallEffect(Block block, Direction direction)
+    {
+        double offX = ThreadLocalRandom.current().nextGaussian() * 0.13;
+        double offY = Math.abs(ThreadLocalRandom.current().nextGaussian()) * 0.13;
+        double offZ = ThreadLocalRandom.current().nextGaussian() * 0.13;
+        
+        Location front = direction.oposite().translateLocation(block.getLocation().add(0.5, 0.196, 0.5), 0.5);
+        Location behind = direction.translateLocation(block.getLocation().add(0.5, 0.196, 0.5), 0.5);
+        
+        block.getWorld().spawnParticle(Particle.SMOKE_LARGE, front.getX(), front.getY(), front.getZ(), 1, offX, offY, offZ, 0, null);
+        block.getWorld().spawnParticle(Particle.SMOKE_LARGE, behind.getX(), behind.getY(), behind.getZ(), 1, offX, offY, offZ, 0, null);
     }
 }
