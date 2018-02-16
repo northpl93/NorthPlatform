@@ -26,6 +26,7 @@ public class ItemStackBuilder
     private List<String>     lore;
     private List<XmlEnchant> enchantments;
     private boolean          hideAttributes;
+    private boolean          unbreakable;
 
     public ItemStackBuilder material(final Material material)
     {
@@ -90,6 +91,12 @@ public class ItemStackBuilder
         this.hideAttributes = true;
         return this;
     }
+    
+    public ItemStackBuilder unbreakable()
+    {
+        this.unbreakable = true;
+        return this;
+    }
 
     public ItemStack build()
     {
@@ -105,7 +112,11 @@ public class ItemStackBuilder
         itemMeta.setLore(this.lore);
         if (this.hideAttributes)
         {
-            itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
+        }
+        if ( this.unbreakable )
+        {
+            itemMeta.setUnbreakable(true);
         }
         itemStack.setItemMeta(itemMeta);
         if (this.enchantments != null)
