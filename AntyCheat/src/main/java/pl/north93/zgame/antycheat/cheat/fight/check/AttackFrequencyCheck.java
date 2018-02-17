@@ -3,8 +3,6 @@ package pl.north93.zgame.antycheat.cheat.fight.check;
 import java.time.Duration;
 import java.time.Instant;
 
-import org.bukkit.Bukkit;
-
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.longs.LongListIterator;
@@ -43,7 +41,7 @@ public class AttackFrequencyCheck implements TimelineAnalyser
         final double avg = sum / size;
         final double standardDeviation = this.standardDeviation(delays, avg);
 
-        Bukkit.broadcastMessage(data.getPlayer().getName() + " C:" + size + " AVG:" + avg + " SD:" + standardDeviation);
+        //Bukkit.broadcastMessage(data.getPlayer().getName() + " C:" + size + " AVG:" + avg + " SD:" + standardDeviation);
 
         final SingleAnalysisResult singleAnalysisResult = SingleAnalysisResult.create();
         this.punishPlayerForHitCount(size, singleAnalysisResult);
@@ -99,17 +97,17 @@ public class AttackFrequencyCheck implements TimelineAnalyser
 
     private void punishPlayerForDeviation(final double standardDeviation, final SingleAnalysisResult result)
     {
-        if (standardDeviation > 100)
+        if (standardDeviation > 75)
         {
             return;
         }
 
         final FalsePositiveProbability falsePositiveProbability;
-        if (standardDeviation >= 50)
+        if (standardDeviation >= 45)
         {
             falsePositiveProbability = FalsePositiveProbability.HIGH;
         }
-        else if (standardDeviation >= 15)
+        else if (standardDeviation >= 10)
         {
             falsePositiveProbability = FalsePositiveProbability.MEDIUM;
         }

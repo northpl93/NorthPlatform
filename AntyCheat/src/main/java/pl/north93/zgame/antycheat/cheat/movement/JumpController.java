@@ -285,7 +285,7 @@ public class JumpController
         final double cosineSimilarity = cosineSimilarity(startVector.clone().normalize(), currentMovementVector.normalize());
         if (to.getDistanceToGround() >= 0.1 && maxHeightExceeded < - 0.15)
         {
-            if (cosineSimilarity <= 0.1 && to.getDistanceToGround() >= 0.25 && maxHeightExceeded < - 0.25)
+            if (cosineSimilarity <= 0.1 && to.getDistanceToGround() >= 0.5 && maxHeightExceeded < - 0.5)
             {
                 // dodatkowo zwiekszamy wymagania zeby uniknac bolesnych false-positives
                 result.addViolation(MovementViolation.SURVIVAL_FLY, INCONSISTENCY_START_VECTOR, FalsePositiveProbability.MEDIUM);
