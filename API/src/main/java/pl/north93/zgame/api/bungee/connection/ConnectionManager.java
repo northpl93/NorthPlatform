@@ -1,13 +1,11 @@
 package pl.north93.zgame.api.bungee.connection;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import org.diorite.utils.math.DioriteRandomUtils;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -53,12 +51,7 @@ public class ConnectionManager
     public Server getBestServerFromServersGroup(final String serversGroup)
     {
         final Set<Server> servers = this.networkManager.getServers().inGroup(serversGroup);
-        if (servers.isEmpty())
-        {
-            return null;
-        }
-
-        return DioriteRandomUtils.getRandom(new ArrayList<>(servers));
+        return servers.stream().min(Comparator.comparing(Server::getPlayersCount)).orElse(null);
     }
 
     @Override
