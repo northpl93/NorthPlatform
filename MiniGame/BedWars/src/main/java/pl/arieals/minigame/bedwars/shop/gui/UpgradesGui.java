@@ -16,6 +16,6 @@ public class UpgradesGui extends Gui
     public UpgradesGui(final Player player)
     {
         super(messageBox, "upgrades");
-        this.addVariables(Vars.of("$playerId", player.getUniqueId()));
+        this.getContent().addVariables(Vars.of("$playerId", player.getUniqueId()));
     }
 }

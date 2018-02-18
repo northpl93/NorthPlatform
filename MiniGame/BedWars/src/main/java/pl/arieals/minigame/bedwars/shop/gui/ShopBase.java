@@ -16,6 +16,6 @@ public abstract class ShopBase extends Gui
     protected ShopBase(final Player player, final String layout)
     {
         super(shopMessages, layout);
-        this.addVariables(Vars.of("$playerId", player.getUniqueId()));
+        this.getContent().addVariables(Vars.of("$playerId", player.getUniqueId()));
     }
 }
