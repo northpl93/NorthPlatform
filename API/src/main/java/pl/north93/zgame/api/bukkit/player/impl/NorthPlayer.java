@@ -128,7 +128,7 @@ class NorthPlayer implements INorthPlayer
         final String[] messages = layout.processMessage(message);
         for (final String line : messages)
         {
-            this.sendMessage(line);
+            this.bukkitPlayer.sendMessage(line);
         }
     }
 
