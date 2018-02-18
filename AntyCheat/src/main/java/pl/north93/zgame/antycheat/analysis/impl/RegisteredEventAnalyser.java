@@ -1,9 +1,13 @@
 package pl.north93.zgame.antycheat.analysis.impl;
 
+import static pl.north93.zgame.antycheat.utils.AntyCheatTimings.eventAnalyserTiming;
+
+
 import javax.annotation.Nonnull;
 
 import java.util.Set;
 
+import co.aikar.timings.Timing;
 import pl.north93.zgame.antycheat.analysis.SingleAnalysisResult;
 import pl.north93.zgame.antycheat.analysis.event.EventAnalyser;
 import pl.north93.zgame.antycheat.analysis.event.EventAnalyserConfig;
@@ -13,15 +17,22 @@ import pl.north93.zgame.antycheat.timeline.TimelineEvent;
 
 /*default*/ class RegisteredEventAnalyser implements Comparable<RegisteredEventAnalyser>
 {
+    private final String                       name;
     private final EventAnalyser<TimelineEvent> eventAnalyser;
     private final EventAnalyserConfig          config;
 
     public RegisteredEventAnalyser(final EventAnalyser<TimelineEvent> eventAnalyser)
     {
+        this.name = eventAnalyser.getClass().getSimpleName();
         this.eventAnalyser = eventAnalyser;
         this.config = new EventAnalyserConfig();
 
         eventAnalyser.configure(this.config);
+    }
+
+    public String getName()
+    {
+        return this.name;
     }
 
     public SingleAnalysisResult tryFire(final PlayerData data, final PlayerTickInfo playerTickInfo, final TimelineEvent event)
@@ -31,7 +42,11 @@ import pl.north93.zgame.antycheat.timeline.TimelineEvent;
             return null;
         }
 
-        return this.eventAnalyser.analyse(data, playerTickInfo, event);
+        try (final Timing timing = eventAnalyserTiming(this.getName()))
+        {
+            // przekazujemy sterowanie do metody analizujacej event i mierzymy czas wykonywania
+            return this.eventAnalyser.analyse(data, playerTickInfo, event);
+        }
     }
 
     private boolean shouldFire(final TimelineEvent event)

@@ -1,5 +1,9 @@
 package pl.north93.zgame.antycheat.analysis.impl;
 
+import static pl.north93.zgame.antycheat.utils.AntyCheatTimings.timelineAnalyserTiming;
+
+
+import co.aikar.timings.Timing;
 import pl.north93.zgame.antycheat.analysis.SingleAnalysisResult;
 import pl.north93.zgame.antycheat.analysis.timeline.TimelineAnalyser;
 import pl.north93.zgame.antycheat.analysis.timeline.TimelineAnalyserConfig;
@@ -10,15 +14,22 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
 /*default*/ class RegisteredTimelineAnalyser
 {
     private static final int ONE_SECOND = 20;
+    private final String                 name;
     private final TimelineAnalyser       timelineAnalyser;
     private final TimelineAnalyserConfig config;
 
     public RegisteredTimelineAnalyser(final TimelineAnalyser timelineAnalyser)
     {
+        this.name = timelineAnalyser.getClass().getSimpleName();
         this.timelineAnalyser = timelineAnalyser;
         this.config = new TimelineAnalyserConfig();
 
         timelineAnalyser.configure(this.config);
+    }
+
+    public String getName()
+    {
+        return this.name;
     }
 
     public SingleAnalysisResult tryFire(final PlayerData data, final Tick currentTick)
@@ -29,7 +40,11 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
         }
 
         final TimelineWalker walker = data.getTimeline().createWalkerForScope(this.config.getScope());
-        return this.timelineAnalyser.analyse(data, walker);
+        try (final Timing timing = timelineAnalyserTiming(this.getName()))
+        {
+            // przekazujemy sterowanie do metody analizujacej linie czasu i mierzymy czas wykonywania
+            return this.timelineAnalyser.analyse(data, walker);
+        }
     }
 
     private boolean shouldFire(final Tick currentTick)

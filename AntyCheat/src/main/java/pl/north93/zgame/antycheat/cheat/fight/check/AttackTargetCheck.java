@@ -1,5 +1,9 @@
 package pl.north93.zgame.antycheat.cheat.fight.check;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -14,10 +18,14 @@ import pl.north93.zgame.antycheat.analysis.FalsePositiveProbability;
 import pl.north93.zgame.antycheat.analysis.SingleAnalysisResult;
 import pl.north93.zgame.antycheat.analysis.event.EventAnalyser;
 import pl.north93.zgame.antycheat.analysis.event.EventAnalyserConfig;
+import pl.north93.zgame.antycheat.analysis.timeline.TimelineAnalyserConfig;
 import pl.north93.zgame.antycheat.cheat.fight.FightViolation;
+import pl.north93.zgame.antycheat.event.impl.ClientMoveTimelineEvent;
 import pl.north93.zgame.antycheat.event.impl.InteractWithEntityTimelineEvent;
 import pl.north93.zgame.antycheat.timeline.PlayerData;
 import pl.north93.zgame.antycheat.timeline.PlayerTickInfo;
+import pl.north93.zgame.antycheat.timeline.Timeline;
+import pl.north93.zgame.antycheat.timeline.TimelineWalker;
 import pl.north93.zgame.antycheat.utils.AABB;
 import pl.north93.zgame.antycheat.utils.EntityUtils;
 import pl.north93.zgame.antycheat.utils.RayTrace;
@@ -48,28 +56,87 @@ public class AttackTargetCheck implements EventAnalyser<InteractWithEntityTimeli
 
         final Entity targetEntity = event.getEntity();
         final IPosition targetPosition = IPosition.fromBukkit(targetEntity.getLocation());
-        final AABB targetAABB = EntityUtils.getAABBOfEntityInLocation(targetEntity, targetPosition);
+        final AABB targetAABB = EntityUtils.getAABBOfEntityInLocation(targetEntity, targetPosition).grow(0.1, 0.1, 0.1);
 
-        final RayTrace rayTrace = this.createRayTrace(tickInfo);
+        final RichEntityLocation attackerLocation = this.findLocationBeforeHit(data, tickInfo, event);
+        final RayTrace rayTrace = this.createRayTrace(attackerLocation, tickInfo);
 
-        final IntersectionResult intersection = this.intersectionWithAabbWithoutBlocks(targetEntity.getWorld(), rayTrace, targetAABB.grow(0.1, 0.1, 0.1));
-        if (intersection.isBlocked())
+        final IntersectionResult intersection = this.intersectionWithAabbWithoutBlocks(targetEntity.getWorld(), rayTrace, targetAABB);
+        if (intersection.getLocation() == null)
         {
+            // wykonujemy dodatkowe checki poniewaz przy dynamicznym machaniu myszka minecraft
+            // jest mocno nieprecyzyjny i lapamiy false positives
+            this.additionalAttackWidthCheck(data, tickInfo, targetAABB, analysisResult);
+            return analysisResult;
+        }
+        else if (intersection.isBlocked())
+        {
+            // gracz wycelowal w entity, ale droga jest zablokowana
             analysisResult.addViolation(FightViolation.HIT_TARGET, ENTITY_NOT_TARGETED, FalsePositiveProbability.MEDIUM);
-            return analysisResult;
-        }
-        else if (intersection.getLocation() == null)
-        {
-            analysisResult.addViolation(FightViolation.HIT_TARGET, ENTITY_NOT_TARGETED, FalsePositiveProbability.HIGH);
-            return analysisResult;
         }
 
-        final Vector attackVector = this.calculateAttackVector(tickInfo, intersection.getLocation());
+        // sprawdzamy czy gracz nie bije z zbyt duzej odleglosci
+        final Vector attackVector = this.calculateAttackVector(attackerLocation, tickInfo, intersection.getLocation());
         final double distance = attackVector.length();
         this.punishForExceededDistance(distance, analysisResult);
 
-        //rayTrace.highlight(targetEntity.getWorld(), distance, 0.25);
         return analysisResult;
+    }
+
+    // uzywa kilku lokalizacji z jednego ticku aby zmniejszyc prawdopodobienstwo pomylki
+    private void additionalAttackWidthCheck(final PlayerData data, final PlayerTickInfo tickInfo, final AABB attackedAabb, final SingleAnalysisResult analysisResult)
+    {
+        final TimelineWalker walkerForScope = data.getTimeline().createWalkerForScope(TimelineAnalyserConfig.Scope.TICK);
+
+        final ClientMoveTimelineEvent lastMovement = walkerForScope.last(ClientMoveTimelineEvent.class);
+        final ClientMoveTimelineEvent firstMovement = walkerForScope.first(ClientMoveTimelineEvent.class);
+
+        if (firstMovement == null || lastMovement == null)
+        {
+            analysisResult.addViolation(FightViolation.HIT_TARGET, ENTITY_NOT_TARGETED, FalsePositiveProbability.HIGH);
+            return;
+        }
+
+        final RichEntityLocation firstLocation = firstMovement.getFrom();
+        final RichEntityLocation lastLocation = lastMovement.getTo();
+
+        final Collection<RayTrace> rayTraces;
+        if (firstMovement == lastMovement)
+        {
+            rayTraces = Collections.singletonList(this.createRayTrace(firstMovement.getTo(), tickInfo));
+        }
+        else
+        {
+            final RayTrace trace1 = this.createRayTrace(firstLocation, tickInfo);
+            final RayTrace trace2 = this.createRayTraceBetweenDirections(firstLocation, lastLocation, tickInfo);
+            final RayTrace trace3 = this.createRayTrace(lastLocation, tickInfo);
+
+            rayTraces = Arrays.asList(trace1, trace2, trace3);
+        }
+
+        if (this.verifyAnyVectorIsValid(rayTraces, data.getPlayer().getWorld(), attackedAabb))
+        {
+            return;
+        }
+
+        analysisResult.addViolation(FightViolation.HIT_TARGET, ENTITY_NOT_TARGETED, FalsePositiveProbability.HIGH);
+    }
+
+    // sprawdza czy jakikolwiek z raytracers jest dobry (przechodzi przez entity i nie koliduje z blokiem)
+    private boolean verifyAnyVectorIsValid(final Collection<RayTrace> rayTracers, final World world, final AABB attacked)
+    {
+        for (final RayTrace rayTracer : rayTracers)
+        {
+            final IntersectionResult intersection = this.intersectionWithAabbWithoutBlocks(world, rayTracer, attacked);
+            if (intersection.getLocation() == null || intersection.isBlocked())
+            {
+                continue;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     private void punishForExceededDistance(final double distance, final SingleAnalysisResult result)
@@ -103,51 +170,77 @@ public class AttackTargetCheck implements EventAnalyser<InteractWithEntityTimeli
         return gameMode == GameMode.CREATIVE || gameMode == GameMode.SPECTATOR;
     }
 
-    private RayTrace createRayTrace(final PlayerTickInfo tickInfo)
+    private RayTrace createRayTrace(final RichEntityLocation location, final PlayerTickInfo tickInfo)
     {
-        final Vector start = this.getEyeLocation(tickInfo);
-
-        final RichEntityLocation location = tickInfo.getProperties().getLocation();
+        final Vector start = this.getEyeLocation(location, tickInfo);
         final Vector direction = location.getDirection();
 
         return new RayTrace(start, direction);
     }
 
-    private Vector calculateAttackVector(final PlayerTickInfo tickInfo, final Vector target)
+    private RayTrace createRayTraceBetweenDirections(final RichEntityLocation l1, final RichEntityLocation l2, final PlayerTickInfo tickInfo)
     {
-        return this.getEyeLocation(tickInfo).subtract(target);
+        final Vector location = this.getEyeLocation(l1, tickInfo);
+        final Vector crossProduct = l1.getDirection().crossProduct(l2.getDirection());
+
+        return new RayTrace(location, crossProduct);
     }
 
-    private Vector getEyeLocation(final PlayerTickInfo tickInfo)
+    private Vector calculateAttackVector(final RichEntityLocation location, final PlayerTickInfo tickInfo, final Vector target)
     {
-        final double eyeHeight = tickInfo.getOwner().getEyeHeight();
-        final RichEntityLocation location = tickInfo.getProperties().getLocation();
-        return new Vector(location.getX(), location.getY() + eyeHeight, location.getZ());
+        return this.getEyeLocation(location, tickInfo).subtract(target);
+    }
+
+    private Vector getEyeLocation(final RichEntityLocation location, final PlayerTickInfo tickInfo)
+    {
+        return new Vector(location.getX(), location.getY() + tickInfo.getOwner().getEyeHeight(), location.getZ());
+    }
+
+    private RichEntityLocation findLocationBeforeHit(final PlayerData playerData, final PlayerTickInfo tickInfo, final InteractWithEntityTimelineEvent event)
+    {
+        final Timeline timeline = playerData.getTimeline();
+
+        final TimelineWalker walker = timeline.createWalkerForScope(TimelineAnalyserConfig.Scope.ALL);
+        if (walker.find(event))
+        {
+            final ClientMoveTimelineEvent moveEvent = walker.previous(ClientMoveTimelineEvent.class);
+            if (moveEvent != null)
+            {
+                return moveEvent.getTo();
+            }
+        }
+
+        return tickInfo.getProperties().getLocation();
     }
 
     private IntersectionResult intersectionWithAabbWithoutBlocks(final World world, final RayTrace rayTrace, final AABB entityAabb)
     {
-        for (final Vector location : rayTrace.traverse(3.25, 0.2))
+        boolean blocked = false;
+        for (final Vector location : rayTrace.traverse(3.25, 0.1))
         {
             if (entityAabb.intersects(location))
             {
-                return new IntersectionResult(location, false);
+                return new IntersectionResult(location, blocked);
             }
 
-            final Block block = world.getBlockAt(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-            if (block.getType() == Material.AIR)
+            if (blocked)
             {
+                // jak juz ustawilismy flage blocked to nie sprawdzamy dalej bloków dla optymalizacji
                 continue;
             }
 
-            final AABB blockAABB = BlockUtils.getExactBlockAABB(block);
-            if (blockAABB.intersects(location))
+            final Block block = world.getBlockAt(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+            if (block.getType() != Material.AIR)
             {
-                return new IntersectionResult(location, true);
+                final AABB blockAABB = BlockUtils.getExactBlockAABB(block);
+                if (blockAABB.intersects(location))
+                {
+                    blocked = true;
+                }
             }
         }
 
-        return new IntersectionResult(null, false);
+        return new IntersectionResult(null, blocked);
     }
 
     private static final class IntersectionResult

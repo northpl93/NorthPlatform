@@ -328,6 +328,19 @@ class LinkedEventsQueue
         }
 
         @Override
+        public boolean find(final TimelineEvent event)
+        {
+            for (TimelineEvent check = this.last(); this.hasPrevious(); check = this.previous())
+            {
+                if (check == event)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
         public boolean hasNext()
         {
             return ! this.isEmpty() && this.status != AFTER;
