@@ -141,8 +141,11 @@ public abstract class Effect implements ITickable
     @Tick
     private void updateBossbar()
     {
-        updateBarProgreess();
-        updateBarTitle();
+        if ( bossbar != null )
+        {
+            updateBarProgreess();
+            updateBarTitle();
+        }
     }
     
     private void updateBarProgreess()
