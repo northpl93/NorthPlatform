@@ -3,6 +3,7 @@ package pl.arieals.minigame.goldhunter.listener;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -36,7 +37,7 @@ public class DamageListener implements AutoListener
         }
     }
     
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDamageByPlayer(EntityDamageByEntityEvent event)
     {
         if ( !( event.getDamager() instanceof Player ) )
@@ -71,7 +72,7 @@ public class DamageListener implements AutoListener
         damager.getStatsTracker().onDamagePlayer(damaged, event.getFinalDamage());
     }
     
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDamagedByProjectile(EntityDamageByEntityEvent event)
     {
         if ( !( event.getDamager() instanceof Projectile ) )

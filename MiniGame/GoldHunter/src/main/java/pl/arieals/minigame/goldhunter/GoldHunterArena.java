@@ -12,6 +12,7 @@ import javax.xml.bind.JAXB;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.util.BlockVector;
 
 import com.google.common.base.Preconditions;
@@ -216,6 +217,11 @@ public class GoldHunterArena implements IArenaData, ITickable
         spawns.clear();
         
         updateLobbyScoreboardLayout();
+    }
+    
+    public boolean canBuild(Block block)
+    {
+        return canBuild(block.getLocation().toVector().toBlockVector());
     }
     
     public boolean canBuild(Location location)

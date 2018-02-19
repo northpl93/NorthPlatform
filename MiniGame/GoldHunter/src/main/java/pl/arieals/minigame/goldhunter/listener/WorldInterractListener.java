@@ -3,7 +3,6 @@ package pl.arieals.minigame.goldhunter.listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
@@ -70,16 +69,11 @@ public class WorldInterractListener implements AutoListener
         }
     }
     
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onBlockExplode(BlockExplodeEvent event)
-    {
-        event.blockList().clear();
-    }
-    
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler
     public void onEntityExplode(EntityExplodeEvent event)
     {
-        event.blockList().clear();
+        GoldHunterArena arena = goldHunter.getArenaForWorld(event.getEntity().getWorld());        
+        event.blockList().removeIf(b -> arena == null || !arena.canBuild(b.getLocation()));
     }
     
     @EventHandler(priority = EventPriority.HIGHEST)
