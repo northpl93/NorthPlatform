@@ -1,7 +1,13 @@
 package pl.north93.zgame.daemon.servers;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
+
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
 
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
@@ -32,6 +38,14 @@ public class FilesManager
         }
 
         return workspace;
+    }
+
+    public Collection<File> getAllWorkspaces()
+    {
+        final FileFilter filter = DirectoryFileFilter.INSTANCE;
+        final File[] files = this.workspace.listFiles(filter);
+
+        return files == null ? Collections.emptyList() : Arrays.asList(files);
     }
 
     public File getEngineFile(final String engineName)

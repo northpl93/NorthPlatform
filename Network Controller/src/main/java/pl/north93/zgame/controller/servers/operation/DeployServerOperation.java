@@ -134,7 +134,7 @@ public class DeployServerOperation extends AutoScalerOperation
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("serversGroup", this.serversGroup).append("ourServer", this.ourServer).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("serversGroup", this.serversGroup.getName()).append("ourServer", this.ourServer).toString();
     }
 }
 
