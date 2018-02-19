@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
@@ -30,6 +31,12 @@ public class GameplayRestrictionListener implements AutoListener
     
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event)
+    {
+        event.setCancelled(true);
+    }
+    
+    @EventHandler
+    public void onRegainHealth(EntityRegainHealthEvent event)
     {
         event.setCancelled(true);
     }
