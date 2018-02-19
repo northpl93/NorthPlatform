@@ -99,6 +99,14 @@ public interface INorthPlayer extends Player, Messageable
      */
     void connectTo(String serversGroupName, IServerJoinAction... actions);
 
+    /**
+     * Sprawdza czy posiadamy lokalnie zcachowane sieciowe dane gracza
+     * (czyli wszystkie dostępne w tym interfejsie).
+     *
+     * @return True jeśli posiadamy lokalne cache danych gracza.
+     */
+    boolean isDataCached();
+
     @Override // trzeba bylo dodac zeby nie bylo bledu kompilacji
     void sendMessage(final String message);
 }

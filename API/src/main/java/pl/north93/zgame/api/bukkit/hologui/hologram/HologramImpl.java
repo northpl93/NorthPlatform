@@ -24,13 +24,20 @@ final class HologramImpl implements IHologram
 
     private final IHologramVisibility hologramVisibility;
     private final Location            location;
+    private final boolean             lowerLocation;
     private final List<HoloLine>      lines;
 
-    public HologramImpl(final IHologramVisibility hologramVisibility, final Location location)
+    public HologramImpl(final IHologramVisibility hologramVisibility, final Location location, final boolean lowerLocation)
     {
         this.hologramVisibility = hologramVisibility;
         this.location = location;
+        this.lowerLocation = lowerLocation;
         this.lines = new LinkedList<>();
+    }
+
+    public HologramImpl(final IHologramVisibility hologramVisibility, final Location location)
+    {
+        this(hologramVisibility, location, false);
     }
 
     @Override
@@ -49,6 +56,11 @@ final class HologramImpl implements IHologram
     public double getLinesSpacing()
     {
         return 0.3;
+    }
+
+    public boolean isLowerLocation()
+    {
+        return this.lowerLocation;
     }
 
     @Override

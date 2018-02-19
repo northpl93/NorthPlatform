@@ -5,11 +5,14 @@ import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.observeT
 
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import net.minecraft.server.v1_12_R1.EntityArmorStand;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
+import net.minecraft.server.v1_12_R1.World;
 import net.minecraft.server.v1_12_R1.WorldServer;
 
 import com.google.common.base.Preconditions;
@@ -25,6 +28,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.nms.EntityMetaPacketHelper;
 
 final class HoloLine
@@ -73,13 +77,21 @@ final class HoloLine
         Preconditions.checkState(this.armorStand == null, "ArmorStand already created");
         Preconditions.checkNotNull(this.lastLine, "Tried to create Armorstand when lastLine is null");
 
-        final double deltaY = - this.lineNo * this.hologram.getLinesSpacing();
+        final double deltaY;
+        if (this.hologram.isLowerLocation())
+        {
+            deltaY = this.lineNo * this.hologram.getLinesSpacing();
+        }
+        else
+        {
+            deltaY = - this.lineNo * this.hologram.getLinesSpacing();
+        }
         final Location myLoc = this.hologram.getLocation().clone().add(0, deltaY, 0);
 
         final CraftWorld craftWorld = (CraftWorld) myLoc.getWorld();
         final WorldServer nmsWorld = craftWorld.getHandle();
 
-        final EntityArmorStand entityArmorStand = new EntityArmorStand(nmsWorld, myLoc.getX(), myLoc.getY(), myLoc.getZ());
+        final HologramArmorStand entityArmorStand = new HologramArmorStand(nmsWorld, myLoc.getX(), myLoc.getY(), myLoc.getZ());
         this.armorStand = (ArmorStand) entityArmorStand.getBukkitEntity();
         this.setupArmorStand();
 
@@ -98,7 +110,10 @@ final class HoloLine
         Preconditions.checkState(this.armorStand != null, "ArmorStand doesn't exist");
 
         final CraftArmorStand craftArmorStand = (CraftArmorStand) this.armorStand;
-        craftArmorStand.getHandle().die();
+        final CraftWorld world = (CraftWorld) craftArmorStand.getWorld();
+
+        // to spowoduje zabicie entity i natychmiastowe usuniecie go z listy
+        world.getHandle().removeEntity(craftArmorStand.getHandle());
     }
 
     private void setupEntityTracker()
@@ -124,10 +139,14 @@ final class HoloLine
     // wysyla pakiet aktualizujacy gdy gracz zacznie trackowac entity
     private void playerStartedTracking(final MapChangeListener.Change<? extends EntityPlayer, ? extends Boolean> change)
     {
-        final EntityPlayer key = change.getKey();
+        final EntityPlayer entityPlayer = change.getKey();
+
         if (change.wasAdded() && change.getValueRemoved() == null && this.lastLine != null)
         {
-            this.hologram.getBukkitExecutor().sync(() -> this.sendUpdateTo(key));
+            final INorthPlayer northPlayer = INorthPlayer.wrap(entityPlayer.getBukkitEntity());
+
+            // Uruchamiamy wysylanie asynchronicznie bo getMyLocale moze wykonac zapytanie do redisa
+            this.hologram.getBukkitExecutor().async(() -> this.sendUpdateTo(entityPlayer, northPlayer.getMyLocale()));
         }
     }
 
@@ -138,16 +157,17 @@ final class HoloLine
 
         for (final EntityPlayer trackedPlayer : trackerEntry.trackedPlayers)
         {
-            this.sendUpdateTo(trackedPlayer);
+            final INorthPlayer northPlayer = INorthPlayer.wrap(trackedPlayer.getBukkitEntity());
+            this.sendUpdateTo(trackedPlayer, northPlayer.getMyLocale());
         }
     }
 
-    private void sendUpdateTo(final EntityPlayer entityPlayer)
+    private void sendUpdateTo(final EntityPlayer entityPlayer, final Locale locale)
     {
         Preconditions.checkNotNull(this.lastLine, "Tried to update ArmorStand name when lastLine is null");
         final EntityMetaPacketHelper packetHelper = new EntityMetaPacketHelper(this.armorStand.getEntityId());
 
-        final String newText = this.lastLine.render(this.hologram, entityPlayer.getBukkitEntity());
+        final String newText = this.lastLine.render(this.hologram, entityPlayer.getBukkitEntity(), locale);
         // 2=custom name http://wiki.vg/Entities#Entity
         packetHelper.addMeta(2, EntityMetaPacketHelper.MetaType.STRING, newText);
 
@@ -170,5 +190,34 @@ final class HoloLine
     public String toString()
     {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
+    }
+}
+
+final class HologramArmorStand extends EntityArmorStand
+{
+    public HologramArmorStand(final World world)
+    {
+        super(world);
+    }
+
+    public HologramArmorStand(final World world, final double d0, final double d1, final double d2)
+    {
+        this(world);
+        this.setPosition(d0, d1, d2);
+    }
+
+    @Override
+    public boolean c(final NBTTagCompound nbttagcompound)
+    {
+        // metoda zapisująca entity do NBTTaga, BEZ sprawdzania passengera
+        // false oznacza ze compound nie zostanie dodany do swiata, a wiec my tak chcemy
+        return false;
+    }
+
+    @Override
+    public boolean d(final NBTTagCompound nbttagcompound)
+    {
+        // metoda zapisująca entity do NBTTaga, Z sprawdzaniem passengera
+        return false;
     }
 }

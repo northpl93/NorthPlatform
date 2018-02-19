@@ -160,6 +160,12 @@ class NorthPlayer implements INorthPlayer
         playerData.connectTo(serversGroupName, actions);
     }
 
+    @Override
+    public boolean isDataCached()
+    {
+        return this.playerData.isCached();
+    }
+
     // wewnetrzna metoda uzywana przez implementacje.
     public Value<IOnlinePlayer> getValue()
     {

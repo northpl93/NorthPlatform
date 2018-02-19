@@ -22,8 +22,18 @@ public interface IHologram
         return create(DefaultVisibility.INSTANCE, location);
     }
 
+    static IHologram createWithLowerLocation(final Location location)
+    {
+        return createWithLowerLocation(DefaultVisibility.INSTANCE, location);
+    }
+
     static IHologram create(final IHologramVisibility hologramVisibility, final Location location)
     {
         return new HologramImpl(hologramVisibility, location);
+    }
+
+    static IHologram createWithLowerLocation(final IHologramVisibility hologramVisibility, final Location location)
+    {
+        return new HologramImpl(hologramVisibility, location, true);
     }
 }
