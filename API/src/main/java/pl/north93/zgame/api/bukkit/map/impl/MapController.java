@@ -72,7 +72,7 @@ class MapController
     {
         final EntityMetaPacketHelper helper = new EntityMetaPacketHelper(frameEntityId);
 
-        final ItemStack mapItem = new ItemStack(Material.MAP, 0, (short) mapId);
+        final ItemStack mapItem = new ItemStack(Material.MAP, 1, (short) mapId);
         helper.addMeta(6, EntityMetaPacketHelper.MetaType.SLOT, mapItem);
 
         final Channel channel = craftPlayer.getHandle().playerConnection.networkManager.channel;
@@ -118,6 +118,11 @@ class MapController
         final PlayerMapData newPlayerMapData = new PlayerMapData(player);
         player.setMetadata("PlayerMapData", new FixedMetadataValue(this.apiCore.getPluginMain(), newPlayerMapData));
         return newPlayerMapData;
+    }
+
+    public void deletePlayerMapData(final Player player)
+    {
+        player.removeMetadata("PlayerMapData", this.apiCore.getPluginMain());
     }
 
     public MapChangeListener<? super EntityPlayer, ? super Boolean> trackerListener(final MapImpl map)

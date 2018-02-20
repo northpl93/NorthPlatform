@@ -6,6 +6,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -19,6 +20,15 @@ public class MapListener implements AutoListener
 {
     @Inject
     private MapManagerImpl mapManager;
+    @Inject
+    private MapController  mapController;
+
+    @EventHandler
+    public void deletePlayerMapData(final PlayerQuitEvent event)
+    {
+        // nie zajmujemy pamieci u pewniamy sie ze po ponownym wejsciu wszystko bedzie ok
+        this.mapController.deletePlayerMapData(event.getPlayer());
+    }
 
     @EventHandler
     public void onInteractWithMap(final PlayerInteractAtEntityEvent event)
