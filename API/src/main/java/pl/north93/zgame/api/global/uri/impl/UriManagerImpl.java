@@ -79,6 +79,7 @@ public class UriManagerImpl extends Component implements IUriManager
         {
             try
             {
+                method.setAccessible(true);
                 if (method.getParameterCount() == 1)
                 {
                     return method.invoke(methodOwner, context);
