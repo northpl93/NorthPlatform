@@ -58,11 +58,11 @@ public class MapVote
 
     public boolean vote(final Player player, final int option)
     {
-        if (this.options == null || option > this.options.length)
+        if (this.options == null || option > this.options.length || option <= 0)
         {
             return false;
         }
-        final MapTemplate selectedMap = this.options[option];
+        final MapTemplate selectedMap = this.options[option - 1];
 
         this.votes.put(player, selectedMap);
         return true;
@@ -115,7 +115,7 @@ public class MapVote
         for (int i = 0; i < this.getOptions().length; i++)
         {
             final MapTemplate gameMap = this.getOptions()[i];
-            arena.getPlayersManager().broadcast(this.messages, "vote.option_line", i, gameMap.getDisplayName());
+            arena.getPlayersManager().broadcast(this.messages, "vote.option_line", i + 1, gameMap.getDisplayName());
         }
     }
 
