@@ -6,6 +6,7 @@ import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.ArmorStand;
 
 import io.netty.buffer.ByteBuf;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.nms.EntityMetaPacketHelper;
 
 abstract class AbstractChestRotationAnimation extends ChestAnimation
@@ -22,7 +23,7 @@ abstract class AbstractChestRotationAnimation extends ChestAnimation
         // bytebuf zostanie zwolniony w metodzie write
         final ByteBuf packet = this.createPacket(armorStand.getEntityId(), newRotation);
 
-        final CraftPlayer craftPlayer = (CraftPlayer) this.getPlayer();
+        final CraftPlayer craftPlayer = INorthPlayer.asCraftPlayer(this.getPlayer());
         craftPlayer.getHandle().playerConnection.networkManager.channel.writeAndFlush(packet);
     }
 

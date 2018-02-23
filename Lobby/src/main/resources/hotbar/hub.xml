@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<hotbar>
+    <entry pos="0">
+        <icon id="COMPASS" name="@hotbar.gamepicker" />
+        <onClick>openGamePicker</onClick>
+    </entry>
+
+    <entry pos="7">
+        <icon id="INK_SACK" data="10" name="@hotbar.mapvote" />
+        <onClick>changeVisibility</onClick>
+    </entry>
+    <entry pos="8">
+        <icon id="BOOK" name="@hotbar.hubinstancepicker" />
+        <onClick>openHubInstancePicker</onClick>
+    </entry>
+</hotbar>

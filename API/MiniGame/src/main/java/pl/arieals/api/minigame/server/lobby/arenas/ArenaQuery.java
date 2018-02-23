@@ -1,30 +1,33 @@
 package pl.arieals.api.minigame.server.lobby.arenas;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.function.Predicate;
 
+import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
 
 public class ArenaQuery implements Predicate<IArena>
 {
-    private GamePhase gamePhase = GamePhase.LOBBY; // default lobby
-    private String    miniGameId;
-    private String    worldId;
+    private GameIdentity          gameIdentity;
+    private Collection<GamePhase> gamePhase = new ArrayList<>(0);
+    private String                worldId;
 
     public static ArenaQuery create()
     {
         return new ArenaQuery();
     }
 
-    public ArenaQuery gamePhase(final GamePhase gamePhase)
+    public ArenaQuery miniGame(final GameIdentity gameIdentity)
     {
-        this.gamePhase = gamePhase;
+        this.gameIdentity = gameIdentity;
         return this;
     }
 
-    public ArenaQuery miniGame(final String miniGameId)
+    public ArenaQuery gamePhase(final GamePhase gamePhase)
     {
-        this.miniGameId = miniGameId;
+        this.gamePhase.add(gamePhase);
         return this;
     }
 
@@ -43,8 +46,13 @@ public class ArenaQuery implements Predicate<IArena>
             return false;
         }
 
-        // jesli this.gamePhase nie jest nullem to sprawdzamy
-        if (this.gamePhase != null && arena.getGamePhase() != this.gamePhase)
+        if (this.gameIdentity != null && !arena.getMiniGame().equals(this.gameIdentity))
+        {
+            return false;
+        }
+
+        // jesli this.gamePhase nie jest puste i nie zawiera gamephase areny to return false
+        if (! this.gamePhase.isEmpty() && ! this.gamePhase.contains(arena.getGamePhase()))
         {
             return false;
         }
@@ -54,8 +62,6 @@ public class ArenaQuery implements Predicate<IArena>
         {
             return false;
         }
-
-        // todo zaimplemrntowac id i variant minigry
 
         return true;
     }

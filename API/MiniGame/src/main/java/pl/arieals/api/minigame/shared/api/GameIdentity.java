@@ -23,6 +23,15 @@ public final class GameIdentity
     @XmlElement(required = true)
     private String variantId;
 
+    public static GameIdentity create(final String gameId, final String variantId)
+    {
+        final GameIdentity identity = new GameIdentity();
+        identity.gameId = gameId;
+        identity.variantId = variantId;
+
+        return identity;
+    }
+
     /**
      * Zwraca identyfikator tej minigry, unikalny we wszystkich minigrach.
      *

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<npcs>
+    <lobbyShopper>
+        <name>shop_bedwars</name>
+        <location x="-537.5" y="4" z="-822.5" yaw="-180"/>
+        <gameId>BED_WARS</gameId>
+    </lobbyShopper>
+
+    <playGame>
+        <name>play_bw_solo</name>
+        <location x="-535.5" y="4" z="-822.5" yaw="-180"/>
+        <skin>
+            <data>eyJ0aW1lc3RhbXAiOjE1MDI5NzkyMDkxODAsInByb2ZpbGVJZCI6ImRmYjg5MGRlNmI2ODQwNGJiY2RhZGZhYjY3NGIxNjc5IiwicHJvZmlsZU5hbWUiOiJfV29kemlvXyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjVlYjI0Y2I5NzVkN2ExYTNlNWM5YzYwMjFjNTczMTMzYWIyNGNiNzFkMjQ2M2JmY2ZhODNmMzJkNDBmMyJ9fX0=</data>
+            <sign>o/lNwhlzl15FNxizW+MTmUKkC6BY6s4Yf67LD9Wecu+SgTGiDuHWYwgiI/CSJIvlD2cFlcGZkBKmbgD+PCeYAwnu3gtgG55git7QvsvTN+WcSCzzDukQIgSgYrJR56srins4sfCVAFK6VSgZTV42wCC4x0MxpWJ0T+6eX+2Ge8tHq01iOC4qzJIimJzxf7bXNMVr7xKEHdbRWdp0e280do1g/PRp200+LJnOR9Aes+QA0zGX4R3BzDrhXAK1Y1CYgrdjEp9s5K2G12wH9LC7iYPBYd1tCpyvl8UdF2wbQSkqJTUKpCn3RQUlpjxdz3Hc1hB3ZiLo3ur2XSocAjKKFyHiPZaPkvyALHGOz6H4XbMr8Oh/IeCHlcGYXg37Tm8K+YLw4G+lfpRsxL3Y+M/zv5rAV4lyP8gVneHb7chiyjLUXHoe51spgS1aHmWEI+A+BJFOYwGoQxi2n+sWkQSF/uaLPeim7LTWwwxFAqwZjG9ISacqCHuy9pjAVT33OplLfnSjpyaXRyo5ay5BkfWTmuMtRc1gHHCpGNxl3iWNt9lW2FrCHcjcjQUrHDFpC0K4i4xnf/pnmg1z1KetY99mMUS7AfczNUcbWlY8w+so+22fB1JciKH0uRv7S1hIgfPUYoLlxsIlf36nqsJA0pmPCKnSgGm8PwWTgpuQSowiBVA=</sign>
+        </skin>
+        <gameIdentity>
+            <gameId>bedwars</gameId>
+            <variantId>solo</variantId>
+        </gameIdentity>
+    </playGame>
+</npcs>

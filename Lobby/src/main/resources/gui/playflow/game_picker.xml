@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="5" title="@gamegui.title">
+    <container pos="0,0" size="9,5">
+        <content>
+            <!-- Item naglówkowy -->
+            <button pos="4,0">
+                <variable name="onlinePlayers" value="northplatform://lobby/ui/playersCount"/>
+                <icon id="COMPASS" name="@gamegui.head_item.name" lore="@gamegui.head_item.lore$onlinePlayers"/>
+            </button>
+
+            <button pos="3,2">
+                <icon id="ENDER_CHEST" name="@gamegui.goldhunter.name" lore="@gamegui.goldhunter.lore"/>
+                <onClick>northplatform://lobby/ui/switchHub/goldhunter/$playerId</onClick>
+            </button>
+            <button pos="5,2">
+                <icon id="BED" name="@gamegui.bedwars.name" lore="@gamegui.bedwars.lore"/>
+                <onClick>northplatform://lobby/ui/switchHub/bedwars/$playerId</onClick>
+            </button>
+
+            <!-- Menu na dole -->
+            <button pos="3,4">
+                <icon id="DOUBLE_PLANT" name="@gamegui.mainhub"/>
+                <onClick>northplatform://lobby/ui/switchHub/main/$playerId</onClick>
+            </button>
+            <button pos="4,4">
+                <icon id="GOLD_INGOT" name="@gamegui.itemshop.name" lore="@gamegui.itemshop.lore"/>
+            </button>
+            <button pos="5,4">
+                <icon id="IRON_DOOR" name="@gamegui.back"/>
+                <onClick>closeGui</onClick>
+            </button>
+
+            <!-- Paski po lewej/prawej -->
+            <button pos="0,0"><icon id="STAINED_GLASS_PANE" data="14" name=""/></button>
+            <button pos="8,0"><icon id="STAINED_GLASS_PANE" data="14" name=""/></button>
+            <button pos="0,2"><icon id="STAINED_GLASS_PANE" data="14" name=""/></button>
+            <button pos="8,2"><icon id="STAINED_GLASS_PANE" data="14" name=""/></button>
+            <button pos="0,4"><icon id="STAINED_GLASS_PANE" data="14" name=""/></button>
+            <button pos="8,4"><icon id="STAINED_GLASS_PANE" data="14" name=""/></button>
+            <button pos="0,1"><icon id="STAINED_GLASS_PANE" data="1" name=""/></button>
+            <button pos="8,1"><icon id="STAINED_GLASS_PANE" data="1" name=""/></button>
+            <button pos="0,3"><icon id="STAINED_GLASS_PANE" data="1" name=""/></button>
+            <button pos="8,3"><icon id="STAINED_GLASS_PANE" data="1" name=""/></button>
+        </content>
+    </container>
+</gui>
