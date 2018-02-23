@@ -1,6 +1,7 @@
 package pl.north93.zgame.api.bungee.proxy.impl;
 
 import static net.md_5.bungee.api.chat.TextComponent.fromLegacyText;
+import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColorCodes;
 
 
 import java.util.logging.Logger;
@@ -37,7 +38,7 @@ public class PingListener implements Listener
             return;
         }
 
-        final String serverListMotd = ChatColor.translateAlternateColorCodes('&', networkMeta.serverListMotd);
+        final String serverListMotd = translateAlternateColorCodes(networkMeta.serverListMotd);
         response.setDescriptionComponent(new TextComponent(fromLegacyText(serverListMotd)));
 
         final ServerPing.Players players = response.getPlayers();
@@ -46,7 +47,7 @@ public class PingListener implements Listener
         players.setOnline(this.networkManager.getProxies().onlinePlayersCount());
 
         final ServerPing.Protocol version = response.getVersion();
-        version.setName("1.10 lub 1.11");
+        version.setName(translateAlternateColorCodes(networkMeta.serverListVersion));
     }
 
     @Override

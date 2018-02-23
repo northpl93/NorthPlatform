@@ -11,6 +11,9 @@
     <!-- Wiadomość na liście serwerów -->
     <serverListMotd>Network Platform by NorthPL93</serverListMotd>
 
+    <!-- Tekst wyświetlany jako wersja serwera -->
+    <serverListVersion>1.12</serverListVersion>
+
     <!-- Domyślna grupa serwerów z którą zostanie połączony gracz -->
     <defaultServersGroup>default</defaultServersGroup>
 </network>

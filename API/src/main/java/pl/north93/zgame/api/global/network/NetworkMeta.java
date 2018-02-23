@@ -25,11 +25,14 @@ public class NetworkMeta
     public String serverListMotd; // Wiadomosc dnia na liscie serwerow
 
     @XmlElement
+    public String serverListVersion; // Tekst wysyłany jako wersja serwera
+
+    @XmlElement
     public String defaultServersGroup; // nazwa domyślnej grupy serwerów, konfigurowane w autoscaler.xml
 
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("joiningPolicy", this.joiningPolicy).append("displayMaxPlayers", this.displayMaxPlayers).append("serverListMotd", this.serverListMotd).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("joiningPolicy", this.joiningPolicy).append("displayMaxPlayers", this.displayMaxPlayers).append("serverListMotd", this.serverListMotd).append("serverListVersion", this.serverListVersion).append("defaultServersGroup", this.defaultServersGroup).toString();
     }
 }
