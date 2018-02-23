@@ -5,8 +5,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import pl.arieals.minigame.goldhunter.InventoryRefilRule;
+import pl.arieals.minigame.goldhunter.PlayerRank;
 import pl.arieals.minigame.goldhunter.SpecialAbilityType;
 import pl.arieals.minigame.goldhunter.classes.CharacterClass;
+import pl.north93.zgame.api.bukkit.utils.xml.itemstack.XmlItemStack;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
@@ -14,6 +16,10 @@ import pl.north93.zgame.api.global.messages.TranslatableString;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlClassDesc
 {
+    private PlayerRank rank;
+    private String shopItem;
+    private XmlItemStack icon;
+    
     private String displayName;
     private String shortName;
     private String lore;
@@ -52,7 +58,10 @@ public class XmlClassDesc
     
     public CharacterClass toCharacterClass(MessagesBox messagesBox)
     {
-        return new CharacterClass(TranslatableString.of(messagesBox, displayName),
+        return new CharacterClass(rank,
+                shopItem,
+                icon != null ? icon : new XmlItemStack("BEDROCK"),
+                TranslatableString.of(messagesBox, displayName),
                 TranslatableString.of(messagesBox, shortName),
                 TranslatableString.of(messagesBox, lore),
                 SpecialAbilityType.byName(specialAbility),

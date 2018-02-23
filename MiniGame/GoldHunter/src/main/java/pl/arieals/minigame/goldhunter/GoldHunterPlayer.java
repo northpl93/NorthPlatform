@@ -237,7 +237,7 @@ public class GoldHunterPlayer implements ITickable
         Preconditions.checkArgument(newClass != null);
         selectedClass = newClass;
         
-        if ( player.getLocation().distanceSquared(arena.getTeamSpawn(team)) <= 9 )
+        if ( isIngame() && player.getLocation().distanceSquared(arena.getTeamSpawn(team)) <= 9 )
         {
             changeClass();
         }

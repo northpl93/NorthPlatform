@@ -8,6 +8,11 @@
 	<lore>@archer.poison.lore</lore>
 	
 	<!-- KLASA PODSTAWOWA -->
+	<icon id="minecraft:tipped_arrow">
+		<potionMeta>
+			<potionData type="POISON" />
+		</potionMeta>
+	</icon>
 	
 	<specialAbility>POISON_ARROW</specialAbility>
 	

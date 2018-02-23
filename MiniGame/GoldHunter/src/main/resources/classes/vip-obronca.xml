@@ -11,6 +11,12 @@
 	
 	<specialAbility>WALL</specialAbility>
 	
+	<icon id="minecraft:iron_chestplate" />
+	
+	<shopItem>class.vip.defender</shopItem>
+	
+	<rank>VIP</rank>
+	
 	<equipment>
 		<chestplate>
 			<item ifbuyed="vip.defender.diamondchest" id="minecraft:diamond_chestplate" />

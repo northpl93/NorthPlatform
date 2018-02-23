@@ -1,6 +1,7 @@
 package pl.arieals.minigame.goldhunter;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,6 +54,11 @@ public class GoldHunter
     void disable()
     {
         
+    }
+    
+    public GoldHunterPlayer getPlayer(UUID uuid)
+    {
+        return getPlayer(Bukkit.getPlayer(uuid));
     }
     
     public GoldHunterPlayer getPlayer(Player bukkitPlayer)

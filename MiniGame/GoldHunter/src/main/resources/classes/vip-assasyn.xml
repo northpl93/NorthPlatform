@@ -9,8 +9,11 @@
 	
 	<!-- KLASA PODSTAWOWA -->
 	
+	<icon id="minecraft:leather_helmet" />
+	
 	<specialAbility>SHADOW</specialAbility>
 	
+	<rank>VIP</rank>
 	<equipment>
 		<chestplate>
 			<!-- <item ifbuyed="vip.assassin.fireresistance" id="minecraft:chainmail_chestplate" /> -->

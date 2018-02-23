@@ -11,6 +11,12 @@
 	
 	<specialAbility>REDEMPTION</specialAbility>
 	
+	<icon id="minecraft:golden_apple" />
+	
+	<shopItem>class.svip.paladin</shopItem>
+	
+	<rank>SVIP</rank>
+	
 	<equipment>
 		<chestplate>
 			<item id="minecraft:golden_chestplate" /> 

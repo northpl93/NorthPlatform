@@ -11,6 +11,8 @@
 	
 	<specialAbility>DAZZLE</specialAbility>
 	
+	<icon id="minecraft:gunpowder" />
+	
 	<equipment>
 		<chestplate>
 			<item id="minecraft:leather_chestplate" /> 

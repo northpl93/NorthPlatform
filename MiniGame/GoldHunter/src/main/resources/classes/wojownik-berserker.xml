@@ -11,6 +11,8 @@
 	
 	<specialAbility>CALL_OF_BLOOD</specialAbility>
 	
+	<icon id="STONE_SWORD" />
+	
 	<equipment>
 		<chestplate>
 			<!-- <item ifbuyed="warrior.berserker.diamondchest" id="minecraft:diamond_chestplate" /> -->

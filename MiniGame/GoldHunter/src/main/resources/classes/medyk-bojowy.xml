@@ -10,6 +10,7 @@
 	<!-- KLASA DODATKOWA -->
 	
 	<specialAbility>BATTLECRY</specialAbility>
+	<icon id="minecraft:magma_cream" />
 	
 	<equipment>
 		<chestplate>

@@ -6,9 +6,16 @@
 	<shortName>@archer</shortName>
 	<!-- @nazwa_klasy -->
 	<lore>@archer.bomb.lore</lore>
-	
+
 	<!-- KLASA DODATKOWA -->
-	
+	<icon id="minecraft:tipped_arrow">
+		<potionMeta>
+			<potionData type="INSTANT_HEAL" />
+		</potionMeta>
+	</icon>
+            	
+    <shopItem>class.archer.bomb</shopItem>
+    
 	<specialAbility>BOMB_ARROW</specialAbility>
 	
 	<equipment>

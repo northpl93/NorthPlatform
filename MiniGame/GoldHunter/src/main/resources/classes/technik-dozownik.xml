@@ -11,6 +11,10 @@
 	
 	<specialAbility>SUPPLIER</specialAbility>
 	
+	<icon id="minecraft:dropper" />
+	
+	<shopItem>class.engeener.dispenser</shopItem>
+	
 	<equipment>
 		<chestplate>
 			<!-- <item ifbuyed="engineer.dispenser.ironchest" id="minecraft:iron_chestplate" /> -->

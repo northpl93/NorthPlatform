@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gui height="1" title="@select_team.title" >
-	<button pos="0,0" >
+<gui height="3" title="@select_team.title" >
+
+	<container pos="0,0" size="1,3">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+	<container pos="8,0" size="1,3">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+	
+	<button pos="2,1" >
 		<icon id="35" data="14" name="@select_team.red" lore="@select_team.red_lore" />
 		<metadata key="team" value="RED" />
 		<onClick>select</onClick>
 	</button>
-	<button pos="4,0" >
+	<button pos="4,1" >
 		<icon id="35" data="7" name="@select_team.random" lore="@select_team.random_lore" />
 		<onClick>select</onClick>
 	</button>
-	<button pos="8,0" >
+	<button pos="6,1" >
 		<icon id="35" data="3" name="@select_team.blue" lore="@select_team.blue_lore" />
 		<metadata key="team" value="BLUE" />
 		<onClick>select</onClick>

@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
@@ -38,7 +39,11 @@ public class GameplayRestrictionListener implements AutoListener
     @EventHandler
     public void onRegainHealth(EntityRegainHealthEvent event)
     {
-        event.setCancelled(true);
+        if ( event.getRegainReason() == RegainReason.EATING )
+        {
+            System.out.println("cancelled");
+            event.setCancelled(true);
+        }
     }
     
     @EventHandler

@@ -11,6 +11,10 @@
 	
 	<specialAbility>BETRAYAL</specialAbility>
 	
+	<icon id="minecraft:name_tag" />
+	
+	<rank>SVIP</rank>
+	
 	<equipment>
 		<chestplate>
 			<item id="minecraft:chainmail_chestplate" /> 

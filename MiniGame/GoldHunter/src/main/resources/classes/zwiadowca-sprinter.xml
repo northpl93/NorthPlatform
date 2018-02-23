@@ -11,6 +11,10 @@
 	
 	<specialAbility>DOUBLE_JUMP</specialAbility>
 	
+	<icon id="minecraft:leather_boots" />
+	
+	<shopItem>class.scout.sprinter</shopItem>
+	
 	<equipment>
 		<chestplate>
 			<item id="minecraft:leather_chestplate" /> 

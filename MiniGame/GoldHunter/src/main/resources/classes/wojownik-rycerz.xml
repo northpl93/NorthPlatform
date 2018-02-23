@@ -11,6 +11,10 @@
 	
 	<specialAbility>SHIELD_ATTACK</specialAbility>
 	
+	<icon id="minecraft:diamond_chestplate" />
+	
+	<shopItem>class.warrior.kngiht</shopItem>
+	
 	<equipment>
 		<chestplate>
 			<item ifbuyed="warrior.knight.ironchest" id="minecraft:iron_chestplate" />

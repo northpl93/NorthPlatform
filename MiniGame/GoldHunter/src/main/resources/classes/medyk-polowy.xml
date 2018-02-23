@@ -11,6 +11,10 @@
 	
 	<specialAbility>SIRENS_TEARS</specialAbility>
 	
+	<icon id="minecraft:slime_ball" />
+	
+	<shopItem>class.medic.healer</shopItem>
+	
 	<equipment>
 		<chestplate>
 			<item id="minecraft:golden_chestplate" /> 

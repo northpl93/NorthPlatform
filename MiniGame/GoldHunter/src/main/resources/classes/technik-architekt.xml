@@ -11,6 +11,8 @@
 	
 	<specialAbility>BRIDGE</specialAbility>
 	
+	<icon id="minecraft:armor_stand" />
+	
 	<equipment>
 		<chestplate>
 			<!-- <item ifbuyed="engineer.architect.ironchest" id="minecraft:iron_chestplate" /> -->

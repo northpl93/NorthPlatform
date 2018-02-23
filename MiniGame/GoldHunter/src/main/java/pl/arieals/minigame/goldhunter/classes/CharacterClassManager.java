@@ -20,7 +20,7 @@ public class CharacterClassManager
     private final MessagesBox messages;
     
     @Bean
-    public CharacterClassManager(@Messages("GoldHunter") MessagesBox messages)
+    public CharacterClassManager(@Messages("GoldHunter_classes") MessagesBox messages)
     {
         this.messages = messages;
     }
