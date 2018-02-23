@@ -19,15 +19,29 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlEnchant;
 
 public class ItemStackBuilder
 {
+    private ItemStack        itemStack;
+    
     private Material         material;
     private int              amount   = 1;
     private short            data     = 0;
     private String           name;
     private List<String>     lore;
     private List<XmlEnchant> enchantments;
-    private boolean          hideAttributes;
+    private ItemFlag[]       flags;
     private boolean          unbreakable;
 
+    public ItemStackBuilder()
+    {
+    }
+    
+    private ItemStackBuilder(ItemStack wrappedStack)
+    {
+        itemStack = wrappedStack;
+        material = itemStack.getType();
+        amount = itemStack.getAmount();
+        data = itemStack.getDurability();
+    }
+    
     public ItemStackBuilder material(final Material material)
     {
         this.material = material;
@@ -88,7 +102,13 @@ public class ItemStackBuilder
 
     public ItemStackBuilder hideAttributes()
     {
-        this.hideAttributes = true;
+        flags = new ItemFlag[] { ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE };
+        return this;
+    }
+    
+    public ItemStackBuilder flags(ItemFlag... flags)
+    {
+        this.flags = flags;
         return this;
     }
     
@@ -100,7 +120,19 @@ public class ItemStackBuilder
 
     public ItemStack build()
     {
-        final ItemStack itemStack = new ItemStack(this.material, this.amount, this.data);
+        final ItemStack itemStack;
+        if ( this.itemStack == null )
+        {
+            itemStack = new ItemStack(this.material, this.amount, this.data);
+        }
+        else
+        {
+            itemStack = this.itemStack;
+            itemStack.setType(this.material);
+            itemStack.setAmount(this.amount);
+            itemStack.setDurability(this.data);
+        }
+        
         if (this.material == Material.AIR)
         {
             // w powietrzu nic wiecej nie ustawimy...
@@ -108,11 +140,20 @@ public class ItemStackBuilder
         }
 
         final ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(this.name);
-        itemMeta.setLore(this.lore);
-        if (this.hideAttributes)
+        
+        if ( this.name != null )
         {
-            itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
+            itemMeta.setDisplayName(this.name);
+        }
+        
+        if ( this.lore != null )
+        {
+            itemMeta.setLore(this.lore);
+        }
+        
+        if (this.flags != null)
+        {
+            itemMeta.addItemFlags(flags);
         }
         if ( this.unbreakable )
         {
@@ -121,6 +162,7 @@ public class ItemStackBuilder
         itemStack.setItemMeta(itemMeta);
         if (this.enchantments != null)
         {
+            itemMeta.getEnchants().keySet().forEach(itemStack::removeEnchantment);
             this.enchantments.forEach(enchantment -> enchantment.apply(itemStack));
         }
         return itemStack;
@@ -135,5 +177,10 @@ public class ItemStackBuilder
     public static ItemStackBuilder create()
     {
         return new ItemStackBuilder();
+    }
+    
+    public static ItemStackBuilder wrap(ItemStack itemStack)
+    {
+        return new ItemStackBuilder(itemStack);
     }
 }
