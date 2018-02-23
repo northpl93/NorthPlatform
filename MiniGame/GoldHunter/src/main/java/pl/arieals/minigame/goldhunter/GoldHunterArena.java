@@ -184,8 +184,8 @@ public class GoldHunterArena implements IArenaData, ITickable
     {
         World world = localArena.getWorld().getCurrentWorld();
         
-        spawns.put(GameTeam.RED, mapConfig.getSpawn1().toBukkit(world).add(0.5, 0.5, 0.5));
-        spawns.put(GameTeam.BLUE, mapConfig.getSpawn2().toBukkit(world).add(0.5, 0.5, 0.5));
+        spawns.put(GameTeam.RED, mapConfig.getSpawn1().toBukkit(world).add(0.5, 1, 0.5));
+        spawns.put(GameTeam.BLUE, mapConfig.getSpawn2().toBukkit(world).add(0.5, 1, 0.5));
     }
 
     public void gameEnd()
