@@ -151,9 +151,7 @@ public class SpecialAbilityTracker implements ITickable
         SoundEffect.ABILITY_READY.play(player);
         currentAbilityType.getHandler().onReady(player);
         
-        player.getPlayer().sendMessage("TODO: umiejetnosc zaladowana");
-        // TODO: display translated message
-        
+        player.sendMessage("ability_ready");
     }
     
     @Tick
