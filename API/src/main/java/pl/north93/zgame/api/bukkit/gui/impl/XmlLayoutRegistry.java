@@ -16,6 +16,7 @@ import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlGuiLayout;
 import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlHotbarLayout;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.utils.lang.CatchException;
 
 public class XmlLayoutRegistry
 {
@@ -55,8 +56,8 @@ public class XmlLayoutRegistry
 
         final Collection<String> values = reflections.getStore().get("ResourcesScanner").values();
         
-        values.stream().filter(name -> name.startsWith("gui") && name.endsWith(".xml")).forEach(path -> loadGuiLayout(cl, path));
-        values.stream().filter(name -> name.startsWith("hotbar") && name.endsWith(".xml")).forEach(path -> loadHotbarLayout(cl, path));
+        values.stream().filter(name -> name.startsWith("gui") && name.endsWith(".xml")).forEach(path -> CatchException.printStackTrace(() -> loadGuiLayout(cl, path), "An error occured when loading xml gui layout " + path));
+        values.stream().filter(name -> name.startsWith("hotbar") && name.endsWith(".xml")).forEach(path -> CatchException.printStackTrace(() -> loadHotbarLayout(cl, path), "An error occured when loading xml hotbar layout " + path));
     }
     
     private static void loadGuiLayout(ClassLoader cl, String path)
