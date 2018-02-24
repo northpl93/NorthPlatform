@@ -101,19 +101,21 @@ public class TranslatedNameTrait extends Trait
         final CraftPlayer player = change.getKey().getBukkitEntity();
         final Scoreboard scoreboard = player.getScoreboard();
 
-        if (change.wasAdded() && (change.getValueRemoved() == Boolean.TRUE || change.getValueRemoved() == null))
+        if (change.wasRemoved() && change.getValueRemoved() == false)
         {
-            final Team entryTeam = scoreboard.getEntryTeam(this.npc.getName());
-            if (entryTeam != null)
-            {
-                // ten npc juz jest dodany do scoreboardu gracza, nic nie musimy robic
-                return;
-            }
-
-            final Team team = scoreboard.registerNewTeam(RandomStringUtils.randomAlphanumeric(16));
-            team.addEntry(this.npc.getName());
-            team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
+            return;
         }
+
+        final Team entryTeam = scoreboard.getEntryTeam(this.npc.getName());
+        if (entryTeam != null)
+        {
+            // ten npc juz jest dodany do scoreboardu gracza, nic nie musimy robic
+            return;
+        }
+
+        final Team team = scoreboard.registerNewTeam(RandomStringUtils.randomAlphanumeric(16));
+        team.addEntry(this.npc.getName());
+        team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
     }
 
     @Override

@@ -24,22 +24,24 @@ public class JoinGameGui extends Gui
     @Inject
     private static PlayGameController playController;
     private final GameIdentity gameIdentity;
+    private final boolean      isDynamic;
 
-    public JoinGameGui(final GameIdentity gameIdentity)
+    public JoinGameGui(final GameIdentity gameIdentity, final boolean isDynamic)
     {
         super(messages, getGuiName(gameIdentity));
         this.gameIdentity = gameIdentity;
+        this.isDynamic = isDynamic;
     }
 
-    public static void openForPlayerAndGame(final Player player, final GameIdentity gameIdentity)
+    public static void openForPlayerAndGame(final Player player, final GameIdentity gameIdentity, final boolean isDynamicGame)
     {
-        new JoinGameGui(gameIdentity).open(player);
+        new JoinGameGui(gameIdentity, isDynamicGame).open(player);
     }
 
     @ClickHandler
     public void play(final GuiClickEvent event)
     {
-        playController.playGame(event.getWhoClicked(), this.gameIdentity, null);
+        playController.playGame(event.getWhoClicked(), this.gameIdentity, this.isDynamic, null);
     }
 
     private static String getGuiName(final GameIdentity gameIdentity)
@@ -51,7 +53,7 @@ public class JoinGameGui extends Gui
     public static void testCmd(final NorthCommandSender sender, final Arguments args, final String label)
     {
         final Player player = (Player) sender.unwrapped();
-        new JoinGameGui(GameIdentity.create("bedwars", "solo")).open(player);
+        new JoinGameGui(GameIdentity.create("bedwars", "solo"), false).open(player);
     }
 
     @Override

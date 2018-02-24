@@ -14,6 +14,7 @@ import pl.arieals.api.minigame.server.lobby.arenas.ArenaQuery;
 import pl.arieals.api.minigame.server.lobby.arenas.IArenaClient;
 import pl.arieals.api.minigame.server.utils.party.PartyClient;
 import pl.arieals.api.minigame.shared.api.GameIdentity;
+import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
@@ -49,7 +50,7 @@ public class PlayGameController
         lobby.getLocalHub().movePlayerToHub(player, hubId);
     }
 
-    public void playGame(final Player player, final GameIdentity gameIdentity, final String worldId)
+    public void playGame(final Player player, final GameIdentity gameIdentity, final boolean allowInProgress, final String worldId)
     {
         if (! this.partyClient.canDecideAboutHimself(player))
         {
@@ -69,9 +70,9 @@ public class PlayGameController
             players = party.getPlayers().stream().map(Bukkit::getPlayer).collect(Collectors.toList());
         }
 
-        if (this.doConnect(players, gameIdentity, worldId))
+        if (this.doConnect(players, gameIdentity, allowInProgress, worldId))
         {
-            player.sendMessage("udalo sie znalexc arene");
+            player.sendMessage("udalo sie znalezc arene");
         }
         else
         {
@@ -79,9 +80,13 @@ public class PlayGameController
         }
     }
 
-    private boolean doConnect(final Collection<Player> players, final GameIdentity gameIdentity, final String worldId)
+    private boolean doConnect(final Collection<Player> players, final GameIdentity gameIdentity, final boolean allowInProgress, final String worldId)
     {
-        final ArenaQuery query = ArenaQuery.create().miniGame(gameIdentity).world(worldId);
+        final ArenaQuery query = ArenaQuery.create().miniGame(gameIdentity).gamePhase(GamePhase.LOBBY).world(worldId);
+        if (allowInProgress)
+        {
+            query.gamePhase(GamePhase.STARTED);
+        }
 
         final List<PlayerJoinInfo> joinInfos = players.stream().map(player ->
         {

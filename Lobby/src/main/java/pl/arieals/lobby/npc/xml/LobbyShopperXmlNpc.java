@@ -43,7 +43,11 @@ public class LobbyShopperXmlNpc extends XmlNpc
     protected void postSpawn(final NPC npc)
     {
         final TranslatableString npcName = TranslatableString.of(this.uiMessages, "@npc.shop");
-        npc.addTrait(new TranslatedNameTrait(npcName));
+
+        final String gameId = ShopperTrait.getById(this.gameId).getGameId();
+        final TranslatableString gameName = TranslatableString.of(this.uiMessages, "@npc." + gameId);
+
+        npc.addTrait(new TranslatedNameTrait(npcName, gameName));
     }
 
     @Override

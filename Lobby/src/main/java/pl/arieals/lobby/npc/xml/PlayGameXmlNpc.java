@@ -26,15 +26,17 @@ public class PlayGameXmlNpc extends XmlNpc
     @XmlTransient
     @Inject @Messages("UserInterface")
     private MessagesBox  uiMessages;
-    @XmlElement
+    @XmlElement(required = true)
     private GameIdentity gameIdentity;
+    @XmlElement
+    private boolean      isDynamic = false;
 
     @Override
     public NPC loadNpc(final NPCRegistry registry)
     {
         final NPC npc = super.loadNpc(registry);
 
-        npc.addTrait(new PlayGameTrait(this.gameIdentity));
+        npc.addTrait(new PlayGameTrait(this.gameIdentity, this.isDynamic));
 
         return npc;
     }

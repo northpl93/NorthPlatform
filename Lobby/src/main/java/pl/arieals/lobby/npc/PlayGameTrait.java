@@ -14,16 +14,23 @@ import pl.arieals.lobby.ui.JoinGameGui;
 public class PlayGameTrait extends Trait
 {
     private final GameIdentity gameIdentity;
+    private final boolean      isDynamic;
 
-    public PlayGameTrait(final GameIdentity gameIdentity)
+    public PlayGameTrait(final GameIdentity gameIdentity, final boolean isDynamic)
     {
         super("playGame");
         this.gameIdentity = gameIdentity;
+        this.isDynamic = isDynamic;
     }
 
     public GameIdentity getGameIdentity()
     {
         return this.gameIdentity;
+    }
+
+    public boolean isDynamic()
+    {
+        return this.isDynamic;
     }
 
     @EventHandler
@@ -34,7 +41,7 @@ public class PlayGameTrait extends Trait
             return;
         }
 
-        JoinGameGui.openForPlayerAndGame(event.getClicker(), this.gameIdentity);
+        JoinGameGui.openForPlayerAndGame(event.getClicker(), this.gameIdentity, this.isDynamic);
     }
 
     @EventHandler
@@ -45,7 +52,7 @@ public class PlayGameTrait extends Trait
             return;
         }
 
-        JoinGameGui.openForPlayerAndGame(event.getClicker(), this.gameIdentity);
+        JoinGameGui.openForPlayerAndGame(event.getClicker(), this.gameIdentity, this.isDynamic);
     }
 
     @Override

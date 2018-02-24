@@ -68,15 +68,22 @@ public class ShopperTrait extends Trait
 
     public enum Shop
     {
-        GOLD_HUNTER(GoldHunterShopGui::openMainGui),
-        BED_WARS(player -> new BwShopMain(player).open(player)),
-        ELYTRA(player -> new ElytraShopMain(player).open(player));
+        GOLD_HUNTER("goldhunter", GoldHunterShopGui::openMainGui),
+        BED_WARS("bedwars", player -> new BwShopMain(player).open(player)),
+        ELYTRA("elytra", player -> new ElytraShopMain(player).open(player));
 
+        private final String gameId;
         private final Consumer<Player> openFunction;
 
-        Shop(final Consumer<Player> openFunction)
+        Shop(final String gameId, final Consumer<Player> openFunction)
         {
+            this.gameId = gameId;
             this.openFunction = openFunction;
+        }
+
+        public String getGameId()
+        {
+            return this.gameId;
         }
 
         public void openForPlayer(final Player player)
