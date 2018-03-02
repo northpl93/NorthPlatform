@@ -1,7 +1,9 @@
 package pl.north93.zgame.antycheat.utils.block;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.bukkit.Material;
 
@@ -69,6 +71,14 @@ public enum BlockFlag
     public static long getFlags(final Material material)
     {
         return materialFlags.getOrDefault(material, 0L);
+    }
+
+    public static Collection<Material> getMaterialsWithFlag(final BlockFlag flag)
+    {
+        return materialFlags.entrySet().stream()
+                            .filter(entry -> isFlagSet(entry.getValue(), flag))
+                            .map(Map.Entry::getKey)
+                            .collect(Collectors.toList());
     }
 
     public long getMask()

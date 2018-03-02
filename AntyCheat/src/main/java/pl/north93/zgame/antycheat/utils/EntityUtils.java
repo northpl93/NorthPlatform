@@ -1,5 +1,8 @@
 package pl.north93.zgame.antycheat.utils;
 
+import static org.apache.commons.lang3.ArrayUtils.contains;
+
+
 import java.util.List;
 
 import net.minecraft.server.v1_12_R1.EntityBoat;
@@ -74,7 +77,7 @@ public final class EntityUtils
         return standsOnEntity(entity, aabbOfEntityInLocation);
     }
 
-    public static boolean isStandsOn(final Entity entity, final IPosition position, final Material material)
+    public static boolean isStandsOn(final Entity entity, final IPosition position, final Material... materials)
     {
         final AABB entityAabb = getAABBOfEntityInLocation(entity, position);
         final AABB underEntity = new AABB(entityAabb.minX, entityAabb.minY - 1, entityAabb.minZ, entityAabb.maxX, entityAabb.minY, entityAabb.maxZ);
@@ -83,7 +86,7 @@ public final class EntityUtils
         while (iterator.hasNext())
         {
             final Block block = iterator.next();
-            if (block.getType().equals(material))
+            if (contains(materials, block.getType()))
             {
                 return true;
             }

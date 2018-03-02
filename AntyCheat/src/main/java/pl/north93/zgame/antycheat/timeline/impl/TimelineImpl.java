@@ -15,6 +15,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.Pair;
 
+import pl.north93.zgame.antycheat.analysis.impl.ViolationsStorage;
 import pl.north93.zgame.antycheat.analysis.timeline.TimelineAnalyserConfig;
 import pl.north93.zgame.antycheat.event.impl.PlayerSpawnTimelineEvent;
 import pl.north93.zgame.antycheat.event.impl.TeleportTimelineEvent;
@@ -32,6 +33,7 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
     private final int             ticksToTrack;
     private final List<TimelineEvent>       queuedEvents;
     private final LinkedEventsQueue         events;
+    private final ViolationsStorage         violations;
     private final Map<Tick, PlayerTickInfo> tickInfo;
 
     public TimelineImpl(final TimelineManager timelineManager, final Player player, final int ticksToTrack)
@@ -42,6 +44,7 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
 
         this.queuedEvents = new LinkedList<>();
         this.events = new LinkedEventsQueue(timelineManager);
+        this.violations = new ViolationsStorage(timelineManager.getAnalysisManager(), player);
         this.tickInfo = new HashMap<>(ticksToTrack, SMALL_LOAD_FACTOR);
     }
 
@@ -115,8 +118,6 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
     @Override
     public Collection<TimelineEvent> getEvents() // najlepiej cachowac ta metode bo nie jest zbyt szybka
     {
-        //final List<TimelineEvent> d1 = this.tickInfo.keySet().stream().map(tick -> this.getEvents(tick)).flatMap(Collection::stream).collect(Collectors.toList());
-
         final Collection<TimelineEvent> d2 = this.events.getEvents();
         return d2;
     }
@@ -132,6 +133,11 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
     {
         final LinkedEventsQueue.TimelineWalkerImpl fullRange = this.events.createWalkerInFullRange(true);
         return fullRange.previous(classEvent);
+    }
+
+    public ViolationsStorage getViolations()
+    {
+        return this.violations;
     }
 
     /**

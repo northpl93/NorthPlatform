@@ -9,7 +9,9 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
 import co.aikar.timings.Timing;
+import pl.north93.zgame.antycheat.analysis.SingleAnalysisResult;
 import pl.north93.zgame.antycheat.analysis.impl.AnalysisManager;
+import pl.north93.zgame.antycheat.analysis.impl.ViolationsStorage;
 import pl.north93.zgame.antycheat.timeline.Tick;
 import pl.north93.zgame.antycheat.timeline.TimelineEvent;
 import pl.north93.zgame.antycheat.utils.AntyCheatTimings;
@@ -54,6 +56,9 @@ public class TimelineManager
 
             // uruchamiamy analizę linii czasu
             this.analysisManager.fireAnalysis(timeline, currentTick);
+
+            // podsumowanie ticku i wywolanie listenerów zmiany poziomu gracza
+            this.analysisManager.summarizeTick(timeline.getOwner(), currentTick);
         });
     }
 
@@ -120,9 +125,27 @@ public class TimelineManager
         return timeline;
     }
 
+    /**
+     * Zwraca obiekt przechowujący naruszenia danego gracza.
+     *
+     * @param player Gracz dla którego pobieramy ViolationsStorage.
+     * @return Obiekt przechowujący naruszenia danego gracza.
+     */
+    public ViolationsStorage getViolations(final Player player)
+    {
+        return this.getPlayerTimeline(player).getViolations();
+    }
+
     public void pushEventForPlayer(final Player player, final TimelineEvent event)
     {
         this.getPlayerTimeline(player).pushEvent(event);
+    }
+
+    // dodaje dane naruszenia do historii w ViolationsStorage
+    public void pushAnalysisResultForPlayer(final Player player, final Tick tick, final SingleAnalysisResult analysisResult)
+    {
+        final TimelineImpl timeline = this.getPlayerTimeline(player);
+        timeline.getViolations().recordAnalysisResult(tick, analysisResult);
     }
 
     public void forEachTimeline(final Consumer<TimelineImpl> timelineConsumer)
@@ -131,6 +154,11 @@ public class TimelineManager
         {
             timelineConsumer.accept(this.getPlayerTimeline(player));
         }
+    }
+
+    public AnalysisManager getAnalysisManager()
+    {
+        return this.analysisManager;
     }
 
     private final class TickHandlerImpl implements TickHandler

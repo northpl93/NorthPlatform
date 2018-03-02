@@ -182,39 +182,12 @@ class LinkedEventsQueue
         final EventEntry lastEvent = this.lastEventInTick.get(lastTick);
         if (lastEvent == null)
         {
+            // tutaj nigdy nic sie nie zepsuje bo mamy checka na poczatku metody
             return this.getFirstAndLastEventInTickRange(firstTick, this.timelineManager.getPreviousTick(lastTick, 1));
         }
 
         return Pair.of(firstEvent, lastEvent);
     }
-
-    /*private synchronized @Nullable Pair<EventEntry, EventEntry> getFirstAndLastEventInTickRange(final Tick firstTick, final Tick lastTick)
-    {
-        Tick checkedFirstTick = firstTick;
-        EventEntry firstEventEntry;
-        while (true)
-        {
-            firstEventEntry = this.firstEventInTick.get(checkedFirstTick);
-            if (firstEventEntry != null)
-            {
-                break;
-            }
-
-            checkedFirstTick = this.timelineManager.getNextTick(checkedFirstTick);
-            if (checkedFirstTick == null || checkedFirstTick.getTickId() > lastTick.getTickId())
-            {
-                return null;
-            }
-        }
-
-        EventEntry lastEventEntry = firstEventEntry;
-        while (lastEventEntry.next != null && lastEventEntry.next.tick.getTickId() <= lastTick.getTickId())
-        {
-            lastEventEntry = lastEventEntry.next;
-        }
-
-        return Pair.of(firstEventEntry, lastEventEntry);
-    }*/
 
     private synchronized @Nullable Pair<EventEntry, EventEntry> getFirstAndLastEventInTick(final Tick tick)
     {
