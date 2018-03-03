@@ -119,17 +119,17 @@ public class ArenaScoreboardManager
     {
         Scoreboard scoreboard = player.getPlayer().getScoreboard();
         
-        Team red = scoreboard.registerNewTeam("red");
+        Team red = scoreboard.registerNewTeam("ared");
         red.setPrefix(GameTeam.RED.getTeamColor() + "");
         red.setCanSeeFriendlyInvisibles(true);
         red.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
         
-        Team blue = scoreboard.registerNewTeam("blue");
+        Team blue = scoreboard.registerNewTeam("bblue");
         blue.setPrefix(GameTeam.BLUE.getTeamColor() + "");
         blue.setCanSeeFriendlyInvisibles(true);
         blue.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
         
-        Team none = scoreboard.registerNewTeam("none");
+        Team none = scoreboard.registerNewTeam("cnone");
         none.setPrefix("§7");
         none.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
     }
@@ -143,9 +143,9 @@ public class ArenaScoreboardManager
     {
         Scoreboard scoreboard = player.getPlayer().getScoreboard();
         
-        Team red = scoreboard.getTeam("red");
-        Team blue = scoreboard.getTeam("blue");
-        Team none = scoreboard.getTeam("none");
+        Team red = scoreboard.getTeam("ared");
+        Team blue = scoreboard.getTeam("bblue");
+        Team none = scoreboard.getTeam("cnone");
         
         for ( GoldHunterPlayer p : arena.getPlayers() )
         {
