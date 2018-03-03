@@ -440,7 +440,7 @@ public class GoldHunterPlayer implements ITickable
         }
         else
         {
-            return team.getTeamColor() + player.getName();
+            return displayTeam.getTeamColor() + player.getName();
         }
     }
     
