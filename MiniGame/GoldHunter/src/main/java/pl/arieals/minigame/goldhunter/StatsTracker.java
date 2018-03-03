@@ -97,24 +97,25 @@ public class StatsTracker implements ITickable
     private void incrementKills()
     {
         kills++;
-        updateScoreboard();
+        updateScoreboardAndDisplayName();
     }
     
     private void incrementDeaths()
     {
         deaths++;
-        updateScoreboard();
+        updateScoreboardAndDisplayName();
     }
     
     private void incrementAssists()
     {
         assists++;
-        updateScoreboard();
+        updateScoreboardAndDisplayName();
     }
     
-    private void updateScoreboard()
+    private void updateScoreboardAndDisplayName()
     {
         player.getScoreboardContext().set(ImmutableMap.of("kills", kills, "deaths", deaths, "assists", assists));
+        player.updateDisplayName();
     }
     
     public void clear()
@@ -129,7 +130,7 @@ public class StatsTracker implements ITickable
         
         if ( player.isIngame() )
         {
-            updateScoreboard();
+            updateScoreboardAndDisplayName();
         }
     }
     
@@ -151,6 +152,11 @@ public class StatsTracker implements ITickable
     public double getTotalDamage()
     {
         return totalDamage;
+    }
+    
+    public String getStatsString()
+    {
+        return getKills() + "/" + getAssists() + "/" + getDeaths();
     }
     
     @Tick

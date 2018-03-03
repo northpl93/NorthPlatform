@@ -8,20 +8,22 @@ import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public enum GameTeam
 {
-    RED(ChatColor.RED, Color.RED),
-    BLUE(ChatColor.AQUA, Color.BLUE),
+    RED(ChatColor.RED, ChatColor.DARK_RED, Color.RED),
+    BLUE(ChatColor.AQUA, ChatColor.BLUE, Color.BLUE),
     ;
     
     private final ChatColor teamColor;
+    private final ChatColor secondaryTeamColor;
     private final Color armorColor;
     
     private TranslatableString nominativeName;
     private TranslatableString genitiveName;
     
-    private GameTeam(ChatColor teamColor, Color armorColor)
+    private GameTeam(ChatColor teamColor, ChatColor secondaryTeamColor, Color armorColor)
     {
         this.armorColor = armorColor;
         this.teamColor = teamColor;
+        this.secondaryTeamColor = secondaryTeamColor;
         
         MessagesBox messages = new MessagesBox(GameTeam.class.getClassLoader(), "GoldHunter");
         
@@ -32,6 +34,11 @@ public enum GameTeam
     public ChatColor getTeamColor()
     {
         return teamColor;
+    }
+    
+    public ChatColor getSecondaryTeamColor()
+    {
+        return secondaryTeamColor;
     }
     
     public Color getArmorColor()

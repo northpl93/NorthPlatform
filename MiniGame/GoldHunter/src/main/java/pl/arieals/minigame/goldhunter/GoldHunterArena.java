@@ -1,9 +1,12 @@
 package pl.arieals.minigame.goldhunter;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -136,6 +139,7 @@ public class GoldHunterArena implements IArenaData, ITickable
         updatePlayersCount();
         
         scoreboardManager.updateTeamColors();
+        player.updateDisplayName();
     }
     
     public void playerLeft(GoldHunterPlayer player)

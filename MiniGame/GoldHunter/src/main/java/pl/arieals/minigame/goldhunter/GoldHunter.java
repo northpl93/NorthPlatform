@@ -58,7 +58,8 @@ public class GoldHunter
     
     public GoldHunterPlayer getPlayer(UUID uuid)
     {
-        return getPlayer(Bukkit.getPlayer(uuid));
+        Player player = Bukkit.getPlayer(uuid);
+        return player != null ? getPlayer(player) : null;
     }
     
     public GoldHunterPlayer getPlayer(Player bukkitPlayer)

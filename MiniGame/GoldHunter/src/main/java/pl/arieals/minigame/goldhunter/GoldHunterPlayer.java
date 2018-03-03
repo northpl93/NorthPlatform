@@ -148,6 +148,7 @@ public class GoldHunterPlayer implements ITickable
         }
         
         arena.getScoreboardManager().updateTeamColors();
+        updateDisplayName();
     }
     
     public boolean isShadow()
@@ -253,6 +254,8 @@ public class GoldHunterPlayer implements ITickable
         
         addLeatherHatToInventory();
         setLeatherArmorColor();
+        
+        updateDisplayName();
     }
     
     public IScoreboardContext getScoreboardContext()
@@ -307,6 +310,7 @@ public class GoldHunterPlayer implements ITickable
         
         setDisplayTeam(null);
         
+        updateDisplayName();
         spawnInLobby();
     }
     
@@ -412,6 +416,20 @@ public class GoldHunterPlayer implements ITickable
     private void playDeathEffect()
     {
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 0, true, false), true);
+    }
+    
+    public void updateDisplayName()
+    {
+        if ( !isIngame() )
+        {
+            player.setDisplayName("§7" + player.getName());
+            player.setPlayerListName("§7" + player.getName());
+        }
+        else
+        {
+            player.setDisplayName(getDisplayName());
+            player.setPlayerListName(getDisplayName());
+        }
     }
     
     public String getDisplayName()
