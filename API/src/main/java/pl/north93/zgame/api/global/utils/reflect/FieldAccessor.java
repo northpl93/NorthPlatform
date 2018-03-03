@@ -6,7 +6,7 @@ import com.google.common.base.Preconditions;
 
 import pl.north93.zgame.api.global.utils.lang.SneakyThrow;
 
-public class FieldAccessor
+public class FieldAccessor <T>
 {
     private final Field field;
     private final Object instance;
@@ -18,7 +18,7 @@ public class FieldAccessor
     }
     
     @SuppressWarnings("unchecked")
-    public <T> T get()
+    public T get()
     {
         try
         {
@@ -31,7 +31,7 @@ public class FieldAccessor
         }
     }
     
-    public <T> void set(T value)
+    public void set(T value)
     {
         try
         {
@@ -43,30 +43,21 @@ public class FieldAccessor
         }
     }
     
-    public static FieldAccessor of(Class<?> clazz, String fieldName)
+    public FieldAccessor<T> withInstance(Object instance)
+    {
+        return new FieldAccessor<>(field, instance);
+    }
+    
+    static <T> FieldAccessor<T> fromClassAndFieldName(Class<?> clazz, String fieldName)
     {
         Preconditions.checkArgument(clazz != null);
         Preconditions.checkArgument(fieldName != null && !fieldName.isEmpty());
         
         try
         {
-            return new FieldAccessor(findField(clazz, fieldName), null);
-        }
-        catch ( NoSuchFieldException e )
-        {
-            SneakyThrow.sneaky(e);
-            return null;
-        }
-    }
-    
-    public static FieldAccessor of(Object instance, String fieldName)
-    {
-        Preconditions.checkArgument(instance != null);
-        Preconditions.checkArgument(fieldName != null && !fieldName.isEmpty());
-        
-        try
-        {
-            return new FieldAccessor(findField(instance.getClass(), fieldName), instance);
+            Field field = findField(clazz, fieldName);
+            field.setAccessible(true);
+            return new FieldAccessor<>(field, null);
         }
         catch ( NoSuchFieldException e )
         {
