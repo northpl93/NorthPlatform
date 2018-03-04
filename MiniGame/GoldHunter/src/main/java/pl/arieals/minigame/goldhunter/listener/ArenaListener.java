@@ -36,7 +36,6 @@ public class ArenaListener implements AutoListener
     @EventHandler
     public void onGameInit(GameInitEvent event)
     {
-        System.out.println("CHUJ");
         logger.debug("Call onGameInit() with event: {}", event);
         
         LocalArena localArena = event.getArena();

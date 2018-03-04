@@ -65,8 +65,6 @@ class ClassIconRenderer
     @UriHandler("/gh/gui/selectClass/renderClassIcon/:class/:playerId")
     public ItemStack renderClassIcon(String calledUri, Map<String, String> parameters)
     {
-        System.out.println(Thread.currentThread().getName());
-        
         GoldHunterPlayer player = goldHunter.getPlayer(UUID.fromString(parameters.get("playerId")));
         CharacterClass characterClass = classManager.getByName(parameters.get("class"));
         
