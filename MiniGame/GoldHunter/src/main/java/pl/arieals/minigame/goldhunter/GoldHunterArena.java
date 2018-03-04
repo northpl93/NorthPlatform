@@ -22,15 +22,19 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
+import net.minecraft.server.v1_12_R1.MinecraftServer;
+
 import pl.arieals.api.minigame.server.gamehost.arena.IArenaData;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.goldhunter.scoreboard.ArenaScoreboardManager;
 import pl.arieals.minigame.goldhunter.structure.GoldChestStructure;
+import pl.arieals.minigame.goldhunter.utils.TimeStringUtils;
 import pl.north93.zgame.api.bukkit.gui.IGuiManager;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.utils.lang.ListUtils;
 
 public class GoldHunterArena implements IArenaData, ITickable
 {
@@ -52,6 +56,8 @@ public class GoldHunterArena implements IArenaData, ITickable
     private GoldHunterMapConfig mapConfig;
     
     private final Map<GameTeam, Location> spawns = new EnumMap<>(GameTeam.class);
+    
+    private int gameTime;
     
     public GoldHunterArena(LocalArena localArena)
     {
@@ -163,6 +169,7 @@ public class GoldHunterArena implements IArenaData, ITickable
         setupSpawns();
         setupChests();
         
+        gameTime = 0;
         signedPlayers.entries().forEach(e -> e.getValue().joinGame(e.getKey()));
         
         updateLobbyScoreboardLayout();
@@ -325,7 +332,11 @@ public class GoldHunterArena implements IArenaData, ITickable
         
         if ( hasGame() && ( signedPlayers.get(GameTeam.RED).size() == 0 || signedPlayers.get(GameTeam.BLUE).size() == 0 ) )
         {
-            // TODO: walkower info
+            if ( localArena.getGamePhase() == GamePhase.STARTED )
+            {
+                walkover(signedPlayers.get(GameTeam.RED).size() == 0 ? GameTeam.BLUE : GameTeam.RED);
+            }
+            
             localArena.setGamePhase(GamePhase.POST_GAME);
             
             if ( signedPlayers.size() == 0 )
@@ -342,6 +353,11 @@ public class GoldHunterArena implements IArenaData, ITickable
         {
             cancelStart();
         }
+    }
+    
+    private void walkover(GameTeam winTeam)
+    {
+        players.forEach(p -> p.sendSeparatedMessage("win_game.walkover", winTeam.getColoredBoldGenitive().getValue(p.getPlayer()).toUpperCase()));
     }
     
     @Tick
@@ -400,10 +416,24 @@ public class GoldHunterArena implements IArenaData, ITickable
     {
         logger.debug("Team {} win game...", winnerTeam);
         
-        // TODO: special effects, fly etc.
-        
-        players.forEach(p -> p.sendSeparatedMessage("win_game", winnerTeam.getColoredBoldGenitive().getValue(p.getPlayer().getLocale()).toUpperCase()));
+        players.forEach(p -> p.getPlayer().setAllowFlight(true));
+        displayWinMessage(winnerTeam);
         localArena.setGamePhase(GamePhase.POST_GAME);
+    }
+    
+    private void displayWinMessage(GameTeam winnerTeam)
+    {
+        ArrayList<GoldHunterPlayer> players = new ArrayList<>(this.players);
+        Collections.sort(players, (p1, p2) -> -Integer.compare(p1.getStatsTracker().getKills(), p2.getStatsTracker().getKills()));
+        
+        Optional<GoldHunterPlayer> first = ListUtils.getIfExists(players, 0);
+        Optional<GoldHunterPlayer> second = ListUtils.getIfExists(players, 1);
+        Optional<GoldHunterPlayer> third = ListUtils.getIfExists(players, 2);
+        
+        players.forEach(p -> p.sendSeparatedMessage("win_game", winnerTeam.getColoredBoldGenitive().getValue(p.getPlayer().getLocale()).toUpperCase(),
+                first.map(GoldHunterPlayer::getDisplayName).orElse("&7&m------"), first.map(x -> x.getStatsTracker().getKills()).orElse(0),
+                second.map(GoldHunterPlayer::getDisplayName).orElse("&7&m------"), second.map(x -> x.getStatsTracker().getKills()).orElse(0),
+                third.map(GoldHunterPlayer::getDisplayName).orElse("&7&m------"), third.map(x -> x.getStatsTracker().getKills()).orElse(0)));
     }
 
     public void broadcastDeath(GoldHunterPlayer goldHunterPlayer, GoldHunterPlayer lastDamager)
@@ -415,6 +445,18 @@ public class GoldHunterArena implements IArenaData, ITickable
         else
         {
             broadcastMessageIngame("death_message", goldHunterPlayer.getDisplayNameBold());
+        }
+    }
+    
+    @Tick
+    public void updateGameTime()
+    {
+        if ( getLocalArena().getGamePhase() == GamePhase.STARTED && MinecraftServer.currentTick % 20 == 0 )
+        {
+            gameTime++;
+            
+            String time = TimeStringUtils.minutesAndSeconds(gameTime);
+            players.forEach(p -> p.getScoreboardContext().set("gameTime", time));
         }
     }
     

@@ -8,10 +8,6 @@
 		<icon id="minecraft:iron_sword" name="@hotbar.select_class" />
 		<onClick>selectClass</onClick>
 	</entry>
-	<entry pos="2">
-		<icon id="minecraft:name_tag" name="@hotbar.mapvote" />
-		<onClick>mapVote</onClick>
-	</entry>
 	<entry pos="8">
 		<icon id="minecraft:web" name="@hotbar.quit" />
 		<onClick>quit</onClick>

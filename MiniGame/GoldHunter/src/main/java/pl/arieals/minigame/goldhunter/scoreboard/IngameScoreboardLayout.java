@@ -24,10 +24,8 @@ public class IngameScoreboardLayout extends GoldHunterScoreboardLayout
         String team1Chests = context.get("team1Chests") + "";
         String team2Chests = context.get("team2Chests") + "";
         
-        String kills = context.get("kills") + "";
-        String deaths = context.get("deaths") + "";
-        String assists = context.get("assists") + "";
+        String stats = context.get("stats") + "";
         
-        return Arrays.asList(player.getMessageLines("scoreboard_ingame", gameTime, team1Count, team2Count, team1Chests, team2Chests, kills, deaths, assists));
+        return Arrays.asList(player.getMessageLines("scoreboard_ingame", gameTime, team1Count, team2Count, team1Chests, team2Chests, stats));
     }
 }

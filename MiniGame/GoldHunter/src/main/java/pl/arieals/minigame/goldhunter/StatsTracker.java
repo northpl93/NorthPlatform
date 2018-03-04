@@ -114,7 +114,7 @@ public class StatsTracker implements ITickable
     
     private void updateScoreboardAndDisplayName()
     {
-        player.getScoreboardContext().set(ImmutableMap.of("kills", kills, "deaths", deaths, "assists", assists));
+        player.getScoreboardContext().set(ImmutableMap.of("stats", getStatsString()));
         player.updateDisplayName();
     }
     
