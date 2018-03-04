@@ -51,6 +51,7 @@ class GeneratorHudHandler
             final Location location = generator.getLocation();
 
             this.hologram = IHologram.create(location.clone().add(0, 4, 0));
+            // ArmorStand nie zespawnuje sie gdy arena nie ma skonfigurowanej listy chunków.
             this.item = (ArmorStand) location.getWorld().spawnEntity(location.clone().add(0, 1.3, 0), EntityType.ARMOR_STAND);
             this.item.setVisible(false);
             this.item.setGravity(false);

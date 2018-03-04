@@ -15,13 +15,13 @@ import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 public class TeleportToPlayer implements IServerJoinAction
 {
     private UUID    playerId;
-    private boolean byCommand;
+    private Boolean byCommand;
 
     public TeleportToPlayer()
     {
     }
 
-    public TeleportToPlayer(final UUID playerId, final boolean byCommand)
+    public TeleportToPlayer(final UUID playerId, final Boolean byCommand)
     {
         this.playerId = playerId;
         this.byCommand = byCommand;
