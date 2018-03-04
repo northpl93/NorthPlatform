@@ -2,6 +2,7 @@ package pl.arieals.minigame.goldhunter.listener;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -33,6 +34,15 @@ public class AdditionalGameplayMechanicsListener implements AutoListener
         
         GoldHunterPlayer player = goldHunter.getPlayer(event.getPlayer());
         Entity caught = event.getCaught();
+        
+        if ( caught instanceof Player )
+        {
+            GoldHunterPlayer caughtPlayer = goldHunter.getPlayer((Player) caught);
+            if ( player.getTeam() == caughtPlayer.getTeam() )
+            {
+                return;
+            }
+        }
         
         if ( player != null && caught != null )
         {
