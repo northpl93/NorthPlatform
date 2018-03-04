@@ -29,6 +29,11 @@ public class GoldHunterGui extends Gui
         return player;
     }
     
+    public final void open()
+    {
+        open(player.getPlayer());
+    }
+    
     @Override
     protected void onOpen(Player player)
     {
