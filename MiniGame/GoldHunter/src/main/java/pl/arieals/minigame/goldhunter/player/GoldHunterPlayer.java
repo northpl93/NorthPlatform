@@ -382,9 +382,6 @@ public class GoldHunterPlayer implements ITickable
     
     private void setupPlayerEntity()
     {
-        // TODO: spectator mode
-        player.setGameMode(isIngame() ? GameMode.SURVIVAL : GameMode.CREATIVE);
-        
         player.setAllowFlight(false);
         player.setFlying(false);
         

@@ -108,4 +108,21 @@ public class DamageListener implements AutoListener
         
         damager.getStatsTracker().onDamagePlayer(damaged, event.getFinalDamage());
     }
+    
+    @EventHandler
+    public void onDamageInLobby(EntityDamageEvent event)
+    {
+        if ( !( event.getEntity() instanceof Player ) )
+        {
+            return;
+        }
+        
+        GoldHunterPlayer player = goldHunter.getPlayer((Player) event.getEntity());
+        
+        if ( player != null && !player.isIngame() )
+        {
+            event.setDamage(0);
+            event.setCancelled(true);
+        }
+    }
 }
