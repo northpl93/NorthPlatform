@@ -41,7 +41,6 @@ public class GameplayRestrictionListener implements AutoListener
     {
         if ( event.getRegainReason() == RegainReason.EATING )
         {
-            System.out.println("cancelled");
             event.setCancelled(true);
         }
     }
