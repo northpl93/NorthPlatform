@@ -4,8 +4,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
-import pl.arieals.api.minigame.server.gamehost.MiniGameApi;
 import pl.arieals.minigame.goldhunter.GoldHunter;
+import pl.arieals.minigame.goldhunter.gui.JoinTeamGui;
 import pl.arieals.minigame.goldhunter.gui.SelectClassGui;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.northspigot.event.PlayerPressQEvent;
@@ -25,8 +25,15 @@ public class KeyShortcutListener implements AutoListener
     {
         event.setCancelled(true);
         
-        GoldHunterPlayer player = MiniGameApi.getPlayerData(event.getPlayer(), GoldHunterPlayer.class);
-        player.getAbilityTracker().useAbility();
+        GoldHunterPlayer player = goldHunter.getPlayer(event.getPlayer());
+        if ( player.isIngame() )
+        {
+            player.getAbilityTracker().useAbility();
+        }
+        else
+        {
+            new JoinTeamGui(player).open();
+        }
     }
     
     @EventHandler(priority = EventPriority.HIGHEST)
