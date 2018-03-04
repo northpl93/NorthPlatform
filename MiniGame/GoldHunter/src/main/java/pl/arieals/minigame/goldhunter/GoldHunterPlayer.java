@@ -338,6 +338,7 @@ public class GoldHunterPlayer implements ITickable
         
         updatePlayersVisibility();
         this.team = team;
+        this.displayTeam = team;
         
         guiManager.closeHotbarMenu(player);
         
