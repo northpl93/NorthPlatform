@@ -2,9 +2,9 @@ package pl.arieals.minigame.goldhunter.abilities;
 
 import org.bukkit.Location;
 
-import pl.arieals.minigame.goldhunter.AbilityHandler;
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
-import pl.arieals.minigame.goldhunter.structure.SupplierStructure;
+import pl.arieals.minigame.goldhunter.arena.structure.SupplierStructure;
+import pl.arieals.minigame.goldhunter.player.AbilityHandler;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 
 public class SupplierAbility implements AbilityHandler
 {

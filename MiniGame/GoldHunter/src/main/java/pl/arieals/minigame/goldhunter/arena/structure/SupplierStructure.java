@@ -1,4 +1,4 @@
-package pl.arieals.minigame.goldhunter.structure;
+package pl.arieals.minigame.goldhunter.arena.structure;
 
 import org.apache.logging.log4j.Logger;
 import org.bukkit.Material;
@@ -9,10 +9,11 @@ import org.bukkit.util.BlockVector;
 import com.google.common.base.Preconditions;
 
 import net.minecraft.server.v1_12_R1.MinecraftServer;
-import pl.arieals.minigame.goldhunter.GameTeam;
+
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
+import pl.arieals.minigame.goldhunter.player.GameTeam;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 

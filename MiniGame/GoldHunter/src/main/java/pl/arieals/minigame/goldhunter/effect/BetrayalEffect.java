@@ -1,6 +1,6 @@
 package pl.arieals.minigame.goldhunter.effect;
 
-import pl.arieals.minigame.goldhunter.Effect;
+import pl.arieals.minigame.goldhunter.player.Effect;
 
 public class BetrayalEffect extends Effect
 {

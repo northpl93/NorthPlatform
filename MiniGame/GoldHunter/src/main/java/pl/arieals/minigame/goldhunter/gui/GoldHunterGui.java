@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import com.google.common.base.Preconditions;
 
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;

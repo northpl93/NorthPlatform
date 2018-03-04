@@ -1,6 +1,6 @@
-package pl.arieals.minigame.goldhunter;
+package pl.arieals.minigame.goldhunter.gui;
 
-import pl.arieals.minigame.goldhunter.gui.SelectClassGui;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.gui.ClickHandler;
 import pl.north93.zgame.api.bukkit.gui.HotbarMenu;
 import pl.north93.zgame.api.bukkit.gui.impl.HotbarClickEvent;
@@ -25,13 +25,13 @@ public class LobbyHotbar extends HotbarMenu
     @ClickHandler
     public void joinTeam(HotbarClickEvent event)
     {
-        new JoinTeamGui(player).open(player.getPlayer());
+        new JoinTeamGui(player).open();
     }
     
     @ClickHandler
     public void selectClass(HotbarClickEvent event)
     {
-        new SelectClassGui(player).open(player.getPlayer());
+        new SelectClassGui(player).open();
     }
     
     @ClickHandler

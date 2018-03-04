@@ -5,14 +5,15 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityExplodeEvent;
 
 import net.minecraft.server.v1_12_R1.Entity;
-import pl.arieals.minigame.goldhunter.AbilityHandler;
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
+
 import pl.arieals.minigame.goldhunter.effect.BombArrowEffect;
 import pl.arieals.minigame.goldhunter.entity.BombArrow;
+import pl.arieals.minigame.goldhunter.player.AbilityHandler;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 
 public class BombArrowAbility implements AbilityHandler
 {

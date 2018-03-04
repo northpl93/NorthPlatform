@@ -1,4 +1,4 @@
-package pl.arieals.minigame.goldhunter;
+package pl.arieals.minigame.goldhunter.player;
 
 import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
@@ -9,6 +9,7 @@ import org.bukkit.boss.BossBar;
 
 import com.google.common.base.Preconditions;
 
+import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.utils.TimeStringUtils;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.Tick;

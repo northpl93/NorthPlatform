@@ -1,4 +1,4 @@
-package pl.arieals.minigame.goldhunter;
+package pl.arieals.minigame.goldhunter.classes;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -6,6 +6,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
 
 public enum InventoryRefilRule

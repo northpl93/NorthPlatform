@@ -4,8 +4,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 
 import pl.arieals.minigame.goldhunter.GoldHunter;
-import pl.arieals.minigame.goldhunter.GoldHunterArena;
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
+import pl.arieals.minigame.goldhunter.arena.GoldHunterArena;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 
 public class StructureDestroyListener implements AutoListener

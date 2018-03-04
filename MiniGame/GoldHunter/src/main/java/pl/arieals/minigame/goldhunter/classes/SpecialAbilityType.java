@@ -1,4 +1,4 @@
-package pl.arieals.minigame.goldhunter;
+package pl.arieals.minigame.goldhunter.classes;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +19,7 @@ import pl.arieals.minigame.goldhunter.abilities.ShieldAttackAbility;
 import pl.arieals.minigame.goldhunter.abilities.SirenTearsAbility;
 import pl.arieals.minigame.goldhunter.abilities.SupplierAbility;
 import pl.arieals.minigame.goldhunter.abilities.WallAbility;
+import pl.arieals.minigame.goldhunter.player.AbilityHandler;
 
 public enum SpecialAbilityType
 {

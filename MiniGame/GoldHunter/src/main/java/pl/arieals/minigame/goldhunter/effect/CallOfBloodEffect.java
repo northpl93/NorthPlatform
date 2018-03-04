@@ -9,7 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import pl.arieals.minigame.goldhunter.Effect;
+import pl.arieals.minigame.goldhunter.player.Effect;
 import pl.north93.zgame.api.bukkit.utils.itemstack.MaterialUtils;
 
 public class CallOfBloodEffect extends Effect

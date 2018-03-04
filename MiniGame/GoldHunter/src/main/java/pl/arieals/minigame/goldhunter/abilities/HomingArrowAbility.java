@@ -6,13 +6,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityShootBowEvent;
 
 import pl.arieals.minigame.goldhunter.GoldHunter;
-import pl.arieals.minigame.goldhunter.GoldHunterArena;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
+import pl.arieals.minigame.goldhunter.arena.GoldHunterArena;
 import pl.arieals.minigame.goldhunter.effect.BombArrowEffect;
 import pl.arieals.minigame.goldhunter.effect.PoisonArrowEffect;
 import pl.arieals.minigame.goldhunter.entity.BombArrow;
 import pl.arieals.minigame.goldhunter.entity.PoisonArrow;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 

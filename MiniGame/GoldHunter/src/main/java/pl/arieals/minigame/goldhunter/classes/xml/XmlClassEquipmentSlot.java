@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlElement;
 
 import org.bukkit.inventory.ItemStack;
 
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.arieals.minigame.goldhunter.utils.ItemStackUtils;
 
 @XmlAccessorType(XmlAccessType.FIELD)

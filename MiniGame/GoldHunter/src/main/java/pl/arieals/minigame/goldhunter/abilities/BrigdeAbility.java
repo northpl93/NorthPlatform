@@ -1,8 +1,8 @@
 package pl.arieals.minigame.goldhunter.abilities;
 
-import pl.arieals.minigame.goldhunter.AbilityHandler;
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
 import pl.arieals.minigame.goldhunter.effect.BridgeEffect;
+import pl.arieals.minigame.goldhunter.player.AbilityHandler;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 
 public class BrigdeAbility implements AbilityHandler
 {

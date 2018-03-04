@@ -14,7 +14,7 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 
 import pl.arieals.minigame.goldhunter.GoldHunter;
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.gui.event.GuiOpenEvent;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 

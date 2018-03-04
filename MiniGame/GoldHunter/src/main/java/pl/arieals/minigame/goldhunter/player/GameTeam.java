@@ -1,4 +1,4 @@
-package pl.arieals.minigame.goldhunter;
+package pl.arieals.minigame.goldhunter.player;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Color;

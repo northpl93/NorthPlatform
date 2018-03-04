@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlElement;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlClassEquipmentInfo

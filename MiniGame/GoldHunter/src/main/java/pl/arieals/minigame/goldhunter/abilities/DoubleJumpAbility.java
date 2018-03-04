@@ -8,10 +8,11 @@ import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.PacketPlayInAbilities;
 import net.minecraft.server.v1_12_R1.PacketPlayOutAbilities;
 import net.minecraft.server.v1_12_R1.PlayerAbilities;
-import pl.arieals.minigame.goldhunter.AbilityHandler;
+
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
+import pl.arieals.minigame.goldhunter.player.AbilityHandler;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.packets.event.AsyncPacketInEvent;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;

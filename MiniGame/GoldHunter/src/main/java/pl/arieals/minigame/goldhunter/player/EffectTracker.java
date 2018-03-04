@@ -1,4 +1,4 @@
-package pl.arieals.minigame.goldhunter;
+package pl.arieals.minigame.goldhunter.player;
 
 import java.util.Collection;
 import java.util.HashMap;

@@ -6,8 +6,8 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
 import pl.arieals.api.minigame.server.gamehost.MiniGameApi;
 import pl.arieals.minigame.goldhunter.GoldHunter;
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
 import pl.arieals.minigame.goldhunter.gui.SelectClassGui;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.northspigot.event.PlayerPressQEvent;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 

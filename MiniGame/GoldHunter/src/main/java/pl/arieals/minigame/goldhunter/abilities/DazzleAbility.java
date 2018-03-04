@@ -5,11 +5,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.ProjectileHitEvent;
 
-import pl.arieals.minigame.goldhunter.AbilityHandler;
 import pl.arieals.minigame.goldhunter.GoldHunter;
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
 import pl.arieals.minigame.goldhunter.effect.BlindnessEffect;
 import pl.arieals.minigame.goldhunter.effect.DazzleAbilityEffect;
+import pl.arieals.minigame.goldhunter.player.AbilityHandler;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class DazzleAbility implements AbilityHandler

@@ -1,4 +1,4 @@
-package pl.arieals.minigame.goldhunter;
+package pl.arieals.minigame.goldhunter.player;
 
 import java.util.Set;
 
@@ -9,6 +9,10 @@ import org.bukkit.entity.Player;
 import org.diorite.utils.math.DioriteMathUtils;
 
 import net.minecraft.server.v1_12_R1.MinecraftServer;
+
+import pl.arieals.minigame.goldhunter.GoldHunterLogger;
+import pl.arieals.minigame.goldhunter.arena.SoundEffect;
+import pl.arieals.minigame.goldhunter.classes.SpecialAbilityType;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;

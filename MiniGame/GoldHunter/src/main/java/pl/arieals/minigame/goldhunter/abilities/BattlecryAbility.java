@@ -1,8 +1,8 @@
 package pl.arieals.minigame.goldhunter.abilities;
 
-import pl.arieals.minigame.goldhunter.AbilityHandler;
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
 import pl.arieals.minigame.goldhunter.effect.BattlecryEffect;
+import pl.arieals.minigame.goldhunter.player.AbilityHandler;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 
 public class BattlecryAbility implements AbilityHandler
 {

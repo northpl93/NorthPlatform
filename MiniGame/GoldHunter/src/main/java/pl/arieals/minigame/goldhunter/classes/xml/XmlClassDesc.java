@@ -4,10 +4,10 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import pl.arieals.minigame.goldhunter.InventoryRefilRule;
-import pl.arieals.minigame.goldhunter.PlayerRank;
-import pl.arieals.minigame.goldhunter.SpecialAbilityType;
 import pl.arieals.minigame.goldhunter.classes.CharacterClass;
+import pl.arieals.minigame.goldhunter.classes.InventoryRefilRule;
+import pl.arieals.minigame.goldhunter.classes.SpecialAbilityType;
+import pl.arieals.minigame.goldhunter.player.PlayerRank;
 import pl.north93.zgame.api.bukkit.utils.xml.itemstack.XmlItemStack;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;

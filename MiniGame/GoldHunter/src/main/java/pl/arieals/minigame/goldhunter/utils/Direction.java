@@ -1,4 +1,4 @@
-package pl.arieals.minigame.goldhunter;
+package pl.arieals.minigame.goldhunter.utils;
 
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;

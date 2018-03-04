@@ -1,4 +1,4 @@
-package pl.arieals.minigame.goldhunter;
+package pl.arieals.minigame.goldhunter.arena;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,8 +27,11 @@ import net.minecraft.server.v1_12_R1.MinecraftServer;
 import pl.arieals.api.minigame.server.gamehost.arena.IArenaData;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.arieals.minigame.goldhunter.GoldHunterLogger;
+import pl.arieals.minigame.goldhunter.arena.structure.GoldChestStructure;
+import pl.arieals.minigame.goldhunter.player.GameTeam;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.arieals.minigame.goldhunter.scoreboard.ArenaScoreboardManager;
-import pl.arieals.minigame.goldhunter.structure.GoldChestStructure;
 import pl.arieals.minigame.goldhunter.utils.TimeStringUtils;
 import pl.north93.zgame.api.bukkit.gui.IGuiManager;
 import pl.north93.zgame.api.bukkit.tick.ITickable;

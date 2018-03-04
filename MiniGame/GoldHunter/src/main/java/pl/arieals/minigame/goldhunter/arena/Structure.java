@@ -1,4 +1,4 @@
-package pl.arieals.minigame.goldhunter;
+package pl.arieals.minigame.goldhunter.arena;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +11,7 @@ import org.bukkit.util.Vector;
 
 import com.google.common.base.Preconditions;
 
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.global.utils.lang.CatchException;
 

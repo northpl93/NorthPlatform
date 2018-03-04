@@ -3,7 +3,7 @@ package pl.arieals.minigame.goldhunter.effect;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import pl.arieals.minigame.goldhunter.Effect;
+import pl.arieals.minigame.goldhunter.player.Effect;
 
 public class BlindnessEffect extends Effect
 {

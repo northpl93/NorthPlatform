@@ -1,8 +1,10 @@
-package pl.arieals.minigame.goldhunter;
+package pl.arieals.minigame.goldhunter.arena;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 
 public enum SoundEffect
 {

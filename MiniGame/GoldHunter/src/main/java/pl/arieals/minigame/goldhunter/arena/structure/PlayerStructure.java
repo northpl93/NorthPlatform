@@ -1,11 +1,11 @@
-package pl.arieals.minigame.goldhunter.structure;
+package pl.arieals.minigame.goldhunter.arena.structure;
 
 import org.bukkit.util.BlockVector;
 
 import com.google.common.base.Preconditions;
 
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
-import pl.arieals.minigame.goldhunter.Structure;
+import pl.arieals.minigame.goldhunter.arena.Structure;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 
 public abstract class PlayerStructure extends Structure
 {

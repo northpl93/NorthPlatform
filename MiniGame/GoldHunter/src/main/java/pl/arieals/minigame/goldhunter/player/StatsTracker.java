@@ -1,4 +1,4 @@
-package pl.arieals.minigame.goldhunter;
+package pl.arieals.minigame.goldhunter.player;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -13,6 +13,8 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.ImmutableMap;
 
 import net.minecraft.server.v1_12_R1.MinecraftServer;
+
+import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
 import pl.north93.zgame.api.bukkit.tick.Tick;

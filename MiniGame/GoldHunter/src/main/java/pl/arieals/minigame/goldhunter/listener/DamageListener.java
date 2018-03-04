@@ -8,10 +8,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
+import pl.arieals.minigame.goldhunter.GoldHunter;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.bukkit.utils.itemstack.MaterialUtils;
-import pl.arieals.minigame.goldhunter.GoldHunter;
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class DamageListener implements AutoListener

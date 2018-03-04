@@ -2,9 +2,9 @@ package pl.arieals.minigame.goldhunter.effect;
 
 import org.bukkit.entity.Player;
 
-import pl.arieals.minigame.goldhunter.Effect;
 import pl.arieals.minigame.goldhunter.GoldHunter;
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
+import pl.arieals.minigame.goldhunter.player.Effect;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 

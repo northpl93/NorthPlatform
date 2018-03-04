@@ -1,4 +1,4 @@
-package pl.arieals.minigame.goldhunter;
+package pl.arieals.minigame.goldhunter.arena;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,6 +17,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
+import pl.arieals.minigame.goldhunter.GoldHunterLogger;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 

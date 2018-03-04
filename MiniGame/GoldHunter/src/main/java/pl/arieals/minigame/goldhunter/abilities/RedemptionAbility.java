@@ -6,11 +6,11 @@ import java.util.List;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import pl.arieals.minigame.goldhunter.AbilityHandler;
-import pl.arieals.minigame.goldhunter.Effect;
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
 import pl.arieals.minigame.goldhunter.effect.BlindnessEffect;
 import pl.arieals.minigame.goldhunter.effect.PoisonEffect;
+import pl.arieals.minigame.goldhunter.player.AbilityHandler;
+import pl.arieals.minigame.goldhunter.player.Effect;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 
 public class RedemptionAbility implements AbilityHandler
 {

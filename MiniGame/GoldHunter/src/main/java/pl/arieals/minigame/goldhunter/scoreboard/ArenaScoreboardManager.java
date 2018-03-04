@@ -3,17 +3,17 @@ package pl.arieals.minigame.goldhunter.scoreboard;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.common.base.Preconditions;
-
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
+import com.google.common.base.Preconditions;
+
 import pl.arieals.api.minigame.shared.api.GamePhase;
-import pl.arieals.minigame.goldhunter.GameTeam;
-import pl.arieals.minigame.goldhunter.GoldHunterArena;
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
+import pl.arieals.minigame.goldhunter.arena.GoldHunterArena;
+import pl.arieals.minigame.goldhunter.player.GameTeam;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;

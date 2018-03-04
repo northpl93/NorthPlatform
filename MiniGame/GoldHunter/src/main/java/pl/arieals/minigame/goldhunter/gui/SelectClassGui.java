@@ -8,12 +8,11 @@ import java.util.UUID;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import pl.arieals.minigame.goldhunter.GoldHunter;
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
 import pl.arieals.minigame.goldhunter.classes.CharacterClass;
 import pl.arieals.minigame.goldhunter.classes.CharacterClassManager;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.gui.ClickHandler;
 import pl.north93.zgame.api.bukkit.gui.GuiClickEvent;
 import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
@@ -21,7 +20,6 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlEnchant;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.messages.TranslatableString;
 import pl.north93.zgame.api.global.uri.UriHandler;
 
 public class SelectClassGui extends GoldHunterGui

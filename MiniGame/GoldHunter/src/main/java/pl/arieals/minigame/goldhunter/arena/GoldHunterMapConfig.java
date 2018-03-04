@@ -1,4 +1,4 @@
-package pl.arieals.minigame.goldhunter;
+package pl.arieals.minigame.goldhunter.arena;
 
 import java.util.ArrayList;
 import java.util.List;

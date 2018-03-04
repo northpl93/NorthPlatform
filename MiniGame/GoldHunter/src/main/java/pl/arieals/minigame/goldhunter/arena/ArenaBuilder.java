@@ -1,4 +1,4 @@
-package pl.arieals.minigame.goldhunter;
+package pl.arieals.minigame.goldhunter.arena;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -6,6 +6,7 @@ import org.bukkit.block.Block;
 
 import com.google.common.base.Preconditions;
 
+import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.utils.Result;
 

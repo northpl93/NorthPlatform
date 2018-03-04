@@ -2,7 +2,7 @@ package pl.arieals.minigame.goldhunter.effect;
 
 import org.bukkit.attribute.Attribute;
 
-import pl.arieals.minigame.goldhunter.Effect;
+import pl.arieals.minigame.goldhunter.player.Effect;
 import pl.north93.zgame.api.bukkit.tick.Tick;
 
 public class HealingEffect extends Effect

@@ -1,15 +1,10 @@
 package pl.arieals.minigame.goldhunter.classes;
 
-import java.util.Optional;
-
 import javax.annotation.Nullable;
 
-import pl.arieals.minigame.goldhunter.GoldHunterPlayer;
-import pl.arieals.minigame.goldhunter.InventoryRefilRule;
-import pl.arieals.minigame.goldhunter.PlayerRank;
-import pl.arieals.minigame.goldhunter.SpecialAbilityType;
 import pl.arieals.minigame.goldhunter.classes.xml.XmlClassEquipmentInfo;
-import pl.arieals.minigame.goldhunter.entity.GoldHunterEntityUtils;
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
+import pl.arieals.minigame.goldhunter.player.PlayerRank;
 import pl.north93.zgame.api.bukkit.utils.xml.itemstack.XmlItemStack;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
