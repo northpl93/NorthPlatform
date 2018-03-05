@@ -57,7 +57,7 @@ public class ViolationsStorage
     public void cleanUpOldViolations(final Tick currentTick)
     {
         final int ticksToKeep = this.analysisManager.getTicksToKeep();
-        if (currentTick.getTickId() - ticksToKeep < 0)
+        if (currentTick.getTickId() - ticksToKeep <= 0)
         {
             return;
         }

@@ -24,7 +24,7 @@ public class VelocityChangeCheck implements EventAnalyser<VelocityAppliedTimelin
     @Override
     public SingleAnalysisResult analyse(final PlayerData data, final PlayerTickInfo tickInfo, final VelocityAppliedTimelineEvent event)
     {
-        if (MovementManipulationChecker.shouldSkip(data))
+        if (MovementManipulationChecker.shouldSkip(data, tickInfo))
         {
             return null;
         }

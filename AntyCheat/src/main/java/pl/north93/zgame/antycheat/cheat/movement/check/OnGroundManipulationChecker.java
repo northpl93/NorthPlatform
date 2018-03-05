@@ -63,6 +63,7 @@ public class OnGroundManipulationChecker implements EventAnalyser<ClientMoveTime
 
         if (! event.isToOnGround())
         {
+            // TODO Klient czasami sie buguje i wysyla w chuj onGround=false podczas stania...
             return this.checkFlying(player, tickInfo, toLocation);
         }
         else if (! event.isFromOnGround() && event.isToOnGround())

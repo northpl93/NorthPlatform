@@ -29,7 +29,7 @@ public class MovementManipulationChecker implements EventAnalyser<ClientMoveTime
     public SingleAnalysisResult analyse(final PlayerData data, final PlayerTickInfo tickInfo, final ClientMoveTimelineEvent event)
     {
         // jak trzeba to pomijamy wszystkie checki
-        if (shouldSkip(data))
+        if (shouldSkip(data, tickInfo))
         {
             return null;
         }
@@ -68,9 +68,15 @@ public class MovementManipulationChecker implements EventAnalyser<ClientMoveTime
         return null;
     }
 
-    public static boolean shouldSkip(final PlayerData data)
+    public static boolean shouldSkip(final PlayerData data, final PlayerTickInfo tickInfo)
     {
         final Player player = data.getPlayer();
+
+        if (tickInfo.isShortAfterSpawn() || tickInfo.isShortAfterTeleport())
+        {
+            // jeśli jest krótko po teleporcie lub spawnie to pomojamy
+            return true;
+        }
 
         final GameMode gameMode = player.getGameMode();
         if (gameMode == GameMode.CREATIVE || gameMode == GameMode.SPECTATOR)

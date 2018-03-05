@@ -74,7 +74,7 @@ public class AntyCheatPacketListener implements AutoListener
 
         final boolean newOnGround = packetPlayInFlying.a();
         final Location newLocation = new Location(
-                oldLocation.getWorld(),
+                player.getWorld(),
                 packetPlayInFlying.a(oldLocation.getX()),
                 packetPlayInFlying.b(oldLocation.getY()),
                 packetPlayInFlying.c(oldLocation.getZ()),
