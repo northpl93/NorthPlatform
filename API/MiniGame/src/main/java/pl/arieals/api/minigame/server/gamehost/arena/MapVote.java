@@ -41,13 +41,15 @@ public class MapVote
     
     private void prepareOptions()
     {
-        int numberOfOptions = this.gameHostManager.getMiniGameConfig().getMapVoting().getNumberOfMaps();
-        Collection<MapTemplate> allTemlates = this.gameHostManager.getMapTemplateManager().getAllTemplates();
+        final Collection<MapTemplate> allTemplates = this.gameHostManager.getMapTemplateManager().getAllTemplates();
+
+        final int maxOptions = this.gameHostManager.getMiniGameConfig().getMapVoting().getNumberOfMaps();
+        final int numberOfOptions = Math.min(maxOptions, allTemplates.size());
         
-        List<MapTemplate> results = new ArrayList<>(numberOfOptions);
-        DioriteRandomUtils.getRandom(allTemlates, results, 3, true);
+        final List<MapTemplate> results = new ArrayList<>(numberOfOptions);
+        DioriteRandomUtils.getRandom(allTemplates, results, numberOfOptions, true);
         
-        MapTemplate[] options = new MapTemplate[numberOfOptions];
+        final MapTemplate[] options = new MapTemplate[numberOfOptions];
         this.options = results.toArray(options);
     }
 
