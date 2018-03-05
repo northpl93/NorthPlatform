@@ -313,6 +313,8 @@ public class JumpController
         final double horizontalExceeded = horizontalDistanceFromStart - expectedHorizontalDistance;
         if (horizontalExceeded > 4)
         {
+            //Bukkit.broadcastMessage("start: " + this.startLocation.toBukkit());
+            //Bukkit.broadcastMessage("to: " + to.toBukkit());
             result.addViolation(MovementViolation.SURVIVAL_FLY, HORIZONTAL_FALLING_EXCEEDED, FalsePositiveProbability.LOW);
         }
         else if (horizontalExceeded > 2)
@@ -323,7 +325,7 @@ public class JumpController
         {
             result.addViolation(MovementViolation.SURVIVAL_FLY, HORIZONTAL_FALLING_EXCEEDED, FalsePositiveProbability.HIGH);
         }
-        //Bukkit.broadcastMessage("exptected:" + expectedHorizontalDistance + " distance:" + horizontalDistanceFromStart);
+        //Bukkit.broadcastMessage("FALL EXPECTED:" + expectedHorizontalDistance + " DIST:" + horizontalDistanceFromStart);
     }
 
     // staramy sie obliczyc wektor z jakim wystartował gracz
@@ -360,13 +362,13 @@ public class JumpController
     private double calculateMaxRisingHorizontalDistance(final Vector startVelocity, final double maxHeight)
     {
         final boolean sprintingWhileStarted = this.startTickInfo.getProperties().isSprinting();
-        final double normalJump = (sprintingWhileStarted ? 2.5 : 1.5) + maxHeight * 0.1; // policzone z dupy
+        final double normalJump = (sprintingWhileStarted ? 2.5 : 1.5) + maxHeight * 0.01; // policzone z dupy
 
         final double maxDistanceX = EntityUtils.maxHeightByStartVelocity(Math.abs(startVelocity.getX()));
         final double maxDistanceZ = EntityUtils.maxHeightByStartVelocity(Math.abs(startVelocity.getZ()));
 
         final double vectorCrossProductXZ = Math.sqrt(maxDistanceX * maxDistanceX + maxDistanceZ * maxDistanceZ);
-        final double distanceFromVelocity = vectorCrossProductXZ + maxHeight * 0.1;
+        final double distanceFromVelocity = vectorCrossProductXZ + maxHeight * 0.01;
 
         return Math.max(normalJump, distanceFromVelocity);
     }
@@ -381,7 +383,7 @@ public class JumpController
         final double maxDistanceZ = EntityUtils.maxDistanceByStartVelocity(velZ);
 
         final double vectorCrossProductXZ = Math.sqrt(maxDistanceX * maxDistanceX + maxDistanceZ * maxDistanceZ);
-        return vectorCrossProductXZ + fallDistance * 0.8;
+        return vectorCrossProductXZ + fallDistance * 0.5;
     }
 
     // pobiera z linii czasu ostatnie ustawione dla gracza velocity

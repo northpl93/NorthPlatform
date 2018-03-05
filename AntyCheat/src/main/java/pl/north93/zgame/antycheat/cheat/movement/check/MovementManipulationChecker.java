@@ -28,16 +28,20 @@ public class MovementManipulationChecker implements EventAnalyser<ClientMoveTime
     @Override
     public SingleAnalysisResult analyse(final PlayerData data, final PlayerTickInfo tickInfo, final ClientMoveTimelineEvent event)
     {
+        final JumpController jumpController = JumpController.get(data);
+
         // jak trzeba to pomijamy wszystkie checki
         if (shouldSkip(data, tickInfo))
         {
+            // resetujemy kontroler skoku, aby upewnic sie, ze po zejsciu ewentualnych blokad bedzie mial czyste srodowisko pracy
+            jumpController.forceReset();
+
+            // nie odpalamy reszty checków
             return null;
         }
 
         final long flags = event.getTo().getFlags();
         //this.debugFlags(flags);
-
-        final JumpController jumpController = JumpController.get(data);
 
         if (tickInfo.getProperties().isGliding())
         {
