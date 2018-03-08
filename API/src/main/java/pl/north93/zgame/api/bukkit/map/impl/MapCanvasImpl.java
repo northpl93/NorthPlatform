@@ -16,7 +16,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.bukkit.map.IMapCanvas;
 import pl.north93.zgame.api.bukkit.map.MapColor;
 
-class MapCanvasImpl implements IMapCanvas
+final class MapCanvasImpl implements IMapCanvas
 {
     private static final int SINGLE_MAP_SIDE = 128;
     private final int xSize, ySize;
@@ -77,6 +77,21 @@ class MapCanvasImpl implements IMapCanvas
     }
 
     @Override
+    public void putCanvas(final int x, final int y, final IMapCanvas canvas)
+    {
+        final MapCanvasImpl impl = (MapCanvasImpl) canvas;
+
+        for (int actualY = 0; actualY < impl.ySize; actualY++)
+        {
+            for (int actualX = 0; actualX < impl.xSize; actualX++)
+            {
+                final byte pixel = impl.getPixel(actualX, actualY);
+                this.setPixel(actualX + x, actualY + y, pixel);
+            }
+        }
+    }
+
+    @Override
     public void fill(final byte color)
     {
         Arrays.fill(this.buffer, color);
@@ -96,7 +111,7 @@ class MapCanvasImpl implements IMapCanvas
 
     public MapCanvasImpl getSubMapCanvas(final int xMap, final int yMap)
     {
-        // definujemy nowa tablice na mape 128x129 pixeli
+        // definujemy nowa tablice na mape 128x128 pixeli
         final byte[] subMap = new byte[SINGLE_MAP_SIDE * SINGLE_MAP_SIDE];
 
         // szukamy punktu poczatkowego skad zaczynamy kopiowac
@@ -135,7 +150,7 @@ class MapCanvasImpl implements IMapCanvas
 
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
-    protected Object clone() throws CloneNotSupportedException
+    public IMapCanvas clone()
     {
         final byte[] bytes = new byte[this.buffer.length];
         System.arraycopy(this.buffer, 0, bytes, 0, this.buffer.length);

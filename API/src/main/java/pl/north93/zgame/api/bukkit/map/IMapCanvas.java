@@ -13,6 +13,8 @@ public interface IMapCanvas extends Cloneable
 
     void putImage(int x, int y, BufferedImage image);
 
+    void putCanvas(int x, int y, IMapCanvas canvas);
+
     void fill(byte color);
 
     byte getPixel(int x, int y);
@@ -20,6 +22,8 @@ public interface IMapCanvas extends Cloneable
     byte[] getBytes();
 
     void writeDebugImage(File location);
+
+    IMapCanvas clone();
 
     boolean equals(Object other);
 }

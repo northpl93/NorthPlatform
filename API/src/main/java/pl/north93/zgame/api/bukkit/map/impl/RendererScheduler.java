@@ -13,6 +13,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.map.IMapRenderer;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -30,7 +31,7 @@ class RendererScheduler
         this.mapController = mapController;
     }
 
-    public synchronized void scheduleRenderer(final Player player, final BoardImpl board)
+    public synchronized void scheduleRenderer(final INorthPlayer player, final BoardImpl board)
     {
         Preconditions.checkNotNull(player, "Player can't be null");
         Preconditions.checkNotNull(board.getRenderer(), "Tried to schedule rendering when renderer is null");
@@ -43,7 +44,7 @@ class RendererScheduler
 
     private void doRendering(final InProgressRenderer inProgressRenderer)
     {
-        final Player player = inProgressRenderer.getPlayer();
+        final INorthPlayer player = inProgressRenderer.getPlayer();
         final BoardImpl board = inProgressRenderer.getBoard();
 
         final MapCanvasImpl canvas = MapCanvasImpl.createFromMaps(board.getWidth(), board.getHeight());
@@ -89,7 +90,7 @@ class RendererScheduler
     {
         for (final InProgressRenderer renderer : this.renderers)
         {
-            if (renderer.getBoard() == board && renderer.getPlayer() == player)
+            if (renderer.getBoard() == board && player.equals(renderer.getPlayer()))
             {
                 return renderer;
             }
@@ -106,19 +107,19 @@ class RendererScheduler
 
 class InProgressRenderer
 {
-    private final Player       player;
+    private final INorthPlayer player;
     private final BoardImpl    board;
     private final IMapRenderer renderer;
-    private boolean            aborted;
+    private       boolean      aborted;
 
-    public InProgressRenderer(final Player player, final BoardImpl board, final IMapRenderer renderer)
+    public InProgressRenderer(final INorthPlayer player, final BoardImpl board, final IMapRenderer renderer)
     {
         this.player = player;
         this.board = board;
         this.renderer = renderer;
     }
 
-    public Player getPlayer()
+    public INorthPlayer getPlayer()
     {
         return this.player;
     }

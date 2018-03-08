@@ -8,22 +8,27 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.bukkit.entity.Player;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.map.IMapCanvas;
-import pl.north93.zgame.api.bukkit.map.IMapRenderer;
+import pl.north93.zgame.api.bukkit.map.loader.xml.XmlTranslatableImage;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
-public class RankingRenderer implements IMapRenderer
+/**
+ * Klasa renderująca ranking według ustalonego wcześniej szablonu.
+ * <p>
+ * Nie jest powiązana z żadnym systemem, wprowadzanie danych następuje poprzez
+ * metody setLeftPlace i setRightPlace.
+ */
+public class RankingRenderer implements IRankingRenderer
 {
-    private final File           background;
-    private final Font           font;
+    private final XmlTranslatableImage background;
+    private final Font                 font;
     private final RankingEntry[] leftRanking = new RankingEntry[10];
     private final RankingEntry[] rightRanking = new RankingEntry[10];
 
-    public RankingRenderer(final File background)
+    public RankingRenderer(final XmlTranslatableImage background)
     {
         this.background = background;
         final InputStream fontStream = this.getClass().getClassLoader().getResourceAsStream("Minecraftia-Regular.ttf");
@@ -37,20 +42,22 @@ public class RankingRenderer implements IMapRenderer
         }
     }
 
+    @Override
     public void setLeftPlace(final int index, final RankingEntry rankingEntry)
     {
         this.leftRanking[index] = rankingEntry;
     }
 
+    @Override
     public void setRightPlace(final int index, final RankingEntry rankingEntry)
     {
         this.rightRanking[index] = rankingEntry;
     }
 
     @Override
-    public void render(final IMapCanvas canvas, final Player player) throws Exception
+    public void render(final IMapCanvas canvas, final INorthPlayer player) throws Exception
     {
-        final BufferedImage image = ImageIO.read(this.background);
+        final BufferedImage image = this.readBackgroundImage(player);
         final Graphics2D graphics = image.createGraphics();
 
         // lewa czesc rankingu
@@ -80,6 +87,12 @@ public class RankingRenderer implements IMapRenderer
         graphics.dispose();
         canvas.putImage(0, 0, image);
         //canvas.writeDebugImage(new File("C:\\Users\\Michał\\Desktop\\test.png"));
+    }
+
+    private BufferedImage readBackgroundImage(final INorthPlayer player) throws Exception
+    {
+        final File backgroundFile = this.background.getFileByLanguage(player.getMyLocale());
+        return ImageIO.read(backgroundFile);
     }
 
     // bierze odpowiednia pozycje startowa i tworzy obiekt renderera

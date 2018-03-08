@@ -17,6 +17,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import io.netty.channel.Channel;
 import javafx.collections.MapChangeListener;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.bukkit.utils.nms.EntityMetaPacketHelper;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
@@ -37,7 +38,7 @@ class MapController
         this.rendererScheduler = new RendererScheduler(this);
     }
 
-    public void handlePlayerEnter(final MapImpl map, final CraftPlayer player)
+    public void handlePlayerEnter(final MapImpl map, final INorthPlayer player)
     {
         final PlayerMapData playerMapData = this.getPlayerMapData(player);
         final int mapId = playerMapData.getMapId(map);
@@ -68,24 +69,25 @@ class MapController
         playerMapData.uploadServerCanvasToClient(map);
     }
 
-    private void uploadFilledMapItem(final CraftPlayer craftPlayer, final int frameEntityId, final int mapId)
+    private void uploadFilledMapItem(final INorthPlayer player, final int frameEntityId, final int mapId)
     {
         final EntityMetaPacketHelper helper = new EntityMetaPacketHelper(frameEntityId);
 
         final ItemStack mapItem = new ItemStack(Material.MAP, 1, (short) mapId);
         helper.addMeta(6, EntityMetaPacketHelper.MetaType.SLOT, mapItem);
 
-        final Channel channel = craftPlayer.getHandle().playerConnection.networkManager.channel;
+        final EntityPlayer entityPlayer = player.getCraftPlayer().getHandle();
+        final Channel channel = entityPlayer.playerConnection.networkManager.channel;
         channel.writeAndFlush(helper.complete());
     }
 
-    public void doRenderingFor(final Player player, final BoardImpl board)
+    public void doRenderingFor(final INorthPlayer player, final BoardImpl board)
     {
         this.rendererScheduler.abortIfRenderingInProgress(board, player);
         this.rendererScheduler.scheduleRenderer(player, board);
     }
 
-    public void pushNewCanvasToBoardForPlayer(final Player player, final BoardImpl board, final MapCanvasImpl mapCanvas)
+    public void pushNewCanvasToBoardForPlayer(final INorthPlayer player, final BoardImpl board, final MapCanvasImpl mapCanvas)
     {
         final PlayerMapData playerMapData = this.getPlayerMapData(player);
 
@@ -129,7 +131,9 @@ class MapController
     {
         return change -> this.bukkitExecutor.sync(() ->
         {
-            final CraftPlayer player = change.getKey().getBukkitEntity();
+            final CraftPlayer craftPlayer = change.getKey().getBukkitEntity();
+            final INorthPlayer player = INorthPlayer.wrap(craftPlayer);
+
             if (change.wasAdded())
             {
                 this.handlePlayerEnter(map, player);

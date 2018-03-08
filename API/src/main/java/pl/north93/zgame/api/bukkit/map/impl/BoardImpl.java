@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import pl.north93.zgame.api.bukkit.map.IBoard;
 import pl.north93.zgame.api.bukkit.map.IMapRenderer;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 class BoardImpl implements IBoard
 {
@@ -86,7 +87,7 @@ class BoardImpl implements IBoard
 
     public void renderFor(final Player player)
     {
-        this.mapController.doRenderingFor(player, this);
+        this.mapController.doRenderingFor(INorthPlayer.wrap(player), this);
     }
 
     /**

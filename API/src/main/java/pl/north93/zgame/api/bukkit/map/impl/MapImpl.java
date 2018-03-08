@@ -67,7 +67,7 @@ class MapImpl implements IMap
         final EntityTrackerEntry trackerEntry = getTrackerEntry(toNmsEntity(this.itemFrame));
         for (final EntityPlayer trackedPlayer : trackerEntry.trackedPlayers)
         {
-            if (trackedPlayer.getBukkitEntity() == player)
+            if (player.equals(trackedPlayer.getBukkitEntity()))
             {
                 return true;
             }
@@ -94,7 +94,7 @@ class MapImpl implements IMap
         // renderujemy mape wszystkim juz obecnym graczom
         for (final Player player : this.getTrackingPlayers())
         {
-            this.controller.handlePlayerEnter(this, INorthPlayer.asCraftPlayer(player));
+            this.controller.handlePlayerEnter(this, INorthPlayer.wrap(player));
         }
     }
 

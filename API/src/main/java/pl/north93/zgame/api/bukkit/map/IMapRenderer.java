@@ -1,8 +1,8 @@
 package pl.north93.zgame.api.bukkit.map;
 
-import org.bukkit.entity.Player;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 public interface IMapRenderer
 {
-    void render(IMapCanvas canvas, Player player) throws Exception;
+    void render(IMapCanvas canvas, INorthPlayer player) throws Exception;
 }

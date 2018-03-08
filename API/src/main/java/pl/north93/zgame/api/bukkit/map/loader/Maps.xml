@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!-- Przykładowy plik konfiguracyjny map-obrazów który należy umieścić w katalogu świata -->
+<maps>
+    <!-- Konfiguracja statycznego obrazu z obsługą tłumaczenia -->
+    <static>
+        <leftCorner x="0" y="0" z="0" />
+        <rightCorner x="0" y="0" z="0" />
+
+        <image>
+            <entry language="pl_PL" file="maps/example_pl.png" />
+            <entry language="en_GB" file="maps/example_en.png" />
+        </image>
+    </static>
+
+    <!-- Konfiguracja tablicy wyświetlającej ranking -->
+    <ranking>
+        <leftCorner x="1" y="1" z="1" />
+        <rightCorner x="1" y="1" z="1" />
+
+        <background>
+            <entry language="pl_PL" file="maps/example_pl.png" />
+            <entry language="en_GB" file="maps/example_en.png" />
+        </background>
+
+        <!-- Metoda wywołana przez ten URL musi zwrócić RankingMapConfig.IMapRankingData -->
+        <rankingData>northplatform://test</rankingData>
+    </ranking>
+</maps>

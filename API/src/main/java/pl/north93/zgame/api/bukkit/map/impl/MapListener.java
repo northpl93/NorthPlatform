@@ -26,7 +26,7 @@ public class MapListener implements AutoListener
     @EventHandler
     public void deletePlayerMapData(final PlayerQuitEvent event)
     {
-        // nie zajmujemy pamieci u pewniamy sie ze po ponownym wejsciu wszystko bedzie ok
+        // nie zajmujemy pamieci i upewniamy sie ze po ponownym wejsciu wszystko bedzie ok
         this.mapController.deletePlayerMapData(event.getPlayer());
     }
 
