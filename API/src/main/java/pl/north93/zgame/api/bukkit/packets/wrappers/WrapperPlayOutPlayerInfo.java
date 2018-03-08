@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.mojang.authlib.GameProfile;
-
 import net.minecraft.server.v1_12_R1.EnumGamemode;
 import net.minecraft.server.v1_12_R1.IChatBaseComponent;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
+
+import com.mojang.authlib.GameProfile;
+
 import pl.north93.zgame.api.global.utils.lang.SneakyThrow;
 
 public class WrapperPlayOutPlayerInfo extends AbstractWrapper<PacketPlayOutPlayerInfo>
@@ -95,7 +96,6 @@ public class WrapperPlayOutPlayerInfo extends AbstractWrapper<PacketPlayOutPlaye
             }
             catch ( Throwable e ) 
             {
-                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
