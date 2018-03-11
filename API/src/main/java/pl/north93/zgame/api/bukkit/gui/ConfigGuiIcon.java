@@ -69,7 +69,7 @@ public class ConfigGuiIcon implements IGuiIcon
 
         itemMeta.setDisplayName(!name.isEmpty() ? name : "§0");
         itemMeta.setLore(lore);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.values());
 
         final ItemStack newItemStack = this.preCreatedItemStack.clone();
         newItemStack.setItemMeta(itemMeta);
