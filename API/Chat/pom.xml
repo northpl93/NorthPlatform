@@ -10,20 +10,22 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>pl.arieals.minigame</groupId>
-    <artifactId>goldhunter</artifactId>
-    <name>MiniGame.GoldHunter</name>
+    <groupId>pl.north93.zgame.api</groupId>
+    <artifactId>chat</artifactId>
+    <name>API.Chat</name>
+    <developers>
+        <developer>
+            <id>NorthPL93</id>
+            <name>Michał Kasprzyk</name>
+            <email>northpl93@gmail.com</email>
+        </developer>
+    </developers>
 
     <dependencies>
         <dependency>
-            <groupId>pl.north93.zgame.api</groupId>
-            <artifactId>minigame</artifactId>
+            <groupId>pl.north93.zgame</groupId>
+            <artifactId>api</artifactId>
             <version>1.0-INDEV</version>
-        </dependency>
-        <dependency>
-        	<groupId>pl.arieals</groupId>
-        	<artifactId>globalshops</artifactId>
-        	<version>1.0-INDEV</version>
         </dependency>
     </dependencies>
 </project>

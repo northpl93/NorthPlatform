@@ -14,7 +14,7 @@
 
     <artifactId>api</artifactId>
     <version>1.0-INDEV</version>
-    <name>API</name>
+    <name>API.Platform</name>
     <developers>
         <developer>
             <id>NorthPL93</id>

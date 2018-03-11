@@ -23,6 +23,8 @@
         <module>../API</module>
         <module>../API/DefaultCommands</module>
         <module>../API/Instrumentation Agent</module>
+        <module>../API/Economy</module>
+        <module>../API/Chat</module>
         <module>../Lobby</module>
         <module>../Network Controller</module>
         <module>../Pets</module>
@@ -31,7 +33,6 @@
         <module>../PlayerDataShare</module>
         <module>../RestfulApi</module>
         <module>../NoPremiumAuth</module>
-        <module>../API/Economy</module>
         <module>../WebAuth</module>
         <module>../TimeGroups</module>
         <!--<module>../SkyBlockShop</module>-->
@@ -42,7 +43,7 @@
         <module>../MiniGame/GoldHunter</module>
         <module>../MiniGame/ElytraRace</module>
         <module>../MiniGame/BedWars</module>
-        <module>../MiniGame/pvp</module>
+        <!--<module>../MiniGame/pvp</module>-->
         <module>../GlobalShops</module>
         <module>../AntyCheat</module>
     </modules>

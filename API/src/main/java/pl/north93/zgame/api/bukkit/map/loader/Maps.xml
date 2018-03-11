@@ -8,8 +8,8 @@
         <rightCorner x="0" y="0" z="0" />
 
         <image>
-            <entry language="pl_PL" file="maps/example_pl.png" />
-            <entry language="en_GB" file="maps/example_en.png" />
+            <entry language="pl-PL" file="maps/example_pl.png" />
+            <entry language="en-GB" file="maps/example_en.png" />
         </image>
     </static>
 
@@ -19,8 +19,8 @@
         <rightCorner x="1" y="1" z="1" />
 
         <background>
-            <entry language="pl_PL" file="maps/example_pl.png" />
-            <entry language="en_GB" file="maps/example_en.png" />
+            <entry language="pl-PL" file="maps/example_pl.png" />
+            <entry language="en-GB" file="maps/example_en.png" />
         </background>
 
         <!-- Metoda wywołana przez ten URL musi zwrócić RankingMapConfig.IMapRankingData -->
