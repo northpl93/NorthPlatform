@@ -42,6 +42,17 @@
         </dependency>
 
         <dependency>
+            <groupId>com.ea.agentloader</groupId>
+            <artifactId>ea-agent-loader</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.10</version>
+        </dependency>
+
+        <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
             <version>${bungee-api.version}</version>
@@ -87,12 +98,6 @@
             <version>8.1.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>javax.vecmath</groupId>
-            <artifactId>vecmath</artifactId>
-            <version>1.5.2</version>
-        </dependency>
-
         <dependency> <!-- We doesn't have it in BungeeCord -->
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -103,17 +108,6 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.6</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ea.agentloader</groupId>
-            <artifactId>ea-agent-loader</artifactId>
-            <version>1.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.9.10</version>
         </dependency>
 
         <!-- MONGO DB STUFF -->
