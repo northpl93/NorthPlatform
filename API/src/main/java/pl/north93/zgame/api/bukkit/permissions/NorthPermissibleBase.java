@@ -1,7 +1,9 @@
 package pl.north93.zgame.api.bukkit.permissions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.permissions.PermissibleBase;
@@ -14,20 +16,17 @@ import org.bukkit.plugin.Plugin;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
-
 public class NorthPermissibleBase extends PermissibleBase
 {
-    private final PermissibleBase           original;
-    private final Object2BooleanMap<String> cache;
-    private final List<String>              asterisk;
+    private final PermissibleBase      original;
+    private final Map<String, Boolean> cache;
+    private final List<String>         asterisk;
 
     public NorthPermissibleBase(final PermissibleBase original, final ServerOperator player)
     {
         super(player);
         this.original = original;
-        this.cache = new Object2BooleanArrayMap<>(16);
+        this.cache = new HashMap<>(16);
         this.asterisk = new ArrayList<>();
     }
 
@@ -62,7 +61,7 @@ public class NorthPermissibleBase extends PermissibleBase
 
         if (this.cache.containsKey(perm))
         {
-            return this.cache.getBoolean(perm);
+            return this.cache.get(perm);
         }
 
         if (! this.original.hasPermission(permission))
@@ -85,7 +84,7 @@ public class NorthPermissibleBase extends PermissibleBase
 
         if (this.cache.containsKey(perm))
         {
-            return this.cache.getBoolean(perm);
+            return this.cache.get(perm);
         }
 
         if (! this.original.hasPermission(permission))

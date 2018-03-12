@@ -4,18 +4,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.carrotsearch.hppc.IntObjectHashMap;
+import com.carrotsearch.hppc.IntObjectMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.md_5.bungee.api.ChatColor;
 
 public abstract class Window
 {
-    private final Int2ObjectMap<ClickHandler> listeners;
+    private final IntObjectMap<ClickHandler> listeners;
     private Inventory inventory;
     private boolean   isOpened;
     private Player    holder;
@@ -26,7 +27,7 @@ public abstract class Window
     {
         this.title = ChatColor.translateAlternateColorCodes('&', title);
         this.size = size;
-        this.listeners = new Int2ObjectOpenHashMap<>();
+        this.listeners = new IntObjectHashMap<>();
     }
 
     public final void close()

@@ -1,16 +1,16 @@
 package pl.north93.zgame.api.global.metadata;
 
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.collections.maps.CaseInsensitiveMap;
-
 public final class MetaKey
 {
-    private static final Map<String, MetaKey> KEY_CACHE = new CaseInsensitiveMap<>();
+    private static final Map<String, MetaKey> KEY_CACHE = new HashMap<>();
 
     public static MetaKey get(final String keyName)
     {
@@ -23,7 +23,10 @@ public final class MetaKey
         {
             throw new IllegalArgumentException("keyName can't be null");
         }
-        final MetaKey metaKey = KEY_CACHE.computeIfAbsent(keyName, k -> new MetaKey(keyName, persist));
+
+        final String normalizedKey = keyName.toLowerCase(Locale.ROOT); // klucz przyjmie wielkosc znaków jak przy pierwszym wywolaniu
+        final MetaKey metaKey = KEY_CACHE.computeIfAbsent(normalizedKey, k -> new MetaKey(keyName, persist));
+
         if (metaKey.persist != persist)
         {
             throw new IllegalArgumentException("Key " + keyName + " can't change persist state after creation!");

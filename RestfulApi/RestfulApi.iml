@@ -44,7 +44,7 @@
     <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.17.Final" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-jdk14:1.7.25" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:17.0" level="project" />
-    <orderEntry type="library" name="Maven: it.unimi.dsi:fastutil:8.1.1" level="project" />
+    <orderEntry type="library" name="Maven: com.carrotsearch:hppc:0.7.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.7" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.6" level="project" />
     <orderEntry type="library" name="Maven: org.mongodb:mongo-java-driver:3.6.1" level="project" />

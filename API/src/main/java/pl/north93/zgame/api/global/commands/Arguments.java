@@ -31,7 +31,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.SimpleEnum;
 import org.diorite.utils.math.DioriteMathUtils;
 import org.diorite.utils.reflections.DioriteReflectionUtils;
 
@@ -148,42 +147,6 @@ public class Arguments implements Iterable<String>
             }
         }
         return false;
-    }
-
-    /**
-     * Get value from enum for given argument,
-     * it will try match it as name or ordinal id.
-     * Name is ignore-case.
-     *
-     * @param enumClass class of enum.
-     * @param index     index of element, 0 is first element.
-     * @param <T>       type of enum.
-     *
-     * @return enum element or null.
-     */
-    public <T extends SimpleEnum<T>> T asSimpleEnumValue(final Class<T> enumClass, final int index)
-    {
-        final String name = this.asString(index);
-        final int num = asInt(name, - 1);
-        return DioriteReflectionUtils.getSimpleEnumValueSafe(name, num, enumClass);
-    }
-
-    /**
-     * Get value from enum for given argument,
-     * it will try match it as name or ordinal id.
-     * Name is ignore-case.
-     *
-     * @param index index of element, 0 is first element.
-     * @param def   default value, can't be null.
-     * @param <T>   type of enum.
-     *
-     * @return enum element or default.
-     */
-    public <T extends SimpleEnum<T>> T asSimpleEnumValue(final int index, final T def)
-    {
-        final String name = this.asString(index);
-        final int num = asInt(name, - 1);
-        return DioriteReflectionUtils.getSimpleEnumValueSafe(name, num, def);
     }
 
     /**

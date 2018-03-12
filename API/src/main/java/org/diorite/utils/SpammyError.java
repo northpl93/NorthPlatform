@@ -26,8 +26,8 @@ package org.diorite.utils;
 
 import java.util.concurrent.TimeUnit;
 
-import it.unimi.dsi.fastutil.objects.Object2LongMap;
-import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
+import com.carrotsearch.hppc.ObjectLongHashMap;
+import com.carrotsearch.hppc.ObjectLongMap;
 
 /**
  * Small utility class useful when we have something to log, that can be invoked very often and we don't want make spam in output. <br>
@@ -35,12 +35,7 @@ import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
  */
 public final class SpammyError
 {
-    private static final Object2LongMap<Object> errors = new Object2LongOpenHashMap<>(10, 0.1f);
-
-    static
-    {
-        errors.defaultReturnValue(0);
-    }
+    private static final ObjectLongMap<Object> errors = new ObjectLongHashMap<>(10, 0.1f);
 
     private SpammyError()
     {
@@ -56,7 +51,7 @@ public final class SpammyError
     public static void err(final String message, final int secondsBetweenLogs, final Object key)
     {
         final long currentTime = System.currentTimeMillis();
-        final long nextTime = errors.getLong(key) + TimeUnit.SECONDS.toMillis(secondsBetweenLogs);
+        final long nextTime = errors.get(key) + TimeUnit.SECONDS.toMillis(secondsBetweenLogs);
         if (currentTime >= nextTime)
         {
             System.err.println(message);
@@ -74,7 +69,7 @@ public final class SpammyError
     public static void out(final String message, final int secondsBetweenLogs, final Object key)
     {
         final long currentTime = System.currentTimeMillis();
-        final long nextTime = errors.getLong(key) + TimeUnit.SECONDS.toMillis(secondsBetweenLogs);
+        final long nextTime = errors.get(key) + TimeUnit.SECONDS.toMillis(secondsBetweenLogs);
         if (currentTime >= nextTime)
         {
             System.out.println(message);

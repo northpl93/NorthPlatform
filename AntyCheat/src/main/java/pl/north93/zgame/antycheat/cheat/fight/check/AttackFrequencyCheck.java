@@ -3,9 +3,10 @@ package pl.north93.zgame.antycheat.cheat.fight.check;
 import java.time.Duration;
 import java.time.Instant;
 
-import it.unimi.dsi.fastutil.longs.LongArrayList;
-import it.unimi.dsi.fastutil.longs.LongList;
-import it.unimi.dsi.fastutil.longs.LongListIterator;
+import com.carrotsearch.hppc.LongArrayList;
+import com.carrotsearch.hppc.LongCollection;
+import com.carrotsearch.hppc.cursors.LongCursor;
+
 import pl.north93.zgame.antycheat.analysis.FalsePositiveProbability;
 import pl.north93.zgame.antycheat.analysis.SingleAnalysisResult;
 import pl.north93.zgame.antycheat.analysis.timeline.TimelineAnalyser;
@@ -28,7 +29,7 @@ public class AttackFrequencyCheck implements TimelineAnalyser
     @Override
     public SingleAnalysisResult analyse(final PlayerData data, final TimelineWalker timelineWalker)
     {
-        final LongList delays = this.collectAllDelays(timelineWalker);
+        final LongCollection delays = this.collectAllDelays(timelineWalker);
 
         final int size = delays.size();
         if (size < MIN_HITS_TO_ANALYSE)
@@ -119,33 +120,32 @@ public class AttackFrequencyCheck implements TimelineAnalyser
         result.addViolation(FightViolation.HIT_RATIO, "Small standard deviation", falsePositiveProbability);
     }
 
-    private double standardDeviation(final LongList numbers, final double average)
+    private double standardDeviation(final LongCollection numbers, final double average)
     {
         final int size = numbers.size();
 
         double deviation = 0, sum = 0;
-        for (int i = 0; i < size; i++)
+        for (final LongCursor entry : numbers)
         {
-            sum = sum + Math.pow(numbers.getLong(i) - average, 2);
+            sum = sum + Math.pow(entry.value - average, 2);
             deviation = Math.sqrt(sum / size);
         }
 
         return deviation;
     }
 
-    private long sum(final LongList longs)
+    private long sum(final LongCollection longs)
     {
         long sum = 0;
-        final LongListIterator iterator = longs.iterator();
-        while (iterator.hasNext())
+        for (final LongCursor aLong : longs)
         {
-            sum += iterator.nextLong();
+            sum += aLong.value;
         }
 
         return sum;
     }
 
-    private LongList collectAllDelays(final TimelineWalker timelineWalker)
+    private LongCollection collectAllDelays(final TimelineWalker timelineWalker)
     {
         final LongArrayList delays = new LongArrayList(16);
 

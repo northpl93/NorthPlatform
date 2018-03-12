@@ -5,6 +5,10 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 import java.time.Duration;
 
+import com.carrotsearch.hppc.ObjectIntHashMap;
+import com.carrotsearch.hppc.ObjectIntMap;
+import com.carrotsearch.hppc.cursors.ObjectIntCursor;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,8 +25,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.event.PlayerRevivedEvent;
@@ -94,7 +96,7 @@ public class PlayerItemsListener implements Listener
         final Player player = event.getEntity();
         final ItemStack[] storageContents = player.getInventory().getStorageContents();
 
-        final Object2IntMap<Material> trackedMaterials = new Object2IntOpenHashMap<>(5, 0.01f);
+        final ObjectIntMap<Material> trackedMaterials = new ObjectIntHashMap<>(5, 0.01f);
         for (int i = 0; i < storageContents.length; i++)
         {
             final ItemStack item = storageContents[i];
@@ -114,7 +116,7 @@ public class PlayerItemsListener implements Listener
     }
 
     // dodaje sledzony material do mapy
-    private void addTrackedMaterial(final Object2IntMap<Material> map, final ItemStack itemStack)
+    private void addTrackedMaterial(final ObjectIntMap<Material> map, final ItemStack itemStack)
     {
         final Material type = itemStack.getType();
         if (type != Material.IRON_INGOT && type != Material.GOLD_INGOT && type != Material.DIAMOND && type != Material.EMERALD && !(type == Material.INK_SACK && itemStack.getDurability() == 4))
@@ -122,12 +124,12 @@ public class PlayerItemsListener implements Listener
             return;
         }
 
-        final int anInt = map.getInt(type);
+        final int anInt = map.get(type);
         map.put(type, anInt + itemStack.getAmount());
     }
 
     // daje przedmioty z mapy zabojcy danego gracza
-    private void giveItemsToKiller(final Object2IntMap<Material> items, final Player death)
+    private void giveItemsToKiller(final ObjectIntMap<Material> items, final Player death)
     {
         final DamageEntry lastDamageByPlayer = DamageTracker.get().getContainer(death).getLastDamageByPlayer(Duration.ofSeconds(10));
         if (lastDamageByPlayer == null)
@@ -144,10 +146,10 @@ public class PlayerItemsListener implements Listener
             return;
         }
 
-        for (final Object2IntMap.Entry<Material> entry : items.object2IntEntrySet())
+        for (final ObjectIntCursor<Material> entry : items)
         {
-            final Material type = entry.getKey();
-            int amount = entry.getIntValue();
+            final Material type = entry.key;
+            int amount = entry.value;
             while (amount > 0)
             {
                 final ItemStack itemStack = new ItemStack(type, Math.min(amount, 64), (byte)(type == Material.INK_SACK ? 4 : 0));
@@ -155,8 +157,8 @@ public class PlayerItemsListener implements Listener
                 amount -= 64;
             }
 
-            final String messageKey = PluralForm.transformKey("die.received_items." + type, entry.getIntValue());
-            this.messages.sendMessage(lastDamager, messageKey, entry.getIntValue());
+            final String messageKey = PluralForm.transformKey("die.received_items." + type, entry.value);
+            this.messages.sendMessage(lastDamager, messageKey, entry.value);
         }
     }
 

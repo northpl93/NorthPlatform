@@ -4,26 +4,27 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.carrotsearch.hppc.IntObjectHashMap;
+import com.carrotsearch.hppc.IntObjectMap;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import pl.north93.zgame.api.global.redis.rpc.IRpcObjectDescription;
 
 class RpcObjectDescription implements IRpcObjectDescription
 {
-    private final Class<?>                            classInterface;
-    private final Integer                             classId;
-    private final Map<Method, RpcMethodDescription>   methodToDescription;
-    private final Int2ObjectMap<RpcMethodDescription> methodDesc;
+    private final Class<?>                           classInterface;
+    private final Integer                            classId;
+    private final Map<Method, RpcMethodDescription>  methodToDescription;
+    private final IntObjectMap<RpcMethodDescription> methodDesc;
 
     public RpcObjectDescription(final Class<?> classInterface)
     {
         this.classInterface = classInterface;
         this.classId = this.classInterface.getName().hashCode();
         this.methodToDescription = new HashMap<>();
-        this.methodDesc = new Int2ObjectArrayMap<>();
+        this.methodDesc = new IntObjectHashMap<>();
         this.populateMethodList();
     }
 

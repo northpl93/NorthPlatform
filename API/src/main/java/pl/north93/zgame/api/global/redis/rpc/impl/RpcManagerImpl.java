@@ -3,16 +3,15 @@ package pl.north93.zgame.api.global.redis.rpc.impl;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.carrotsearch.hppc.IntObjectHashMap;
+import com.carrotsearch.hppc.IntObjectMap;
 import com.lambdaworks.redis.api.sync.RedisCommands;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.storage.StorageConnector;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcTarget;
@@ -21,6 +20,7 @@ import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcExceptionInfo;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcInvokeMessage;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcResponseMessage;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
+import pl.north93.zgame.api.global.storage.StorageConnector;
 
 public class RpcManagerImpl extends Component implements IRpcManager
 {
@@ -30,10 +30,10 @@ public class RpcManagerImpl extends Component implements IRpcManager
     private RedisSubscriber                         redisSubscriber;
     @Inject
     private TemplateManager                         msgPack;
-    private final RpcProxyCache                     rpcProxyCache      = new RpcProxyCache(this);
-    private final Int2ObjectMap<RpcResponseHandler> responseHandlerMap = new Int2ObjectArrayMap<>();
-    private final Int2ObjectMap<RpcResponseLock>    locks              = new Int2ObjectArrayMap<>();
-    private final Map<Class<?>, RpcObjectDescription> descriptionCache = new ConcurrentHashMap<>();
+    private final RpcProxyCache                       rpcProxyCache      = new RpcProxyCache(this);
+    private final IntObjectMap<RpcResponseHandler>    responseHandlerMap = new IntObjectHashMap<>();
+    private final IntObjectMap<RpcResponseLock>       locks              = new IntObjectHashMap<>();
+    private final Map<Class<?>, RpcObjectDescription> descriptionCache   = new ConcurrentHashMap<>();
 
     @Override
     protected void enableComponent()

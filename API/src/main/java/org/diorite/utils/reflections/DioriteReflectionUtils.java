@@ -30,10 +30,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.diorite.utils.SimpleEnum;
 
 @SuppressWarnings({"unchecked", "ObjectEquality"})
 public final class DioriteReflectionUtils
@@ -308,70 +304,6 @@ public final class DioriteReflectionUtils
         {
             return new ReflectField<>(field);
         }
-    }
-
-    /**
-     * Safe method to get one of enum values by name or ordinal,
-     * use -1 as id, to use only name,
-     * and null or empty string for name, to use only ordinal id.
-     *
-     * @param name      name of enum field (ignore-case)
-     * @param id        ordinal id.
-     * @param enumClass class of enum.
-     * @param <T>       type of enum.
-     *
-     * @return enum element or null.
-     */
-    public static <T extends SimpleEnum<T>> T getSimpleEnumValueSafe(final String name, final int id, final Class<? extends SimpleEnum<T>> enumClass)
-    {
-        return getSimpleEnumValueSafe(name, id, enumClass, null);
-    }
-
-    /**
-     * Safe method to get one of enum values by name or ordinal,
-     * use -1 as id, to use only name,
-     * and null or empty string for name, to use only ordinal id.
-     *
-     * @param name name of enum field (ignore-case)
-     * @param id   ordinal id.
-     * @param def  default value, can't be null.
-     * @param <T>  type of enum.
-     *
-     * @return enum element or def.
-     */
-    public static <T extends SimpleEnum<T>> T getSimpleEnumValueSafe(final String name, final int id, final T def)
-    {
-        return getSimpleEnumValueSafe(name, id, def.getClass(), def);
-    }
-
-    private static final Map<Class<?>, Method> simpleEnumMethods = new HashMap<>(40);
-
-    private static <T extends SimpleEnum<T>> T getSimpleEnumValueSafe(final String name, final int id, Class<?> enumClass, final Object def)
-    {
-        do
-        {
-            try
-            {
-                Method m = simpleEnumMethods.get(enumClass);
-                if (m == null)
-                {
-                    m = enumClass.getMethod("values");
-                    simpleEnumMethods.put(enumClass, m);
-                }
-                final SimpleEnum<?>[] objects = (SimpleEnum<?>[]) m.invoke(null);
-                for (final SimpleEnum<?> object : objects)
-                {
-                    if (object.name().equalsIgnoreCase(name) || (object.ordinal() == id))
-                    {
-                        return (T) object;
-                    }
-                }
-            } catch (final Exception ignored)
-            {
-            }
-            enumClass = enumClass.getSuperclass();
-        } while ((enumClass != null) && ! (enumClass.equals(Object.class)));
-        return (T) def;
     }
 
     /**

@@ -1,11 +1,11 @@
 package pl.north93.zgame.api.global.permissions;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.config.ConfigUpdatedNetEvent;
@@ -17,7 +17,7 @@ public class PermissionsManager extends Component
 {
     @Inject @NetConfig(type = GroupsContainer.class, id = "groups")
     private IConfig<GroupsContainer> groups;
-    private final Set<Group> cachedGroups = new ObjectArraySet<>();
+    private final Set<Group> cachedGroups = new HashSet<>();
     private Group            defaultGroup;
 
     @Override

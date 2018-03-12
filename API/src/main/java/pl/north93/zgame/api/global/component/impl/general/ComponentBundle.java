@@ -2,6 +2,7 @@ package pl.north93.zgame.api.global.component.impl.general;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,7 +13,6 @@ import com.google.common.collect.Sets;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.ComponentDescription;
@@ -153,7 +153,7 @@ public class ComponentBundle implements IComponentBundle
 
     private Set<String> createPackageList()
     {
-        final Set<String> packages = new ObjectArraySet<>();
+        final Set<String> packages = new HashSet<>();
 
         final String mainClass = this.description.getMainClass();
         if (this.description.getPackages().isEmpty())
