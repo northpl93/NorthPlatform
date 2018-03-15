@@ -480,12 +480,6 @@ public class GoldHunterPlayer implements ITickable
     
     public String[] getMessageLines(String msgKey, Object... args)
     {
-        System.out.println("Dupa");
-        player.sendMessage(player.spigot().getLocale());
-        player.sendMessage(player.getLocale());
-        player.sendMessage(getMinecraftPlayer().locale);
-        Locale locale = Locale.forLanguageTag(player.getLocale());
-        player.sendMessage(locale + "");
         return messages.getMessage(player.getLocale(), msgKey, args).split("\n");
     }
     
