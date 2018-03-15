@@ -1,5 +1,6 @@
 package pl.arieals.minigame.goldhunter.player;
 
+import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.logging.log4j.Logger;
@@ -245,9 +246,20 @@ public class GoldHunterPlayer implements ITickable
         Preconditions.checkArgument(newClass != null);
         selectedClass = newClass;
         
-        if ( isIngame() && player.getLocation().distanceSquared(arena.getTeamSpawn(team)) <= 9 )
+        if ( isIngame() )
         {
-            changeClass();
+            if ( player.getLocation().distanceSquared(arena.getTeamSpawn(team)) <= 9 )
+            {
+                changeClass();
+            }
+            else 
+            {
+                sendMessage("class_will_be_changed_after_respawn");
+            }
+        }
+        else
+        {
+            sendMessage("selected_class");
         }
     }
     
@@ -463,11 +475,17 @@ public class GoldHunterPlayer implements ITickable
     
     public String getMessage(String msgKey, Object... args)
     {
-        return messages.getMessage(player.getLocale(), msgKey, args);
+        return messages.getMessage(player.getLocale(), msgKey, args); 
     }
     
     public String[] getMessageLines(String msgKey, Object... args)
     {
+        System.out.println("Dupa");
+        player.sendMessage(player.spigot().getLocale());
+        player.sendMessage(player.getLocale());
+        player.sendMessage(getMinecraftPlayer().locale);
+        Locale locale = Locale.forLanguageTag(player.getLocale());
+        player.sendMessage(locale + "");
         return messages.getMessage(player.getLocale(), msgKey, args).split("\n");
     }
     

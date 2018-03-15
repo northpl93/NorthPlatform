@@ -15,6 +15,8 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.server.v1_12_R1.MinecraftServer;
 
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
+import pl.arieals.minigame.goldhunter.effect.BetrayalEffect;
+import pl.arieals.minigame.goldhunter.effect.ShadowEffect;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
 import pl.north93.zgame.api.bukkit.tick.Tick;
@@ -75,6 +77,9 @@ public class StatsTracker implements ITickable
         Deque<DamagerEntry> lastDamagers = damaged.getStatsTracker().lastDamagers;
         lastDamagers.removeIf(entry -> entry.player == this.player);
         lastDamagers.push(new DamagerEntry(player));
+        
+        player.getEffectTracker().removeEffect(BetrayalEffect.class);
+        player.getEffectTracker().removeEffect(ShadowEffect.class);
         
         logger.debug("{} lastdamagers: {}", damaged, lastDamagers);
     }
