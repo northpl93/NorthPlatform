@@ -33,6 +33,7 @@ import pl.arieals.minigame.bedwars.shop.upgrade.IUpgrade;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.impl.GuiTracker;
+import pl.north93.zgame.api.bukkit.utils.ChatUtils;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -106,7 +107,7 @@ public class UpgradeManager
         if (playerData == null || playerData.getTeam() == null)
         {
             this.logger.log(SEVERE, "PlayerData or team is null in getNameColor {0} on arena {1}", new Object[]{playerData, arena.getId()});
-            return "c";
+            return ChatUtils.COLOR_CHAR + "c";
         }
         final Team team = playerData.getTeam();
         final int actualLevel = team.getUpgrades().getUpgradeLevel(upgrade);
@@ -114,10 +115,10 @@ public class UpgradeManager
         final UpgradeInstallEvent event = this.apiCore.callEvent(new UpgradeInstallEvent(arena, team, player, upgrade, actualLevel + 1, false));
         if (event.isCancelled())
         {
-            return "c";
+            return ChatUtils.COLOR_CHAR + "c";
         }
 
-        return "a";
+        return ChatUtils.COLOR_CHAR + "a";
     }
 
     @UriHandler("/minigame/bedwars/upgrade/:name/:playerId/composeLore")

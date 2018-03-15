@@ -103,9 +103,9 @@ public final class ShopGuiManager
         final ItemPreBuyEvent preBuyEvent = this.apiCore.callEvent(new ItemPreBuyEvent(getArena(player), player, shopEntry, price, true));
         if (preBuyEvent.getBuyStatus().canBuy())
         {
-            return "a";
+            return ChatUtils.COLOR_CHAR + "a";
         }
-        return "c";
+        return ChatUtils.COLOR_CHAR + "c";
     }
 
     @UriHandler("/minigame/bedwars/shop/lore/:name/:playerId")
