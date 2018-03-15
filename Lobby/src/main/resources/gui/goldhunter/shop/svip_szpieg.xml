@@ -34,7 +34,7 @@
             </button>
             
             <button pos="4,2">
-            	<icon id="IRON_HELMET" name="@svip.szpieg.armor1.name$color" lore="@svip.szpieg.armor1.lore$color,status,price"/>
+            	<icon id="IRON_BOOTS" name="@svip.szpieg.armor1.name$color" lore="@svip.szpieg.armor1.lore$color,status,price"/>
             	<metadata key="item" value="svip.spy.ironboots" />
             	<onClick>buy</onClick>
             </button>

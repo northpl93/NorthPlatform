@@ -9,7 +9,7 @@
     <container pos="1,0" size="7,5">
         <content>
             <button pos="3,0">
-                <icon id="WATCH" name="@wojownik.rycerz.timefolder.name" />
+                <icon id="WATCH" name="@wojownik.rycerz.timefolder.name$color" />
             </button>
 
             <button pos="1,2">
@@ -49,7 +49,7 @@
             
             <button pos="6,4">
             	<icon id="minecraft:iron_door" name="@main.return" />
-            	<metadata key="guiName" value="lucznik_truciciel" />
+            	<metadata key="guiName" value="wojownik_rycerz" />
             	<onClick>open</onClick>
             </button>
         </content>

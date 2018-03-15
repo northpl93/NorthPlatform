@@ -9,7 +9,7 @@
     <container pos="1,0" size="7,5">
         <content>
             <button pos="3,0">
-                <icon id="minecraft:potion" name="@medyk.polowy.potionfolder.name" >
+                <icon id="minecraft:potion" name="@medyk.polowy.potionfolder.name$color" >
                 	<potionMeta>
             			<potionData type="INSTANT_HEAL" />
             		</potionMeta>

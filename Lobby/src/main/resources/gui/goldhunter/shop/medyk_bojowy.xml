@@ -29,8 +29,8 @@
             	<icon id="WOOD" name="@medyk.bojowy.budulecfolder.name$color" lore="@medyk.bojowy.budulecfolder.lore$color,count,max" />
             	<metadata key="guiName" value="medyk_bojowy_budulec" />
             	<metadata key="folder" value="true" />
-            	<metadata key="item3" value="medic.battle.budulec:1" />
-            	<metadata key="item3" value="medic.battle.budulec:2" />
+            	<metadata key="item1" value="medic.battle.budulec:1" />
+            	<metadata key="item2" value="medic.battle.budulec:2" />
             	<metadata key="item3" value="medic.battle.budulec:3" />
             	<onClick>open</onClick>
             </button>

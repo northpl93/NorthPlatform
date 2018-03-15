@@ -26,7 +26,6 @@
             	<metadata key="item1" value="engineer.dispenser.time:1" />
             	<metadata key="item2" value="engineer.dispenser.time:2" />
             	<metadata key="item3" value="engineer.dispenser.time:3" />
-            	<metadata key="item4" value="engineer.dispenser.time:4" />
             	<onClick>open</onClick>
             </button>
             
@@ -37,12 +36,11 @@
             	<metadata key="item1" value="engineer.dispenser.time2:1" />
             	<metadata key="item2" value="engineer.dispenser.time2:2" />
             	<metadata key="item3" value="engineer.dispenser.time2:3" />
-            	<metadata key="item4" value="engineer.dispenser.time2:4" />
             	<onClick>open</onClick>
             </button>
             
             <button pos="5,2">
-            	<icon id="IRON_HELMET" name="@technik.dozownik.armor1.name$color" lore="@technik.dozownik.armor1.lore$color,status,price"/>
+            	<icon id="CHAINMAIL_CHESTPLATE" name="@technik.dozownik.armor1.name$color" lore="@technik.dozownik.armor1.lore$color,status,price"/>
             	<metadata key="item" value="engineer.dispenser.chainchest" />
             	<onClick>buy</onClick>
             </button>
@@ -54,7 +52,6 @@
             	<metadata key="item1" value="engineer.dispenser.budulec:1" />
             	<metadata key="item2" value="engineer.dispenser.budulec:2" />
             	<metadata key="item3" value="engineer.dispenser.budulec:3" />
-            	<metadata key="item4" value="engineer.dispenser.budulec:4" />
             	<onClick>open</onClick>
             </button>
             

@@ -10,7 +10,7 @@
         <content>
 
             <button pos="3,0">
-            	<icon id="STONE_SWORD" name="@main.wojownik.berserker.name" />
+            	<icon id="STONE_SWORD" name="@main.wojownik.berserker.name$color" />
             </button>
             
             <button pos="1,2">
@@ -26,13 +26,13 @@
             </button>
             
             <button pos="2,2">
-            	<icon id="IRON_HELMET" name="@wojownik.berserker.armor1.name$color" lore="@wojownik.berserker.armor1.lore$color,status,price"/>
+            	<icon id="IRON_CHESTPLATE" name="@wojownik.berserker.armor1.name$color" lore="@wojownik.berserker.armor1.lore$color,status,price"/>
             	<metadata key="item" value="warrior.berserker.ironchest" />
             	<onClick>buy</onClick>
             </button>
             
             <button pos="4,2">
-            	<icon id="CHAINMAIL_CHESTPLATE" name="@wojownik.berserker.miecz1.name$color" lore="@wojownik.berserker.miecz1.lore$color,status,price"/>
+            	<icon id="IRON_SWORD" name="@wojownik.berserker.miecz1.name$color" lore="@wojownik.berserker.miecz1.lore$color,status,price"/>
             	<metadata key="item" value="warrior.berserker.ironsword" />
             	<onClick>buy</onClick>
             </button>
@@ -49,7 +49,7 @@
             
             <button pos="6,4">
             	<icon id="minecraft:iron_door" name="@main.return" />
-            	<metadata key="guiName" value="lucznik" />
+            	<metadata key="guiName" value="wojownik" />
             	<onClick>open</onClick>
             </button>
         </content>

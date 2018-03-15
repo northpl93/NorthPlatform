@@ -9,7 +9,7 @@
     <container pos="1,0" size="7,5">
         <content>
             <button pos="3,0">
-                <icon id="WOOD" name="@wojownik.rycerz.budulecfolder.name" />
+                <icon id="WOOD" name="@wojownik.rycerz.budulecfolder.name$color" />
             </button>
 
             <button pos="1,2">
@@ -35,7 +35,7 @@
             
             <button pos="6,4">
             	<icon id="minecraft:iron_door" name="@main.return" />
-            	<metadata key="guiName" value="lucznik_truciciel" />
+            	<metadata key="guiName" value="wojownik_rycerz" />
             	<onClick>open</onClick>
             </button>
         </content>

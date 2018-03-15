@@ -10,11 +10,11 @@
         <content>
 
             <button pos="3,0">
-            	<icon id="DIAMOND_CHESTPLATE" name="@main.wojownik.rycerz.name" />
+            	<icon id="DIAMOND_CHESTPLATE" name="@main.wojownik.rycerz.name$color" />
             </button>
             
             <button pos="1,2">
-            	<icon id="DIAMOND_CHESTPLATE" name="@buy.wojownik.rycerz.name$color" lore="@buy.wojownik.rycerz.name$color$price$status" />
+            	<icon id="DIAMOND_CHESTPLATE" name="@buy.wojownik.rycerz.name$color" lore="@buy.wojownik.rycerz.lore$color,price,status" />
             	<metadata key="item" value="class.warrior.knight" />
             	<onClick>buy</onClick>
             </button>
@@ -30,12 +30,12 @@
             </button>
             
             <button pos="4,2">
-            	<icon id="IRON_HELMET" name="@wojownik.rycerz.helmet1.name$color" lore="@wojownik.rycerz.helmet1.lore$color,status,price"/>
+            	<icon id="IRON_CHESTPLATE" name="@wojownik.rycerz.helmet1.name$color" lore="@wojownik.rycerz.helmet1.lore$color,status,price"/>
             	<metadata key="item" value="warrior.knight.ironchest" />
             	<onClick>buy</onClick>
             </button>
             
-            <button pos="6,2">
+            <button pos="5,2">
             	<icon id="WOOD" name="@wojownik.rycerz.budulecfolder.name$color" lore="@wojownik.rycerz.budulecfolder.lore$color,count,max" />
             	<metadata key="guiName" value="wojownik_rycerz_budulec" />
             	<metadata key="folder" value="true" />
@@ -47,7 +47,7 @@
             
             <button pos="6,4">
             	<icon id="minecraft:iron_door" name="@main.return" />
-            	<metadata key="guiName" value="lucznik" />
+            	<metadata key="guiName" value="wojownik" />
             	<onClick>open</onClick>
             </button>
         </content>

@@ -9,7 +9,7 @@
     <container pos="1,0" size="7,5">
         <content>
             <button pos="3,0">
-                <icon id="SMOOTH_BRICK" name="@vip.obronca.timefolder.name" />
+                <icon id="SMOOTH_BRICK" name="@vip.obronca.timefolder.name$color" />
             </button>
 
             <button pos="1,2">

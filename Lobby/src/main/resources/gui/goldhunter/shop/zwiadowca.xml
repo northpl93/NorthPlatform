@@ -9,7 +9,7 @@
     <container pos="1,0" size="7,5">
         <content>
             <button pos="3,0">
-                <icon id="FISHING_ROD" name="@main.zwiadowca.name" />
+                <icon id="FISHING_ROD" name="@main.zwiadowca.name" lore="@main.zwiadowca.lore"/>
             </button>
 
             <button pos="1,2">

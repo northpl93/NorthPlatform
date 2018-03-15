@@ -20,7 +20,7 @@
             </button>
             
             <button pos="3,2">
-            	<icon id="WATCH" name="@medyk.polowy.timefolder.name$color" lore="@medyk.polowy.timefolder.lore$color,count,max"/>
+            	<icon id="WATCH" name="@medyk.polowy.timefolder.name$color" lore="@medyk.polowy.timefolder.lore$color,status,price"/>
             	<metadata key="guiName" value="medyk_polowy_czas" />
             	<metadata key="folder" value="true" />
             	<metadata key="item1" value="medic.healer.time:1" />
@@ -48,8 +48,8 @@
             	<icon id="WOOD" name="@medyk.polowy.budulecfolder.name$color" lore="@medyk.polowy.budulecfolder.lore$color,count,max" />
             	<metadata key="guiName" value="medyk_polowy_budulec" />
             	<metadata key="folder" value="true" />
-            	<metadata key="item3" value="medic.healer.budulec:1" />
-            	<metadata key="item3" value="medic.healer.budulec:2" />
+            	<metadata key="item1" value="medic.healer.budulec:1" />
+            	<metadata key="item2" value="medic.healer.budulec:2" />
             	<metadata key="item3" value="medic.healer.budulec:3" />
             	<onClick>open</onClick>
             </button>

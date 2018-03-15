@@ -9,7 +9,7 @@
     <container pos="1,0" size="7,5">
         <content>
             <button pos="3,0">
-                <icon id="WOOD" name="@zwiadowca.sprinter.budulecfolder.name" />
+                <icon id="WOOD" name="@zwiadowca.sprinter.budulecfolder.name$color" />
             </button>
 
             <button pos="1,2">
@@ -19,14 +19,14 @@
             	<onClick>buy</onClick>
             </button>
             
-            <button pos="2,2">
+            <button pos="3,2">
             	<icon id="WOOD" name="@zwiadowca.sprinter.budulec1.name$color" lore="@zwiadowca.sprinter.budulec1.lore$color,status,price" />
             	<metadata key="item" value="scout.sprinter.budulec" />
             	<metadata key="level" value="2" />
             	<onClick>buy</onClick>
             </button>
             
-            <button pos="3,2">
+            <button pos="5,2">
             	<icon id="WOOD" name="@zwiadowca.sprinter.budulec1.name$color" lore="@zwiadowca.sprinter.budulec1.lore$color,status,price" />
             	<metadata key="item" value="scout.sprinter.budulec" />
             	<metadata key="level" value="3" />

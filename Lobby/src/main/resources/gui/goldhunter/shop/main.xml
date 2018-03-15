@@ -31,7 +31,7 @@
             </button>
             
             <button pos="3,2">
-            	<icon id="minecraft:dye" name="@main.medyk.name" lore="@main.medyk.lore" />
+            	<icon id="minecraft:dye" data="1" name="@main.medyk.name" lore="@main.medyk.lore" />
             	<metadata key="guiName" value="medyk" />
             	<onClick>open</onClick>
             </button>

@@ -39,7 +39,7 @@
             </button>
             
             <button pos="5,2">
-            	<icon id="IRON_HELMET" name="@vip.obronca.armor1.name$color" lore="@vip.obronca.armor1.lore$color,status,price"/>
+            	<icon id="DIAMOND_CHESTPLATE" name="@vip.obronca.armor1.name$color" lore="@vip.obronca.armor1.lore$color,status,price"/>
             	<metadata key="item" value="vip.defender.diamondchest" />
             	<onClick>buy</onClick>
             </button>

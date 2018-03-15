@@ -26,7 +26,7 @@
             </button>
             
             <button pos="3,2">
-            	<icon id="IRON_HELMET" name="@technik.architekt.armor1.name$color" lore="@technik.architekt.armor1.lore$color,status,price"/>
+            	<icon id="CHAINMAIL_CHESTPLATE" name="@technik.architekt.armor1.name$color" lore="@technik.architekt.armor1.lore$color,status,price"/>
             	<metadata key="item" value="engineer.architect.chainchest" />
             	<onClick>buy</onClick>
             </button>

@@ -9,7 +9,7 @@
     <container pos="1,0" size="7,5">
         <content>
             <button pos="3,0">
-                <icon id="WOOD" name="@medyk.polowy.budulecfolder.name" />
+                <icon id="WOOD" name="@medyk.polowy.budulecfolder.name$color" />
             </button>
 
             <button pos="1,2">

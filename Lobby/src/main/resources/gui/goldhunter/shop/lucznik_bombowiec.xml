@@ -10,7 +10,7 @@
         <content>
 
             <button pos="3,0">
-            	<icon id="minecraft:tipped_arrow" name="@main.lucznik.bombowiec.name">
+            	<icon id="minecraft:tipped_arrow" name="@main.lucznik.bombowiec.name$color">
             		<potionMeta>
             			<potionData type="INSTANT_HEAL" />
             		</potionMeta>
@@ -45,7 +45,7 @@
             </button>
             
             <button pos="5,2">
-            	<icon id="CHAINMAIL_CHESTPLATE" name="@lucznik.bombowiec.helmet1.name$color" lore="@lucznik.truciciel.helmet1.lore$color,status,price"/>
+            	<icon id="IRON_CHESTPLATE" name="@lucznik.bombowiec.helmet1.name$color" lore="@lucznik.truciciel.helmet1.lore$color,status,price"/>
             	<metadata key="item" value="archer.bomb.chainchest" />
             	<onClick>buy</onClick>
             </button>
