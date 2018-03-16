@@ -7,6 +7,7 @@ import org.bukkit.entity.ItemFrame;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -28,6 +29,16 @@ public class MapListener implements AutoListener
     {
         // nie zajmujemy pamieci i upewniamy sie ze po ponownym wejsciu wszystko bedzie ok
         this.mapController.deletePlayerMapData(event.getPlayer());
+    }
+
+    @EventHandler
+    public void resetCanvasesWhenRespawn(final PlayerRespawnEvent event)
+    {
+        final PlayerMapData data = this.mapController.getPlayerMapData(event.getPlayer());
+
+        // Respawn u klienta powoduje zresetowanie wszystkich zcachowanych kanw,
+        // dlatego my robimy to samo na serwerze.
+        data.resetAllClientSideCanvases();
     }
 
     @EventHandler

@@ -28,7 +28,7 @@ public class CancelStarting extends NorthCommand
 
     public CancelStarting()
     {
-        super("cancelstarting");
+        super("cancelstarting", "abortstarting");
         this.setPermission("dev");
     }
 

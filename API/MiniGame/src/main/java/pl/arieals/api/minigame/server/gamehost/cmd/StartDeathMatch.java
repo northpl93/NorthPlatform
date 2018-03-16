@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
+import pl.arieals.api.minigame.server.gamehost.arena.DeathMatch;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.north93.zgame.api.global.commands.Arguments;
@@ -44,8 +45,16 @@ public class StartDeathMatch extends NorthCommand
         final Player player = (Player) sender.unwrapped();
         final LocalArena arena = getArena(player);
 
-        arena.getDeathMatch().activateDeathMatch();
-        player.sendMessage(ChatColor.GREEN + "Done");
+        final DeathMatch deathMatch = arena.getDeathMatch();
+        if (deathMatch.getConfig().getEnabled())
+        {
+            deathMatch.activateDeathMatch();
+            player.sendMessage(ChatColor.GREEN + "Done");
+        }
+        else
+        {
+            player.sendMessage(ChatColor.RED + "DeathMatch jest wylaczony w tej minigrze");
+        }
     }
 
     @Override

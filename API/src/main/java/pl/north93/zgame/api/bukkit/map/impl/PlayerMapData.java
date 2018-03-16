@@ -83,6 +83,15 @@ class PlayerMapData
         container.setClientCanvas(container.getServerCanvas());
     }
 
+    public void resetAllClientSideCanvases()
+    {
+        // usuwamy aktualny stan wszystkich kanw u klienta
+        for (final MapContainer container : this.mapping.values())
+        {
+            container.setClientCanvas(null);
+        }
+    }
+
     public MapContainer getOrComputeContainer(final MapImpl map)
     {
         return this.mapping.computeIfAbsent(map, this::generateNewContainer);
