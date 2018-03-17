@@ -92,7 +92,7 @@ public class ItemShardLoot implements ILoot
 
     private TranslatableString getShardsText(final Player player, final int shards)
     {
-        final String locale = player.spigot().getLocale();
+        final String locale = player.getLocale();
         final String shardsKey = PluralForm.transformKey("shards", shards);
 
         return TranslatableString.constant(this.messages.getMessage(locale, shardsKey, shards));

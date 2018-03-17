@@ -3,20 +3,27 @@ package pl.north93.zgame.api.global.messages;
 import java.util.Locale;
 import java.util.Objects;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import pl.north93.zgame.api.global.utils.Vars;
 
 class ConstantTranslatableString extends TranslatableString
 {
     public static final TranslatableString EMPTY = new ConstantTranslatableString(""); // uzywane w TranslatableString#empty()
-    private final String fixedValue;
-    
-    ConstantTranslatableString(String fixedValue)
+    private final BaseComponent fixedValue;
+
+    ConstantTranslatableString(final String legacyText)
+    {
+        this(new TextComponent(TextComponent.fromLegacyText(legacyText)));
+    }
+
+    ConstantTranslatableString(final BaseComponent fixedValue)
     {
         this.fixedValue = fixedValue;
     }
     
     @Override
-    public String getValue(Locale locale, Vars<Object> params)
+    public BaseComponent getValue(Locale locale, Vars<Object> params)
     {
         return fixedValue;
     }
@@ -24,7 +31,7 @@ class ConstantTranslatableString extends TranslatableString
     @Override
     public int hashCode()
     {
-        return fixedValue.hashCode();
+        return fixedValue.hashCode(); // todo Przy zmianie na BaseComponent ta linijka stracila sens?
     }
 
     @Override

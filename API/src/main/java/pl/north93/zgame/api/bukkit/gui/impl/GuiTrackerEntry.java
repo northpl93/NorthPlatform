@@ -21,6 +21,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.GuiContent;
 import pl.north93.zgame.api.bukkit.gui.HotbarEntry;
@@ -74,7 +76,14 @@ public class GuiTrackerEntry
     {
         GuiContent content = newGui.getContent();
 
-        Inventory inv = Bukkit.createInventory(null, 9 * content.getHeight(), content.getTitle().getValue(player, newGui.getVariables()));
+        final BaseComponent guiName = content.getTitle().getValue(player, newGui.getVariables());
+        if (guiName.getColorRaw() == null)
+        {
+            // by default it will be set to WHITE
+            guiName.setColor(ChatColor.RESET);
+        }
+
+        Inventory inv = Bukkit.createInventory(null, 9 * content.getHeight(), guiName.toLegacyText());
         content.renderToInventory(player, inv);
 
         if ( tryOpenContainerAndCallOwnEvent(inv, newGui) )
@@ -152,7 +161,7 @@ public class GuiTrackerEntry
         Inventory inv = player.getOpenInventory().getTopInventory();
         Preconditions.checkState(inv.equals(currentInventory));
         
-        String title = content.getTitle().getValue(player, currentGui.getVariables());
+        String title = content.getTitle().getValue(player, currentGui.getVariables()).toLegacyText();
         
         if ( inv.getSize() != content.getHeight() * content.getWidth() || !inv.getTitle().equals(title) )
         {

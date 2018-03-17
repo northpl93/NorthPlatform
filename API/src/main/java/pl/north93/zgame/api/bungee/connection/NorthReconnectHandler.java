@@ -2,9 +2,6 @@ package pl.north93.zgame.api.bungee.connection;
 
 import static java.util.ResourceBundle.getBundle;
 
-import static net.md_5.bungee.api.ChatColor.translateAlternateColorCodes;
-import static net.md_5.bungee.api.chat.TextComponent.fromLegacyText;
-
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -16,11 +13,12 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ReconnectHandler;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.zgame.api.bungee.BungeeApiCore;
-import pl.north93.zgame.api.global.network.NetworkMeta;
-import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.messages.UTF8Control;
+import pl.north93.zgame.api.global.network.INetworkManager;
+import pl.north93.zgame.api.global.network.NetworkMeta;
+import pl.north93.zgame.api.global.network.server.Server;
 
 public class NorthReconnectHandler implements ReconnectHandler
 {
@@ -43,7 +41,7 @@ public class NorthReconnectHandler implements ReconnectHandler
         if (server == null)
         {
             final String message = this.messages.getString("join.no_servers");
-            proxiedPlayer.disconnect(fromLegacyText(translateAlternateColorCodes('&', message)));
+            proxiedPlayer.disconnect(ChatUtils.fromLegacyText(message));
             return null;
         }
 

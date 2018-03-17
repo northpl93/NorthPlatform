@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messageable;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
@@ -109,6 +110,9 @@ public interface INorthPlayer extends Player, Messageable
 
     @Override // trzeba bylo dodac zeby nie bylo bledu kompilacji
     void sendMessage(final String message);
+
+    @Override // trzeba bylo dodac zeby nie bylo bledu kompilacji
+    void sendMessage(BaseComponent component);
 }
 
 final class Helper

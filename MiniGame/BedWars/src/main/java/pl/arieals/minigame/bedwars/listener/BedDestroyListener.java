@@ -3,7 +3,7 @@ package pl.arieals.minigame.bedwars.listener;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import static pl.arieals.minigame.bedwars.utils.PlayerTeamPredicates.isInTeam;
 import static pl.arieals.minigame.bedwars.utils.PlayerTeamPredicates.notInTeam;
-import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColorCodes;
+import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
 
 
 import com.destroystokyo.paper.Title;

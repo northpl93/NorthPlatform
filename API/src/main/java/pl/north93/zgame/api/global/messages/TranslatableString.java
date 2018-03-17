@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.bukkit.entity.Player;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.zgame.api.global.utils.Vars;
 
 /**
@@ -24,52 +25,37 @@ public abstract class TranslatableString
     {
     }
     
-    public TranslatableString concat(String string)
-    {
-        return concat(this, new ConstantTranslatableString(string));
-    }
-    
-    public TranslatableString concat(TranslatableString other)
-    {
-        return concat(this, other);
-    }
-
-    public TranslatableString withVars(final Vars<Object> vars)
-    {
-        return withVars(this, vars);
-    }
-    
-    public String getValue(Messageable messageable)
+    public BaseComponent getValue(Messageable messageable)
     {
         return getValue(messageable, Vars.empty());
     }
     
-    public String getValue(Messageable messageable, Vars<Object> params)
+    public BaseComponent getValue(Messageable messageable, Vars<Object> params)
     {
         return getValue(messageable.getMyLocale(), params);
     }
     
-    public String getValue(Player player)
+    public BaseComponent getValue(Player player)
     {
         return getValue(player, Vars.empty());
     }
     
-    public String getValue(Player player, Vars<Object> params)
+    public BaseComponent getValue(Player player, Vars<Object> params)
     {
         return getValue(player.getLocale(), params);
     }
     
-    public String getValue(String locale)
+    public BaseComponent getValue(String locale)
     {
         return getValue(locale, Vars.empty());
     }
     
-    public String getValue(String locale, Vars<Object> params)
+    public BaseComponent getValue(String locale, Vars<Object> params)
     {
         return getValue(Locale.forLanguageTag(locale), params);
     }
         
-    public String getValue(Locale locale)
+    public BaseComponent getValue(Locale locale)
     {
         return getValue(locale, Vars.empty());
     }
@@ -91,40 +77,54 @@ public abstract class TranslatableString
     
     public void sendMessage(Messageable messageable, MessageLayout messageLayout, Vars<Object> params)
     {
-        String message = getValue(messageable, params);
-        for ( String line : messageLayout.processMessage(message) )
-        {
-            messageable.sendMessage(line, true);
-        }
+        final BaseComponent message = getValue(messageable, params);
+        messageable.sendMessage(message);
     }
     
     public void sendMessage(Player player)
     {
-        sendMessage(player, MessageLayout.DEFAULT, Vars.empty());
+        this.sendMessage(player, MessageLayout.DEFAULT, Vars.empty());
     }
     
     public void sendMessage(Player player, Vars<Object> params)
     {
-        sendMessage(player, MessageLayout.DEFAULT, params);
+        this.sendMessage(player, MessageLayout.DEFAULT, params);
     }
     
     public void sendMessage(Player player, MessageLayout messageLayout)
     {
-        sendMessage(player, messageLayout, Vars.empty());
+        this.sendMessage(player, messageLayout, Vars.empty());
     }
     
     public void sendMessage(Player player, MessageLayout messageLayout, Vars<Object> params)
     {
-        String message = getValue(player, params);
+        final Locale locale = Locale.forLanguageTag(player.getLocale());
+        final BaseComponent message = this.getValue(locale, params);
+
         player.sendMessage(messageLayout.processMessage(message));
     }
-    
-    public abstract String getValue(Locale locale, Vars<Object> params);
-    
+
+    public abstract BaseComponent getValue(Locale locale, Vars<Object> params);
+
+    public TranslatableString concat(final String string)
+    {
+        return concat(this, new ConstantTranslatableString(string));
+    }
+
+    public TranslatableString concat(final TranslatableString other)
+    {
+        return concat(this, other);
+    }
+
+    public TranslatableString withVars(final Vars<Object> vars)
+    {
+        return withVars(this, vars);
+    }
+
     public abstract boolean equals(Object object);
-    
+
     public abstract int hashCode();
-    
+
     public abstract String toString();
 
     /**
@@ -138,17 +138,22 @@ public abstract class TranslatableString
         return ConstantTranslatableString.EMPTY;
     }
 
+    public static TranslatableString constant(final BaseComponent component)
+    {
+        return new ConstantTranslatableString(component);
+    }
+
     /**
      * Tworzy obiekt {@link TranslatableString} ktory zawsze zwraca stala wartosc.
      *
      * @param string Wartosc ktora bedzie zawsze zwracana przez tego TranslatableString.
      * @return TranslatableString o stalej wartosci.
      */
-    public static TranslatableString constant(String string)
+    public static TranslatableString constant(final String string)
     {
         return new ConstantTranslatableString(string);
     }
-    
+
     public static TranslatableString of(MessagesBox messagesBox, String string)
     {
         if ( string == null )
@@ -176,7 +181,7 @@ public abstract class TranslatableString
         }
     }
     
-    public static TranslatableString concat(TranslatableString string1, TranslatableString string2)
+    public static TranslatableString concat(final TranslatableString string1, final TranslatableString string2)
     {
         return new ComplexTranslatableString(string1, string2);
     }

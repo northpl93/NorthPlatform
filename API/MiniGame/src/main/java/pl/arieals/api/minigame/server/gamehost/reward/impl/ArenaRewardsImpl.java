@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.reward.IArenaRewards;
 import pl.arieals.api.minigame.server.gamehost.reward.IReward;
@@ -65,11 +66,8 @@ public class ArenaRewardsImpl implements IArenaRewards
             final List<IReward> values = entry.getValue();
             final IReward.RewardMessageRenderer renderer = values.get(0).getRenderer();
 
-            final String[] message = renderer.composeMessage(messagesBox, Locale.forLanguageTag(player.spigot().getLocale()), values);
-            for (final String msg : message)
-            {
-                player.sendMessage(msg);
-            }
+            final BaseComponent component = renderer.composeMessage(messagesBox, Locale.forLanguageTag(player.spigot().getLocale()), values);
+            player.sendMessage(component);
         }
     }
 

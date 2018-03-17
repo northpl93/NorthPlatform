@@ -10,6 +10,7 @@
     <excludedPackages>
         <excludedPackage>rx</excludedPackage>
         <excludedPackage>org</excludedPackage>
+        <excludedPackage>net</excludedPackage>
         <excludedPackage>javax</excludedPackage>
         <excludedPackage>javassist</excludedPackage>
         <excludedPackage>it</excludedPackage>

@@ -10,7 +10,10 @@ public interface IProxyRpc
     Boolean isOnline(String nick); // sprawdza czy gracz jest online na tym proxy
 
     @DoNotWaitForResponse
-    void sendMessage(String nick, String message, MessageLayout layout);
+    void sendMessage(String nick, String legacyText, MessageLayout layout);
+
+    @DoNotWaitForResponse
+    void sendJsonMessage(String nick, String json);
 
     @DoNotWaitForResponse
     void kick(String nick, String kickMessage);

@@ -5,6 +5,7 @@ import java.util.Locale;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.zgame.api.global.utils.Vars;
 
 public class PredefinedVarsTranslatableString extends TranslatableString
@@ -19,7 +20,7 @@ public class PredefinedVarsTranslatableString extends TranslatableString
     }
 
     @Override
-    public String getValue(final Locale locale, final Vars<Object> params)
+    public BaseComponent getValue(final Locale locale, final Vars<Object> params)
     {
         return this.wrapped.getValue(locale, this.vars.and(params));
     }

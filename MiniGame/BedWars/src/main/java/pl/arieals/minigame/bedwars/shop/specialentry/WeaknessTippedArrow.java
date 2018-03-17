@@ -61,9 +61,9 @@ public class WeaknessTippedArrow implements IShopSpecialEntry
 
         itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ATTRIBUTES);
 
-        itemMeta.setDisplayName(TranslatableString.of(this.shopMessages, "@item.extras.exhaust_arrow.name$nameColor").getValue(player, Vars.of("nameColor", nameColor)));
+        itemMeta.setDisplayName(TranslatableString.of(this.shopMessages, "@item.extras.exhaust_arrow.name$nameColor").getValue(player, Vars.of("nameColor", nameColor)).toLegacyText());
 
-        final String loreText = TranslatableString.of(this.shopMessages, "@gui.lore_placeholder$lore").getValue(player, Vars.of("lore", lore));
+        final String loreText = TranslatableString.of(this.shopMessages, "@gui.lore_placeholder$lore").getValue(player, Vars.of("lore", lore)).toLegacyText();
         itemMeta.setLore(Arrays.asList(StringUtils.split(loreText, "\n")));
 
         itemStack.setItemMeta(itemMeta);

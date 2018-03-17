@@ -2,7 +2,7 @@ package pl.arieals.minigame.bedwars.arena;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.setPlayerStatus;
-import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColorCodes;
+import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.fromLegacyText;
 
 
 import java.util.logging.Level;
@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.minigame.bedwars.event.PlayerRevivedEvent;
 import pl.north93.zgame.api.bukkit.utils.AbstractCountdown;
@@ -42,10 +43,10 @@ public class RevivePlayerCountdown extends AbstractCountdown
     @Override
     protected void loop(final int time)
     {
-        final String locale = this.player.spigot().getLocale();
+        final String locale = this.player.getLocale();
 
-        final String title = translateAlternateColorCodes(this.messages.getMessage(locale, "die.respawn.title"));
-        final String subtitle = translateAlternateColorCodes(this.messages.getMessage(locale, "die.respawn.subtitle", time));
+        final BaseComponent title = fromLegacyText(this.messages.getMessage(locale, "die.respawn.title"));
+        final BaseComponent subtitle = this.messages.getMessage(locale, "die.respawn.subtitle", time);
 
         this.player.sendTitle(new Title(title, subtitle, 0, 20, 0));
     }

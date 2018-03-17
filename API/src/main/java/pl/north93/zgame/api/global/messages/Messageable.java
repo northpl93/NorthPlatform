@@ -3,6 +3,8 @@ package pl.north93.zgame.api.global.messages;
 import java.text.MessageFormat;
 import java.util.Locale;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+
 public interface Messageable
 {
     /**
@@ -13,21 +15,34 @@ public interface Messageable
     Locale getMyLocale();
 
     /**
-     * Wysyła wiadomość do gracza ostylowaną przez dany MessageLayout.
+     * Wysyła surową, nietłumaczalną wiadomość do gracza ostylowaną przez dany MessageLayout.
      *
-     * @param message treść wiadomości.
+     * @param message surowa treść wiadomości.
      * @param layout Wygląd wiadomości.
      */
     void sendMessage(String message, MessageLayout layout);
 
     /**
-     * Wysyła wiadomość do gracza ostylowaną przez domyślny MessageLayout.
+     * Wysyła surową, nietłumaczalną wiadomość do gracza ostylowaną przez domyślny MessageLayout.
      *
-     * @param message treść wiadomości.
+     * @param message surowa treść wiadomości.
      */
-    default void sendMessage(String message)
+    default void sendMessage(final String message)
     {
         this.sendMessage(message, MessageLayout.DEFAULT);
+    }
+
+    /**
+     * Wysyła do gracza komponent zawierający wiadomość ostylowany przez dany MessageLayout.
+     *
+     * @param component komponent wiadomości.
+     * @param layout Wygląd wiadomości.
+     */
+    void sendMessage(BaseComponent component, MessageLayout layout);
+
+    default void sendMessage(final BaseComponent component)
+    {
+        this.sendMessage(component, MessageLayout.DEFAULT);
     }
 
     /**

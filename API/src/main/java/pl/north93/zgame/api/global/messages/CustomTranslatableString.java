@@ -3,6 +3,8 @@ package pl.north93.zgame.api.global.messages;
 import java.util.Locale;
 import java.util.Map;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.zgame.api.global.utils.Vars;
 
 class CustomTranslatableString extends TranslatableString
@@ -15,9 +17,10 @@ class CustomTranslatableString extends TranslatableString
     }
 
     @Override
-    public String getValue(final Locale locale, final Vars<Object> params)
+    public BaseComponent getValue(final Locale locale, final Vars<Object> params)
     {
-        return this.values.getOrDefault(locale, locale.toLanguageTag());
+        final String legacyText = this.values.getOrDefault(locale, locale.toLanguageTag());
+        return ChatUtils.fromLegacyText(legacyText);
     }
 
     @Override

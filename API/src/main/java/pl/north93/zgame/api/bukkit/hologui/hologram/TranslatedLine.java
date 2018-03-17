@@ -1,8 +1,5 @@
 package pl.north93.zgame.api.bukkit.hologui.hologram;
 
-import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColorCodes;
-
-
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -29,7 +26,7 @@ public class TranslatedLine implements IHologramLine
     @Override
     public String render(final IHologram hologram, final Player player, final Locale locale)
     {
-        return translateAlternateColorCodes(this.messagesBox.getMessage(locale, this.msgKey, this.args));
+        return this.messagesBox.getMessage(locale, this.msgKey, this.args).toLegacyText();
     }
 
     @Override

@@ -77,8 +77,8 @@ public class PlayerTeamListener implements Listener
             final Team smallestTeam = arenaData.getTeams()
                                                .stream()
                                                .filter(team -> team.getPlayers().size() < this.config.getTeamSize())
-                                               .sorted(Comparator.comparing(team -> team.getPlayers().size()))
-                                               .findFirst().orElse(null);
+                                               .min(Comparator.comparing(team -> team.getPlayers().size()))
+                                               .orElse(null);
             final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
 
             if (smallestTeam == null)
@@ -99,7 +99,7 @@ public class PlayerTeamListener implements Listener
 
             this.scoreboardManager.setLayout(player, new GameScoreboard());
 
-            final String teamNameDative = this.messages.getMessage(player.spigot().getLocale(), "team.dative." + smallestTeam.getName());
+            final String teamNameDative = this.messages.getMessage(player.getLocale(), "team.dative." + smallestTeam.getName());
             this.messages.sendMessage(player, "separator");
             this.messages.sendMessage(player, "welcome", MessageLayout.CENTER, smallestTeam.getColorChar(), teamNameDative);
             this.messages.sendMessage(player, "separator");

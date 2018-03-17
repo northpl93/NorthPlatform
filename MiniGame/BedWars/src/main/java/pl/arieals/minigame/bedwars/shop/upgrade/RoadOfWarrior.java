@@ -47,7 +47,7 @@ public class RoadOfWarrior implements IUpgrade, Listener
     public String getLoreDescription(final MessagesBox messagesBox, final Team team, final Player player)
     {
         final String sharpnessLevel = DioriteMathUtils.toRoman(Math.min(team.getUpgrades().getUpgradeLevel(this) + 1, this.maxLevel()));
-        return messagesBox.getMessage(player.spigot().getLocale(), "upgrade_gui.RoadOfWarrior.lore", sharpnessLevel);
+        return messagesBox.getMessage(player.spigot().getLocale(), "upgrade_gui.RoadOfWarrior.lore", sharpnessLevel).toLegacyText();
     }
 
     @EventHandler(ignoreCancelled = true)

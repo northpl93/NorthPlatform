@@ -3,10 +3,11 @@ package pl.north93.zgame.api.global.messages;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 import com.google.common.base.Preconditions;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import pl.north93.zgame.api.global.utils.Vars;
 
 class ComplexTranslatableString extends TranslatableString
@@ -24,9 +25,12 @@ class ComplexTranslatableString extends TranslatableString
     }
     
     @Override
-    public String getValue(Locale locale, Vars<Object> params)
+    public BaseComponent getValue(Locale locale, Vars<Object> params)
     {
-        return inOrder().stream().map(translatableString -> translatableString.getValue(locale, params)).collect(Collectors.joining());
+        return inOrder().stream().map(translatableString -> translatableString.getValue(locale, params)).reduce(new TextComponent(), (l, r) -> {
+            l.addExtra(r);
+            return l;
+        });
     }
     
     private List<TranslatableString> inOrder()

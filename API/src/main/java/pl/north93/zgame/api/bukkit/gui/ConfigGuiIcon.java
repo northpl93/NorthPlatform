@@ -57,8 +57,8 @@ public class ConfigGuiIcon implements IGuiIcon
             parameters = parameters.and(xmlVariable.process(messages, parameters));
         }
 
-        List<String> lore = this.lore != null ? Arrays.asList(this.lore.getValue(player.getLocale(), parameters).split("\n")) : Arrays.asList();
-        String name = this.name.getValue(player.getLocale(), parameters);
+        List<String> lore = this.lore != null ? Arrays.asList(this.lore.getValue(player.getLocale(), parameters).toLegacyText().split("\n")) : Arrays.asList();
+        String name = this.name.getValue(player.getLocale(), parameters).toLegacyText();
 
         final ItemMeta itemMeta = this.preCreatedItemStack.getItemMeta();
         if (itemMeta == null)

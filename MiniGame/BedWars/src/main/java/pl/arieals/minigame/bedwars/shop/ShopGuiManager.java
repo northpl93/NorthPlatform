@@ -27,7 +27,7 @@ import pl.arieals.minigame.bedwars.shop.gui.ShopMaterials;
 import pl.arieals.minigame.bedwars.shop.gui.ShopSwords;
 import pl.arieals.minigame.bedwars.shop.gui.ShopTools;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.bukkit.utils.ChatUtils;
+import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -120,7 +120,7 @@ public final class ShopGuiManager
 
         final String currencyKey = "currency." + priceItem.getType().name().toLowerCase(Locale.ROOT);
         final String priceMsgKey = PluralForm.transformKey(currencyKey, priceItem.getAmount());
-        final String price = this.shopMessages.getMessage(locale, priceMsgKey, priceItem.getAmount());
+        final String price = this.shopMessages.getMessage(locale, priceMsgKey, priceItem.getAmount()).toLegacyText();
 
         final String description = this.shopMessages.getMessage(locale, "item." + name + ".lore");
 
@@ -132,23 +132,23 @@ public final class ShopGuiManager
             return this.shopMessages.getMessage(locale,
                     "gui.shop.item_lore.available",
                     description,
-                    price);
+                    price).toLegacyText();
         }
         else if (buyStatus == ItemPreBuyEvent.BuyStatus.NOT_ENOUGH_CURRENCY)
         {
-            final String currencyName = ChatUtils.stripColor(this.shopMessages.getMessage(locale, currencyKey + ".many", ""));
+            final String currencyName = ChatUtils.stripColor(this.shopMessages.getMessage(locale, currencyKey + ".many", "").toLegacyText());
             return this.shopMessages.getMessage(locale,
                     "gui.shop.item_lore.no_money",
                     description,
                     price,
-                    currencyName);
+                    currencyName).toLegacyText();
         }
         else
         {
             return this.shopMessages.getMessage(locale,
                     "gui.shop.item_lore.already_had",
                     description,
-                    price);
+                    price).toLegacyText();
         }
     }
 

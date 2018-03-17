@@ -1,13 +1,8 @@
 package pl.north93.zgame.api.global.messages;
 
-import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColorCodes;
-
-
-import java.util.Arrays;
-
-import org.apache.commons.lang3.StringUtils;
-
-import pl.north93.zgame.api.bukkit.utils.ChatUtils;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
+import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 
 /**
  * Klasa odpowiedzialna za formatowanie wiadomości.
@@ -20,9 +15,9 @@ public enum MessageLayout
     DEFAULT
             {
                 @Override
-                public String[] processMessage(final String message)
+                public BaseComponent processMessage(final BaseComponent component)
                 {
-                    return StringUtils.split(translateAlternateColorCodes(message), '\n');
+                    return component;
                 }
             },
     /**
@@ -31,15 +26,9 @@ public enum MessageLayout
     SEPARATED
             {
                 @Override
-                public String[] processMessage(final String message)
+                public BaseComponent processMessage(final BaseComponent component)
                 {
-                    final String[] splitted = DEFAULT.processMessage(message);
-
-                    final String[] output = new String[splitted.length + 2];
-                    Arrays.fill(output, "");
-                    System.arraycopy(splitted, 0, output, 1, splitted.length);
-
-                    return output;
+                    return new TextComponent(NEW_LINE, component, NEW_LINE);
                 }
             },
     /**
@@ -48,34 +37,21 @@ public enum MessageLayout
     CENTER
             {
                 @Override
-                public String[] processMessage(final String message)
+                public BaseComponent processMessage(final BaseComponent component)
                 {
-                    final String[] split = StringUtils.split(message, '\n');
-                    if (split.length == 1)
-                    {
-                        return new String[] { ChatUtils.centerMessage(message) };
-                    }
-                    for (int i = 0; i < split.length; i++)
-                    {
-                        split[i] = ChatUtils.centerMessage(split[i]);
-                    }
-                    return split;
+                    return ChatUtils.centerMessage(component);
                 }
             },
     SEPARATED_CENTER
             {
                 @Override
-                public String[] processMessage(final String message)
+                public BaseComponent processMessage(final BaseComponent component)
                 {
-                    final String[] centered = CENTER.processMessage(message);
-
-                    final String[] output = new String[centered.length + 2];
-                    Arrays.fill(output, "");
-                    System.arraycopy(centered, 0, output, 1, centered.length);
-
-                    return output;
+                    return SEPARATED.processMessage(CENTER.processMessage(component));
                 }
             };
 
-    public abstract String[] processMessage(String message);
+    public abstract BaseComponent processMessage(BaseComponent component);
+
+    private static final BaseComponent NEW_LINE = new TextComponent("\n");
 }

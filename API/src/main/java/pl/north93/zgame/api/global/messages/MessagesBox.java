@@ -9,9 +9,9 @@ import java.util.ResourceBundle;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import pl.north93.zgame.api.bukkit.utils.ChatUtils;
+import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 
 public class MessagesBox
 {
@@ -60,16 +60,18 @@ public class MessagesBox
         return this.getMessage(Locale.forLanguageTag(locale), key);
     }
 
-    public String getMessage(final Locale locale, final String key, final Object... params)
+    public BaseComponent getMessage(final Locale locale, final String key, final Object... params)
     {
-        evalTranslatableString(locale, params);
-        return MessageFormat.format(this.getMessage(locale, key), (Object[]) params);
+        evalParameters(locale, params);
+        final String legacyText = MessageFormat.format(this.getMessage(locale, key), (Object[]) params);
+        return ChatUtils.fromLegacyText(legacyText);
     }
 
-    public String getMessage(final String locale, final String key, final Object... params)
+    public BaseComponent getMessage(final String locale, final String key, final Object... params)
     {
-        evalTranslatableString(Locale.forLanguageTag(locale), params);
-        return MessageFormat.format(this.getMessage(locale, key), (Object[]) params);
+        evalParameters(Locale.forLanguageTag(locale), params);
+        final String legacyText = MessageFormat.format(this.getMessage(locale, key), (Object[]) params);
+        return ChatUtils.fromLegacyText(legacyText);
     }
 
     @Deprecated // uniemozliwia tlumaczenie wiadomosci per-gracz
@@ -82,11 +84,7 @@ public class MessagesBox
 
     public void sendMessage(final Messageable messageable, final String key, final MessageLayout layout, final Object... params)
     {
-        final String message = this.getMessage(messageable.getMyLocale(), key, (Object[]) params);
-        for (final String line : layout.processMessage(message))
-        {
-            messageable.sendMessage(line, true);
-        }
+        messageable.sendMessage(this, key, layout, params);
     }
 
     public void sendMessage(final Messageable messageable, final String key, final Object... params)
@@ -97,7 +95,7 @@ public class MessagesBox
     // nie powinno jebnac na innych platformach niz Bukkit o ile nie wykonamy tej metody
     public void sendMessage(final org.bukkit.entity.Player player, final String key, final MessageLayout layout, final Object... params)
     {
-        final String message = this.getMessage(player.getLocale(), key, (Object[]) params);
+        final BaseComponent message = this.getMessage(player.getLocale(), key, (Object[]) params);
         player.sendMessage(layout.processMessage(message));
     }
 
@@ -110,11 +108,8 @@ public class MessagesBox
     // nie powinno jebnac na innych platformach niz Bungee o ile nie wykonamy tej metody
     public void sendMessage(final ProxiedPlayer player, final String key, final MessageLayout layout, final Object... params)
     {
-        final String message = this.getMessage(player.getLocale(), key, (Object[]) params);
-        for (final String messageLine : layout.processMessage(message))
-        {
-            player.sendMessage(TextComponent.fromLegacyText(messageLine));
-        }
+        final BaseComponent message = this.getMessage(player.getLocale(), key, (Object[]) params);
+        player.sendMessage(layout.processMessage(message));
     }
 
     // nie powinno jebnac na innych platformach niz Bungee o ile nie wykonamy tej metody
@@ -123,13 +118,19 @@ public class MessagesBox
         this.sendMessage(player, key, MessageLayout.DEFAULT, params);
     }
 
-    private void evalTranslatableString(Locale locale, Object[] args)
+    private void evalParameters(Locale locale, Object[] args)
     {
         for ( int i = 0; i < args.length; i++ )
         {
+            // todo ulepszyc obsluge komponentów, aby byly wstawiane bezposrednio a nie konwertowane na legacy text
             if ( args[i] instanceof TranslatableString )
             {
-                args[i] = ((TranslatableString) args[i]).getValue(locale);
+                final TranslatableString translatableString = (TranslatableString) args[i];
+                args[i] = translatableString.getValue(locale).toLegacyText();
+            }
+            else if ( args[i] instanceof BaseComponent )
+            {
+                args[i] = ((BaseComponent) args[i]).toLegacyText();
             }
         }
     }

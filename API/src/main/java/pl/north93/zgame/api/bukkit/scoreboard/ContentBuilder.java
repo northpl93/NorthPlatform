@@ -38,7 +38,7 @@ public final class ContentBuilder
 
     public ContentBuilder translated(final MessagesBox messagesBox, final Locale locale, final String key, final Object... args)
     {
-        final String message = messagesBox.getMessage(locale, key, args);
+        final String message = messagesBox.getMessage(locale, key, args).toLegacyText();
         this.content.addAll(Arrays.asList(StringUtils.split(message, '\n')));
         return this;
     }

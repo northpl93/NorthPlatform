@@ -13,6 +13,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
@@ -70,8 +71,8 @@ public class IslandTrapUpgrade implements IUpgrade
                 continue;
             }
 
-            final String title = TranslatableString.of(this.bedWarsMessages, "@trap_used.title").getValue(player);
-            final String subtitle = TranslatableString.of(this.bedWarsMessages, "@trap_used.subtitle").getValue(player);
+            final BaseComponent title = TranslatableString.of(this.bedWarsMessages, "@trap_used.title").getValue(player);
+            final BaseComponent subtitle = TranslatableString.of(this.bedWarsMessages, "@trap_used.subtitle").getValue(player);
 
             player.sendTitle(new Title(title, subtitle, 0, 50, 10));
         }

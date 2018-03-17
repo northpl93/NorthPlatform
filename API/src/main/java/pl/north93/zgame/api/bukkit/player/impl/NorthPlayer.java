@@ -65,6 +65,7 @@ import org.bukkit.util.Vector;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
+import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
 import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.network.INetworkManager;
@@ -125,11 +126,14 @@ class NorthPlayer implements INorthPlayer
     @Override
     public void sendMessage(final String message, final MessageLayout layout)
     {
-        final String[] messages = layout.processMessage(message);
-        for (final String line : messages)
-        {
-            this.bukkitPlayer.sendMessage(line);
-        }
+        final BaseComponent component = ChatUtils.fromLegacyText(message);
+        this.bukkitPlayer.sendMessage(layout.processMessage(component));
+    }
+
+    @Override
+    public void sendMessage(final BaseComponent component, final MessageLayout layout)
+    {
+        this.bukkitPlayer.sendMessage(layout.processMessage(component));
     }
 
     @Override

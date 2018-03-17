@@ -1,7 +1,7 @@
 package pl.north93.zgame.api.bungee.proxy.impl;
 
 import static net.md_5.bungee.api.chat.TextComponent.fromLegacyText;
-import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColorCodes;
+import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
 
 
 import java.util.logging.Logger;

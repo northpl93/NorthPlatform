@@ -75,7 +75,7 @@ public class UpgradeInstallListener implements Listener
         for (final Player player : event.getTeam().getPlayers())
         {
             final String messageKey = "upgrade_gui." + event.getUpgrade().getName() + ".name";
-            final String upgradeName = this.messagesShop.getMessage(player.spigot().getLocale(), messageKey, "e");
+            final String upgradeName = this.messagesShop.getMessage(player.spigot().getLocale(), messageKey, "e").toLegacyText();
 
             this.messagesShop.sendMessage(player, "action.buy_upgrade", issuer.getDisplayName(), upgradeName);
         }

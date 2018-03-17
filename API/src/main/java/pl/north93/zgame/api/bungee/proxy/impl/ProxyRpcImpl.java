@@ -5,8 +5,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.protocol.packet.Chat;
+import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.zgame.api.bungee.BungeeApiCore;
 import pl.north93.zgame.api.bungee.proxy.IProxyServerManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -30,14 +33,19 @@ class ProxyRpcImpl implements IProxyRpc
     }
 
     @Override
-    public void sendMessage(final String nick, final String message, final MessageLayout layout)
+    public void sendMessage(final String nick, final String legacyText, final MessageLayout layout)
     {
         final ProxiedPlayer player = this.proxy.getPlayer(nick);
-        final String[] lines = layout.processMessage(message);
-        for (final String line : lines)
-        {
-            player.sendMessage(TextComponent.fromLegacyText(line));
-        }
+
+        final BaseComponent component = ChatUtils.fromLegacyText(legacyText);
+        player.sendMessage(layout.processMessage(component));
+    }
+
+    @Override
+    public void sendJsonMessage(final String nick, final String json)
+    {
+        final ProxiedPlayer player = this.proxy.getPlayer(nick);
+        player.unsafe().sendPacket(new Chat(json));
     }
 
     @Override

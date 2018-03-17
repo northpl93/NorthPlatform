@@ -10,6 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.metadata.MetaStore;
@@ -243,6 +245,15 @@ public class OnlinePlayerImpl implements IOnlinePlayer
         proxyRpc.sendMessage(this.nick, message, layout);
     }
 
+    @Override
+    public void sendMessage(final BaseComponent component, final MessageLayout layout)
+    {
+        final String serialized = ComponentSerializer.toString(layout.processMessage(component));
+
+        final IProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
+        proxyRpc.sendJsonMessage(this.nick, serialized);
+    }
+
     /**
      * Wyrzuca gracza z serwera.
      * @param message wiadomość która pokaże się po wyrzuceniu.
@@ -255,14 +266,14 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     }
 
     @Override
-    public void connectTo(final ServerProxyData server, IServerJoinAction... actions)
+    public void connectTo(final ServerProxyData server, final IServerJoinAction... actions)
     {
         final IProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
         proxyRpc.connectPlayer(this.nick, server.getProxyName(), new JoinActionsContainer(actions));
     }
 
     @Override
-    public void connectTo(final String serversGroupName, IServerJoinAction... actions)
+    public void connectTo(final String serversGroupName, final IServerJoinAction... actions)
     {
         final IProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
         proxyRpc.connectPlayerToServersGroup(this.nick, serversGroupName, new JoinActionsContainer(actions));

@@ -69,8 +69,8 @@ public class StatTrackItems
 
         final long kills = playerData.getCachedStatistic(TrackedStatistic.KILLS, type);
 
-        final String playerLocale = playerData.getBukkitPlayer().spigot().getLocale();
-        final String loreContent = this.messages.getMessage(playerLocale, "stattrack_lore", kills);
+        final String playerLocale = playerData.getBukkitPlayer().getLocale();
+        final String loreContent = this.messages.getMessage(playerLocale, "stattrack_lore", kills).toLegacyText();
 
         final ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setLore(Arrays.asList(StringUtils.split(loreContent, "\n")));

@@ -33,7 +33,7 @@ import pl.arieals.minigame.bedwars.shop.upgrade.IUpgrade;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.impl.GuiTracker;
-import pl.north93.zgame.api.bukkit.utils.ChatUtils;
+import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -138,25 +138,25 @@ public class UpgradeManager
         {
             return this.shopMessages.getMessage(player.spigot().getLocale(),
                     "gui.upgrade_lore.max_level",
-                    description);
+                    description).toLegacyText();
         }
         else
         {
-            final String diamondsWord = this.shopMessages.getMessage(player.spigot().getLocale(), PluralForm.transformKey("currency.diamond", price), price);
+            final String diamondsWord = this.shopMessages.getMessage(player.spigot().getLocale(), PluralForm.transformKey("currency.diamond", price), price).toLegacyText();
             if (player.getInventory().containsAtLeast(new ItemStack(Material.DIAMOND), price))
             {
                 return this.shopMessages.getMessage(player.spigot().getLocale(),
                         "gui.upgrade_lore.available",
                         description,
                         diamondsWord,
-                        actualLevel + 1);
+                        actualLevel + 1).toLegacyText();
             }
             else
             {
                 return this.shopMessages.getMessage(player.spigot().getLocale(),
                         "gui.upgrade_lore.no_diamonds",
                         description,
-                        diamondsWord);
+                        diamondsWord).toLegacyText();
             }
         }
     }

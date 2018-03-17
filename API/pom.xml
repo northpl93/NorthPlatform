@@ -71,6 +71,13 @@
             </exclusions>
         </dependency>
 
+        <!-- Wkompilowujemy API czatu BungeeCord -->
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-chat</artifactId>
+            <version>${bungee-api.version}</version>
+        </dependency>
+
         <!-- wymagane przez lettuce do dzialania na linuxie -->
         <dependency>
             <groupId>io.netty</groupId>

@@ -3,7 +3,7 @@ package pl.arieals.minigame.bedwars.scoreboard;
 import static java.util.Comparator.comparing;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
-import static pl.north93.zgame.api.bukkit.utils.ChatUtils.stripColor;
+import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.stripColor;
 
 
 import java.time.LocalDateTime;

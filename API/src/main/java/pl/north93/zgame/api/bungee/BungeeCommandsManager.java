@@ -7,9 +7,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.ICommandsManager;
@@ -92,10 +93,14 @@ public class BungeeCommandsManager implements ICommandsManager
         @Override
         public void sendMessage(final String message, final MessageLayout layout)
         {
-            for (final String line : layout.processMessage(message))
-            {
-                this.sender.sendMessage(TextComponent.fromLegacyText(line));
-            }
+            final BaseComponent component = ChatUtils.fromLegacyText(message);
+            this.sender.sendMessage(layout.processMessage(component));
+        }
+
+        @Override
+        public void sendMessage(final BaseComponent component, final MessageLayout layout)
+        {
+            this.sender.sendMessage(layout.processMessage(component));
         }
 
         @Override

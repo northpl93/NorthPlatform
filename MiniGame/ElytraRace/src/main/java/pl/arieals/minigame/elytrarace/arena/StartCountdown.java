@@ -15,6 +15,7 @@ import org.bukkit.util.Vector;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.zgame.api.bukkit.utils.AbstractCountdown;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -55,8 +56,9 @@ public class StartCountdown extends AbstractCountdown
                 color = ChatColor.GREEN;
             }
 
-            final String message = this.msg.getMessage(locale, "start_countdown", time);
-            final Title title = new Title(color + message, "", 0, 21, 0);
+            final BaseComponent message = this.msg.getMessage(locale, "start_countdown", time);
+            message.setColor(color.asBungee());
+            final Title title = new Title(message, null, 0, 21, 0);
 
             player.sendTitle(title);
 

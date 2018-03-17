@@ -1,5 +1,6 @@
 package pl.north93.zgame.api.bukkit.gui.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -293,7 +294,7 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
             gui.getContent().renderContent();
             gui.getContent().resetDirty();
 
-            for (GuiTrackerEntry entry : entries)
+            for (GuiTrackerEntry entry : new ArrayList<>(entries))
             {
                 entry.refreshInventory();
             }
@@ -312,7 +313,7 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
 
             hotbar.resetDirty();
 
-            for (GuiTrackerEntry entry : entries)
+            for (GuiTrackerEntry entry : new ArrayList<>(entries))
             {
                 entry.refreshHotbarMenu();
             }

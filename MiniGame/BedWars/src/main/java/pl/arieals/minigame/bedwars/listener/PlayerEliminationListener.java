@@ -1,6 +1,6 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColorCodes;
+import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
 
 
 import java.util.logging.Level;
@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import com.destroystokyo.paper.Title;
 
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,7 +42,7 @@ public class PlayerEliminationListener implements Listener
         }
 
         // resetujemy maksymalne zdrowie ktore moglo zostac zmienione przez ulepszenie
-        player.setMaxHealth(20);
+        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
         // czyscimy ekwipunek, nie jest potrzebny spectatorowi
         player.getInventory().clear();
 
