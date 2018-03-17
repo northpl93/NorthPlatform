@@ -1,5 +1,6 @@
 package pl.north93.zgame.antycheat.timeline;
 
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -11,6 +12,7 @@ public final class PlayerProperties
     private final boolean            sprinting;
     private final boolean            flying;
     private final boolean            gliding;
+    private final double             movementSpeed;
     private final int                ping;
     private final Vector             velocity;
 
@@ -20,6 +22,7 @@ public final class PlayerProperties
         this.sprinting = player.isSprinting();
         this.flying = player.isFlying();
         this.gliding = player.isGliding();
+        this.movementSpeed = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue();
         this.ping = player.spigot().getPing();
         this.velocity = player.getVelocity();
     }
@@ -42,6 +45,11 @@ public final class PlayerProperties
     public boolean isGliding()
     {
         return this.gliding;
+    }
+
+    public double getMovementSpeed()
+    {
+        return this.movementSpeed;
     }
 
     public int getPing()

@@ -2,7 +2,7 @@ package pl.north93.zgame.antycheat.analysis.impl;
 
 import static java.text.MessageFormat.format;
 
-import static pl.north93.zgame.api.bukkit.utils.ChatUtils.translateAlternateColorCodes;
+import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
 
 
 import java.util.ArrayList;

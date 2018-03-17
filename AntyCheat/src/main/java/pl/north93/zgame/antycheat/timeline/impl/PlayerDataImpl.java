@@ -1,8 +1,5 @@
 package pl.north93.zgame.antycheat.timeline.impl;
 
-import static org.diorite.utils.SimpleEnum.SMALL_LOAD_FACTOR;
-
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +13,7 @@ class PlayerDataImpl implements PlayerData
 {
     private final Player       player;
     private final TimelineImpl timeline;
-    private final Map<DataKey, Object> data = new HashMap<>(2, SMALL_LOAD_FACTOR);
+    private final Map<DataKey, Object> data = new HashMap<>(2, 0.01f);
 
     public PlayerDataImpl(final Player player, final TimelineImpl timeline)
     {

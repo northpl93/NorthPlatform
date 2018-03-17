@@ -14,6 +14,7 @@ import pl.north93.zgame.antycheat.event.impl.ClientMoveTimelineEvent;
 import pl.north93.zgame.antycheat.event.impl.VelocityAppliedTimelineEvent;
 import pl.north93.zgame.antycheat.timeline.DataKey;
 import pl.north93.zgame.antycheat.timeline.PlayerData;
+import pl.north93.zgame.antycheat.timeline.PlayerProperties;
 import pl.north93.zgame.antycheat.timeline.PlayerTickInfo;
 import pl.north93.zgame.antycheat.utils.DistanceUtils;
 import pl.north93.zgame.antycheat.utils.EntityUtils;
@@ -85,6 +86,10 @@ public class JumpController
             this.handleLanding(event);
         }
 
+        if (tickInfo.isShortAfterTeleport() || tickInfo.isShortAfterSpawn())
+        {
+            return SingleAnalysisResult.EMPTY;
+        }
         return singleAnalysisResult;
     }
 
@@ -361,8 +366,10 @@ public class JumpController
 
     private double calculateMaxRisingHorizontalDistance(final Vector startVelocity, final double maxHeight)
     {
-        final boolean sprintingWhileStarted = this.startTickInfo.getProperties().isSprinting();
-        final double normalJump = (sprintingWhileStarted ? 2.5 : 1.5) + maxHeight * 0.01; // policzone z dupy
+        final double heightBonus = maxHeight / (maxHeight + 1);
+        final double normalJump = this.getBaseJumpDistance() + heightBonus; // policzone z dupy
+        //Bukkit.broadcastMessage("heightDist: " + heightBonus);
+        //Bukkit.broadcastMessage("baseDist:" + this.getBaseJumpDistance() + " totalDist:" + normalJump);
 
         final double maxDistanceX = EntityUtils.maxHeightByStartVelocity(Math.abs(startVelocity.getX()));
         final double maxDistanceZ = EntityUtils.maxHeightByStartVelocity(Math.abs(startVelocity.getZ()));
@@ -384,6 +391,17 @@ public class JumpController
 
         final double vectorCrossProductXZ = Math.sqrt(maxDistanceX * maxDistanceX + maxDistanceZ * maxDistanceZ);
         return vectorCrossProductXZ + fallDistance * 0.5;
+    }
+
+    private double getBaseJumpDistance()
+    {
+        final PlayerProperties properties = this.startTickInfo.getProperties();
+
+        final boolean sprintingWhileStarted = properties.isSprinting();
+        final double walkSpeed = properties.getMovementSpeed();
+        //Bukkit.broadcastMessage("movSpeed: " + properties.getMovementSpeed());
+
+        return sprintingWhileStarted ? walkSpeed * 15.5 : walkSpeed * 10;
     }
 
     // pobiera z linii czasu ostatnie ustawione dla gracza velocity

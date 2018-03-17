@@ -31,7 +31,7 @@ public class MovementManipulationChecker implements EventAnalyser<ClientMoveTime
         final JumpController jumpController = JumpController.get(data);
 
         // jak trzeba to pomijamy wszystkie checki
-        if (shouldSkip(data, tickInfo))
+        if (shouldSkip(data))
         {
             // resetujemy kontroler skoku, aby upewnic sie, ze po zejsciu ewentualnych blokad bedzie mial czyste srodowisko pracy
             jumpController.forceReset();
@@ -72,15 +72,9 @@ public class MovementManipulationChecker implements EventAnalyser<ClientMoveTime
         return null;
     }
 
-    public static boolean shouldSkip(final PlayerData data, final PlayerTickInfo tickInfo)
+    public static boolean shouldSkip(final PlayerData data)
     {
         final Player player = data.getPlayer();
-
-        if (tickInfo.isShortAfterSpawn() || tickInfo.isShortAfterTeleport())
-        {
-            // jeśli jest krótko po teleporcie lub spawnie to pomojamy
-            return true;
-        }
 
         final GameMode gameMode = player.getGameMode();
         if (gameMode == GameMode.CREATIVE || gameMode == GameMode.SPECTATOR)

@@ -1,8 +1,5 @@
 package pl.north93.zgame.antycheat.timeline.impl;
 
-import static org.diorite.utils.SimpleEnum.SMALL_LOAD_FACTOR;
-
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -45,7 +42,7 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
         this.queuedEvents = new LinkedList<>();
         this.events = new LinkedEventsQueue(timelineManager);
         this.violations = new ViolationsStorage(timelineManager.getAnalysisManager(), player);
-        this.tickInfo = new HashMap<>(ticksToTrack, SMALL_LOAD_FACTOR);
+        this.tickInfo = new HashMap<>(ticksToTrack, 0.01f);
     }
 
     /**
