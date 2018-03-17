@@ -18,15 +18,19 @@ import pl.north93.zgame.api.global.network.server.group.ServersGroupDto;
 import pl.north93.zgame.api.global.redis.observable.Hash;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
+import pl.north93.zgame.api.global.redis.rpc.Targets;
 
 class ServersManagerImpl implements IServersManager
 {
     private final Unsafe          unsafe = new ServersManagerUnsafe();
+    private final IRpcManager     rpcManager;
     private Hash<ServerDto>       servers;
     private Hash<ServersGroupDto> serversGroups;
 
-    public ServersManagerImpl(final IObservationManager observationManager)
+    public ServersManagerImpl(final IRpcManager rpcManager, final IObservationManager observationManager)
     {
+        this.rpcManager = rpcManager;
         this.servers = observationManager.getHash(ServerDto.class, "servers");
         this.serversGroups = observationManager.getHash(ServersGroupDto.class, "servers_groups");
     }
@@ -40,7 +44,7 @@ class ServersManagerImpl implements IServersManager
     @Override
     public IServerRpc getServerRpc(final UUID uuid)
     {
-        throw new UnsupportedOperationException(); // todo
+        return this.rpcManager.createRpcProxy(IServerRpc.class, Targets.server(uuid));
     }
 
     @Override

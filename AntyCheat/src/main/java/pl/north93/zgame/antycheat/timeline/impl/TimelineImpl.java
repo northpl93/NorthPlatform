@@ -145,7 +145,7 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
      */
     public synchronized void pushEvent(final TimelineEvent timelineEvent)
     {
-        //Bukkit.broadcastMessage(timelineEvent.toString()); // todo
+        //Bukkit.broadcastMessage(timelineEvent.toString());
         final Tick currentTick = this.getCurrentTick();
         if (currentTick.isCompleted())
         {

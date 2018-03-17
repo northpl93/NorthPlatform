@@ -41,11 +41,11 @@ class PlayersManagerImpl implements IPlayersManager
     private final IRpcManager         rpcManager;
     private final Unsafe              unsafe;
 
-    public PlayersManagerImpl(final IObservationManager observer, final IRpcManager rpcManager)
+    public PlayersManagerImpl(final IRpcManager rpcManager, final IObservationManager observer)
     {
         INSTANCE = this;
-        this.rpcManager = rpcManager;
         this.observer = observer;
+        this.rpcManager = rpcManager;
         this.playerCache = new PlayerCacheImpl();
         this.playersDataManager = new PlayersDataManager(this);
         this.unsafe = new PlayersManagerUnsafeImpl();

@@ -4,11 +4,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import pl.arieals.api.minigame.server.MiniGameServer;
+import pl.arieals.api.minigame.server.gamehost.GameHostManager;
+import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.north93.zgame.api.bukkit.server.event.ShutdownCancelledEvent;
 import pl.north93.zgame.api.bukkit.server.event.ShutdownScheduledEvent;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ServerShutdownListener implements Listener
 {
+    @Inject
+    private MiniGameServer miniGameServer;
+
     @EventHandler
     public void onShutdownRequest(final ShutdownScheduledEvent event)
     {
@@ -25,6 +32,17 @@ public class ServerShutdownListener implements Listener
     @EventHandler
     public void onShutdownCancelled(final ShutdownCancelledEvent event)
     {
-        // todo sprawdzic czy ilosc aren sie zgadza i ew. utworzyc nowe
+        final GameHostManager serverManager = this.miniGameServer.getServerManager();
+        final LocalArenaManager arenaManager = serverManager.getArenaManager();
+
+        final int arenas = arenaManager.getArenas().size();
+        final int target = serverManager.getMiniGameConfig().getArenas();
+
+        for (int i = 0; i < target - arenas; i++)
+        {
+            // tworzymy nowe areny jesli ich ilosc zmniejszyla sie gdy
+            // bylo zaplanowane wylaczenie
+            arenaManager.createArena();
+        }
     }
 }
