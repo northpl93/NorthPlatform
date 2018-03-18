@@ -17,6 +17,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.util.BlockVector;
+import org.bukkit.util.Vector;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
@@ -245,9 +246,11 @@ public class GoldHunterArena implements IArenaData, ITickable
     
     public boolean canBuild(BlockVector location)
     {
+        Vector loc = new Vector(location.getBlockX() + 0.5, location.getBlockY(), location.getBlockZ() + 0.5);
+
         for ( Location spawnLocation : spawns.values() )
         {
-            if ( location.distanceSquared(spawnLocation.clone().add(0.5, 0.5, 0.5).toVector()) <= 9 )
+            if ( loc.distanceSquared(spawnLocation.clone().toVector()) <= 4.5 * 4.5 )
             {
                 return false;
             }
