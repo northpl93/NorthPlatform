@@ -5,8 +5,9 @@ import pl.arieals.api.minigame.shared.api.party.event.InviteToPartyNetEvent;
 import pl.arieals.api.minigame.shared.api.party.event.JoinPartyNetEvent;
 import pl.arieals.api.minigame.shared.api.party.event.LeavePartyNetEvent.LeavePartyReason;
 import pl.arieals.api.minigame.shared.api.party.event.LocationChangePartyNetEvent;
-import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
+import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.players.Identity;
+import pl.north93.zgame.api.global.network.players.PlayerOfflineException;
 
 /**
  * Interfejs udostępniający metody modyfikujące Party.
@@ -39,11 +40,12 @@ public interface IPartyAccess extends IParty
      * Gdy gracz posiada już jako ostatnie zaproszenie do tego party to nie zostanie utworzone nowe.
      *
      * @param playerIdentity Identity gracza którego zapraszamy.
-     * @throws PlayerNotFoundException Gdy nie udało się powiązać Identity z graczem lub gdy jest offline.
+     * @throws PlayerNotFoundException Gdy nie udało się powiązać Identity z graczem.
+     * @throws PlayerOfflineException Gdy gracz nie jest zalogowany w sieci.
      * @throws PlayerAlreadyHasPartyException Gdy dany gracz jest już w innym Party.
      * @return True jeśli zaproszenie zostało utworzone, false jeśli gracz już jest zaproszony.
      */
-    boolean invitePlayer(Identity playerIdentity) throws PlayerNotFoundException, PlayerAlreadyHasPartyException;
+    boolean invitePlayer(Identity playerIdentity) throws PlayerNotFoundException, PlayerOfflineException, PlayerAlreadyHasPartyException;
 
     /**
      * Usuwa zaproszenie do tego party konkretnego gracza.
@@ -63,9 +65,10 @@ public interface IPartyAccess extends IParty
      *
      * @param playerIdentity Gracz którego dodajemy do Party. (nie musi mieć zaproszenia)
      * @throws PlayerNotFoundException Gdy nie udało się powiązać Identity z graczem lub gdy jest offline.
+     * @throws PlayerOfflineException Gdy gracz nie jest zalogowany w sieci.
      * @throws PlayerAlreadyHasPartyException Gdy dany gracz jest już w innym Party.
      */
-    void addPlayer(Identity playerIdentity) throws PlayerNotFoundException, PlayerAlreadyHasPartyException;
+    void addPlayer(Identity playerIdentity) throws PlayerNotFoundException, PlayerOfflineException, PlayerAlreadyHasPartyException;
 
     boolean removePlayer(Identity playerIdentity, LeavePartyReason reason) throws PlayerNotFoundException;
 

@@ -2,7 +2,7 @@ package pl.north93.zgame.api.economy;
 
 import java.util.UUID;
 
-import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
+import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.players.Identity;
 
 public interface IEconomyManager

@@ -79,7 +79,17 @@ class CachedHashValueImpl<T> extends CachedValue<T>
     @Override
     public T getAndDelete()
     {
-        throw new UnsupportedOperationException("getAndDelete");
+        final T value = this.hash.getAndDelete(this.name);
+        if (value != null)
+        {
+            // czyscimy lokalne cache zeby nie czekac na update z redisa.
+            this.cache = null;
+
+            // wysylamy aktualizacje mowiaca o usunieciu wartosci.
+            this.observationManager.getValueSubHandler().update(this, new byte[0]);
+        }
+
+        return value;
     }
 
     @Override
@@ -149,8 +159,7 @@ class CachedHashValueImpl<T> extends CachedValue<T>
     @Override
     public boolean delete()
     {
-        this.hash.delete(this.name);
-        return true;
+        return this.hash.delete(this.name);
     }
 
     @Override

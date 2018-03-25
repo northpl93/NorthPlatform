@@ -11,13 +11,14 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import com.google.common.base.Preconditions;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
+import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
@@ -117,7 +118,7 @@ class PlayersManagerImpl implements IPlayersManager
         }
 
         lock.unlock();
-        throw new PlayerNotFoundException(completeIdentity.getNick());
+        throw new PlayerNotFoundException(completeIdentity);
     }
 
     @SuppressWarnings("unchecked")
@@ -288,15 +289,19 @@ class PlayersManagerImpl implements IPlayersManager
             // mamy calkowicie puste identity, nic z nim nie zrobimy
             throw new IllegalArgumentException("Both nick and uuid are null");
         }
-        else if (currentNick != null)
-        {
-            final UUID uuid = this.getUuidFromNick(currentNick).orElseThrow(() -> new PlayerNotFoundException(identity));
-            return Identity.create(uuid, currentNick);
-        }
         else
         {
-            final String nick = this.getNickFromUuid(currentUuid).orElse(null);
-            return Identity.create(currentUuid, nick);
+            final Supplier<PlayerNotFoundException> exceptionSupplier = () -> new PlayerNotFoundException(identity);
+            if (currentNick != null)
+            {
+                final UUID uuid = this.getUuidFromNick(currentNick).orElseThrow(exceptionSupplier);
+                return Identity.create(uuid, currentNick);
+            }
+            else
+            {
+                final String nick = this.getNickFromUuid(currentUuid).orElseThrow(exceptionSupplier);
+                return Identity.create(currentUuid, nick);
+            }
         }
     }
 

@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.redis.observable.Hash;
 import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.api.global.storage.StorageConnector;
 
 class HashImpl<V> implements Hash<V>
 {
@@ -31,9 +32,10 @@ class HashImpl<V> implements Hash<V>
     }
 
     @Override
-    public void put(final String key, final V value)
+    public boolean put(final String key, final V value)
     {
-        this.observer.getRedis().hset(this.name, key, this.observer.getMsgPack().serialize(this.valueClass, value));
+        final byte[] bytes = this.observer.getMsgPack().serialize(this.valueClass, value);
+        return this.observer.getRedis().hset(this.name, key, bytes);
     }
 
     /*default*/ void put(final String key, final byte[] bytes)
@@ -45,6 +47,22 @@ class HashImpl<V> implements Hash<V>
     public V get(final String key)
     {
         return this.deserialize(this.observer.getRedis().hget(this.name, key));
+    }
+
+    /*default*/ V getAndDelete(final String key)
+    {
+        final StorageConnector storageConnector = this.observer.getStorageConnector();
+
+        final byte[] result = storageConnector.redisAtomically(redis ->
+        {
+            redis.multi();
+            redis.hget(this.name, key);
+            redis.hdel(this.name, key);
+
+            return (byte[]) redis.exec().get(0);
+        });
+
+        return this.deserialize(result);
     }
 
     @Override
@@ -66,9 +84,9 @@ class HashImpl<V> implements Hash<V>
     }
 
     @Override
-    public void delete(final String key)
+    public boolean delete(final String key)
     {
-        this.observer.getRedis().hdel(this.name, key);
+        return this.observer.getRedis().hdel(this.name, key) > 0;
     }
 
     @Override

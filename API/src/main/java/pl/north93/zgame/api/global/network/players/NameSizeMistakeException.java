@@ -1,5 +1,10 @@
 package pl.north93.zgame.api.global.network.players;
 
+/**
+ * Wyjątek rzucany podczas ładowania gracza w offline mode z bazy danych w
+ * momencie gdy wielkość liter nicku w bazie nie zgadza się z wielkością
+ * liter w nicku według którego znaleźliśmy te dane.
+ */
 public class NameSizeMistakeException extends Exception
 {
     private final String nick;

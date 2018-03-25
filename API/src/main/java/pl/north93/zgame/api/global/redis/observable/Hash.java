@@ -6,7 +6,13 @@ public interface Hash<V>
 {
     String getName();
 
-    void put(String key, V value);
+    /**
+     * @param key Field name in hash.
+     * @param value New value of field.
+     * @return True if field doesn't exist and value has been set,
+     *         false when field already exist and value has been updated.
+     */
+    boolean put(String key, V value);
 
     V get(String key);
 
@@ -16,7 +22,11 @@ public interface Hash<V>
 
     Set<V> values();
 
-    void delete(String key);
+    /**
+     * @param key Field name in hash.
+     * @return True if successfully deleted.
+     */
+    boolean delete(String key);
 
     boolean exists(String key);
 

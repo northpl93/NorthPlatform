@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.impl.OnlinePlayerImpl;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
@@ -134,6 +133,17 @@ public interface IPlayersManager
     {
         void logPlayerJoin(UUID uuid, String nick, boolean premium, String ip, String bungee);
 
+        /**
+         * Wczytuje gracza w stanie offline z nieulotnej bazy danych do bazy danych tymczasowej
+         * czyniąc go graczem online.
+         *
+         * @param uuid UUID wczytywanego gracza.
+         * @param name Nick wczytywanego gracza.
+         * @param premium Czy ładujemy gracza zweryfikowanego w online mode.
+         * @param proxyId Unikalny identyfikator proxy odpowiedzialnego za wczytanie danych gracza
+         * @return Wartość reprezentująca gracza online w ulotnej bazie danych.
+         * @throws NameSizeMistakeException Gdy wielkość liter gracza offline mode się nie zgadza.
+         */
         Value<OnlinePlayerImpl> loadPlayer(UUID uuid, String name, Boolean premium, String proxyId) throws NameSizeMistakeException;
 
         Optional<Value<IOfflinePlayer>> getOfflinePlayerValue(UUID uuid);

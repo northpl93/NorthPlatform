@@ -98,6 +98,15 @@ public interface Value<T>
     boolean isCached();
 
     /**
+     * Checks if value is preset using cache and redis.
+     * @return True if value is preset.
+     */
+    default boolean isPreset()
+    {
+        return this.isCached() || this.isAvailable();
+    }
+
+    /**
      * Set a timeout on key.
      * Pass here -1 to persist (remove timeout) value.
      *

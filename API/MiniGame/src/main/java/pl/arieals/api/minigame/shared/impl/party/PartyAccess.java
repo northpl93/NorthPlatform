@@ -19,10 +19,11 @@ import pl.arieals.api.minigame.shared.api.party.event.JoinPartyNetEvent;
 import pl.arieals.api.minigame.shared.api.party.event.LeavePartyNetEvent;
 import pl.arieals.api.minigame.shared.api.party.event.LeavePartyNetEvent.LeavePartyReason;
 import pl.arieals.api.minigame.shared.api.party.event.LocationChangePartyNetEvent;
-import pl.north93.zgame.api.global.exceptions.PlayerNotFoundException;
+import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.Identity;
+import pl.north93.zgame.api.global.network.players.PlayerOfflineException;
 
 /*default*/ class PartyAccess implements IPartyAccess
 {
@@ -65,7 +66,7 @@ import pl.north93.zgame.api.global.network.players.Identity;
     }
 
     @Override
-    public boolean invitePlayer(final Identity playerIdentity) throws PlayerNotFoundException, PlayerAlreadyHasPartyException
+    public boolean invitePlayer(final Identity playerIdentity) throws PlayerNotFoundException, PlayerOfflineException, PlayerAlreadyHasPartyException
     {
         Preconditions.checkState(this.isNotDeleted(), "Party is deleted");
 
@@ -74,7 +75,7 @@ import pl.north93.zgame.api.global.network.players.Identity;
             final IPlayer player = t.getPlayer();
             if (t.isOffline())
             {
-                throw new PlayerNotFoundException(player.getLatestNick());
+                throw new PlayerOfflineException(player);
             }
 
             if (this.partyManager.playerHasParty(player))
@@ -125,7 +126,7 @@ import pl.north93.zgame.api.global.network.players.Identity;
     }
 
     @Override
-    public void addPlayer(final Identity playerIdentity) throws PlayerNotFoundException, PlayerAlreadyHasPartyException
+    public void addPlayer(final Identity playerIdentity) throws PlayerNotFoundException, PlayerOfflineException, PlayerAlreadyHasPartyException
     {
         Preconditions.checkState(this.isNotDeleted(), "Party is deleted");
 
@@ -134,7 +135,7 @@ import pl.north93.zgame.api.global.network.players.Identity;
             final IPlayer player = t.getPlayer();
             if (t.isOffline())
             {
-                throw new PlayerNotFoundException(player.getLatestNick());
+                throw new PlayerOfflineException(player);
             }
 
             if (this.partyManager.playerHasParty(player))
