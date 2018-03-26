@@ -44,7 +44,7 @@
         <dependency>
             <groupId>com.ea.agentloader</groupId>
             <artifactId>ea-agent-loader</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.reflections</groupId>
@@ -56,7 +56,6 @@
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
             <version>${bungee-api.version}</version>
-            <type>jar</type>
             <exclusions>
                 <!-- stara guava -->
                 <exclusion>
@@ -133,12 +132,12 @@
         <dependency>
             <groupId>biz.paluch.redis</groupId>
             <artifactId>lettuce</artifactId>
-            <version>4.4.2.Final</version>
+            <version>4.4.3.Final</version>
         </dependency>
         <dependency>
             <groupId>org.msgpack</groupId>
             <artifactId>msgpack-core</artifactId>
-            <version>0.8.14</version>
+            <version>0.8.15</version>
         </dependency>
 
         <!-- Testing stuff -->
@@ -194,10 +193,6 @@
 
         <plugins>
             <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-
-            <plugin>
                 <artifactId>maven-shade-plugin</artifactId>
                 <!-- Konfigurujemy excludowanie -->
                 <executions>
@@ -212,11 +207,16 @@
                                     <exclude>pl.north93.zgame.api:instrumentationagent</exclude>
                                     <exclude>pl.north93:northspigot</exclude>
                                     <exclude>org.spigotmc:spigot-server</exclude>
-                                    <exclude>net.md-5:*</exclude>
+
+                                    <exclude>net.md-5:bungeecord-api</exclude>
+                                    <exclude>net.md-5:bungeecord-config</exclude>
+                                    <exclude>net.md-5:bungeecord-event</exclude>
+                                    <exclude>net.md-5:bungeecord-protocol</exclude>
 
                                     <exclude>org.yaml:snakeyaml</exclude>
 
                                     <exclude>com.google.code.findbugs:annotations</exclude>
+                                    <exclude>com.google.code.findbugs:jsr305</exclude>
                                     <exclude>de.schlichtherle:truezip</exclude>
                                     <exclude>net.sf.trove4j:trove4j</exclude>
                                     <exclude>org.mongodb:bson</exclude>
@@ -231,11 +231,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-
-            <!-- Uruchamiamy nasza konfiguracje testowania -->
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
 
             <!-- Konfigurujemy budowanie niestandardowego jara -->
