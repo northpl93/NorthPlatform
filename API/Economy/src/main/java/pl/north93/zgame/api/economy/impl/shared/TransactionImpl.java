@@ -84,9 +84,12 @@ class TransactionImpl implements ITransaction
     public void close() throws Exception
     {
         this.checkClosed();
-        this.isClosed = true;
 
+        // aktualizujemy dane w rankingu
         this.currencyRanking.update(this.getAssociatedPlayer().getUuid(), this.getAmount());
+
+        // zamykamy transakcje
+        this.isClosed = true;
         this.playerTransaction.close();
     }
 
