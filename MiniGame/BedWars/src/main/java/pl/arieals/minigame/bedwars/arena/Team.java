@@ -94,17 +94,6 @@ public class Team
         return this.getColor().name().toLowerCase(Locale.ROOT);
     }
 
-    /**
-     * Zwraca literę reprezentującą dany kolor w Bukkicie
-     * np. dla RED zwróci c.
-     * @see ChatColor
-     * @return litera koloru danego teamu.
-     */
-    public char getColorChar()
-    {
-        return this.getColor().getChar();
-    }
-
     public Set<Player> getPlayers()
     {
         return this.players;

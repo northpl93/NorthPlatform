@@ -43,13 +43,13 @@ public class BaseGeneratorUpgrade implements IUpgrade
         final int nextLevel = Math.min(team.getUpgrades().getUpgradeLevel(this) + 1, this.maxLevel());
         if (nextLevel < 3)
         {
-            return messagesBox.getMessage(player.spigot().getLocale(), "upgrade_gui.BaseGeneratorUpgrade.lore");
+            return messagesBox.getMessage(player.getLocale(), "upgrade_gui.BaseGeneratorUpgrade.lore");
         }
         else if (nextLevel == 3)
         {
-            return messagesBox.getMessage(player.spigot().getLocale(), "upgrade_gui.BaseGeneratorUpgrade.lore3");
+            return messagesBox.getMessage(player.getLocale(), "upgrade_gui.BaseGeneratorUpgrade.lore3");
         }
-        return messagesBox.getMessage(player.spigot().getLocale(), "upgrade_gui.BaseGeneratorUpgrade.lore4");
+        return messagesBox.getMessage(player.getLocale(), "upgrade_gui.BaseGeneratorUpgrade.lore4");
     }
 
     @Override

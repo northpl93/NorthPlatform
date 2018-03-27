@@ -152,11 +152,11 @@ public class GameScoreboard implements IScoreboardLayout
             final int lives = team.countAdditionalLives();
             if (renderFlag && lives > 0)
             {
-                builder.translated("scoreboard.team_line_lives", team.getColor().getChar(), teamName, status, lives);
+                builder.translated("scoreboard.team_line_lives", team.getColor(), teamName, status, lives);
             }
             else
             {
-                builder.translated("scoreboard.team_line", team.getColor().getChar(), teamName, status);
+                builder.translated("scoreboard.team_line", team.getColor(), teamName, status);
             }
         });
     }

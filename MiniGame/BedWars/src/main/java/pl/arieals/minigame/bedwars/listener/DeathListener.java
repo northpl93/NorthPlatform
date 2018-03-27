@@ -204,17 +204,17 @@ public class DeathListener implements Listener
         if (elimination)
         {
             arena.getPlayersManager().broadcast(this.messages, deathMessageKey,
-                    team.getColorChar(),
+                    team.getColor(),
                     player.getDisplayName(),
-                    damagerData.getTeam().getColorChar(),
+                    damagerData.getTeam().getColor(),
                     damager.getDisplayName());
         }
         else
         {
             arena.getPlayersManager().broadcast(this.messages, deathMessageKey,
-                    team.getColorChar(),
+                    team.getColor(),
                     player.getDisplayName(),
-                    damagerData.getTeam().getColorChar(),
+                    damagerData.getTeam().getColor(),
                     damager.getDisplayName());
         }
     }

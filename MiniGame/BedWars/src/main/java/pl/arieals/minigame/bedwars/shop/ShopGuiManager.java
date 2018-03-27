@@ -120,7 +120,7 @@ public final class ShopGuiManager
 
         final String currencyKey = "currency." + priceItem.getType().name().toLowerCase(Locale.ROOT);
         final String priceMsgKey = PluralForm.transformKey(currencyKey, priceItem.getAmount());
-        final String price = this.shopMessages.getMessage(locale, priceMsgKey, priceItem.getAmount()).toLegacyText();
+        final String price = this.shopMessages.getLegacyMessage(locale, priceMsgKey, priceItem.getAmount());
 
         final String description = this.shopMessages.getMessage(locale, "item." + name + ".lore");
 
@@ -129,26 +129,26 @@ public final class ShopGuiManager
 
         if (buyStatus.canBuy())
         {
-            return this.shopMessages.getMessage(locale,
+            return this.shopMessages.getLegacyMessage(locale,
                     "gui.shop.item_lore.available",
                     description,
-                    price).toLegacyText();
+                    price);
         }
         else if (buyStatus == ItemPreBuyEvent.BuyStatus.NOT_ENOUGH_CURRENCY)
         {
-            final String currencyName = ChatUtils.stripColor(this.shopMessages.getMessage(locale, currencyKey + ".many", "").toLegacyText());
-            return this.shopMessages.getMessage(locale,
+            final String currencyName = ChatUtils.stripColor(this.shopMessages.getLegacyMessage(locale, currencyKey + ".many", ""));
+            return this.shopMessages.getLegacyMessage(locale,
                     "gui.shop.item_lore.no_money",
                     description,
                     price,
-                    currencyName).toLegacyText();
+                    currencyName);
         }
         else
         {
-            return this.shopMessages.getMessage(locale,
+            return this.shopMessages.getLegacyMessage(locale,
                     "gui.shop.item_lore.already_had",
                     description,
-                    price).toLegacyText();
+                    price);
         }
     }
 

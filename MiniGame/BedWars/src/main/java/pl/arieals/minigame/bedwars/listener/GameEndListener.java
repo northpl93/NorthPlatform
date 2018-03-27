@@ -77,7 +77,7 @@ public class GameEndListener implements Listener
         }
 
         final TranslatableString teamName = TranslatableString.of(this.messages, "@team.nominative." + team.getName());
-        arena.getPlayersManager().broadcast(this.messages, "team_eliminated", MessageLayout.SEPARATED, team.getColorChar(), teamName);
+        arena.getPlayersManager().broadcast(this.messages, "team_eliminated", MessageLayout.SEPARATED, team.getColor(), teamName);
 
         final BedWarsArena arenaData = arena.getArenaData();
         if (arenaData.getTeams().stream().filter(not(Team::isEliminated)).count() <= 1)
@@ -141,7 +141,7 @@ public class GameEndListener implements Listener
             final TranslatableString teamNameKey = TranslatableString.of(this.messages, "@team.scoreboard." + winnerTeam.getName());
             final String nicks = this.playersList(winnerTeam);
 
-            players.broadcast(this.messages, "end.winner_list", MessageLayout.CENTER, winnerTeam.getColorChar(), teamNameKey, nicks);
+            players.broadcast(this.messages, "end.winner_list", MessageLayout.CENTER, winnerTeam.getColor(), teamNameKey, nicks);
         }
 
         players.broadcast(this.messages, "end.top_kills", MessageLayout.CENTER);

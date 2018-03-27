@@ -136,27 +136,27 @@ public class UpgradeManager
 
         if (actualLevel >= upgrade.maxLevel())
         {
-            return this.shopMessages.getMessage(player.spigot().getLocale(),
+            return this.shopMessages.getLegacyMessage(player.getLocale(),
                     "gui.upgrade_lore.max_level",
-                    description).toLegacyText();
+                    description);
         }
         else
         {
-            final String diamondsWord = this.shopMessages.getMessage(player.spigot().getLocale(), PluralForm.transformKey("currency.diamond", price), price).toLegacyText();
+            final String diamondsWord = this.shopMessages.getLegacyMessage(player.getLocale(), PluralForm.transformKey("currency.diamond", price), price);
             if (player.getInventory().containsAtLeast(new ItemStack(Material.DIAMOND), price))
             {
-                return this.shopMessages.getMessage(player.spigot().getLocale(),
+                return this.shopMessages.getLegacyMessage(player.getLocale(),
                         "gui.upgrade_lore.available",
                         description,
                         diamondsWord,
-                        actualLevel + 1).toLegacyText();
+                        actualLevel + 1);
             }
             else
             {
-                return this.shopMessages.getMessage(player.spigot().getLocale(),
+                return this.shopMessages.getLegacyMessage(player.getLocale(),
                         "gui.upgrade_lore.no_diamonds",
                         description,
-                        diamondsWord).toLegacyText();
+                        diamondsWord);
             }
         }
     }

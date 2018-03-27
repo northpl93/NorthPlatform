@@ -49,18 +49,18 @@ public class BedDestroyListener implements Listener
 
             playersManager.broadcast(isInTeam(team), this.messages,
                     "bed_destroyed.you", MessageLayout.SEPARATED,
-                    team.getColor().getChar(),
-                    destroyerData.getTeam().getColor().getChar(),
+                    team.getColor(),
+                    destroyerData.getTeam().getColor(),
                     destroyerData.getBukkitPlayer().getDisplayName());
 
             final TranslatableString teamName = TranslatableString.of(this.messages, "@team.genitive." + team.getName());
-            playersManager.broadcast(notInTeam(team), this.messages, "bed_destroyed.global", MessageLayout.SEPARATED, team.getColorChar(), teamName, destroyerData.getTeam().getColorChar(), destroyerData.getBukkitPlayer().getDisplayName());
+            playersManager.broadcast(notInTeam(team), this.messages, "bed_destroyed.global", MessageLayout.SEPARATED, team.getColor(), teamName, destroyerData.getTeam().getColor(), destroyerData.getBukkitPlayer().getDisplayName());
         }
         else
         {
             playersManager.broadcast(isInTeam(team), this.messages,
                     "bed_destroyed.you_no_destroyer", MessageLayout.SEPARATED,
-                    team.getColor().getChar());
+                    team.getColor());
         }
 
         for (final Player player : arena.getPlayersManager().getPlayers())
@@ -71,7 +71,7 @@ public class BedDestroyListener implements Listener
 
         for (final Player player : team.getPlayers())
         {
-            final String locale = player.spigot().getLocale();
+            final String locale = player.getLocale();
 
             final String title = translateAlternateColorCodes(this.messages.getMessage(locale, "bed_destroyed.title.title"));
             final String subtitle = translateAlternateColorCodes(this.messages.getMessage(locale, "bed_destroyed.title.subtitle"));

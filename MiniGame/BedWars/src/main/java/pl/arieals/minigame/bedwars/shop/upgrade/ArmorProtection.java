@@ -47,7 +47,7 @@ public class ArmorProtection implements IUpgrade, Listener
     public String getLoreDescription(final MessagesBox messagesBox, final Team team, final Player player)
     {
         final String sharpnessLevel = DioriteMathUtils.toRoman(Math.min(team.getUpgrades().getUpgradeLevel(this) + 1, this.maxLevel()));
-        return messagesBox.getMessage(player.spigot().getLocale(), "upgrade_gui.ArmorProtection.lore", sharpnessLevel).toLegacyText();
+        return messagesBox.getLegacyMessage(player.getLocale(), "upgrade_gui.ArmorProtection.lore", sharpnessLevel);
     }
 
     @EventHandler(ignoreCancelled = true)

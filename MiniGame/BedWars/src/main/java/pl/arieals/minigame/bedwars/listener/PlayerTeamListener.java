@@ -101,7 +101,7 @@ public class PlayerTeamListener implements Listener
 
             final String teamNameDative = this.messages.getMessage(player.getLocale(), "team.dative." + smallestTeam.getName());
             this.messages.sendMessage(player, "separator");
-            this.messages.sendMessage(player, "welcome", MessageLayout.CENTER, smallestTeam.getColorChar(), teamNameDative);
+            this.messages.sendMessage(player, "welcome", MessageLayout.CENTER, smallestTeam.getColor(), teamNameDative);
             this.messages.sendMessage(player, "separator");
         }
     }
@@ -164,8 +164,8 @@ public class PlayerTeamListener implements Listener
             // jesli team ma lozko lub zywych graczy to anulujemy otwarcie skrzynki
             event.setCancelled(true);
 
-            final String teamName = this.messages.getMessage(player.spigot().getLocale(), "team.nominative." + teamAt.getName());
-            this.messages.sendMessage(player, "chest_blocked", teamAt.getColorChar(), teamName);
+            final String teamName = this.messages.getMessage(player.getLocale(), "team.nominative." + teamAt.getName());
+            this.messages.sendMessage(player, "chest_blocked", teamAt.getColor(), teamName);
         }
     }
 

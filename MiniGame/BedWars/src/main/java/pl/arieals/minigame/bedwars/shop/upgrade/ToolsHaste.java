@@ -47,7 +47,7 @@ public class ToolsHaste implements IUpgrade, Listener
     public String getLoreDescription(final MessagesBox messagesBox, final Team team, final Player player)
     {
         final String hasteLevel = DioriteMathUtils.toRoman(Math.min(team.getUpgrades().getUpgradeLevel(this) + 1, this.maxLevel()));
-        return messagesBox.getMessage(player.spigot().getLocale(), "upgrade_gui.ToolsHaste.lore", hasteLevel).toLegacyText();
+        return messagesBox.getLegacyMessage(player.getLocale(), "upgrade_gui.ToolsHaste.lore", hasteLevel);
     }
 
     @Override
