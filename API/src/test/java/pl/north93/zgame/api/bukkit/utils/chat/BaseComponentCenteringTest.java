@@ -5,7 +5,8 @@ import org.junit.Test;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 
-public class ChatUtilsTest
+// testy algorytmu wyśrodkowującego BaseComponent
+public class BaseComponentCenteringTest
 {
     @Test
     public void emptyCenter()

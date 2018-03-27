@@ -66,7 +66,7 @@ public class ArenaRewardsImpl implements IArenaRewards
             final List<IReward> values = entry.getValue();
             final IReward.RewardMessageRenderer renderer = values.get(0).getRenderer();
 
-            final BaseComponent component = renderer.composeMessage(messagesBox, Locale.forLanguageTag(player.spigot().getLocale()), values);
+            final BaseComponent component = renderer.composeMessage(messagesBox, Locale.forLanguageTag(player.getLocale()), values);
             player.sendMessage(component);
         }
     }

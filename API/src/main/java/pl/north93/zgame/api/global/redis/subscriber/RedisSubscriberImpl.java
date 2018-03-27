@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.lambdaworks.redis.pubsub.RedisPubSubAdapter;
@@ -39,6 +41,15 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
     {
         this.unSubscribeAll();
         this.executorService.shutdown();
+        try
+        {
+            // oczekujemy na pomyślne zakończenie wszystkich tasków przed zakończeniem
+            this.executorService.awaitTermination(10, TimeUnit.SECONDS);
+        }
+        catch (final InterruptedException e)
+        {
+            this.getLogger().log(Level.SEVERE, "Interrupted while waiting for executor termination", e);
+        }
         this.connection.close();
     }
 

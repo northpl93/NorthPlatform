@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
 import com.google.common.base.Preconditions;
 
 import net.md_5.bungee.api.chat.BaseComponent;
+import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.zgame.api.global.utils.Vars;
 
 class MessagesBoxTranslatableString extends TranslatableString
@@ -26,24 +27,23 @@ class MessagesBoxTranslatableString extends TranslatableString
     @Override
     public BaseComponent getValue(Locale locale, Vars<Object> params)
     {
-        String[] args = new String[messageArgs.length];
+        final Object[] args = new Object[messageArgs.length];
         IntStream.range(0, args.length).forEach(i ->
         {
             final Object value = params.getValue(messageArgs[i]);
-            // todo ulepszyc obsluge komponentów, aby byly wstawiane bezposrednio a nie konwertowane na legacy text
             if (value instanceof TranslatableString)
             {
                 final TranslatableString translatableString = (TranslatableString) value;
-                args[i] = translatableString.getValue(locale, params).toLegacyText();
+                args[i] = translatableString.getValue(locale, params);
             }
             else if (value instanceof BaseComponent)
             {
-                final BaseComponent component = (BaseComponent) value;
-                args[i] = component.toLegacyText();
+                args[i] = value;
             }
             else
             {
-                args[i] = String.valueOf(value);
+                final String possibleLegacyText = String.valueOf(value);
+                args[i] = ChatUtils.fromLegacyText(possibleLegacyText);
             }
         });
         return messagesBox.getMessage(locale, messageKey, args);

@@ -26,7 +26,7 @@ public class TranslatedLine implements IHologramLine
     @Override
     public String render(final IHologram hologram, final Player player, final Locale locale)
     {
-        return this.messagesBox.getMessage(locale, this.msgKey, this.args).toLegacyText();
+        return this.messagesBox.getLegacyMessage(locale, this.msgKey, this.args);
     }
 
     @Override

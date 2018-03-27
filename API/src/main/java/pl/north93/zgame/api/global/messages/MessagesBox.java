@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.global.messages;
 
+import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
+
+
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -11,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
+import pl.north93.zgame.api.bukkit.utils.chat.LegacyTextParser;
 
 public class MessagesBox
 {
@@ -47,7 +50,7 @@ public class MessagesBox
         ResourceBundle bundle = this.getBundle(locale);
         if ( bundle.containsKey(key) )
         {
-            return ChatUtils.translateAlternateColorCodes(bundle.getString(key));
+            return translateAlternateColorCodes(bundle.getString(key));
         }
         else
         {
@@ -60,24 +63,38 @@ public class MessagesBox
         return this.getMessage(Locale.forLanguageTag(locale), key);
     }
 
-    public BaseComponent getMessage(final Locale locale, final String key, final Object... params)
-    {
-        evalParameters(locale, params);
-        final String legacyText = MessageFormat.format(this.getMessage(locale, key), (Object[]) params);
-        return ChatUtils.fromLegacyText(legacyText);
-    }
-
-    public BaseComponent getMessage(final String locale, final String key, final Object... params)
-    {
-        evalParameters(Locale.forLanguageTag(locale), params);
-        final String legacyText = MessageFormat.format(this.getMessage(locale, key), (Object[]) params);
-        return ChatUtils.fromLegacyText(legacyText);
-    }
-
     @Deprecated // uniemozliwia tlumaczenie wiadomosci per-gracz
     public String getMessage(final String key)
     {
         return this.getMessage(Locale.forLanguageTag("pl-PL"), key);
+    }
+
+    // = = = POBIERANIE WIADOMOSCI Z PARAMETRAMI = = = //
+
+    public BaseComponent getMessage(final Locale locale, final String key, final Object... params)
+    {
+        this.evalParameters(locale, params);
+
+        final String rawMessage = this.getMessage(locale, key); // surowy tekst z pliku
+        return LegacyTextParser.parseLegacyText(rawMessage, params);
+    }
+
+    public String getLegacyMessage(final Locale locale, final String key, final Object... params)
+    {
+        this.evalLegacyParameters(locale, params);
+
+        final String rawMessage = this.getMessage(locale, key); // surowy tekst z pliku
+        return translateAlternateColorCodes(MessageFormat.format(rawMessage, params));
+    }
+
+    public BaseComponent getMessage(final String locale, final String key, final Object... params)
+    {
+        return this.getMessage(Locale.forLanguageTag(locale), key, params);
+    }
+
+    public String getLegacyMessage(final String locale, final String key, final Object... params)
+    {
+        return this.getLegacyMessage(Locale.forLanguageTag(locale), key, params);
     }
 
     // = = = WYSYLANIE WIADOMOSCI = = = //
@@ -118,11 +135,29 @@ public class MessagesBox
         this.sendMessage(player, key, MessageLayout.DEFAULT, params);
     }
 
+    // konwertuje wszystkie argumenty na BaseComponent lub legacy tekst
     private void evalParameters(Locale locale, Object[] args)
     {
         for ( int i = 0; i < args.length; i++ )
         {
-            // todo ulepszyc obsluge komponentów, aby byly wstawiane bezposrednio a nie konwertowane na legacy text
+            if ( args[i] instanceof TranslatableString )
+            {
+                final TranslatableString translatableString = (TranslatableString) args[i];
+                args[i] = translatableString.getValue(locale);
+            }
+            else if (! (args[i] instanceof BaseComponent))
+            {
+                final String possibleLegacyText = String.valueOf(args[i]);
+                args[i] = translateAlternateColorCodes(possibleLegacyText);
+            }
+        }
+    }
+
+    // konwertuje wszystkie argumenty na tekst legacy
+    private void evalLegacyParameters(Locale locale, Object[] args)
+    {
+        for ( int i = 0; i < args.length; i++ )
+        {
             if ( args[i] instanceof TranslatableString )
             {
                 final TranslatableString translatableString = (TranslatableString) args[i];
@@ -130,7 +165,8 @@ public class MessagesBox
             }
             else if ( args[i] instanceof BaseComponent )
             {
-                args[i] = ((BaseComponent) args[i]).toLegacyText();
+                final BaseComponent component = (BaseComponent) args[i];
+                args[i] = component.toLegacyText();
             }
         }
     }

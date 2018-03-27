@@ -16,7 +16,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 
-public class ChatUtils
+public final class ChatUtils
 {
     public  static final char    COLOR_CHAR          = '§';
     private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)(" + COLOR_CHAR + "|&)[0-9A-FK-OR]");
@@ -24,13 +24,7 @@ public class ChatUtils
 
     public static BaseComponent fromLegacyText(final String legacyText)
     {
-        final BaseComponent[] components = TextComponent.fromLegacyText(translateAlternateColorCodes(legacyText));
-        if (components.length == 1)
-        {
-            return components[0];
-        }
-
-        return new TextComponent(components);
+        return LegacyTextParser.parseLegacyText(legacyText);
     }
 
     public static String stripColor(final String input)
