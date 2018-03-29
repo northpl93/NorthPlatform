@@ -14,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import pl.north93.zgame.api.bukkit.utils.chat.LegacyTextParser;
+import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 
 public class MessagesBox
 {
@@ -76,7 +76,7 @@ public class MessagesBox
         this.evalParameters(locale, params);
 
         final String rawMessage = this.getMessage(locale, key); // surowy tekst z pliku
-        return LegacyTextParser.parseLegacyText(rawMessage, params);
+        return ChatUtils.parseLegacyText(rawMessage, params);
     }
 
     public String getLegacyMessage(final Locale locale, final String key, final Object... params)

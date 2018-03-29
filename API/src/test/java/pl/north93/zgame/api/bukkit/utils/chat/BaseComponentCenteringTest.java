@@ -11,7 +11,7 @@ public class BaseComponentCenteringTest
     @Test
     public void emptyCenter()
     {
-        final BaseComponent component = ChatUtils.fromLegacyText("");
+        final BaseComponent component = ChatUtils.parseLegacyText("");
 
         final BaseComponent centered = ChatUtils.centerMessage(component);
         final String plain = centered.toPlainText();
@@ -22,7 +22,7 @@ public class BaseComponentCenteringTest
     @Test
     public void oneLetterCenter()
     {
-        final BaseComponent component = ChatUtils.fromLegacyText("a");
+        final BaseComponent component = ChatUtils.parseLegacyText("a");
 
         final BaseComponent centered = ChatUtils.centerMessage(component);
         final String plain = centered.toPlainText();
@@ -33,7 +33,7 @@ public class BaseComponentCenteringTest
     @Test
     public void manyLettersCenter()
     {
-        final BaseComponent component = ChatUtils.fromLegacyText("test");
+        final BaseComponent component = ChatUtils.parseLegacyText("test");
 
         final BaseComponent centered = ChatUtils.centerMessage(component);
         final String plain = centered.toPlainText();
@@ -44,7 +44,7 @@ public class BaseComponentCenteringTest
     @Test
     public void formattedText()
     {
-        final BaseComponent component = ChatUtils.fromLegacyText("&a&lABC &rdef &cghi &ljkl");
+        final BaseComponent component = ChatUtils.parseLegacyText("&a&lABC &rdef &cghi &ljkl");
 
         final BaseComponent centered = ChatUtils.centerMessage(component);
         final String plain = centered.toPlainText();
@@ -55,7 +55,7 @@ public class BaseComponentCenteringTest
     @Test
     public void oneNewLine()
     {
-        final BaseComponent component = ChatUtils.fromLegacyText("line1\nline2");
+        final BaseComponent component = ChatUtils.parseLegacyText("line1\nline2");
 
         final BaseComponent centered = ChatUtils.centerMessage(component);
         final String plain = centered.toPlainText();
@@ -66,7 +66,7 @@ public class BaseComponentCenteringTest
     @Test
     public void manyNewLinesWithoutText()
     {
-        final BaseComponent component = ChatUtils.fromLegacyText("\n\n\n");
+        final BaseComponent component = ChatUtils.parseLegacyText("\n\n\n");
 
         final BaseComponent centered = ChatUtils.centerMessage(component);
         final String plain = centered.toPlainText();
@@ -77,7 +77,7 @@ public class BaseComponentCenteringTest
     @Test
     public void manyNewLinesWithFormatting()
     {
-        final BaseComponent component = ChatUtils.fromLegacyText("\n&aA\n&bB\n");
+        final BaseComponent component = ChatUtils.parseLegacyText("\n&aA\n&bB\n");
 
         final BaseComponent centered = ChatUtils.centerMessage(component);
         final String plain = centered.toPlainText();
@@ -88,7 +88,7 @@ public class BaseComponentCenteringTest
     @Test
     public void bugTest2()
     {
-        final BaseComponent component = ChatUtils.fromLegacyText("&aWpisz &f&lGrupa&e&l/grupa akceptuj &alub kliknij &e&lTUTAJ");
+        final BaseComponent component = ChatUtils.parseLegacyText("&aWpisz &f&lGrupa&e&l/grupa akceptuj &alub kliknij &e&lTUTAJ");
 
         final BaseComponent centered = ChatUtils.centerMessage(component);
         final String plain = centered.toPlainText();
@@ -100,7 +100,7 @@ public class BaseComponentCenteringTest
     @Test
     public void bugTest1() // wyjatek przy obslugiwaniu tego konkretnego stringa
     {
-        final BaseComponent component = ChatUtils.fromLegacyText("&f&e&lL &eNorthPL93");
+        final BaseComponent component = ChatUtils.parseLegacyText("&f&e&lL &eNorthPL93");
 
         final BaseComponent centered = ChatUtils.centerMessage(component);
         final String plain = centered.toPlainText();

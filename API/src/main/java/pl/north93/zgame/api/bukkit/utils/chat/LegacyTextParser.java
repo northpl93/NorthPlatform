@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.bukkit.utils.chat;
 
+import static java.lang.Character.toLowerCase;
+
 import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
 
 
@@ -66,19 +68,15 @@ public final class LegacyTextParser
 
         for (int i = 0; i < message.length(); i++)
         {
-            char c = message.charAt(i);
+            final char c = message.charAt(i);
             if (c == ChatColor.COLOR_CHAR)
             {
                 if (++ i >= message.length())
                 {
                     break;
                 }
-                c = message.charAt(i);
-                if (c >= 'A' && c <= 'Z')
-                {
-                    c += 32;
-                }
-                ChatColor format = ChatColor.getByChar(c);
+                final char colorCode = toLowerCase(message.charAt(i)); // tutaj i jest przesuniete o jeden w ifie wyzej
+                ChatColor format = ChatColor.getByChar(colorCode);
                 if (format == null)
                 {
                     continue;
@@ -121,7 +119,8 @@ public final class LegacyTextParser
                 final int closingPos = message.indexOf('}', i); // szukamy zamknięcia
                 if (closingPos == - 1)
                 {
-                    throw new IllegalArgumentException("Closing brace not found in: " + message);
+                    // jeśli brak zamknięcia klamry to ignorujemy i idziemy dalej
+                    continue;
                 }
 
                 final String parameter = message.substring(i + 1, closingPos);

@@ -1,6 +1,6 @@
 package pl.north93.zgame.api.bungee.proxy.impl;
 
-import static net.md_5.bungee.api.chat.TextComponent.fromLegacyText;
+import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.fromLegacyText;
 import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
 
 
@@ -11,7 +11,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ServerPing;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -33,13 +32,12 @@ public class PingListener implements Listener
         final ServerPing response = event.getResponse();
         if (networkMeta == null)
         {
-            response.setDescriptionComponent(new TextComponent(fromLegacyText(ChatColor.RED + "Problemy techniczne. (networkMeta==null in onPing)")));
+            response.setDescriptionComponent(fromLegacyText(ChatColor.RED + "Problemy techniczne. (networkMeta==null in onPing)"));
             this.logger.severe("networkMeta is null in onPing");
             return;
         }
 
-        final String serverListMotd = translateAlternateColorCodes(networkMeta.serverListMotd);
-        response.setDescriptionComponent(new TextComponent(fromLegacyText(serverListMotd)));
+        response.setDescriptionComponent(fromLegacyText(networkMeta.serverListMotd));
 
         final ServerPing.Players players = response.getPlayers();
         players.setSample(null);

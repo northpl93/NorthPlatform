@@ -3,10 +3,8 @@ package pl.north93.zgame.api.bungee.proxy.impl;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.packet.Chat;
 import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
@@ -51,7 +49,7 @@ class ProxyRpcImpl implements IProxyRpc
     @Override
     public void kick(final String nick, final String kickMessage)
     {
-        this.proxy.getPlayer(nick).disconnect(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', kickMessage)));
+        this.proxy.getPlayer(nick).disconnect(ChatUtils.fromLegacyText(kickMessage));
     }
 
     @Override

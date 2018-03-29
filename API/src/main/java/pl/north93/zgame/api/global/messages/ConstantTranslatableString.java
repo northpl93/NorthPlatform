@@ -4,7 +4,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
+import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.zgame.api.global.utils.Vars;
 
 class ConstantTranslatableString extends TranslatableString
@@ -14,7 +14,7 @@ class ConstantTranslatableString extends TranslatableString
 
     ConstantTranslatableString(final String legacyText)
     {
-        this(new TextComponent(TextComponent.fromLegacyText(legacyText)));
+        this(ChatUtils.fromLegacyText(legacyText));
     }
 
     ConstantTranslatableString(final BaseComponent fixedValue)

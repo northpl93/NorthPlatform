@@ -22,9 +22,35 @@ public final class ChatUtils
     private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)(" + COLOR_CHAR + "|&)[0-9A-FK-OR]");
     private final static int     CENTER_PX           = 140;
 
+    /**
+     * Konwertuje tekst legacy na BaseComponent, bez systemu parametrów.
+     * Kody kolorów są tłumaczone w tej metodzie, nie ma potrzeby robienia tego ręcznie.
+     *
+     * @param legacyText Tekst do skonwertowania.
+     * @return Wynikowy komponent.
+     */
     public static BaseComponent fromLegacyText(final String legacyText)
     {
-        return LegacyTextParser.parseLegacyText(legacyText);
+        final BaseComponent[] components = TextComponent.fromLegacyText(translateAlternateColorCodes(legacyText));
+        if (components.length == 1)
+        {
+            return components[0];
+        }
+
+        return new TextComponent(components);
+    }
+
+    /**
+     * Parsuje dany legacy tekst wraz z parametrami do BaseComponent.
+     * Kody kolorów są tłumaczone w tej metodzie, nie ma potrzeby robienia tego ręcznie.
+     * Więcej w dokumentacji klasy {@link LegacyTextParser}.
+     *
+     * @param legacyText Tekst legacy do sparsowania.
+     * @return Wynikowy komponent parsowania.
+     */
+    public static BaseComponent parseLegacyText(final String legacyText, final Object... params)
+    {
+        return LegacyTextParser.parseLegacyText(legacyText, params);
     }
 
     public static String stripColor(final String input)
