@@ -16,7 +16,7 @@ import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 
 import pl.north93.zgame.antycheat.utils.AABB;
 
-public class BlockUtils
+public final class BlockUtils
 {
     /**
      * Zwraca dokładny AABB bloku pobrany z NMS który blokuje gracza,

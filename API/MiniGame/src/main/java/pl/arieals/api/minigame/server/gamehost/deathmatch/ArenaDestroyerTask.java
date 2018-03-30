@@ -47,12 +47,8 @@ public class ArenaDestroyerTask extends BukkitRunnable
         }
 
         Block highestBlockAt = next.getWorld().getHighestBlockAt(next.getX(), next.getZ());
-        while (true)
+        while (highestBlockAt.getY() > 0)
         {
-            if (highestBlockAt.getY() <= 0)
-            {
-                break;
-            }
             if (highestBlockAt.isEmpty())
             {
                 highestBlockAt = highestBlockAt.getRelative(BlockFace.DOWN);

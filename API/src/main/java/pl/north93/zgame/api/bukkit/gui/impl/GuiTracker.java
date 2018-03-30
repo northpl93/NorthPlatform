@@ -280,43 +280,43 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
         HotbarEntry clickedEntry = entry.getCurrentHotbarMenu().getEntry(slot);
         entry.getCurrentHotbarMenu().click(event.getPlayer(), clickedEntry, ClickType.fromBukkitAction(event.getAction()));
     }
-    
+
     @Tick
     public void updateDirtyGuis()
     {
-        entriesByGui.asMap().forEach((gui, entries) ->
+        for ( Gui gui : entriesByGui.keySet() )
         {
-            if (! gui.isDirty())
+            if ( !gui.isDirty() )
             {
-                return;
+                continue;
             }
 
             gui.getContent().renderContent();
             gui.getContent().resetDirty();
 
-            for (GuiTrackerEntry entry : new ArrayList<>(entries))
+            for ( GuiTrackerEntry entry : new ArrayList<>(entriesByGui.get(gui)) )
             {
                 entry.refreshInventory();
             }
-        });
+        }
     }
-    
+
     @Tick
     public void updateDirtyHotbars()
     {
-        entriesByHotbar.asMap().forEach((hotbar, entries) ->
+        for ( HotbarMenu hotbar : entriesByHotbar.keySet() )
         {
-            if (! hotbar.isDirty())
+            if ( !hotbar.isDirty() )
             {
-                return;
+                continue;
             }
 
             hotbar.resetDirty();
 
-            for (GuiTrackerEntry entry : new ArrayList<>(entries))
+            for ( GuiTrackerEntry entry : entriesByHotbar.get(hotbar) )
             {
                 entry.refreshHotbarMenu();
             }
-        });
+        }
     }
 }
