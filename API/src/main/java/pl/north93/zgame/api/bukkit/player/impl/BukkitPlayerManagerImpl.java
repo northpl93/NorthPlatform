@@ -73,6 +73,12 @@ public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
     }
 
     @Override
+    public INorthPlayer getPlayerExact(final String exactNick)
+    {
+        return Optional.ofNullable(Bukkit.getPlayerExact(exactNick)).map(this::getPlayer).orElse(null);
+    }
+
+    @Override
     public CraftPlayer getCraftPlayer(final Player player)
     {
         if (player instanceof CraftPlayer)

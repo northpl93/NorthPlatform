@@ -2,6 +2,7 @@ package pl.north93.zgame.api.bukkit.player;
 
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -30,16 +31,23 @@ public interface IBukkitPlayers
      *
      * @param uuid uuid gracza bedacego online lokalnie.
      * @return zwrappowany obiekt gracza online.
-     * @see org.bukkit.Bukkit#getPlayer(UUID)
+     * @see Bukkit#getPlayer(UUID)
      */
     INorthPlayer getPlayer(UUID uuid);
 
     /**
      * @param nick nick gracza bedacego lokalnie.
      * @return zwrappowany obiekt gracza online
-     * @see #getPlayer(String)
+     * @see Bukkit#getPlayer(String)
      */
     INorthPlayer getPlayer(String nick);
+
+    /**
+     * @param exactNick Dokładny nick gracza będącego online lokalnie.
+     * @return zwrappowany obiekt gracza online.
+     * @see Bukkit#getPlayerExact(String)
+     */
+    INorthPlayer getPlayerExact(String exactNick);
 
     /**
      * Zwraca instancję CraftPlayera wydobytą z danego Playera.
