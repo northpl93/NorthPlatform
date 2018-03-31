@@ -1,15 +1,15 @@
 package pl.north93.zgame.controller.servers.operation;
 
+import static java.util.Comparator.comparing;
+
 import static org.diorite.utils.function.FunctionUtils.not;
 
 
+import java.util.Comparator;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import org.diorite.utils.math.DioriteRandomUtils;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
@@ -95,18 +95,13 @@ public class RemoveServerOperation extends AutoScalerOperation
 
     private Server getServerToShutdown()
     {
-        final Set<Server> servers = this.networkManager.getServers()
-                                                       .inGroup(this.serversGroup.getName())
-                                                       .stream().filter(not(Server::isShutdownScheduled))
-                                                       .collect(Collectors.toSet());
+        final Comparator<Server> serverComparator = comparing(Server::getPlayersCount);
 
-        final Server randomServer = DioriteRandomUtils.getRandom(servers);
-        if (randomServer == null)
-        {
-            return null;
-        }
-
-        return randomServer;
+        final Set<Server> servers = this.networkManager.getServers().inGroup(this.serversGroup.getName());
+        return servers.stream()
+                      .filter(not(Server::isShutdownScheduled)) // nie chcemy serwerów ktore juz sie wylaczaja
+                      .min(serverComparator) // bierzemy ten z najmniejsza iloscia graczy
+                      .orElse(null);
     }
 
     @Override
