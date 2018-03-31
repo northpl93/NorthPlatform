@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Agent-Class: pl.north93.zgame.api.global.agent.host.NorthPlatformAgent
-Can-Redefine-Classes: true
-Can-Retransform-Classes: true
-

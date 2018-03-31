@@ -1,23 +1,16 @@
 package pl.north93.zgame.api.global;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.InetAddress;
-import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.ea.agentloader.AgentLoader;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-
 import org.diorite.utils.DioriteUtils;
 
-import pl.north93.zgame.api.global.agent.client.IAgentClient;
-import pl.north93.zgame.api.global.agent.client.LocalAgentClient;
+import pl.north93.zgame.api.global.agent.InstrumentationClient;
 import pl.north93.zgame.api.global.component.IComponentManager;
 import pl.north93.zgame.api.global.component.annotations.ProvidesComponent;
 import pl.north93.zgame.api.global.component.impl.general.ComponentManagerImpl;
@@ -27,7 +20,7 @@ import pl.north93.zgame.api.global.permissions.PermissionsManager;
 public abstract class ApiCore
 {
     private final boolean            isDebug;
-    private final IAgentClient       instrumentationClient;
+    private final InstrumentationClient       instrumentationClient;
     private final IComponentManager  componentManager;
     private final Platform           platform;
     private final PlatformConnector  connector;
@@ -38,7 +31,7 @@ public abstract class ApiCore
         this.platform = platform;
         this.connector = platformConnector;
         this.isDebug = System.getProperties().containsKey("debug");
-        this.instrumentationClient = new LocalAgentClient();
+        this.instrumentationClient = new InstrumentationClient();
         this.componentManager = new ComponentManagerImpl(this);
         API.setApiCore(this);
         this.setApiState(ApiState.CONSTRUCTED);
@@ -101,6 +94,7 @@ public abstract class ApiCore
 
     protected void setupInstrumentation()
     {
+        /*
         final File extractedAgent = this.getFile("NorthPlatformInstrumentation.jar");
         if (!extractedAgent.exists())
         {
@@ -117,7 +111,9 @@ public abstract class ApiCore
             }
         }
         AgentLoader.loadAgent(extractedAgent.toString(), "");
-        this.instrumentationClient.connect();
+        
+        */
+        
     }
 
     public final void stopCore()
@@ -147,7 +143,7 @@ public abstract class ApiCore
         return this.componentManager.getComponent("API.MinecraftNetwork.PermissionsManager");
     }
 
-    public IAgentClient getInstrumentationClient()
+    public InstrumentationClient getInstrumentationClient()
     {
         return this.instrumentationClient;
     }

@@ -225,7 +225,16 @@ public class ClassloaderScanningTask
             {
                 // wymusza zainicjowanie klasy
                 // jak sie nie uda to leci wyjatek ktory ignorujemy
-                return Class.forName(type, true, classLoader);
+                
+                Class<?> clazz = Class.forName(type, true, classLoader);
+                
+                // Musimy sie upewnic czy klasa rzeczywiscie zostala zaladowana przez dany classloader
+                // Sytuacja kiedy classloader jest inny mozliwa jest kiedy klasa zostala zaladowana wczesniej przez inny classloader
+                // ktory jest rodzicem classloader'a tego ktory zostal przekazany do metody forName.
+                if ( clazz.getClassLoader() == classLoader )
+                {
+                    return clazz;
+                }
             }
             catch (final Throwable ignored)
             {

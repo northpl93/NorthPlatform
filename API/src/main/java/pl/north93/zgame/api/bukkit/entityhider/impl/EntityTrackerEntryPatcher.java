@@ -2,11 +2,12 @@ package pl.north93.zgame.api.bukkit.entityhider.impl;
 
 import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
 
+import pl.north93.zgame.api.global.agent.InstrumentationClient;
+
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.LoaderClassPath;
-import pl.north93.zgame.api.global.agent.client.IAgentClient;
 
 /**
  * Modyfikujemy metode c z klasy EntityTrackerEntry
@@ -16,7 +17,7 @@ import pl.north93.zgame.api.global.agent.client.IAgentClient;
  */
 class EntityTrackerEntryPatcher
 {
-    /*default*/ static void applyChange(final IAgentClient client) throws Exception
+    /*default*/ static void applyChange(final InstrumentationClient client) throws Exception
     {
         final ClassPool classPool = new ClassPool();
         classPool.appendClassPath(new LoaderClassPath(EntityTrackerEntry.class.getClassLoader()));

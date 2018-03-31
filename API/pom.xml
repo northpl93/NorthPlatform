@@ -31,21 +31,10 @@
         <dependency>
             <groupId>pl.north93.zgame</groupId>
             <artifactId>install-deps</artifactId>
-            <version>5</version>
+            <version>6</version>
             <type>pom</type>
         </dependency>
 
-        <dependency>
-            <groupId>pl.north93.zgame.api</groupId>
-            <artifactId>instrumentationagent</artifactId>
-            <version>1.0-INDEV</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ea.agentloader</groupId>
-            <artifactId>ea-agent-loader</artifactId>
-            <version>1.0.3</version>
-        </dependency>
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
@@ -204,7 +193,6 @@
                         <configuration>
                             <artifactSet>
                                 <excludes>
-                                    <exclude>pl.north93.zgame.api:instrumentationagent</exclude>
                                     <exclude>pl.north93:northspigot</exclude>
                                     <exclude>org.spigotmc:spigot-server</exclude>
 
@@ -234,6 +222,19 @@
             </plugin>
 
             <!-- Konfigurujemy budowanie niestandardowego jara -->
+            
+            <plugin>
+            	<artifactId>maven-jar-plugin</artifactId>
+            	<configuration>
+            		<archive>
+            			<manifest>
+            				<mainClass>pl.north93.zgame.api.standalone.StandaloneApiCore</mainClass>
+            			</manifest>
+            		</archive>
+            	</configuration>
+            </plugin>
+            
+            <!-- 
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
@@ -242,7 +243,7 @@
                     <descriptors>
                         <descriptor>src/main/assembly/deploy-package.xml</descriptor>
                     </descriptors>
-                    <!-- API is a runnable application that can host components -->
+                    
                     <archive>
                         <manifest>
                             <mainClass>pl.north93.zgame.api.standalone.StandaloneApiCore</mainClass>
@@ -250,6 +251,7 @@
                     </archive>
                 </configuration>
             </plugin>
+            -->
         </plugins>
     </build>
 </project>

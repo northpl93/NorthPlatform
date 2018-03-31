@@ -22,7 +22,6 @@
 	    <module>./install-deps</module>
         <module>../API</module>
         <module>../API/DefaultCommands</module>
-        <module>../API/Instrumentation Agent</module>
         <module>../API/Economy</module>
         <module>../API/Chat</module>
         <module>../Lobby</module>

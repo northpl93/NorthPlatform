@@ -24,7 +24,7 @@
     * podbic numer wersji tego modulu (nizej i w pom.xml api)
     -->
     <artifactId>install-deps</artifactId>
-    <version>5</version>
+    <version>6</version>
 	<packaging>pom</packaging>
 
     <dependencies>
@@ -35,6 +35,21 @@
             <version>1.12-2</version>
         </dependency>
 
+		<!-- Tymczasowe rozwiązanie - poniej zrobie jakies repo dla tego -->
+		<dependency>
+			<groupId>pl.rafsze.utils</groupId>
+			<artifactId>AgentUtils</artifactId>
+			<version>1.0</version>
+			
+			<exclusions>
+				<exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+			</exclusions>
+			
+		</dependency>
+		
         <!-- World Edit zawsze moze sie przydac! -->
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
@@ -98,6 +113,20 @@
                             <groupId>pl.north93</groupId>
                             <artifactId>northspigot</artifactId>
                             <version>1.12-2</version>
+                        </configuration>
+                    </execution>
+                    
+                    <execution>
+                        <id>install-agentutils</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>../../lib/AgentUtils-1.0.jar</file>
+                            <groupId>pl.rafsze.utils</groupId>
+							<artifactId>AgentUtils</artifactId>
+							<version>1.0</version>
                         </configuration>
                     </execution>
                 </executions>
