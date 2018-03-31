@@ -5,6 +5,7 @@
 
 ### Java/Maven
 target/
+dependency-reduced-pom.xml
 *.class
 *.jar
 *.war
