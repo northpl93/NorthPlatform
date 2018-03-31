@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <components>
+        <component>
+            <name>ChatApi.Bukkit</name>
+            <mainClass>pl.north93.zgame.api.chat.bukkit.BukkitChatComponent</mainClass>
+            <description>Chat API.</description>
+            <packages>
+                <package>pl.north93.zgame.api.chat.bukkit</package>
+                <package>pl.north93.zgame.api.chat.global</package>
+            </packages>
+            <dependencies>
+                <dependency>API.Database.Redis.RPC</dependency>
+                <dependency>API.Database.Redis.Event</dependency>
+            </dependencies>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>
