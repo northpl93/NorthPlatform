@@ -224,26 +224,8 @@
             <!-- Konfigurujemy budowanie niestandardowego jara -->
             
             <plugin>
-            	<artifactId>maven-jar-plugin</artifactId>
-            	<configuration>
-            		<archive>
-            			<manifest>
-            				<mainClass>pl.north93.zgame.api.standalone.StandaloneApiCore</mainClass>
-            			</manifest>
-            		</archive>
-            	</configuration>
-            </plugin>
-            
-            <!-- 
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
+                <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
-                    <finalName>${project.artifactId}-${project.version}</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <descriptors>
-                        <descriptor>src/main/assembly/deploy-package.xml</descriptor>
-                    </descriptors>
-                    
                     <archive>
                         <manifest>
                             <mainClass>pl.north93.zgame.api.standalone.StandaloneApiCore</mainClass>
@@ -251,7 +233,7 @@
                     </archive>
                 </configuration>
             </plugin>
-            -->
+            
         </plugins>
     </build>
 </project>
