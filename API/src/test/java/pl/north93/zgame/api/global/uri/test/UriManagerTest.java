@@ -7,22 +7,18 @@ import static org.junit.Assert.assertTrue;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.uri.IUriManager;
-import pl.north93.zgame.api.standalone.TestApiCore;
+import pl.north93.zgame.api.test.NorthPlatformJunitRunner;
 
+@RunWith(NorthPlatformJunitRunner.class)
 public class UriManagerTest
 {
+    @Inject
     private IUriManager manager;
-
-    @Before
-    public void setup()
-    {
-        final TestApiCore api = TestApiCore.ensureEnvironment();
-        this.manager = api.getComponent("API.URI");
-    }
 
     @Test
     public void simpleRoutes()

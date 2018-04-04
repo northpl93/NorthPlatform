@@ -51,7 +51,6 @@ public abstract class ApiCore
     {
         Locale.setDefault(new Locale("pl", "PL"));
         this.getLogger().info("Starting North API Core.");
-        this.setupInstrumentation();
 
         try
         {
@@ -90,30 +89,6 @@ public abstract class ApiCore
         this.setApiState(ApiState.ENABLED);
         this.getLogger().info("Client id is " + this.getId());
         this.debug("Debug mode is enabled");
-    }
-
-    protected void setupInstrumentation()
-    {
-        /*
-        final File extractedAgent = this.getFile("NorthPlatformInstrumentation.jar");
-        if (!extractedAgent.exists())
-        {
-            this.getLogger().log(Level.INFO, "Not found javaagent in {0}. Trying to copy from api's jar.", extractedAgent);
-            final URL inputUrl = this.getClass().getResource("/InstrumentationAgent.jar");
-            try
-            {
-                FileUtils.copyURLToFile(inputUrl, extractedAgent);
-            }
-            catch (final IOException e)
-            {
-                this.getLogger().log(Level.SEVERE, "There's no javaagent inside api's jar. Place InstrumentationAgent.jar inside API's jar. You may also place it direct in API's working directory as NorthPlatformInstrumentation.jar", e);
-                return;
-            }
-        }
-        AgentLoader.loadAgent(extractedAgent.toString(), "");
-        
-        */
-        
     }
 
     public final void stopCore()

@@ -1,7 +1,8 @@
-package pl.north93.zgame.api.standalone;
+package pl.north93.zgame.api.test;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.standalone.StandaloneApiCore;
 import pl.north93.zgame.api.standalone.cfg.EnvironmentCfg;
 
 /**
@@ -32,12 +33,6 @@ public class TestApiCore extends StandaloneApiCore
     {
         this.getLogger().info("Initialising testing environment");
         this.environmentCfg = new EnvironmentCfg("testenv");
-    }
-
-    @Override
-    protected void setupInstrumentation()
-    {
-        this.getLogger().info("Skipped initialisation of instrumentation. Automatic injections will be unavailable.");
     }
 
     /**

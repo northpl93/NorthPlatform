@@ -51,6 +51,7 @@ public class ComponentManagerImpl implements IComponentManager
     private final ApiCore               apiCore;
     private final List<ComponentBundle> components;
     private final ClassPool             rootClassPool;
+    private final ClassResolver         classResolver;
     private final RootBeanContext       rootBeanCtx;
     private final ProfileManagerImpl    profileManager;
     private final AggregationManager    aggregationManager;
@@ -67,6 +68,7 @@ public class ComponentManagerImpl implements IComponentManager
         this.rootClassPool = new ClassPool();
         this.rootClassPool.appendClassPath(new LoaderClassPath(this.getClass().getClassLoader()));
 
+        this.classResolver = new ClassResolver(this);
         this.rootBeanCtx = new RootBeanContext();
         this.profileManager = new ProfileManagerImpl(this);
         this.aggregationManager = new AggregationManager();
@@ -355,6 +357,12 @@ public class ComponentManagerImpl implements IComponentManager
                 }
             }
         }
+    }
+
+    @Override
+    public Class<?> findClass(final String name)
+    {
+        return this.classResolver.findClass(name);
     }
 
     @Override

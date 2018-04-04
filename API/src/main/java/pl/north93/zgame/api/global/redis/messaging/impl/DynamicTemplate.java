@@ -1,8 +1,6 @@
 package pl.north93.zgame.api.global.redis.messaging.impl;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -10,7 +8,6 @@ import org.msgpack.core.MessageBufferPacker;
 import org.msgpack.core.MessageUnpacker;
 
 import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.component.IComponentBundle;
 import pl.north93.zgame.api.global.redis.messaging.Template;
 import pl.north93.zgame.api.global.redis.messaging.TemplateGeneric;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
@@ -19,44 +16,8 @@ import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 @SuppressWarnings("unchecked")
 class DynamicTemplate<T> implements TemplateGeneric<T>
 {
-    private static final Map<String, Class<?>> classCache = new HashMap<>();
-    private Class<?>[] genericTypes;
+    private Class<?>[]        genericTypes;
     private ParameterizedType parameterizedType;
-
-    private static Class<?> findClass(final String className)
-    {
-        Class<?> clazz = classCache.get(className);
-        if (clazz == null)
-        {
-            synchronized (classCache)
-            {
-                try
-                {
-                    clazz = Class.forName(className);
-                }
-                catch (final ClassNotFoundException e)
-                {
-                    for (final IComponentBundle iComponentBundle : API.getApiCore().getComponentManager().getComponents())
-                    {
-                        try
-                        {
-                            clazz = Class.forName(className, true, iComponentBundle.getClassLoader());
-                        }
-                        catch (final ClassNotFoundException ignored)
-                        {
-                        }
-                    }
-
-                    if (clazz == null)
-                    {
-                        throw new RuntimeException("I can't find class " + className);
-                    }
-                }
-                classCache.put(className, clazz);
-            }
-        }
-        return clazz;
-    }
 
     @Override
     public void serializeObject(final TemplateManager templateManager, final MessageBufferPacker packer, final T object) throws Exception
@@ -113,6 +74,11 @@ class DynamicTemplate<T> implements TemplateGeneric<T>
     {
         this.genericTypes = genericTypes;
         return this;
+    }
+
+    private static Class<?> findClass(final String className)
+    {
+        return API.getApiCore().getComponentManager().findClass(className);
     }
 
     @Override

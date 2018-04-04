@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface NetEventSubscriber
 {
-    Class<? extends INetEvent> value();
+    Class<? extends INetEvent>[] value();
 }

@@ -29,6 +29,8 @@ public interface IComponentManager
 
     void disableAllComponents();
 
+    Class<?> findClass(String name);
+
     <T extends Component> T getComponent(String name);
 
     Collection<? extends IComponentBundle> getComponents();

@@ -12,6 +12,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messageable;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
+import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
@@ -62,6 +63,18 @@ public interface INorthPlayer extends Player, Messageable
      * @return CraftPlayer
      */
     CraftPlayer getCraftPlayer();
+
+    /**
+     * Zwraca Identity tego gracza, czyli lekki obiekt służący do
+     * identyfikacji gracza.
+     *
+     * @see Identity
+     * @return Identity tego gracza.
+     */
+    default Identity getIdentity()
+    {
+        return Identity.of(this);
+    }
 
     /**
      * Otwiera transakcje dostepu do sieciowych danych gracza.

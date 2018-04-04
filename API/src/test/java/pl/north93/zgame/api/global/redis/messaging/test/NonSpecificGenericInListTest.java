@@ -7,11 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.messaging.impl.TemplateFactoryImpl;
 import pl.north93.zgame.api.global.redis.messaging.impl.TemplateManagerImpl;
+import pl.north93.zgame.api.test.NorthPlatformJunitRunner;
 
+@RunWith(NorthPlatformJunitRunner.class)
 public class NonSpecificGenericInListTest
 {
     final TemplateManager templateManager = new TemplateManagerImpl(new TemplateFactoryImpl());

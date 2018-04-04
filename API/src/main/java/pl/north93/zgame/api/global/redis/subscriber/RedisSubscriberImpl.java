@@ -60,40 +60,31 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
     }
 
     @Override
-    public void subscribe(final String channel, final SubscriptionHandler handler, final boolean pattern)
+    public synchronized void subscribe(final String channel, final SubscriptionHandler handler, final boolean pattern)
     {
-        synchronized (this)
+        this.handlerMap.put(channel, handler);
+        if (pattern)
         {
-            this.handlerMap.put(channel, handler);
-            if (pattern)
-            {
-                this.connection.sync().psubscribe(channel);
-            }
-            else
-            {
-                this.connection.sync().subscribe(channel);
-            }
+            this.connection.sync().psubscribe(channel);
+        }
+        else
+        {
+            this.connection.sync().subscribe(channel);
         }
     }
 
     @Override
-    public void unSubscribe(final String channel)
+    public synchronized void unSubscribe(final String channel)
     {
-        synchronized (this)
-        {
-            this.handlerMap.remove(channel);
-            this.connection.sync().unsubscribe(channel);
-        }
+        this.handlerMap.remove(channel);
+        this.connection.sync().unsubscribe(channel);
     }
 
     @Override
-    public void unSubscribeAll()
+    public synchronized void unSubscribeAll()
     {
-        synchronized (this)
-        {
-            this.handlerMap.clear();
-            this.connection.sync().punsubscribe("*");
-        }
+        this.handlerMap.clear();
+        this.connection.sync().punsubscribe("*");
     }
 
     private class MessageHandler extends RedisPubSubAdapter<String, byte[]>

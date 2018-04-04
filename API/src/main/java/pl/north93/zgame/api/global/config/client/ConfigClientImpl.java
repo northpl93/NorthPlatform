@@ -36,7 +36,7 @@ public class ConfigClientImpl extends Component implements IConfigClient
     {
         if (this.serverRpc.reloadConfig(id))
         {
-            this.getLogger().log(Level.INFO, "Received information about successfully reload of {0}", id);
+            this.getLogger().log(Level.INFO, "Received information about successfully reload of config {0}", id);
         }
     }
 
@@ -44,7 +44,7 @@ public class ConfigClientImpl extends Component implements IConfigClient
     {
         if (this.serverRpc.updateConfig(id, newValue))
         {
-            this.getLogger().log(Level.INFO, "Received information about successfully update of {0}", id);
+            this.getLogger().log(Level.INFO, "Received information about successfully update of config {0}", id);
         }
     }
 
