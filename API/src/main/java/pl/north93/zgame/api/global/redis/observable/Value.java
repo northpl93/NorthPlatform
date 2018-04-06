@@ -123,9 +123,16 @@ public interface Value<T>
      */
     long getTimeToLive();
 
+    /**
+     * Returns Lock instance associated with this value.
+     * @return Lock associated with this value.
+     */
     Lock getLock();
 
-    void lock();
-
-    void unlock();
+    /**
+     * Acquires lock and returns it's instance.
+     * @see Lock#lock()
+     * @return Instance of lock in locked state.
+     */
+    Lock lock();
 }

@@ -44,6 +44,7 @@ import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.players.NameSizeMistakeException;
 import pl.north93.zgame.api.global.network.players.UsernameDetails;
 import pl.north93.zgame.api.global.redis.event.IEventManager;
+import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class PlayerListener implements Listener
@@ -223,9 +224,8 @@ public class PlayerListener implements Listener
         final ProxiedPlayer proxyPlayer = event.getPlayer();
         final Value<IOnlinePlayer> player = this.bungeeApiCore.getNetworkManager().getPlayers().unsafe().getOnline(proxyPlayer.getName());
 
-        try
+        try (final Lock lock = player.lock())
         {
-            player.lock();
             final IOnlinePlayer onlinePlayer = player.getWithoutCache();
             if (onlinePlayer == null)
             {
@@ -236,10 +236,6 @@ public class PlayerListener implements Listener
             this.eventManager.callEvent(new PlayerQuitNetEvent((OnlinePlayerImpl) onlinePlayer));
             this.networkManager.getPlayers().getInternalData().savePlayer(onlinePlayer);
             player.delete();
-        }
-        finally
-        {
-            player.unlock();
         }
     }
     

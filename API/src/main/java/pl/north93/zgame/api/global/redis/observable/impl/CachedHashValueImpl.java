@@ -95,9 +95,8 @@ class CachedHashValueImpl<T> extends CachedValue<T>
     @Override
     public boolean update(final Function<T, T> update)
     {
-        try
+        try (final Lock lock = this.lock())
         {
-            this.lock();
             final T t = this.get();
             if (t != null)
             {
@@ -106,10 +105,6 @@ class CachedHashValueImpl<T> extends CachedValue<T>
             }
 
             return false;
-        }
-        finally
-        {
-            this.unlock();
         }
     }
 

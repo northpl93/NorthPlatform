@@ -154,14 +154,9 @@ class PlayersManagerImpl implements IPlayersManager
     public void ifOnline(final String nick, final Consumer<IOnlinePlayer> onlineAction)
     {
         final Value<IOnlinePlayer> onlinePlayerValue = this.nickToOnlinePlayerValue(nick);
-        try
+        try (final Lock lock = onlinePlayerValue.lock())
         {
-            onlinePlayerValue.lock();
             onlinePlayerValue.ifPresent(onlineAction);
-        }
-        finally
-        {
-            onlinePlayerValue.unlock();
         }
     }
 

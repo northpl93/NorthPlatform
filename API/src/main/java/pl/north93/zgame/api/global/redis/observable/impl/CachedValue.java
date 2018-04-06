@@ -3,6 +3,7 @@ package pl.north93.zgame.api.global.redis.observable.impl;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
 abstract class CachedValue<T> implements Value<T>
@@ -15,15 +16,9 @@ abstract class CachedValue<T> implements Value<T>
     }
 
     @Override
-    public final void lock()
+    public final Lock lock()
     {
-        this.getLock().lock();
-    }
-
-    @Override
-    public final void unlock()
-    {
-        this.getLock().unlock();
+        return this.getLock().lock();
     }
 
     // zwraca unikalna nazwe tej wartosci, sluzy do nasluchiwania

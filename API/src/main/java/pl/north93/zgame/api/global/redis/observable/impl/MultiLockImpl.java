@@ -26,7 +26,7 @@ class MultiLockImpl implements Lock
     }
 
     @Override
-    public void lock()
+    public Lock lock()
     {
         synchronized (this.localLock)
         {
@@ -35,6 +35,7 @@ class MultiLockImpl implements Lock
                 lock.lock();
             }
         }
+        return this;
     }
 
     @Override

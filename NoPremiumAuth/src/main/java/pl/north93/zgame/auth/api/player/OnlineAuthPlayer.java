@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
+import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
 class OnlineAuthPlayer extends AuthPlayer
@@ -26,15 +27,10 @@ class OnlineAuthPlayer extends AuthPlayer
     @Override
     public boolean isRegistered()
     {
-        try
+        try (final Lock lock = this.playerValue.lock())
         {
-            this.playerValue.lock();
             final MetaStore playerMeta = this.playerValue.get().getMetaStore();
             return playerMeta.contains(PLAYER_PASSWORD);
-        }
-        finally
-        {
-            this.playerValue.unlock();
         }
     }
 
@@ -59,14 +55,9 @@ class OnlineAuthPlayer extends AuthPlayer
     @Override
     public String getPassword()
     {
-        try
+        try (final Lock lock = this.playerValue.lock())
         {
-            this.playerValue.lock();
             return this.playerValue.get().getMetaStore().getString(PLAYER_PASSWORD);
-        }
-        finally
-        {
-            this.playerValue.unlock();
         }
     }
 

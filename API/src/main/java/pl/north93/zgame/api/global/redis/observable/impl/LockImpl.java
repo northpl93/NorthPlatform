@@ -35,7 +35,7 @@ class LockImpl implements Lock
     }
 
     @Override
-    public void lock()
+    public LockImpl lock()
     {
         final Logger logger = this.observationManager.getMyLogger();
         if (this.tryLock0())
@@ -64,6 +64,7 @@ class LockImpl implements Lock
             this.isLockedLocally.compareAndSet(false, true);
             logger.log(Level.FINE, "[Lock] Successfully acquired lock {0}", this.name);
         }
+        return this;
     }
 
     @Override
