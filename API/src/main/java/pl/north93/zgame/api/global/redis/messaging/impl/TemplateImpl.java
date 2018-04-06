@@ -1,9 +1,5 @@
 package pl.north93.zgame.api.global.redis.messaging.impl;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodHandles.Lookup;
-import java.lang.invoke.MethodType;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -18,23 +14,26 @@ import pl.north93.zgame.api.global.redis.messaging.impl.element.ITemplateElement
 
 class TemplateImpl<T> implements Template<T>
 {
-    private static final Lookup          LOOKUP      = MethodHandles.lookup();
-    private static final MethodType      VOID_TYPE   = MethodType.methodType(void.class);
-    private static final MethodType      OBJECT_TYPE = MethodType.methodType(Object.class);
-    private final MethodHandle           constructor;
+    private final InstanceCreator<T>     instanceCreator;
     private final List<ITemplateElement> structure;
 
     public TemplateImpl(final Class<T> templateClass, final List<ITemplateElement> structure)
     {
+        this.instanceCreator = setUpCreator(templateClass);
+        this.structure = structure;
+    }
+
+    private static <T> InstanceCreator<T> setUpCreator(final Class<T> templateClass)
+    {
         try
         {
-            this.constructor = LOOKUP.findConstructor(templateClass, VOID_TYPE).asType(OBJECT_TYPE);
+            templateClass.getConstructor(); // probujemy uzyskac konstruktor bez argumentów
+            return new MethodHandleConstructorCreator<>(templateClass);
         }
-        catch (final NoSuchMethodException | IllegalAccessException e)
+        catch (final Exception e)
         {
-            throw new RuntimeException("Lookup failed. Can't find constructor.", e);
+            return new UnsafeCreator<>(templateClass);
         }
-        this.structure = structure;
     }
 
     @SuppressWarnings("unchecked")
@@ -65,8 +64,7 @@ class TemplateImpl<T> implements Template<T>
     {
         try
         {
-            @SuppressWarnings("unchecked")
-            final T instance = (T) this.constructor.invokeExact();
+            final T instance = this.instanceCreator.newInstance();
             for (final ITemplateElement templateElement : this.structure)
             {
                 if (templateElement.isNullable() && unpacker.getNextFormat() == MessageFormat.NIL)
@@ -88,6 +86,6 @@ class TemplateImpl<T> implements Template<T>
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("constructor", this.constructor).append("structure", this.structure).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("instanceCreator", this.instanceCreator).append("structure", this.structure).toString();
     }
 }
