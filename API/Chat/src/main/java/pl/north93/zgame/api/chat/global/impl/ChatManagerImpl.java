@@ -23,6 +23,7 @@ import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
 import pl.north93.zgame.api.global.redis.observable.Hash;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
+import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class ChatManagerImpl implements ChatManager
@@ -71,21 +72,46 @@ public class ChatManagerImpl implements ChatManager
     @Override
     public ChatRoom createRoom(final String id, final ChatFormatter formatter)
     {
-        final Value<ChatRoomData> value = this.chatRooms.getAsValue(id);
-        if (value.isPreset())
-        {
-            throw new IllegalArgumentException("Room " + id + " already exist");
-        }
-
         final String formatterId = this.getFormatterId(formatter);
-        value.set(new ChatRoomData(formatterId));
+
+        final Value<ChatRoomData> value = this.chatRooms.getAsValue(id);
+        value.update(actual ->
+        {
+            if (actual != null)
+            {
+                // jesli w redisie istnieje juz taki obiekt to blokujemy tworzenie.
+                throw new IllegalArgumentException("Room " + id + " already exist");
+            }
+
+            // zwracamy nowy obiekt; spowoduje to ustawienie wartosci w redisie
+            // i tym samym utworzenie kanalu
+            return new ChatRoomData(formatterId);
+        });
 
         this.logger.log(Level.INFO, "Created room with ID {0} and formatter {1}", new Object[]{id, formatterId});
         return new ChatRoomImpl(this, id, value);
     }
 
     @Override
-    public void deleteRoom(final String id)
+    public ChatRoom getOrCreateRoom(final String id, final ChatFormatter formatter)
+    {
+        final String formatterId = this.getFormatterId(formatter);
+
+        final Value<ChatRoomData> value = this.chatRooms.getAsValue(id);
+        try (final Lock lock = value.lock())
+        {
+            if (! value.isPreset())
+            {
+                value.set(new ChatRoomData(formatterId));
+                this.logger.log(Level.INFO, "Created room with ID {0} and formatter {1}", new Object[]{id, formatterId});
+            }
+        }
+
+        return new ChatRoomImpl(this, id, value);
+    }
+
+    @Override
+    public void deleteRoom(final String id) throws ChatRoomNotFoundException
     {
         // to od razu zweryfikuje czy pokój istnieje
         final ChatRoomImpl room = this.getRoom(id);
@@ -95,7 +121,7 @@ public class ChatManagerImpl implements ChatManager
     }
 
     @Override
-    public ChatRoomImpl getRoom(final String id)
+    public ChatRoomImpl getRoom(final String id) throws ChatRoomNotFoundException
     {
         final Value<ChatRoomData> value = this.chatRooms.getAsValue(id);
         if (! value.isPreset())

@@ -4,6 +4,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import pl.arieals.api.minigame.shared.api.cfg.HubConfig;
+import pl.north93.zgame.api.chat.global.ChatRoom;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 
 /**
@@ -12,14 +13,16 @@ import pl.north93.zgame.api.global.network.JoiningPolicy;
  */
 public class HubWorld
 {
-    private final String hubId;
-    private final World  bukkitWorld;
-    private JoiningPolicy policy;
+    private final String   hubId;
+    private final World    bukkitWorld;
+    private final ChatRoom chatRoom;
+    private JoiningPolicy  policy;
 
-    public HubWorld(final String hubId, final World bukkitWorld)
+    public HubWorld(final String hubId, final World bukkitWorld, final ChatRoom chatRoom)
     {
         this.hubId = hubId;
         this.bukkitWorld = bukkitWorld;
+        this.chatRoom = chatRoom;
     }
 
     public String getHubId()
@@ -30,6 +33,11 @@ public class HubWorld
     public World getBukkitWorld()
     {
         return this.bukkitWorld;
+    }
+
+    public ChatRoom getChatRoom()
+    {
+        return this.chatRoom;
     }
 
     public JoiningPolicy getPolicy()

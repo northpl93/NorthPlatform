@@ -42,18 +42,21 @@ public class Msg extends NorthCommand
             return;
         }
 
+        final Player player = (Player) sender.unwrapped();
+
         // todo rewrite
         final Value<IOnlinePlayer> networkPlayer = this.networkManager.getPlayers().unsafe().getOnline(args.asString(0));
-        if (!networkPlayer.isCached() && !networkPlayer.isAvailable())
+        if (! networkPlayer.isPreset())
         {
             sender.sendMessage(this.messages, "command.no_player");
             return;
         }
 
         final IOnlinePlayer receiver = networkPlayer.get();
-        if(! ((Player) sender.unwrapped()).hasPermission("api.privatemessagespolicy.ignore"))
+        if (! player.hasPermission("api.privatemessagespolicy.ignore"))
         {
-            switch (receiver.privateMessagesPolicy()) {
+            switch (receiver.privateMessagesPolicy())
+            {
                 case DISABLED:
                     sender.sendMessage(this.messages, "command.msg.disabled");
                     return;
@@ -64,7 +67,7 @@ public class Msg extends NorthCommand
             }
         }
 
-        final boolean colorText = ((Player) sender.unwrapped()).hasPermission("api.command.msg.colorize");
+        final boolean colorText = player.hasPermission("api.command.msg.colorize");
         final String message = colorText ? args.asText(1) : StringUtils.replace(args.asText(1), "&", "");
         sender.sendMessage(this.messages, "command.msg.message", this.messages.getMessage("command.msg.you"), receiver.getNick(), message);
         receiver.sendMessage(this.messages, "command.msg.message", sender.getName(), this.messages.getMessage("command.msg.you"), message);

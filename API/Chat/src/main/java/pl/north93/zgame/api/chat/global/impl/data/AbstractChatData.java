@@ -3,10 +3,12 @@ package pl.north93.zgame.api.chat.global.impl.data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public abstract class AbstractChatData
+import pl.north93.zgame.api.global.redis.event.INetEvent;
+
+public abstract class AbstractChatData implements INetEvent
 {
     protected String roomId;
-    protected String message;
+    protected String message; // w jsonie
 
     public AbstractChatData()
     {

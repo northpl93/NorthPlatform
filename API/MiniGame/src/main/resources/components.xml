@@ -13,6 +13,7 @@
                 <dependency>API.Database.Redis.RPC</dependency>
                 <dependency>API.Database.Redis.Event</dependency>
                 <dependency>API.Economy</dependency>
+                <dependency>API.Chat.Bukkit</dependency>
             </dependencies>
             <platforms>
                 <platform>BUKKIT</platform>

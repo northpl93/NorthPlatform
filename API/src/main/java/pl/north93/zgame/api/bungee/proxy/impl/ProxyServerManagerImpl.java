@@ -38,7 +38,7 @@ class ProxyServerManagerImpl extends Component implements IProxyServerManager
         this.rpcManager.addRpcImplementation(IProxyRpc.class, new ProxyRpcImpl());
 
         // rejestrujemy nasze listenery
-        this.apiCore.registerListeners(new PingListener(), new PlayerListener(), new PermissionsListener());
+        this.apiCore.registerListeners(new PingListener(), new PlayerListener(), new PermissionsListener(), new JoinPermissionsChecker());
 
         this.uploadInfo();
         this.getApiCore().getPlatformConnector().runTaskAsynchronously(this::uploadInfo, UPDATE_PROXY_DATA_EVERY);

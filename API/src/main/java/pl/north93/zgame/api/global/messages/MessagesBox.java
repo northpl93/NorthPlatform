@@ -198,10 +198,4 @@ public class MessagesBox
          MessagesBox other = (MessagesBox) obj;
          return Objects.equals(other.loader, this.loader) && Objects.equals(other.fileName, this.fileName);
     }
-
-    @Deprecated // weird utility, uniemozliwa tlumaczenie wiadomosci per gracz
-    public static String message(final MessagesBox messagesBox, final String key, final Object... params)
-    {
-        return MessageFormat.format(messagesBox.getMessage(key).replace('&', (char)167), params);
-    }
 }

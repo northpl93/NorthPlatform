@@ -79,7 +79,9 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     @Override
     public void joinRoom(final ChatRoom room)
     {
+        final Logger logger = this.chatManager.getLogger();
         final ChatRoomImpl roomImpl = (ChatRoomImpl) room;
+
         try (final IPlayerTransaction t = this.chatManager.getPlayersManager().transaction(this.identity))
         {
             final IPlayer player = t.getPlayer();
@@ -91,13 +93,11 @@ import pl.north93.zgame.api.global.redis.observable.Value;
             // aktualizujemy pokój i dodajemy do niego gracza
             roomImpl.update(data -> data.getParticipants().add(player.getIdentity()));
 
-            // w metodzie update wyżej może zostaćzucony wyjątek o nieistniejącym pokoju
+            // w metodzie update wyżej może zostać rzucony wyjątek o nieistniejącym pokoju
             final ChatPlayerData playerData = ChatPlayerData.get(player);
             playerData.getRooms().add(room.getId());
 
-            final Logger logger = this.chatManager.getLogger();
             logger.log(Level.INFO, "Player {0} joined chat room {1}", new Object[]{player.getLatestNick(), room.getId()});
-
             this.checkIsMainRoomNeeded(playerData);
         }
     }
@@ -105,7 +105,9 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     @Override
     public void leaveRoom(final ChatRoom room)
     {
+        final Logger logger = this.chatManager.getLogger();
         final ChatRoomImpl roomImpl = (ChatRoomImpl) room;
+
         try (final IPlayerTransaction t = this.chatManager.getPlayersManager().transaction(this.identity))
         {
             final IPlayer player = t.getPlayer();
@@ -114,6 +116,18 @@ import pl.north93.zgame.api.global.redis.observable.Value;
                 throw new PlayerOfflineException(player);
             }
 
+            roomImpl.update(data -> data.getParticipants().remove(player.getIdentity()));
+
+            // w metodzie update wyżej może zostać rzucony wyjątek o nieistniejącym pokoju
+            final ChatPlayerData playerData = ChatPlayerData.get(player);
+            playerData.getRooms().remove(room.getId());
+
+            logger.log(Level.INFO, "Player {0} leaved chat room {1}", new Object[]{player.getLatestNick(), room.getId()});
+            if (roomImpl.getId().equals(playerData.getMainRoomId()))
+            {
+                playerData.setMainRoomId(null);
+            }
+            this.checkIsMainRoomNeeded(playerData);
         }
     }
 

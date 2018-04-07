@@ -1,5 +1,7 @@
 package pl.arieals.api.minigame.server.lobby.event;
 
+import javax.annotation.Nullable;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
@@ -17,12 +19,20 @@ import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
 public class PlayerSwitchedHubEvent extends PlayerEvent
 {
     private static final HandlerList handlers = new HandlerList();
+    private final HubWorld oldHub;
     private final HubWorld newHub;
 
-    public PlayerSwitchedHubEvent(final Player who, final HubWorld newHub)
+    public PlayerSwitchedHubEvent(final Player who, final HubWorld oldHub, final HubWorld newHub)
     {
         super(who);
+        this.oldHub = oldHub;
         this.newHub = newHub;
+    }
+
+    @Nullable
+    public HubWorld getOldHub()
+    {
+        return this.oldHub;
     }
 
     public HubWorld getNewHub()

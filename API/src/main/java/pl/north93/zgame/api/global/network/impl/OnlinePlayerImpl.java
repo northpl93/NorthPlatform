@@ -6,7 +6,6 @@ import static pl.north93.zgame.api.global.redis.RedisKeys.PLAYERS;
 import java.util.Locale;
 import java.util.UUID;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -55,10 +54,6 @@ public class OnlinePlayerImpl implements IOnlinePlayer
         {
             this.displayName = offlinePlayer.getDisplayName();
         }
-        else
-        {
-            this.displayName = "";
-        }
         this.isBanned = offlinePlayer.isBanned();
         this.group = offlinePlayer.getGroup();
         this.groupExpireAt = offlinePlayer.getGroupExpireAt();
@@ -85,7 +80,7 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     @Override
     public boolean hasDisplayName()
     {
-        return StringUtils.isNotEmpty(this.displayName);
+        return this.displayName != null;
     }
 
     @Override
@@ -101,23 +96,12 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     @Override
     public void setDisplayName(final String newName)
     {
-        if (newName != null)
-        {
-            this.displayName = newName;
-        }
-        else
-        {
-            this.displayName = "";
-        }
+        this.displayName = newName;
     }
 
     @Override
     public boolean isBanned()
     {
-        if (this.isBanned == null)
-        {
-            return false;
-        }
         return this.isBanned;
     }
 
@@ -210,11 +194,6 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     {
         final IProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
         return proxyRpc.isOnline(this.nick);
-    }
-
-    public boolean hasPermission(final String permission)
-    {
-        return this.group != null && this.group.hasPermission(permission);
     }
 
     @Override

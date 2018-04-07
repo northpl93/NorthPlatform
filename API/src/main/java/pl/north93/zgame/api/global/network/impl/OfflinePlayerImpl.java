@@ -2,7 +2,6 @@ package pl.north93.zgame.api.global.network.impl;
 
 import java.util.UUID;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -44,10 +43,6 @@ public class OfflinePlayerImpl implements IOfflinePlayer
         {
             this.displayName = onlinePlayer.getDisplayName();
         }
-        else
-        {
-            this.displayName = "";
-        }
         this.isBanned = onlinePlayer.isBanned();
         this.group = onlinePlayer.getGroup();
         this.groupExpireAt = onlinePlayer.getGroupExpireAt();
@@ -75,7 +70,7 @@ public class OfflinePlayerImpl implements IOfflinePlayer
     @Override
     public boolean hasDisplayName()
     {
-        return StringUtils.isNotEmpty(this.displayName);
+        return this.displayName != null;
     }
 
     @Override
@@ -91,23 +86,12 @@ public class OfflinePlayerImpl implements IOfflinePlayer
     @Override
     public void setDisplayName(final String newName)
     {
-        if (newName != null)
-        {
-            this.displayName = newName;
-        }
-        else
-        {
-            this.displayName = "";
-        }
+        this.displayName = newName;
     }
 
     @Override
     public boolean isBanned()
     {
-        if (this.isBanned == null)
-        {
-            return false;
-        }
         return this.isBanned;
     }
 

@@ -20,6 +20,9 @@ import pl.arieals.api.minigame.shared.api.cfg.HubConfig;
 import pl.arieals.api.minigame.shared.api.cfg.HubsConfig;
 import pl.arieals.api.minigame.shared.api.hub.IHubServer;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.chat.global.ChatManager;
+import pl.north93.zgame.api.chat.global.ChatRoom;
+import pl.north93.zgame.api.chat.global.formatter.PermissionsBasedFormatter;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.config.IConfig;
 import pl.north93.zgame.api.global.config.NetConfig;
@@ -31,6 +34,8 @@ public class LocalHubServer implements IHubServer
 {
     @Inject
     private BukkitApiCore         apiCore;
+    @Inject
+    private ChatManager           chatManager;
     @Inject @NetConfig(type = HubsConfig.class, id = "hubs")
     private IConfig<HubsConfig>   hubsConfig;
     private Map<String, HubWorld> hubWorlds = new HashMap<>();
@@ -111,8 +116,11 @@ public class LocalHubServer implements IHubServer
             return;
         }
 
+        // stary hub gracza, może być nullem
+        final HubWorld oldHub = this.getHubWorld(player);
+
         hubWorld.teleportPlayerHere(player);
-        this.apiCore.callEvent(new PlayerSwitchedHubEvent(player, hubWorld));
+        this.apiCore.callEvent(new PlayerSwitchedHubEvent(player, oldHub, hubWorld));
     }
 
     /**
@@ -158,11 +166,19 @@ public class LocalHubServer implements IHubServer
     {
         final World bukkitWorld = this.createWorld(hubConfig);
 
-        final HubWorld hubWorld = new HubWorld(hubConfig.getHubId(), bukkitWorld);
+        final ChatRoom room = this.getChatRoomFor(hubConfig);
+
+        final HubWorld hubWorld = new HubWorld(hubConfig.getHubId(), bukkitWorld, room);
         hubWorld.updateConfig(hubConfig);
 
         this.hubWorlds.put(hubConfig.getHubId(), hubWorld);
         this.apiCore.getLogger().log(Level.INFO, "Created hub with ID {0}", hubConfig.getHubId());
+    }
+
+    private ChatRoom getChatRoomFor(final HubConfig hubConfig)
+    {
+        final String roomId = "hub:" + hubConfig.getHubId();
+        return this.chatManager.getOrCreateRoom(roomId, PermissionsBasedFormatter.INSTANCE);
     }
 
     private World createWorld(final HubConfig hubConfig)

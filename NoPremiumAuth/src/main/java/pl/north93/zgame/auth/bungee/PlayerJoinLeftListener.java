@@ -1,14 +1,15 @@
 package pl.north93.zgame.auth.bungee;
 
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import pl.north93.zgame.api.bungee.proxy.event.HandlePlayerProxyQuitEvent;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
@@ -38,9 +39,10 @@ public class PlayerJoinLeftListener implements Listener
     }
 
     @EventHandler
-    public void onPlayerQuit(final PlayerDisconnectEvent event)
+    public void onPlayerQuit(final HandlePlayerProxyQuitEvent event)
     {
-        this.authProxy.getAuthManager().deleteStatus(event.getPlayer().getUniqueId());
+        final UUID playerId = event.getProxiedPlayer().getUniqueId();
+        this.authProxy.getAuthManager().deleteStatus(playerId);
     }
 
     @Override

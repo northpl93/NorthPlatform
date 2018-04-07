@@ -1,25 +1,34 @@
 package pl.north93.zgame.api.chat.global.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
-import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
+import pl.north93.zgame.api.global.redis.messaging.templates.HashSetTemplate;
 
-/*default*/ class ChatRoomData
+/**
+ * Obiekt przechowujący informacje o pokoju czatu.
+ * Jest on zapisywany w redisie.
+ */
+public class ChatRoomData
 {
-    private String         formatterId;
-    @MsgPackCustomTemplate(ArrayListTemplate.class)
-    private List<Identity> participants;
+    private String        formatterId;
+    @MsgPackCustomTemplate(HashSetTemplate.class)
+    private Set<Identity> participants;
+
+    // domyślny konstruktor dla serializacji
+    public ChatRoomData()
+    {
+    }
 
     public ChatRoomData(final String formatterId)
     {
         this.formatterId = formatterId;
-        this.participants = new ArrayList<>();
+        this.participants = new HashSet<>();
     }
 
     public String getFormatterId()
@@ -32,7 +41,7 @@ import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
         this.formatterId = formatterId;
     }
 
-    public List<Identity> getParticipants()
+    public Set<Identity> getParticipants()
     {
         return this.participants;
     }

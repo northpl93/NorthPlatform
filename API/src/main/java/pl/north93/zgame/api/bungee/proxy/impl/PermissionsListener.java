@@ -6,21 +6,21 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import net.md_5.bungee.api.event.PermissionCheckEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import pl.north93.zgame.api.bungee.BungeeApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.permissions.Group;
 
 public class PermissionsListener implements Listener
 {
     @Inject
-    private BungeeApiCore apiCore;
+    private INetworkManager networkManager;
 
     @EventHandler
     public void onPermissionCheck(final PermissionCheckEvent event)
     {
         // todo rewrite
-        final IOnlinePlayer online = this.apiCore.getNetworkManager().getPlayers().unsafe().getOnline(event.getSender().getName()).get();
+        final IOnlinePlayer online = this.networkManager.getPlayers().unsafe().getOnline(event.getSender().getName()).get();
         if (online == null)
         {
             return;

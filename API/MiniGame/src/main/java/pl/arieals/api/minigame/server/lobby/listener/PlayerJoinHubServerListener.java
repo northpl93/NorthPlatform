@@ -20,12 +20,17 @@ import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.api.minigame.server.lobby.event.PlayerSwitchedHubEvent;
 import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
+import pl.arieals.api.minigame.server.lobby.hub.LocalHubServer;
 import pl.arieals.api.minigame.server.lobby.hub.SelectHubServerJoinAction;
 import pl.north93.zgame.api.bukkit.player.event.PlayerDataLoadedEvent;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 
-public class PlayerJoinLobbyServerListener implements Listener
+/**
+ * Ogólna obsługa wejścia gracza na serwer hubów,
+ * dodatkowe śledzenie aktualnego hubu gracza.
+ */
+public class PlayerJoinHubServerListener implements Listener
 {
     @Inject
     private MiniGameServer gameServer;
@@ -66,9 +71,12 @@ public class PlayerJoinLobbyServerListener implements Listener
         }
 
         final LobbyManager serverManager = this.gameServer.getServerManager();
-        final HubWorld hubWorld = serverManager.getLocalHub().getHubWorld(to.getWorld());
+        final LocalHubServer localHub = serverManager.getLocalHub();
 
-        Bukkit.getPluginManager().callEvent(new PlayerSwitchedHubEvent(event.getPlayer(), hubWorld));
+        final HubWorld oldHubWorld = localHub.getHubWorld(from.getWorld());
+        final HubWorld newWorldHub = localHub.getHubWorld(to.getWorld());
+
+        Bukkit.getPluginManager().callEvent(new PlayerSwitchedHubEvent(event.getPlayer(), oldHubWorld, newWorldHub));
     }
 
     @EventHandler

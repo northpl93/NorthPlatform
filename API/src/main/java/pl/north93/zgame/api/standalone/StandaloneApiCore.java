@@ -2,7 +2,9 @@ package pl.north93.zgame.api.standalone;
 
 import java.io.File;
 import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.StreamHandler;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -37,10 +39,14 @@ public class StandaloneApiCore extends ApiCore
     {
         super(Platform.STANDALONE, new StandalonePlatformConnector());
 
-        final ConsoleHandler handler = new ConsoleHandler();
+        final StreamHandler handler = new ConsoleHandler();
         handler.setFormatter(new NorthFormatter());
+        handler.setLevel(Level.ALL);
+
         this.logger.setUseParentHandlers(false);
         this.logger.addHandler(handler);
+        Logger.getGlobal().setLevel(Level.ALL);
+        this.logger.setLevel(Level.ALL);
     }
 
     @Override

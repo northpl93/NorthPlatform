@@ -40,6 +40,11 @@
             <artifactId>economy</artifactId>
             <version>1.0-INDEV</version>
         </dependency>
+        <dependency>
+            <groupId>pl.north93.zgame.api</groupId>
+            <artifactId>chat</artifactId>
+            <version>1.0-INDEV</version>
+        </dependency>
 
         <!-- NPCty -->
         <dependency>

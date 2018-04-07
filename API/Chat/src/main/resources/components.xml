@@ -2,19 +2,47 @@
 <bundle>
     <components>
         <component>
-            <name>ChatApi.Bukkit</name>
+            <name>API.Chat.Bukkit</name>
             <mainClass>pl.north93.zgame.api.chat.bukkit.BukkitChatComponent</mainClass>
             <description>Chat API.</description>
             <packages>
-                <package>pl.north93.zgame.api.chat.bukkit</package>
                 <package>pl.north93.zgame.api.chat.global</package>
+                <package>pl.north93.zgame.api.chat.bukkit</package>
             </packages>
             <dependencies>
-                <dependency>API.Database.Redis.RPC</dependency>
-                <dependency>API.Database.Redis.Event</dependency>
+                <dependency>API.MinecraftNetwork.NetworkManager</dependency>
             </dependencies>
             <platforms>
                 <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+
+        <component>
+            <name>API.Chat.Bungee</name>
+            <mainClass>pl.north93.zgame.api.chat.bungee.BungeeChatComponent</mainClass>
+            <description>Chat API.</description>
+            <packages>
+                <package>pl.north93.zgame.api.chat.global</package>
+                <package>pl.north93.zgame.api.chat.bungee</package>
+            </packages>
+            <dependencies>
+                <dependency>API.MinecraftNetwork.NetworkManager</dependency>
+            </dependencies>
+            <platforms>
+                <platform>BUNGEE</platform>
+            </platforms>
+        </component>
+
+        <component>
+            <name>API.Chat.Controller</name>
+            <mainClass>pl.north93.zgame.api.chat.controller.ControllerChatComponent</mainClass>
+            <description>Chat API.</description>
+            <packages>
+                <package>pl.north93.zgame.api.chat.global</package>
+                <package>pl.north93.zgame.api.chat.controller</package>
+            </packages>
+            <platforms>
+                <platform>STANDALONE</platform>
             </platforms>
         </component>
     </components>

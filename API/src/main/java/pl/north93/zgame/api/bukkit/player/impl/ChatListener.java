@@ -1,8 +1,9 @@
 package pl.north93.zgame.api.bukkit.player.impl;
 
-import static org.bukkit.ChatColor.translateAlternateColorCodes;
+import static org.bukkit.ChatColor.stripColor;
 
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -11,7 +12,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.player.IBukkitPlayers;
-import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ChatListener implements Listener
@@ -23,16 +23,13 @@ public class ChatListener implements Listener
     public void onChat(final AsyncPlayerChatEvent event)
     {
         // todo rewrite
-        final INorthPlayer player = this.bukkitPlayers.getPlayer(event.getPlayer());
-        final String newFormat = translateAlternateColorCodes('&', player.getGroup().getChatFormat());
-        event.setFormat(newFormat);
-
-        if (event.getPlayer().hasPermission("chat.colorize"))
+        final Player player = event.getPlayer();
+        if (! player.hasPermission("chat.colorize"))
         {
-            event.setMessage(translateAlternateColorCodes('&', event.getMessage()));
+            event.setMessage(stripColor(event.getMessage()));
         }
 
-        if (! event.getPlayer().hasPermission("chat.rawMessage"))
+        if (! player.hasPermission("chat.rawMessage"))
         {
             event.setMessage(
                 event.getMessage()

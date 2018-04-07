@@ -178,7 +178,7 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
         }
 
         final String latestKnownUsername = result.getString("latestKnownUsername");
-        final String displayName = result.containsKey("displayName") ? result.getString("displayName") : ""; // gdy nie ma niestandardowej nazwy to nie ma fielda
+        final String displayName = result.getString("displayName");
         final boolean isBanned = result.getBoolean("banned");
         final Group group = this.permissionsManager.getGroupByName(result.getString("group"));
         final long groupExpireAt = result.getLong("groupExpireAt");
@@ -213,11 +213,7 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
         playerData.put("banned", player.isBanned());
         playerData.put("group", player.getGroup().getName());
         playerData.put("groupExpireAt", player.getGroupExpireAt());
-
-        if (player.hasDisplayName())
-        {
-            playerData.put("displayName", player.getDisplayName());
-        }
+        playerData.put("displayName", player.hasDisplayName() ? player.getDisplayName() : null);
 
         final Document metadata = new Document();
         for (final Map.Entry<MetaKey, Object> entry : player.getMetaStore().getInternalMap().entrySet())

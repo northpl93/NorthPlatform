@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.lobby.hub.LocalHubServer;
-import pl.arieals.api.minigame.server.lobby.listener.PlayerJoinLobbyServerListener;
+import pl.arieals.api.minigame.server.lobby.listener.PlayerJoinHubServerListener;
 import pl.arieals.api.minigame.shared.api.hub.RemoteHub;
 import pl.arieals.api.minigame.shared.api.location.HubNetworkLocation;
 import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
@@ -38,7 +38,7 @@ public class LobbyManager implements IServerManager
         this.localHub.refreshConfiguration();
 
         this.apiCore.registerEvents(
-                new PlayerJoinLobbyServerListener() // nasluchuje wejscia gracza na serwer z hubami
+                new PlayerJoinHubServerListener() // nasluchuje wejscia gracza na serwer z hubami
         );
 
         this.logger.log(Level.INFO, "Hub component started successfully");

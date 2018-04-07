@@ -60,10 +60,6 @@ public class NickCmd extends NorthCommand
             {
                 sender.sendMessage(this.messages, "command.no_player");
             }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -94,10 +90,6 @@ public class NickCmd extends NorthCommand
         catch (final PlayerNotFoundException e)
         {
             sender.sendMessage(this.messages, "command.no_player");
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
         }
     }
 

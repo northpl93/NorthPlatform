@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.chat.global.impl;
 
+import javax.annotation.Nullable;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +26,7 @@ import pl.north93.zgame.api.global.network.players.IPlayer;
         this.rooms = new HashSet<>(4);
     }
 
+    @Nullable
     public String getMainRoomId()
     {
         return this.mainRoomId;

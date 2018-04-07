@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.plugin.Event;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.PluginManager;
 import pl.north93.zgame.api.bungee.cfg.ProxyInstanceConfig;
@@ -96,6 +97,11 @@ public class BungeeApiCore extends ApiCore
         {
             pluginManager.registerListener(this.bungeePlugin, listener);
         }
+    }
+
+    public <T extends Event> T callEvent(final T event)
+    {
+        return this.bungeePlugin.getProxy().getPluginManager().callEvent(event);
     }
 
     public ConnectionManager getConnectionManager()

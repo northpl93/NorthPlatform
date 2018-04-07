@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.zgame.api.chat.global.ChatFormatter;
 import pl.north93.zgame.api.chat.global.ChatPlayer;
 import pl.north93.zgame.api.chat.global.ChatRoom;
@@ -41,6 +42,8 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     public Collection<Identity> getParticipants()
     {
         final ChatRoomData roomData = this.data.get();
+        this.checkIsPresent(roomData);
+
         return unmodifiableCollection(roomData.getParticipants());
     }
 
@@ -48,6 +51,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     public ChatFormatter getChatFormatter()
     {
         final ChatRoomData roomData = this.data.get();
+        this.checkIsPresent(roomData);
 
         final String formatterId = roomData.getFormatterId();
         return this.chatManager.getFormatter(formatterId);
@@ -68,6 +72,12 @@ import pl.north93.zgame.api.global.redis.observable.Value;
         });
     }
 
+    @Override
+    public void broadcast(final BaseComponent component)
+    {
+        // todo
+    }
+
     public void update(final Consumer<ChatRoomData> updater)
     {
         this.data.update(data ->
@@ -77,6 +87,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
         });
     }
 
+    // robi null-check, i throwuje ChatRoomNotFoundException
     private void checkIsPresent(final ChatRoomData data)
     {
         if (data == null)
