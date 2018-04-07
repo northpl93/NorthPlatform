@@ -1,21 +1,20 @@
 package pl.north93.zgame.api.global.redis.rpc.impl.messaging;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackNullable;
 
 public class RpcResponseMessage
 {
     private Integer requestId;
-    @MsgPackNullable
     private Object  response;
 
     public RpcResponseMessage()
     {
     }
 
-    public RpcResponseMessage(final Integer requestId, final Object response)
+    public RpcResponseMessage(final Integer requestId, final @Nullable Object response)
     {
         this.requestId = requestId;
         this.response = response;

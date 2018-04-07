@@ -1,6 +1,7 @@
 package pl.north93.zgame.api.global.redis.messaging.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 
 import java.util.ArrayList;
@@ -9,7 +10,6 @@ import java.util.List;
 import org.junit.Test;
 
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
-import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackNullable;
 import pl.north93.zgame.api.global.redis.messaging.impl.TemplateFactoryImpl;
 import pl.north93.zgame.api.global.redis.messaging.impl.TemplateManagerImpl;
 
@@ -30,9 +30,9 @@ public class SimpleTest
             this.integerField = integerField;
         }
 
-        private @MsgPackNullable String  stringField;
-        private @MsgPackNullable Boolean booleanField;
-        private @MsgPackNullable Integer integerField;
+        private String  stringField;
+        private Boolean booleanField;
+        private Integer integerField;
     }
 
     @Test
@@ -54,9 +54,9 @@ public class SimpleTest
         final byte[] serialized = this.templateManager.serialize(SimpleTestObject.class, new SimpleTestObject());
         final SimpleTestObject after = this.templateManager.deserialize(SimpleTestObject.class, serialized);
 
-        assertEquals(null, after.stringField);
-        assertEquals(null, after.booleanField);
-        assertEquals(null, after.integerField);
+        assertNull(after.stringField);
+        assertNull(after.booleanField);
+        assertNull(after.integerField);
     }
 
     @Test

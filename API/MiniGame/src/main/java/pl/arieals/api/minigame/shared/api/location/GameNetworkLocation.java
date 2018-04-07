@@ -9,12 +9,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.shared.api.GameIdentity;
-import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackNullable;
 
 public final class GameNetworkLocation implements INetworkLocation
 {
     private UUID         serverId;
-    @MsgPackNullable
     private UUID         arenaId;
     private GameIdentity game;
 
@@ -22,7 +20,7 @@ public final class GameNetworkLocation implements INetworkLocation
     {
     }
 
-    public GameNetworkLocation(final UUID serverId, final UUID arenaId, final GameIdentity game)
+    public GameNetworkLocation(final UUID serverId, final @Nullable UUID arenaId, final GameIdentity game)
     {
         this.serverId = serverId;
         this.arenaId = arenaId;

@@ -13,6 +13,4 @@ public interface ITemplateElement
     void set(Object instance, Object value);
 
     Template getTemplate();
-
-    boolean isNullable();
 }

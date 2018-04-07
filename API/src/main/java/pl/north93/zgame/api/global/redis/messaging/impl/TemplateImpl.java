@@ -44,17 +44,13 @@ class TemplateImpl<T> implements Template<T>
         {
             //API.debug("TemplateImpl :: TemplateElement :: " + templateElement);
             final Object value = templateElement.get(object);
-            if (value == null)
+            if (value != null)
             {
-                if (! templateElement.isNullable())
-                {
-                    throw new NullPointerException("Field is not annotated by @MsgPackNullable");
-                }
-                packer.packNil();
+                templateElement.getTemplate().serializeObject(templateManager, packer, value);
             }
             else
             {
-                templateElement.getTemplate().serializeObject(templateManager, packer, value);
+                packer.packNil();
             }
         }
     }
@@ -67,9 +63,10 @@ class TemplateImpl<T> implements Template<T>
             final T instance = this.instanceCreator.newInstance();
             for (final ITemplateElement templateElement : this.structure)
             {
-                if (templateElement.isNullable() && unpacker.getNextFormat() == MessageFormat.NIL)
+                if (unpacker.getNextFormat() == MessageFormat.NIL)
                 {
-                    continue; // field is nullable and next value is nil so we not try to deserialize it
+                    unpacker.skipValue();
+                    continue; // next value is nil so we not try to deserialize it
                 }
                 templateElement.set(instance, templateElement.getTemplate().deserializeObject(templateManager, unpacker));
             }
