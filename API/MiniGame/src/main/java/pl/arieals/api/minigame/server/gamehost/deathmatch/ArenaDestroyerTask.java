@@ -10,7 +10,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import org.diorite.utils.math.DioriteRandomUtils;
+import org.diorite.commons.math.DioriteRandomUtils;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;

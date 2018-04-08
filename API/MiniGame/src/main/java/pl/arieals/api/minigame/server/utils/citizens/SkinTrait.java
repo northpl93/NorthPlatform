@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
+import com.destroystokyo.paper.utils.UnsafeUtils;
 import com.mojang.authlib.properties.Property;
 
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
@@ -11,9 +12,8 @@ import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.DioriteUtils;
-import org.diorite.utils.reflections.DioriteReflectionUtils;
-import org.diorite.utils.reflections.FieldAccessor;
+import org.diorite.commons.reflections.DioriteReflectionUtils;
+import org.diorite.commons.reflections.FieldAccessor;
 
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
@@ -75,7 +75,7 @@ final class SkinHelper
         final Skin newSkin;
         try
         {
-            newSkin = (Skin) DioriteUtils.getUnsafe().allocateInstance(Skin.class);
+            newSkin = (Skin) UnsafeUtils.getUnsafe().allocateInstance(Skin.class);
         }
         catch (final InstantiationException e)
         {

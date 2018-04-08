@@ -6,12 +6,12 @@ import org.bukkit.scheduler.BukkitTask;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.reflections.DioriteReflectionUtils;
-import org.diorite.utils.reflections.FieldAccessor;
+import org.diorite.commons.reflections.DioriteReflectionUtils;
+import org.diorite.commons.reflections.FieldAccessor;
 
 class WrappedBukkitTask implements BukkitTaskWrapper
 {
-    private static final FieldAccessor<Long> craftTaskPeriod = DioriteReflectionUtils.getField(CraftTask.class, "period", long.class);
+    private static final FieldAccessor<Long> craftTaskPeriod  = DioriteReflectionUtils.getField(CraftTask.class, "period", long.class);
     private static final FieldAccessor<Long> craftTaskNextRun = DioriteReflectionUtils.getField(CraftTask.class, "nextRun", long.class);
     private final BukkitTask bukkitTask;
     private final long       scheduledAt;

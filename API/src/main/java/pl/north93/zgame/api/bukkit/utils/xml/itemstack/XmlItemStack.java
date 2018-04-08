@@ -17,7 +17,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import org.diorite.utils.math.DioriteMathUtils;
+import org.diorite.commons.math.DioriteMathUtils;
 
 import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlEnchant;

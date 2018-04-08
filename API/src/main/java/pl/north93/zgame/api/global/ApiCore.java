@@ -8,7 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
-import org.diorite.utils.DioriteUtils;
+
+import org.diorite.commons.io.DioriteFileUtils;
 
 import pl.north93.zgame.api.global.agent.InstrumentationClient;
 import pl.north93.zgame.api.global.component.IComponentManager;
@@ -66,7 +67,7 @@ public abstract class ApiCore
         ((ComponentManagerImpl) this.componentManager).initDefaultBeans();
         this.componentManager.doComponentScan(this.getClass().getClassLoader()); // scan for builtin API components
         final File components = this.getFile("components");
-        DioriteUtils.createDirectory(components);
+        DioriteFileUtils.createDirectory(components);
         this.componentManager.doComponentScan(components); // Scan components directory
         final String extraDirectory = System.getProperty("northplatform.components");
         if (! StringUtils.isEmpty(extraDirectory))

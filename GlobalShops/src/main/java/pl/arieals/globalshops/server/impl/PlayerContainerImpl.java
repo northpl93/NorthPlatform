@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import org.diorite.utils.lazy.LazyValue;
+import org.diorite.commons.lazy.LazyValue;
 
 import pl.arieals.globalshops.server.IPlayerContainer;
 import pl.arieals.globalshops.server.event.ItemMarkedActiveEvent;

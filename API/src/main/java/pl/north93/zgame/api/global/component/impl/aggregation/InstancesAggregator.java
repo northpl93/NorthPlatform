@@ -9,12 +9,12 @@ import java.lang.reflect.Modifier;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.lazy.LazyValue;
+import org.diorite.commons.lazy.LazyValue;
 
 import javassist.CtClass;
-import pl.north93.zgame.api.global.component.impl.general.SmartExecutor;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.zgame.api.global.component.impl.context.TemporaryBeanContext;
+import pl.north93.zgame.api.global.component.impl.general.SmartExecutor;
 
 class InstancesAggregator implements IAggregator
 {

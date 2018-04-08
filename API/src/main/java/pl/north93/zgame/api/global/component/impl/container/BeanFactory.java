@@ -5,13 +5,13 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import org.diorite.utils.lazy.LazyValue;
+import org.diorite.commons.lazy.LazyValue;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
 import pl.north93.zgame.api.global.component.exceptions.BeanCreationException;
-import pl.north93.zgame.api.global.component.impl.general.SmartExecutor;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
+import pl.north93.zgame.api.global.component.impl.general.SmartExecutor;
 
 public class BeanFactory
 {

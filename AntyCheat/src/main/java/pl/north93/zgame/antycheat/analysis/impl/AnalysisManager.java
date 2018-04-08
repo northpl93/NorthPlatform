@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.lazy.IntLazyValue;
+import org.diorite.commons.lazy.IntLazyValue;
 
 import pl.north93.zgame.antycheat.analysis.FalsePositiveProbability;
 import pl.north93.zgame.antycheat.analysis.SingleAnalysisResult;

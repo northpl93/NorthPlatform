@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.math.DioriteRandomUtils;
+import org.diorite.commons.math.DioriteRandomUtils;
 
 import pl.arieals.api.minigame.shared.api.party.IPartyManager;
 import pl.arieals.api.minigame.shared.api.party.event.LeavePartyNetEvent.LeavePartyReason;

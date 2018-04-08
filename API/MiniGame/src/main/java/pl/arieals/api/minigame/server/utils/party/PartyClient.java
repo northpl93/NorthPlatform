@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.math.DioriteRandomUtils;
+import org.diorite.commons.math.DioriteRandomUtils;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
@@ -20,9 +20,9 @@ import pl.arieals.api.minigame.shared.api.party.PlayerAlreadyHasPartyException;
 import pl.arieals.api.minigame.shared.api.party.event.LeavePartyNetEvent.LeavePartyReason;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.Identity;
+import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
 
 /**
  * Klasa pomocnicza służąca do interakcji gracza z API party.

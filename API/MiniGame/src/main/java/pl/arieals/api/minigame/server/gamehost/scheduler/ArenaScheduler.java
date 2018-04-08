@@ -13,8 +13,8 @@ import org.bukkit.scheduler.BukkitTask;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.reflections.DioriteReflectionUtils;
-import org.diorite.utils.reflections.MethodInvoker;
+import org.diorite.commons.reflections.DioriteReflectionUtils;
+import org.diorite.commons.reflections.MethodInvoker;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;

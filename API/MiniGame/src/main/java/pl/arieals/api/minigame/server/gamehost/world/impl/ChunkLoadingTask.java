@@ -25,8 +25,8 @@ import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.reflections.DioriteReflectionUtils;
-import org.diorite.utils.reflections.FieldAccessor;
+import org.diorite.commons.reflections.DioriteReflectionUtils;
+import org.diorite.commons.reflections.FieldAccessor;
 
 import pl.arieals.api.minigame.server.gamehost.world.impl.blocker.WrappedChunkProviderServer;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlChunk;

@@ -24,7 +24,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.Document;
 
-import org.diorite.utils.network.DioriteURLUtils;
+import org.diorite.commons.io.DioriteURLUtils;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;

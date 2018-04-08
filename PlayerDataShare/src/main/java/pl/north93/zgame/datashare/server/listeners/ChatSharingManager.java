@@ -20,8 +20,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.cooldown.CooldownEntry;
-import org.diorite.utils.cooldown.CooldownManager;
+import org.diorite.commons.cooldown.CooldownEntry;
+import org.diorite.commons.cooldown.CooldownManager;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;

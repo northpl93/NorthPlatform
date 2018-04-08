@@ -2,11 +2,10 @@ package pl.north93.zgame.controller.servers.operation;
 
 import static java.util.Comparator.comparing;
 
-import static org.diorite.utils.function.FunctionUtils.not;
-
 
 import java.util.Comparator;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -95,11 +94,12 @@ public class RemoveServerOperation extends AutoScalerOperation
 
     private Server getServerToShutdown()
     {
+        final Predicate<Server> isShutdownScheduled = Server::isShutdownScheduled;
         final Comparator<Server> serverComparator = comparing(Server::getPlayersCount);
 
         final Set<Server> servers = this.networkManager.getServers().inGroup(this.serversGroup.getName());
         return servers.stream()
-                      .filter(not(Server::isShutdownScheduled)) // nie chcemy serwerów ktore juz sie wylaczaja
+                      .filter(isShutdownScheduled.negate()) // nie chcemy serwerów ktore juz sie wylaczaja
                       .min(serverComparator) // bierzemy ten z najmniejsza iloscia graczy
                       .orElse(null);
     }

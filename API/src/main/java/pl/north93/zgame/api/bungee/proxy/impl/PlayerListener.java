@@ -13,8 +13,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.reflections.DioriteReflectionUtils;
-import org.diorite.utils.reflections.FieldAccessor;
+import org.diorite.commons.reflections.DioriteReflectionUtils;
+import org.diorite.commons.reflections.FieldAccessor;
 
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;

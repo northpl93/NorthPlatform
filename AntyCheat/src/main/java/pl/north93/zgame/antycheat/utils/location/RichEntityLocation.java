@@ -5,7 +5,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-import org.diorite.utils.lazy.LazyValue;
+import org.diorite.commons.lazy.LazyValue;
 
 import pl.north93.zgame.antycheat.utils.AABB;
 import pl.north93.zgame.antycheat.utils.DistanceUtils;

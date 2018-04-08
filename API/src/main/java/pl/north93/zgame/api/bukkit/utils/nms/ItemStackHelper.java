@@ -1,6 +1,6 @@
 package pl.north93.zgame.api.bukkit.utils.nms;
 
-import static org.diorite.utils.reflections.DioriteReflectionUtils.getField;
+import static org.diorite.commons.reflections.DioriteReflectionUtils.getField;
 
 
 import net.minecraft.server.v1_12_R1.ItemStack;
@@ -11,13 +11,12 @@ import com.mojang.authlib.GameProfile;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import org.diorite.utils.reflections.DioriteReflectionUtils;
-import org.diorite.utils.reflections.FieldAccessor;
+import org.diorite.commons.reflections.FieldAccessor;
 
 public final class ItemStackHelper
 {
     private static final FieldAccessor<GameProfile> craftMetaSkull_profile = getField("org.bukkit.craftbukkit.v1_12_R1.inventory.CraftMetaSkull", "profile", GameProfile.class);
-    private static final FieldAccessor<ItemStack> craftItemStack_handle = DioriteReflectionUtils.getField(CraftItemStack.class, "handle", ItemStack.class);
+    private static final FieldAccessor<ItemStack>   craftItemStack_handle  = getField(CraftItemStack.class, "handle", ItemStack.class);
 
     private ItemStackHelper()
     {

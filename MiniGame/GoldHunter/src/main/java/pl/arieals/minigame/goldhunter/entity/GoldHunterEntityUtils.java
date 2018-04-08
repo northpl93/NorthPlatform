@@ -2,13 +2,13 @@ package pl.arieals.minigame.goldhunter.entity;
 
 import java.util.Set;
 
-import org.diorite.utils.reflections.DioriteReflectionUtils;
-import org.diorite.utils.reflections.FieldAccessor;
-
 import net.minecraft.server.v1_12_R1.Entity;
 import net.minecraft.server.v1_12_R1.EntityTypes;
 import net.minecraft.server.v1_12_R1.MinecraftKey;
 import net.minecraft.server.v1_12_R1.RegistryMaterials;
+
+import org.diorite.commons.reflections.DioriteReflectionUtils;
+import org.diorite.commons.reflections.FieldAccessor;
 
 public class GoldHunterEntityUtils
 {

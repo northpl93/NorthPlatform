@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
-import org.diorite.utils.reflections.DioriteReflectionUtils;
+import org.diorite.commons.reflections.DioriteReflectionUtils;
 
 import pl.north93.zgame.api.global.redis.messaging.Template;
 import pl.north93.zgame.api.global.redis.messaging.TemplateFactory;
@@ -60,11 +60,11 @@ public class TemplateFactoryImpl implements TemplateFactory
 
                 if (TemplateGeneric.class.isAssignableFrom(templateClass))
                 {
-                    template = ((TemplateGeneric) DioriteReflectionUtils.getConstructor(templateClass).invoke()).setGenericType((ParameterizedType) genericType);
+                    template = ((TemplateGeneric) DioriteReflectionUtils.getConstructor(templateClass).invokeWith()).setGenericType((ParameterizedType) genericType);
                 }
                 else
                 {
-                    template = (Template) DioriteReflectionUtils.getConstructor(templateClass).invoke();
+                    template = (Template) DioriteReflectionUtils.getConstructor(templateClass).invokeWith();
                 }
             }
             else if (fieldType.isEnum()) // enum needs a own special template

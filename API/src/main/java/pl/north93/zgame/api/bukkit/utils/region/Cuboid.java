@@ -15,7 +15,7 @@ import org.bukkit.block.Block;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import org.diorite.utils.math.DioriteRandomUtils;
+import org.diorite.commons.math.DioriteRandomUtils;
 
 public class Cuboid implements IRegion
 {

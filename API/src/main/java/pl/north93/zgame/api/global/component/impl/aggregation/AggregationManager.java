@@ -14,15 +14,15 @@ import com.google.common.collect.Multimap;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.lazy.LazyValue;
+import org.diorite.commons.lazy.LazyValue;
 
 import javassist.ClassPool;
 import javassist.CtClass;
 import pl.north93.zgame.api.global.component.annotations.SkipInjections;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
+import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.zgame.api.global.component.impl.general.ComponentManagerImpl;
 import pl.north93.zgame.api.global.component.impl.general.SmartExecutor;
-import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 
 public class AggregationManager
 {

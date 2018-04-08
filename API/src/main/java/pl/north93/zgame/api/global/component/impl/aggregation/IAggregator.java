@@ -2,7 +2,7 @@ package pl.north93.zgame.api.global.component.impl.aggregation;
 
 import java.lang.reflect.Method;
 
-import org.diorite.utils.lazy.LazyValue;
+import org.diorite.commons.lazy.LazyValue;
 
 import javassist.CtClass;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;

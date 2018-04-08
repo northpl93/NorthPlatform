@@ -1,6 +1,6 @@
 package pl.north93.zgame.antycheat.utils.block;
 
-import static org.diorite.utils.math.DioriteMathUtils.floor;
+import static org.diorite.commons.math.DioriteMathUtils.floor;
 
 
 import java.util.Iterator;

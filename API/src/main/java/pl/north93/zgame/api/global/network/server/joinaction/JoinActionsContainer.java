@@ -3,7 +3,7 @@ package pl.north93.zgame.api.global.network.server.joinaction;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.collections.arrays.DioriteArrayUtils;
+import org.diorite.commons.arrays.DioriteArrayUtils;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;

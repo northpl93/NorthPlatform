@@ -7,8 +7,8 @@ import net.minecraft.server.v1_12_R1.ChunkCoordIntPair;
 import net.minecraft.server.v1_12_R1.ChunkProviderServer;
 import net.minecraft.server.v1_12_R1.IChunkLoader;
 
-import org.diorite.utils.reflections.DioriteReflectionUtils;
-import org.diorite.utils.reflections.FieldAccessor;
+import org.diorite.commons.reflections.DioriteReflectionUtils;
+import org.diorite.commons.reflections.FieldAccessor;
 
 public class WrappedChunkProviderServer extends ChunkProviderServer
 {

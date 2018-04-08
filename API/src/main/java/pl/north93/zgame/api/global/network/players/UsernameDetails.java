@@ -1,8 +1,6 @@
 package pl.north93.zgame.api.global.network.players;
 
-import static org.diorite.utils.DioriteUtils.getCrackedUuid;
-
-
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
 
@@ -27,7 +25,7 @@ public final class UsernameDetails
     public UsernameDetails(final String validSpelling, final Date fetchTime)
     {
         this.validSpelling = validSpelling;
-        this.uuid = getCrackedUuid(validSpelling);
+        this.uuid = UUID.nameUUIDFromBytes(("OfflinePlayer:" + validSpelling).getBytes(StandardCharsets.UTF_8));
         this.isPremium = false;
         this.fetchTime = fetchTime;
     }

@@ -1,6 +1,6 @@
 package pl.arieals.api.minigame.server.gamehost.world.impl;
 
-import static org.diorite.utils.reflections.DioriteReflectionUtils.getField;
+import static org.diorite.commons.reflections.DioriteReflectionUtils.getField;
 
 
 import java.io.File;

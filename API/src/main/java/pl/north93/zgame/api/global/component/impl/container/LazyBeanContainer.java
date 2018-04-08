@@ -3,7 +3,7 @@ package pl.north93.zgame.api.global.component.impl.container;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.lazy.LazyValue;
+import org.diorite.commons.lazy.LazyValue;
 
 import pl.north93.zgame.api.global.component.impl.injection.IInjectionContext;
 

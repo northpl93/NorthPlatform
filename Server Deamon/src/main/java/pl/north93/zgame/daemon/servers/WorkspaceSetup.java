@@ -12,7 +12,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.DioriteUtils;
+import org.diorite.commons.io.DioriteFileUtils;
 
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
@@ -53,12 +53,12 @@ public class WorkspaceSetup
     private void copyApiFiles(final File workspace) throws IOException
     {
         final File plugins = new File(workspace, "plugins");
-        DioriteUtils.createDirectory(plugins);
+        DioriteFileUtils.createDirectory(plugins);
         final File apiJar = new File(ApiCore.class.getProtectionDomain().getCodeSource().getLocation().getFile());
         FileUtils.copyFileToDirectory(apiJar, plugins);
 
         final File pluginsApi = new File(plugins, "API");
-        DioriteUtils.createDirectory(pluginsApi);
+        DioriteFileUtils.createDirectory(pluginsApi);
         final File connectionXml = this.apiCore.getFile("connection.xml");
         FileUtils.copyFileToDirectory(connectionXml, pluginsApi);
     }

@@ -2,13 +2,15 @@ package pl.arieals.minigame.goldhunter.player;
 
 import java.util.Set;
 
-import org.apache.logging.log4j.Logger;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.diorite.utils.math.DioriteMathUtils;
 
-import net.minecraft.server.v1_12_R1.MinecraftServer;
+import org.apache.logging.log4j.Logger;
+
+import org.diorite.commons.math.DioriteMathUtils;
 
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.arena.SoundEffect;

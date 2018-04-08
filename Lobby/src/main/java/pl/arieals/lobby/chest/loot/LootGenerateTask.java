@@ -15,8 +15,8 @@ import org.bukkit.Bukkit;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.math.DioriteRandomUtils;
-import org.diorite.utils.math.IWeightedRandomChoice;
+import org.diorite.commons.math.DioriteRandomUtils;
+import org.diorite.commons.math.IWeightedRandomChoice;
 
 import pl.arieals.globalshops.server.IGlobalShops;
 import pl.arieals.globalshops.shared.Item;
@@ -99,7 +99,7 @@ class LootGenerateTask implements Runnable
                               .collect(Collectors.toList());
 
         // mieszamy liste zeby byla taka sama szansa na wszystkie itemy
-        Collections.shuffle(items, DioriteRandomUtils.getRandom());
+        Collections.shuffle(items);
 
         return items;
     }
@@ -120,7 +120,7 @@ class WeightedItem implements IWeightedRandomChoice
     }
 
     @Override
-    public int getWeight()
+    public double getWeight()
     {
         return this.item.getRarity().getWeight();
     }
