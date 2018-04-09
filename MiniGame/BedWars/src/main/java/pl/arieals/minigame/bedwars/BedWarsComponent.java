@@ -17,7 +17,6 @@ import pl.arieals.minigame.bedwars.listener.ArenaStartListener;
 import pl.arieals.minigame.bedwars.listener.BedDestroyListener;
 import pl.arieals.minigame.bedwars.listener.BuildListener;
 import pl.arieals.minigame.bedwars.listener.BwSpectatorListener;
-import pl.arieals.minigame.bedwars.listener.ChatListener;
 import pl.arieals.minigame.bedwars.listener.DeathListener;
 import pl.arieals.minigame.bedwars.listener.DeathMatchStartListener;
 import pl.arieals.minigame.bedwars.listener.GameEndListener;
@@ -57,7 +56,6 @@ public class BedWarsComponent extends Component
                 new StatTrackListener(), // zarzadza stat trakami.
                 new NpcCreator(), // zarzadza tworzeniem NPC w bazie
                 new TabListHandler(), // zarzadza tablista
-                new ChatListener(), // formatuje czat bedwarsow
                 new PlayerTeamListener(), //wejscie,start areny,wyjscie
                 new BuildListener(), // crafting,budowanie,niszczenie
                 new DeathListener(), // smierc gracza

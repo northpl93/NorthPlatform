@@ -5,6 +5,12 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Task sprawdzający czy wysłane zapytania dołączenia gracza do serwera
+ * się nie przedawniły.
+ *
+ * @see PlayersManager#checkTimeouts()
+ */
 public class PlayerTimeoutChecker implements Runnable
 {
     private final LocalArenaManager arenaManager;

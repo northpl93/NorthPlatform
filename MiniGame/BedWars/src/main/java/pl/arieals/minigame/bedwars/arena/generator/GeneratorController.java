@@ -19,7 +19,7 @@ import org.bukkit.util.Vector;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.diorite.utils.math.DioriteRandomUtils;
+import org.diorite.commons.math.DioriteRandomUtils;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
@@ -190,8 +190,8 @@ public class GeneratorController
 
             if (GeneratorController.this.generatorType.isRandomLocation())
             {
-                final double x = (DioriteRandomUtils.getRandom().nextInt(6) - 2.5) / 10D;
-                final double z = (DioriteRandomUtils.getRandom().nextInt(6) - 2.5) / 10D;
+                final double x = (DioriteRandomUtils.nextInt(6) - 2.5) / 10D;
+                final double z = (DioriteRandomUtils.nextInt(6) - 2.5) / 10D;
 
                 item.setVelocity(new Vector(x, 0.1, z));
             }

@@ -3,7 +3,7 @@ package pl.arieals.minigame.bedwars.shop.elimination;
 import static org.bukkit.FireworkEffect.Type;
 import static org.bukkit.FireworkEffect.builder;
 
-import static org.diorite.utils.math.DioriteRandomUtils.getRandomInt;
+import static org.diorite.commons.math.DioriteRandomUtils.getRandomInt;
 
 
 import net.minecraft.server.v1_12_R1.EntityFireworks;
@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.meta.FireworkMeta;
 
-import org.diorite.utils.math.DioriteRandomUtils;
+import org.diorite.commons.math.DioriteRandomUtils;
 
 public class FireworkEffect implements IEliminationEffect
 {

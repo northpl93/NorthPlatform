@@ -39,6 +39,15 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     }
 
     @Override
+    public int getPriority()
+    {
+        final ChatRoomData roomData = this.data.get();
+        this.checkIsPresent(roomData);
+
+        return roomData.getPriority();
+    }
+
+    @Override
     public Collection<Identity> getParticipants()
     {
         final ChatRoomData roomData = this.data.get();
@@ -76,6 +85,12 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     public void broadcast(final BaseComponent component)
     {
         // todo
+    }
+
+    @Override
+    public void delete()
+    {
+        this.kickAllAndDelete();
     }
 
     public void update(final Consumer<ChatRoomData> updater)

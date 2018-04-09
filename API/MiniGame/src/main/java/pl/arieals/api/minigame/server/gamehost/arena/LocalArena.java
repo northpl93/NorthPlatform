@@ -43,9 +43,9 @@ public class LocalArena implements IArena
     private final ArenaScheduler      scheduler;
     private final DeathMatch          deathMatch;
     private final IArenaRewards       rewards;
+    private final ArenaStartScheduler startScheduler;
     private       IArenaData          arenaData;
     private       MapVote             mapVote;
-    private final ArenaStartScheduler startScheduler;
 
     public LocalArena(final GameHostManager gameHostManager, final ArenaManager arenaManager, final RemoteArena data)
     {
@@ -53,7 +53,7 @@ public class LocalArena implements IArena
         this.arenaManager = arenaManager;
         this.data = data;
         this.world = new ArenaWorld(gameHostManager, this);
-        this.playersManager = new PlayersManager(gameHostManager, arenaManager, this);
+        this.playersManager = new PlayersManager(gameHostManager, this);
         this.timer = new StaticTimer();
         this.scheduler = new ArenaScheduler(this);
         this.deathMatch = new DeathMatch(gameHostManager, this);
@@ -100,8 +100,8 @@ public class LocalArena implements IArena
 
         this.scheduler.cancelAndClear();
         this.data.setGamePhase(gamePhase);
-        this.arenaManager.setArena(this.data);
-        
+        this.uploadRemoteData();
+
         final String mapName = this.world.getCurrentMapTemplate() != null ? this.world.getCurrentMapTemplate().getName() : "Lobby";
         this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.getId(), this.getMiniGame(), mapName, gamePhase, this.data.getPlayers().size()));
 
@@ -186,11 +186,6 @@ public class LocalArena implements IArena
     public MapVote getMapVote()
     {
         return this.mapVote;
-    }
-    
-    void setMapVote(MapVote mapVote)
-    {
-        this.mapVote = mapVote;
     }
 
     /**
@@ -330,10 +325,12 @@ public class LocalArena implements IArena
             this.mapVote.printStartVoteInfo();
         }
     }
-    
-    void startArenaGame()
+
+    // kończy głosowanie i zmienia etap gry na STARTED
+    // aktualnie wywoływane po zakończeniu odliczania do startu
+    /*default*/ void startArenaGame()
     {
-        if (this.mapVote == null )
+        if (this.mapVote == null)
         {
             this.setGamePhase(GamePhase.STARTED);
             return;
@@ -341,6 +338,11 @@ public class LocalArena implements IArena
 
         this.mapVote.printVotingResult();
         this.world.setActiveMap(this.mapVote.getWinner()).onComplete(() -> this.setGamePhase(GamePhase.STARTED));
+    }
+
+    /*default*/ void uploadRemoteData()
+    {
+        this.arenaManager.setArena(this.data);
     }
     
     @Override

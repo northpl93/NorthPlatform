@@ -30,8 +30,8 @@ import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.cfg.MiniGameConfig;
-import pl.arieals.api.minigame.shared.impl.ArenaManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.chat.global.ChatRoom;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
@@ -48,20 +48,45 @@ public class PlayersManager
     @Inject
     private Logger                          logger;
     private final GameHostManager           gameHostManager;
-    private final ArenaManager              manager;
     private final LocalArena                arena;
+    private final ChatRoom                  chatRoom; // pokój czatu
+    private final ChatRoom                  spectatorsRoom; // pokój czatu spectatorów
     private final List<Player>              players; // lista połączonych już graczy
     private final List<Player>              spectators; // lista polaczonych spectatorow
     private final Map<UUID, PlayerJoinInfo> joinInfos; // lista graczy chcacych wejsc na arene juz na niej bedacych
 
-    public PlayersManager(final GameHostManager gameHostManager, final ArenaManager manager, final LocalArena arena)
+    public PlayersManager(final GameHostManager gameHostManager, final LocalArena arena)
     {
         this.gameHostManager = gameHostManager;
-        this.manager = manager;
         this.arena = arena;
+
+        final LocalArenaManager arenaManager = gameHostManager.getArenaManager();
+        this.chatRoom = arenaManager.getChatRoomFor(arena, false);
+        this.spectatorsRoom = arenaManager.getChatRoomFor(arena, true);
+
         this.players = new ArrayList<>();
         this.spectators = new ArrayList<>(0); // zakladamy brak spectatorow
         this.joinInfos = new ConcurrentHashMap<>(); // may be accessed by server thread and rpc method executor in tryAddPlayers
+    }
+
+    /**
+     * Zwraca pokój czatu powiązany z tą areną i przeznaczony dla
+     * graczy biorących udział w rozgrywce.
+     * @return Pokój czatu przeznaczony dla graczy biorących udział w rozgrywce.
+     */
+    public ChatRoom getChatRoom()
+    {
+        return this.chatRoom;
+    }
+
+    /**
+     * Zwraca pokój czatu powiązany z tą areną i przeznaczony dla
+     * graczy oglądających grę.
+     * @return Pokój czatu przeznaczony dla graczy oglądających grę.
+     */
+    public ChatRoom getSpectatorsRoom()
+    {
+        return this.spectatorsRoom;
     }
 
     /**
@@ -169,7 +194,7 @@ public class PlayersManager
         final List<UUID> playerIds = players.stream().map(PlayerJoinInfo::getUuid).collect(Collectors.toList());
         final RemoteArena remoteArena = this.arena.getAsRemoteArena();
         remoteArena.getPlayers().addAll(playerIds);
-        this.manager.setArena(remoteArena);
+        this.arena.uploadRemoteData();
 
         return true;
     }
@@ -234,7 +259,7 @@ public class PlayersManager
 
         final RemoteArena remoteArena = this.arena.getAsRemoteArena();
         remoteArena.getPlayers().remove(player.getUniqueId());
-        this.manager.setArena(remoteArena);
+        this.arena.uploadRemoteData();
 
         final MapVote mapVote = this.arena.getMapVote();
         if (mapVote != null)

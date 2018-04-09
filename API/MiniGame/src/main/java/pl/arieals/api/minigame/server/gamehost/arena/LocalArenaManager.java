@@ -18,21 +18,28 @@ import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaCreatedNetEvent;
 import pl.arieals.api.minigame.shared.api.cfg.MiniGameConfig;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.chat.global.ChatManager;
+import pl.north93.zgame.api.chat.global.ChatRoom;
+import pl.north93.zgame.api.chat.global.ChatRoomPriority;
+import pl.north93.zgame.api.chat.global.formatter.PermissionsBasedFormatter;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class LocalArenaManager
 {
     @Inject
-    private BukkitApiCore          apiCore;
+    private BukkitApiCore  apiCore;
     @Inject
-    private Logger                 logger;
+    private Logger         logger;
     @Inject
-    private MiniGameServer         miniGameServer;
+    private MiniGameServer miniGameServer;
+    @Inject
+    private ChatManager    chatManager;
     private final List<LocalArena> arenas = new ArrayList<>();
 
     public LocalArena createArena()
@@ -101,6 +108,20 @@ public class LocalArenaManager
         for (final LocalArena arena : new ArrayList<>(this.arenas)) // unikamy ConcurrentModificationException
         {
             arena.delete();
+        }
+    }
+
+    /*default*/ ChatRoom getChatRoomFor(final IArena arena, final boolean spectators)
+    {
+        if (spectators)
+        {
+            final String id = "spectators:" + arena.getId();
+            return this.chatManager.getOrCreateRoom(id, PermissionsBasedFormatter.INSTANCE, ChatRoomPriority.HIGH);
+        }
+        else
+        {
+            final String id = "arena:" + arena.getId();
+            return this.chatManager.getOrCreateRoom(id, PermissionsBasedFormatter.INSTANCE, ChatRoomPriority.NORMAL);
         }
     }
 }

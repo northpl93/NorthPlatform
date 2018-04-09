@@ -15,6 +15,7 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
 import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
+import pl.arieals.minigame.bedwars.BedWarsChatFormatter;
 import pl.arieals.minigame.bedwars.arena.BedDestroyTask;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.generator.GeneratorTask;
@@ -36,6 +37,10 @@ public class ArenaStartListener implements Listener
 
         final BwArenaConfig arenaConfig = JAXB.unmarshal(arena.getWorld().getResource("BedWarsArena.xml"), BwArenaConfig.class);
         arena.setArenaData(new BedWarsArena(arena, this.config, arenaConfig));
+
+        // ustawiamy formatter naszemu głównemu pokojowi czatu,
+        // obsługuje on sytuacje gdy jesteśmy na etapie lobby (nie walnie NPE)
+        arena.getPlayersManager().getChatRoom().setChatFormatter(BedWarsChatFormatter.INSTANCE);
     }
 
     @EventHandler

@@ -1,14 +1,13 @@
 package pl.north93.zgame.api.chat.global.impl;
 
-import static java.util.Optional.ofNullable;
-
-
 import javax.annotation.Nullable;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import pl.north93.zgame.api.chat.global.ChatPlayer;
 import pl.north93.zgame.api.chat.global.ChatRoom;
@@ -40,16 +39,21 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
     @Nullable
     @Override
-    public ChatRoom getMainRoom()
+    public ChatRoom getActiveRoom()
     {
         final IOnlinePlayer player = this.player.get();
 
         final ChatPlayerData data = ChatPlayerData.get(player);
-        return ofNullable(data.getMainRoomId()).map(this.chatManager::getRoom).orElse(null);
+        if (data.getMainRoomId() == null)
+        {
+            return this.getBestMainRoom(data);
+        }
+
+        return this.chatManager.getRoom(data.getMainRoomId());
     }
 
     @Override
-    public void setMainRoom(final ChatRoom room)
+    public void setPreferredMainRoom(final ChatRoom room)
     {
         try (final IPlayerTransaction t = this.chatManager.getPlayersManager().transaction(this.identity))
         {
@@ -95,10 +99,12 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
             // w metodzie update wyżej może zostać rzucony wyjątek o nieistniejącym pokoju
             final ChatPlayerData playerData = ChatPlayerData.get(player);
-            playerData.getRooms().add(room.getId());
+            if (! playerData.getRooms().add(room.getId()))
+            {
+                return;
+            }
 
             logger.log(Level.INFO, "Player {0} joined chat room {1}", new Object[]{player.getLatestNick(), room.getId()});
-            this.checkIsMainRoomNeeded(playerData);
         }
     }
 
@@ -120,24 +126,22 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
             // w metodzie update wyżej może zostać rzucony wyjątek o nieistniejącym pokoju
             final ChatPlayerData playerData = ChatPlayerData.get(player);
-            playerData.getRooms().remove(room.getId());
+            if (! playerData.getRooms().remove(room.getId()))
+            {
+                return;
+            }
 
             logger.log(Level.INFO, "Player {0} leaved chat room {1}", new Object[]{player.getLatestNick(), room.getId()});
             if (roomImpl.getId().equals(playerData.getMainRoomId()))
             {
                 playerData.setMainRoomId(null);
             }
-            this.checkIsMainRoomNeeded(playerData);
         }
     }
 
-    private void checkIsMainRoomNeeded(final ChatPlayerData data)
+    private ChatRoom getBestMainRoom(final ChatPlayerData player)
     {
-        if (data.getMainRoomId() != null)
-        {
-            return;
-        }
-
-        data.getRooms().stream().findFirst().ifPresent(data::setMainRoomId);
+        final Stream<ChatRoomImpl> playerRooms = player.getRooms().stream().map(this.chatManager::getRoom);
+        return playerRooms.max(Comparator.comparing(ChatRoom::getPriority)).orElse(null);
     }
 }

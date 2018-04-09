@@ -22,6 +22,7 @@ import pl.arieals.api.minigame.shared.api.hub.IHubServer;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.chat.global.ChatManager;
 import pl.north93.zgame.api.chat.global.ChatRoom;
+import pl.north93.zgame.api.chat.global.ChatRoomPriority;
 import pl.north93.zgame.api.chat.global.formatter.PermissionsBasedFormatter;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.config.IConfig;
@@ -178,7 +179,7 @@ public class LocalHubServer implements IHubServer
     private ChatRoom getChatRoomFor(final HubConfig hubConfig)
     {
         final String roomId = "hub:" + hubConfig.getHubId();
-        return this.chatManager.getOrCreateRoom(roomId, PermissionsBasedFormatter.INSTANCE);
+        return this.chatManager.getOrCreateRoom(roomId, PermissionsBasedFormatter.INSTANCE, ChatRoomPriority.NORMAL);
     }
 
     private World createWorld(final HubConfig hubConfig)

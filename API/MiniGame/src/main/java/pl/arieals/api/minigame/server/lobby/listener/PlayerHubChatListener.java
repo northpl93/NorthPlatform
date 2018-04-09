@@ -1,7 +1,14 @@
 package pl.arieals.api.minigame.server.lobby.listener;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerQuitEvent;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import pl.arieals.api.minigame.server.MiniGameServer;
+import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.api.minigame.server.lobby.event.PlayerSwitchedHubEvent;
 import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
@@ -17,7 +24,9 @@ import pl.north93.zgame.api.global.network.players.Identity;
 public class PlayerHubChatListener implements AutoListener
 {
     @Inject
-    private ChatManager chatManager;
+    private ChatManager    chatManager;
+    @Inject
+    private MiniGameServer miniGameServer;
 
     @EventHandler
     public void switchChatRoomOnHubSwitch(final PlayerSwitchedHubEvent event)
@@ -34,5 +43,29 @@ public class PlayerHubChatListener implements AutoListener
 
         final ChatRoom newChatRoom = newHub.getChatRoom();
         player.joinRoom(newChatRoom);
+    }
+
+    @EventHandler
+    public void leaveRoomWhenPlayerQuitHubServer(final PlayerQuitEvent event)
+    {
+        final Player player = event.getPlayer();
+        final ChatPlayer chatPlayer = this.chatManager.getPlayer(Identity.of(player));
+
+        final LobbyManager lobbyManager = this.miniGameServer.getServerManager();
+        final HubWorld hubWorld = lobbyManager.getLocalHub().getHubWorld(player);
+
+        if (hubWorld == null)
+        {
+            // teoretycznie nigdy tak nie powinno się stać, ale warto dmuchać na zimne
+            return;
+        }
+
+        chatPlayer.leaveRoom(hubWorld.getChatRoom());
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

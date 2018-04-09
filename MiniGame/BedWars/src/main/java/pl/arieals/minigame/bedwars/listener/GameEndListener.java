@@ -1,6 +1,6 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import static org.diorite.utils.function.FunctionUtils.not;
+import static com.google.common.base.Predicates.not;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -80,7 +81,8 @@ public class GameEndListener implements Listener
         arena.getPlayersManager().broadcast(this.messages, "team_eliminated", MessageLayout.SEPARATED, team.getColor(), teamName);
 
         final BedWarsArena arenaData = arena.getArenaData();
-        if (arenaData.getTeams().stream().filter(not(Team::isEliminated)).count() <= 1)
+        final Predicate<Team> isEliminated = Team::isEliminated;
+        if (arenaData.getTeams().stream().filter(isEliminated.negate()).count() <= 1)
         {
             arena.endGame();
         }

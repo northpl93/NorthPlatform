@@ -70,7 +70,7 @@ public class ChatManagerImpl implements ChatManager
     }
 
     @Override
-    public ChatRoom createRoom(final String id, final ChatFormatter formatter)
+    public ChatRoom createRoom(final String id, final ChatFormatter formatter, final int priority)
     {
         final String formatterId = this.getFormatterId(formatter);
 
@@ -85,7 +85,7 @@ public class ChatManagerImpl implements ChatManager
 
             // zwracamy nowy obiekt; spowoduje to ustawienie wartosci w redisie
             // i tym samym utworzenie kanalu
-            return new ChatRoomData(formatterId);
+            return new ChatRoomData(priority, formatterId);
         });
 
         this.logger.log(Level.INFO, "Created room with ID {0} and formatter {1}", new Object[]{id, formatterId});
@@ -93,7 +93,7 @@ public class ChatManagerImpl implements ChatManager
     }
 
     @Override
-    public ChatRoom getOrCreateRoom(final String id, final ChatFormatter formatter)
+    public ChatRoom getOrCreateRoom(final String id, final ChatFormatter formatter, final int priority)
     {
         final String formatterId = this.getFormatterId(formatter);
 
@@ -102,7 +102,7 @@ public class ChatManagerImpl implements ChatManager
         {
             if (! value.isPreset())
             {
-                value.set(new ChatRoomData(formatterId));
+                value.set(new ChatRoomData(priority, formatterId));
                 this.logger.log(Level.INFO, "Created room with ID {0} and formatter {1}", new Object[]{id, formatterId});
             }
         }

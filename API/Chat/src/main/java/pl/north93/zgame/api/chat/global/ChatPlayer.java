@@ -11,11 +11,6 @@ public interface ChatPlayer
 {
     Identity getIdentity();
 
-    @Nullable
-    ChatRoom getMainRoom() throws PlayerOfflineException;
-
-    void setMainRoom(ChatRoom room) throws PlayerOfflineException;
-
     Collection<ChatRoom> getChatRooms() throws PlayerOfflineException;
 
     boolean isInRoom(ChatRoom room) throws PlayerOfflineException;
@@ -23,4 +18,9 @@ public interface ChatPlayer
     void joinRoom(ChatRoom room) throws PlayerOfflineException;
 
     void leaveRoom(ChatRoom room) throws PlayerOfflineException;
+
+    @Nullable
+    ChatRoom getActiveRoom() throws PlayerOfflineException;
+
+    void setPreferredMainRoom(ChatRoom room) throws PlayerOfflineException;
 }

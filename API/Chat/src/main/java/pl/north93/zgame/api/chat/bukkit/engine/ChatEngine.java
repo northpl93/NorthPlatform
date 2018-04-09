@@ -37,7 +37,7 @@ public class ChatEngine
         final Identity identity = northPlayer.getIdentity();
 
         final ChatPlayer chatPlayer = this.chatManager.getPlayer(identity);
-        final ChatRoom mainRoom = chatPlayer.getMainRoom();
+        final ChatRoom mainRoom = chatPlayer.getActiveRoom();
 
         if (mainRoom == null)
         {

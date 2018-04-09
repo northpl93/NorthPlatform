@@ -14,9 +14,11 @@ public interface ChatManager
      *
      * @param id Unikalne ID nowo tworzonego pokoju czatu.
      * @param formatter Formatter używany w tym pokoju.
+     * @param priority Priorytet tego pokoju podczas wybierania głównego
+     *                 pokoju gracza.
      * @return Obiekt reprezentujący nowo utworzony pokój czatu o podanym ID.
      */
-    ChatRoom createRoom(String id, ChatFormatter formatter);
+    ChatRoom createRoom(String id, ChatFormatter formatter, int priority);
 
     /**
      * Zwraca instancję już istniejącego pokoju czatu lub tworzy nowy pokój
@@ -25,9 +27,11 @@ public interface ChatManager
      * @param id Unikalne ID pokoju czatu.
      * @param formatter Formatter używany w tym pokoju.
      *                  Zostaje ustawiony tylko przy tworzeniu pokoju!
+     * @param priority Priorytet tego pokoju podczas wybierania głównego
+     *                 pokoju gracza. Zostaje ustawiony tylko przy tworzeniu pokoju!
      * @return Obiekt reprezentujący pokój czatu o podanym ID.
      */
-    ChatRoom getOrCreateRoom(String id, ChatFormatter formatter);
+    ChatRoom getOrCreateRoom(String id, ChatFormatter formatter, int priority);
 
     /**
      * Zwraca instancję już istniejącego pokoju czatu.
@@ -37,6 +41,12 @@ public interface ChatManager
      */
     ChatRoom getRoom(String id) throws ChatRoomNotFoundException;
 
+    /**
+     * Usuwa pokój czatu o podanym identyfikatorze.
+     *
+     * @param id Unikalne ID pokoju czatu.
+     * @throws ChatRoomNotFoundException Jeśli pokój czatu o podanym ID nie zostanie odnaleziony.
+     */
     void deleteRoom(String id) throws ChatRoomNotFoundException;
 
     ChatPlayer getPlayer(Identity identity) throws PlayerNotFoundException;

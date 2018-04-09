@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-import org.diorite.utils.reflections.DioriteReflectionUtils;
+import org.diorite.commons.reflections.DioriteReflectionUtils;
 
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;

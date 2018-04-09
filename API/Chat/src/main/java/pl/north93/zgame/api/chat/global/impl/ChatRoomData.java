@@ -16,6 +16,7 @@ import pl.north93.zgame.api.global.redis.messaging.templates.HashSetTemplate;
  */
 public class ChatRoomData
 {
+    private Integer       priority;
     private String        formatterId;
     @MsgPackCustomTemplate(HashSetTemplate.class)
     private Set<Identity> participants;
@@ -25,10 +26,16 @@ public class ChatRoomData
     {
     }
 
-    public ChatRoomData(final String formatterId)
+    public ChatRoomData(final int priority, final String formatterId)
     {
+        this.priority = priority;
         this.formatterId = formatterId;
         this.participants = new HashSet<>();
+    }
+
+    public Integer getPriority()
+    {
+        return this.priority;
     }
 
     public String getFormatterId()
