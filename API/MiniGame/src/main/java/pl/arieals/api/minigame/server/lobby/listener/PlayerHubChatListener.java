@@ -51,6 +51,13 @@ public class PlayerHubChatListener implements AutoListener
         final Player player = event.getPlayer();
         final ChatPlayer chatPlayer = this.chatManager.getPlayer(Identity.of(player));
 
+        if (! chatPlayer.isOnline())
+        {
+            // gdy gracz wychodzi z sieci to tu będzie false
+            // unikamy wyjątku PlayerOfflineException
+            return;
+        }
+
         final LobbyManager lobbyManager = this.miniGameServer.getServerManager();
         final HubWorld hubWorld = lobbyManager.getLocalHub().getHubWorld(player);
 

@@ -11,6 +11,8 @@ public interface ChatPlayer
 {
     Identity getIdentity();
 
+    boolean isOnline();
+
     Collection<ChatRoom> getChatRooms() throws PlayerOfflineException;
 
     boolean isInRoom(ChatRoom room) throws PlayerOfflineException;

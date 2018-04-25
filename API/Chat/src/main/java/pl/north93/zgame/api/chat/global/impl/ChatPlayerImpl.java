@@ -24,10 +24,10 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     private final Identity             identity;
     private final Value<IOnlinePlayer> player;
 
-    public ChatPlayerImpl(final ChatManagerImpl chatManager, final Value<IOnlinePlayer> player)
+    public ChatPlayerImpl(final ChatManagerImpl chatManager, final Identity identity, final Value<IOnlinePlayer> player)
     {
         this.chatManager = chatManager;
-        this.identity = player.get().getIdentity();
+        this.identity = identity;
         this.player = player;
     }
 
@@ -35,6 +35,18 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     public Identity getIdentity()
     {
         return this.identity;
+    }
+
+    @Override
+    public boolean isOnline()
+    {
+        final IOnlinePlayer player = this.player.get();
+        if (player == null)
+        {
+            return false;
+        }
+
+        return player.isOnline();
     }
 
     @Nullable
@@ -135,6 +147,21 @@ import pl.north93.zgame.api.global.redis.observable.Value;
             if (roomImpl.getId().equals(playerData.getMainRoomId()))
             {
                 playerData.setMainRoomId(null);
+            }
+        }
+    }
+
+    // usuwa tego gracza z wszystkich pokojów, ale nie modyfikuje danych samego gracza
+    public void leaveAllRoomsUnsafe()
+    {
+        try (final IPlayerTransaction t = this.chatManager.getPlayersManager().transaction(this.identity))
+        {
+            final ChatPlayerData playerData = ChatPlayerData.get(t.getPlayer());
+
+            for (final String roomId : playerData.getRooms())
+            {
+                final ChatRoomImpl room = this.chatManager.getRoom(roomId);
+                room.update(roomData -> roomData.getParticipants().remove(this.identity));
             }
         }
     }

@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.bungee.proxy.impl;
+package pl.north93.zgame.api.bungee.proxy.impl.listener;
 
 import static net.md_5.bungee.api.ChatColor.RED;
 
@@ -20,7 +20,6 @@ import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.AsyncEvent;
 import net.md_5.bungee.api.event.LoginEvent;
-import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
@@ -31,6 +30,7 @@ import pl.north93.zgame.api.bungee.BungeeApiCore;
 import pl.north93.zgame.api.bungee.Main;
 import pl.north93.zgame.api.bungee.proxy.event.HandlePlayerProxyJoinEvent;
 import pl.north93.zgame.api.bungee.proxy.event.HandlePlayerProxyQuitEvent;
+import pl.north93.zgame.api.bungee.proxy.event.PlayerLateDisconnectEvent;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -49,7 +49,10 @@ import pl.north93.zgame.api.global.redis.event.IEventManager;
 import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
-public class PlayerListener implements Listener
+/**
+ * Zarządza ładowaniem danych gracza i usuwaniem ich z Redisa.
+ */
+public class PlayerNetworkListener implements Listener
 {
     private static final Pattern  NICK_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{3,16}$");
     @Inject
@@ -161,8 +164,9 @@ public class PlayerListener implements Listener
     }
 
     @EventHandler
-    public void onLeave(final PlayerDisconnectEvent event)
+    public void onLeave(final PlayerLateDisconnectEvent event)
     {
+        System.out.println(event);
         final ProxiedPlayer proxyPlayer = event.getPlayer();
         final Value<IOnlinePlayer> player = this.networkManager.getPlayers().unsafe().getOnline(proxyPlayer.getName());
 

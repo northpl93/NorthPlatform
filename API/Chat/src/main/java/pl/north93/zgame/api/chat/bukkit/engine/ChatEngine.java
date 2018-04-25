@@ -1,7 +1,12 @@
 package pl.north93.zgame.api.chat.bukkit.engine;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -44,14 +49,46 @@ public class ChatEngine
             return SendMessageResult.NO_ROOM;
         }
 
+        final BaseComponent message = mainRoom.getChatFormatter().format(northPlayer, rawMessage);
+        if (this.processIfOnlyLocal(mainRoom, message))
+        {
+            // wszyscy gracze z pokoju byli online na lokalnym serwerze; wiec nie angazujemy
+            // redisa w wysylanie wiadomosci
+            return SendMessageResult.OK;
+        }
+        else
+        {
+            // używamy redisa do rozgłoszenia wiadomości
+            this.processRemote(mainRoom, identity, message);
+            return SendMessageResult.OK;
+        }
+    }
+
+    // sprawdza czy na lokalnym serwerze sa wszyscy gracze w pokoju
+    // jak tak to wysyla do nich wiadomosc i zwraca true
+    private boolean processIfOnlyLocal(final ChatRoom chatRoom, final BaseComponent message)
+    {
+        final Collection<Identity> participants = chatRoom.getParticipants();
+
+        final Function<Identity, Player> mapper = identity -> Bukkit.getPlayerExact(identity.getNick());
+        final List<Player> localPlayers = participants.stream().map(mapper).collect(Collectors.toList());
+
+        if (participants.size() != localPlayers.size())
+        {
+            return false;
+        }
+
+        localPlayers.forEach(player -> player.sendMessage(message));
+        return true;
+    }
+
+    // wysyła wiadomość do redisa
+    private void processRemote(final ChatRoom mainRoom, final Identity sender, final BaseComponent message)
+    {
+        final String jsonMessage = ComponentSerializer.toString(message);
         final UUID serverId = this.apiCore.getServerId();
 
-        final BaseComponent format = mainRoom.getChatFormatter().format(northPlayer, rawMessage);
-        final String jsonMessage = ComponentSerializer.toString(format);
-
-        final PlayerChatMessage chatMessage = new PlayerChatMessage(mainRoom.getId(), jsonMessage, identity, serverId);
+        final PlayerChatMessage chatMessage = new PlayerChatMessage(mainRoom.getId(), jsonMessage, sender, serverId);
         this.eventManager.callEvent(chatMessage);
-
-        return SendMessageResult.OK;
     }
 }

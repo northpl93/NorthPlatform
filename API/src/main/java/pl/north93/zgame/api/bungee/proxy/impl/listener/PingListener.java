@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.bungee.proxy.impl;
+package pl.north93.zgame.api.bungee.proxy.impl.listener;
 
 import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.fromLegacyText;
 import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;

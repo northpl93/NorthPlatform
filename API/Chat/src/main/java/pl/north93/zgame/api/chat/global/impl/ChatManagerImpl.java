@@ -10,7 +10,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.chat.global.ChatFormatter;
 import pl.north93.zgame.api.chat.global.ChatManager;
-import pl.north93.zgame.api.chat.global.ChatPlayer;
 import pl.north93.zgame.api.chat.global.ChatRoom;
 import pl.north93.zgame.api.chat.global.ChatRoomNotFoundException;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
@@ -75,18 +74,17 @@ public class ChatManagerImpl implements ChatManager
         final String formatterId = this.getFormatterId(formatter);
 
         final Value<ChatRoomData> value = this.chatRooms.getAsValue(id);
-        value.update(actual ->
+        try (final Lock lock = value.lock())
         {
-            if (actual != null)
+            if (value.isPreset())
             {
                 // jesli w redisie istnieje juz taki obiekt to blokujemy tworzenie.
                 throw new IllegalArgumentException("Room " + id + " already exist");
             }
 
-            // zwracamy nowy obiekt; spowoduje to ustawienie wartosci w redisie
-            // i tym samym utworzenie kanalu
-            return new ChatRoomData(priority, formatterId);
-        });
+            // tworzymy nowy obiekt redisie tworząc tym samym kanał
+            value.set(new ChatRoomData(priority, formatterId));
+        }
 
         this.logger.log(Level.INFO, "Created room with ID {0} and formatter {1}", new Object[]{id, formatterId});
         return new ChatRoomImpl(this, id, value);
@@ -132,14 +130,28 @@ public class ChatManagerImpl implements ChatManager
     }
 
     @Override
-    public ChatPlayer getPlayer(final Identity identity) throws PlayerNotFoundException
+    public ChatPlayerImpl getPlayer(final Identity identity) throws PlayerNotFoundException
     {
         final IPlayersManager manager = this.getPlayersManager();
 
         final Identity validIdentity = manager.completeIdentity(identity);
         final Value<IOnlinePlayer> playerValue = manager.unsafe().getOnline(validIdentity.getNick());
 
-        return new ChatPlayerImpl(this, playerValue);
+        return new ChatPlayerImpl(this, validIdentity, playerValue);
+    }
+
+    /**
+     * Specjalna metoda używana w implementacji API Czatu usuwająca gracza
+     * z wszystkich jego pokojów bez modyfikacji danych samego gracza i bez
+     * dodatkowych sprawdzeń.
+     * Używane przy wychodzeniu gracza z sieci.
+     *
+     * @param identity Identity które usuwamy z wszystkich pokojów.
+     */
+    public void leaveAllRoomsUnsafe(final Identity identity)
+    {
+        final ChatPlayerImpl chatPlayer = this.getPlayer(identity);
+        chatPlayer.leaveAllRoomsUnsafe();
     }
 
     @Override

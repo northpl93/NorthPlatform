@@ -142,11 +142,21 @@ public class LocalServersManager
     private void setupJavaOptimizations(final JavaArguments java)
     {
         java.addJavaArg("XX:+UnlockExperimentalVMOptions"); // aikars
+
+        // = = = GARBAGE COLLECTOR = = = //
         java.addJavaArg("XX:+UseG1GC");
         java.addJavaArg("XX:+UseStringDeduplication");
-        java.addJavaArg("XX:MaxGCPauseMillis=40"); // tick time=50ms
-        java.addJavaArg("XX:TargetSurvivorRatio=90"); // aikars
-        java.addJavaArg("XX:G1NewSizePercent=50"); // aikars=50
+        java.addJavaArg("XX:MaxGCPauseMillis=50"); // tick time=50ms, default is 200
+        java.addJavaArg("XX:G1NewSizePercent=30"); // default 5, minecraft alokuje bardzo dużo obiektów
+        java.addJavaArg("XX:G1MaxNewSizePercent=60"); // default 60
+
+        // raczej nigdy nie zaalokujemy wystarczająco dużego heapu (32GB?)
+        java.addJavaArg("XX:+UseCompressedClassPointers");
+        java.addJavaArg("XX:+UseCompressedOops");
+
+        java.addJavaArg("XX:MaxMetaspaceSize=128m");
+
+        // = = = OGÓLNE = = = //
         java.addJavaArg("XX:+AggressiveOpts");
         java.addJavaArg("XX:InlineSmallCode=2048"); // increase max code size to inline. Default=1000
         java.addJavaArg("XX:MaxInlineSize=70"); // Default=35

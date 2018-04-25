@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.bungee.proxy.impl;
+package pl.north93.zgame.api.bungee.proxy.impl.listener;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
