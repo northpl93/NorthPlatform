@@ -1,5 +1,6 @@
 package pl.north93.zgame.restful;
 
+import static spark.Spark.before;
 import static spark.Spark.get;
 import static spark.Spark.stop;
 
@@ -22,6 +23,8 @@ public class RestfulComponent extends Component
     @Override
     protected void enableComponent()
     {
+        before((request, response) -> response.type("application/json;charset=utf-8"));
+
         final PlayerController player = new PlayerController();
         get("player/:nick", player::root, this.gson::toJson);
 

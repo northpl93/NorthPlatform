@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <components>
+        <component>
+            <name>ItemShop.Controller</name>
+            <mainClass>pl.north93.zgame.itemshop.controller.ItemShopController</mainClass>
+            <description>ItemShop REST API.</description>
+            <packages>
+                <package>pl.north93.zgame.itemshop.shared</package>
+                <package>pl.north93.zgame.itemshop.controller</package>
+            </packages>
+            <dependencies>
+                <dependency>RestfulApi</dependency>
+                <dependency>API.MinecraftNetwork.NetworkManager</dependency>
+                <dependency>API.Economy.Controller</dependency>
+            </dependencies>
+            <platforms>
+                <platform>STANDALONE</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>

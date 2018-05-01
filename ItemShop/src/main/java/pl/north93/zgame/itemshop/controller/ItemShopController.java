@@ -10,7 +10,6 @@ public class ItemShopController extends Component
     @Override
     protected void enableComponent()
     {
-        new Handler();
     }
 
     @Override

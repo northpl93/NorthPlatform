@@ -7,32 +7,28 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class DataEntry
 {
-    private DataType            dataType;
-    private Map<String, String> properties;
+    private String              type;
+    private Map<String, String> data;
 
-    public DataEntry()
+    public DataEntry(final String type, final Map<String, String> data)
     {
+        this.type = type;
+        this.data = data;
     }
 
-    public DataEntry(final DataType dataType, final Map<String, String> properties)
+    public String getType()
     {
-        this.dataType = dataType;
-        this.properties = properties;
+        return this.type;
     }
 
-    public DataType getDataType()
+    public Map<String, String> getData()
     {
-        return this.dataType;
-    }
-
-    public Map<String, String> getProperties()
-    {
-        return this.properties;
+        return this.data;
     }
 
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("dataType", this.dataType).append("properties", this.properties).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("type", this.type).append("data", this.data).toString();
     }
 }
