@@ -74,6 +74,12 @@ public class ArenaChatHandler implements Listener
     public void removePlayerFromChatWhenQuitArena(final PlayerQuitArenaEvent event)
     {
         final ChatPlayer chatPlayer = this.chatManager.getPlayer(Identity.of(event.getPlayer()));
+        if (! chatPlayer.isOnline())
+        {
+            // gracz wyszedl z sieci, nie musimy go usuwac z kanalow
+            return;
+        }
+
         final PlayersManager playersManager = event.getArena().getPlayersManager();
 
         final ChatRoom chatRoom = playersManager.getChatRoom();
