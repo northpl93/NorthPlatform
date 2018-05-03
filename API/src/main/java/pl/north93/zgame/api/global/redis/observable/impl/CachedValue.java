@@ -28,12 +28,6 @@ abstract class CachedValue<T> implements Value<T>
     abstract void handleNewValue(final byte[] newValue);
 
     @Override
-    protected void finalize()
-    {
-        this.observationManager.getValueSubHandler().removeListener(this);
-    }
-
-    @Override
     public String toString()
     {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();

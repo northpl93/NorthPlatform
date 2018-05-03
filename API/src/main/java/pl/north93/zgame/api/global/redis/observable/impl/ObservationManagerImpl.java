@@ -26,11 +26,11 @@ import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
 import pl.north93.zgame.api.global.redis.observable.SortedSet;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
-import pl.north93.zgame.api.global.utils.SoftValueHashMap;
+import pl.north93.zgame.api.global.utils.ReferenceHashMap;
 
 public class ObservationManagerImpl extends Component implements IObservationManager
 {
-    private final Map<String, CachedValue> cachedValues = new SoftValueHashMap<>();
+    private final Map<String, CachedValue> cachedValues = new ReferenceHashMap<>();
     private final ValueSubscriptionHandler valueSubHandler;
     private final List<LockImpl>           waitingLocks = new ArrayList<>();
     @Inject

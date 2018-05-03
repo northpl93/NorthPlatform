@@ -166,7 +166,6 @@ public class PlayerNetworkListener implements Listener
     @EventHandler
     public void onLeave(final PlayerLateDisconnectEvent event)
     {
-        System.out.println(event);
         final ProxiedPlayer proxyPlayer = event.getPlayer();
         final Value<IOnlinePlayer> player = this.networkManager.getPlayers().unsafe().getOnline(proxyPlayer.getName());
 

@@ -21,6 +21,15 @@
     <!-- Lista komponentów dla platformy STANDALONE -->
     <components>
         <component>
+            <name>API.Finalizer</name>
+            <mainClass>pl.north93.zgame.api.global.finalizer.impl.FinalizerImpl</mainClass>
+            <description>Provides a way to detect when object is garbage collected</description>
+            <packages>
+                <package>pl.north93.zgame.api.global.finalizer</package>
+            </packages>
+        </component>
+
+        <component>
             <name>API.Commands</name>
             <mainClass>pl.north93.zgame.api.global.commands.impl.CommandsManagerDecorator</mainClass>
             <description>Provides unified commands API.</description>

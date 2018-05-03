@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.finalizer.FinalizerUtils;
 import pl.north93.zgame.api.global.redis.subscriber.SubscriptionHandler;
 
 class ValueSubscriptionHandler implements SubscriptionHandler
@@ -25,15 +26,18 @@ class ValueSubscriptionHandler implements SubscriptionHandler
     {
         synchronized (this.listeners)
         {
-            this.listeners.put(value.getInternalName(), new WeakReference<>(value));
+            final String internalName = value.getInternalName();
+            this.listeners.put(internalName, new WeakReference<>(value));
+
+            FinalizerUtils.register(value, () -> this.removeListener(internalName));
         }
     }
 
-    public void removeListener(final CachedValue<?> value)
+    private void removeListener(final String internalName)
     {
         synchronized (this.listeners)
         {
-            this.listeners.remove(value.getInternalName());
+            this.listeners.remove(internalName);
         }
     }
 
