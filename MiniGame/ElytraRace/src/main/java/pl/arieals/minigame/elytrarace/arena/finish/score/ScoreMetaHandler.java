@@ -50,7 +50,7 @@ public class ScoreMetaHandler implements IFinishHandler
                 scoreData.getPoints());
 
         final IStatistic<NumberUnit> scoreStatistic = this.getScoreStatistic(arena);
-        final IStatisticHolder statisticsHolder = this.statisticsManager.getHolder(player.getUniqueId());
+        final IStatisticHolder statisticsHolder = this.statisticsManager.getPlayerHolder(player.getUniqueId());
 
         this.points.put(new ScoreFinishInfo(player.getUniqueId(), player.getDisplayName()), scoreData.getPoints());
 
@@ -134,7 +134,7 @@ public class ScoreMetaHandler implements IFinishHandler
         }
 
         final ScoreFinishInfo firstPlayer = top.keySet().iterator().next(); // pobiera pierwszego gracza z topki
-        final IStatisticHolder holder = this.statisticsManager.getHolder(firstPlayer.getUuid());
+        final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(firstPlayer.getUuid());
 
         final HigherNumberBetterStatistic totalElytraWins = new HigherNumberBetterStatistic("elytra/totalWins");
         holder.increment(totalElytraWins, new NumberUnit(1L));

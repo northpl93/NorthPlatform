@@ -48,7 +48,7 @@ public class RaceScoreboard implements IScoreboardLayout
         final String statKey = "elytra/race/" + arena.getWorld().getCurrentMapTemplate().getName();
         final ShorterTimeBetterStatistic statistic = new ShorterTimeBetterStatistic(statKey);
 
-        final IStatisticHolder holder = this.statisticsManager.getHolder(context.getPlayer().getUniqueId());
+        final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(context.getPlayer().getUniqueId());
 
         context.setCompletableFuture("avgTime", holder.getValue(statistic));
     }

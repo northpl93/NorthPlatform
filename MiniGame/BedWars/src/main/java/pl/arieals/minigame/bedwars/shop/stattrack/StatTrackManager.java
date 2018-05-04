@@ -33,7 +33,7 @@ public class StatTrackManager
 
     public void preCacheData(final StatTrackPlayer playerData)
     {
-        final IStatisticHolder holder = this.statisticsManager.getHolder(playerData.getBukkitPlayer().getUniqueId());
+        final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(playerData.getBukkitPlayer().getUniqueId());
         for (final TrackedWeapon trackedWeapon : TrackedWeapon.values())
         {
             if (! playerData.isEnabled(trackedWeapon))
@@ -59,7 +59,7 @@ public class StatTrackManager
 
     public void bumpStatistic(final Player player, final TrackedStatistic statistic, final ItemStack tool)
     {
-        final IStatisticHolder holder = this.statisticsManager.getHolder(player.getUniqueId());
+        final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(player.getUniqueId());
         this.bumpGlobalStatistic(holder);
 
         final TrackedWeapon weapon = TrackedWeapon.getByMaterial(tool.getType());

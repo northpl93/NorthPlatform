@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.bson.Document;
 
 /**
  * Obiekt identyfikujcy w sieci dany typ minigry wraz z jej wariantem.
@@ -28,6 +29,15 @@ public final class GameIdentity
         final GameIdentity identity = new GameIdentity();
         identity.gameId = gameId;
         identity.variantId = variantId;
+
+        return identity;
+    }
+
+    public static GameIdentity create(final Document document)
+    {
+        final GameIdentity identity = new GameIdentity();
+        identity.gameId = document.getString("gameId");
+        identity.variantId = document.getString("variantId");
 
         return identity;
     }
@@ -52,6 +62,15 @@ public final class GameIdentity
     public String getVariantId()
     {
         return this.variantId;
+    }
+
+    public Document toDocument()
+    {
+        final Document document = new Document();
+        document.put("gameId", this.gameId);
+        document.put("variantId", this.variantId);
+
+        return document;
     }
 
     @Override

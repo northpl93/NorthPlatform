@@ -67,7 +67,7 @@ public class RaceMetaHandler implements IFinishHandler
         final DurationUnit playerTimeDuration = new DurationUnit(Duration.ofMillis(playerTime));
 
         final IStatistic<DurationUnit> raceStatistic = this.getRaceStatistic(arena);
-        final IStatisticHolder holder = this.statisticsManager.getHolder(player.getUniqueId());
+        final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(player.getUniqueId());
 
         final boolean isFinished = IFinishHandler.checkFinished(arena);
         this.statisticsManager.getBestRecord(raceStatistic).whenComplete((bestRecord, throwable) ->
@@ -145,7 +145,7 @@ public class RaceMetaHandler implements IFinishHandler
         }
 
         final RaceFinishInfo firstPlayer = this.finishInfo.get(0);
-        final IStatisticHolder holder = this.statisticsManager.getHolder(firstPlayer.getUuid());
+        final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(firstPlayer.getUuid());
 
         final HigherNumberBetterStatistic totalElytraWins = new HigherNumberBetterStatistic("elytra/totalWins");
         holder.increment(totalElytraWins, new NumberUnit(1L));

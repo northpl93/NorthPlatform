@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.bson.Document;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -22,6 +23,11 @@ public final class Identity
     {
         this.uuid = uuid;
         this.nick = nick;
+    }
+
+    public Identity(final Document document)
+    {
+        this(document.get("uuid", UUID.class), document.getString("nick"));
     }
 
     public static Identity of(final Player bukkitPlayer) // nie jebnie o ile nie wykonamy na innej platformie
@@ -63,6 +69,20 @@ public final class Identity
     public boolean isValid()
     {
         return this.uuid != null || this.nick != null;
+    }
+
+    /**
+     * Zamienia to Identity w dokument który moze zostac zapisany w MongoDB.
+     *
+     * @return Identity zapisane jako dokument bson.
+     */
+    public Document toDocument()
+    {
+        final Document document = new Document();
+        document.put("uuid", this.uuid);
+        document.put("nick", this.nick);
+
+        return document;
     }
 
     @Override

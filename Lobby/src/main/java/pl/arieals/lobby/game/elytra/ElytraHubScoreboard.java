@@ -32,7 +32,7 @@ public class ElytraHubScoreboard extends HubScoreboardLayout
     @Override
     public void initContext(final IScoreboardContext context)
     {
-        final IStatisticHolder playerHolder = this.statisticsManager.getHolder(context.getPlayer().getUniqueId());
+        final IStatisticHolder playerHolder = this.statisticsManager.getPlayerHolder(context.getPlayer().getUniqueId());
 
         final LongerTimeBetterStatistic totalRaceTimeStat = new LongerTimeBetterStatistic("elytra/totalRaceTime");
         context.setCompletableFuture("raceTime", playerHolder.getValue(totalRaceTimeStat));

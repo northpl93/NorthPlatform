@@ -1,6 +1,5 @@
 package pl.arieals.api.minigame.shared.api.statistics;
 
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -10,11 +9,12 @@ import java.util.concurrent.CompletableFuture;
 public interface IStatisticHolder
 {
     /**
-     * Unikalny identyfikator posiadacza statystyki.
+     * Unikalny identyfikator posiadacza statystyk.
+     * Sklada się niego typ posiadacza i UUID.
      *
      * @return unikalny identyfikator.
      */
-    UUID getUniqueId();
+    HolderIdentity getIdentity();
 
     /**
      * Zwraca wartosc danej statystyki w odpowiedniej jednostce.
@@ -37,7 +37,7 @@ public interface IStatisticHolder
      */
     <UNIT extends IStatisticUnit> CompletableFuture<IRecord<UNIT>> record(IStatistic<UNIT> statistic, UNIT value, boolean onlyWhenBetter);
 
-    default <UNIT extends IStatisticUnit> CompletableFuture<IRecord<UNIT>> record(IStatistic<UNIT> statistic, UNIT value)
+    default <UNIT extends IStatisticUnit> CompletableFuture<IRecord<UNIT>> record(final IStatistic<UNIT> statistic, final UNIT value)
     {
         return this.record(statistic, value, false);
     }

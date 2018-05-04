@@ -1,6 +1,5 @@
 package pl.arieals.api.minigame.shared.impl.statistics;
 
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import com.mongodb.client.MongoCollection;
@@ -10,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.Document;
 
+import pl.arieals.api.minigame.shared.api.statistics.HolderIdentity;
 import pl.arieals.api.minigame.shared.api.statistics.IRecord;
 import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
@@ -18,25 +18,25 @@ import pl.arieals.api.minigame.shared.api.statistics.IStatisticUnit;
 class StatisticHolderImpl implements IStatisticHolder
 {
     private final StatisticsManagerImpl manager;
-    private final UUID uuid;
+    private final HolderIdentity        holder;
 
-    public StatisticHolderImpl(final StatisticsManagerImpl manager, final UUID uuid)
+    public StatisticHolderImpl(final StatisticsManagerImpl manager, final HolderIdentity holder)
     {
         this.manager = manager;
-        this.uuid = uuid;
+        this.holder = holder;
     }
 
     @Override
-    public UUID getUniqueId()
+    public HolderIdentity getIdentity()
     {
-        return this.uuid;
+        return this.holder;
     }
 
     @Override
     public <UNIT extends IStatisticUnit> CompletableFuture<IRecord<UNIT>> getValue(final IStatistic<UNIT> statistic)
     {
         final MongoCollection<Document> collection = this.manager.getCollection();
-        final Document query = new Document("ownerId", this.uuid).append("statId", statistic.getId());
+        final Document query = new Document("owner", this.holder.asBson()).append("statId", statistic.getId());
 
         final CompletableFuture<IRecord<UNIT>> future = new CompletableFuture<>();
         this.manager.getApiCore().getPlatformConnector().runTaskAsynchronously(() ->
@@ -55,7 +55,7 @@ class StatisticHolderImpl implements IStatisticHolder
         final String id = statistic.getId();
 
         final Document insertDocument = new Document();
-        final Document setContent = new Document("ownerId", this.uuid).append("statId", id).append("recordedAt", System.currentTimeMillis());
+        final Document setContent = new Document("owner", this.holder.asBson()).append("statId", id).append("recordedAt", System.currentTimeMillis());
         if (onlyWhenBetter)
         {
             statistic.getDbComposer().insertOnlyWhenBetter(insertDocument, value);
@@ -67,7 +67,7 @@ class StatisticHolderImpl implements IStatisticHolder
         insertDocument.put("$set", setContent);
 
         final Document find = new Document("statId", id);
-        find.put("ownerId", this.uuid);
+        find.put("owner", this.holder.asBson());
 
         final CompletableFuture<IRecord<UNIT>> future = new CompletableFuture<>();
         this.manager.getApiCore().getPlatformConnector().runTaskAsynchronously(() ->
@@ -86,9 +86,9 @@ class StatisticHolderImpl implements IStatisticHolder
         final Document insertDocument = new Document();
 
         final Document find = new Document("statId", statistic.getId());
-        find.put("ownerId", this.uuid);
+        find.put("owner", this.holder.asBson());
 
-        final Document setContent = new Document("ownerId", this.uuid).append("statId", statistic.getId()).append("recordedAt", System.currentTimeMillis());
+        final Document setContent = new Document("owner", this.holder.asBson()).append("statId", statistic.getId()).append("recordedAt", System.currentTimeMillis());
         final Document valueDocument = new Document();
         value.toDocument(valueDocument);
         insertDocument.put("$set", setContent);
@@ -107,6 +107,6 @@ class StatisticHolderImpl implements IStatisticHolder
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("holder", this.holder).toString();
     }
 }

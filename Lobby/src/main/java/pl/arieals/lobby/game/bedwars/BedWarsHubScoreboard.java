@@ -26,7 +26,7 @@ public class BedWarsHubScoreboard extends HubScoreboardLayout
     @Override
     public void initContext(final IScoreboardContext context)
     {
-        final IStatisticHolder playerHolder = this.statisticsManager.getHolder(context.getPlayer().getUniqueId());
+        final IStatisticHolder playerHolder = this.statisticsManager.getPlayerHolder(context.getPlayer().getUniqueId());
 
         final HigherNumberBetterStatistic killsStat = new HigherNumberBetterStatistic("bedwars/kills");
         context.setCompletableFuture("kills", playerHolder.getValue(killsStat));

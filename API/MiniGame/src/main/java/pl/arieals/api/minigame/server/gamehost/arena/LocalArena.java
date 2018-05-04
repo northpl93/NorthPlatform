@@ -28,6 +28,7 @@ import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDataChangedNetEvent;
 import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDeletedNetEvent;
+import pl.arieals.api.minigame.shared.api.match.IMatchAccess;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
 import pl.north93.zgame.api.bukkit.utils.StaticTimer;
 
@@ -44,6 +45,7 @@ public class LocalArena implements IArena
     private final DeathMatch          deathMatch;
     private final IArenaRewards       rewards;
     private final ArenaStartScheduler startScheduler;
+    private       IMatchAccess        match;
     private       IArenaData          arenaData;
     private       MapVote             mapVote;
 
@@ -232,6 +234,21 @@ public class LocalArena implements IArena
     }
 
     /**
+     * Zwraca instancję reprezentującą mecz rozgrywany na tej arenie.
+     * Można go pobrać tylko gdy arena jest w trakcie lub po grze,
+     * czyli {@link GamePhase#STARTED} lub {@link GamePhase#POST_GAME}.
+     *
+     * @return Mecz rozgrywany na tej arenie.
+     */
+    public IMatchAccess getMatch()
+    {
+        final GamePhase gamePhase = this.getGamePhase();
+        Preconditions.checkState(gamePhase == GamePhase.STARTED || gamePhase == GamePhase.POST_GAME);
+
+        return this.match;
+    }
+
+    /**
      * Konczy gre na tej arenie. Przelacza w tryb POST_GAME.
      * Dziala tylko w {@link GamePhase#STARTED}.
      */
@@ -324,6 +341,11 @@ public class LocalArena implements IArena
             this.mapVote = new MapVote(this.gameHostManager, this);
             this.mapVote.printStartVoteInfo();
         }
+    }
+
+    public void setMatch(final IMatchAccess match)
+    {
+        this.match = match;
     }
 
     // kończy głosowanie i zmienia etap gry na STARTED

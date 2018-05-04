@@ -1,5 +1,8 @@
 package pl.arieals.api.minigame.shared.api;
 
+/**
+ * Reprezentuje tryb dzialania lobby na danej minigrze.
+ */
 public enum LobbyMode
 {
     /**

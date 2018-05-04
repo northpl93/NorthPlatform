@@ -199,7 +199,7 @@ public class GameEndListener implements Listener
 
         for (final Player player : team.getPlayers())
         {
-            final IStatisticHolder holder = this.statisticsManager.getHolder(player.getUniqueId());
+            final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(player.getUniqueId());
             holder.increment(winsStat, numberUnit);
         }
     }
