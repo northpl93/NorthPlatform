@@ -12,6 +12,8 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.packet.Chat;
 import pl.north93.zgame.api.chat.global.ChatRoom;
 import pl.north93.zgame.api.chat.global.impl.ChatManagerImpl;
+import pl.north93.zgame.api.chat.global.impl.data.AbstractChatData;
+import pl.north93.zgame.api.chat.global.impl.data.BroadcastMessage;
 import pl.north93.zgame.api.chat.global.impl.data.PlayerChatMessage;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -36,18 +38,29 @@ public class MessageHandler
     @NetEventSubscriber(PlayerChatMessage.class)
     public void handleMessage(final PlayerChatMessage chatMessage)
     {
-        final String roomId = chatMessage.getRoomId();
+        this.handle(chatMessage);
+    }
+
+    @NetEventSubscriber(BroadcastMessage.class)
+    public void handleBroadcast(final BroadcastMessage message)
+    {
+        this.handle(message);
+    }
+
+    private void handle(final AbstractChatData message)
+    {
+        final String roomId = message.getRoomId();
 
         final ChatRoom room = this.chatManager.getRoom(roomId);
         if (room == null)
         {
-            this.logger.log(Level.WARNING, "Received message with invalid roomId {0}", roomId);
+            this.logger.log(Level.WARNING, "Received chat data with invalid roomId {0}", roomId);
             return;
         }
 
         final Collection<Identity> participants = room.getParticipants();
         final ProxyServer proxyServer = ProxyServer.getInstance();
-        final Chat chatPacket = new Chat(chatMessage.getMessage());
+        final Chat chatPacket = new Chat(message.getMessage());
 
         for (final Identity participant : participants)
         {

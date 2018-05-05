@@ -12,10 +12,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import pl.north93.zgame.api.chat.global.ChatFormatter;
 import pl.north93.zgame.api.chat.global.ChatPlayer;
 import pl.north93.zgame.api.chat.global.ChatRoom;
 import pl.north93.zgame.api.chat.global.ChatRoomNotFoundException;
+import pl.north93.zgame.api.chat.global.impl.data.BroadcastMessage;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
@@ -84,7 +86,10 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     @Override
     public void broadcast(final BaseComponent component)
     {
-        // todo
+        final String jsonMessage = ComponentSerializer.toString(component);
+        final BroadcastMessage message = new BroadcastMessage(this.getId(), jsonMessage);
+
+        this.chatManager.sendMessage(message);
     }
 
     @Override

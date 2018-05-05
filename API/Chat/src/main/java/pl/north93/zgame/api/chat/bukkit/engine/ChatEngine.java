@@ -20,14 +20,11 @@ import pl.north93.zgame.api.chat.global.impl.data.PlayerChatMessage;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.players.Identity;
-import pl.north93.zgame.api.global.redis.event.IEventManager;
 
 public class ChatEngine
 {
     @Inject
     private BukkitApiCore   apiCore;
-    @Inject
-    private IEventManager   eventManager;
     @Inject
     private ChatManagerImpl chatManager;
 
@@ -89,6 +86,6 @@ public class ChatEngine
         final UUID serverId = this.apiCore.getServerId();
 
         final PlayerChatMessage chatMessage = new PlayerChatMessage(mainRoom.getId(), jsonMessage, sender, serverId);
-        this.eventManager.callEvent(chatMessage);
+        this.chatManager.sendMessage(chatMessage);
     }
 }

@@ -12,6 +12,7 @@ import pl.north93.zgame.api.chat.global.ChatFormatter;
 import pl.north93.zgame.api.chat.global.ChatManager;
 import pl.north93.zgame.api.chat.global.ChatRoom;
 import pl.north93.zgame.api.chat.global.ChatRoomNotFoundException;
+import pl.north93.zgame.api.chat.global.impl.data.AbstractChatData;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -20,6 +21,7 @@ import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
+import pl.north93.zgame.api.global.redis.event.IEventManager;
 import pl.north93.zgame.api.global.redis.observable.Hash;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Lock;
@@ -29,6 +31,8 @@ public class ChatManagerImpl implements ChatManager
 {
     @Inject
     private Logger          logger;
+    @Inject
+    private IEventManager   eventManager;
     @Inject
     private INetworkManager networkManager;
     private final Map<String, ChatFormatter> formatters;
@@ -138,6 +142,17 @@ public class ChatManagerImpl implements ChatManager
         final Value<IOnlinePlayer> playerValue = manager.unsafe().getOnline(validIdentity.getNick());
 
         return new ChatPlayerImpl(this, validIdentity, playerValue);
+    }
+
+    /**
+     * Wysyla do sieci obiekt przechowujacy wiadomosc.
+     * Zostanie on obsluzony w czesci Bungee api czatu.
+     *
+     * @param data Obiekt wiadomosci.
+     */
+    public void sendMessage(final AbstractChatData data)
+    {
+        this.eventManager.callEvent(data);
     }
 
     /**
