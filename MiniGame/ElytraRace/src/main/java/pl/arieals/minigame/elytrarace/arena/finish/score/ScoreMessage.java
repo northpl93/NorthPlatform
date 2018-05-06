@@ -109,7 +109,7 @@ public class ScoreMessage
         this.messages.sendMessage(player, "finish.score.your_points", MessageLayout.CENTER, getPlayerData(player, ElytraScorePlayer.class).getPoints());
         if (this.record != null)
         {
-            final UUID uniqueId = this.record.getHolder().getUniqueId();
+            final UUID uniqueId = this.record.getHolder().getIdentity().getUuid();
             final String recordOwner = this.network.getPlayers().getNickFromUuid(uniqueId).orElse(uniqueId.toString());
             this.messages.sendMessage(player, "finish.score.record", MessageLayout.CENTER, recordOwner, this.record.getValue().getValue());
         }

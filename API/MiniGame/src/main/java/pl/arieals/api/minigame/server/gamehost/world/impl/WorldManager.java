@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import net.minecraft.server.v1_12_R1.Chunk;
 import net.minecraft.server.v1_12_R1.MinecraftServer;
@@ -46,13 +47,17 @@ public class WorldManager implements IWorldManager, Listener
     {
         this.worldHelper = new NmsWorldHelper();
         this.chunkLoadingTask = new ChunkLoadingTask();
+
         final Main plugin = this.apiCore.getPluginMain();
+        final Logger logger = this.apiCore.getLogger();
+
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this.chunkLoadingTask, 0, 2);
         Bukkit.getPluginManager().registerEvents(this, plugin);
+
         Bukkit.getWorlds().get(0).setAutoSave(false); // disable auto-saving in world 0
         if (MinecraftServer.getServer().autosavePeriod > 0)
         {
-            System.err.println("Game host is configured to autosave worlds. This may affect performance. Set ticks-per.autosave in bukkit.yml to 0");
+            logger.severe("Game host is configured to autosave worlds. This may affect performance. Set ticks-per.autosave in bukkit.yml to 0");
         }
     }
 

@@ -44,7 +44,7 @@ public class WrappedChunkProviderServer extends ChunkProviderServer
     }
 
     @Override
-    public void saveChunk(final Chunk chunk, boolean unloaded)
+    public void saveChunk(final Chunk chunk, final boolean unloaded)
     {
         // do nothing
     }

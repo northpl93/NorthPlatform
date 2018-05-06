@@ -115,7 +115,7 @@ public class RaceMessage
 
         if (this.record != null)
         {
-            final UUID uniqueId = this.record.getHolder().getUniqueId();
+            final UUID uniqueId = this.record.getHolder().getIdentity().getUuid();
             final String recordOwner = this.network.getPlayers().getNickFromUuid(uniqueId).orElse(uniqueId.toString());
             final String formattedRecord = this.timeFormat.format(new Date(this.record.getValue().getValue().toMillis()));
             this.messages.sendMessage(player, "finish.race.record", MessageLayout.CENTER, recordOwner, formattedRecord);
