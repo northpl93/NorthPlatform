@@ -1,6 +1,7 @@
 package pl.arieals.minigame.elytrarace.listener;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.setPlayerData;
+import static pl.arieals.minigame.elytrarace.ElytraRaceMode.fromVariantId;
 
 
 import javax.xml.bind.JAXB;
@@ -29,7 +30,6 @@ import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.arieals.minigame.elytrarace.arena.StartCountdown;
 import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
-import pl.arieals.minigame.elytrarace.cfg.ElytraConfig;
 import pl.arieals.minigame.elytrarace.shop.ElytraEffectTask;
 import pl.arieals.minigame.elytrarace.shop.ElytraEffectsManager;
 import pl.arieals.minigame.elytrarace.shop.effects.IElytraEffect;
@@ -45,14 +45,16 @@ public class ArenaStartListener implements Listener
     private MessagesBox          messages;
     @Inject
     private ElytraEffectsManager effectsManager;
-    @Inject
-    private ElytraConfig         config;
 
     @EventHandler
     public void loadArenaData(final LobbyInitEvent event)
     {
-        final ElytraRaceArena arenaData = new ElytraRaceArena(this.loadConfig(event.getArena()), this.config.getMode());
-        event.getArena().setArenaData(arenaData);
+        final LocalArena arena = event.getArena();
+
+        final ElytraRaceMode elytraRaceMode = fromVariantId(arena.getMiniGame().getVariantId());
+        final ElytraRaceArena arenaData = new ElytraRaceArena(this.loadConfig(arena), elytraRaceMode);
+
+        arena.setArenaData(arenaData);
     }
 
     @EventHandler

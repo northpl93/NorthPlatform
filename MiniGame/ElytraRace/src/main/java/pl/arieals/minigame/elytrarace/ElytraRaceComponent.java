@@ -1,7 +1,5 @@
 package pl.arieals.minigame.elytrarace;
 
-import javax.xml.bind.JAXB;
-
 import java.text.SimpleDateFormat;
 
 import org.bukkit.Bukkit;
@@ -11,7 +9,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
-import pl.arieals.minigame.elytrarace.cfg.ElytraConfig;
 import pl.arieals.minigame.elytrarace.listener.ArenaEndListener;
 import pl.arieals.minigame.elytrarace.listener.ArenaStartListener;
 import pl.arieals.minigame.elytrarace.listener.BoostListener;
@@ -23,7 +20,6 @@ import pl.arieals.minigame.elytrarace.listener.ScoreListener;
 import pl.arieals.minigame.elytrarace.listener.ScoreboardListener;
 import pl.arieals.minigame.elytrarace.shop.HeadsListener;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -72,12 +68,6 @@ public class ElytraRaceComponent extends Component
     private SimpleDateFormat timeFormat()
     {
         return new SimpleDateFormat("mm:ss.SSS");
-    }
-
-    @Bean
-    private ElytraConfig elytraConfig(final ApiCore api)
-    {
-        return JAXB.unmarshal(api.getFile("MiniGame.ElytraRace.xml"), ElytraConfig.class);
     }
 
     @Override
