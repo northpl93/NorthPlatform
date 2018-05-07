@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
+import com.google.common.base.Preconditions;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
@@ -107,6 +109,8 @@ public class ArenaWorld
      */
     public ISyncCallback setActiveMap(final MapTemplate template)
     {
+        Preconditions.checkNotNull(template, "New MapTemplate can't be null");
+
         if (this.arena.getLobbyMode() == LobbyMode.EXTERNAL)
         {
             checkGamePhase(this.arena.getGamePhase(), GamePhase.LOBBY);
