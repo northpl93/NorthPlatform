@@ -34,12 +34,26 @@
     </dependencies>
 
     <build>
-        <defaultGoal>clean install</defaultGoal>
-
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>com.sparkjava:spark-core</include>
+                                    <include>javax.servlet:javax.servlet-api</include>
+                                    <include>org.eclipse.jetty:*</include>
+                                </includes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
