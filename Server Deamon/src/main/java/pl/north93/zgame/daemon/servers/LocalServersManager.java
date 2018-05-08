@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +19,7 @@ import java.util.logging.Logger;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
+import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
@@ -27,6 +29,7 @@ import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.daemon.config.AutoScalingConfig;
 import pl.north93.zgame.api.global.network.daemon.config.ServerPatternConfig;
 import pl.north93.zgame.api.global.network.impl.ServerDto;
+import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.utils.JavaArguments;
@@ -40,6 +43,8 @@ public class LocalServersManager
 {
     @Inject
     private Logger                     logger;
+    @Inject
+    private ApiCore                    apiCore;
     @Inject
     private FilesManager               filesManager;
     @Inject
@@ -82,6 +87,27 @@ public class LocalServersManager
         return new ArrayList<>(this.instances.values());
     }
 
+    /**
+     * Planuje asynchroniczny deployment serwera o podanym ID.
+     *
+     * @param serverId UUID serwera do deploymentu.
+     * @param patternId Identyfikator wzoru serwera.
+     * @return CompletableFuture ktre zakończy się gdy serwer zaczniac
+     */
+    public CompletableFuture<Server> scheduleServerDeployment(final UUID serverId, final String patternId)
+    {
+        this.logger.log(Level.INFO, "Deploying server {0} with pattern {1}", new Object[]{serverId, patternId});
+
+        final CompletableFuture<Server> future = new CompletableFuture<>();
+        this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
+        {
+            future.complete(this.deployServer(serverId, patternId));
+            this.logger.log(Level.INFO, "Deployment operation of {0} completed.", serverId);
+        });
+
+        return future;
+    }
+
     @Subscribe
     public void onServerExited(final ServerExitedEvent event)
     {
@@ -104,10 +130,8 @@ public class LocalServersManager
         this.portManagement.returnPort(server.getConnectPort());
     }
 
-    public void deployServer(final UUID serverId, final String patternId)
+    private Server deployServer(final UUID serverId, final String patternId)
     {
-        this.logger.log(Level.INFO, "Deploying server {0} with pattern {1}", new Object[]{serverId, patternId});
-
         final ServerPatternConfig pattern = this.getPattern(patternId);
         final File workspace = this.filesManager.getWorkspace(serverId);
 
@@ -136,7 +160,7 @@ public class LocalServersManager
             this.instances.put(serverId, instance);
         }
 
-        this.logger.log(Level.INFO, "Deployment operation of {0} completed.", serverId);
+        return serverDto.get();
     }
 
     private void setupJavaOptimizations(final JavaArguments java)

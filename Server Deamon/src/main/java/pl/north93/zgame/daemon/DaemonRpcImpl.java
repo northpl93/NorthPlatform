@@ -1,11 +1,13 @@
 package pl.north93.zgame.daemon;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.daemon.DaemonRpc;
+import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.daemon.network.DaemonInfoHandler;
 import pl.north93.zgame.daemon.servers.LocalServerInstance;
 import pl.north93.zgame.daemon.servers.LocalServersManager;
@@ -28,7 +30,7 @@ public class DaemonRpcImpl implements DaemonRpc
     @Override
     public void deployServer(final UUID serverUuid, final String templateName)
     {
-        this.localServersManager.deployServer(serverUuid, templateName);
+        final CompletableFuture<Server> future = this.localServersManager.scheduleServerDeployment(serverUuid, templateName);
     }
 
     @Override

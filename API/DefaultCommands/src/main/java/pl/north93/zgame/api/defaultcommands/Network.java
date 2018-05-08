@@ -12,6 +12,7 @@ import pl.north93.zgame.api.global.network.daemon.DaemonDto;
 import pl.north93.zgame.api.global.network.event.NetworkKickAllNetEvent;
 import pl.north93.zgame.api.global.network.event.NetworkShutdownNetEvent;
 import pl.north93.zgame.api.global.network.proxy.ProxyDto;
+import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.redis.event.IEventManager;
 
 public class Network extends NorthCommand
@@ -60,8 +61,21 @@ public class Network extends NorthCommand
                     sender.sendMessage("&e|- " + daemon.getName());
                     sender.sendMessage("&e  |- Nazwa hosta: " + daemon.getHostName());
                     sender.sendMessage("&e  |- Maksymalna ilość ramu: " + daemon.getMaxRam() + "MB");
-                    sender.sendMessage("&e  |- Użyty ram: " + daemon.getRamUsed() + "MB (" + daemon.getRamUsed() / daemon.getMaxRam() * 100 + "%)");
+
+                    final int usedPercent = (int) (daemon.getRamUsed().doubleValue() / daemon.getMaxRam().doubleValue() * 100);
+                    sender.sendMessage("&e  |- Użyty ram: " + daemon.getRamUsed() + "MB (" + usedPercent + "%)");
+
                     sender.sendMessage("&e  |- Ilość serwerów hostowanych: " + daemon.getServerCount());
+                }
+            }
+            else if ("servers".equals(args.asString(0)))
+            {
+                sender.sendMessage("&cSerwery");
+                for (final Server server : this.networkManager.getServers().all())
+                {
+                    sender.sendMessage("&e|- " + server.getUuid());
+                    sender.sendMessage("&e  |- Grupa: " + server.getServersGroup().getName() + " Rodzaj: " + server.getType());
+                    sender.sendMessage("&e  |- Stan: " + server.getServerState() + " Gracze: " + server.getPlayersCount());
                 }
             }
             else if ("stopall".equals(args.asString(0)))
