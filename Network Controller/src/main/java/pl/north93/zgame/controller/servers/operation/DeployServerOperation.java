@@ -61,11 +61,8 @@ public class DeployServerOperation extends AutoScalerOperation
         this.ourServer = this.uploadServer(serverDto);
 
         final DaemonRpc daemonRpc = this.networkManager.getDaemons().getRpc(bestDaemon);
-        // wysylamy do demona polecenie
+        // wysylamy do demona polecenie, daemon zadba o to zeby dodac serwer do bungeecordów
         daemonRpc.deployServer(serverId, pattern);
-
-        // wysylamy do wszystkich bungeecordow info o nowym serwerze
-        this.networkManager.getProxies().addServer(serverDto);
 
         return true;
     }

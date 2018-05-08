@@ -149,6 +149,7 @@ public class LocalServersManager
         final Value<ServerDto> serverDto = this.networkManager.getServers().unsafe().getServerDto(serverId);
         this.portManagement.setupNetwork(serverDto, java);
 
+        // wywolujemy event tworzenia serwera i cala pozostala konfiguracje
         this.eventBus.post(new ServerCreatingEvent(workspace, pattern, java, serverDto));
 
         // aktualizacja stanu serwera
@@ -159,6 +160,10 @@ public class LocalServersManager
         {
             this.instances.put(serverId, instance);
         }
+
+        // wysylamy do wszystkich bungeecordow info o nowym serwerze,
+        // bo juz nic nie rzuci wyjatku i juz mamy skonfigurowany networking
+        this.networkManager.getProxies().addServer(serverDto.get());
 
         return serverDto.get();
     }

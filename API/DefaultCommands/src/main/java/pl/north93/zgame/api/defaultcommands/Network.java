@@ -36,6 +36,7 @@ public class Network extends NorthCommand
             sender.sendMessage("&e/network - pomoc");
             sender.sendMessage("&e  proxies - lista połączonych serwerów proxy");
             sender.sendMessage("&e  daemons - lista połączonych demonów");
+            sender.sendMessage("&e  servers - lista serwerów");
             sender.sendMessage("&e  kickall - wyrzuca wszystkich graczy");
             sender.sendMessage("&e  stopall - wyłącza wszystkie komponenty sieci");
             return;
