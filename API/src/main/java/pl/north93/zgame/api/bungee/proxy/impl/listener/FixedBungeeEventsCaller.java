@@ -4,6 +4,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.ServerDisconnectEvent;
+import net.md_5.bungee.api.event.ServerKickEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
@@ -40,6 +41,18 @@ public class FixedBungeeEventsCaller implements Listener
         }
 
         final PlayerLateDisconnectEvent newEvent = new PlayerLateDisconnectEvent(player);
+        ProxyServer.getInstance().getPluginManager().callEvent(newEvent);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onServerKick(final ServerKickEvent event)
+    {
+        if (event.getState() != ServerKickEvent.State.CONNECTED || event.getCancelServer() != null)
+        {
+            return;
+        }
+
+        final PlayerLateDisconnectEvent newEvent = new PlayerLateDisconnectEvent(event.getPlayer());
         ProxyServer.getInstance().getPluginManager().callEvent(newEvent);
     }
 }
