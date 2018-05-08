@@ -3,6 +3,7 @@ package pl.north93.zgame.api.bungee.connection;
 import java.util.Comparator;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -12,6 +13,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.server.Server;
+import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.network.server.joinaction.JoinActionsContainer;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
@@ -50,8 +52,14 @@ public class ConnectionManager
 
     public Server getBestServerFromServersGroup(final String serversGroup)
     {
+        final Predicate<Server> requireWorking = server -> server.getServerState() == ServerState.WORKING;
+        final Comparator<Server> playersComparator = Comparator.comparing(Server::getPlayersCount);
+
         final Set<Server> servers = this.networkManager.getServers().inGroup(serversGroup);
-        return servers.stream().min(Comparator.comparing(Server::getPlayersCount)).orElse(null);
+        return servers.stream()
+                      .filter(requireWorking)
+                      .min(playersComparator)
+                      .orElse(null);
     }
 
     @Override
