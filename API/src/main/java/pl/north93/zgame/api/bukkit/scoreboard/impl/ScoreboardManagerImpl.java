@@ -13,6 +13,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardLayout;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
@@ -36,8 +37,11 @@ public class ScoreboardManagerImpl extends Component implements IScoreboardManag
     @Override
     public IScoreboardContext setLayout(final Player player, final IScoreboardLayout layout)
     {
-        final ScoreboardContextImpl context = new ScoreboardContextImpl(this.bukkitExecutor, player, layout);
+        final INorthPlayer northPlayer = INorthPlayer.wrap(player);
+
+        final ScoreboardContextImpl context = new ScoreboardContextImpl(this.bukkitExecutor, northPlayer, layout);
         this.setContext(player, context);
+
         this.checkRunUpdater(layout);
         return context;
     }

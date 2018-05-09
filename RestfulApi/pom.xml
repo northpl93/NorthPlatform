@@ -46,6 +46,7 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
+                                    <include>pl.north93.zgame:restful</include>
                                     <include>com.sparkjava:spark-core</include>
                                     <include>javax.servlet:javax.servlet-api</include>
                                     <include>org.eclipse.jetty:*</include>

@@ -4,11 +4,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import org.bukkit.entity.Player;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 public interface IScoreboardContext
 {
-    Player getPlayer();
+    INorthPlayer getPlayer();
 
     IScoreboardLayout getLayout();
 

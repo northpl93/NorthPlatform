@@ -74,7 +74,7 @@ public class RaceScoreboard implements IScoreboardLayout
         final ElytraRaceArena arenaData = arena.getArenaData();
         final ContentBuilder builder = IScoreboardLayout.builder();
 
-        builder.box(this.msg).locale(player.spigot().getLocale());
+        builder.box(this.msg).locale(player.getLocale());
         builder.add("");
 
         builder.translated("scoreboard.race.time", arena.getTimer().humanReadableTimeAfterStart());

@@ -1,8 +1,7 @@
 package pl.north93.zgame.api.bukkit.scoreboard.impl;
 
-import static org.bukkit.ChatColor.translateAlternateColorCodes;
-
 import static pl.north93.zgame.api.bukkit.scoreboard.impl.BoardLine.newBoardLine;
+import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
 
 
 import java.util.HashMap;
@@ -14,8 +13,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -24,6 +21,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardLayout;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
@@ -31,14 +29,14 @@ import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 class ScoreboardContextImpl implements IScoreboardContext
 {
     private final IBukkitExecutor       executor;
-    private final Player                player;
+    private final INorthPlayer          player;
     private final IScoreboardLayout     layout;
     private final Map<String, Object>   data;
     // scoreboard logic
     private final String                boardId;
     private final LinkedList<BoardLine> boardLines;
 
-    public ScoreboardContextImpl(final IBukkitExecutor executor, final Player player, final IScoreboardLayout layout)
+    public ScoreboardContextImpl(final IBukkitExecutor executor, final INorthPlayer player, final IScoreboardLayout layout)
     {
         this.executor = executor;
         this.player = player;
@@ -50,7 +48,7 @@ class ScoreboardContextImpl implements IScoreboardContext
     }
 
     @Override
-    public Player getPlayer()
+    public INorthPlayer getPlayer()
     {
         return this.player;
     }
@@ -101,7 +99,7 @@ class ScoreboardContextImpl implements IScoreboardContext
     {
         final Scoreboard board = this.player.getScoreboard();
 
-        final String title = translateAlternateColorCodes('&', this.layout.getTitle(this));
+        final String title = translateAlternateColorCodes(this.layout.getTitle(this));
         final List<String> content = this.layout.getContent(this);
 
         final Objective objective = this.getObjective(board);
@@ -115,7 +113,7 @@ class ScoreboardContextImpl implements IScoreboardContext
             // rozmiar this.boardLines i content jest taki sam; dba o to checkLines
             final BoardLine boardLine = linesIterator.next();
 
-            boardLine.updateText(ChatColor.translateAlternateColorCodes('&', aContent));
+            boardLine.updateText(translateAlternateColorCodes(aContent));
         }
     }
 

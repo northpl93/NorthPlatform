@@ -60,7 +60,7 @@ public class ScoreScoreboard implements IScoreboardLayout
         }
 
         final ContentBuilder builder = IScoreboardLayout.builder();
-        builder.box(this.msg).locale(player.spigot().getLocale());
+        builder.box(this.msg).locale(player.getLocale());
 
         builder.add("");
         builder.translated("scoreboard.score.points", playerData.getPoints());

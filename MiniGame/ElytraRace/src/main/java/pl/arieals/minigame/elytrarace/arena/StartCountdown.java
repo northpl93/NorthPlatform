@@ -1,8 +1,7 @@
 package pl.arieals.minigame.elytrarace.arena;
 
-import static org.bukkit.ChatColor.translateAlternateColorCodes;
-
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
 
 
 import com.destroystokyo.paper.Title;
@@ -80,7 +79,7 @@ public class StartCountdown extends AbstractCountdown
 
         for (final Player player : this.arena.getPlayersManager().getPlayers())
         {
-            final String message = translateAlternateColorCodes('&', this.msg.getMessage(player.spigot().getLocale(), "start"));
+            final String message = translateAlternateColorCodes(this.msg.getMessage(player.getLocale(), "start"));
             final Title title = new Title(message, "", 0, 20, 0);
             player.sendTitle(title);
 

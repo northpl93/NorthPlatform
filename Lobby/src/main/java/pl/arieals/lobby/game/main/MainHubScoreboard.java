@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.lobby.game.HubScoreboardLayout;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.scoreboard.ContentBuilder;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardLayout;
@@ -35,10 +36,10 @@ public class MainHubScoreboard extends HubScoreboardLayout
         builder.translated("scoreboard.money", this.getPlayerCurrency(context.getPlayer()));
         builder.add("");
 
-        builder.translated("scoreboard.multipler", "todo");
+        builder.translated("scoreboard.multipler", "x1");
         builder.add("");
 
-        builder.translated("scoreboard.group", "todo");
+        builder.translated("scoreboard.group", this.getGroupName(context.getPlayer()));
         builder.add("");
 
         builder.translated("scoreboard.www");
@@ -48,6 +49,12 @@ public class MainHubScoreboard extends HubScoreboardLayout
         builder.add("");
 
         return builder.getContent();
+    }
+
+    private String getGroupName(final INorthPlayer player)
+    {
+        final String groupName = player.getGroup().getName();
+        return this.messages.getLegacyMessage(player.getLocale(), "scoreboard.group." + groupName);
     }
 
     @Override
