@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
@@ -78,7 +77,6 @@ public class ScoreboardManagerImpl extends Component implements IScoreboardManag
             old.cleanup();
         }
         player.setMetadata("scoreboard_context", new FixedMetadataValue(this.apiCore.getPluginMain(), scoreboardContext));
-        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         scoreboardContext.update();
     }
 

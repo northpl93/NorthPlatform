@@ -1,5 +1,7 @@
 package pl.arieals.api.minigame.server.utils.citizens;
 
+import java.util.Optional;
+
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
@@ -23,6 +25,7 @@ import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public class TranslatedNameTrait extends Trait
 {
+    private static final String TEAM_NAME = RandomStringUtils.randomAlphanumeric(16);
     private final TranslatableString[] nameLines;
     private IHologram hologram;
 
@@ -106,16 +109,24 @@ public class TranslatedNameTrait extends Trait
             return;
         }
 
-        final Team entryTeam = scoreboard.getEntryTeam(this.npc.getName());
-        if (entryTeam != null)
+        final Team hideNameTeam = this.getOrCreateTeam(scoreboard);
+        if (hideNameTeam.hasEntry(this.npc.getName()))
         {
-            // ten npc juz jest dodany do scoreboardu gracza, nic nie musimy robic
             return;
         }
 
-        final Team team = scoreboard.registerNewTeam(RandomStringUtils.randomAlphanumeric(16));
-        team.addEntry(this.npc.getName());
-        team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
+        hideNameTeam.addEntry(this.npc.getName());
+    }
+
+    private Team getOrCreateTeam(final Scoreboard scoreboard)
+    {
+        return Optional.ofNullable(scoreboard.getTeam(TEAM_NAME)).orElseGet(() ->
+        {
+            final Team newTeam = scoreboard.registerNewTeam(TEAM_NAME);
+            newTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
+
+            return newTeam;
+        });
     }
 
     @Override

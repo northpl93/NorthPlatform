@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -35,6 +36,7 @@ final class BoardFactory
 
         final int width = Math.max(cuboid.getSizeX(), cuboid.getSizeZ()); // szerokosc
         final int height = cuboid.getSizeY(); // wysokosc
+        final BlockFace mapFace = getMapFace(loc1, loc2);
 
         final MapImpl[][] maps = new MapImpl[width][height];
         final BoardImpl board = new BoardImpl(mapController, width, height, maps);
@@ -43,18 +45,18 @@ final class BoardFactory
         {
             final int distanceX = Math.abs(loc1.getBlockX() - location.getBlockX());
             final int distanceZ = Math.abs(loc1.getBlockZ() - location.getBlockZ());
-            int itemFrameX = Math.max(distanceX, distanceZ);
+            final int itemFrameX = Math.max(distanceX, distanceZ);
 
             final int maxY = Math.max(loc1.getBlockY(), loc2.getBlockY());
-            int itemFrameY = Math.abs(maxY - location.getBlockY());
+            final int itemFrameY = Math.abs(maxY - location.getBlockY());
 
-            maps[itemFrameX][itemFrameY] = createMap(board, location);
+            maps[itemFrameX][itemFrameY] = createMap(board, location, mapFace);
         });
 
         return board;
     }
 
-    private static MapImpl createMap(final BoardImpl board, final Location location)
+    private static MapImpl createMap(final BoardImpl board, final Location location, final BlockFace face)
     {
         final CraftWorld world = (CraftWorld) location.getWorld();
         world.getBlockAt(location).setType(Material.AIR);
@@ -64,6 +66,7 @@ final class BoardFactory
         {
             itemFrame = (ItemFrame) world.spawnEntity(location, EntityType.ITEM_FRAME);
             itemFrame.setInvulnerable(true);
+            itemFrame.setFacingDirection(face);
         }
 
         return new MapImpl(mapController, board, itemFrame);
@@ -142,6 +145,28 @@ final class BoardFactory
                 }
             }
         }
+    }
+
+    private static BlockFace getMapFace(final Location loc1, final Location loc2)
+    {
+        if (loc1.getX() > loc2.getX())
+        {
+            return BlockFace.NORTH;
+        }
+        else if (loc1.getX() < loc2.getX())
+        {
+            return BlockFace.SOUTH;
+        }
+        else if (loc1.getZ() > loc2.getZ())
+        {
+            return BlockFace.EAST;
+        }
+        else if (loc1.getZ() < loc2.getZ())
+        {
+            return BlockFace.WEST;
+        }
+
+        return BlockFace.NORTH;
     }
 }
 
