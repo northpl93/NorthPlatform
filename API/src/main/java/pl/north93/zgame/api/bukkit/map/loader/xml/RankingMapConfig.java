@@ -6,12 +6,16 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import java.net.URI;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.bukkit.map.IMapCanvas;
 import pl.north93.zgame.api.bukkit.map.IMapRenderer;
 import pl.north93.zgame.api.bukkit.map.renderer.ranking.IRankingRenderer;
 import pl.north93.zgame.api.bukkit.map.renderer.ranking.RankingRenderer;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.uri.IUriManager;
 
@@ -24,17 +28,47 @@ public class RankingMapConfig extends MapConfig
     @XmlElement(required = true)
     private XmlTranslatableImage background;
     @XmlElement(required = true)
-    private String               rankingData;
+    private URI                  rankingData;
 
     @Override
     public IMapRenderer createRenderer()
     {
+        /*
+         * Klasa uzywana do opóznienia wywolania pobrania danych rankingu.
+         * Usuwamy tym samym blad powstajacy gdy mapa zaladuje sie szybciej niz
+         * komponent udostepniajacy dane rankingu.
+         */
+        class LazyRankingRenderer implements IMapRenderer
+        {
+            @Inject
+            private IUriManager           uriManager;
+            private final RankingRenderer renderer;
+            private final URI             rankingDataUri;
+
+            public LazyRankingRenderer(final RankingRenderer renderer, final URI rankingDataUri)
+            {
+                this.renderer = renderer;
+                this.rankingDataUri = rankingDataUri;
+            }
+
+            @Override
+            public void render(final IMapCanvas canvas, final INorthPlayer player) throws Exception
+            {
+                final IMapRankingData rankingData = (IMapRankingData) this.uriManager.call(this.rankingDataUri);
+                rankingData.setUp(this.renderer);
+
+                this.renderer.render(canvas, player);
+            }
+
+            @Override
+            public String toString()
+            {
+                return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("renderer", this.renderer).append("rankingDataUri", this.rankingDataUri).toString();
+            }
+        }
+
         final RankingRenderer renderer = new RankingRenderer(this.background);
-
-        final IMapRankingData rankingData = (IMapRankingData) this.uriManager.call(this.rankingData);
-        rankingData.setUp(renderer);
-
-        return renderer;
+        return new LazyRankingRenderer(renderer, this.rankingData);
     }
 
     /**
