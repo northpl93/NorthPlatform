@@ -25,7 +25,7 @@ import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEv
 import pl.arieals.api.minigame.server.utils.citizens.SkinTrait;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.globalshops.server.IGlobalShops;
-import pl.arieals.globalshops.shared.ItemsGroup;
+import pl.arieals.globalshops.server.domain.ItemsGroup;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.shop.ShopGuiManager;

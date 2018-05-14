@@ -5,10 +5,9 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
-import org.bukkit.entity.Player;
-
-import pl.arieals.globalshops.shared.Item;
-import pl.arieals.globalshops.shared.ItemsGroup;
+import pl.arieals.globalshops.server.domain.Item;
+import pl.arieals.globalshops.server.domain.ItemsGroup;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 public interface IPlayerContainer
 {
@@ -17,7 +16,7 @@ public interface IPlayerContainer
      *
      * @return instancja bukkitowego gracza.
      */
-    Player getBukkitPlayer();
+    INorthPlayer getBukkitPlayer();
 
     /**
      * Zwraca liste itemow zakupionych z danej grupy.

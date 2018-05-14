@@ -7,9 +7,9 @@ import org.bukkit.event.player.PlayerEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.globalshops.server.BuyResult;
+import pl.arieals.globalshops.server.domain.BuyResult;
 import pl.arieals.globalshops.server.IPlayerContainer;
-import pl.arieals.globalshops.shared.Item;
+import pl.arieals.globalshops.server.domain.Item;
 
 public class ItemCheckBuyEvent extends PlayerEvent
 {

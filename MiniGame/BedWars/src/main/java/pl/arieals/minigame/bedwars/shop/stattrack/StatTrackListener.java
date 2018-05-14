@@ -22,8 +22,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.globalshops.server.IGlobalShops;
 import pl.arieals.globalshops.server.IPlayerContainer;
-import pl.arieals.globalshops.shared.Item;
-import pl.arieals.globalshops.shared.ItemsGroup;
+import pl.arieals.globalshops.server.domain.Item;
+import pl.arieals.globalshops.server.domain.ItemsGroup;
 import pl.arieals.minigame.bedwars.event.ItemBuyEvent;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 

@@ -19,7 +19,7 @@ import org.diorite.commons.math.DioriteRandomUtils;
 import org.diorite.commons.math.IWeightedRandomChoice;
 
 import pl.arieals.globalshops.server.IGlobalShops;
-import pl.arieals.globalshops.shared.Item;
+import pl.arieals.globalshops.server.domain.Item;
 import pl.arieals.lobby.chest.ChestType;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 

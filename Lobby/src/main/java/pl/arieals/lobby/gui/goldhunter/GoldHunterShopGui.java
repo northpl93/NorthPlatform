@@ -11,12 +11,12 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import pl.arieals.globalshops.server.BuyResult;
+import pl.arieals.globalshops.server.domain.BuyResult;
 import pl.arieals.globalshops.server.IGlobalShops;
 import pl.arieals.globalshops.server.IPlayerContainer;
 import pl.arieals.globalshops.server.IPlayerExperienceService;
-import pl.arieals.globalshops.shared.Item;
-import pl.arieals.globalshops.shared.ItemsGroup;
+import pl.arieals.globalshops.server.domain.Item;
+import pl.arieals.globalshops.server.domain.ItemsGroup;
 import pl.north93.zgame.api.bukkit.gui.ClickHandler;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.GuiButtonElement;

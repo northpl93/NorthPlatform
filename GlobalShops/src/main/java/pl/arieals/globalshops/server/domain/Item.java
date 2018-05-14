@@ -1,30 +1,35 @@
-package pl.arieals.globalshops.shared;
+package pl.arieals.globalshops.server.domain;
 
 import java.util.Locale;
 import java.util.Map;
 
+import com.carrotsearch.hppc.IntObjectMap;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.globalshops.shared.Rarity;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public final class Item
 {
-    private final ItemsGroup          group;
-    private final String              id;
-    private final int                 maxLevel;
-    private final Rarity              rarity;
-    private final Map<Locale, String> name;
-    private final Map<String, String> data;
+    private final ItemsGroup           group;
+    private final String               id;
+    private final int                  maxLevel;
+    private final Rarity               rarity;
+    private final IntObjectMap<IPrice> price;
+    private final Map<Locale, String>  name;
+    private final Map<String, String>  data;
 
-    public Item(final ItemsGroup group, final String id, final int maxLevel, final Rarity rarity, final Map<Locale, String> name, final Map<String, String> data)
+    public Item(final ItemsGroup group, final String id, final int maxLevel, final Rarity rarity, final IntObjectMap<IPrice> price, final Map<Locale, String> name, final Map<String, String> data)
     {
         this.group = group;
         this.id = id;
         this.maxLevel = maxLevel;
         this.rarity = rarity;
+        this.price = price;
         this.name = name;
         this.data = ImmutableMap.copyOf(data);
     }
@@ -47,6 +52,17 @@ public final class Item
     public Rarity getRarity()
     {
         return this.rarity;
+    }
+
+    public IntObjectMap<IPrice> getPrices()
+    {
+        return this.price;
+    }
+
+    public IPrice getPrice(final int level)
+    {
+        Preconditions.checkState(this.maxLevel >= level);
+        return this.price.get(level);
     }
 
     /**

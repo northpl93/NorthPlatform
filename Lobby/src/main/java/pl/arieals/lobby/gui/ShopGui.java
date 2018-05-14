@@ -1,5 +1,6 @@
 package pl.arieals.lobby.gui;
 
+import java.text.DecimalFormat;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
@@ -8,11 +9,14 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import pl.arieals.globalshops.server.IGlobalShops;
 import pl.arieals.globalshops.server.IPlayerContainer;
+import pl.arieals.globalshops.server.domain.IPrice;
+import pl.arieals.globalshops.server.domain.Item;
+import pl.arieals.globalshops.server.domain.ItemsGroup;
+import pl.arieals.globalshops.server.impl.price.MoneyPrice;
 import pl.arieals.globalshops.shared.GroupType;
-import pl.arieals.globalshops.shared.Item;
-import pl.arieals.globalshops.shared.ItemsGroup;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
@@ -67,7 +71,7 @@ public abstract class ShopGui extends Gui
         loreBuilder.and("rarity", TranslatableString.of(generalMessages, "@rarity." + item.getRarity().name()));
 
         // shardy o obliczyc cene
-        loreBuilder.and("price", "price todo");
+        loreBuilder.and("price", this.getPrice(playerContainer, item));
         loreBuilder.and("shards", playerContainer.getShards(item));
 
         final Vars<Object> loreVars = loreBuilder.build();
@@ -94,7 +98,8 @@ public abstract class ShopGui extends Gui
         {
             if (playerContainer.hasMaxLevel(item))
             {
-                // najwyzszy level kupiony
+                // lore_bought
+                builder.and("lore", TranslatableString.of(generalMessages, "@item.lore_bought$rarity").getValue(this.player, loreVars));
             }
             else
             {
@@ -104,6 +109,37 @@ public abstract class ShopGui extends Gui
         }
 
         return builder.build();
+    }
+
+    private BaseComponent getPrice(final IPlayerContainer container, final Item item)
+    {
+        final int level = Math.min(item.getMaxLevel(), container.getBoughtItemLevel(item) + 1);
+
+        final IPrice price = item.getPrice(level);
+        if (price instanceof MoneyPrice)
+        {
+            final MoneyPrice moneyPrice = (MoneyPrice) price;
+            final int amount = (int) moneyPrice.getAmount(container, item);
+
+            if (moneyPrice.getDiscount(container, item) == 0)
+            {
+                final Vars<Object> vars = Vars.of("amount", amount);
+                return TranslatableString.of(generalMessages, "@price.money.normal$amount").getValue(this.player, vars);
+            }
+            else
+            {
+                final DecimalFormat format = new DecimalFormat("#");
+                Vars<Object> vars = Vars.of("before", format.format(moneyPrice.getOriginalAmount()));
+                vars = vars.and("after", amount);
+                vars = vars.and("percent", format.format(moneyPrice.getDiscount(container, item) * 100));
+
+                return TranslatableString.of(generalMessages, "@price.money.discounted$before,after,percent").getValue(this.player, vars);
+            }
+        }
+        else
+        {
+            return TranslatableString.of(generalMessages, "@price.free").getValue(this.player, Vars.empty());
+        }
     }
 
     @Override

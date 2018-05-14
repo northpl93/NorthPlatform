@@ -10,11 +10,14 @@
             <id>test_item</id>
             <itemData name="priority" value="1" />
             <itemData name="type" value="PLAYER" />
+            <price currency="minigame" amount="100" />
+            <dependency item="npc_skin_1" level="1" />
         </item>
         <item>
             <id>npc_skin_1</id>
             <itemData name="priority" value="1" />
             <itemData name="type" value="PLAYER" />
+            <price currency="minigame" amount="150" />
         </item>
     </items>
 </itemGroup>

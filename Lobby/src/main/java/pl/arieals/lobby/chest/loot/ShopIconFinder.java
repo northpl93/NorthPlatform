@@ -29,8 +29,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.globalshops.shared.Item;
-import pl.arieals.globalshops.shared.ItemsGroup;
+import pl.arieals.globalshops.server.domain.Item;
+import pl.arieals.globalshops.server.domain.ItemsGroup;
 import pl.north93.zgame.api.bukkit.gui.impl.XmlLayoutRegistry;
 import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlButtonElement;
 import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlContainerElement;

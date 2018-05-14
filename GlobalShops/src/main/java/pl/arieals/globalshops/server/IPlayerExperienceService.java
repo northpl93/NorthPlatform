@@ -1,6 +1,7 @@
 package pl.arieals.globalshops.server;
 
-import pl.arieals.globalshops.shared.Item;
+import pl.arieals.globalshops.server.domain.BuyResult;
+import pl.arieals.globalshops.server.domain.Item;
 
 public interface IPlayerExperienceService
 {

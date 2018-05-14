@@ -1,4 +1,4 @@
-package pl.arieals.globalshops.server;
+package pl.arieals.globalshops.server.domain;
 
 public enum BuyResult
 {

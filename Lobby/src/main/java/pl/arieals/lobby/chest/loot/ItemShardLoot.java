@@ -15,7 +15,7 @@ import org.diorite.commons.math.IWeightedRandomChoice;
 
 import pl.arieals.globalshops.server.IGlobalShops;
 import pl.arieals.globalshops.server.IPlayerContainer;
-import pl.arieals.globalshops.shared.Item;
+import pl.arieals.globalshops.server.domain.Item;
 import pl.north93.zgame.api.bukkit.hologui.IHoloContext;
 import pl.north93.zgame.api.bukkit.hologui.IIcon;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;

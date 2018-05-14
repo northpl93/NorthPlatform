@@ -13,9 +13,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.globalshops.controller.cfg.ItemsGroupCfg;
 import pl.arieals.globalshops.server.IGlobalShops;
 import pl.arieals.globalshops.server.IPlayerContainer;
-import pl.arieals.globalshops.shared.Item;
+import pl.arieals.globalshops.server.domain.Item;
 import pl.arieals.globalshops.shared.ItemsDataContainer;
-import pl.arieals.globalshops.shared.ItemsGroup;
+import pl.arieals.globalshops.server.domain.ItemsGroup;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.config.ConfigUpdatedNetEvent;
@@ -28,6 +29,8 @@ public class GlobalShopsServer extends Component implements IGlobalShops
 {
     @Inject @NetConfig(type = ItemsDataContainer.class, id = "globalShops")
     private IConfig<ItemsDataContainer> config;
+    @Inject
+    private ItemFactory                 itemFactory;
     private final Map<String, ItemsGroup> groups = new HashMap<>();
 
     @Override
@@ -61,12 +64,10 @@ public class GlobalShopsServer extends Component implements IGlobalShops
 
     private synchronized void updateGroups0(final ItemsDataContainer container)
     {
-    	System.out.println("update groups0");
         this.groups.clear();
         for (final ItemsGroupCfg itemsGroupCfg : container.getGroups())
         {
-        	System.out.println(itemsGroupCfg);
-            final ItemsGroup itemsGroup = new ItemsGroup(itemsGroupCfg);
+            final ItemsGroup itemsGroup = this.itemFactory.createGroupFromConfig(itemsGroupCfg);
             this.groups.put(itemsGroup.getId(), itemsGroup);
         }
     }
@@ -95,7 +96,7 @@ public class GlobalShopsServer extends Component implements IGlobalShops
     public IPlayerContainer getPlayer(final Player player)
     {
         Preconditions.checkNotNull(player);
-        return new PlayerContainerImpl(player);
+        return new PlayerContainerImpl(INorthPlayer.wrap(player));
     }
 
     @Override

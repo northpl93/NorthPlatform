@@ -18,17 +18,19 @@ import pl.arieals.globalshops.shared.Rarity;
 public final class ItemCfg
 {
     @XmlElement(name = "id", required = true)
-    private String            id;
+    private String                  id;
     @XmlElement(name = "maxLevel")
-    private Integer           maxLevel = 1; // default max level is 1, so item doesn't support leveling
+    private Integer                 maxLevel     = 1; // default max level is 1, so item doesn't support leveling
     @XmlElement(name = "rarity")
-    private Rarity            rarity = NORMAL; // default is normal
+    private Rarity                  rarity       = NORMAL; // default is normal
+    @XmlElement(name = "price")
+    private List<ItemPriceCfg>      prices       = new ArrayList<>(0);
     @XmlElement(name = "name")
-    private List<ItemName>    names = new ArrayList<>(0);
+    private List<ItemName>          names        = new ArrayList<>(0);
     @XmlElement(name = "itemData")
-    private List<ItemDataCfg> itemData = new ArrayList<>(0);
+    private List<ItemDataCfg>       itemData     = new ArrayList<>(0);
     @XmlElement(name = "dependency")
-    private List<ItemDependencyCfg> dependecies = new ArrayList<>(0);
+    private List<ItemDependencyCfg> dependencies = new ArrayList<>(0);
 
     public String getId()
     {
@@ -45,6 +47,11 @@ public final class ItemCfg
         return this.rarity;
     }
 
+    public List<ItemPriceCfg> getPrices()
+    {
+        return this.prices;
+    }
+
     public List<ItemName> getNames()
     {
         return this.names;
@@ -55,8 +62,8 @@ public final class ItemCfg
         return this.itemData;
     }
     
-    public List<ItemDependencyCfg> getDependecies()
+    public List<ItemDependencyCfg> getDependencies()
 	{
-		return dependecies;
+		return this.dependencies;
 	}
 }

@@ -3,18 +3,18 @@ package pl.arieals.globalshops.server.impl;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.bukkit.entity.Player;
-
 import com.google.common.base.Preconditions;
 
-import pl.arieals.globalshops.server.BuyResult;
 import pl.arieals.globalshops.server.IPlayerContainer;
 import pl.arieals.globalshops.server.IPlayerExperienceService;
+import pl.arieals.globalshops.server.domain.BuyResult;
+import pl.arieals.globalshops.server.domain.IPrice;
+import pl.arieals.globalshops.server.domain.Item;
 import pl.arieals.globalshops.server.event.ItemBuyEvent;
 import pl.arieals.globalshops.server.event.ItemCheckBuyEvent;
 import pl.arieals.globalshops.shared.GroupType;
-import pl.arieals.globalshops.shared.Item;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -46,11 +46,16 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
             event.setResult(BuyResult.MAX_LEVEL);
         }
 
-        if ( !checkDependencies(playerContainer, item, level) )
+        if ( ! this.checkDependencies(playerContainer, item, level) )
         {
         	event.setResult(BuyResult.NOT_SATISFIED_DEPENDENCIES);
         }
-        // TODO: money check
+
+        final IPrice price = item.getPrice(level);
+        if (! price.canBuy(playerContainer, item))
+        {
+            event.setResult(BuyResult.NO_MONEY);
+        }
 
         return this.apiCore.callEvent(event).getResult();
     }
@@ -74,27 +79,28 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
         {
             if (playerContainer.hasBoughtItem(item))
             {
-                this.markActive(playerContainer, item);
+                this.processMarkActiveClick(playerContainer, item);
             }
             else
             {
-                this.buyItem(playerContainer, item, 1);
+                this.processBuyClick(playerContainer, item, 1);
             }
         }
         else
         {
-            this.upgradeItem(playerContainer, item);
+            this.processUpgradeClick(playerContainer, item);
         }
     }
 
     @Override
-    public void processClick(IPlayerContainer playerContainer, Item item, int level)
+    public void processClick(final IPlayerContainer playerContainer, final Item item, final int level)
     {
     	Preconditions.checkState(item.getGroup().getGroupType() == GroupType.MULTI_BUY);
-    	this.buyItem(playerContainer, item, level);
+    	this.processBuyClick(playerContainer, item, level);
     }
-    
-    private void markActive(final IPlayerContainer playerContainer, final Item item)
+
+    // obsluguje sytuacje gdy gracz chce oznaczyc item jako aktywny
+    private void processMarkActiveClick(final IPlayerContainer playerContainer, final Item item)
     {
         playerContainer.markAsActive(item);
 
@@ -102,23 +108,25 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
         this.logger.log(Level.INFO, "Player {0} marked {1} as active in group {2}", new Object[]{playerName, item.getId(), item.getGroup().getId()});
     }
 
-    private void upgradeItem(final IPlayerContainer playerContainer, final Item item)
+    // obsluguje sytuacje gdy gracz moze ulepszac item
+    private void processUpgradeClick(final IPlayerContainer playerContainer, final Item item)
     {
-        int nextLevel = playerContainer.getBoughtItemLevel(item) + 1;
-        buyItem(playerContainer, item, nextLevel);
+        final int nextLevel = playerContainer.getBoughtItemLevel(item) + 1;
+        this.processBuyClick(playerContainer, item, nextLevel);
     }
-    
-    private void buyItem(final IPlayerContainer playerContainer, final Item item, int level)
+
+    // obsługuje sytuację gdy gracz kupuje przedmiot
+    private void processBuyClick(final IPlayerContainer playerContainer, final Item item, final int level)
     {
     	Preconditions.checkArgument(level > 0);
     	Preconditions.checkState(item.getGroup().getGroupType() == GroupType.MULTI_BUY || level == 1);
     	
-        final Player bukkitPlayer = playerContainer.getBukkitPlayer();
+        final INorthPlayer player = playerContainer.getBukkitPlayer();
 
         final BuyResult buyResult = this.checkCanBuy(playerContainer, item, level);
         if (buyResult != BuyResult.CAN_BUY)
         {
-            this.logger.log(Level.INFO, "Upgrade cancelled with reason {0} for player {1} item {2} level {3}", new Object[]{buyResult, bukkitPlayer.getName(), item.getId(), level});
+            this.logger.log(Level.INFO, "Upgrade cancelled with reason {0} for player {1} item {2} level {3}", new Object[]{buyResult, player.getName(), item.getId(), level});
             return;
         }
 
@@ -129,29 +137,36 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
             if (buyResult2 != BuyResult.CAN_BUY)
             {
             	// TODO: send message
-                this.logger.log(Level.INFO, "Upgrade cancelled with reason {0} for player {1} item {2} level {3}", new Object[]{buyResult2, bukkitPlayer.getName(), item.getId(), level});
+                this.logger.log(Level.INFO, "Upgrade cancelled with reason {0} for player {1} item {2} level {3}", new Object[]{buyResult2, player.getName(), item.getId(), level});
                 return;
             }
             
-	        final ItemBuyEvent buyEvent = this.apiCore.callEvent(new ItemBuyEvent(bukkitPlayer, item, level));
+	        final ItemBuyEvent buyEvent = this.apiCore.callEvent(new ItemBuyEvent(player, item, level));
 	        if (buyEvent.isCancelled())
 	        {
 	            return;
 	        }
+
+            final IPrice price = item.getPrice(level);
+            if (! price.processBuy(playerContainer, item))
+            {
+                // nie udalo sie pobrac kasy. Nie powinno byc mozliwe
+                return;
+            }
 	
 	        final boolean success = playerContainer.addItem(item, level);
 	        if (! success)
 	        {
-	            this.logger.log(Level.WARNING, "Player {0} failed to buy {1} level {2} (success false)", new Object[]{bukkitPlayer.getName(), item.getId(), level});
+	            this.logger.log(Level.WARNING, "Player {0} failed to buy {1} level {2} (success false)", new Object[]{player.getName(), item.getId(), level});
 	            return;
 	        }
 	
-	        // todo bierzemy kase
-	        this.logger.log(Level.INFO, "Player {0} bought {1} level {2}", new Object[]{bukkitPlayer.getName(), item.getId(), level});
+	        this.logger.log(Level.INFO, "Player {0} bought {1} level {2}", new Object[]{player.getName(), item.getId(), level});
 	        
 	        if ( item.getGroup().getGroupType() == GroupType.SINGLE_PICK )
 	        {
-	        	markActive(playerContainer, item);
+	            // po zakupie w grupie typu single pick od razu oznaczamy item jako kupiony
+                this.processMarkActiveClick(playerContainer, item);
 	        }
         });
     }

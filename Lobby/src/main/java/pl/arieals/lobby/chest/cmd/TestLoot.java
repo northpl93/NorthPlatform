@@ -5,7 +5,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.bukkit.entity.Player;
 
-import pl.arieals.globalshops.shared.Item;
+import pl.arieals.globalshops.server.domain.Item;
 import pl.arieals.lobby.chest.ChestService;
 import pl.arieals.lobby.chest.ChestType;
 import pl.arieals.lobby.chest.loot.ChestLootService;

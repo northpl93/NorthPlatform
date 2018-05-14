@@ -2,8 +2,8 @@ package pl.arieals.globalshops.server;
 
 import org.bukkit.entity.Player;
 
-import pl.arieals.globalshops.shared.Item;
-import pl.arieals.globalshops.shared.ItemsGroup;
+import pl.arieals.globalshops.server.domain.Item;
+import pl.arieals.globalshops.server.domain.ItemsGroup;
 
 /**
  * API klienta globalnych sklepow.

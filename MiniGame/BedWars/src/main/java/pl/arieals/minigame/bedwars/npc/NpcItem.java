@@ -5,7 +5,7 @@ import java.util.Map;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
 
-import pl.arieals.globalshops.shared.Item;
+import pl.arieals.globalshops.server.domain.Item;
 
 public class NpcItem
 {

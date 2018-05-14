@@ -11,6 +11,7 @@
             </packages>
             <dependencies>
                 <dependency>NetworkController.ConfigServer</dependency>
+                <dependency>API.Economy.Controller</dependency>
             </dependencies>
             <platforms>
                 <platform>STANDALONE</platform>
@@ -27,6 +28,7 @@
             </packages>
             <dependencies>
                 <dependency>API.Config.Client</dependency>
+                <dependency>API.Economy</dependency>
             </dependencies>
             <platforms>
                 <platform>BUKKIT</platform>

@@ -1,5 +1,7 @@
 package pl.arieals.lobby.game;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Optional;
 
 import org.bukkit.entity.Player;
@@ -21,6 +23,7 @@ import pl.north93.zgame.api.global.network.players.Identity;
  */
 public abstract class HubScoreboardLayout implements IScoreboardLayout
 {
+    private static final NumberFormat CURRENCY_FORMATTER = new DecimalFormat("#");
     @Inject
     protected IEconomyManager economyManager;
 
@@ -41,7 +44,7 @@ public abstract class HubScoreboardLayout implements IScoreboardLayout
         final ICurrency currency = this.economyManager.getCurrency("minigame");
 
         final IAccountAccessor unsafeAccessor = this.economyManager.getUnsafeAccessor(currency, identity);
-        return String.valueOf(unsafeAccessor.getAmount());
+        return CURRENCY_FORMATTER.format(unsafeAccessor.getAmount());
     }
 
     @Override

@@ -1,11 +1,9 @@
 package pl.arieals.minigame.goldhunter.player;
 
-import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -27,8 +25,8 @@ import com.google.common.base.Preconditions;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 
 import pl.arieals.globalshops.server.IGlobalShops;
-import pl.arieals.globalshops.shared.Item;
-import pl.arieals.globalshops.shared.ItemsGroup;
+import pl.arieals.globalshops.server.domain.Item;
+import pl.arieals.globalshops.server.domain.ItemsGroup;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.arena.ArenaBuilder;
 import pl.arieals.minigame.goldhunter.arena.GoldHunterArena;
