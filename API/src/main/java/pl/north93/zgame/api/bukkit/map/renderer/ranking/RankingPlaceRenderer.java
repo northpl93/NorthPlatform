@@ -33,8 +33,18 @@ public final class RankingPlaceRenderer
         graphics.setFont(this.font);
         graphics.setColor(this.textColor);
 
-        final int targetTextX = this.x + this.skinSize + this.textSpacing;
-        graphics.drawString(rankingEntry.getText(), targetTextX, this.y + this.skinSize + 10);
+        final int targetNickX = this.x + this.skinSize + this.textSpacing;
+        graphics.drawString(rankingEntry.getText(), targetNickX, this.y + this.skinSize + 10);
+
+        final FontMetrics fontMetrics = graphics.getFontMetrics();
+        final int rankingTextWidth = fontMetrics.stringWidth(rankingEntry.getText());
+        graphics.setColor(Color.WHITE);
+        graphics.drawString(" - " + rankingEntry.getResult(), targetNickX + rankingTextWidth, this.y + this.skinSize + 10);
+
+        /*final FontMetrics fontMetrics = graphics.getFontMetrics(); // wariant z punktami po prawej
+        final int resultTextWidth = fontMetrics.stringWidth(rankingEntry.getResult());
+        final int targetResultX = targetNickX + 425 - resultTextWidth;
+        graphics.drawString(rankingEntry.getResult(), targetResultX, this.y + this.skinSize + 10);*/
     }
 
     private BufferedImage extractSkin(final UUID uuid, final int targetSize)

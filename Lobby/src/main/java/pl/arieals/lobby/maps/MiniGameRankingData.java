@@ -46,7 +46,7 @@ public class MiniGameRankingData implements RankingMapConfig.IMapRankingData
             final UUID playerId = place.getHolder().getIdentity().getUuid();
             final String nick = networkManager.getPlayers().getNickFromUuid(playerId).orElse("");
 
-            rankingRenderer.setLeftPlace(i, new RankingEntry(playerId, nick));
+            rankingRenderer.setLeftPlace(i, new RankingEntry(playerId, nick, place.getValue().getValue().toString()));
         }
 
         final IRanking rightRanking = this.getRanking(this.rightStatistic);
@@ -57,7 +57,7 @@ public class MiniGameRankingData implements RankingMapConfig.IMapRankingData
             final UUID playerId = place.getHolder().getIdentity().getUuid();
             final String nick = networkManager.getPlayers().getNickFromUuid(playerId).orElse("");
 
-            rankingRenderer.setRightPlace(i, new RankingEntry(playerId, nick));
+            rankingRenderer.setRightPlace(i, new RankingEntry(playerId, nick, place.getValue().getValue().toString()));
         }
     }
 

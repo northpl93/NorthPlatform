@@ -9,11 +9,13 @@ public final class RankingEntry
 {
     private final UUID   skinId;
     private final String text;
+    private final String result;
 
-    public RankingEntry(final UUID skinId, final String text)
+    public RankingEntry(final UUID skinId, final String text, final String result)
     {
         this.skinId = skinId;
         this.text = text;
+        this.result = result;
     }
 
     public UUID getSkinId()
@@ -24,6 +26,11 @@ public final class RankingEntry
     public String getText()
     {
         return this.text;
+    }
+
+    public String getResult()
+    {
+        return this.result;
     }
 
     @Override
