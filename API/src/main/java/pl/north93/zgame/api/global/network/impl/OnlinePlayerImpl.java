@@ -11,6 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
+import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.metadata.MetaStore;
@@ -220,8 +221,10 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     @Override
     public void sendMessage(final String message, final MessageLayout layout)
     {
+        final BaseComponent component = layout.processMessage(ChatUtils.fromLegacyText(message));
+
         final IProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
-        proxyRpc.sendMessage(this.nick, message, layout);
+        proxyRpc.sendJsonMessage(this.nick, ComponentSerializer.toString(component));
     }
 
     @Override
