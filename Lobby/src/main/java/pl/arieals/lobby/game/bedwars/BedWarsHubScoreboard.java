@@ -29,10 +29,10 @@ public class BedWarsHubScoreboard extends HubScoreboardLayout
         final IStatisticHolder playerHolder = this.statisticsManager.getPlayerHolder(context.getPlayer().getUniqueId());
 
         final HigherNumberBetterStatistic killsStat = new HigherNumberBetterStatistic("bedwars/kills");
-        context.setCompletableFuture("kills", playerHolder.getValue(killsStat));
+        context.setCompletableFuture("kills", playerHolder.getBest(killsStat));
 
         final HigherNumberBetterStatistic winsStat = new HigherNumberBetterStatistic("bedwars/wins");
-        context.setCompletableFuture("wins", playerHolder.getValue(winsStat));
+        context.setCompletableFuture("wins", playerHolder.getBest(winsStat));
     }
 
     @Override

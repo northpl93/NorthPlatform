@@ -1,12 +1,10 @@
 package pl.arieals.api.minigame.shared.api.statistics;
 
-import com.mongodb.client.FindIterable;
-
 import org.bson.Document;
 
 public interface IStatisticDbComposer<UNIT extends IStatisticUnit>
 {
-    FindIterable<Document> bestRecordQuery(FindIterable<Document> in);
+    Document bestRecordQuery();
 
     UNIT readValue(Document document);
 

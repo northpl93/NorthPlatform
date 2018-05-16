@@ -17,30 +17,34 @@ public interface IStatisticHolder
     HolderIdentity getIdentity();
 
     /**
-     * Zwraca wartosc danej statystyki w odpowiedniej jednostce.
+     * Zwraca najlepszą wartość danej statystyki w odpowiedniej jednostce.
      *
      * @param statistic Statystyka dla ktorej tworzymy zapytanie.
+     * @param filters Filtry zastosowane do szukania.
      * @param <UNIT> Jednostka danej statystyki.
      * @return CompletableFuture z wynikiem w odpowiedniej jednostce.
      */
-    <UNIT extends IStatisticUnit> CompletableFuture<IRecord<UNIT>> getValue(IStatistic<UNIT> statistic);
+    <UNIT extends IStatisticUnit> CompletableFuture<IRecord<UNIT>> getBest(IStatistic<UNIT> statistic, IStatisticFilter... filters);
+
+    /**
+     * Zwraca ostatnią zarejestrowaną wartość danej statystyki w odpowiedniej jednostce.
+     *
+     * @param statistic Statystyka dla ktorej tworzymy zapytanie.
+     * @param filters Filtry zastosowane do szukania.
+     * @param <UNIT> Jednostka danej statystyki.
+     * @return CompletableFuture z wynikiem w odpowiedniej jednostce.
+     */
+    <UNIT extends IStatisticUnit> CompletableFuture<IRecord<UNIT>> getLatest(IStatistic<UNIT> statistic, IStatisticFilter... filters);
 
     /**
      * Rejestruje nowa wartosc statystyki.
      *
      * @param statistic Statystyka dla ktorej rejestrujemy wartosc.
      * @param value Nowa wartosc.
-     * @param onlyWhenBetter Jesli tu bedzie true podmiana nastapi tylko wtedy gdy
-     *                       nowa wartosc bedzie lepsza od starej.
      * @param <UNIT> Jednostka danej statystyki.
      * @return Zwraca poprzednia wartosc.
      */
-    <UNIT extends IStatisticUnit> CompletableFuture<IRecord<UNIT>> record(IStatistic<UNIT> statistic, UNIT value, boolean onlyWhenBetter);
-
-    default <UNIT extends IStatisticUnit> CompletableFuture<IRecord<UNIT>> record(final IStatistic<UNIT> statistic, final UNIT value)
-    {
-        return this.record(statistic, value, false);
-    }
+    <UNIT extends IStatisticUnit> CompletableFuture<IRecord<UNIT>> record(IStatistic<UNIT> statistic, UNIT value);
 
     /**
      * Inkrementuje podaną statystykę o podaną wartość.

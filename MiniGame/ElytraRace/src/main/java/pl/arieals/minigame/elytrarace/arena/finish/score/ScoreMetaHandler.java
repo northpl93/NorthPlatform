@@ -17,6 +17,7 @@ import pl.arieals.api.minigame.shared.api.statistics.IRecord;
 import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
+import pl.arieals.api.minigame.shared.api.statistics.filter.BestRecordFilter;
 import pl.arieals.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.unit.NumberUnit;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
@@ -57,9 +58,9 @@ public class ScoreMetaHandler implements IFinishHandler
         final boolean isFinished = IFinishHandler.checkFinished(arena);
 
         final NumberUnit points = new NumberUnit((long) scoreData.getPoints()); // ilosc punktow gracza w NumberUnit
-        this.statisticsManager.getBestRecord(scoreStatistic).whenComplete((bestRecord, throwable) ->
+        this.statisticsManager.getRecord(scoreStatistic, new BestRecordFilter()).whenComplete((bestRecord, throwable) ->
         {
-            statisticsHolder.record(scoreStatistic, points, true).whenComplete((record, throwable2) ->
+            statisticsHolder.record(scoreStatistic, points).whenComplete((record, throwable2) ->
             {
                 final ScoreMessage raceMessage = new ScoreMessage(this.getTop(), bestRecord, !isFinished);
                 if (isFinished)
@@ -101,7 +102,7 @@ public class ScoreMetaHandler implements IFinishHandler
         }
 
         final HigherNumberBetterStatistic scoreStatistic = this.getScoreStatistic(arena);
-        this.statisticsManager.getBestRecord(scoreStatistic).whenComplete((result, throwable) ->
+        this.statisticsManager.getRecord(scoreStatistic, new BestRecordFilter()).whenComplete((result, throwable) ->
         {
             final ScoreMessage raceMessage = new ScoreMessage(this.getTop(), result, false);
             for (final Player playerInArena : arena.getPlayersManager().getPlayers())

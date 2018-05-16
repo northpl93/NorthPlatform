@@ -1,7 +1,5 @@
 package pl.arieals.api.minigame.shared.api.statistics.type;
 
-import com.mongodb.client.FindIterable;
-
 import org.bson.Document;
 
 import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
@@ -41,9 +39,9 @@ class HigherNumberBetterStatisticDbComposer implements IStatisticDbComposer<Numb
     static final HigherNumberBetterStatisticDbComposer INSTANCE = new HigherNumberBetterStatisticDbComposer();
 
     @Override
-    public FindIterable<Document> bestRecordQuery(final FindIterable<Document> in)
+    public Document bestRecordQuery()
     {
-        return in.sort(new Document("value", -1));
+        return new Document("value", -1);
     }
 
     @Override

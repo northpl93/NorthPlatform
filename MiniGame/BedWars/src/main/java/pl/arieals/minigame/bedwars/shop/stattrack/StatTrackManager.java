@@ -44,7 +44,7 @@ public class StatTrackManager
             for (final TrackedStatistic trackedStatistic : TrackedStatistic.values())
             {
                 final IStatistic<NumberUnit> statistic = this.getStatistic(trackedStatistic, trackedWeapon);
-                holder.getValue(statistic).whenComplete((result, throwable) ->
+                holder.getBest(statistic).whenComplete((result, throwable) ->
                 {
                     if (result == null)
                     {

@@ -35,13 +35,13 @@ public class ElytraHubScoreboard extends HubScoreboardLayout
         final IStatisticHolder playerHolder = this.statisticsManager.getPlayerHolder(context.getPlayer().getUniqueId());
 
         final LongerTimeBetterStatistic totalRaceTimeStat = new LongerTimeBetterStatistic("elytra/totalRaceTime");
-        context.setCompletableFuture("raceTime", playerHolder.getValue(totalRaceTimeStat));
+        context.setCompletableFuture("raceTime", playerHolder.getBest(totalRaceTimeStat));
 
         final HigherNumberBetterStatistic totalScorePointsStat = new HigherNumberBetterStatistic("elytra/totalScorePoints");
-        context.setCompletableFuture("scorePoints", playerHolder.getValue(totalScorePointsStat));
+        context.setCompletableFuture("scorePoints", playerHolder.getBest(totalScorePointsStat));
 
         final HigherNumberBetterStatistic winsStat = new HigherNumberBetterStatistic("elytra/totalWins");
-        context.setCompletableFuture("wins", playerHolder.getValue(winsStat));
+        context.setCompletableFuture("wins", playerHolder.getBest(winsStat));
     }
 
     @Override

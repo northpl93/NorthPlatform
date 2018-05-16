@@ -2,8 +2,6 @@ package pl.arieals.api.minigame.shared.api.statistics.type;
 
 import java.time.Duration;
 
-import com.mongodb.client.FindIterable;
-
 import org.bson.Document;
 
 import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
@@ -48,9 +46,9 @@ class LongerTimeBetterStatisticDbComposer implements IStatisticDbComposer<Durati
     static final LongerTimeBetterStatisticDbComposer INSTANCE = new LongerTimeBetterStatisticDbComposer();
 
     @Override
-    public FindIterable<Document> bestRecordQuery(final FindIterable<Document> in)
+    public Document bestRecordQuery()
     {
-        return in.sort(new Document("value", -1));
+        return new Document("value", -1);
     }
 
     @Override
