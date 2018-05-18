@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.server.lobby.cmd;
+package pl.arieals.api.minigame.server.lobby.hub.cmd;
 
 import java.util.Collection;
 import java.util.Collections;

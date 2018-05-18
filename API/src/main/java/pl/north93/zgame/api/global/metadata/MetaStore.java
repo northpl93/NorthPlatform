@@ -15,8 +15,22 @@ public final class MetaStore
 {
     private final Map<MetaKey, Object> metadata = new IdentityHashMap<>();
 
+    /**
+     * Konstruktor tworzący nowe, puste {@link MetaStore}.
+     */
     public MetaStore()
     {
+    }
+
+    /**
+     * Konstruktor wykonujący płytkie kopiowanie
+     * (wartości wewnątrz mapy będą tymi samymi referencjami).
+     *
+     * @param store Inny MetaStore do skopiowania danych.
+     */
+    public MetaStore(final MetaStore store)
+    {
+        this.metadata.putAll(store.metadata);
     }
 
     public void set(final MetaKey key, final Object value)
@@ -24,9 +38,17 @@ public final class MetaStore
         this.metadata.put(key, value);
     }
 
-    public Object get(final MetaKey key)
+    /**
+     * Metoda zwracająca wartość z metastore, wykonująca castowanie przez genericsy.
+     *
+     * @param key Klucz dla którego wartość pobieramy.
+     * @param <T> Typ obiektu który uzyskujemy z MetaStore.
+     * @return Wartość pobrana z wewnętrznej Mapy.
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T get(final MetaKey key)
     {
-        return this.metadata.get(key);
+        return (T) this.metadata.get(key);
     }
 
     public void setString(final MetaKey key, final String value)
@@ -36,7 +58,7 @@ public final class MetaStore
 
     public String getString(final MetaKey key)
     {
-        return (String) this.get(key);
+        return this.get(key);
     }
 
     public void setInteger(final MetaKey key, final Integer value)
@@ -46,7 +68,7 @@ public final class MetaStore
 
     public Integer getInteger(final MetaKey key)
     {
-        return (Integer) this.get(key);
+        return this.get(key);
     }
 
     public void setDouble(final MetaKey key, final Double value)
@@ -56,7 +78,7 @@ public final class MetaStore
 
     public Double getDouble(final MetaKey key)
     {
-        return (Double) this.get(key);
+        return this.get(key);
     }
 
     public void setBoolean(final MetaKey key, final Boolean value)
@@ -66,7 +88,7 @@ public final class MetaStore
 
     public Boolean getBoolean(final MetaKey key)
     {
-        return (Boolean) this.get(key);
+        return this.get(key);
     }
 
     public void setUuid(final MetaKey key, final UUID value)
@@ -76,7 +98,7 @@ public final class MetaStore
 
     public UUID getUuid(final MetaKey key)
     {
-        return (UUID) this.get(key);
+        return this.get(key);
     }
 
     public void setLong(final MetaKey key, final long value)
@@ -86,7 +108,7 @@ public final class MetaStore
 
     public long getLong(final MetaKey key)
     {
-        return (long) this.get(key);
+        return this.get(key);
     }
 
     public boolean contains(final MetaKey key)

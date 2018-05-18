@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messageable;
+import pl.north93.zgame.api.global.metadata.Metadatable;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.server.Server;
@@ -26,7 +27,7 @@ import pl.north93.zgame.api.global.permissions.Group;
  * edycje danych i sa one nieatomowe (np. podczas Twoich dzialan
  * gracz moze zmienic serwer)
  */
-public interface INorthPlayer extends Player, Messageable
+public interface INorthPlayer extends Player, Metadatable, Messageable
 {
     static INorthPlayer get(final UUID playerId)
     {

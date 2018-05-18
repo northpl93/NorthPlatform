@@ -1,7 +1,5 @@
 package pl.north93.zgame.api.global.redis.observable.impl;
 
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -9,36 +7,31 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.finalizer.FinalizerUtils;
 import pl.north93.zgame.api.global.redis.subscriber.SubscriptionHandler;
+import pl.north93.zgame.api.global.utils.ReferenceHashMap;
 
 class ValueSubscriptionHandler implements SubscriptionHandler
 {
     /*default*/ final static String CHANNEL_PREFIX = "caval_upd:";
-    private final ObservationManagerImpl                     observationManager;
-    private final Map<String, WeakReference<CachedValue<?>>> listeners;
+    private final ObservationManagerImpl      observationManager;
+    private final Map<String, CachedValue<?>> listeners;
 
     public ValueSubscriptionHandler(final ObservationManagerImpl observationManager)
     {
         this.observationManager = observationManager;
-        this.listeners = new HashMap<>(128);
+        this.listeners = new ReferenceHashMap<>(ReferenceHashMap.ReferenceType.WEAK);
     }
 
     public void addListener(final CachedValue<?> value)
     {
-        synchronized (this.listeners)
-        {
-            final String internalName = value.getInternalName();
-            this.listeners.put(internalName, new WeakReference<>(value));
+        final String internalName = value.getInternalName();
+        this.listeners.put(internalName, value); // mapa jest wewnętrznie lockowana
 
-            FinalizerUtils.register(value, () -> this.removeListener(internalName));
-        }
+        FinalizerUtils.register(value, () -> this.removeListener(internalName));
     }
 
     private void removeListener(final String internalName)
     {
-        synchronized (this.listeners)
-        {
-            this.listeners.remove(internalName);
-        }
+        this.listeners.remove(internalName); // mapa jest wewnętrznie lockowana
     }
 
     public void update(final CachedValue<?> value, final byte[] message)
@@ -52,17 +45,13 @@ class ValueSubscriptionHandler implements SubscriptionHandler
     {
         final String name = channel.substring(CHANNEL_PREFIX.length());
 
-        final CachedValue<?> value;
-        synchronized (this.listeners)
+        final CachedValue<?> cachedValue = this.listeners.get(name); // mapa jest wewnętrznie lockowana
+        if (cachedValue == null)
         {
-            final WeakReference<CachedValue<?>> valueRef = this.listeners.get(name);
-            if (valueRef == null || (value = valueRef.get()) == null)
-            {
-                return;
-            }
+            return;
         }
 
-        value.handleNewValue(message);
+        cachedValue.handleNewValue(message);
     }
 
     @Override

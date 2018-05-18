@@ -6,7 +6,7 @@
     </entry>
 
     <entry pos="7">
-        <icon id="INK_SACK" data="10" name="@hotbar.mapvote" />
+        <icon id="INK_SACK" data="10" name="@hotbar.visibility" />
         <onClick>changeVisibility</onClick>
     </entry>
     <entry pos="8">

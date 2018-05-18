@@ -99,7 +99,26 @@ public class ReferenceHashMap<K, V> implements Map<K, V>
     public boolean containsValue(final Object value)
     {
         Preconditions.checkNotNull(value);
-        throw new NotImplementedException("entrySet"); // todo
+
+        try
+        {
+            this.lock.readLock().lock();
+
+            for (final Reference<V> reference : this.map.values())
+            {
+                final V object = this.decodeReference(reference);
+                if (object == value || value.equals(object))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        finally
+        {
+            this.lock.readLock().unlock();
+        }
     }
 
     @Override

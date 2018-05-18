@@ -2,7 +2,7 @@ package pl.arieals.lobby.game.bedwars;
 
 import org.bukkit.event.EventHandler;
 
-import pl.arieals.api.minigame.server.lobby.event.PlayerSwitchedHubEvent;
+import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
 import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
 import pl.arieals.lobby.game.HubListener;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;

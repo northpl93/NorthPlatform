@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.bukkit.player.impl;
 
+import static pl.north93.zgame.api.bukkit.player.INorthPlayer.asCraftPlayer;
+
+
 import javax.annotation.Nullable;
 
 import java.net.InetSocketAddress;
@@ -62,10 +65,14 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.Vector;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
+import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
 import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.network.INetworkManager;
@@ -77,13 +84,13 @@ import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.zgame.api.global.permissions.Group;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
-class NorthPlayer implements INorthPlayer
+/*default*/ class NorthPlayerImpl implements INorthPlayer
 {
     private final INetworkManager      networkManager;
     private final Player               bukkitPlayer;
     private final Value<IOnlinePlayer> playerData;
 
-    public NorthPlayer(final INetworkManager networkManager, final Player bukkitPlayer, final Value<IOnlinePlayer> playerData)
+    public NorthPlayerImpl(final INetworkManager networkManager, final Player bukkitPlayer, final Value<IOnlinePlayer> playerData)
     {
         this.networkManager = networkManager;
         this.bukkitPlayer = bukkitPlayer;
@@ -168,6 +175,16 @@ class NorthPlayer implements INorthPlayer
     public boolean isDataCached()
     {
         return this.playerData.isCached();
+    }
+
+    @Override
+    public MetaStore getMetaStore()
+    {
+        final IOnlinePlayer playerData = this.playerData.get();
+
+        // zwracamy kopie, aby nikt nic nie zepsul, ale dalej
+        // istnieje mozliwosc zmodyfikowania wartosci jesli sa one mutable.
+        return new MetaStore(playerData.getMetaStore());
     }
 
     // wewnetrzna metoda uzywana przez implementacje.
@@ -822,32 +839,32 @@ class NorthPlayer implements INorthPlayer
     @Deprecated
     public void hidePlayer(final Player player)
     {
-        this.bukkitPlayer.hidePlayer(player);
+        this.bukkitPlayer.hidePlayer(asCraftPlayer(player));
     }
 
     @Override
     public void hidePlayer(final Plugin plugin, final Player player)
     {
-        this.bukkitPlayer.hidePlayer(plugin, player);
+        this.bukkitPlayer.hidePlayer(plugin, asCraftPlayer(player));
     }
 
     @Override
     @Deprecated
     public void showPlayer(final Player player)
     {
-        this.bukkitPlayer.showPlayer(player);
+        this.bukkitPlayer.showPlayer(asCraftPlayer(player));
     }
 
     @Override
     public void showPlayer(final Plugin plugin, final Player player)
     {
-        this.bukkitPlayer.showPlayer(plugin, player);
+        this.bukkitPlayer.showPlayer(plugin, asCraftPlayer(player));
     }
 
     @Override
     public boolean canSee(final Player player)
     {
-        return this.bukkitPlayer.canSee(player);
+        return this.bukkitPlayer.canSee(asCraftPlayer(player));
     }
 
     @Override
@@ -2254,11 +2271,17 @@ class NorthPlayer implements INorthPlayer
     @Override
     public boolean equals(final Object obj)
     {
-        if (obj instanceof NorthPlayer)
+        if (obj instanceof NorthPlayerImpl)
         {
-            final NorthPlayer otherNorthPlayer = (NorthPlayer) obj;
+            final NorthPlayerImpl otherNorthPlayer = (NorthPlayerImpl) obj;
             return this.bukkitPlayer.equals(otherNorthPlayer.bukkitPlayer);
         }
         return this.bukkitPlayer.equals(obj); // prawdopodobnie przyszla instancja CraftPlayer
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("bukkitPlayer", this.bukkitPlayer).toString();
     }
 }

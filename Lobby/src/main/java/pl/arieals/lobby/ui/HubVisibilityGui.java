@@ -5,13 +5,13 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
-public class HubPickGui extends Gui
+public class HubVisibilityGui extends Gui
 {
     @Inject @Messages("UserInterface")
     private static MessagesBox messages;
 
-    public HubPickGui()
+    public HubVisibilityGui()
     {
-        super(messages, "hub/game_picker");
+        super(messages, "hub/visibility");
     }
 }

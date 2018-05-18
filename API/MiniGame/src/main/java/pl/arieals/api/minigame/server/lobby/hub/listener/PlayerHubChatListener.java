@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.server.lobby.listener;
+package pl.arieals.api.minigame.server.lobby.hub.listener;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
-import pl.arieals.api.minigame.server.lobby.event.PlayerSwitchedHubEvent;
+import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
 import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.chat.global.ChatManager;

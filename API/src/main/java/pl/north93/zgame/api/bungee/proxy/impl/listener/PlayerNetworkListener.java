@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.bungee.proxy.impl.listener;
 
+import static java.text.MessageFormat.format;
+
 import static net.md_5.bungee.api.ChatColor.RED;
 
 
@@ -166,8 +168,11 @@ public class PlayerNetworkListener implements Listener
     @EventHandler
     public void onLeave(final PlayerLateDisconnectEvent event)
     {
+        final Logger logger = this.bungeeApiCore.getLogger();
+        final IPlayersManager players = this.networkManager.getPlayers();
+
         final ProxiedPlayer proxyPlayer = event.getPlayer();
-        final Value<IOnlinePlayer> player = this.networkManager.getPlayers().unsafe().getOnline(proxyPlayer.getName());
+        final Value<IOnlinePlayer> player = players.unsafe().getOnline(proxyPlayer.getName());
 
         // wywołujemy event w którym spokojnie można obsłużyć wyjście gracza
         this.bungeeApiCore.callEvent(new HandlePlayerProxyQuitEvent(proxyPlayer, player));
@@ -177,13 +182,17 @@ public class PlayerNetworkListener implements Listener
             final IOnlinePlayer onlinePlayer = player.getWithoutCache();
             if (onlinePlayer == null)
             {
-                this.bungeeApiCore.getLogger().warning("onlinePlayer==null in onLeave. " + event);
+                logger.warning("onlinePlayer==null in onLeave. " + event);
                 return;
             }
 
             this.eventManager.callEvent(new PlayerQuitNetEvent((OnlinePlayerImpl) onlinePlayer));
-            this.networkManager.getPlayers().getInternalData().savePlayer(onlinePlayer);
+            players.getInternalData().savePlayer(onlinePlayer);
             player.delete();
+        }
+        catch (final Exception e)
+        {
+            logger.log(Level.SEVERE, format("Failed to save player data for {0}/{1}", proxyPlayer.getName(), proxyPlayer.getUniqueId()), e);
         }
     }
     

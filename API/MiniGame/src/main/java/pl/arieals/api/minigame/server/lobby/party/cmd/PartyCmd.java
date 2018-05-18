@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.server.lobby.cmd;
+package pl.arieals.api.minigame.server.lobby.party.cmd;
 
 import java.util.Locale;
 import java.util.UUID;

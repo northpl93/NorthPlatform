@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.server.lobby.listener;
+package pl.arieals.api.minigame.server.lobby.hub.listener;
 
 import static java.text.MessageFormat.format;
 
@@ -9,7 +9,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
@@ -18,11 +17,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
-import pl.arieals.api.minigame.server.lobby.event.PlayerSwitchedHubEvent;
 import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
 import pl.arieals.api.minigame.server.lobby.hub.LocalHubServer;
 import pl.arieals.api.minigame.server.lobby.hub.SelectHubServerJoinAction;
+import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
 import pl.north93.zgame.api.bukkit.player.event.PlayerDataLoadedEvent;
+import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 
@@ -30,7 +30,7 @@ import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
  * Ogólna obsługa wejścia gracza na serwer hubów,
  * dodatkowe śledzenie aktualnego hubu gracza.
  */
-public class PlayerJoinHubServerListener implements Listener
+public class PlayerJoinHubServerListener implements AutoListener
 {
     @Inject
     private MiniGameServer gameServer;

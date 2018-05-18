@@ -1,7 +1,10 @@
 package pl.north93.zgame.api.bukkit.player.impl;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -88,13 +91,25 @@ public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
         return ((INorthPlayer) player).getCraftPlayer();
     }
 
+    @Override
+    public Collection<INorthPlayer> getPlayers()
+    {
+        return this.getStream().collect(Collectors.toList());
+    }
+
+    @Override
+    public Stream<INorthPlayer> getStream()
+    {
+        return Bukkit.getOnlinePlayers().stream().map(this::getPlayer);
+    }
+
     private INorthPlayer wrapNorthPlayer(final Player player, final Value<IOnlinePlayer> playerData)
     {
-        if (player instanceof NorthPlayer)
+        if (player instanceof NorthPlayerImpl)
         {
             return (INorthPlayer) player;
         }
-        return new NorthPlayer(this.networkManager, player, playerData);
+        return new NorthPlayerImpl(this.networkManager, player, playerData);
     }
 
     @Override

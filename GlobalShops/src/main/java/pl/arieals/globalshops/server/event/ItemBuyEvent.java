@@ -1,23 +1,23 @@
 package pl.arieals.globalshops.server.event;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.player.PlayerEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.globalshops.server.domain.Item;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
+import pl.north93.zgame.api.bukkit.player.event.NorthPlayerEvent;
 
-public class ItemBuyEvent extends PlayerEvent implements Cancellable
+public class ItemBuyEvent extends NorthPlayerEvent implements Cancellable
 {
     private static final HandlerList handlers = new HandlerList();
     private final Item    item;
     private final int     level;
     private       boolean cancelled;
 
-    public ItemBuyEvent(final Player who, final Item item, final int level)
+    public ItemBuyEvent(final INorthPlayer who, final Item item, final int level)
     {
         super(who);
         this.item = item;

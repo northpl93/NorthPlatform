@@ -22,4 +22,10 @@ public class HubHotbar extends HotbarMenu
     {
         this.getViewers().forEach(viewer -> new HubPickGui().open(viewer));
     }
+
+    @ClickHandler
+    public void changeVisibility(final HotbarClickEvent event)
+    {
+        this.getViewers().forEach(viewer -> new HubVisibilityGui().open(viewer));
+    }
 }

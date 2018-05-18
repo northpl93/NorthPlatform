@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="1" title="@visibility.title">
+    <container pos="0,0" size="9,1">
+        <content>
+            <button pos="2,0">
+                <icon id="INK_SACK" data="8" name="@visibility.nobody"/>
+                <onClick>northplatform://lobby/ui/visibility/nobody/$playerId</onClick>
+            </button>
+
+            <button pos="4,0">
+                <icon id="INK_SACK" data="10" name="@visibility.everyone"/>
+                <onClick>northplatform://lobby/ui/visibility/everyone/$playerId</onClick>
+            </button>
+
+            <button pos="6,0">
+                <icon id="INK_SACK" data="5" name="@visibility.party"/>
+                <onClick>northplatform://lobby/ui/visibility/party/$playerId</onClick>
+            </button>
+
+            <!-- Paski po lewej/prawej -->
+            <button pos="0,0"><icon id="STAINED_GLASS_PANE" data="14" name=""/></button>
+            <button pos="8,0"><icon id="STAINED_GLASS_PANE" data="14" name=""/></button>
+        </content>
+    </container>
+</gui>

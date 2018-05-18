@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.lobby.event.PlayerSwitchedHubEvent;
+import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
 import pl.arieals.api.minigame.shared.api.cfg.HubConfig;
 import pl.arieals.api.minigame.shared.api.cfg.HubsConfig;
 import pl.arieals.api.minigame.shared.api.hub.IHubServer;
@@ -166,7 +166,6 @@ public class LocalHubServer implements IHubServer
     private void createNewHubWorld(final HubConfig hubConfig)
     {
         final World bukkitWorld = this.createWorld(hubConfig);
-
         final ChatRoom room = this.getChatRoomFor(hubConfig);
 
         final HubWorld hubWorld = new HubWorld(hubConfig.getHubId(), bukkitWorld, room);
@@ -174,12 +173,6 @@ public class LocalHubServer implements IHubServer
 
         this.hubWorlds.put(hubConfig.getHubId(), hubWorld);
         this.apiCore.getLogger().log(Level.INFO, "Created hub with ID {0}", hubConfig.getHubId());
-    }
-
-    private ChatRoom getChatRoomFor(final HubConfig hubConfig)
-    {
-        final String roomId = "hub:" + hubConfig.getHubId();
-        return this.chatManager.getOrCreateRoom(roomId, PermissionsBasedFormatter.INSTANCE, ChatRoomPriority.NORMAL);
     }
 
     private World createWorld(final HubConfig hubConfig)
@@ -192,6 +185,12 @@ public class LocalHubServer implements IHubServer
 
         final WorldCreator creator = WorldCreator.name(hubConfig.getWorldName());
         return creator.createWorld();
+    }
+
+    private ChatRoom getChatRoomFor(final HubConfig hubConfig)
+    {
+        final String roomId = "hub:" + hubConfig.getHubId();
+        return this.chatManager.getOrCreateRoom(roomId, PermissionsBasedFormatter.INSTANCE, ChatRoomPriority.NORMAL);
     }
 
     @Override

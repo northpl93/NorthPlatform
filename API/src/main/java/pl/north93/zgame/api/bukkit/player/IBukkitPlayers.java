@@ -1,6 +1,8 @@
 package pl.north93.zgame.api.bukkit.player;
 
+import java.util.Collection;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -56,4 +58,18 @@ public interface IBukkitPlayers
      * @return Instancja CraftPlayer danego gracza.
      */
     CraftPlayer getCraftPlayer(Player player);
+
+    /**
+     * Zwraca kolekcję graczy będących online na serwerze.
+     *
+     * @return Kolekcja graczy online na serwerze.
+     */
+    Collection<INorthPlayer> getPlayers();
+
+    /**
+     * Zwraca stream z wszystkimi graczami online na serwerze.
+     *
+     * @return Stream graczy online na serwerze.
+     */
+    Stream<INorthPlayer> getStream();
 }

@@ -48,7 +48,7 @@ class PlayerDataLoadTask implements Runnable
     public void run()
     {
         final Logger logger = this.apiCore.getLogger();
-        final NorthPlayer northPlayer = (NorthPlayer) this.bukkitPlayers.getPlayer(this.player);
+        final NorthPlayerImpl northPlayer = (NorthPlayerImpl) this.bukkitPlayers.getPlayer(this.player);
 
         // wymuszamy pobranie danych i dodatkowo weryfikujemy czy one rzeczywiscie tu sa
         final IOnlinePlayer iOnlinePlayer = northPlayer.getValue().get();

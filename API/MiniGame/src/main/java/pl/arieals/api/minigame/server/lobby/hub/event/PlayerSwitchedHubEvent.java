@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.server.lobby.event;
+package pl.arieals.api.minigame.server.lobby.hub.event;
 
 import javax.annotation.Nullable;
 
