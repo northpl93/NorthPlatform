@@ -8,7 +8,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
@@ -16,6 +15,7 @@ import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.arieals.api.minigame.shared.api.party.IPartyManager;
 import pl.arieals.api.minigame.shared.api.party.event.InviteToPartyNetEvent;
 import pl.arieals.api.minigame.shared.api.party.event.JoinPartyNetEvent;
+import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.zgame.api.bungee.BungeeApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -70,7 +70,7 @@ public class PartyMessagesBroadcaster implements Listener
         this.partyMessages.sendMessage(proxiedPlayer, "invite.info", MessageLayout.CENTER, this.uuidToNick(party.getOwnerId()));
 
         final String cmdClickMessage = this.partyMessages.getMessage(proxiedPlayer.getLocale(), "invite.cmd");
-        final BaseComponent[] cmdClickComponents = new ComponentBuilder(cmdClickMessage).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party accept")).create();
+        final BaseComponent[] cmdClickComponents = ChatUtils.builderFromLegacyText(cmdClickMessage).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party accept")).create();
         proxiedPlayer.sendMessage(MessageLayout.CENTER.processMessage(new TextComponent(cmdClickComponents)));
 
         proxiedPlayer.sendMessage();

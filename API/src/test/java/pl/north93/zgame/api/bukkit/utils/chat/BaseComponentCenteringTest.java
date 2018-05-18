@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 // testy algorytmu wyśrodkowującego BaseComponent
 public class BaseComponentCenteringTest
@@ -86,18 +88,6 @@ public class BaseComponentCenteringTest
     }
 
     @Test
-    public void bugTest2()
-    {
-        final BaseComponent component = ChatUtils.parseLegacyText("&aWpisz &f&lGrupa&e&l/grupa akceptuj &alub kliknij &e&lTUTAJ");
-
-        final BaseComponent centered = ChatUtils.centerMessage(component);
-        final String plain = centered.toPlainText();
-
-        System.out.println(centered.toLegacyText());
-        System.out.println(ChatUtils.centerMessage("&aWpisz &f&lGrupa&e&l/grupa akceptuj &alub kliknij &e&lTUTAJ"));
-    }
-
-    @Test
     public void bugTest1() // wyjatek przy obslugiwaniu tego konkretnego stringa
     {
         final BaseComponent component = ChatUtils.parseLegacyText("&f&e&lL &eNorthPL93");
@@ -106,5 +96,17 @@ public class BaseComponentCenteringTest
         final String plain = centered.toPlainText();
 
         Assert.assertEquals("                           L NorthPL93", plain);
+    }
+
+    // 1. niepoprawnie uzyty builder nie zamienia znaków formatowania, ale klient to ogarnia
+    // 2. bug powodujacy zliczanie znaków koloru
+    @Test
+    public void bugTest2()
+    {
+        final String cmdClickMessage = "&aWpisz &e&l/grupa akceptuj &alub kliknij &e&lTUTAJ";
+        final BaseComponent[] cmdClickComponents = ChatUtils.builderFromLegacyText(cmdClickMessage).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party accept")).create();
+
+        final BaseComponent centered = ChatUtils.centerMessage(new TextComponent(cmdClickComponents));
+        Assert.assertEquals(centered.toLegacyText(), "§f§f§a        Wpisz §e§l/grupa akceptuj §alub kliknij §e§lTUTAJ");
     }
 }

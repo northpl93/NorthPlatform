@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public final class ChatUtils
@@ -38,6 +39,18 @@ public final class ChatUtils
         }
 
         return new TextComponent(components);
+    }
+
+    /**
+     * Tworzy nową instancję {@link ComponentBuilder} z podanym tekstem legacy.
+     *
+     * @param legacyText Tekst legacy do dodania na początek buildera.
+     * @return Builder z poprawnie wczytanym tekstem legacy.
+     */
+    public static ComponentBuilder builderFromLegacyText(final String legacyText)
+    {
+        final BaseComponent[] components = TextComponent.fromLegacyText(translateAlternateColorCodes(legacyText));
+        return new ComponentBuilder("").append(components);
     }
 
     /**
@@ -161,11 +174,20 @@ public final class ChatUtils
                 break;
             }
 
-            final boolean bold = iterator.getCurrentComponent().isBold();
+            if (character != COLOR_CHAR) // jak nie jest kodem koloru to ok
+            {
+                final boolean bold = iterator.getCurrentComponent().isBold();
 
-            final DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(character);
-            messagePxSize += bold ? dFI.getBoldLength() : dFI.getLength();
-            messagePxSize++;
+                final DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(character);
+                messagePxSize += bold ? dFI.getBoldLength() : dFI.getLength();
+                messagePxSize++;
+            }
+            else if (iterator.hasNext()) // jak jest kodem koloru to omijamy nastepny znak, jesli jest
+            {
+                iterator.next();
+                chars++;
+            }
+
             chars++;
         }
 
