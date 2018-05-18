@@ -173,21 +173,21 @@ public class PartyManagerImpl implements IPartyManager
     }
 
     @Nullable
-    /*default*/ PartyDataImpl getParty(final UUID partyId)
-    {
-        return this.parties.get(partyId.toString());
-    }
-
-    @Nullable
     /*default*/ IParty getPartyFromPlayer(final IPlayer player)
     {
-        final UUID partyId = (UUID) player.getMetaStore().get(PARTY_META);
+        final UUID partyId = player.getMetaStore().get(PARTY_META);
         if (partyId == null)
         {
             return null;
         }
 
         return this.getParty(partyId);
+    }
+
+    @Nullable
+    /*default*/ PartyDataImpl getParty(final UUID partyId)
+    {
+        return this.parties.getAsValue(partyId.toString()).get();
     }
 
     /*default*/ boolean playerHasParty(final IPlayer player)
@@ -209,7 +209,7 @@ public class PartyManagerImpl implements IPartyManager
     @Nullable
     /*default*/ PartyInvite getLatestInviteFromPlayer(final IPlayer player)
     {
-        final PartyInvite invite = (PartyInvite) player.getMetaStore().get(PARTY_INVITE);
+        final PartyInvite invite = player.getMetaStore().get(PARTY_INVITE);
         if (invite == null || invite.isExpired())
         {
             return null;
