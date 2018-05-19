@@ -2,9 +2,9 @@
 <bundle>
     <components>
         <component>
-            <name>API.DefaultCommands</name>
-            <mainClass>pl.north93.zgame.api.defaultcommands.DefaultCommands</mainClass>
-            <description>Provides base commands.</description>
+            <name>API.GlobalCommands</name>
+            <mainClass>pl.north93.zgame.commands.global.GlobalCommands</mainClass>
+            <description>Provides platform independent commands.</description>
             <dependencies>
                 <dependency>API.Commands</dependency>
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>
@@ -13,7 +13,7 @@
 
         <component>
             <name>API.BukkitCommands</name>
-            <mainClass>pl.north93.zgame.api.bukkitcommands.BukkitCommands</mainClass>
+            <mainClass>pl.north93.zgame.commands.bukkit.BukkitCommands</mainClass>
             <description>Provides base commands for Bukkit server.</description>
             <dependencies>
                 <dependency>API.Commands</dependency>

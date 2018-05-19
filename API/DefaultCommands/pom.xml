@@ -12,6 +12,7 @@
 
     <groupId>pl.north93.zgame.api</groupId>
     <artifactId>defaultcommands</artifactId>
+    <name>API.DefaultCommands</name>
     <developers>
         <developer>
             <id>NorthPL93</id>
