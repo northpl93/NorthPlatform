@@ -12,7 +12,7 @@ public interface IProxyRpc
     void sendJsonMessage(String nick, String json);
 
     @DoNotWaitForResponse
-    void kick(String nick, String kickMessage);
+    void kick(String nick, String json);
 
     @DoNotWaitForResponse
     void connectPlayer(String nick, String serverName, JoinActionsContainer actions);

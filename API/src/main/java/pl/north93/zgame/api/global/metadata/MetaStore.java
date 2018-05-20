@@ -1,8 +1,10 @@
 package pl.north93.zgame.api.global.metadata;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.IdentityHashMap;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Optional;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -51,64 +53,26 @@ public final class MetaStore
         return (T) this.metadata.get(key);
     }
 
-    public void setString(final MetaKey key, final String value)
+    public void setInstant(final MetaKey key, final Instant value)
     {
-        this.set(key, value);
+        this.set(key, value.toEpochMilli());
     }
 
-    public String getString(final MetaKey key)
+    public Instant getInstant(final MetaKey key)
     {
-        return this.get(key);
+        final Optional<Long> optionalEpochMilli = Optional.ofNullable(this.get(key));
+        return optionalEpochMilli.map(Instant::ofEpochMilli).orElse(null);
     }
 
-    public void setInteger(final MetaKey key, final Integer value)
+    public void setDuration(final MetaKey key, final Duration value)
     {
-        this.set(key, value);
+        this.set(key, value.toMillis());
     }
 
-    public Integer getInteger(final MetaKey key)
+    public Duration getDuration(final MetaKey key)
     {
-        return this.get(key);
-    }
-
-    public void setDouble(final MetaKey key, final Double value)
-    {
-        this.set(key, value);
-    }
-
-    public Double getDouble(final MetaKey key)
-    {
-        return this.get(key);
-    }
-
-    public void setBoolean(final MetaKey key, final Boolean value)
-    {
-        this.set(key, value);
-    }
-
-    public Boolean getBoolean(final MetaKey key)
-    {
-        return this.get(key);
-    }
-
-    public void setUuid(final MetaKey key, final UUID value)
-    {
-        this.set(key, value);
-    }
-
-    public UUID getUuid(final MetaKey key)
-    {
-        return this.get(key);
-    }
-
-    public void setLong(final MetaKey key, final long value)
-    {
-        this.set(key, value);
-    }
-
-    public long getLong(final MetaKey key)
-    {
-        return this.get(key);
+        final Optional<Long> optionalDuration = Optional.ofNullable(this.get(key));
+        return optionalDuration.map(Duration::ofMillis).orElse(null);
     }
 
     public boolean contains(final MetaKey key)

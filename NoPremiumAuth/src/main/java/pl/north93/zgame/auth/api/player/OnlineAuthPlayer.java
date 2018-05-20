@@ -48,7 +48,7 @@ class OnlineAuthPlayer extends AuthPlayer
     {
         this.playerValue.update(player ->
         {
-            player.getMetaStore().setString(PLAYER_PASSWORD, newPassword);
+            player.getMetaStore().set(PLAYER_PASSWORD, newPassword);
         });
     }
 
@@ -57,7 +57,7 @@ class OnlineAuthPlayer extends AuthPlayer
     {
         try (final Lock lock = this.playerValue.lock())
         {
-            return this.playerValue.get().getMetaStore().getString(PLAYER_PASSWORD);
+            return this.playerValue.get().getMetaStore().get(PLAYER_PASSWORD);
         }
     }
 

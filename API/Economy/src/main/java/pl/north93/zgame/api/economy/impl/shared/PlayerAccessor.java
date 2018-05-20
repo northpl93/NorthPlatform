@@ -24,7 +24,7 @@ class PlayerAccessor implements IAccountAccessor
 
     public void setAmount(final double newAmount)
     {
-        this.player.getMetaStore().setDouble(this.prefix, newAmount);
+        this.player.getMetaStore().set(this.prefix, newAmount);
     }
 
     @Override
@@ -43,7 +43,7 @@ class PlayerAccessor implements IAccountAccessor
     public double getAmount()
     {
         final MetaStore metaStore = this.player.getMetaStore();
-        return metaStore.contains(this.prefix) ? metaStore.getDouble(this.prefix) : this.currency.getStartValue();
+        return metaStore.contains(this.prefix) ? metaStore.get(this.prefix) : this.currency.getStartValue();
     }
 
     @Override

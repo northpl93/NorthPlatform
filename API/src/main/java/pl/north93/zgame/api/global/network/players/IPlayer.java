@@ -47,10 +47,6 @@ public interface IPlayer extends Metadatable
      */
     void setDisplayName(String newName);
 
-    boolean isBanned();
-
-    void setBanned(boolean banned);
-
     Group getGroup();
 
     long getGroupExpireAt(); // zwraca w milis kiedy grupa wygasa
@@ -73,12 +69,12 @@ public interface IPlayer extends Metadatable
         {
             return PrivateMessages.ENABLED;
         }
-        return PrivateMessages.values()[metaStore.getInteger(policy)];
+        return PrivateMessages.values()[metaStore.<Integer>get(policy)];
     }
 
     default void setPrivateMessagesPolicy(final PrivateMessages newPolicy)
     {
-        this.getMetaStore().setInteger(MetaKey.get("privateMessages"), newPolicy.ordinal());
+        this.getMetaStore().set(MetaKey.get("privateMessages"), newPolicy.ordinal());
     }
 
     /**
@@ -90,6 +86,6 @@ public interface IPlayer extends Metadatable
 
     default void setLocale(final Locale locale)
     {
-        this.getMetaStore().setString(MetaKey.get("lang"), locale.toLanguageTag());
+        this.getMetaStore().set(MetaKey.get("lang"), locale.toLanguageTag());
     }
 }

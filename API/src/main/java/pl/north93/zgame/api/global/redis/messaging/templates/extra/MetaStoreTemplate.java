@@ -22,7 +22,16 @@ public class MetaStoreTemplate implements Template<MetaStore>
         {
             packer.packString(entry.getKey().getKey());
             packer.packBoolean(entry.getKey().isPersist());
-            dynamicObjectTemplate.serializeObject(templateManager, packer, entry.getValue());
+
+            final Object value = entry.getValue();
+            if (value == null)
+            {
+                packer.packNil();
+            }
+            else
+            {
+                dynamicObjectTemplate.serializeObject(templateManager, packer, value);
+            }
         }
     }
 
@@ -37,7 +46,15 @@ public class MetaStoreTemplate implements Template<MetaStore>
         for (int i = 0; i < size; i++)
         {
             final MetaKey metaKey = MetaKey.get(unpacker.unpackString(), unpacker.unpackBoolean());
-            internalMap.put(metaKey, dynamicObjectTemplate.deserializeObject(templateManager, unpacker));
+
+            if (unpacker.tryUnpackNil())
+            {
+                internalMap.put(metaKey, null);
+            }
+            else
+            {
+                internalMap.put(metaKey, dynamicObjectTemplate.deserializeObject(templateManager, unpacker));
+            }
         }
 
         return metaStore;

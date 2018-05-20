@@ -15,7 +15,6 @@ public class OfflinePlayerImpl implements IOfflinePlayer
     private UUID    uuid;
     private String  latestNick;
     private String  displayName;
-    private Boolean isBanned;
     private Group   group;
     private Long    groupExpireAt;
     private MetaStore meta = new MetaStore();
@@ -24,12 +23,11 @@ public class OfflinePlayerImpl implements IOfflinePlayer
     {
     }
 
-    public OfflinePlayerImpl(final UUID uuid, final String latestNick, final String displayName, final Boolean isBanned, final Group group, final Long groupExpireAt, final MetaStore meta)
+    public OfflinePlayerImpl(final UUID uuid, final String latestNick, final String displayName, final Group group, final Long groupExpireAt, final MetaStore meta)
     {
         this.uuid = uuid;
         this.latestNick = latestNick;
         this.displayName = displayName;
-        this.isBanned = isBanned;
         this.group = group;
         this.groupExpireAt = groupExpireAt;
         this.meta = meta;
@@ -43,7 +41,6 @@ public class OfflinePlayerImpl implements IOfflinePlayer
         {
             this.displayName = onlinePlayer.getDisplayName();
         }
-        this.isBanned = onlinePlayer.isBanned();
         this.group = onlinePlayer.getGroup();
         this.groupExpireAt = onlinePlayer.getGroupExpireAt();
         this.meta = onlinePlayer.getMetaStore().prepareForPersist();
@@ -90,18 +87,6 @@ public class OfflinePlayerImpl implements IOfflinePlayer
     }
 
     @Override
-    public boolean isBanned()
-    {
-        return this.isBanned;
-    }
-
-    @Override
-    public void setBanned(final boolean banned)
-    {
-        this.isBanned = banned;
-    }
-
-    @Override
     public Group getGroup()
     {
         return this.group;
@@ -144,6 +129,6 @@ public class OfflinePlayerImpl implements IOfflinePlayer
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).append("latestNick", this.latestNick).append("displayName", this.displayName).append("isBanned", this.isBanned).append("group", this.group).append("groupExpireAt", this.groupExpireAt).append("meta", this.meta).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).append("latestNick", this.latestNick).append("displayName", this.displayName).append("group", this.group).append("groupExpireAt", this.groupExpireAt).append("meta", this.meta).toString();
     }
 }

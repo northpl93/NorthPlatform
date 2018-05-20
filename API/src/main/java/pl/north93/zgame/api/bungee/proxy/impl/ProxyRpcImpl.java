@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.packet.Chat;
-import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
+import net.md_5.bungee.protocol.packet.Kick;
 import pl.north93.zgame.api.bungee.BungeeApiCore;
 import pl.north93.zgame.api.bungee.proxy.IProxyServerManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -36,9 +36,12 @@ class ProxyRpcImpl implements IProxyRpc
     }
 
     @Override
-    public void kick(final String nick, final String kickMessage)
+    public void kick(final String nick, final String json)
     {
-        this.proxy.getPlayer(nick).disconnect(ChatUtils.fromLegacyText(kickMessage));
+        final ProxiedPlayer player = this.proxy.getPlayer(nick);
+
+        player.unsafe().sendPacket(new Kick(json));
+        //this.proxy.getPlayer(nick).disconnect(ChatUtils.fromLegacyText(kickMessage));
     }
 
     @Override

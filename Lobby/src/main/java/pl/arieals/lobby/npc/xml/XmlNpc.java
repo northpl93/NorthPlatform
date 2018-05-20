@@ -37,10 +37,8 @@ public abstract class XmlNpc
         return npc;
     }
 
-    protected void postSpawn(final NPC npc)
-    {
-        // hack wymagany bo Citizens zmienia EntityTrackerEntry na swoje i przez to usuwa listenera
-    }
+    // hack wymagany bo Citizens zmienia EntityTrackerEntry na swoje i przez to usuwa listenera
+    protected abstract void postSpawn(final NPC npc);
 
     public final NPC createNpc(final NPCRegistry registry, final World world)
     {

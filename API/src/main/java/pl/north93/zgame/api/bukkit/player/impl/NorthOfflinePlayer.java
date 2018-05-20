@@ -43,7 +43,7 @@ class NorthOfflinePlayer implements OfflinePlayer
     @Override
     public boolean isBanned()
     {
-        return this.northPlayer.isBanned();
+        throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     @Override

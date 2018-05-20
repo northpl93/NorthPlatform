@@ -36,7 +36,6 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     private UUID      serverId;
     private String    proxyId;
     private Boolean   premium;
-    private Boolean   isBanned;
     private Group     group;
     private Long      groupExpireAt;
     private MetaStore meta = new MetaStore();
@@ -55,7 +54,6 @@ public class OnlinePlayerImpl implements IOnlinePlayer
         {
             this.displayName = offlinePlayer.getDisplayName();
         }
-        this.isBanned = offlinePlayer.isBanned();
         this.group = offlinePlayer.getGroup();
         this.groupExpireAt = offlinePlayer.getGroupExpireAt();
         this.meta = offlinePlayer.getMetaStore();
@@ -98,18 +96,6 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     public void setDisplayName(final String newName)
     {
         this.displayName = newName;
-    }
-
-    @Override
-    public boolean isBanned()
-    {
-        return this.isBanned;
-    }
-
-    @Override
-    public void setBanned(final boolean banned)
-    {
-        this.isBanned = banned;
     }
 
     public void setLatestNick(final String latestNick)
@@ -209,7 +195,7 @@ public class OnlinePlayerImpl implements IOnlinePlayer
         final MetaKey metaKey = MetaKey.get("lang");
         if (this.meta.contains(metaKey))
         {
-            return Locale.forLanguageTag(this.meta.getString(metaKey));
+            return Locale.forLanguageTag(this.meta.get(metaKey));
         }
         return Locale.forLanguageTag("pl-PL");
     }
@@ -241,10 +227,12 @@ public class OnlinePlayerImpl implements IOnlinePlayer
      * @param message wiadomość która pokaże się po wyrzuceniu.
      */
     @Override
-    public void kick(final String message)
+    public void kick(final BaseComponent message)
     {
+        final String serialized = ComponentSerializer.toString(message);
+
         final IProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
-        proxyRpc.kick(this.nick, message);
+        proxyRpc.kick(this.nick, serialized);
     }
 
     @Override
@@ -264,6 +252,6 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).append("nick", this.nick).append("latestNick", this.latestNick).append("displayName", this.displayName).append("serverId", this.serverId).append("proxyId", this.proxyId).append("premium", this.premium).append("isBanned", this.isBanned).append("group", this.group).append("groupExpireAt", this.groupExpireAt).append("meta", this.meta).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("uuid", this.uuid).append("nick", this.nick).append("latestNick", this.latestNick).append("displayName", this.displayName).append("serverId", this.serverId).append("proxyId", this.proxyId).append("premium", this.premium).append("group", this.group).append("groupExpireAt", this.groupExpireAt).append("meta", this.meta).toString();
     }
 }

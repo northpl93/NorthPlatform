@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>pl.north93.zgame</groupId>
+        <artifactId>platform</artifactId>
+        <version>1.0-INDEV</version>
+        <relativePath>../../NorthPlatformParent</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>pl.north93.zgame.api</groupId>
+    <artifactId>features</artifactId>
+    <name>API.BaseFeatures</name>
+    <developers>
+        <developer>
+            <id>NorthPL93</id>
+            <name>Michał Kasprzyk</name>
+            <email>northpl93@gmail.com</email>
+        </developer>
+    </developers>
+
+    <dependencies>
+        <dependency>
+            <groupId>pl.north93.zgame</groupId>
+            <artifactId>api</artifactId>
+            <version>1.0-INDEV</version>
+        </dependency>
+        <dependency>
+            <groupId>pl.north93.zgame</groupId>
+            <artifactId>controller</artifactId>
+            <version>1.0-INDEV</version>
+        </dependency>
+    </dependencies>
+</project>

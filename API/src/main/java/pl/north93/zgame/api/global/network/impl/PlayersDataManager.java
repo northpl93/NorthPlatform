@@ -4,6 +4,8 @@ import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
 
 
+import javax.annotation.Nonnull;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -122,7 +124,6 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
             player.setLatestNick(name);
             player.setGroupExpireAt(0);
             player.setGroup(this.permissionsManager.getDefaultGroup());
-            player.setBanned(false);
         }
         player.setServerId(UUID.randomUUID());
         player.setProxyId(proxyId);
@@ -135,7 +136,7 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
     }
 
     @Override
-    public Optional<Value<IOfflinePlayer>> getOfflinePlayerValue(final UUID uuid)
+    public Optional<Value<IOfflinePlayer>> getOfflinePlayerValue(final @Nonnull UUID uuid)
     {
         if (uuid == null)
         {
@@ -179,7 +180,6 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
 
         final String latestKnownUsername = result.getString("latestKnownUsername");
         final String displayName = result.getString("displayName");
-        final boolean isBanned = result.getBoolean("banned");
         final Group group = this.permissionsManager.getGroupByName(result.getString("group"));
         final long groupExpireAt = result.getLong("groupExpireAt");
 
@@ -200,7 +200,7 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
             playerMeta.put(MetaKey.get(entry.getKey()), value);
         }
 
-        return new OfflinePlayerImpl(result.get("uuid", UUID.class), latestKnownUsername, displayName, isBanned, group, groupExpireAt, store);
+        return new OfflinePlayerImpl(result.get("uuid", UUID.class), latestKnownUsername, displayName, group, groupExpireAt, store);
     }
 
     @Override
@@ -210,7 +210,6 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
 
         playerData.put("savedAt", System.currentTimeMillis());
         playerData.put("uuid", player.getUuid());
-        playerData.put("banned", player.isBanned());
         playerData.put("group", player.getGroup().getName());
         playerData.put("groupExpireAt", player.getGroupExpireAt());
         playerData.put("displayName", player.hasDisplayName() ? player.getDisplayName() : null);

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<punishement>
+    <bans>
+        <ban id="1">
+            <name>cheats</name>
+            <message locale="pl-PL" message="Używanie oprogramoania umożliwiającego oszukiwanie" />
+            <message locale="en-GB" message="Cheats xD" />
+        </ban>
+
+        <ban id="2">
+            <name>spam</name>
+            <duration>900000</duration> <!-- 15 * 60 * 1000 -->
+            <message locale="pl-PL" message="Spam" />
+            <message locale="en-GB" message="Spam" />
+        </ban>
+    </bans>
+</punishement>

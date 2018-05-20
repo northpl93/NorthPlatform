@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
 import pl.north93.zgame.api.bungee.proxy.event.HandlePlayerProxyJoinEvent;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
@@ -44,25 +45,16 @@ public class JoinPermissionsChecker implements Listener
         {
             event.setCancelled(this.apiMessages.getMessage("pl-PL", "join.access_locked", (Object[]) null));
         }
-        else if (cache.isBanned())
-        {
-            if (cache.getMetaStore().contains(BAN_EXPIRE) && System.currentTimeMillis() > cache.getMetaStore().getLong(BAN_EXPIRE))
-            {
-                player.update(p ->
-                {
-                    p.setBanned(false);
-                    p.getMetaStore().remove(BAN_EXPIRE);
-                });
-            }
-            else
-            {
-                event.setCancelled(this.apiMessages.getMessage("pl-PL", "join.banned", (Object[]) null));
-            }
-        }
         else if (this.networkManager.getProxies().onlinePlayersCount() > networkMeta.displayMaxPlayers && ! cache.getGroup().hasPermission("join.bypass"))
         {
             event.setCancelled(this.apiMessages.getMessage("pl-PL", "join.server_full", (Object[]) null));
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void logPlayerJoin(final HandlePlayerProxyJoinEvent event)
+    {
+        final IOnlinePlayer cache = event.getValue().get();
 
         final String hostAddress = event.getConnection().getAddress().getHostString();
         this.networkManager.getPlayers().getInternalData().logPlayerJoin(cache.getUuid(), cache.getNick(), cache.isPremium(), hostAddress, cache.getProxyId());

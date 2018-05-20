@@ -12,23 +12,24 @@ import org.apache.commons.io.FileUtils;
 
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.exceptions.ConfigurationException;
-import pl.north93.zgame.api.global.utils.lang.ClassUtils;
 
 public final class ConfigUtils
 {
     public static <T> T loadConfig(final Class<T> configClass, final String configName)
     {
-        final ClassLoader classLoader = ClassUtils.getCallerClass().getClassLoader();
+        //final ClassLoader classLoader = ClassUtils.getCallerClass().getClassLoader();
+        final ClassLoader classLoader = configClass.getClassLoader();
         return loadConfig(classLoader, configClass, API.getApiCore().getFile(configName));
     }
 
     public static <T> T loadConfig(final Class<T> configClass, final File configFile)
     {
-        final ClassLoader classLoader = ClassUtils.getCallerClass().getClassLoader();
+        //final ClassLoader classLoader = ClassUtils.getCallerClass().getClassLoader();
+        final ClassLoader classLoader = configClass.getClassLoader();
         return loadConfig(classLoader, configClass, configFile);
     }
 
-    private static <T> T loadConfig(final ClassLoader callerLoader, final Class<T> configClass, final File configFile)
+    private static <T> T loadConfig(final ClassLoader loader, final Class<T> configClass, final File configFile)
     {
         final Logger logger = API.getApiCore().getLogger();
         if (configFile.exists())
@@ -38,10 +39,10 @@ public final class ConfigUtils
         }
 
         final String configName = configFile.getName();
-        final URL exampleConfig = callerLoader.getResource("examples/" + configName);
+        final URL exampleConfig = loader.getResource("examples/" + configName);
         if (exampleConfig == null)
         {
-            System.out.println(callerLoader);
+            System.out.println(loader);
             System.out.println("examples/" + configName);
             throw new ConfigurationException("Not found config and it's example definition " + configName);
         }

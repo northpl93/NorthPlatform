@@ -43,9 +43,17 @@ class PlayerTransactionImpl implements IPlayerTransaction
     public void close()
     {
         this.checkClosed();
-        this.isClosed = true;
-        this.callback.accept(this.player);
-        this.lock.unlock();
+        try
+        {
+            this.isClosed = true;
+            this.callback.accept(this.player);
+        }
+        finally
+        {
+            // jesli zostanie rzucony wyjątek w callbacku to i tak powinniśmy zwolnić
+            // locka, aby zapobiec dead-lockom.
+            this.lock.unlock();
+        }
     }
 
     private void checkClosed()

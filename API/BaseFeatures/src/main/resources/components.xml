@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <components>
+        <component>
+            <name>API.BaseFeatures</name>
+            <mainClass>pl.north93.zgame.features.global.GlobalFeatures</mainClass>
+            <description>Provides platform independent base features and commands.</description>
+            <dependencies>
+                <dependency>API.Commands</dependency>
+                <dependency>API.MinecraftNetwork.NetworkManager</dependency>
+                <dependency>API.MinecraftNetwork.PermissionsManager</dependency>
+            </dependencies>
+        </component>
+
+        <component>
+            <name>API.ControllerFeatures</name>
+            <mainClass>pl.north93.zgame.features.controller.ControllerFeatures</mainClass>
+            <description>Provides base features for network controller.</description>
+            <dependencies>
+                <dependency>API.BaseFeatures</dependency>
+                <dependency>NetworkController.ConfigServer</dependency>
+            </dependencies>
+            <platforms>
+                <platform>STANDALONE</platform>
+            </platforms>
+        </component>
+
+        <component>
+            <name>API.BungeeFeatures</name>
+            <mainClass>pl.north93.zgame.features.bungee.BungeeFeatures</mainClass>
+            <description>Provides base features for Bungee server.</description>
+            <dependencies>
+                <dependency>API.BaseFeatures</dependency>
+            </dependencies>
+            <platforms>
+                <platform>BUNGEE</platform>
+            </platforms>
+        </component>
+
+        <component>
+            <name>API.BukkitFeatures</name>
+            <mainClass>pl.north93.zgame.features.bukkit.BukkitFeatures</mainClass>
+            <description>Provides base features for Bukkit server.</description>
+            <dependencies>
+                <dependency>API.BaseFeatures</dependency>
+            </dependencies>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>
