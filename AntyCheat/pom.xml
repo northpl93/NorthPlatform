@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>antycheat</artifactId>
-    <name>AntyCheat</name>
+    <name>AntyCheat.Core</name>
     <developers>
         <developer>
             <id>NorthPL93</id>

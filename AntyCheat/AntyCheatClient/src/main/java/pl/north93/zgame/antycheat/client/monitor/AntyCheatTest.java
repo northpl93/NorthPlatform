@@ -1,4 +1,4 @@
-package pl.north93.zgame.antycheat.analysis;
+package pl.north93.zgame.antycheat.client.monitor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -10,11 +10,10 @@ import pl.north93.zgame.antycheat.analysis.reaction.ITriggerListener;
 import pl.north93.zgame.antycheat.analysis.reaction.IViolationMonitor;
 import pl.north93.zgame.antycheat.analysis.reaction.MappedPointsCondition;
 import pl.north93.zgame.antycheat.cheat.movement.MovementViolation;
-import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
 public class AntyCheatTest
 {
-    @Bean
+    //@Bean
     public AntyCheatTest(final AnalysisManager analysisManager)
     {
         this.onGroundManipulationTest(analysisManager);

@@ -43,6 +43,7 @@
             <description>Provides base features for Bukkit server.</description>
             <dependencies>
                 <dependency>API.BaseFeatures</dependency>
+                <dependency>API.Chat.Bukkit</dependency>
             </dependencies>
             <platforms>
                 <platform>BUKKIT</platform>

@@ -2,8 +2,7 @@ package pl.north93.zgame.antycheat.cheat.other;
 
 import java.nio.charset.StandardCharsets;
 
-import org.bukkit.Bukkit;
-
+import pl.north93.zgame.antycheat.analysis.FalsePositiveProbability;
 import pl.north93.zgame.antycheat.analysis.SingleAnalysisResult;
 import pl.north93.zgame.antycheat.analysis.event.EventAnalyser;
 import pl.north93.zgame.antycheat.analysis.event.EventAnalyserConfig;
@@ -27,12 +26,18 @@ public class ClientBrandChecker implements EventAnalyser<PluginMessageTimelineEv
             return null;
         }
 
+        final SingleAnalysisResult analysisResult = SingleAnalysisResult.create();
+        this.checkBrand(analysisResult, event);
+
+        return analysisResult;
+    }
+
+    private void checkBrand(final SingleAnalysisResult result, final PluginMessageTimelineEvent event)
+    {
         final String brand = new String(event.getData(), StandardCharsets.UTF_8);
         if (! brand.endsWith("vanilla"))
         {
-            Bukkit.broadcastMessage(data.getPlayer().getName() + " uzywa zmodowanego klienta: " + brand);
+            result.addViolation(OtherViolation.CLIENT_BRAND, brand, FalsePositiveProbability.MEDIUM);
         }
-
-        return null;
     }
 }

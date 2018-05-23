@@ -1,6 +1,8 @@
 package pl.north93.zgame.antycheat.timeline.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -110,18 +112,18 @@ public class EventsQueueTest
 
         final LinkedEventsQueue.TimelineWalkerImpl walker = this.queue.createWalkerInFullRange(false);
 
-        assertEquals(false, walker.hasPrevious());
-        assertEquals(true, walker.hasNext());
+        assertFalse(walker.hasPrevious());
+        assertTrue(walker.hasNext());
 
         walker.next();
 
-        assertEquals(true, walker.hasPrevious());
-        assertEquals(false, walker.hasNext());
+        assertTrue(walker.hasPrevious());
+        assertFalse(walker.hasNext());
 
         walker.previous();
 
-        assertEquals(false, walker.hasPrevious());
-        assertEquals(true, walker.hasNext());
+        assertFalse(walker.hasPrevious());
+        assertTrue(walker.hasNext());
     }
 
     @Test
@@ -132,18 +134,18 @@ public class EventsQueueTest
 
         final LinkedEventsQueue.TimelineWalkerImpl walker = this.queue.createWalkerInFullRange(true);
 
-        assertEquals(true, walker.hasPrevious());
-        assertEquals(false, walker.hasNext());
+        assertTrue(walker.hasPrevious());
+        assertFalse(walker.hasNext());
 
         walker.previous();
 
-        assertEquals(false, walker.hasPrevious());
-        assertEquals(true, walker.hasNext());
+        assertFalse(walker.hasPrevious());
+        assertTrue(walker.hasNext());
 
         walker.next();
 
-        assertEquals(true, walker.hasPrevious());
-        assertEquals(false, walker.hasNext());
+        assertTrue(walker.hasPrevious());
+        assertFalse(walker.hasNext());
     }
 
     private Tick nextTick()

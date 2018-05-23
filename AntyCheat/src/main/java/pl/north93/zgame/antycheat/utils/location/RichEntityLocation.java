@@ -5,7 +5,9 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-import org.diorite.commons.lazy.LazyValue;
+import org.diorite.commons.lazy.BooleanLazyValue;
+import org.diorite.commons.lazy.DoubleLazyValue;
+import org.diorite.commons.lazy.LongLazyValue;
 
 import pl.north93.zgame.antycheat.utils.AABB;
 import pl.north93.zgame.antycheat.utils.DistanceUtils;
@@ -20,19 +22,19 @@ public final class RichEntityLocation implements IPosition
     private final Vector   velocity;
 
     /** Określa dystans dzielący entity i twardy grunt */
-    private final LazyValue<Double>  distanceToGround;
+    private final DoubleLazyValue  distanceToGround;
 
     /** Określa czy entity stoi na innym entity */
-    private final LazyValue<Boolean> standsOnEntity;
+    private final BooleanLazyValue standsOnEntity;
 
     /** Wszystkie flagi blogów obowiązujące bloki kolidująca z AABB */
-    private final LazyValue<Long>    flags;
+    private final LongLazyValue    flags;
 
     /**
      * Tworzy nową instancję RichEntityLocation dla danego entity będącego w określonej lokalizacji.
      *
-     * @param entity
-     * @param location
+     * @param entity Entity dla którego tworzymy tą lokację.
+     * @param location Lokacja w której znajduje się entity.
      */
     public RichEntityLocation(final Entity entity, final Location location)
     {
@@ -41,9 +43,9 @@ public final class RichEntityLocation implements IPosition
         this.velocity = entity.getVelocity();
         this.aabb = EntityUtils.getAABBOfEntityInLocation(entity, this); // mozna przekazac bezpiecznie this bo location jest juz ustawione
 
-        this.distanceToGround = new LazyValue<>(this::computeDistanceToGround);
-        this.standsOnEntity = new LazyValue<>(this::computeStandsOnEntity);
-        this.flags = new LazyValue<>(this::computeFlags);
+        this.distanceToGround = new DoubleLazyValue(this::computeDistanceToGround);
+        this.standsOnEntity = new BooleanLazyValue(this::computeStandsOnEntity);
+        this.flags = new LongLazyValue(this::computeFlags);
     }
 
     // = = = Głowne metody logiczne. = = = //

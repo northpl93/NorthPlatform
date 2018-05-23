@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <components>
+        <component>
+            <name>AntyCheat.Client</name>
+            <mainClass>pl.north93.zgame.antycheat.client.AntyCheatClientComponent</mainClass>
+            <description>Anti Cheat module.</description>
+            <dependencies>
+                <dependency>API.BukkitFeatures</dependency>
+                <dependency>AntyCheat</dependency>
+            </dependencies>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>

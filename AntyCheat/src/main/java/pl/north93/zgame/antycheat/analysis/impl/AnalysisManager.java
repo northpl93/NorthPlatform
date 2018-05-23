@@ -1,17 +1,11 @@
 package pl.north93.zgame.antycheat.analysis.impl;
 
-import static java.text.MessageFormat.format;
-
-import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
-
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -19,7 +13,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import org.diorite.commons.lazy.IntLazyValue;
 
-import pl.north93.zgame.antycheat.analysis.FalsePositiveProbability;
 import pl.north93.zgame.antycheat.analysis.SingleAnalysisResult;
 import pl.north93.zgame.antycheat.analysis.SingleAnalysisResult.ViolationEntry;
 import pl.north93.zgame.antycheat.analysis.Violation;
@@ -37,14 +30,16 @@ import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
 public class AnalysisManager
 {
+    private final AnalysisLogger                   logger;
     private final List<ViolationMonitorImpl>       monitors          = new ArrayList<>();
     private final IntLazyValue                     ticksToKeep;
     private final List<RegisteredEventAnalyser>    eventAnalysers    = new ArrayList<>();
     private final List<RegisteredTimelineAnalyser> timelineAnalysers = new ArrayList<>();
 
     @Bean
-    private AnalysisManager()
+    private AnalysisManager(final AnalysisLogger logger)
     {
+        this.logger = logger;
         this.ticksToKeep = new IntLazyValue(this::calculateTicksToKeep);
     }
 
@@ -185,28 +180,7 @@ public class AnalysisManager
         this.getTimelineManager().pushAnalysisResultForPlayer(player, tick, result);
 
         // printujemy wiadomość debugowania
-        //this.print(player, result);
-    }
-
-    private void print(final Player player, final SingleAnalysisResult singleAnalysisResult)
-    {
-        final Collection<ViolationEntry> violations = singleAnalysisResult.getViolations();
-        for (final ViolationEntry violation : violations)
-        {
-            if (violation.getFalsePositiveProbability() == FalsePositiveProbability.DEFINITELY)
-            {
-                // ukrywamy definitely
-                continue;
-            }
-            final String nick = player.getName();
-            final String violationName = violation.getViolation().name();
-
-            final String firstLine = format("&cP: &e{0} &cV: &e{1} &cFPP: &e{2}", nick, violationName, violation.getFalsePositiveProbability());
-            final String secondLine = format("&cD: &7{0}", violation.getDescription());
-
-            Bukkit.broadcastMessage(translateAlternateColorCodes(firstLine));
-            Bukkit.broadcastMessage(translateAlternateColorCodes(secondLine));
-        }
+        this.logger.print(player, result);
     }
 
     private int calculateTicksToKeep()

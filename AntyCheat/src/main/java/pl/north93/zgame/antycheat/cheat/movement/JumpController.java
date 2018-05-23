@@ -274,6 +274,8 @@ public class JumpController
         final double horizontalExceeded = horizontalDistanceFromStart - expectedHorizontalDistance;
         if (horizontalExceeded > 1)
         {
+            System.out.println("horizontalDistanceFromStart = " + horizontalDistanceFromStart);
+            System.out.println("horizontalDistanceFromStart = " + expectedHorizontalDistance);
             result.addViolation(MovementViolation.SURVIVAL_FLY, HORIZONTAL_RISING_EXCEEDED, FalsePositiveProbability.LOW);
         }
         else if (horizontalExceeded > 0.5)
@@ -396,12 +398,21 @@ public class JumpController
     private double getBaseJumpDistance()
     {
         final PlayerProperties properties = this.startTickInfo.getProperties();
+        final PlayerProperties previousProperties = this.getPreviousPlayerProperties();
 
-        final boolean sprintingWhileStarted = properties.isSprinting();
-        final double walkSpeed = properties.getMovementSpeed();
+        // bierzemy bardziej korzystne dla gracza warunki,
+        // próba naprawienia losowego buga z przekroczeniem dystansu wznoszenia
+        final boolean sprintingWhileStarted = properties.isSprinting() || previousProperties.isSprinting();
+        final double walkSpeed = Math.max(properties.getMovementSpeed(), previousProperties.getMovementSpeed());
         //Bukkit.broadcastMessage("movSpeed: " + properties.getMovementSpeed());
 
         return sprintingWhileStarted ? walkSpeed * 15.5 : walkSpeed * 10;
+    }
+
+    private PlayerProperties getPreviousPlayerProperties()
+    {
+        final PlayerTickInfo previousPlayerTickInfo = this.playerData.getPreviousPlayerTickInfo(this.startTickInfo.getTick(), 1);
+        return previousPlayerTickInfo.getProperties();
     }
 
     // pobiera z linii czasu ostatnie ustawione dla gracza velocity

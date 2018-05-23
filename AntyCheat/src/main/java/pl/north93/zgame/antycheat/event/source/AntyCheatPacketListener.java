@@ -10,9 +10,11 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
+import io.netty.buffer.ByteBuf;
 import pl.north93.zgame.antycheat.event.impl.ClientMoveTimelineEvent;
 import pl.north93.zgame.antycheat.event.impl.InteractWithEntityTimelineEvent;
 import pl.north93.zgame.antycheat.event.impl.InteractWithEntityTimelineEvent.EntityAction;
+import pl.north93.zgame.antycheat.event.impl.PluginMessageTimelineEvent;
 import pl.north93.zgame.antycheat.timeline.Timeline;
 import pl.north93.zgame.antycheat.timeline.impl.TimelineManager;
 import pl.north93.zgame.antycheat.utils.handle.WorldHandle;
@@ -55,16 +57,13 @@ public class AntyCheatPacketListener implements AutoListener
         {
             final PacketPlayInCustomPayload customPayload = (PacketPlayInCustomPayload) packet;
 
-            final String channel = customPayload.a();
-            //final byte[] data = customPayload.b().array(); // todo Caused by: java.lang.UnsupportedOperationException: direct buffer
-
-            //final PluginMessageTimelineEvent pluginMessageTimelineEvent = new PluginMessageTimelineEvent(player, channel, data);
-            //this.timelineManager.pushEventForPlayer(player, pluginMessageTimelineEvent);
+            final PluginMessageTimelineEvent timelineEvent = this.createPluginMessageTimelineEvent(player, customPayload);
+            this.timelineManager.pushEventForPlayer(player, timelineEvent);
         }
     }
 
     // tworzy PlayerMoveTimelineEvent na podstawie obiektu gracza i pakietów od movementu
-    private ClientMoveTimelineEvent createMoveTimelineEvent(final Player player, final PacketPlayInFlying packetPlayInFlying)
+    private ClientMoveTimelineEvent createMoveTimelineEvent(final Player player, final PacketPlayInFlying packet)
     {
         final Timeline timeline = this.timelineManager.getPlayerTimeline(player);
         final ClientMoveTimelineEvent previousEvent = timeline.getPreviousEvent(ClientMoveTimelineEvent.class);
@@ -72,15 +71,28 @@ public class AntyCheatPacketListener implements AutoListener
         final boolean oldOnGround = previousEvent != null && previousEvent.isToOnGround();
         final RichEntityLocation oldLocation = previousEvent == null ? new RichEntityLocation(player, player.getLocation()) : previousEvent.getTo();
 
-        final boolean newOnGround = packetPlayInFlying.a();
+        final boolean newOnGround = packet.a();
         final Location newLocation = new Location(
                 player.getWorld(),
-                packetPlayInFlying.a(oldLocation.getX()),
-                packetPlayInFlying.b(oldLocation.getY()),
-                packetPlayInFlying.c(oldLocation.getZ()),
-                packetPlayInFlying.a(oldLocation.getYaw()) % 360F,
-                packetPlayInFlying.b(oldLocation.getPitch()) % 360F);
+                packet.a(oldLocation.getX()),
+                packet.b(oldLocation.getY()),
+                packet.c(oldLocation.getZ()),
+                packet.a(oldLocation.getYaw()) % 360F,
+                packet.b(oldLocation.getPitch()) % 360F);
 
         return new ClientMoveTimelineEvent(player, oldLocation, oldOnGround, new RichEntityLocation(player, newLocation), newOnGround);
+    }
+
+    private PluginMessageTimelineEvent createPluginMessageTimelineEvent(final Player player, final PacketPlayInCustomPayload packet)
+    {
+        final String channel = packet.a();
+        //final byte[] data = customPayload.b().array(); // Caused by: java.lang.UnsupportedOperationException: direct buffer
+
+        final ByteBuf copiedData = packet.b().copy(); // kopiujemy zeby nie zepsuc pakietu
+        final byte[] data = new byte[copiedData.readableBytes()];
+        copiedData.readBytes(data);
+        copiedData.release();
+
+        return new PluginMessageTimelineEvent(player, channel, data);
     }
 }
