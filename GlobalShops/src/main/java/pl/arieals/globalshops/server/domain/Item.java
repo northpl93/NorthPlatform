@@ -59,10 +59,19 @@ public final class Item
         return this.price;
     }
 
+    /**
+     * Zwraca cene dla okreslonego przedmiotu.
+     * Jesli nie jest ona zdefiniowana zostanie zwrócona wartosc dla poziomu 1.
+     *
+     * @param level Poziom dla którego pobieramy cene.
+     * @return Cena przedmiotu dla danego poziomu.
+     */
     public IPrice getPrice(final int level)
     {
+        Preconditions.checkState(level > 0);
         Preconditions.checkState(this.maxLevel >= level);
-        return this.price.get(level);
+
+        return this.price.getOrDefault(level, this.price.get(1));
     }
 
     /**

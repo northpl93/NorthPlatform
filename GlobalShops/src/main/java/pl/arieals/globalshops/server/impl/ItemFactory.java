@@ -54,13 +54,29 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
         final Map<Locale, String> name = cfg.getNames().stream().collect(Collectors.toMap(itemName -> Locale.forLanguageTag(itemName.getLang()), ItemName::getName));
         final Map<String, String> itemData = cfg.getItemData().stream().collect(Collectors.toMap(ItemDataCfg::getName, ItemDataCfg::getValue));
 
-        final IntObjectMap<IPrice> prices = new IntObjectHashMap<>();
-        for (final ItemPriceCfg itemPriceCfg : cfg.getPrices())
-        {
-            prices.put(itemPriceCfg.getLevel(), this.createPriceFromConfig(itemPriceCfg));
-        }
+        final IntObjectMap<IPrice> prices = this.createPrices(cfg);
 
         return new Item(group, cfg.getId(), cfg.getMaxLevel(), cfg.getRarity(), prices, name, itemData);
+    }
+
+    private IntObjectMap<IPrice> createPrices(final ItemCfg cfg)
+    {
+        final IntObjectMap<IPrice> prices = new IntObjectHashMap<>();
+
+        final List<ItemPriceCfg> cfgPrices = cfg.getPrices();
+        if (cfgPrices.isEmpty())
+        {
+            prices.put(0, this.createPriceFromConfig(null));
+        }
+        else
+        {
+            for (final ItemPriceCfg itemPriceCfg : cfg.getPrices())
+            {
+                prices.put(itemPriceCfg.getLevel(), this.createPriceFromConfig(itemPriceCfg));
+            }
+        }
+
+        return prices;
     }
 
     private IPrice createPriceFromConfig(final ItemPriceCfg cfg)

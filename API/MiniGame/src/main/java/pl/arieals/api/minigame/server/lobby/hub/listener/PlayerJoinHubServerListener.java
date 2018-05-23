@@ -44,7 +44,7 @@ public class PlayerJoinHubServerListener implements AutoListener
         }
 
         final LobbyManager serverManager = this.gameServer.getServerManager();
-        serverManager.getLocalHub().movePlayerToDefaultHub(event.getNorthPlayer());
+        serverManager.getLocalHub().movePlayerToDefaultHub(event.getPlayer());
     }
 
     private boolean containsLobbySwitchAction(final Collection<IServerJoinAction> actions)

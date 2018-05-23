@@ -2,7 +2,6 @@ package pl.north93.zgame.api.bukkit.player.event;
 
 import java.util.Collection;
 
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -16,21 +15,15 @@ import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
  * i akcje do wykonania po wejsciu na serwer.
  * Jest on normalnie synchroniczny do watku serwera.
  */
-public class PlayerDataLoadedEvent extends Event
+public class PlayerDataLoadedEvent extends NorthPlayerEvent
 {
     private static final HandlerList handlers = new HandlerList();
-    private final INorthPlayer northPlayer;
     private final Collection<IServerJoinAction> joinActions;
 
     public PlayerDataLoadedEvent(final INorthPlayer northPlayer, final Collection<IServerJoinAction> joinActions)
     {
-        this.northPlayer = northPlayer;
+        super(northPlayer);
         this.joinActions = joinActions;
-    }
-
-    public INorthPlayer getNorthPlayer()
-    {
-        return this.northPlayer;
     }
 
     /**
@@ -58,6 +51,6 @@ public class PlayerDataLoadedEvent extends Event
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("northPlayer", this.northPlayer).append("joinActions", this.joinActions).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("joinActions", this.joinActions).toString();
     }
 }

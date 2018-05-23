@@ -38,7 +38,7 @@ public class JoinLeftListener implements Listener
     @EventHandler(priority = EventPriority.LOW)
     public void handleLoadedData(final PlayerDataLoadedEvent event)
     {
-        final INorthPlayer player = event.getNorthPlayer();
+        final INorthPlayer player = event.getPlayer();
         final Group group = player.getGroup();
 
         PermissionsInjector.inject(player.getCraftPlayer());

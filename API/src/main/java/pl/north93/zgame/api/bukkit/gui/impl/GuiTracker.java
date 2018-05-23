@@ -2,6 +2,7 @@ package pl.north93.zgame.api.bukkit.gui.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -284,8 +285,10 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
     @Tick
     public void updateDirtyGuis()
     {
-        for ( Gui gui : entriesByGui.keySet() )
+        final Map<Gui, Collection<GuiTrackerEntry>> map = new HashMap<>(this.entriesByGui.asMap());
+        for (final Map.Entry<Gui, Collection<GuiTrackerEntry>> entry : map.entrySet())
         {
+            final Gui gui = entry.getKey();
             if ( !gui.isDirty() )
             {
                 continue;
@@ -294,9 +297,9 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
             gui.getContent().renderContent();
             gui.getContent().resetDirty();
 
-            for ( GuiTrackerEntry entry : new ArrayList<>(entriesByGui.get(gui)) )
+            for ( final GuiTrackerEntry guiTrackerEntry : new ArrayList<>(entry.getValue()) )
             {
-                entry.refreshInventory();
+                guiTrackerEntry.refreshInventory();
             }
         }
     }
@@ -304,8 +307,10 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
     @Tick
     public void updateDirtyHotbars()
     {
-        for ( HotbarMenu hotbar : entriesByHotbar.keySet() )
+        final Map<HotbarMenu, Collection<GuiTrackerEntry>> map = new HashMap<>(this.entriesByHotbar.asMap());
+        for (final Map.Entry<HotbarMenu, Collection<GuiTrackerEntry>> entry : map.entrySet())
         {
+            final HotbarMenu hotbar = entry.getKey();
             if ( !hotbar.isDirty() )
             {
                 continue;
@@ -313,9 +318,9 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
 
             hotbar.resetDirty();
 
-            for ( GuiTrackerEntry entry : entriesByHotbar.get(hotbar) )
+            for ( final GuiTrackerEntry guiTrackerEntry : new ArrayList<>(this.entriesByHotbar.get(hotbar)) )
             {
-                entry.refreshHotbarMenu();
+                guiTrackerEntry.refreshHotbarMenu();
             }
         }
     }
