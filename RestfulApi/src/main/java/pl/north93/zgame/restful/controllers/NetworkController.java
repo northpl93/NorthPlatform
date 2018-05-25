@@ -8,6 +8,9 @@ import pl.north93.zgame.api.global.config.IConfig;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.NetworkMeta;
+import pl.north93.zgame.api.global.network.event.NetworkKickAllNetEvent;
+import pl.north93.zgame.api.global.network.event.NetworkShutdownNetEvent;
+import pl.north93.zgame.api.global.redis.event.IEventManager;
 import pl.north93.zgame.restful.models.NetworkJoinPolicyChanged;
 import pl.north93.zgame.restful.models.NetworkStatus;
 import spark.Request;
@@ -15,6 +18,8 @@ import spark.Response;
 
 public class NetworkController
 {
+    @Inject
+    private IEventManager   eventManager;
     @Inject
     private INetworkManager networkManager;
 
@@ -42,14 +47,13 @@ public class NetworkController
 
     public Object kickall(final Request request, final Response response)
     {
-        // todo
-        //this.networkManager.broadcastNetworkAction(NetworkAction.KICK_ALL);
+        this.eventManager.callEvent(new NetworkKickAllNetEvent());
         return "ok";
     }
 
     public Object stopall(final Request request, final Response response)
     {
-        //this.networkManager.broadcastNetworkAction(NetworkAction.STOP_ALL);
+        this.eventManager.callEvent(new NetworkShutdownNetEvent());
         return "ok";
     }
 
