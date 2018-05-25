@@ -5,25 +5,29 @@ import java.util.Collection;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import com.google.common.base.Preconditions;
-
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.StringUtils;
 
+import pl.north93.zgame.api.bukkit.gui.element.GuiContent;
+import pl.north93.zgame.api.bukkit.gui.element.GuiElement;
+import pl.north93.zgame.api.bukkit.gui.event.GuiClickEvent;
 import pl.north93.zgame.api.bukkit.gui.impl.GuiTracker;
-import pl.north93.zgame.api.bukkit.gui.impl.IClickHandler;
 import pl.north93.zgame.api.bukkit.gui.impl.XmlLayoutRegistry;
+import pl.north93.zgame.api.bukkit.gui.impl.click.IClickHandler;
+import pl.north93.zgame.api.bukkit.gui.impl.click.IClickSource;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.utils.Vars;
 import pl.north93.zgame.api.global.utils.lang.ClassUtils;
 
-public class Gui implements IClickHandler
+public class Gui implements IClickSource
 {
+    @Inject
     private static GuiTracker guiTracker;
     
-    private final GuiContent content;
-    private MessagesBox messagesBox;
+    private final GuiContent  content;
+    private       MessagesBox messagesBox;
     
     protected Gui(MessagesBox messagesBox, String layout)
     {
@@ -65,7 +69,10 @@ public class Gui implements IClickHandler
     public final void click(Player player, GuiElement element, ClickType type)
     {
         GuiClickEvent event = new GuiClickEvent(player, type, element);
-        guiTracker.getGuiClickHandlerManager().callClickEvent(this, element, event);
+        for (final IClickHandler handler : element.getClickHandlers())
+        {
+            handler.handle(this, event);
+        }
     }
     
     public final Collection<Player> getViewers()
@@ -147,12 +154,6 @@ public class Gui implements IClickHandler
     
     protected void onClose(Player player)
     {
-    }
-
-    public static void setGuiTracker(GuiTracker guiTracker)
-    {
-        Preconditions.checkState(Gui.guiTracker == null);
-        Gui.guiTracker = guiTracker;
     }
 
     // Domyślne metody pomocnicze do używania w XMLu.

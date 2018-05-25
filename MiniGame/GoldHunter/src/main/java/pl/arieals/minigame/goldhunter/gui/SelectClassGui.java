@@ -14,7 +14,7 @@ import pl.arieals.minigame.goldhunter.classes.CharacterClass;
 import pl.arieals.minigame.goldhunter.classes.CharacterClassManager;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.gui.ClickHandler;
-import pl.north93.zgame.api.bukkit.gui.GuiClickEvent;
+import pl.north93.zgame.api.bukkit.gui.event.GuiClickEvent;
 import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlEnchant;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;

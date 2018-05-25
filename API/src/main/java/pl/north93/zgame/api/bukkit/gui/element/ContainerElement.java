@@ -1,31 +1,35 @@
-package pl.north93.zgame.api.bukkit.gui;
+package pl.north93.zgame.api.bukkit.gui.element;
 
 import com.google.common.base.Preconditions;
 
-public class GuiContainerElement extends GuiElement implements IPageable
+import pl.north93.zgame.api.bukkit.gui.GuiCanvas;
+import pl.north93.zgame.api.bukkit.gui.IGuiIcon;
+import pl.north93.zgame.api.bukkit.gui.IPageable;
+
+public abstract class ContainerElement extends GuiElement implements IPageable
 {
     private int      width, height;
     private IGuiIcon background;
     private IGuiIcon border;
     private int      page;
 
-    public GuiContainerElement(int width, int height)
+    public ContainerElement(final boolean canHasChildren, int width, int height)
     {
-        super(true);
+        super(canHasChildren);
         this.width = width;
         this.height = height;
     }
-    
+
     public int getWidth()
     {
         return width;
     }
-    
+
     public int getHeight()
     {
         return height;
     }
-    
+
     public void setSize(int width, int height)
     {
         this.width = width;
@@ -68,7 +72,7 @@ public class GuiContainerElement extends GuiElement implements IPageable
         this.background = background;
         markDirty();
     }
-    
+
     public void setBorder(IGuiIcon border)
     {
         this.border = border;
@@ -76,12 +80,12 @@ public class GuiContainerElement extends GuiElement implements IPageable
     }
 
     @Override
-    protected void render0(GuiCanvas canvas)
+    protected final void render0(GuiCanvas canvas)
     {
         final GuiCanvas tempCanvas = new GuiCanvas(this.getWidth(), this.getHeight(), this.getHeight() * this.page);
-        getChildren().forEach(child -> child.render(tempCanvas));
-        
-        if ( border != null )
+        this.renderElements(tempCanvas);
+
+        if ( this.border != null )
         {
             renderBorder(canvas);
         }
@@ -89,10 +93,12 @@ public class GuiContainerElement extends GuiElement implements IPageable
         {
             renderBackground(canvas);
         }
-        
+
         canvas.paste(getPosX(), getPosY(), tempCanvas, true);
     }
-    
+
+    protected abstract void renderElements(GuiCanvas canvas);
+
     private void renderBorder(GuiCanvas canvas)
     {
         for ( int i = 0; i < this.getHeight() + 2; i++ )
@@ -106,7 +112,7 @@ public class GuiContainerElement extends GuiElement implements IPageable
             canvas.setEntry(getPosX() - 1 + i, getPosY() + getHeight(), border, this);
         }
     }
-    
+
     private void renderBackground(GuiCanvas canvas)
     {
         for ( int i = 0; i < this.getWidth(); i++ )

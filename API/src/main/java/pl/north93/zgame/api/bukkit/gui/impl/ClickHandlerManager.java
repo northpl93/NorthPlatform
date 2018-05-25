@@ -1,116 +1,115 @@
 package pl.north93.zgame.api.bukkit.gui.impl;
 
+import static org.diorite.commons.reflections.DioriteReflectionUtils.getMethod;
+
+
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.Objects;
 import java.util.WeakHashMap;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
-import org.spigotmc.SneakyThrow;
+import org.diorite.commons.reflections.MethodInvoker;
 
 import pl.north93.zgame.api.bukkit.gui.ClickHandler;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.uri.IUriManager;
-import pl.north93.zgame.api.global.utils.Vars;
+import pl.north93.zgame.api.bukkit.gui.impl.click.IClickHandler;
+import pl.north93.zgame.api.bukkit.gui.impl.click.IClickSource;
+import pl.north93.zgame.api.bukkit.gui.impl.click.MethodClickHandler;
+import pl.north93.zgame.api.bukkit.gui.impl.click.NorthUriClickHandler;
 
-public class ClickHandlerManager<T extends ClickEvent>
+public class ClickHandlerManager
 {
-    private final Class<T> clickEventClass;
-    private final Map<Class<?>, Multimap<String, Method>> resolvedClasses = new WeakHashMap<>();
-    @Inject
-    private IUriManager uriManager;
-    
-    public ClickHandlerManager(Class<T> clickEventClass)
-    {
-        this.clickEventClass = clickEventClass;
-    }
-    
-    private Multimap<String, Method> resolveClass(Class<?> classToResolve)
-    {
-        Multimap<String, Method> result = ArrayListMultimap.create();
-        
-        for ( Method method : classToResolve.getMethods() )
-        {
-            ClickHandler annotation = method.getAnnotation(ClickHandler.class);
-            
-            if ( annotation == null )
-            {
-                continue;
-            }
-            
-            if ( !checkMethodSignature(method) )
-            {
-                continue;
-            }
-            
-            String name = annotation.value().isEmpty() ? method.getName() : annotation.value();
-            
-            method.setAccessible(true);
-            result.put(name, method);
-        }
-        
-        return result;
-    }
-    
-    private boolean checkMethodSignature(Method method)
-    {
-        return method.getReturnType() == Void.TYPE && method.getParameters().length == 1 && method.getParameterTypes()[0] == clickEventClass;
-    }
-    
-    public void callClickEvent(IClickHandler handler, IClickable clickedElement, T event)
-    {
-        Preconditions.checkArgument(handler != null);
-        Preconditions.checkArgument(clickedElement != null);
-        Preconditions.checkArgument(event != null);
-        
-        for ( String handlerName : clickedElement.getClickHandlers() )
-        {
-            callClickEvent(handler, handlerName, event);
-        }
-    }
-    
-    public void callClickEvent(IClickHandler handler, String clickHandlerName, T event)
-    {
-        Preconditions.checkArgument(handler != null);
-        Preconditions.checkArgument(clickHandlerName != null);
-        Preconditions.checkArgument(event != null);
+    private static ClickHandlerManager instance;
+    private final Map<ClickCacheKey, IClickHandler> cachedHandlers = new WeakHashMap<>();
 
-        if (clickHandlerName.startsWith("northplatform://"))
+    public static ClickHandlerManager getInstance()
+    {
+        if (instance == null)
         {
-            this.callNorthUriClickEvent(handler.getVariables(), clickHandlerName, event);
+            instance = new ClickHandlerManager();
+        }
+
+        return instance;
+    }
+
+    public IClickHandler processClickHandler(final IClickSource gui, final String clickString)
+    {
+        if (clickString.startsWith("northplatform:"))
+        {
+            return new NorthUriClickHandler(clickString);
         }
         else
         {
-            this.callMethodClickEvent(handler, clickHandlerName, event);
+            final Class<? extends IClickSource> guiClass = gui.getClass();
+            return this.cachedHandlers.computeIfAbsent(new ClickCacheKey(guiClass, clickString), this::computeKey);
         }
     }
 
-    private void callMethodClickEvent(IClickHandler handler, String clickHandlerName, T event)
+    private IClickHandler computeKey(final ClickCacheKey key)
     {
-        Multimap<String, Method> methods = resolvedClasses.computeIfAbsent(handler.getClass(), this::resolveClass);
-        for ( Method method : methods.get(clickHandlerName) )
+        final MethodInvoker invoker = getMethod(key.getClazz(), key.getClick(), false);
+        if (invoker == null)
         {
-            try
-            {
-                method.invoke(handler, event);
-            }
-            catch ( Throwable e )
-            {
-                SneakyThrow.sneaky(e);
-            }
+            return null;
         }
+
+        final Method method = invoker.getMethod();
+        if (! method.isAnnotationPresent(ClickHandler.class))
+        {
+            return null;
+        }
+
+        return new MethodClickHandler(method);
+    }
+}
+
+final class ClickCacheKey
+{
+    private final Class<?> clazz;
+    private final String   click;
+
+    public ClickCacheKey(final Class<?> clazz, final String click)
+    {
+        this.clazz = clazz;
+        this.click = click;
     }
 
-    private void callNorthUriClickEvent(final Vars<Object> vars, final String clickHandlerName, final T event)
+    public Class<?> getClazz()
     {
-        final Vars.Builder<Object> builder = Vars.builder();
+        return this.clazz;
+    }
 
-        builder.and(vars);
-        builder.and("$playerId", event.getWhoClicked().getUniqueId());
-        builder.and("$playerName", event.getWhoClicked().getName());
+    public String getClick()
+    {
+        return this.click;
+    }
 
-        NorthUriUtils.getInstance().call(clickHandlerName, builder.build());
+    @Override
+    public boolean equals(final Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass())
+        {
+            return false;
+        }
+        final ClickCacheKey that = (ClickCacheKey) o;
+        return Objects.equals(this.clazz, that.clazz) && Objects.equals(this.click, that.click);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(this.clazz, this.click);
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("clazz", this.clazz).append("click", this.click).toString();
     }
 }

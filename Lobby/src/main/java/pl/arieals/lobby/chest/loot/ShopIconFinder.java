@@ -33,7 +33,7 @@ import pl.arieals.globalshops.server.domain.Item;
 import pl.arieals.globalshops.server.domain.ItemsGroup;
 import pl.north93.zgame.api.bukkit.gui.impl.XmlLayoutRegistry;
 import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlButtonElement;
-import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlContainerElement;
+import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlStaticContainerElement;
 import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlGuiElement;
 import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlGuiLayout;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
@@ -127,9 +127,9 @@ public class ShopIconFinder
 
                 return button.getIcon().createItemStack();
             }
-            else if (element instanceof XmlContainerElement)
+            else if (element instanceof XmlStaticContainerElement)
             {
-                final XmlContainerElement container = (XmlContainerElement) element;
+                final XmlStaticContainerElement container = (XmlStaticContainerElement) element;
                 final List<XmlGuiElement> content = XmlGuiElementReflect.getContent(container);
 
                 // rekursywnie przeszukujemy kolejne kontenery

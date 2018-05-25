@@ -1,6 +1,5 @@
 package pl.north93.zgame.api.bukkit.gui;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.entity.Player;
@@ -9,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlVariable;
+import pl.north93.zgame.api.global.messages.LegacyMessage;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 import pl.north93.zgame.api.global.utils.Vars;
@@ -57,8 +57,8 @@ public class ConfigGuiIcon implements IGuiIcon
             parameters = parameters.and(xmlVariable.process(messages, parameters));
         }
 
-        List<String> lore = this.lore != null ? Arrays.asList(this.lore.getValue(player.getLocale(), parameters).toLegacyText().split("\n")) : Arrays.asList();
-        String name = this.name.getValue(player.getLocale(), parameters).toLegacyText();
+        final LegacyMessage name = this.name.getLegacy(player.getLocale(), parameters);
+        final LegacyMessage lore = this.lore == null ? LegacyMessage.EMPTY : this.lore.getLegacy(player.getLocale(), parameters);
 
         final ItemMeta itemMeta = this.preCreatedItemStack.getItemMeta();
         if (itemMeta == null)
@@ -67,8 +67,8 @@ public class ConfigGuiIcon implements IGuiIcon
             return this.preCreatedItemStack;
         }
 
-        itemMeta.setDisplayName(!name.isEmpty() ? name : "§0");
-        itemMeta.setLore(lore);
+        itemMeta.setDisplayName(name.asNonEmptyString());
+        itemMeta.setLore(lore.asList());
         itemMeta.addItemFlags(ItemFlag.values());
 
         final ItemStack newItemStack = this.preCreatedItemStack.clone();

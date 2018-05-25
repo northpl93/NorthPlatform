@@ -4,23 +4,25 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import com.google.common.base.Preconditions;
-
 import org.bukkit.entity.Player;
 
+import pl.north93.zgame.api.bukkit.gui.event.HotbarClickEvent;
+import pl.north93.zgame.api.bukkit.gui.impl.ClickHandlerManager;
 import pl.north93.zgame.api.bukkit.gui.impl.GuiTracker;
-import pl.north93.zgame.api.bukkit.gui.impl.HotbarClickEvent;
-import pl.north93.zgame.api.bukkit.gui.impl.IClickHandler;
-import pl.north93.zgame.api.bukkit.gui.impl.RenderContext;
 import pl.north93.zgame.api.bukkit.gui.impl.XmlLayoutRegistry;
+import pl.north93.zgame.api.bukkit.gui.impl.XmlReaderContext;
+import pl.north93.zgame.api.bukkit.gui.impl.click.IClickHandler;
+import pl.north93.zgame.api.bukkit.gui.impl.click.IClickSource;
 import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlHotbarEntry;
 import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlHotbarLayout;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.utils.Vars;
 import pl.north93.zgame.api.global.utils.lang.ClassUtils;
 
-public class HotbarMenu implements IClickHandler
+public class HotbarMenu implements IClickSource
 {
+    @Inject
     private static GuiTracker guiTracker;
     
     private final MessagesBox messages;
@@ -55,14 +57,20 @@ public class HotbarMenu implements IClickHandler
     
     private void applyLayout(XmlHotbarLayout layout)
     {
-        RenderContext ctx = new RenderContext(messages, variables);
+        XmlReaderContext ctx = new XmlReaderContext(this, messages, variables);
         
         for ( XmlHotbarEntry entry : layout.getEntries() )
         {
             HotbarEntry current = getEntry(entry.getPosition());
             
             current.setVisible(entry.isVisible());
-            current.getClickHandlers().addAll(entry.getOnClick());
+
+            for (final String onClickString : entry.getOnClick())
+            {
+                final IClickHandler handler = ClickHandlerManager.getInstance().processClickHandler(this, onClickString);
+                current.getClickHandlers().add(handler);
+            }
+
             current.getMetadata().putAll(entry.getMetadataAsMap());
             current.setIcon(entry.createGuiIcon(ctx));
         }
@@ -98,7 +106,10 @@ public class HotbarMenu implements IClickHandler
     public final void click(Player player, HotbarEntry entry, ClickType type)
     {
         HotbarClickEvent event = new HotbarClickEvent(player, type, entry);
-        guiTracker.getHotbarClickHandlerManager().callClickEvent(this, entry, event);
+        for (final IClickHandler handler : entry.getClickHandlers())
+        {
+            handler.handle(this, event);
+        }
     }
     
     public final MessagesBox getMessages()
@@ -176,11 +187,5 @@ public class HotbarMenu implements IClickHandler
     
     protected void onClose(Player player)
     {
-    }
-    
-    public static void setGuiTracker(GuiTracker guiTracker)
-    {
-        Preconditions.checkState(HotbarMenu.guiTracker == null);
-        HotbarMenu.guiTracker = guiTracker;
     }
 }

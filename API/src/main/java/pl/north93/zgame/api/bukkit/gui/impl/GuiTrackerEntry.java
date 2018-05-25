@@ -24,7 +24,7 @@ import org.bukkit.inventory.PlayerInventory;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.zgame.api.bukkit.gui.Gui;
-import pl.north93.zgame.api.bukkit.gui.GuiContent;
+import pl.north93.zgame.api.bukkit.gui.element.GuiContent;
 import pl.north93.zgame.api.bukkit.gui.HotbarEntry;
 import pl.north93.zgame.api.bukkit.gui.HotbarMenu;
 import pl.north93.zgame.api.bukkit.gui.event.GuiOpenEvent;

@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.bukkit.gui;
+package pl.north93.zgame.api.bukkit.gui.element;
 
 import com.google.common.base.Preconditions;
 
@@ -6,10 +6,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
+import pl.north93.zgame.api.bukkit.gui.Gui;
+import pl.north93.zgame.api.bukkit.gui.GuiCanvas;
+import pl.north93.zgame.api.bukkit.gui.IGuiIcon;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 import pl.north93.zgame.api.global.utils.Vars;
 
-public class GuiContent extends GuiContainerElement
+public class GuiContent extends StaticContainerElement
 {
     private final Gui gui;
     

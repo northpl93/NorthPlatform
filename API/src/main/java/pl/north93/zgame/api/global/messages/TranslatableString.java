@@ -24,7 +24,9 @@ public abstract class TranslatableString
     TranslatableString()
     {
     }
-    
+
+    // Pobieranie wartości jako BaseComponent //
+
     public BaseComponent getValue(Messageable messageable)
     {
         return getValue(messageable, Vars.empty());
@@ -59,7 +61,29 @@ public abstract class TranslatableString
     {
         return getValue(locale, Vars.empty());
     }
-    
+
+    // Pobieranie wartości jako wiadomość legacy //
+
+    public LegacyMessage getLegacy(Messageable messageable)
+    {
+        final BaseComponent component = getValue(messageable.getMyLocale(), Vars.empty());
+        return new LegacyMessage(component);
+    }
+
+    public LegacyMessage getLegacy(String locale)
+    {
+        final BaseComponent component = getValue(Locale.forLanguageTag(locale), Vars.empty());
+        return new LegacyMessage(component);
+    }
+
+    public LegacyMessage getLegacy(String locale, Vars<Object> params)
+    {
+        final BaseComponent component = getValue(Locale.forLanguageTag(locale), params);
+        return new LegacyMessage(component);
+    }
+
+    // Wysyłanie wiadomości //
+
     public void sendMessage(Messageable messageable)
     {
         sendMessage(messageable, MessageLayout.DEFAULT, Vars.empty());
@@ -103,6 +127,8 @@ public abstract class TranslatableString
 
         player.sendMessage(messageLayout.processMessage(message));
     }
+
+    // pozostałe metody //
 
     public abstract BaseComponent getValue(Locale locale, Vars<Object> params);
 

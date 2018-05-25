@@ -31,11 +31,10 @@ import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.gui.ClickType;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.GuiCanvas;
-import pl.north93.zgame.api.bukkit.gui.GuiClickEvent;
-import pl.north93.zgame.api.bukkit.gui.GuiElement;
 import pl.north93.zgame.api.bukkit.gui.HotbarEntry;
 import pl.north93.zgame.api.bukkit.gui.HotbarMenu;
 import pl.north93.zgame.api.bukkit.gui.IGuiManager;
+import pl.north93.zgame.api.bukkit.gui.element.GuiElement;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
 import pl.north93.zgame.api.bukkit.tick.Tick;
@@ -44,9 +43,6 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class GuiTracker extends Component implements IGuiManager, ITickable, Listener
 {
-    private final ClickHandlerManager<GuiClickEvent> guiClickHandlerManager = new ClickHandlerManager<>(GuiClickEvent.class);
-    private final ClickHandlerManager<HotbarClickEvent> hotbarClickHandlerManager = new ClickHandlerManager<>(HotbarClickEvent.class);
-    
     private final Map<Player, GuiTrackerEntry> entriesByPlayer = new WeakHashMap<>();
     private final Multimap<Gui, GuiTrackerEntry> entriesByGui = ArrayListMultimap.create();
     private final Multimap<HotbarMenu, GuiTrackerEntry> entriesByHotbar = ArrayListMultimap.create();
@@ -61,26 +57,11 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
     {
         apiCore.registerEvents(this);
         tickableManager.addTickableObject(this);
-        
-        // Statyczny @Inject nie dziala prawidlowo, wiec trzeba tak wstrzyknac instancje :(
-        Gui.setGuiTracker(this);
-        HotbarMenu.setGuiTracker(this);
     }
 
     @Override
     protected void disableComponent()
     {
-
-    }
-    
-    public ClickHandlerManager<GuiClickEvent> getGuiClickHandlerManager()
-    {
-        return guiClickHandlerManager;
-    }
-    
-    public ClickHandlerManager<HotbarClickEvent> getHotbarClickHandlerManager()
-    {
-        return hotbarClickHandlerManager;
     }
     
     @Override

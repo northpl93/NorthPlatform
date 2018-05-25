@@ -3,7 +3,7 @@ package pl.arieals.minigame.goldhunter.gui;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.gui.ClickHandler;
 import pl.north93.zgame.api.bukkit.gui.HotbarMenu;
-import pl.north93.zgame.api.bukkit.gui.impl.HotbarClickEvent;
+import pl.north93.zgame.api.bukkit.gui.event.HotbarClickEvent;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;

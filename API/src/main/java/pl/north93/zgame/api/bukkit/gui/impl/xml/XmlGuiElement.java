@@ -10,8 +10,10 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.north93.zgame.api.bukkit.gui.GuiElement;
-import pl.north93.zgame.api.bukkit.gui.impl.RenderContext;
+import pl.north93.zgame.api.bukkit.gui.element.GuiElement;
+import pl.north93.zgame.api.bukkit.gui.impl.ClickHandlerManager;
+import pl.north93.zgame.api.bukkit.gui.impl.XmlReaderContext;
+import pl.north93.zgame.api.bukkit.gui.impl.click.IClickHandler;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class XmlGuiElement
@@ -35,7 +37,7 @@ public abstract class XmlGuiElement
     @XmlAnyElement(lax = true)
     private List<XmlGuiElement> content = new ArrayList<>();
     
-    public GuiElement toGuiElement(final RenderContext context)
+    public GuiElement toGuiElement(final XmlReaderContext context)
     {
         GuiElement element = toGuiElement0(context);
         
@@ -45,7 +47,8 @@ public abstract class XmlGuiElement
         
         for ( String clickHandler : onClick )
         {
-            element.getClickHandlers().add(clickHandler);
+            final IClickHandler handler = ClickHandlerManager.getInstance().processClickHandler(context.getClickSource(), clickHandler);
+            element.getClickHandlers().add(handler);
         }
         
         for ( XmlMetadataEntry entry : metadata )
@@ -71,5 +74,5 @@ public abstract class XmlGuiElement
         return this.variables;
     }
 
-    protected abstract GuiElement toGuiElement0(RenderContext context);
+    protected abstract GuiElement toGuiElement0(XmlReaderContext context);
 }

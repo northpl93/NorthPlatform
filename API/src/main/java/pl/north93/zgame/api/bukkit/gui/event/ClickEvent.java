@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.bukkit.gui.impl;
+package pl.north93.zgame.api.bukkit.gui.event;
 
 import org.bukkit.entity.Player;
 

@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.bukkit.gui.impl.RenderContext;
+import pl.north93.zgame.api.bukkit.gui.impl.XmlReaderContext;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class XmlConditionalGuiElement extends XmlGuiElement
@@ -17,7 +17,7 @@ public abstract class XmlConditionalGuiElement extends XmlGuiElement
     @XmlAttribute
     private boolean negated = false;
 
-    protected final boolean shouldShow(final RenderContext context)
+    protected final boolean shouldShow(final XmlReaderContext context)
     {
         if (this.ifVar == null)
         {

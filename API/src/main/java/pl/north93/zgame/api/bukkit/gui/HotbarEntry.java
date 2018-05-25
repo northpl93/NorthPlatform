@@ -5,15 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pl.north93.zgame.api.bukkit.gui.impl.IClickable;
+import pl.north93.zgame.api.bukkit.gui.impl.click.IClickHandler;
+import pl.north93.zgame.api.bukkit.gui.impl.click.IClickable;
 
 public class HotbarEntry implements IClickable
 {
     private final HotbarMenu hotbarMenu;
     private final int slot;
     
-    private final List<String> clickHandlers = new ArrayList<>();
-    private final Map<String, String> metadata = new HashMap<>();
+    private final List<IClickHandler> clickHandlers = new ArrayList<>();
+    private final Map<String, String> metadata      = new HashMap<>();
     
     private IGuiIcon icon;
     
@@ -35,7 +36,7 @@ public class HotbarEntry implements IClickable
         return slot;
     }
     
-    public List<String> getClickHandlers()
+    public List<IClickHandler> getClickHandlers()
     {
         return clickHandlers;
     }

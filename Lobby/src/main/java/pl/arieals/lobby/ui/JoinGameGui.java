@@ -9,7 +9,7 @@ import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.lobby.play.PlayGameController;
 import pl.north93.zgame.api.bukkit.gui.ClickHandler;
 import pl.north93.zgame.api.bukkit.gui.Gui;
-import pl.north93.zgame.api.bukkit.gui.GuiClickEvent;
+import pl.north93.zgame.api.bukkit.gui.event.GuiClickEvent;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.commands.annotation.QuickCommand;

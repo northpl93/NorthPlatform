@@ -5,6 +5,8 @@ import java.util.stream.IntStream;
 
 import com.google.common.base.Preconditions;
 
+import pl.north93.zgame.api.bukkit.gui.element.GuiElement;
+
 public class GuiCanvas
 {
     private GuiContentEntry[][] content;

@@ -19,9 +19,9 @@ import pl.arieals.globalshops.server.domain.Item;
 import pl.arieals.globalshops.server.domain.ItemsGroup;
 import pl.north93.zgame.api.bukkit.gui.ClickHandler;
 import pl.north93.zgame.api.bukkit.gui.Gui;
-import pl.north93.zgame.api.bukkit.gui.GuiButtonElement;
-import pl.north93.zgame.api.bukkit.gui.GuiClickEvent;
-import pl.north93.zgame.api.bukkit.gui.GuiElement;
+import pl.north93.zgame.api.bukkit.gui.element.ButtonElement;
+import pl.north93.zgame.api.bukkit.gui.event.GuiClickEvent;
+import pl.north93.zgame.api.bukkit.gui.element.GuiElement;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -51,7 +51,7 @@ public class GoldHunterShopGui extends Gui
 	@Override
 	protected void onRender()
 	{
-		for ( GuiButtonElement element : getContent().getChildrenByClassDeep(GuiButtonElement.class) )
+		for ( ButtonElement element : getContent().getChildrenByClassDeep(ButtonElement.class) )
 		{
 			if ( isBuyButton(element) )
 			{
@@ -64,12 +64,12 @@ public class GoldHunterShopGui extends Gui
 		}
 	}
 	
-	private boolean isBuyButton(GuiButtonElement element)
+	private boolean isBuyButton(ButtonElement element)
 	{
 		return element.getClickHandlers().contains("buy");
 	}
 	
-	private boolean isFolder(GuiButtonElement element)
+	private boolean isFolder(ButtonElement element)
 	{
 		return !isBuyButton(element) && element.getMetadata().containsKey("folder");
 	}

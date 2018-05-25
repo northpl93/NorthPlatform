@@ -3,18 +3,24 @@ package pl.north93.zgame.api.bukkit.gui.impl.xml;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import pl.north93.zgame.api.bukkit.gui.GuiContainerElement;
-import pl.north93.zgame.api.bukkit.gui.impl.RenderContext;
+import pl.north93.zgame.api.bukkit.gui.element.ContainerElement;
+import pl.north93.zgame.api.bukkit.gui.element.StaticContainerElement;
+import pl.north93.zgame.api.bukkit.gui.impl.XmlReaderContext;
 
 @XmlRootElement(name = "container")
-public class XmlContainerElement extends XmlGuiElement
+public class XmlStaticContainerElement extends XmlGuiElement
 {
     @XmlAttribute
     private String size = "1,1";
     
     private XmlGuiIcon background;
     private XmlGuiIcon border;
-    
+
+    public String getSize()
+    {
+        return this.size;
+    }
+
     public XmlGuiIcon getBackground()
     {
         return background;
@@ -36,11 +42,11 @@ public class XmlContainerElement extends XmlGuiElement
     }
     
     @Override
-    protected GuiContainerElement toGuiElement0(RenderContext renderContext)
+    protected ContainerElement toGuiElement0(XmlReaderContext renderContext)
     {
         String[] split = size.split(",");
         
-        GuiContainerElement result = new GuiContainerElement(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
+        StaticContainerElement result = new StaticContainerElement(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
         result.setBackground(background != null ? background.toGuiIcon(renderContext, this.getVariables()) : null);
         result.setBorder(border != null ? border.toGuiIcon(renderContext, this.getVariables()) : null);
         

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import pl.north93.zgame.api.bukkit.gui.IGuiIcon;
-import pl.north93.zgame.api.bukkit.gui.impl.RenderContext;
+import pl.north93.zgame.api.bukkit.gui.impl.XmlReaderContext;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlHotbarEntry
@@ -96,7 +96,7 @@ public class XmlHotbarEntry
         return result;
     }
     
-    public IGuiIcon createGuiIcon(RenderContext context)
+    public IGuiIcon createGuiIcon(XmlReaderContext context)
     {
         if ( icon == null )
         {

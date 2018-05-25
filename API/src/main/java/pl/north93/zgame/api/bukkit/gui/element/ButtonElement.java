@@ -1,10 +1,13 @@
-package pl.north93.zgame.api.bukkit.gui;
+package pl.north93.zgame.api.bukkit.gui.element;
 
-public class GuiButtonElement extends GuiElement
+import pl.north93.zgame.api.bukkit.gui.GuiCanvas;
+import pl.north93.zgame.api.bukkit.gui.IGuiIcon;
+
+public class ButtonElement extends GuiElement
 {
     private IGuiIcon icon;
     
-    public GuiButtonElement(IGuiIcon icon)
+    public ButtonElement(IGuiIcon icon)
     {
         super(false);
         this.icon = icon;

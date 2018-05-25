@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.bukkit.gui;
+package pl.north93.zgame.api.bukkit.gui.element;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +10,9 @@ import java.util.stream.Stream;
 
 import com.google.common.base.Preconditions;
 
-import pl.north93.zgame.api.bukkit.gui.impl.IClickable;
+import pl.north93.zgame.api.bukkit.gui.GuiCanvas;
+import pl.north93.zgame.api.bukkit.gui.impl.click.IClickHandler;
+import pl.north93.zgame.api.bukkit.gui.impl.click.IClickable;
 import pl.north93.zgame.api.global.utils.Vars;
 
 public abstract class GuiElement implements IClickable
@@ -18,7 +20,7 @@ public abstract class GuiElement implements IClickable
     private GuiElement parent;
     private final List<GuiElement> children;
     
-    private final List<String> clickHandlers = new ArrayList<>();
+    private final List<IClickHandler> clickHandlers = new ArrayList<>();
     private final Map<String, String> metadata = new HashMap<>();
 
     // Nie da się jeszcze ich ustawiać w XMLu, są dostępne tylko leniwe <variable>
@@ -103,7 +105,7 @@ public abstract class GuiElement implements IClickable
         return metadata;
     }
     
-    public final List<String> getClickHandlers()
+    public final List<IClickHandler> getClickHandlers()
     {
         return clickHandlers;
     }

@@ -7,10 +7,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 
-import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.uri.IUriManager;
 import pl.north93.zgame.api.global.utils.Vars;
@@ -18,6 +18,8 @@ import pl.north93.zgame.api.global.utils.Vars;
 public final class NorthUriUtils
 {
     private static NorthUriUtils instance;
+    @Inject
+    private Logger      logger;
     @Inject
     private IUriManager uriManager;
 
@@ -48,7 +50,7 @@ public final class NorthUriUtils
         }
         catch (final URISyntaxException e)
         {
-            API.getLogger().log(Level.SEVERE, format("Failed to create a uri {0}", finalUri), e);
+            this.logger.log(Level.SEVERE, format("Failed to create a uri {0}", finalUri), e);
             return null;
         }
     }

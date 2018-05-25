@@ -3,7 +3,7 @@ package pl.arieals.minigame.goldhunter.gui;
 import pl.arieals.minigame.goldhunter.player.GameTeam;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.gui.ClickHandler;
-import pl.north93.zgame.api.bukkit.gui.GuiClickEvent;
+import pl.north93.zgame.api.bukkit.gui.event.GuiClickEvent;
 
 public class JoinTeamGui extends GoldHunterGui
 {

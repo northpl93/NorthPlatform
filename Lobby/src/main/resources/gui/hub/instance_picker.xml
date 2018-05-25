@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="1" title="@gamegui.title">
+    <container pos="0,0" size="9,1">
+        <content>
+
+            <dynamicContainer pos="2,0" size="5,1">
+                <dataUri>northplatform://lobby/ui/instancePicker/instances</dataUri>
+                <icon id="SLIME_BALL" name="test"/>
+            </dynamicContainer>
+
+            <!-- Paski po lewej/prawej -->
+            <button pos="0,0"><icon id="STAINED_GLASS_PANE" data="14" name=""/></button>
+            <button pos="8,0"><icon id="STAINED_GLASS_PANE" data="14" name=""/></button>
+        </content>
+    </container>
+</gui>
