@@ -1,7 +1,8 @@
 package pl.arieals.lobby.ui;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -11,6 +12,7 @@ import pl.arieals.api.minigame.server.lobby.hub.visibility.HubVisibilityService;
 import pl.arieals.api.minigame.server.lobby.hub.visibility.IHubVisibilityPolicy;
 import pl.arieals.api.minigame.server.lobby.hub.visibility.NobodyHubVisibilityPolicy;
 import pl.arieals.api.minigame.server.lobby.hub.visibility.PartyHubVisibilityPolicy;
+import pl.arieals.api.minigame.shared.api.hub.IHubServer;
 import pl.arieals.lobby.play.PlayGameController;
 import pl.north93.zgame.api.bukkit.gui.element.dynamic.DynamicElementData;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
@@ -47,7 +49,19 @@ public final class UiHelper
     @UriHandler("/lobby/ui/instancePicker/instances")
     public Collection<DynamicElementData> listHubInstances(final UriInvocationContext context)
     {
-        return Arrays.asList(new DynamicElementData(Vars.empty(), (p1, p2) -> Bukkit.broadcastMessage("test")));
+        final List<DynamicElementData> elements = new ArrayList<>();
+
+        int counter = 0;
+        for (final IHubServer hubServer : this.playController.getHubs())
+        {
+            final Vars<Object> vars = Vars.of("id", ++counter);
+            elements.add(new DynamicElementData(vars, (source, event) ->
+            {
+                this.playController.switchHubInstance(event.getWhoClicked(), hubServer);
+            }));
+        }
+
+        return elements;
     }
 
     @UriHandler("/lobby/ui/visibility/:mode/:playerId")

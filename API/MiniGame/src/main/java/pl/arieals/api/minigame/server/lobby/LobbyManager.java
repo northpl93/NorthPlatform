@@ -12,37 +12,31 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.lobby.hub.LocalHubServer;
-import pl.arieals.api.minigame.shared.api.hub.RemoteHub;
+import pl.arieals.api.minigame.shared.api.hub.IHubServer;
 import pl.arieals.api.minigame.shared.api.location.HubNetworkLocation;
 import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
-import pl.arieals.api.minigame.shared.impl.HubsManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class LobbyManager implements IServerManager
 {
     @Inject
-    private Logger         logger;
+    private Logger           logger;
     @Inject
-    private BukkitApiCore  apiCore;
+    private LobbyHubsManager lobbyHubsManager;
     @Inject
-    private HubsManager    hubsManager;
-    private LocalHubServer localHub;
+    private BukkitApiCore    apiCore;
 
     @Override
     public void start()
     {
-        this.localHub = new LocalHubServer();
-        this.hubsManager.setHub(new RemoteHub(this.localHub));
-        this.localHub.refreshConfiguration();
-
         this.logger.log(Level.INFO, "Hub component started successfully");
     }
 
     @Override
     public void stop()
     {
-        this.hubsManager.removeHub(this.localHub.getServerId());
+        this.lobbyHubsManager.unregister();
     }
 
     @Override
@@ -54,10 +48,13 @@ public class LobbyManager implements IServerManager
     @Override
     public void tpToHub(final Collection<Player> players, final String hubId)
     {
-        for (final Player player : players)
-        {
-            this.localHub.movePlayerToHub(player, hubId);
-        }
+        this.lobbyHubsManager.tpToHub(players, hubId);
+    }
+
+    @Override
+    public void tpToHub(final Collection<Player> players, final IHubServer hubServer, final String hubId)
+    {
+        this.lobbyHubsManager.tpToHub(players, hubServer, hubId);
     }
 
     @Override
@@ -74,7 +71,7 @@ public class LobbyManager implements IServerManager
      */
     public LocalHubServer getLocalHub()
     {
-        return this.localHub;
+        return this.lobbyHubsManager.getLocalHub();
     }
 
     @Override

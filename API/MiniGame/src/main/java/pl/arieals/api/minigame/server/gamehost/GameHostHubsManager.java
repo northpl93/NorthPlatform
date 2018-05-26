@@ -12,6 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.diorite.commons.math.DioriteRandomUtils;
 
 import pl.arieals.api.minigame.server.lobby.hub.SelectHubServerJoinAction;
+import pl.arieals.api.minigame.shared.api.hub.IHubServer;
 import pl.arieals.api.minigame.shared.api.hub.RemoteHub;
 import pl.arieals.api.minigame.shared.impl.HubsManager;
 import pl.north93.zgame.api.bukkit.player.IBukkitPlayers;
@@ -50,7 +51,19 @@ public class GameHostHubsManager
             return;
         }
 
-        final Server server = this.networkManager.getServers().withUuid(hub.getServerId());
+        this.tpToHub(players, hub, hubId);
+    }
+
+    /**
+     * Teleportuje podanych graczy do huba o podanym ID na wskazaną instancję.
+     *
+     * @param players Gracze do teleportacji.
+     * @param hubServer Instancja serwera z hubami.
+     * @param hubId ID huba na ktorego maja trafic gracze.
+     */
+    public void tpToHub(final Collection<Player> players, final IHubServer hubServer, final String hubId)
+    {
+        final Server server = this.networkManager.getServers().withUuid(hubServer.getServerId());
         for (final Player player : players)
         {
             final INorthPlayer northPlayer = this.bukkitPlayers.getPlayer(player);

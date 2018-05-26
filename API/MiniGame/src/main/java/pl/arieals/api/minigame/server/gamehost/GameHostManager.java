@@ -46,6 +46,7 @@ import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.arena.netevent.IArenaNetEvent;
 import pl.arieals.api.minigame.shared.api.cfg.MiniGameConfig;
+import pl.arieals.api.minigame.shared.api.hub.IHubServer;
 import pl.arieals.api.minigame.shared.api.location.GameNetworkLocation;
 import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
@@ -125,6 +126,12 @@ public class GameHostManager implements IServerManager
     public void tpToHub(final Collection<Player> players, final String hubId)
     {
         this.gameHostHubsManager.tpToHub(players, hubId);
+    }
+
+    @Override
+    public void tpToHub(final Collection<Player> players, final IHubServer hubServer, final String hubId)
+    {
+        this.gameHostHubsManager.tpToHub(players, hubServer, hubId);
     }
 
     @Override

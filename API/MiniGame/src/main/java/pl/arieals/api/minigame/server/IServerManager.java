@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
+import pl.arieals.api.minigame.shared.api.hub.IHubServer;
 import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
 
 public interface IServerManager
@@ -16,6 +17,8 @@ public interface IServerManager
     UUID getServerId();
 
     void tpToHub(Collection<Player> players, String hubId);
+
+    void tpToHub(Collection<Player> players, IHubServer hubServer, String hubId);
 
     /**
      * Zwraca sieciową lokalizację danego gracza znajdującego się lokalnie na serwerze.

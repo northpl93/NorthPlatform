@@ -12,11 +12,14 @@ import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.api.minigame.server.lobby.arenas.ArenaQuery;
 import pl.arieals.api.minigame.server.lobby.arenas.IArenaClient;
+import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
 import pl.arieals.api.minigame.server.utils.party.PartyClient;
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
+import pl.arieals.api.minigame.shared.api.hub.IHubServer;
 import pl.arieals.api.minigame.shared.api.party.IParty;
+import pl.arieals.api.minigame.shared.impl.HubsManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -30,6 +33,8 @@ public class PlayGameController
     private MiniGameServer miniGameServer;
     @Inject
     private IArenaClient   arenaClient;
+    @Inject
+    private HubsManager    hubsManager;
     @Inject
     private PartyClient    partyClient;
 
@@ -48,6 +53,25 @@ public class PlayGameController
 
         final LobbyManager lobby = this.miniGameServer.getServerManager();
         lobby.getLocalHub().movePlayerToHub(player, hubId);
+    }
+
+    public void switchHubInstance(final Player player, final IHubServer hubServer)
+    {
+        if (! this.partyClient.canDecideAboutHimself(player))
+        {
+            // gracz jest w grupie i nie jest liderem więc nie może decydować gdzie gra
+            return;
+        }
+
+        final LobbyManager lobby = this.miniGameServer.getServerManager();
+        final HubWorld hubWorld = lobby.getLocalHub().getHubWorld(player);
+
+        lobby.tpToHub(Collections.singletonList(player), hubServer, hubWorld.getHubId());
+    }
+
+    public Collection<? extends IHubServer> getHubs()
+    {
+        return this.hubsManager.getAllHubs();
     }
 
     public void playGame(final Player player, final GameIdentity gameIdentity, final boolean allowInProgress, final String worldId)

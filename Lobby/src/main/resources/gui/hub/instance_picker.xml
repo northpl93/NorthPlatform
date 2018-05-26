@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<gui height="1" title="@gamegui.title">
+<gui height="1" title="@instance.title">
     <container pos="0,0" size="9,1">
         <content>
 
             <dynamicContainer pos="2,0" size="5,1">
                 <dataUri>northplatform://lobby/ui/instancePicker/instances</dataUri>
-                <icon id="SLIME_BALL" name="test"/>
+                <icon id="SLIME_BALL" name="@instance.icon.title$id"/>
             </dynamicContainer>
 
             <!-- Paski po lewej/prawej -->
