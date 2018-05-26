@@ -1,7 +1,5 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import static com.google.common.base.Predicates.not;
-
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
@@ -133,7 +131,8 @@ public class GameEndListener implements Listener
         players.broadcast(this.messages, "separator");
         players.broadcast(this.messages, "end.header", MessageLayout.CENTER);
 
-        final Optional<Team> winner = arenaData.getTeams().stream().filter(not(Team::isEliminated)).findAny();
+        final Predicate<Team> isEliminatedPredicate = Team::isEliminated;
+        final Optional<Team> winner = arenaData.getTeams().stream().filter(isEliminatedPredicate.negate()).findAny();
         if (winner.isPresent())
         {
             final Team winnerTeam = winner.get();

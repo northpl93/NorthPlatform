@@ -50,7 +50,7 @@ public class RaceScoreboard implements IScoreboardLayout
 
         final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(context.getPlayer().getUniqueId());
 
-        context.setCompletableFuture("avgTime", holder.getValue(statistic));
+        context.setCompletableFuture("avgTime", holder.getBest(statistic));
     }
 
     @Override

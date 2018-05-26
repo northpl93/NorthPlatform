@@ -70,9 +70,9 @@ public class RaceMetaHandler implements IFinishHandler
         final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(player.getUniqueId());
 
         final boolean isFinished = IFinishHandler.checkFinished(arena);
-        this.statisticsManager.getBestRecord(raceStatistic).whenComplete((bestRecord, throwable) ->
+        this.statisticsManager.getRecord(raceStatistic).whenComplete((bestRecord, throwable) ->
         {
-            holder.record(raceStatistic, playerTimeDuration, true).whenComplete((record, throwable2) ->
+            holder.record(raceStatistic, playerTimeDuration).whenComplete((record, throwable2) ->
             {
                 final RaceMessage raceMessage = new RaceMessage(this.finishInfo, bestRecord, !isFinished);
                 if (isFinished)
@@ -108,7 +108,7 @@ public class RaceMetaHandler implements IFinishHandler
         }
 
         final IStatistic<DurationUnit> raceStatistic = this.getRaceStatistic(arena);
-        this.statisticsManager.getBestRecord(raceStatistic).whenComplete((result, throwable) ->
+        this.statisticsManager.getRecord(raceStatistic).whenComplete((result, throwable) ->
         {
             final RaceMessage raceMessage = new RaceMessage(this.finishInfo, result, false);
             for (final Player playerInArena : arena.getPlayersManager().getPlayers())

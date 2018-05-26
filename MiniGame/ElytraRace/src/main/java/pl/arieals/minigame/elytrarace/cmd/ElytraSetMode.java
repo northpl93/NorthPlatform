@@ -1,5 +1,7 @@
 package pl.arieals.minigame.elytrarace.cmd;
 
+import static org.diorite.commons.reflections.DioriteReflectionUtils.getField;
+
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.minigame.elytrarace.cmd.ElytraDevMode.checkDevMode;
 
@@ -10,18 +12,18 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import org.diorite.commons.reflections.FieldAccessor;
+
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.minigame.elytrarace.ElytraRaceMode;
-import pl.arieals.minigame.elytrarace.cfg.ElytraConfig;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ElytraSetMode extends NorthCommand
 {
-    @Inject
-    private ElytraConfig elytraConfig;
+    private static final FieldAccessor<String> VARIANT_FIELD = getField(GameIdentity.class, "variantId");
 
     public ElytraSetMode()
     {
@@ -59,7 +61,9 @@ public class ElytraSetMode extends NorthCommand
             arenaPlayer.sendMessage(ChatColor.DARK_GREEN + "Zmiana trybu gry na " + newMode + "! Arena zostanie ponownie zainicjowana.");
         }
 
-        this.elytraConfig.setMode(newMode);
+
+        VARIANT_FIELD.set(arena.getMiniGame(), newMode == ElytraRaceMode.RACE_MODE ? "race" : "score");
+
         arena.endGame();
         arena.prepareNewCycle();
     }
@@ -67,6 +71,6 @@ public class ElytraSetMode extends NorthCommand
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("elytraConfig", this.elytraConfig).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }
