@@ -29,6 +29,7 @@ import org.diorite.commons.reflections.DioriteReflectionUtils;
 import org.diorite.commons.reflections.FieldAccessor;
 
 import pl.arieals.api.minigame.server.gamehost.world.impl.blocker.WrappedChunkProviderServer;
+import pl.north93.zgame.api.bukkit.server.impl.WorldInitializationHandler;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlChunk;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -37,9 +38,11 @@ class ChunkLoadingTask implements Runnable
     private static final FieldAccessor chunkProvider = DioriteReflectionUtils.getField(net.minecraft.server.v1_12_R1.World.class, "chunkProvider");
     private static final int MIN_MEMORY = 15; // ponizej 15% przestajemy doczytywac chunki i czekamy na GC
     private final Queue<QueuedLoadingTask> tasks = Queues.synchronizedQueue(new ArrayDeque<>());
-    private QueuedLoadingTask activeTask;
+    private QueuedLoadingTask          activeTask;
     @Inject
-    private Logger            logger;
+    private Logger                     logger;
+    @Inject
+    private WorldInitializationHandler initializationHandler;
 
     public void queueTask(final World world, final Set<XmlChunk> chunks, final LoadingProgressImpl progress)
     {
@@ -73,23 +76,31 @@ class ChunkLoadingTask implements Runnable
             final XmlChunk chunk = chunks.poll();
             if (chunk == null)
             {
-                final long totalTime = System.currentTimeMillis() - task.startTime;
-                this.logger.info(format("Completed loading of world {0} in {1}ms", task.world.getName(), totalTime));
-
-                if (task.isEmpty)
-                {
-                    this.logger.warning(format("World {0} has empty list of chunks. Use WE wand and /mapaddchunks to add chunks. Blocking of new chunks disabled.", task.world.getName()));
-                }
-                else
-                {
-                    this.blockNewChunks(task.world);
-                }
-                this.activeTask = null;
-                task.progress.setCompleted();
+                this.completeTask(task);
                 break;
             }
             task.world.loadChunk(chunk.getX(), chunk.getZ(), false);
         } while (System.currentTimeMillis() < stopTime);
+    }
+
+    private void completeTask(final QueuedLoadingTask task)
+    {
+        final long totalTime = System.currentTimeMillis() - task.startTime;
+        this.logger.info(format("Completed loading of world {0} in {1}ms", task.world.getName(), totalTime));
+
+        if (task.isEmpty)
+        {
+            this.logger.warning(format("World {0} has empty list of chunks. Use WE wand and /mapaddchunks to add chunks. Blocking of new chunks disabled.", task.world.getName()));
+        }
+        else
+        {
+            this.blockNewChunks(task.world);
+        }
+
+        this.activeTask = null;
+
+        this.initializationHandler.callInitializers(task.world);
+        task.progress.setCompleted();
     }
 
     // zwraca false jesli jest mniej niz MIN_MEMORY% wolnej pamieci

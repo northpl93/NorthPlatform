@@ -20,7 +20,7 @@ import pl.north93.zgame.api.bukkit.server.IWorldInitializer;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
-/*default*/ class WorldInitializationHandler implements Listener
+public class WorldInitializationHandler implements Listener
 {
     private final Logger                  logger;
     private final List<IWorldInitializer> initializers = new ArrayList<>();
@@ -46,6 +46,11 @@ import pl.north93.zgame.api.global.component.annotations.bean.Bean;
     public void onWorldLoad(final WorldLoadEvent event)
     {
         final World world = event.getWorld();
+        this.callInitializers(world);
+    }
+
+    public void callInitializers(final World world)
+    {
         this.initializers.forEach(initializer -> this.callInitializer(initializer, world));
     }
 
