@@ -37,6 +37,7 @@ public class SingleServerJoin extends NorthCommand
     public SingleServerJoin()
     {
         super("singleserverjoin", "ssjoin");
+        this.setPermission("dev");
     }
 
     @Override

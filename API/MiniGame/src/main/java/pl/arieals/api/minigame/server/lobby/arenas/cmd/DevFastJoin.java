@@ -31,6 +31,7 @@ public class DevFastJoin extends NorthCommand
     {
         super("devfastjoin", "fastdevjoin"); // czesto sie myli
         this.setAsync(true);
+        this.setPermission("dev");
     }
 
     @Override

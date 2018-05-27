@@ -13,6 +13,8 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.daemon.DaemonDto;
+import pl.north93.zgame.api.global.network.event.NetworkShutdownNetEvent;
+import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 import pl.north93.zgame.api.global.redis.observable.Hash;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.standalone.StandaloneApiCore;
@@ -31,7 +33,7 @@ public class DaemonInfoHandler
     private Value<DaemonDto>  daemonInfo;
 
     @Bean
-    public DaemonInfoHandler(final @Named("daemon") EventBus eventBus)
+    private DaemonInfoHandler(final @Named("daemon") EventBus eventBus)
     {
         final String id = this.apiCore.getId();
         final DaemonDto daemon = new DaemonDto(id, this.apiCore.getHostName(), this.config.maxMemory, 0, 0, true);
@@ -41,6 +43,14 @@ public class DaemonInfoHandler
         this.daemonInfo = daemons.getAsValue(id);
 
         eventBus.register(this);
+    }
+
+    @NetEventSubscriber(NetworkShutdownNetEvent.class)
+    public void handleNetworkShutdownEvent(final NetworkShutdownNetEvent event)
+    {
+        // blokujemy akceptowanie nowych serwerów gdy zostala rozpoczeta procedura
+        // wylaczania sieci
+        this.setAcceptingNewServers(false);
     }
 
     public DaemonDto getDaemonInfo()
