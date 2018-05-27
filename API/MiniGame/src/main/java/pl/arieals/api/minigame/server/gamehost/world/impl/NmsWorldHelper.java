@@ -61,10 +61,6 @@ class NmsWorldHelper
         Validate.notNull(creator, "Creator may not be null");
 
         final String name = creator.name();
-        final File folder = new File(this.getWorldContainer(), name);
-
-        final WorldType type = WorldType.getType(creator.type().getName());
-        final boolean generateStructures = creator.generateStructures();
 
         final World world = Bukkit.getWorld(name);
         if (world != null)
@@ -72,10 +68,14 @@ class NmsWorldHelper
             return world;
         }
 
+        final File folder = new File(this.getWorldContainer(), name);
         if (folder.exists() && ! folder.isDirectory())
         {
             throw new IllegalArgumentException("File exists with the name '" + name + "' and isn't a folder");
         }
+
+        final WorldType type = WorldType.getType(creator.type().getName());
+        final boolean generateStructures = creator.generateStructures();
 
         ChunkGenerator generator = creator.generator();
         if (generator == null)
@@ -112,7 +112,7 @@ class NmsWorldHelper
         }
 
         worlddata.checkName(name);
-        WorldServer internal = (WorldServer) (new WorldServer(this.console, sdm, worlddata, dimension, this.console.methodProfiler, creator.environment(), generator)).b();
+        final WorldServer internal = (WorldServer) (new WorldServer(this.console, sdm, worlddata, dimension, this.console.methodProfiler, creator.environment(), generator)).b();
         if (! this.worlds.containsKey(name.toLowerCase(Locale.ENGLISH)))
         {
             return null;

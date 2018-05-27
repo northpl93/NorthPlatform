@@ -91,9 +91,11 @@ class StatisticHolderImpl implements IStatisticHolder
         {
             final FindOneAndUpdateOptions options = new FindOneAndUpdateOptions().sort(TIME_SORT).upsert(true);
             final Document previous = collection.findOneAndUpdate(find, insertDocument, options);
-
-            previous.remove("_id");
-            collection.insertOne(previous);
+            if (previous != null)
+            {
+                previous.remove("_id");
+                collection.insertOne(previous);
+            }
 
             future.complete(this.manager.documentToUnit(statistic, previous));
         });
@@ -120,9 +122,11 @@ class StatisticHolderImpl implements IStatisticHolder
         {
             final FindOneAndUpdateOptions options = new FindOneAndUpdateOptions().sort(TIME_SORT).upsert(true);
             final Document previous = collection.findOneAndUpdate(query, insertDocument, options);
-
-            previous.remove("_id");
-            collection.insertOne(previous);
+            if (previous != null)
+            {
+                previous.remove("_id");
+                collection.insertOne(previous);
+            }
 
             future.complete(this.manager.documentToUnit(statistic, previous));
         });
