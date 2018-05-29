@@ -66,7 +66,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
         final List<ItemPriceCfg> cfgPrices = cfg.getPrices();
         if (cfgPrices.isEmpty())
         {
-            prices.put(0, this.createPriceFromConfig(null));
+            prices.put(1, this.createPriceFromConfig(null));
         }
         else
         {

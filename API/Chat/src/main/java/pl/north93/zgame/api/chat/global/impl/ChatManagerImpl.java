@@ -1,6 +1,9 @@
 package pl.north93.zgame.api.chat.global.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -87,7 +90,7 @@ public class ChatManagerImpl implements ChatManager
             }
 
             // tworzymy nowy obiekt redisie tworząc tym samym kanał
-            value.set(new ChatRoomData(priority, formatterId));
+            value.set(new ChatRoomData(id, priority, formatterId));
         }
 
         this.logger.log(Level.INFO, "Created room with ID {0} and formatter {1}", new Object[]{id, formatterId});
@@ -104,7 +107,7 @@ public class ChatManagerImpl implements ChatManager
         {
             if (! value.isPreset())
             {
-                value.set(new ChatRoomData(priority, formatterId));
+                value.set(new ChatRoomData(id, priority, formatterId));
                 this.logger.log(Level.INFO, "Created room with ID {0} and formatter {1}", new Object[]{id, formatterId});
             }
         }
@@ -131,6 +134,21 @@ public class ChatManagerImpl implements ChatManager
             throw new ChatRoomNotFoundException(id);
         }
         return new ChatRoomImpl(this, id, value);
+    }
+
+    @Override
+    public Collection<ChatRoom> getChatRooms()
+    {
+        final List<ChatRoom> rooms = new ArrayList<>();
+        for (final ChatRoomData data : this.chatRooms.values())
+        {
+            final String roomId = data.getId();
+            final Value<ChatRoomData> value = this.chatRooms.getAsValue(roomId);
+
+            rooms.add(new ChatRoomImpl(this, roomId, value));
+        }
+
+        return rooms;
     }
 
     @Override

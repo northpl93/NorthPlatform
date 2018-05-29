@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.chat.global;
 
+import java.util.Collection;
+
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
 
@@ -40,6 +42,15 @@ public interface ChatManager
      * @return Obiekt reprezentujący pokój czatu o podanym ID.
      */
     ChatRoom getRoom(String id) throws ChatRoomNotFoundException;
+
+    /**
+     * Zwraca listę wszystkich pokojów czatu.
+     * Należy uważać podczas używania jej, niektóre pokoje mogły już zniknąć
+     * i zostanie rzucony {@link ChatRoomNotFoundException}.
+     *
+     * @return Lista wszystkich pokojów czatu.
+     */
+    Collection<ChatRoom> getChatRooms();
 
     /**
      * Usuwa pokój czatu o podanym identyfikatorze.

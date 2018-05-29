@@ -41,7 +41,7 @@ public class MethodClickHandler implements IClickHandler
         {
             if (throwable instanceof Exception)
             {
-                throw new RuntimeException(throwable);
+                throw new RuntimeException("Exception thrown while executing gui click handler", throwable);
             }
 
             // nie próbujemy zlapac Throwable typu OutOfMemoryError

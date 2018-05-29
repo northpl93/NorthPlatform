@@ -11,17 +11,17 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import pl.arieals.globalshops.server.domain.BuyResult;
 import pl.arieals.globalshops.server.IGlobalShops;
 import pl.arieals.globalshops.server.IPlayerContainer;
 import pl.arieals.globalshops.server.IPlayerExperienceService;
+import pl.arieals.globalshops.server.domain.BuyResult;
 import pl.arieals.globalshops.server.domain.Item;
 import pl.arieals.globalshops.server.domain.ItemsGroup;
 import pl.north93.zgame.api.bukkit.gui.ClickHandler;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.element.ButtonElement;
-import pl.north93.zgame.api.bukkit.gui.event.GuiClickEvent;
 import pl.north93.zgame.api.bukkit.gui.element.GuiElement;
+import pl.north93.zgame.api.bukkit.gui.event.GuiClickEvent;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -66,7 +66,7 @@ public class GoldHunterShopGui extends Gui
 	
 	private boolean isBuyButton(ButtonElement element)
 	{
-		return element.getClickHandlers().contains("buy");
+		return element.getClickHandlers().size() == 1 && ! element.getMetadata().containsKey("guiName");
 	}
 	
 	private boolean isFolder(ButtonElement element)

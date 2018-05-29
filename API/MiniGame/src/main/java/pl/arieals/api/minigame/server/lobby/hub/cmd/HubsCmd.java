@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
@@ -32,18 +35,22 @@ public class HubsCmd extends NorthCommand
         final LobbyManager lobby = this.miniGameServer.getServerManager();
         final Player player = (Player) sender.unwrapped();
 
-        if (args.isEmpty())
-        {
-            final Collection<HubWorld> localWorlds = lobby.getLocalHub().getLocalWorlds();
-            final String message = localWorlds.stream().map(HubWorld::getHubId).collect(Collectors.joining(","));
-            player.sendMessage(ChatColor.RED + "Lista hubów: " + message);
-            return;
-        }
-
         if (args.length() == 1)
         {
             final String hubName = args.asString(0);
             lobby.tpToHub(Collections.singleton(player), hubName);
         }
+        else
+        {
+            final Collection<HubWorld> localWorlds = lobby.getLocalHub().getLocalWorlds();
+            final String message = localWorlds.stream().map(HubWorld::getHubId).collect(Collectors.joining(","));
+            player.sendMessage(ChatColor.RED + "Lista hubów: " + message);
+        }
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

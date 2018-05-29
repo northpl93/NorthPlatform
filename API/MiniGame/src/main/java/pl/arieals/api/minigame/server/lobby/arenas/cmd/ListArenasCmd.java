@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
+import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
@@ -100,6 +101,19 @@ public class ListArenasCmd extends NorthCommand
             final int percent = (int) ((count * 100D) / totalArenas);
 
             sender.sendMessage("&e  * {0} - {1} ({2}%)", gamePhase, count, percent);
+        }
+
+        sender.sendMessage("&eWedlug rodzaju gry:");
+
+        final Map<GameIdentity, List<RemoteArena>> arenasByIdentity = arenas.stream().collect(Collectors.groupingBy(RemoteArena::getMiniGame));
+        for (final Map.Entry<GameIdentity, List<RemoteArena>> entry : arenasByIdentity.entrySet())
+        {
+            final GameIdentity gameIdentity = entry.getKey();
+            final int count = entry.getValue().size();
+
+            final int percent = (int) ((count * 100D) / totalArenas);
+
+            sender.sendMessage("&e  * {0}/{1} - {2} ({3}%)", gameIdentity.getGameId(), gameIdentity.getVariantId(), count, percent);
         }
     }
 

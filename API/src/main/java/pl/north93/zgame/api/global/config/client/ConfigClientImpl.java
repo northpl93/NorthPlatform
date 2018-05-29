@@ -32,6 +32,7 @@ public class ConfigClientImpl extends Component implements IConfigClient
     {
     }
 
+    @Override
     public void reloadConfig(final String id)
     {
         if (this.serverRpc.reloadConfig(id))
@@ -49,9 +50,9 @@ public class ConfigClientImpl extends Component implements IConfigClient
     }
 
     @Override
-    public <T> IConfig<T> getConfig(final Class<T> type, final String id)
+    public <T> IConfig<T> getConfig(final Class<T> type, final String configId)
     {
-        return new ConfigImpl<>(this, id, this.observationManager.get(type, "configs_" + id));
+        return new ConfigImpl<>(this, configId, this.observationManager.get(type, "configs_" + configId));
     }
 
     @Override

@@ -38,7 +38,7 @@ public interface IConfig<T>
      *
      * @param update Funkcja aktualizujaca.
      */
-    default void update(Consumer<T> update)
+    default void update(final Consumer<T> update)
     {
         final T current = this.get();
         update.accept(current);

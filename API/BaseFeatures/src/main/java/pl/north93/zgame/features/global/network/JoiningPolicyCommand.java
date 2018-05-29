@@ -1,4 +1,4 @@
-package pl.north93.zgame.features.bukkit.server;
+package pl.north93.zgame.features.global.network;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
