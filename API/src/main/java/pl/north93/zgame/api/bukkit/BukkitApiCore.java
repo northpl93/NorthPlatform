@@ -4,6 +4,7 @@ import static pl.north93.zgame.api.global.redis.RedisKeys.SERVER;
 
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -24,6 +25,7 @@ import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.component.impl.general.ComponentManagerImpl;
 import pl.north93.zgame.api.global.exceptions.ConfigurationException;
+import pl.north93.zgame.api.global.utils.lang.SneakyThrow;
 
 public class BukkitApiCore extends ApiCore
 {
@@ -78,7 +80,10 @@ public class BukkitApiCore extends ApiCore
     @Override
     public File getRootDirectory()
     {
-        return new File(Bukkit.class.getProtectionDomain().getCodeSource().getLocation().getFile());
+        // property handle national characters in path
+        String location = Bukkit.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        String path = SneakyThrow.sneaky(() -> URLEncoder.encode(location, "UTF-8"));
+        return new File(path).getParentFile();
     }
 
     @Override
