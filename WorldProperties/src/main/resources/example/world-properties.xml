@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<properties>
+
+	<protection>
+		<build>false</build>
+		<interact>false</interact>
+		<playersInvulnerable>true</playersInvulnerable>
+	</protection>
+	<!-- SUNNY, RAIN, STROM, THUNDERING -->
+	<weather>SUNNY</weather>
+	
+	<time>6000</time>
+	
+	<physics>false</physics>
+	
+	<gamerule name="doTileDrops" value="false" />
+	
+</properties>
