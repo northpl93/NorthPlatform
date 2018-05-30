@@ -4,6 +4,7 @@ import static java.util.Collections.unmodifiableCollection;
 
 
 import java.util.Collection;
+import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +19,9 @@ import pl.north93.zgame.api.chat.global.ChatPlayer;
 import pl.north93.zgame.api.chat.global.ChatRoom;
 import pl.north93.zgame.api.chat.global.ChatRoomNotFoundException;
 import pl.north93.zgame.api.chat.global.impl.data.BroadcastMessage;
+import pl.north93.zgame.api.global.messages.TranslatableString;
+import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
+import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
@@ -90,6 +94,33 @@ import pl.north93.zgame.api.global.redis.observable.Value;
         final BroadcastMessage message = new BroadcastMessage(this.getId(), jsonMessage);
 
         this.chatManager.sendMessage(message);
+    }
+
+    @Override
+    public void broadcast(final TranslatableString translatableString)
+    {
+        final IPlayersManager playersManager = this.chatManager.getPlayersManager();
+        this.data.update(data ->
+        {
+            this.checkIsPresent(data);
+
+            for (final Identity participant : data.getParticipants())
+            {
+                // uzywamy metody unsafe aby nie wywolywac pierdyliarda locków w redisie
+                final Value<IOnlinePlayer> playerValue = playersManager.unsafe().getOnline(participant.getNick());
+                if (! playerValue.isPreset())
+                {
+                    continue;
+                }
+
+                final IOnlinePlayer player = playerValue.get();
+
+                final Locale locale = player.getMyLocale();
+                final BaseComponent component = translatableString.getValue(locale);
+
+                player.sendMessage(component);
+            }
+        });
     }
 
     @Override

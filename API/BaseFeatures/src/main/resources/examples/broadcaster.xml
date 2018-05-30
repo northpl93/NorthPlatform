@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<broadcaster>
+    <!-- konfiguracja zadania broadcastowania, może ich być wiele -->
+    <entry>
+        <!-- Lista pokojów (regex!) na których bedzie broadcastowana wiadomosc. -->
+        <rooms>
+            <room>hub:main</room>
+        </rooms>
+
+        <!-- Lista broadcastowanych wiadomości. Za każdym razem losowana jest inna dla każdego języka -->
+        <messages>
+            <message locale="pl-PL">Testowa wiadomość po polsku co 60 sekund</message>
+        </messages>
+
+        <!-- Co ile sekund broadcastować wiadomości -->
+        <interval>60</interval>
+    </entry>
+</broadcaster>

@@ -18,6 +18,7 @@
             <description>Provides base features for network controller.</description>
             <dependencies>
                 <dependency>API.BaseFeatures</dependency>
+                <dependency>API.Chat.Controller</dependency>
                 <dependency>NetworkController.ConfigServer</dependency>
             </dependencies>
             <platforms>
