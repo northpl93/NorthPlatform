@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <components>
+        <component>
+            <name>Utils.World.Properties</name>
+            <mainClass>pl.mcpiraci.world.properties.impl.WorldPropertiesComponent</mainClass>
+            <description>An utility to config properties of worlds</description>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>

@@ -45,7 +45,8 @@
         <!--<module>../MiniGame/pvp</module>-->
         <module>../GlobalShops</module>
         <module>../AntyCheat</module>
-        <module>../AntyCheat/AntyCheatClient</module>
+		<module>../AntyCheat/AntyCheatClient</module>
+		<module>../WorldProperties</module>
     </modules>
 
     <repositories>
