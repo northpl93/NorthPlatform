@@ -3,9 +3,11 @@ package pl.north93.zgame.itemshop.controller;
 import static spark.Spark.post;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,7 +19,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.metadata.MetaKey;
+import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.INetworkManager;
+import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.itemshop.shared.DataEntry;
 import pl.north93.zgame.itemshop.shared.DataModel;
@@ -26,6 +31,7 @@ import spark.Request;
 
 public class RequestHandler
 {
+    private static final MetaKey ONE_TIME_LIST = MetaKey.get("itemShop_oneTimeList");
     private final Gson                      gson     = new Gson();
     private final Map<String, IDataHandler> handlers = new HashMap<>();
     @Inject
@@ -86,10 +92,43 @@ public class RequestHandler
             return;
         }
 
+        final String oneTimeId = dataEntry.getOneTime();
+        if (oneTimeId != null && this.markAsUsed(identity, oneTimeId))
+        {
+            this.logger.log(Level.INFO, "Skipped dataEntry {0} because it is already used by player", dataEntry.getType());
+            return;
+        }
+
         if (! handler.process(identity, dataEntry.getData()))
         {
             final Object[] params = {handler.getId(), identity.getNick(), identity.getUuid()};
             this.logger.log(Level.WARNING, "Handler {0} failed while processing dataEntry for player {1}/{2}", params);
+        }
+    }
+
+    private boolean markAsUsed(final Identity identity, final String oneTimeId)
+    {
+        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(identity))
+        {
+            final MetaStore metaStore = t.getPlayer().getMetaStore();
+
+            final List<String> oneTimeItemsList = Optional.ofNullable(metaStore.<List<String>>get(ONE_TIME_LIST)).orElseGet(() ->
+            {
+                final List<String> list = new ArrayList<>();
+                metaStore.set(ONE_TIME_LIST, list);
+
+                return list;
+            });
+
+            if (oneTimeItemsList.contains(oneTimeId))
+            {
+                return true;
+            }
+            else
+            {
+                oneTimeItemsList.add(oneTimeId);
+                return false;
+            }
         }
     }
 

@@ -1,0 +1,11 @@
+[
+
+  {"entries":[
+    {"type":"money","oneTime":"test1","data":{"currency":"minigame","amount":"100"}}
+  ]},
+
+  {"entries":[
+    {"type":"group","data":{"group":"vip","time":"300"}}
+  ]}
+
+]
