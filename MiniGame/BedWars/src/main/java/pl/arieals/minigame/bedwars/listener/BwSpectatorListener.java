@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 
@@ -37,7 +38,7 @@ public class BwSpectatorListener implements Listener
         final Player player = event.getPlayer();
 
         final PlayerStatus playerStatus = getPlayerStatus(player);
-        if (playerStatus == null || ! playerStatus.isSpectator())
+        if (playerStatus == null || ! playerStatus.isSpectator() || player.hasPermission("bedwars.ignoreYKeeper"))
         {
             return;
         }
@@ -88,5 +89,16 @@ public class BwSpectatorListener implements Listener
         }
 
         player.teleport(location);
+    }
+
+    @EventHandler
+    public void teleportSpectatorToLobby(final SpectatorJoinEvent event)
+    {
+        final LocalArena arena = getArena(event.getPlayer());
+        assert arena != null;
+
+        final BedWarsArena arenaData = arena.getArenaData();
+        final Location location = arenaData.getConfig().getLobby().toBukkit(arena.getWorld().getCurrentWorld());
+        event.getPlayer().teleport(location);
     }
 }

@@ -47,8 +47,8 @@ import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.arena.netevent.IArenaNetEvent;
 import pl.arieals.api.minigame.shared.api.cfg.MiniGameConfig;
 import pl.arieals.api.minigame.shared.api.hub.IHubServer;
-import pl.arieals.api.minigame.shared.api.location.GameNetworkLocation;
-import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
+import pl.arieals.api.minigame.shared.api.status.InGameStatus;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.exceptions.ConfigurationException;
@@ -135,10 +135,10 @@ public class GameHostManager implements IServerManager
     }
 
     @Override
-    public INetworkLocation getLocation(final Player player)
+    public IPlayerStatus getLocation(final Player player)
     {
         final UUID arenaId = this.arenaManager.getArenaAssociatedWith(player.getUniqueId()).map(IArena::getId).orElse(null);
-        return new GameNetworkLocation(this.apiCore.getServerId(), arenaId, this.miniGameConfig.getGameIdentity());
+        return new InGameStatus(this.apiCore.getServerId(), arenaId, this.miniGameConfig.getGameIdentity());
     }
 
     /**

@@ -5,23 +5,23 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.arieals.api.minigame.shared.api.party.PartyInvite;
 
 public class PartyDataImpl implements IParty
 {
-    private UUID uuid;
-    private UUID ownerUuid;
+    private UUID             uuid;
+    private UUID             ownerUuid;
     private Set<PartyInvite> invites;
     private Set<UUID>        players;
-    private INetworkLocation location;
+    private IPlayerStatus    location;
 
     public PartyDataImpl()
     {
     }
 
-    public PartyDataImpl(final UUID ownerUuid, final INetworkLocation location)
+    public PartyDataImpl(final UUID ownerUuid, final IPlayerStatus location)
     {
         this.uuid = UUID.randomUUID();
         this.ownerUuid = ownerUuid;
@@ -113,12 +113,12 @@ public class PartyDataImpl implements IParty
     }
 
     @Override
-    public INetworkLocation getTargetLocation()
+    public IPlayerStatus getTargetLocation()
     {
         return this.location;
     }
 
-    public void setLocation(final INetworkLocation location)
+    public void setLocation(final IPlayerStatus location)
     {
         this.location = location;
     }

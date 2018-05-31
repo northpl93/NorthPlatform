@@ -13,10 +13,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.util.Vector;
 
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorModeChangeEvent;
@@ -47,7 +47,7 @@ public class SpectatorListener implements Listener
     @EventHandler
     public void onSpectatorDisable(final SpectatorModeChangeEvent event)
     {
-        if (event.getOldStatus() == null || !event.getOldStatus().isSpectator())
+        if (event.getOldStatus() == null || ! event.getOldStatus().isSpectator())
         {
             return;
         }
@@ -69,11 +69,7 @@ public class SpectatorListener implements Listener
         }
 
         final PlayerStatus playerStatus = getPlayerStatus(player);
-        if (playerStatus == null)
-        {
-            return;
-        }
-        if (playerStatus.isSpectator())
+        if (playerStatus != null && playerStatus.isSpectator())
         {
             cancellable.setCancelled(true);
         }
@@ -94,7 +90,7 @@ public class SpectatorListener implements Listener
         {
             final EntityDamageByEntityEvent byEntity = (EntityDamageByEntityEvent) event;
             final Player attacker = instanceOf(byEntity.getDamager(), Player.class);
-            final Player receiver = instanceOf(byEntity.getDamager(), Player.class);
+            final Player receiver = instanceOf(byEntity.getEntity(), Player.class);
 
             this.cancelIfNecessary(event, attacker);
             this.cancelIfNecessary(event, receiver);
@@ -133,9 +129,9 @@ public class SpectatorListener implements Listener
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public void disableItemPickup(final PlayerPickupItemEvent event)
+    public void disableItemPickup(final EntityPickupItemEvent event)
     {
-        final Player player = event.getPlayer();
+        final Player player = instanceOf(event.getEntity(), Player.class);
         this.cancelIfNecessary(event, player);
     }
 

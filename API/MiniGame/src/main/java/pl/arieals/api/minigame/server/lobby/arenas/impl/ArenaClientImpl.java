@@ -2,6 +2,7 @@ package pl.arieals.api.minigame.server.lobby.arenas.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,6 +76,12 @@ public class ArenaClientImpl implements IArenaClient
     }
 
     @Override
+    public IArena get(final UUID arenaId)
+    {
+        return this.arenas.get(arenaId);
+    }
+
+    @Override
     public Collection<IArena> get(final ArenaQuery query)
     {
         final Collection<IArena> arenas = new ArrayList<>(this.arenas.values());
@@ -104,21 +111,29 @@ public class ArenaClientImpl implements IArenaClient
     @Override
     public boolean connect(final IArena arena, final Collection<PlayerJoinInfo> players)
     {
+        return this.doConnect(arena, players, false);
+    }
+
+    @Override
+    public boolean spectate(final IArena arena, final PlayerJoinInfo playerJoinInfo)
+    {
+        return this.doConnect(arena, Collections.singletonList(playerJoinInfo), true);
+    }
+
+    private boolean doConnect(final IArena arena, final Collection<PlayerJoinInfo> players, final boolean spectator)
+    {
         final IGameHostRpc rpcProxy = this.getGameHostRpc(arena.getServerId());
 
-        Boolean connectionResult;
         try
         {
-            connectionResult = rpcProxy.tryConnectPlayers(new ArrayList<>(players), arena.getId(), false);
+            if (! rpcProxy.tryConnectPlayers(new ArrayList<>(players), arena.getId(), spectator))
+            {
+                return false;
+            }
         }
         catch (final RpcException exception)
         {
             exception.printStackTrace();
-            connectionResult = false;
-        }
-
-        if (! connectionResult)
-        {
             return false;
         }
 

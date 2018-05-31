@@ -3,7 +3,6 @@ package pl.north93.zgame.api.bungee.connection;
 import java.util.Comparator;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -52,14 +51,20 @@ public class ConnectionManager
 
     public Server getBestServerFromServersGroup(final String serversGroup)
     {
-        final Predicate<Server> requireWorking = server -> server.getServerState() == ServerState.WORKING;
         final Comparator<Server> playersComparator = Comparator.comparing(Server::getPlayersCount);
 
         final Set<Server> servers = this.networkManager.getServers().inGroup(serversGroup);
         return servers.stream()
-                      .filter(requireWorking)
+                      .filter(this::checkIsServerWorking)
                       .min(playersComparator)
                       .orElse(null);
+    }
+
+    private boolean checkIsServerWorking(final Server server)
+    {
+        // nie chcemy teleportowac graczy na serwery wlaczajace/wylaczajace sie i
+        // zaplanowane do wylaczenia
+        return server.getServerState() == ServerState.WORKING && ! server.isShutdownScheduled();
     }
 
     @Override

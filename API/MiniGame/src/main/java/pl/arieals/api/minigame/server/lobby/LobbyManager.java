@@ -13,8 +13,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.lobby.hub.LocalHubServer;
 import pl.arieals.api.minigame.shared.api.hub.IHubServer;
-import pl.arieals.api.minigame.shared.api.location.HubNetworkLocation;
-import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
+import pl.arieals.api.minigame.shared.api.status.InHubStatus;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -58,10 +58,10 @@ public class LobbyManager implements IServerManager
     }
 
     @Override
-    public INetworkLocation getLocation(final Player player)
+    public IPlayerStatus getLocation(final Player player)
     {
         final String hubId = this.getLocalHub().getHubWorld(player).getHubId();
-        return new HubNetworkLocation(this.apiCore.getServerId(), hubId);
+        return new InHubStatus(this.apiCore.getServerId(), hubId);
     }
 
     /**

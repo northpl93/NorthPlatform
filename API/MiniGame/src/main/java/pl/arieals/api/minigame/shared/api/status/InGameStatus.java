@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.shared.api.location;
+package pl.arieals.api.minigame.shared.api.status;
 
 import javax.annotation.Nullable;
 
@@ -10,17 +10,17 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 
-public final class GameNetworkLocation implements INetworkLocation
+public final class InGameStatus implements IPlayerStatus
 {
     private UUID         serverId;
     private UUID         arenaId;
     private GameIdentity game;
 
-    public GameNetworkLocation()
+    public InGameStatus()
     {
     }
 
-    public GameNetworkLocation(final UUID serverId, final @Nullable UUID arenaId, final GameIdentity game)
+    public InGameStatus(final UUID serverId, final @Nullable UUID arenaId, final GameIdentity game)
     {
         this.serverId = serverId;
         this.arenaId = arenaId;
@@ -61,7 +61,7 @@ public final class GameNetworkLocation implements INetworkLocation
         {
             return false;
         }
-        final GameNetworkLocation that = (GameNetworkLocation) o;
+        final InGameStatus that = (InGameStatus) o;
         return Objects.equals(this.serverId, that.serverId) && Objects.equals(this.arenaId, that.arenaId) && Objects.equals(this.game, that.game);
     }
 

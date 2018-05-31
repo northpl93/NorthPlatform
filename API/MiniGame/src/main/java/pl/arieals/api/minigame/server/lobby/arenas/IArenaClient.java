@@ -10,6 +10,8 @@ import pl.arieals.api.minigame.shared.api.arena.IArena;
 
 public interface IArenaClient
 {
+    IArena get(UUID arenaId);
+
     Collection<IArena> get(ArenaQuery query);
 
     void observe(ArenaQuery query, IArenaObserver observer);
@@ -22,6 +24,8 @@ public interface IArenaClient
     {
         return this.connect(arena, Collections.singleton(playerJoinInfo));
     }
+
+    boolean spectate(final IArena arena, final PlayerJoinInfo playerJoinInfo);
 
     IGameHostRpc getGameHostRpc(UUID serverId);
 }

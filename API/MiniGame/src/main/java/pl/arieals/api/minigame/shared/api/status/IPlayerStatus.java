@@ -1,11 +1,11 @@
-package pl.arieals.api.minigame.shared.api.location;
+package pl.arieals.api.minigame.shared.api.status;
 
 import java.util.UUID;
 
 /**
  * Reprezentuje lokację w sieci w której znajduje się gracz.
  */
-public interface INetworkLocation
+public interface IPlayerStatus
 {
     /**
      * @return ID serwera na którym znajduje się gracz.
@@ -25,6 +25,7 @@ public interface INetworkLocation
     {
         HUB,
         GAME,
-        UNKNOWN
+        UNKNOWN,
+        OFFLINE
     }
 }

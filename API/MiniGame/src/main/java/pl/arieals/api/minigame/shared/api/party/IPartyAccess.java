@@ -1,6 +1,6 @@
 package pl.arieals.api.minigame.shared.api.party;
 
-import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.arieals.api.minigame.shared.api.party.event.InviteToPartyNetEvent;
 import pl.arieals.api.minigame.shared.api.party.event.JoinPartyNetEvent;
 import pl.arieals.api.minigame.shared.api.party.event.LeavePartyNetEvent.LeavePartyReason;
@@ -21,7 +21,7 @@ public interface IPartyAccess extends IParty
      *
      * @param location Nowa lokalizacja tego Party.
      */
-    void changeLocation(INetworkLocation location);
+    void changeLocation(IPlayerStatus location);
 
     /**
      * Zmienia lidera/właściciela tego Party.

@@ -10,7 +10,7 @@ import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.arieals.api.minigame.shared.api.party.IPartyAccess;
 import pl.arieals.api.minigame.shared.api.party.PartyInvite;
 import pl.arieals.api.minigame.shared.api.party.PlayerAlreadyHasPartyException;
@@ -38,7 +38,7 @@ import pl.north93.zgame.api.global.network.players.PlayerOfflineException;
     }
 
     @Override
-    public void changeLocation(final INetworkLocation location)
+    public void changeLocation(final IPlayerStatus location)
     {
         Preconditions.checkState(this.isNotDeleted(), "Party is deleted");
 
@@ -241,7 +241,7 @@ import pl.north93.zgame.api.global.network.players.PlayerOfflineException;
     }
 
     @Override
-    public INetworkLocation getTargetLocation()
+    public IPlayerStatus getTargetLocation()
     {
         return this.partyData.getTargetLocation();
     }

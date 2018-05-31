@@ -28,12 +28,20 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinWithoutArenaEvent;
 import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatusManager;
+import pl.arieals.api.minigame.shared.api.status.InGameStatus;
+import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.network.players.Identity;
 
 public class PlayerListener implements Listener
 {
     @Inject
-    private MiniGameServer server;
+    private MiniGameServer       server;
+    @Inject
+    private IBukkitExecutor      bukkitExecutor;
+    @Inject
+    private IPlayerStatusManager statusManager;
 
     @EventHandler
     public void onPlayerJoin(final PlayerJoinEvent event)
@@ -50,7 +58,8 @@ public class PlayerListener implements Listener
             final PlayersManager playersManager = localArena.getPlayersManager();
             playersManager.playerConnected(player);
 
-            this.fixLobbyVisibility(localArena, player);
+            this.setPlayerStatus(player, localArena);
+            this.fixLobbyVisibility(player, localArena);
         }
         else
         {
@@ -68,7 +77,7 @@ public class PlayerListener implements Listener
      * Recznie untrackujemy kazdego wchodzacego gracza
      * zeby serwer mogl go ztrackowac ponownie, poprawnie
      */
-    private void fixLobbyVisibility(final LocalArena arena, final Player player)
+    private void fixLobbyVisibility(final Player player, final LocalArena arena)
     {
         final EntityPlayer joiningPlayer = asCraftPlayer(player).getHandle();
         final EntityTrackerEntry joiningTrackerEntry = getTrackerEntry(joiningPlayer);
@@ -92,6 +101,18 @@ public class PlayerListener implements Listener
             // untrackujemy gracza bedacego na arenie z trackera gracza wchodzacego na arene
             joiningTrackerEntry.a(arenaEntityPlayer);
         }
+    }
+
+    private void setPlayerStatus(final Player player, final LocalArena arena)
+    {
+        final GameHostManager gameHostManager = this.server.getServerManager();
+        this.bukkitExecutor.async(() ->
+        {
+            final Identity identity = Identity.of(player);
+            final InGameStatus status = new InGameStatus(gameHostManager.getServerId(), arena.getId(), arena.getMiniGame());
+
+            this.statusManager.updatePlayerStatus(identity, status);
+        });
     }
 
     @EventHandler

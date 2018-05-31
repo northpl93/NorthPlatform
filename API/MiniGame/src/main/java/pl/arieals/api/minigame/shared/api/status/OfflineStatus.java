@@ -1,0 +1,24 @@
+package pl.arieals.api.minigame.shared.api.status;
+
+import java.util.UUID;
+
+public class OfflineStatus implements IPlayerStatus
+{
+    public static final IPlayerStatus INSTANCE = new OfflineStatus();
+
+    private OfflineStatus()
+    {
+    }
+
+    @Override
+    public UUID getServerId()
+    {
+        return null;
+    }
+
+    @Override
+    public LocationType getType()
+    {
+        return LocationType.OFFLINE;
+    }
+}

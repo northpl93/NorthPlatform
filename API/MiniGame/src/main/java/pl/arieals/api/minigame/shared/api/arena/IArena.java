@@ -5,8 +5,8 @@ import java.util.UUID;
 
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.GamePhase;
-import pl.arieals.api.minigame.shared.api.location.GameNetworkLocation;
-import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
+import pl.arieals.api.minigame.shared.api.status.InGameStatus;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 
 public interface IArena
 {
@@ -72,12 +72,12 @@ public interface IArena
     int getMaxPlayers();
 
     /**
-     * Zwraca obiekt lokalizacji sieciowej reprezentujący tą arenę.
+     * Zwraca obiekt statusu reprezentujący grę na tej arenie.
      *
-     * @return Obiekt lokalizacji sieciowej tej areny.
+     * @return Obiekt statusu tej areny.
      */
-    default INetworkLocation getLocation()
+    default IPlayerStatus getPlayerStatus()
     {
-        return new GameNetworkLocation(this.getServerId(), this.getId(), this.getMiniGame());
+        return new InGameStatus(this.getServerId(), this.getId(), this.getMiniGame());
     }
 }

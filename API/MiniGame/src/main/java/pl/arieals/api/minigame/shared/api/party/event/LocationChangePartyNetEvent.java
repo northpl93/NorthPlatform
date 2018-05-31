@@ -3,24 +3,24 @@ package pl.arieals.api.minigame.shared.api.party.event;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.arieals.api.minigame.shared.impl.party.PartyDataImpl;
 
 public class LocationChangePartyNetEvent extends PartyNetEvent
 {
-    private INetworkLocation location;
+    private IPlayerStatus location;
 
     public LocationChangePartyNetEvent()
     {
     }
 
-    public LocationChangePartyNetEvent(final PartyDataImpl party, final INetworkLocation location)
+    public LocationChangePartyNetEvent(final PartyDataImpl party, final IPlayerStatus location)
     {
         super(party);
         this.location = location;
     }
 
-    public INetworkLocation getLocation()
+    public IPlayerStatus getLocation()
     {
         return this.location;
     }

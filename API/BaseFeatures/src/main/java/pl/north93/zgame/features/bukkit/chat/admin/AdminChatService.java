@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.zgame.api.chat.global.ChatManager;
 import pl.north93.zgame.api.chat.global.ChatRoom;
+import pl.north93.zgame.api.chat.global.ChatRoomPriority;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
 public class AdminChatService
@@ -15,7 +16,7 @@ public class AdminChatService
     @Bean
     private AdminChatService(final ChatManager chatManager)
     {
-        this.adminRoom = chatManager.getOrCreateRoom("admin", new AdminChatFormatter(), 0);
+        this.adminRoom = chatManager.getOrCreateRoom("admin", new AdminChatFormatter(), ChatRoomPriority.LOW);
     }
 
     public ChatRoom getAdminRoom()

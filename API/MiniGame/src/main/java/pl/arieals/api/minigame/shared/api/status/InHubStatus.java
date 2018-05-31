@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.shared.api.location;
+package pl.arieals.api.minigame.shared.api.status;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -9,16 +9,16 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * Reprezentuje lokację w której znajduje się gracz
  */
-public final class HubNetworkLocation implements INetworkLocation
+public final class InHubStatus implements IPlayerStatus
 {
     private UUID   serverId;
     private String hubId;
 
-    public HubNetworkLocation()
+    public InHubStatus()
     {
     }
 
-    public HubNetworkLocation(final UUID serverId, final String hubId)
+    public InHubStatus(final UUID serverId, final String hubId)
     {
         this.serverId = serverId;
         this.hubId = hubId;
@@ -52,7 +52,7 @@ public final class HubNetworkLocation implements INetworkLocation
         {
             return false;
         }
-        final HubNetworkLocation that = (HubNetworkLocation) o;
+        final InHubStatus that = (InHubStatus) o;
         return Objects.equals(this.serverId, that.serverId) && Objects.equals(this.hubId, that.hubId);
     }
 

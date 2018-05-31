@@ -14,8 +14,8 @@ import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
 import pl.arieals.api.minigame.server.lobby.hub.SelectHubServerJoinAction;
 import pl.arieals.api.minigame.server.utils.party.PartyClient;
-import pl.arieals.api.minigame.shared.api.location.HubNetworkLocation;
-import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
+import pl.arieals.api.minigame.shared.api.status.InHubStatus;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.arieals.api.minigame.shared.api.party.event.LocationChangePartyNetEvent;
 import pl.north93.zgame.api.bukkit.player.IBukkitPlayers;
@@ -59,8 +59,8 @@ public class PartyHubListener implements AutoListener
     @NetEventSubscriber(LocationChangePartyNetEvent.class)
     public void teleportPartyToNewHubLocation(final LocationChangePartyNetEvent event)
     {
-        final INetworkLocation newLocation = event.getLocation();
-        if (newLocation.getType() != INetworkLocation.LocationType.HUB)
+        final IPlayerStatus newLocation = event.getLocation();
+        if (newLocation.getType() != IPlayerStatus.LocationType.HUB)
         {
             // kiedy nowa lokalizacja znajduje sie na serwerze gier to nic nie robimy
             // bo tu to nas nie obchodzi
@@ -68,7 +68,7 @@ public class PartyHubListener implements AutoListener
         }
 
         final UUID newServerId = newLocation.getServerId();
-        final String newHubId = ((HubNetworkLocation) newLocation).getHubId();
+        final String newHubId = ((InHubStatus) newLocation).getHubId();
 
         final LobbyManager lobbyManager = this.miniGameServer.getServerManager();
 
@@ -85,7 +85,7 @@ public class PartyHubListener implements AutoListener
             // sprawdzamy czy gracz juz znajduje sie na dobrym serwerze, czy trzeba go przeniesc
             if (newServerId.equals(lobbyManager.getServerId()))
             {
-                final INetworkLocation playerLocation = lobbyManager.getLocation(localPlayer);
+                final IPlayerStatus playerLocation = lobbyManager.getLocation(localPlayer);
                 if (newLocation.equals(playerLocation))
                 {
                     // gracz juz znajduje sie w tej lokalizacji, nic nie robimy

@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.diorite.commons.math.DioriteRandomUtils;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
-import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.arieals.api.minigame.shared.api.party.IPartyManager;
 import pl.arieals.api.minigame.shared.api.party.PartyInvite;
@@ -199,7 +199,7 @@ public class PartyClient
         return playerParty == null || playerParty.isOwner(player.getUniqueId());
     }
 
-    public void changePartyLocation(final IParty party, final INetworkLocation location)
+    public void changePartyLocation(final IParty party, final IPlayerStatus location)
     {
         this.partyManager.access(party.getId(), partyAccess ->
         {
@@ -215,7 +215,7 @@ public class PartyClient
             return party;
         }
 
-        final INetworkLocation location = this.miniGameServer.getServerManager().getLocation(player);
+        final IPlayerStatus location = this.miniGameServer.getServerManager().getLocation(player);
         try
         {
             return this.partyManager.createParty(Identity.of(player), location);

@@ -39,7 +39,7 @@ public class DeathMatchStartListener implements Listener
         serverManager.getRegionManager().getRegions(event.getOldWorld()).forEach(ITrackedRegion::unTrack);
 
         final Location location = event.getArena().getDeathMatch().getArenaSpawn();
-        for (final Player player : event.getArena().getPlayersManager().getPlayers())
+        for (final Player player : event.getArena().getPlayersManager().getAllPlayers())
         {
             this.messages.sendMessage(player, "separator");
             this.messages.sendMessage(player, "deathmatch.welcome", MessageLayout.CENTER);

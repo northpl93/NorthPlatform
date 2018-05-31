@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 
 import pl.arieals.api.minigame.shared.api.hub.IHubServer;
-import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 
 public interface IServerManager
 {
@@ -26,5 +26,5 @@ public interface IServerManager
      * @param player Lokalny gracz dla którego pobieramy lokalizację.
      * @return Lokalizacja sieciowa danego lokalnego gracza.
      */
-    INetworkLocation getLocation(Player player);
+    IPlayerStatus getLocation(Player player);
 }

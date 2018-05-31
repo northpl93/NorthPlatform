@@ -1,8 +1,5 @@
 package pl.arieals.api.minigame.server.lobby.hub.listener;
 
-import static java.text.MessageFormat.format;
-
-
 import java.util.Collection;
 
 import org.bukkit.Bukkit;
@@ -21,9 +18,13 @@ import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
 import pl.arieals.api.minigame.server.lobby.hub.LocalHubServer;
 import pl.arieals.api.minigame.server.lobby.hub.SelectHubServerJoinAction;
 import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatusManager;
+import pl.arieals.api.minigame.shared.api.status.InHubStatus;
 import pl.north93.zgame.api.bukkit.player.event.PlayerDataLoadedEvent;
+import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 
 /**
@@ -33,7 +34,11 @@ import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 public class PlayerJoinHubServerListener implements AutoListener
 {
     @Inject
-    private MiniGameServer gameServer;
+    private MiniGameServer       gameServer;
+    @Inject
+    private IBukkitExecutor      bukkitExecutor;
+    @Inject
+    private IPlayerStatusManager statusManager;
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void teleportPlayerToDefaultHubOnJoin(final PlayerDataLoadedEvent event)
@@ -80,11 +85,20 @@ public class PlayerJoinHubServerListener implements AutoListener
     }
 
     @EventHandler
-    public void test(final PlayerSwitchedHubEvent event)
+    public void updatePlayerStatusOnHubSwitch(final PlayerSwitchedHubEvent event)
     {
-        final String playerName = event.getPlayer().getName();
-        final String hubId = event.getNewHub().getHubId();
-        Bukkit.broadcastMessage(format("Player {0} switched hub to {1}", playerName, hubId));
+        final LobbyManager serverManager = this.gameServer.getServerManager();
+
+        this.bukkitExecutor.async(() ->
+        {
+            final Identity identity = Identity.of(event.getPlayer());
+            final InHubStatus status = new InHubStatus(serverManager.getServerId(), event.getNewHub().getHubId());
+
+            this.statusManager.updatePlayerStatus(identity, status);
+        });
+//        final String playerName = event.getPlayer().getName();
+//        final String hubId = event.getNewHub().getHubId();
+//        Bukkit.broadcastMessage(format("Player {0} switched hub to {1}", playerName, hubId));
     }
 
     @Override

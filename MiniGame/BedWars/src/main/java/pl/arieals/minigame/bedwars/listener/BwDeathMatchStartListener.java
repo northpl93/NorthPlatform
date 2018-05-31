@@ -16,7 +16,7 @@ import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
-public class DeathMatchStartListener implements Listener
+public class BwDeathMatchStartListener implements Listener
 {
     @Inject
     private Logger logger;

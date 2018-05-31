@@ -3,7 +3,7 @@ package pl.arieals.api.minigame.shared.api.party;
 import java.util.Set;
 import java.util.UUID;
 
-import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 
 /**
  * Interfejs udostępiniający dane Party w trybie tylko do odczytu.
@@ -35,7 +35,7 @@ public interface IParty
      *
      * @return Aktualna lokalizacja kapitana party.
      */
-    INetworkLocation getTargetLocation();
+    IPlayerStatus getTargetLocation();
 
     /**
      * Zwraca prawdę jeśli właściciel party jest w grze.
@@ -44,6 +44,6 @@ public interface IParty
      */
     default boolean isInGame()
     {
-        return this.getTargetLocation().getType() == INetworkLocation.LocationType.GAME;
+        return this.getTargetLocation().getType() == IPlayerStatus.LocationType.GAME;
     }
 }

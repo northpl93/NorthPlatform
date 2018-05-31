@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.arieals.api.minigame.shared.api.party.IPartyAccess;
 import pl.arieals.api.minigame.shared.api.party.IPartyManager;
@@ -74,7 +74,7 @@ public class PartyManagerImpl implements IPartyManager
     }
 
     @Override
-    public IParty createParty(final Identity ownerIdentity, final INetworkLocation location) throws PlayerNotFoundException, PlayerAlreadyHasPartyException
+    public IParty createParty(final Identity ownerIdentity, final IPlayerStatus location) throws PlayerNotFoundException, PlayerAlreadyHasPartyException
     {
         try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(ownerIdentity))
         {

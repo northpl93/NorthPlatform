@@ -5,7 +5,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import pl.arieals.api.minigame.shared.api.location.INetworkLocation;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.Identity;
@@ -34,7 +34,7 @@ public interface IPartyManager
      * @param location Lokalizacja sieciowa party.
      * @return Nowa instancja party o podanym właścicielu i lokalizacji.
      */
-    IParty createParty(Identity ownerIdentity, INetworkLocation location) throws PlayerNotFoundException, PlayerAlreadyHasPartyException;
+    IParty createParty(Identity ownerIdentity, IPlayerStatus location) throws PlayerNotFoundException, PlayerAlreadyHasPartyException;
 
     <T> T access(UUID partyId, Function<IPartyAccess, T> atomicFunction);
 
