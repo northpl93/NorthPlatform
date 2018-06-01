@@ -2,11 +2,11 @@ package pl.mcpiraci.world.properties;
 
 import org.bukkit.entity.Player;
 
-public interface PlayerProperties
+public interface IPlayerProperties
 {
     Player getPlayer();
     
-    WorldProperties getCurrentWorldProperties();
+    IWorldProperties getCurrentWorldProperties();
     
     boolean canBypassRestrictions();
     

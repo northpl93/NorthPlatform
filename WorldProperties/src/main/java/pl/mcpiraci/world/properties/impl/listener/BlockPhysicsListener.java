@@ -8,22 +8,22 @@ import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 
-import pl.mcpiraci.world.properties.WorldProperties;
-import pl.mcpiraci.world.properties.WorldPropertiesManager;
+import pl.mcpiraci.world.properties.IWorldProperties;
+import pl.mcpiraci.world.properties.IWorldPropertiesManager;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 
 public class BlockPhysicsListener implements AutoListener
 {
-    private final WorldPropertiesManager propertiesManager;
+    private final IWorldPropertiesManager propertiesManager;
     
-    private BlockPhysicsListener(WorldPropertiesManager propertiesManager)
+    private BlockPhysicsListener(IWorldPropertiesManager propertiesManager)
     {
         this.propertiesManager = propertiesManager;
     }
     
     private void handleEvent(World world, Cancellable event)
     {
-        WorldProperties properties = propertiesManager.getProperties(world);
+        IWorldProperties properties = propertiesManager.getProperties(world);
         
         if ( properties != null && !properties.isPhysicsEnabled() )
         {

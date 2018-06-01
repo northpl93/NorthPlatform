@@ -2,15 +2,15 @@ package pl.mcpiraci.world.properties.impl;
 
 import org.bukkit.entity.Player;
 
-import pl.mcpiraci.world.properties.PlayerProperties;
-import pl.mcpiraci.world.properties.WorldProperties;
-import pl.mcpiraci.world.properties.WorldPropertiesManager;
+import pl.mcpiraci.world.properties.IPlayerProperties;
+import pl.mcpiraci.world.properties.IWorldProperties;
+import pl.mcpiraci.world.properties.IWorldPropertiesManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
-public class PlayerPropertiesImpl implements PlayerProperties
+public class PlayerPropertiesImpl implements IPlayerProperties
 {
     @Inject
-    private static WorldPropertiesManager propertiesManager;
+    private static IWorldPropertiesManager propertiesManager;
     
     private final Player player;
     
@@ -29,7 +29,7 @@ public class PlayerPropertiesImpl implements PlayerProperties
     }
     
     @Override
-    public WorldProperties getCurrentWorldProperties()
+    public IWorldProperties getCurrentWorldProperties()
     {
         return propertiesManager.getProperties(player.getWorld());
     }

@@ -3,7 +3,7 @@ package pl.mcpiraci.world.properties;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-public interface WorldPropertiesManager
+public interface IWorldPropertiesManager
 {
     PropertiesConfig getServerConfig();
     
@@ -11,13 +11,13 @@ public interface WorldPropertiesManager
     
     PropertiesConfig getWorldConfig(World world);
     
-    WorldProperties getProperties(String worldName);
+    IWorldProperties getProperties(String worldName);
     
-    WorldProperties getProperties(World world);
+    IWorldProperties getProperties(World world);
     
-    PlayerProperties getPlayerProperties(String playerName);
+    IPlayerProperties getPlayerProperties(String playerName);
     
-    PlayerProperties getPlayerProperties(Player player);
+    IPlayerProperties getPlayerProperties(Player player);
 
     void reloadServerConfig();
 }

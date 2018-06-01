@@ -5,7 +5,7 @@ import java.util.Map;
 import org.bukkit.GameMode;
 import org.bukkit.World;
 
-public interface WorldProperties
+public interface IWorldProperties
 {
     /**
      * @return a world that properties are applied

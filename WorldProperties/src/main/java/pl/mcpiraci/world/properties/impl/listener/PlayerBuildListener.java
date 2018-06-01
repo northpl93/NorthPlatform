@@ -7,22 +7,22 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import pl.mcpiraci.world.properties.PlayerProperties;
-import pl.mcpiraci.world.properties.WorldPropertiesManager;
+import pl.mcpiraci.world.properties.IPlayerProperties;
+import pl.mcpiraci.world.properties.IWorldPropertiesManager;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 
 public class PlayerBuildListener implements AutoListener
 {
-    private final WorldPropertiesManager propertiesManager;
+    private final IWorldPropertiesManager propertiesManager;
     
-    private PlayerBuildListener(WorldPropertiesManager propertiesManager)
+    private PlayerBuildListener(IWorldPropertiesManager propertiesManager)
     {
         this.propertiesManager = propertiesManager;
     }
     
     private void handleEvent(Player player, Cancellable event)
     {
-        PlayerProperties playerProperties = propertiesManager.getPlayerProperties(player);
+        IPlayerProperties playerProperties = propertiesManager.getPlayerProperties(player);
         
         if ( !playerProperties.effectiveCanBuild() )
         {

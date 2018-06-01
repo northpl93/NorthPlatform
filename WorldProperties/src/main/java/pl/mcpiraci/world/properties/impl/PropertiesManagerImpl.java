@@ -16,22 +16,22 @@ import org.bukkit.entity.Player;
 
 import com.google.common.base.Preconditions;
 
-import pl.mcpiraci.world.properties.PlayerProperties;
+import pl.mcpiraci.world.properties.IPlayerProperties;
 import pl.mcpiraci.world.properties.PropertiesConfig;
-import pl.mcpiraci.world.properties.WorldProperties;
-import pl.mcpiraci.world.properties.WorldPropertiesManager;
+import pl.mcpiraci.world.properties.IWorldProperties;
+import pl.mcpiraci.world.properties.IWorldPropertiesManager;
 import pl.mcpiraci.world.properties.impl.xml.XmlWorldProperties;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
-public class PropertiesManagerImpl implements WorldPropertiesManager
+public class PropertiesManagerImpl implements IWorldPropertiesManager
 {
     private static Logger logger = LogManager.getLogger();
     
     private final PropertiesConfig serverConfig = new PropertiesConfig(null);
     private final Map<String, WorldPropertiesImpl> propertiesByWorld = new HashMap<>();
-    private final Map<Player, PlayerProperties> playerProperties = new WeakHashMap<>();
+    private final Map<Player, IPlayerProperties> playerProperties = new WeakHashMap<>();
     
     private final BukkitApiCore apiCore;
     
@@ -53,7 +53,7 @@ public class PropertiesManagerImpl implements WorldPropertiesManager
     {
         Preconditions.checkArgument(worldName != null, "World name cannot be null");
         
-        return Optional.ofNullable(getProperties(worldName)).map(WorldProperties::getWorldConfig).orElse(null);
+        return Optional.ofNullable(getProperties(worldName)).map(IWorldProperties::getWorldConfig).orElse(null);
     }
 
     @Override
@@ -61,32 +61,32 @@ public class PropertiesManagerImpl implements WorldPropertiesManager
     {
         Preconditions.checkArgument(world != null, "World cannot be null");
         
-        return Optional.ofNullable(getProperties(world)).map(WorldProperties::getWorldConfig).orElse(null);
+        return Optional.ofNullable(getProperties(world)).map(IWorldProperties::getWorldConfig).orElse(null);
     }
 
     @Override
-    public WorldProperties getProperties(String worldName)
+    public IWorldProperties getProperties(String worldName)
     {
         Preconditions.checkArgument(worldName != null, "World name cannot be null");
         return propertiesByWorld.get(worldName);
     }
 
     @Override
-    public WorldProperties getProperties(World world)
+    public IWorldProperties getProperties(World world)
     {
         Preconditions.checkArgument(world != null, "World cannot be null");
         return propertiesByWorld.get(world.getName());
     }
     
     @Override
-    public PlayerProperties getPlayerProperties(String playerName)
+    public IPlayerProperties getPlayerProperties(String playerName)
     {
         Preconditions.checkArgument(playerName != null, "Player name cannot be null");
         return getPlayerProperties(Bukkit.getPlayerExact(playerName));
     }
 
     @Override
-    public PlayerProperties getPlayerProperties(Player player)
+    public IPlayerProperties getPlayerProperties(Player player)
     {
         Preconditions.checkArgument(player != null, "Player cannot be null");
         

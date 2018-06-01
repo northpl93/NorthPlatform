@@ -9,17 +9,17 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import pl.mcpiraci.world.properties.PlayerProperties;
-import pl.mcpiraci.world.properties.WorldPropertiesManager;
+import pl.mcpiraci.world.properties.IPlayerProperties;
+import pl.mcpiraci.world.properties.IWorldPropertiesManager;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 
 public class PlayerInvulnerableListener implements AutoListener
 {
     private static final Logger logger = LogManager.getLogger();
     
-    private final WorldPropertiesManager propertiesManager;
+    private final IWorldPropertiesManager propertiesManager;
     
-    private PlayerInvulnerableListener(WorldPropertiesManager propertiesManager)
+    private PlayerInvulnerableListener(IWorldPropertiesManager propertiesManager)
     {
         this.propertiesManager = propertiesManager;
     }
@@ -33,7 +33,7 @@ public class PlayerInvulnerableListener implements AutoListener
         }
         
         Player player = (Player) event.getEntity();
-        PlayerProperties playerProperties = propertiesManager.getPlayerProperties(player);
+        IPlayerProperties playerProperties = propertiesManager.getPlayerProperties(player);
         
         if ( playerProperties.effectiveInvulnerable() )
         {
@@ -45,7 +45,7 @@ public class PlayerInvulnerableListener implements AutoListener
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onFallIntoVoid(PlayerMoveEvent event)
     {
-        PlayerProperties playerProperties = propertiesManager.getPlayerProperties(event.getPlayer());
+        IPlayerProperties playerProperties = propertiesManager.getPlayerProperties(event.getPlayer());
         
         if ( event.getTo().getY() < 0 && playerProperties.effectiveInvulnerable() )
         {
@@ -56,7 +56,7 @@ public class PlayerInvulnerableListener implements AutoListener
     @EventHandler
     public void onPlayerDie(PlayerDeathEvent event)
     {
-        PlayerProperties playerProperties = propertiesManager.getPlayerProperties(event.getEntity());
+        IPlayerProperties playerProperties = propertiesManager.getPlayerProperties(event.getEntity());
         
         if ( playerProperties.effectiveInvulnerable() )
         {

@@ -3,8 +3,8 @@ package pl.mcpiraci.world.properties.impl.cmd;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import pl.mcpiraci.world.properties.PlayerProperties;
-import pl.mcpiraci.world.properties.WorldPropertiesManager;
+import pl.mcpiraci.world.properties.IPlayerProperties;
+import pl.mcpiraci.world.properties.IWorldPropertiesManager;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
@@ -13,10 +13,10 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class BypassRestrictionsCommand extends NorthCommand
 {
-    private final WorldPropertiesManager propertiesManager;
+    private final IWorldPropertiesManager propertiesManager;
     private final MessagesBox messages;
     
-    public BypassRestrictionsCommand(WorldPropertiesManager propertiesManager, @Messages("commands") MessagesBox messages)
+    public BypassRestrictionsCommand(IWorldPropertiesManager propertiesManager, @Messages("commands") MessagesBox messages)
     {
         super("br", "bypass-restrictions");
         setPermission("worldproperties.cmd.br");
@@ -44,7 +44,7 @@ public class BypassRestrictionsCommand extends NorthCommand
             player = Bukkit.getPlayer(args.asString(0));
         }
         
-        PlayerProperties playerProperties = propertiesManager.getPlayerProperties(player);
+        IPlayerProperties playerProperties = propertiesManager.getPlayerProperties(player);
         playerProperties.setCanBypassRestriction(!playerProperties.canBypassRestrictions());
         
         sender.sendMessage(messages, playerProperties.canBypassRestrictions() ? "br.on" : "br.off", player.getName());

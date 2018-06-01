@@ -15,14 +15,14 @@ import com.google.common.collect.ImmutableMap;
 
 import pl.mcpiraci.world.properties.PropertiesConfig;
 import pl.mcpiraci.world.properties.Weather;
-import pl.mcpiraci.world.properties.WorldProperties;
+import pl.mcpiraci.world.properties.IWorldProperties;
 import pl.mcpiraci.world.properties.impl.util.GamerulesUtils;
 import pl.mcpiraci.world.properties.impl.xml.XmlWorldProperties;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
-public class WorldPropertiesImpl implements WorldProperties, ITickable
+public class WorldPropertiesImpl implements IWorldProperties, ITickable
 {
     private static final Logger logger = LogManager.getLogger();
     

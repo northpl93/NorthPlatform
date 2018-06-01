@@ -7,17 +7,17 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 
-import pl.mcpiraci.world.properties.WorldProperties;
-import pl.mcpiraci.world.properties.WorldPropertiesManager;
+import pl.mcpiraci.world.properties.IWorldProperties;
+import pl.mcpiraci.world.properties.IWorldPropertiesManager;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 
 public class WeatherWatchdogListener implements AutoListener
 {
     private static final Logger logger = LogManager.getLogger();
     
-    private final WorldPropertiesManager propertiesManager;
+    private final IWorldPropertiesManager propertiesManager;
     
-    private WeatherWatchdogListener(WorldPropertiesManager propertiesManager)
+    private WeatherWatchdogListener(IWorldPropertiesManager propertiesManager)
     {
         this.propertiesManager = propertiesManager;
     }
@@ -25,7 +25,7 @@ public class WeatherWatchdogListener implements AutoListener
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onWeatherChange(WeatherChangeEvent event)
     {
-        WorldProperties properties = propertiesManager.getProperties(event.getWorld());
+        IWorldProperties properties = propertiesManager.getProperties(event.getWorld());
         
         if ( properties == null || properties.getWeather() == null )
         {
@@ -42,7 +42,7 @@ public class WeatherWatchdogListener implements AutoListener
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onThunderChange(ThunderChangeEvent event)
     {
-        WorldProperties properties = propertiesManager.getProperties(event.getWorld());
+        IWorldProperties properties = propertiesManager.getProperties(event.getWorld());
         
         if ( properties == null || properties.getWeather() == null )
         {

@@ -3,8 +3,8 @@ package pl.mcpiraci.world.properties.impl.cmd;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import pl.mcpiraci.world.properties.WorldProperties;
-import pl.mcpiraci.world.properties.WorldPropertiesManager;
+import pl.mcpiraci.world.properties.IWorldProperties;
+import pl.mcpiraci.world.properties.IWorldPropertiesManager;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
@@ -13,10 +13,10 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class ReloadCommand extends NorthCommand
 {
-    private final WorldPropertiesManager propertiesManager;
+    private final IWorldPropertiesManager propertiesManager;
     private final MessagesBox messages;
     
-    public ReloadCommand(WorldPropertiesManager propertiesManager, @Messages("commands") MessagesBox messages)
+    public ReloadCommand(IWorldPropertiesManager propertiesManager, @Messages("commands") MessagesBox messages)
     {
         super("wpreload", "wpreloadall", "wpreloadserver");
         setPermission("worldproperties.cmd.wpreload");
@@ -30,7 +30,7 @@ public class ReloadCommand extends NorthCommand
     {
         if ( label.equalsIgnoreCase("wpreloadall") )
         {
-            Bukkit.getWorlds().stream().map(propertiesManager::getProperties).forEach(WorldProperties::reloadWorldConfig);
+            Bukkit.getWorlds().stream().map(propertiesManager::getProperties).forEach(IWorldProperties::reloadWorldConfig);
             sender.sendMessage(messages, "reload.all.success");
             return;
         }
@@ -64,7 +64,7 @@ public class ReloadCommand extends NorthCommand
             worldName = args.asString(0);
         }
         
-        WorldProperties properties = propertiesManager.getProperties(worldName);
+        IWorldProperties properties = propertiesManager.getProperties(worldName);
         if ( properties == null )
         {
             sender.sendMessage(messages, "reload.invalid_world");

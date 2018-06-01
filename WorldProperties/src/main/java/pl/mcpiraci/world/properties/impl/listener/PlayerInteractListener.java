@@ -7,22 +7,22 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import pl.mcpiraci.world.properties.PlayerProperties;
-import pl.mcpiraci.world.properties.WorldPropertiesManager;
+import pl.mcpiraci.world.properties.IPlayerProperties;
+import pl.mcpiraci.world.properties.IWorldPropertiesManager;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 
 public class PlayerInteractListener implements AutoListener
 {
-    private final WorldPropertiesManager propertiesManager;
+    private final IWorldPropertiesManager propertiesManager;
     
-    private PlayerInteractListener(WorldPropertiesManager propertiesManager)
+    private PlayerInteractListener(IWorldPropertiesManager propertiesManager)
     {
         this.propertiesManager = propertiesManager;
     }
     
     private void handleEvent(Player player, Cancellable event)
     {
-        PlayerProperties playerProperties = propertiesManager.getPlayerProperties(player);
+        IPlayerProperties playerProperties = propertiesManager.getPlayerProperties(player);
         
         if ( !playerProperties.effectiveCanInteract() )
         {

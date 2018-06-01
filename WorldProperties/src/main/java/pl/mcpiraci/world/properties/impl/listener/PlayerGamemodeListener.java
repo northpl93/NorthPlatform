@@ -8,16 +8,16 @@ import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import net.minecraft.server.v1_12_R1.EnumGamemode;
 
-import pl.mcpiraci.world.properties.WorldProperties;
-import pl.mcpiraci.world.properties.WorldPropertiesManager;
+import pl.mcpiraci.world.properties.IWorldProperties;
+import pl.mcpiraci.world.properties.IWorldPropertiesManager;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 
 public class PlayerGamemodeListener implements AutoListener
 {
-    private final WorldPropertiesManager propertiesManager;
+    private final IWorldPropertiesManager propertiesManager;
     
-    public PlayerGamemodeListener(WorldPropertiesManager propertiesManager)
+    public PlayerGamemodeListener(IWorldPropertiesManager propertiesManager)
     {
         this.propertiesManager = propertiesManager;
     }
@@ -25,7 +25,7 @@ public class PlayerGamemodeListener implements AutoListener
     @EventHandler(priority = EventPriority.MONITOR)
     public void setInitialGamemode(PlayerSpawnLocationEvent event)
     {
-        WorldProperties properties = propertiesManager.getProperties(event.getSpawnLocation().getWorld());
+        IWorldProperties properties = propertiesManager.getProperties(event.getSpawnLocation().getWorld());
         GameMode gamemode = properties.getGamemode();
         EnumGamemode nmsGamemode = gamemode != null ? EnumGamemode.valueOf(gamemode.name()) : EnumGamemode.ADVENTURE;
         
@@ -36,7 +36,7 @@ public class PlayerGamemodeListener implements AutoListener
     @EventHandler
     public void setGamemodeOnWorldChange(PlayerChangedWorldEvent event)
     {
-        WorldProperties properties = propertiesManager.getProperties(event.getPlayer().getWorld());
+        IWorldProperties properties = propertiesManager.getProperties(event.getPlayer().getWorld());
         
         if ( properties.getGamemode() != null )
         {
