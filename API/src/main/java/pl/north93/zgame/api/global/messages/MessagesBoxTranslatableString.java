@@ -43,7 +43,7 @@ class MessagesBoxTranslatableString extends TranslatableString
             else
             {
                 final String possibleLegacyText = String.valueOf(value);
-                args[i] = ChatUtils.fromLegacyText(possibleLegacyText);
+                args[i] = ChatUtils.parseLegacyText(possibleLegacyText);
             }
         });
         return messagesBox.getMessage(locale, messageKey, args);
@@ -86,12 +86,9 @@ class MessagesBoxTranslatableString extends TranslatableString
         Preconditions.checkNotNull(messagesBox);
         
         String[] split = string.split("\\$");
-        String[] keys = split[0].split("\\.");
         String[] args = split.length > 1 ? split[1].split(",") : new String[0];
         final String messageKey = split[0].substring(1);
 
-        //String messageKey = Arrays.stream(keys).collect(Collectors.joining("."));
-        
         return new MessagesBoxTranslatableString(messagesBox, messageKey, args);
     }
 }

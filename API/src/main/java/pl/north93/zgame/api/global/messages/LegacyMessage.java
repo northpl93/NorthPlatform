@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.chat.BaseComponent;
+
 import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 
 /**
@@ -23,13 +24,13 @@ public class LegacyMessage
     public LegacyMessage(final BaseComponent component)
     {
         this.message = component.toLegacyText();
-        this.lines = StringUtils.split(this.message, '\n');
+        this.lines = this.message.split("\n");
     }
 
     public LegacyMessage(final String legacyText)
     {
         this.message = legacyText;
-        this.lines = StringUtils.split(this.message, '\n');
+        this.lines = this.message.split("\n");
     }
 
     /**
