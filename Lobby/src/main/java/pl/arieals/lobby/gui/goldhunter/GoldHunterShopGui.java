@@ -6,6 +6,8 @@ import java.util.Map.Entry;
 
 import com.google.common.base.Preconditions;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -17,6 +19,7 @@ import pl.arieals.globalshops.server.IPlayerExperienceService;
 import pl.arieals.globalshops.server.domain.BuyResult;
 import pl.arieals.globalshops.server.domain.Item;
 import pl.arieals.globalshops.server.domain.ItemsGroup;
+import pl.arieals.lobby.gui.ShopGui;
 import pl.north93.zgame.api.bukkit.gui.ClickHandler;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.element.ButtonElement;
@@ -83,9 +86,12 @@ public class GoldHunterShopGui extends Gui
 		}
 		
 		ItemState itemState = ItemState.getItemState(playerContainer, item);
+		BaseComponent price = ShopGui.getPrice(playerContainer, item.getLeft(), item.getRight());
+		
 		element.addVariables(Vars.<Object>of("color", itemState.getMainColor())
 				.and("status", itemState.getBuyText())
-				.and("price", "§lCena: TODO"));
+				.and("price", TranslatableString.of(messages, "@itemstate.price$priceValue"))
+                .and("priceValue", price));
 	}
 	
 	private void addFolderItemVariables(GuiElement element)

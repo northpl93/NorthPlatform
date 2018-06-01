@@ -71,7 +71,7 @@ public abstract class ShopGui extends Gui
         loreBuilder.and("rarity", TranslatableString.of(generalMessages, "@rarity." + item.getRarity().name()));
 
         // shardy o obliczyc cene
-        loreBuilder.and("price", this.getPrice(playerContainer, item));
+        loreBuilder.and("price", getPrice(playerContainer, item));
         loreBuilder.and("shards", playerContainer.getShards(item));
 
         final Vars<Object> loreVars = loreBuilder.build();
@@ -111,10 +111,16 @@ public abstract class ShopGui extends Gui
         return builder.build();
     }
 
-    private BaseComponent getPrice(final IPlayerContainer container, final Item item)
+    public static BaseComponent getPrice(final IPlayerContainer container, final Item item)
     {
         final int level = Math.min(item.getMaxLevel(), container.getBoughtItemLevel(item) + 1);
-
+        return getPrice(container, item, level);
+    }
+    
+    public static BaseComponent getPrice(final IPlayerContainer container, final Item item, final int level)
+    {
+        Player player = container.getBukkitPlayer();
+        
         final IPrice price = item.getPrice(level);
         if (price instanceof MoneyPrice)
         {
@@ -124,7 +130,7 @@ public abstract class ShopGui extends Gui
             if (moneyPrice.getDiscount(container, item) == 0)
             {
                 final Vars<Object> vars = Vars.of("amount", amount);
-                return TranslatableString.of(generalMessages, "@price.money.normal$amount").getValue(this.player, vars);
+                return TranslatableString.of(generalMessages, "@price.money.normal$amount").getValue(player, vars);
             }
             else
             {
@@ -133,12 +139,12 @@ public abstract class ShopGui extends Gui
                 vars = vars.and("after", amount);
                 vars = vars.and("percent", format.format(moneyPrice.getDiscount(container, item) * 100));
 
-                return TranslatableString.of(generalMessages, "@price.money.discounted$before,after,percent").getValue(this.player, vars);
+                return TranslatableString.of(generalMessages, "@price.money.discounted$before,after,percent").getValue(player, vars);
             }
         }
         else
         {
-            return TranslatableString.of(generalMessages, "@price.free").getValue(this.player, Vars.empty());
+            return TranslatableString.of(generalMessages, "@price.free").getValue(player, Vars.empty());
         }
     }
 
