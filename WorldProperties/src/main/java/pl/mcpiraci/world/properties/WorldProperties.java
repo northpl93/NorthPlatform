@@ -2,6 +2,7 @@ package pl.mcpiraci.world.properties;
 
 import java.util.Map;
 
+import org.bukkit.GameMode;
 import org.bukkit.World;
 
 public interface WorldProperties
@@ -49,6 +50,11 @@ public interface WorldProperties
      * @return a immutable map of gamerules on that world
      */
     Map<String, String> getGamerules();
+    
+    /**
+     * @return a gamemode that is aplied to the players on that world, null means no gamemode force
+     */
+    GameMode getGamemode();
     
     /**
      * Reload config file located in world directory

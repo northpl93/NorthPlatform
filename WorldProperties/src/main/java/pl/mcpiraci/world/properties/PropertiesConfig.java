@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.bukkit.GameMode;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -25,6 +26,7 @@ public final class PropertiesConfig
     private Integer time;
     private Weather weather;
     private Boolean physicsEnabled;
+    private GameMode gamemode;
     
     private Map<String, String> gamerules = Collections.emptyMap();
     
@@ -131,6 +133,15 @@ public final class PropertiesConfig
         return result;
     }
     
+    public GameMode gamemodeValue()
+    {
+        if ( gamemode != null )
+        {
+            return gamemode;
+        }
+        
+        return parent != null ? parent.getGamemode() : null;
+    }
     
     public Boolean getCanBuild()
     {
@@ -165,6 +176,11 @@ public final class PropertiesConfig
     public Map<String, String> getGamerules()
     {
         return gamerules;
+    }
+    
+    public GameMode getGamemode()
+    {
+        return gamemode;
     }
     
     public void setCanBuild(Boolean canBuild)
@@ -209,6 +225,12 @@ public final class PropertiesConfig
         updateModifiedTimestamp();
     }
     
+    public void setGamemode(GameMode gamemode)
+    {
+        this.gamemode = gamemode;
+        updateModifiedTimestamp();
+    }
+    
     public void setDefaultValues()
     {
         canBuild = null;
@@ -217,6 +239,7 @@ public final class PropertiesConfig
         time = null;
         weather = null;
         gamerules = Collections.emptyMap();
+        gamemode = null;
         
         updateModifiedTimestamp();
     }

@@ -7,6 +7,7 @@ import javax.xml.bind.JAXB;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bukkit.GameMode;
 import org.bukkit.World;
 
 import com.google.common.base.Preconditions;
@@ -95,6 +96,12 @@ public class WorldPropertiesImpl implements WorldProperties, ITickable
         return ImmutableMap.copyOf(worldConfig.gamerulesValue());
     }
 
+    @Override
+    public GameMode getGamemode()
+    {
+        return worldConfig.getGamemode();
+    }
+    
     @Override
     public void reloadWorldConfig()
     {

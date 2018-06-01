@@ -10,6 +10,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.bukkit.GameMode;
+
 import com.google.common.base.Preconditions;
 
 import pl.mcpiraci.world.properties.PropertiesConfig;
@@ -27,6 +29,8 @@ public class XmlWorldProperties
     
     @XmlElement(name = "gamerule")
     private List<XmlGamerule> gamerules = new ArrayList<>();
+    
+    private GameMode gamemode;
     
     private Boolean physics;
     
@@ -60,6 +64,11 @@ public class XmlWorldProperties
         return gamerules.stream().collect(Collectors.toMap(XmlGamerule::getName, XmlGamerule::getValue));
     }
     
+    public GameMode getGamemode()
+    {
+        return gamemode;
+    }
+    
     public void applyToConfig(PropertiesConfig config)
     {
         Preconditions.checkArgument(config != null);
@@ -70,5 +79,6 @@ public class XmlWorldProperties
         config.setWeather(weather);
         config.setTime(time);
         config.setGamerules(getGamerulesAsMap());
+        config.setGamemode(gamemode);
     }
 }
