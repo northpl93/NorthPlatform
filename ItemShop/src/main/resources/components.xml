@@ -13,6 +13,7 @@
                 <dependency>RestfulApi</dependency>
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>
                 <dependency>API.Economy.Controller</dependency>
+                <dependency>MiniGameApi.Controller</dependency> <!-- booster w sklepie -->
             </dependencies>
             <platforms>
                 <platform>STANDALONE</platform>

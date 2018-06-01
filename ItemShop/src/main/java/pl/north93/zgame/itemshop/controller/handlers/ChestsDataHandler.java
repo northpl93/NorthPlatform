@@ -33,7 +33,7 @@ public class ChestsDataHandler implements IDataHandler
         {
             final MetaStore metaStore = playerObj.getMetaStore();
 
-            Map<String, Integer> chests = (Map<String, Integer>) metaStore.get(CHESTS);
+            Map<String, Integer> chests = metaStore.get(CHESTS);
             if (chests == null)
             {
                 chests = new HashMap<>(1);

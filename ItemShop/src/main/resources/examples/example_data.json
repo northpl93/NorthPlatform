@@ -6,6 +6,61 @@
 
   {"entries":[
     {"type":"group","data":{"group":"vip","time":"300"}}
-  ]}
+  ]},
+
+  // konfiguracja sklepu
+  // https://www.infobyip.com/jsonencoderdecoder.php
+
+  {"entries":[
+    {"type":"group","data":{"group":"vip","time":"864000"}}, // vip 10 dni
+    {"type":"boost","data":{"time":"21600"}}, // boost 6h
+    {"type":"money","oneTime":"moneySet1","data":{"currency":"minigame","amount":"5000"}} // jednorazowo x waluty
+  ]},
+  {"entries":[
+    {"type":"group","data":{"group":"vip","time":"2160000"}}, // vip 25 dni
+    {"type":"boost","data":{"time":"43200"}}, // boost 12h
+    {"type":"chests","data":{"type":"bedwars","amount":"15"}}, // 15 skrzynek bw
+    {"type":"money","oneTime":"moneySet2","data":{"currency":"minigame","amount":"8000"}} // jednorazowo x waluty
+  ]},
+  {"entries":[
+    {"type":"group","data":{"group":"svip","time":"1728000"}}, // vip 25 dni
+    {"type":"boost","data":{"time":"72000"}}, // boost 20h
+    {"type":"chests","data":{"type":"bedwars","amount":"40"}}, // 40 skrzynek bw
+    {"type":"money","oneTime":"moneySet3","data":{"currency":"minigame","amount":"12000"}} // jednorazowo x waluty
+  ]},
+
+  {"entries":[
+    {"type":"group","data":{"group":"vip","time":"604800"}} // vip tydzien
+  ]},
+  {"entries":[
+    {"type":"group","data":{"group":"vip","time":"1296000"}} // vip 15 dni
+  ]},
+  {"entries":[
+    {"type":"group","data":{"group":"vip","time":"2592000"}} // vip 30 dni
+  ]},
+
+  {"entries":[
+    {"type":"group","data":{"group":"svip","time":"1296000"}} // svip 15 dni
+  ]},
+  {"entries":[
+    {"type":"group","data":{"group":"svip","time":"2592000"}} // svip 30 dni
+  ]},
+
+  {"entries":[
+    {"type":"boost","data":{"time":"43200"}} // boost 12h
+  ]},
+  {"entries":[
+    {"type":"boost","data":{"time":"129600"}} // boost 36h
+  ]},
+
+  {"entries":[
+    {"type":"chests","data":{"type":"bedwars","amount":"10"}} // 10 skrzynek bw
+  ]},
+  {"entries":[
+    {"type":"chests","data":{"type":"bedwars","amount":"25"}} // 25 skrzynek bw
+  ]},
+  {"entries":[
+    {"type":"chests","data":{"type":"bedwars","amount":"50"}} // 50 skrzynek bw
+  ]},
 
 ]
