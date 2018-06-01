@@ -17,7 +17,7 @@ public interface IReward
 
     String getId();
 
-    void apply(Identity identity);
+    IReward apply(Identity identity);
 
     RewardMessageRenderer getRenderer();
 }

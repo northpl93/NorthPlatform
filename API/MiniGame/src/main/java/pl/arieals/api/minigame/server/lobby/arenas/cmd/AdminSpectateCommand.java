@@ -61,7 +61,7 @@ public class AdminSpectateCommand extends NorthCommand
                 return;
             }
 
-            if (status.getType() != IPlayerStatus.LocationType.GAME)
+            if (status.getType() != IPlayerStatus.StatusType.GAME)
             {
                 sender.sendMessage("&cPodany gracz nie jest w grze lub jest offline");
                 return;

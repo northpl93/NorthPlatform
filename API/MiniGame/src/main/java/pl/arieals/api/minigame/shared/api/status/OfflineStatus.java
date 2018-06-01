@@ -17,8 +17,8 @@ public class OfflineStatus implements IPlayerStatus
     }
 
     @Override
-    public LocationType getType()
+    public StatusType getType()
     {
-        return LocationType.OFFLINE;
+        return StatusType.OFFLINE;
     }
 }

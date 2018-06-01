@@ -31,9 +31,9 @@ public final class InHubStatus implements IPlayerStatus
     }
 
     @Override
-    public LocationType getType()
+    public StatusType getType()
     {
-        return LocationType.HUB;
+        return StatusType.HUB;
     }
 
     public String getHubId()

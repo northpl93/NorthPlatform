@@ -36,7 +36,7 @@ public class MainHubScoreboard extends HubScoreboardLayout
         builder.translated("scoreboard.money", this.getPlayerCurrency(context.getPlayer()));
         builder.add("");
 
-        builder.translated("scoreboard.multipler", "x1");
+        builder.translated("scoreboard.multipler", this.getPlayerBooster(context.getPlayer()));
         builder.add("");
 
         builder.translated("scoreboard.group", this.getGroupName(context.getPlayer()));

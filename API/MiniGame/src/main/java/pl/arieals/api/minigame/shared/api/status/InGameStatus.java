@@ -34,9 +34,9 @@ public final class InGameStatus implements IPlayerStatus
     }
 
     @Override
-    public LocationType getType()
+    public StatusType getType()
     {
-        return LocationType.GAME;
+        return StatusType.GAME;
     }
 
     @Nullable

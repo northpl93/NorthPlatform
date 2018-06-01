@@ -60,7 +60,7 @@ public class PartyHubListener implements AutoListener
     public void teleportPartyToNewHubLocation(final LocationChangePartyNetEvent event)
     {
         final IPlayerStatus newLocation = event.getLocation();
-        if (newLocation.getType() != IPlayerStatus.LocationType.HUB)
+        if (newLocation.getType() != IPlayerStatus.StatusType.HUB)
         {
             // kiedy nowa lokalizacja znajduje sie na serwerze gier to nic nie robimy
             // bo tu to nas nie obchodzi

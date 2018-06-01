@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<boosters>
+    <booster id="base" enabled="true" /> <!-- Bazowe x1.0 -->
+    <booster id="vip" enabled="true" /> <!-- automat vip:1.1 / svip:1.25 -->
+    <booster id="event" enabled="false" /> <!-- + 0.25 -->
+    <booster id="bigevent" enabled="false" /> <!-- + 0.5 -->
+    <booster id="extra" enabled="false" /> <!-- + 1.0 -->
+</boosters>

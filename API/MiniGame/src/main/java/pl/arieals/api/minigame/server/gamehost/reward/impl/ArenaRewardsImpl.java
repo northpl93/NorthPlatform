@@ -41,8 +41,7 @@ public class ArenaRewardsImpl implements IArenaRewards
     public void addReward(final Identity identity, final IReward reward)
     {
         // todo track reward in database
-        this.rewards.put(identity, reward);
-        reward.apply(identity);
+        this.rewards.put(identity, reward.apply(identity));
     }
 
     @Override

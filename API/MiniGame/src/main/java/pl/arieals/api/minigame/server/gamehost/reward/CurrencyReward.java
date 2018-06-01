@@ -6,16 +6,20 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.api.minigame.shared.api.booster.IBoosterManager;
 import pl.north93.zgame.api.economy.ICurrency;
 import pl.north93.zgame.api.economy.IEconomyManager;
 import pl.north93.zgame.api.economy.ITransaction;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.Identity;
 
 public class CurrencyReward implements IReward
 {
     @Inject
-    private static IEconomyManager manager;
+    private static IEconomyManager economyManager;
+    @Inject
+    private static IBoosterManager boosterManager;
     @Inject
     private static Logger          logger;
     private final String rewardId;
@@ -46,17 +50,26 @@ public class CurrencyReward implements IReward
     }
 
     @Override
-    public void apply(final Identity identity)
+    public IReward apply(final Identity identity)
     {
-        final ICurrency currency = manager.getCurrency(this.currencyId);
-        try (final ITransaction t = manager.openTransaction(currency, identity))
+        final ICurrency currency = economyManager.getCurrency(this.currencyId);
+        try (final ITransaction t = economyManager.openTransaction(currency, identity))
         {
+            final double amount = this.calculateFinalAmount(t.getAssociatedPlayer());
             t.add(this.amount);
+
+            return new CurrencyReward(this.rewardId, this.currencyId, amount);
         }
         catch (final Exception e)
         {
             logger.log(Level.SEVERE, "CurrencyReward can't add money to user's account.", e);
+            return this;
         }
+    }
+
+    private double calculateFinalAmount(final IPlayer player)
+    {
+        return this.amount * boosterManager.calculateFinalMultiplier(player);
     }
 
     @Override

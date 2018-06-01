@@ -3,7 +3,7 @@ package pl.arieals.api.minigame.shared.api.status;
 import java.util.UUID;
 
 /**
- * Reprezentuje lokację w sieci w której znajduje się gracz.
+ * Reprezentuje status gracza w sieci, opisuje aktualną lokalizację.
  */
 public interface IPlayerStatus
 {
@@ -13,15 +13,15 @@ public interface IPlayerStatus
     UUID getServerId();
 
     /**
-     * @return Typ lokalizacji.
+     * @return Typ statusu.
      */
-    LocationType getType();
+    StatusType getType();
 
     boolean equals(Object other);
 
     int hashCode();
 
-    enum LocationType
+    enum StatusType
     {
         HUB,
         GAME,

@@ -44,6 +44,6 @@ public interface IParty
      */
     default boolean isInGame()
     {
-        return this.getTargetLocation().getType() == IPlayerStatus.LocationType.GAME;
+        return this.getTargetLocation().getType() == IPlayerStatus.StatusType.GAME;
     }
 }
