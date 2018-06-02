@@ -40,13 +40,8 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     @Override
     public boolean isOnline()
     {
-        final IOnlinePlayer player = this.player.get();
-        if (player == null)
-        {
-            return false;
-        }
-
-        return player.isOnline();
+        // gdy obiekt znajduje sie w redisie to gracz musi byc online
+        return this.player.isPreset();
     }
 
     @Nullable

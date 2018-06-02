@@ -8,7 +8,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import pl.north93.zgame.api.bungee.BungeeApiCore;
 import pl.north93.zgame.api.bungee.proxy.IProxyServerList;
 import pl.north93.zgame.api.bungee.proxy.IProxyServerManager;
-import pl.north93.zgame.api.bungee.proxy.impl.listener.FixedBungeeEventsCaller;
 import pl.north93.zgame.api.bungee.proxy.impl.listener.JoinPermissionsChecker;
 import pl.north93.zgame.api.bungee.proxy.impl.listener.PermissionsListener;
 import pl.north93.zgame.api.bungee.proxy.impl.listener.PingListener;
@@ -43,7 +42,7 @@ class ProxyServerManagerImpl extends Component implements IProxyServerManager
         this.rpcManager.addRpcImplementation(IProxyRpc.class, new ProxyRpcImpl());
 
         // rejestrujemy nasze listenery
-        this.apiCore.registerListeners(new FixedBungeeEventsCaller(), new PingListener(), new PlayerNetworkListener(), new PermissionsListener(), new JoinPermissionsChecker());
+        this.apiCore.registerListeners(new PingListener(), new PlayerNetworkListener(), new PermissionsListener(), new JoinPermissionsChecker());
 
         this.uploadInfo();
         this.getApiCore().getPlatformConnector().runTaskAsynchronously(this::uploadInfo, UPDATE_PROXY_DATA_EVERY);

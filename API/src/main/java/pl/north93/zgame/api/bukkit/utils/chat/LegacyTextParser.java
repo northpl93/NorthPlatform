@@ -183,10 +183,9 @@ public final class LegacyTextParser
             component.setText(builder.toString());
             components.add(component);
         }
-
-        // The client will crash if the array is empty
-        if (components.isEmpty())
+        else if (components.isEmpty())
         {
+            // The client will crash if the array is empty
             components.add(component);
         }
 

@@ -21,7 +21,9 @@ import org.diorite.commons.reflections.FieldAccessor;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.AsyncEvent;
+import net.md_5.bungee.api.event.LoginAbortedEvent;
 import net.md_5.bungee.api.event.LoginEvent;
+import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
@@ -32,7 +34,6 @@ import pl.north93.zgame.api.bungee.BungeeApiCore;
 import pl.north93.zgame.api.bungee.Main;
 import pl.north93.zgame.api.bungee.proxy.event.HandlePlayerProxyJoinEvent;
 import pl.north93.zgame.api.bungee.proxy.event.HandlePlayerProxyQuitEvent;
-import pl.north93.zgame.api.bungee.proxy.event.PlayerLateDisconnectEvent;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -120,7 +121,6 @@ public class PlayerNetworkListener implements Listener
                 final String proxyName = this.bungeeApiCore.getProxyConfig().getUniqueName();
 
                 player = dataManager.loadPlayer(conn.getUniqueId(), conn.getName(), conn.isOnlineMode(), proxyName);
-                player.expire(5); // po 5 sekundach logowanie wygasnie
             }
             catch (final NameSizeMistakeException e)
             {
@@ -153,20 +153,24 @@ public class PlayerNetworkListener implements Listener
         final IPlayersManager.Unsafe unsafe = this.networkManager.getPlayers().unsafe();
         final Value<IOnlinePlayer> onlineValue = unsafe.getOnline(event.getPlayer().getName());
 
-        if (! onlineValue.expire(-1))
-        {
-            // nastapilo przedawnienie logowania, rozlaczamy gracza aby uniknac dalszego
-            // bugowania sie systemu.
-            event.getPlayer().disconnect();
-            return;
-        }
-
         // wywolujemy sieciowy event dolaczenia gracza
         this.eventManager.callEvent(new PlayerJoinNetEvent((OnlinePlayerImpl) onlineValue.get()));
     }
 
     @EventHandler
-    public void onLeave(final PlayerLateDisconnectEvent event)
+    public void onLoginCancelled(final LoginAbortedEvent event)
+    {
+        final Logger logger = this.bungeeApiCore.getLogger();
+
+        final String name = event.getConnection().getName();
+        final Value<IOnlinePlayer> onlineValue = this.networkManager.getPlayers().unsafe().getOnline(name);
+
+        onlineValue.delete();
+        logger.log(Level.INFO, "User {0} cancelled login", name);
+    }
+
+    @EventHandler
+    public void onLeave(final PlayerDisconnectEvent event)
     {
         final Logger logger = this.bungeeApiCore.getLogger();
         final IPlayersManager players = this.networkManager.getPlayers();
