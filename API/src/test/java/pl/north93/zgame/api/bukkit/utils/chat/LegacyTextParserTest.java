@@ -16,7 +16,16 @@ public class LegacyTextParserTest
     }
 
     @Test
-    public void textWithoutColour()
+    public void oneColor()
+    {
+        //final BaseComponent baseComponent = new TextComponent(TextComponent.fromLegacyText(ChatUtils.translateAlternateColorCodes("&a")));
+        final BaseComponent baseComponent = LegacyTextParser.parseLegacyText("&a");
+
+        Assert.assertEquals("§a", baseComponent.toLegacyText());
+    }
+
+    @Test
+    public void simpleTextWithoutColour()
     {
         final BaseComponent baseComponent = LegacyTextParser.parseLegacyText("Test");
 
@@ -24,7 +33,7 @@ public class LegacyTextParserTest
     }
 
     @Test
-    public void simpleOneColor()
+    public void simpleTextWithOneColor()
     {
         final BaseComponent baseComponent = LegacyTextParser.parseLegacyText("&aTest");
 

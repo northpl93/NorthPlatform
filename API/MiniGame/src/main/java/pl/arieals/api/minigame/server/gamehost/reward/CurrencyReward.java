@@ -1,5 +1,6 @@
 package pl.arieals.api.minigame.server.gamehost.reward;
 
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,6 +12,7 @@ import pl.north93.zgame.api.economy.ICurrency;
 import pl.north93.zgame.api.economy.IEconomyManager;
 import pl.north93.zgame.api.economy.ITransaction;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.Identity;
 
@@ -77,10 +79,11 @@ public class CurrencyReward implements IReward
     {
         return (messagesBox, locale, allRewardsOfType) ->
         {
-            final double totalAmount = allRewardsOfType.stream().map(reward -> ((CurrencyReward) reward)).mapToDouble(CurrencyReward::getAmount).sum();
+            final Function<IReward, CurrencyReward> mapper = reward -> ((CurrencyReward) reward);
+            final int totalAmount = (int) allRewardsOfType.stream().map(mapper).mapToDouble(CurrencyReward::getAmount).sum();
             final String msgKey = "rewards." + this.rewardId;
 
-            return messagesBox.getMessage(locale, msgKey, totalAmount);
+            return MessageLayout.CENTER.processMessage(messagesBox.getMessage(locale, msgKey, totalAmount));
         };
     }
 

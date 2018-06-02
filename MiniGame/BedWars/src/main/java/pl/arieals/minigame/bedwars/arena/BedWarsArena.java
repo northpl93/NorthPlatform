@@ -57,9 +57,14 @@ public class BedWarsArena implements IArenaData
         return this.arena;
     }
 
-    public BwArenaConfig getConfig()
+    public BwArenaConfig getConfig() // config tej konkretnej areny
     {
         return this.config;
+    }
+
+    public BwConfig getBedWarsConfig() // globalny config bedwarsów
+    {
+        return this.bedWarsConfig;
     }
 
     public Set<BwGeneratorItemConfig> getAnnouncedItems()

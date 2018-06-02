@@ -126,9 +126,14 @@ public class BuildListener implements Listener
         if (bedData.isHeadOfBed())
         {
             final Block lowerPart = block.getRelative(bedData.getFacing().getOppositeFace());
-            lowerPart.setType(Material.AIR);
+            lowerPart.setType(Material.AIR, false);
         }
-        block.setType(Material.AIR);
+        else
+        {
+            final Block upperPart = block.getRelative(bedData.getFacing());
+            upperPart.setType(Material.AIR, false);
+        }
+        block.setType(Material.AIR, false);
 
         if (! teamAt.isBedAlive())
         {

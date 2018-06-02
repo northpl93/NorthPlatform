@@ -27,6 +27,8 @@ public class BwConfig
     private Integer               startDeathMatchAt;
     @XmlElement
     private Integer               teamSize;
+    @XmlElement
+    private BwRewardsConfig       rewards;
     @XmlElementWrapper(name = "generatorTypes")
     @XmlElement(name = "generatorType")
     private List<BwGeneratorType> generatorTypes;
@@ -44,6 +46,11 @@ public class BwConfig
     public Integer getTeamSize()
     {
         return this.teamSize;
+    }
+
+    public BwRewardsConfig getRewards()
+    {
+        return this.rewards;
     }
 
     public List<BwGeneratorType> getGeneratorTypes()

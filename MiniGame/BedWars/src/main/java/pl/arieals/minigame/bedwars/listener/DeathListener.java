@@ -24,6 +24,7 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
+import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.RevivePlayerCountdown;
 import pl.arieals.minigame.bedwars.arena.Team;
@@ -194,13 +195,23 @@ public class DeathListener implements Listener
         this.statTrackManager.bumpStatistic(damager, TrackedStatistic.KILLS, lastDmg.getTool());
         // dodajemy zabojcy killa w obiekcie BedWarsPlayer
         damagerData.incrementKills();
-        // dajemy zabojcy nagrode(?) za eliminacje
-        arena.getRewards().addReward(Identity.of(damager), new CurrencyReward("elimination", "minigame", 100));
 
         // jesli gracz ma 0 i mniej zycia, a lozko jest zniszczone to nastapila eliminacja
         final boolean elimination = deathData.getLives() <= 0 && ! team.isBedAlive();
-        final String deathMessageKey = this.getDeathMessageKey(player, elimination);
 
+        final BedWarsArena bedWarsArena = arena.getArenaData();
+        if (elimination)
+        {
+            final int currencyAmount = bedWarsArena.getBedWarsConfig().getRewards().getElimination();
+            arena.getRewards().addReward(Identity.of(damager), new CurrencyReward("elimination", "minigame", currencyAmount));
+        }
+        else
+        {
+            final int currencyAmount = bedWarsArena.getBedWarsConfig().getRewards().getKill();
+            arena.getRewards().addReward(Identity.of(damager), new CurrencyReward("kill", "minigame", currencyAmount));
+        }
+
+        final String deathMessageKey = this.getDeathMessageKey(player, elimination);
         if (elimination)
         {
             arena.getPlayersManager().broadcast(this.messages, deathMessageKey,

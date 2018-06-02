@@ -3,7 +3,6 @@ package pl.arieals.minigame.bedwars.listener;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import static pl.arieals.minigame.bedwars.utils.PlayerTeamPredicates.isInTeam;
 import static pl.arieals.minigame.bedwars.utils.PlayerTeamPredicates.notInTeam;
-import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
 
 
 import com.destroystokyo.paper.Title;
@@ -18,6 +17,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
+import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
+import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.event.BedDestroyedEvent;
@@ -27,6 +28,7 @@ import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
+import pl.north93.zgame.api.global.network.players.Identity;
 
 public class BedDestroyListener implements Listener
 {
@@ -39,6 +41,7 @@ public class BedDestroyListener implements Listener
     public void onBedDestroy(final BedDestroyedEvent event)
     {
         final LocalArena arena = event.getArena();
+        final BedWarsArena bedWarsArena = arena.getArenaData();
         final Team team = event.getTeam();
 
         final PlayersManager playersManager = arena.getPlayersManager();
@@ -46,6 +49,9 @@ public class BedDestroyListener implements Listener
         {
             final BedWarsPlayer destroyerData = getPlayerData(event.getDestroyer(), BedWarsPlayer.class);
             assert destroyerData != null; // tu nie moze byc nullem
+
+            final int currencyAmount = bedWarsArena.getBedWarsConfig().getRewards().getBedDestroy();
+            arena.getRewards().addReward(Identity.of(event.getDestroyer()), new CurrencyReward("bedDestroy", "minigame", currencyAmount));
 
             playersManager.broadcast(isInTeam(team), this.messages,
                     "bed_destroyed.you", MessageLayout.SEPARATED,
@@ -73,8 +79,8 @@ public class BedDestroyListener implements Listener
         {
             final String locale = player.getLocale();
 
-            final String title = translateAlternateColorCodes(this.messages.getMessage(locale, "bed_destroyed.title.title"));
-            final String subtitle = translateAlternateColorCodes(this.messages.getMessage(locale, "bed_destroyed.title.subtitle"));
+            final String title = this.messages.getMessage(locale, "bed_destroyed.title.title");
+            final String subtitle = this.messages.getMessage(locale, "bed_destroyed.title.subtitle");
 
             player.sendTitle(new Title(title, subtitle, 20, 20, 20));
         }

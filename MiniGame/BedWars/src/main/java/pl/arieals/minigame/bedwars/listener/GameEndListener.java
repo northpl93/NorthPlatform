@@ -22,6 +22,7 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
+import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
@@ -38,6 +39,7 @@ import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
+import pl.north93.zgame.api.global.network.players.Identity;
 
 public class GameEndListener implements Listener
 {
@@ -136,8 +138,8 @@ public class GameEndListener implements Listener
         if (winner.isPresent())
         {
             final Team winnerTeam = winner.get();
-            // podnosimy licznik zwyciestw wszystkich osob w teamie
-            this.bumpWinsCount(winnerTeam);
+            // obslugujemy zwyciestwo danego teamu (nagrody, licznik zwyciestw)
+            this.handleTeamWin(event.getArena(), arenaData, winnerTeam);
 
             final TranslatableString teamNameKey = TranslatableString.of(this.messages, "@team.scoreboard." + winnerTeam.getName());
             final String nicks = this.playersList(winnerTeam);
@@ -191,15 +193,20 @@ public class GameEndListener implements Listener
         return nicks.toString();
     }
 
-    private void bumpWinsCount(final Team team)
+    private void handleTeamWin(final LocalArena arena, final BedWarsArena bedWarsArena, final Team team)
     {
         final HigherNumberBetterStatistic winsStat = new HigherNumberBetterStatistic("bedwars/wins");
         final NumberUnit numberUnit = new NumberUnit(1L);
+
+        final int currencyAmount = bedWarsArena.getBedWarsConfig().getRewards().getWin();
+        final CurrencyReward reward = new CurrencyReward("win", "minigame", currencyAmount);
 
         for (final Player player : team.getPlayers())
         {
             final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(player.getUniqueId());
             holder.increment(winsStat, numberUnit);
+
+            arena.getRewards().addReward(Identity.of(player), reward);
         }
     }
 

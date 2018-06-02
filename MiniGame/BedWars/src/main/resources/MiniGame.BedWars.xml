@@ -4,6 +4,13 @@
     <startDeathMatchAt>24000</startDeathMatchAt> <!-- 20 minut? -->
     <teamSize>1</teamSize>
 
+    <rewards>
+        <kill>10</kill>
+        <elimination>12</elimination>
+        <bedDestroy>15</bedDestroy>
+        <win>20</win>
+    </rewards>
+
     <generatorTypes>
         <generatorType>
             <name>island</name>
