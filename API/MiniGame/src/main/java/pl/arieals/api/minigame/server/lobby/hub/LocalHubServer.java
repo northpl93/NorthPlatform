@@ -1,5 +1,8 @@
 package pl.arieals.api.minigame.server.lobby.hub;
 
+import static java.util.Optional.ofNullable;
+
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,6 +11,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
@@ -19,6 +23,8 @@ import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
 import pl.arieals.api.minigame.shared.api.cfg.HubConfig;
 import pl.arieals.api.minigame.shared.api.cfg.HubsConfig;
 import pl.arieals.api.minigame.shared.api.hub.IHubServer;
+import pl.mcpiraci.world.properties.IWorldProperties;
+import pl.mcpiraci.world.properties.IWorldPropertiesManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.chat.global.ChatManager;
 import pl.north93.zgame.api.chat.global.ChatRoom;
@@ -34,12 +40,14 @@ import pl.north93.zgame.api.global.config.NetConfig;
 public class LocalHubServer implements IHubServer
 {
     @Inject
-    private BukkitApiCore         apiCore;
+    private BukkitApiCore           apiCore;
     @Inject
-    private ChatManager           chatManager;
+    private ChatManager             chatManager;
+    @Inject
+    private IWorldPropertiesManager worldPropertiesManager;
     @Inject @NetConfig(type = HubsConfig.class, id = "hubs")
-    private IConfig<HubsConfig>   hubsConfig;
-    private Map<String, HubWorld> hubWorlds = new HashMap<>();
+    private IConfig<HubsConfig>     hubsConfig;
+    private Map<String, HubWorld>   hubWorlds = new HashMap<>();
 
     @Override
     public UUID getServerId()
@@ -170,6 +178,10 @@ public class LocalHubServer implements IHubServer
 
         final HubWorld hubWorld = new HubWorld(hubConfig.getHubId(), bukkitWorld, room);
         hubWorld.updateConfig(hubConfig);
+
+        final IWorldProperties properties = this.worldPropertiesManager.getProperties(bukkitWorld);
+        final Location spawn = ofNullable(properties.getSpawn()).orElse(bukkitWorld.getSpawnLocation());
+        hubWorld.setSpawn(new Location(bukkitWorld, spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getYaw(), spawn.getPitch()));
 
         this.hubWorlds.put(hubConfig.getHubId(), hubWorld);
         this.apiCore.getLogger().log(Level.INFO, "Created hub with ID {0}", hubConfig.getHubId());

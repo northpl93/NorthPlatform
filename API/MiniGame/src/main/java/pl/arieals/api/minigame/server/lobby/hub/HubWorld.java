@@ -1,5 +1,6 @@
 package pl.arieals.api.minigame.server.lobby.hub;
 
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -16,6 +17,7 @@ public class HubWorld
     private final String   hubId;
     private final World    bukkitWorld;
     private final ChatRoom chatRoom;
+    private Location       spawn;
     private JoiningPolicy  policy;
 
     public HubWorld(final String hubId, final World bukkitWorld, final ChatRoom chatRoom)
@@ -40,6 +42,16 @@ public class HubWorld
         return this.chatRoom;
     }
 
+    public Location getSpawn()
+    {
+        return this.spawn;
+    }
+
+    public void setSpawn(final Location spawn)
+    {
+        this.spawn = spawn;
+    }
+
     public JoiningPolicy getPolicy()
     {
         return this.policy;
@@ -57,7 +69,6 @@ public class HubWorld
      */
     /*default*/ void teleportPlayerHere(final Player player)
     {
-        // todo
-        player.teleport(this.bukkitWorld.getSpawnLocation());
+        player.teleport(this.spawn);
     }
 }

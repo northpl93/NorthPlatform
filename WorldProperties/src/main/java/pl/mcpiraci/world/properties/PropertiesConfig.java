@@ -8,10 +8,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.bukkit.GameMode;
-
 import com.google.common.collect.ImmutableMap;
+
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public final class PropertiesConfig
 {
@@ -27,6 +29,7 @@ public final class PropertiesConfig
     private Weather weather;
     private Boolean physicsEnabled;
     private GameMode gamemode;
+    private Location spawn;
     
     private Map<String, String> gamerules = Collections.emptyMap();
     
@@ -142,7 +145,17 @@ public final class PropertiesConfig
         
         return parent != null ? parent.getGamemode() : null;
     }
-    
+
+    public Location spawnValue()
+    {
+        if ( spawn != null )
+        {
+            return spawn;
+        }
+
+        return parent != null ? parent.getSpawn() : null;
+    }
+
     public Boolean getCanBuild()
     {
         return canBuild;
@@ -182,7 +195,12 @@ public final class PropertiesConfig
     {
         return gamemode;
     }
-    
+
+    public Location getSpawn()
+    {
+        return this.spawn;
+    }
+
     public void setCanBuild(Boolean canBuild)
     {
         this.canBuild = canBuild;
@@ -230,7 +248,13 @@ public final class PropertiesConfig
         this.gamemode = gamemode;
         updateModifiedTimestamp();
     }
-    
+
+    public void setSpawn(Location spawn)
+    {
+        this.spawn = spawn;
+        updateModifiedTimestamp();
+    }
+
     public void setDefaultValues()
     {
         canBuild = null;
@@ -240,6 +264,7 @@ public final class PropertiesConfig
         weather = null;
         gamerules = Collections.emptyMap();
         gamemode = null;
+        spawn = null;
         
         updateModifiedTimestamp();
     }
@@ -254,12 +279,14 @@ public final class PropertiesConfig
                 .append("time", time)
                 .append("weather", weather)
                 .append("gamerules", gamerules)
+                .append("spawn", spawn)
                 .append("effectiveCanBuild", canBuildValue())
                 .append("effectiveCanInteract", canInteractValue())
                 .append("effectivePlayersInvulnerable", playersInvulnerableValue())
                 .append("effectiveTime", timeValue())
                 .append("effectiveWeather", weatherValue())
                 .append("effectiveGamerules", gamerulesValue())
+                .append("effectiveSpawn", spawnValue())
                 .build();
     }
 }

@@ -20,6 +20,12 @@ public abstract class NorthPlayerEvent extends Event
         this.who = who;
     }
 
+    public NorthPlayerEvent(final boolean isAsync, final INorthPlayer who)
+    {
+        super(isAsync);
+        this.who = who;
+    }
+
     public final INorthPlayer getPlayer()
     {
         return this.who;

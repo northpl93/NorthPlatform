@@ -21,6 +21,8 @@ public class MainHubListener extends HubListener
     @EventHandler(priority = EventPriority.HIGH)
     public void playerJoinHub(final PlayerSwitchedHubEvent event)
     {
+        // ten listener pierwszy raz po wlaczeniu serwera zajmuje duza ilosc czasu
+        // bo wywola leniwe wczytywanie plików *.xml z GUI i hotbarami.
         if (! this.isMyHub(event.getNewHub()))
         {
             return;

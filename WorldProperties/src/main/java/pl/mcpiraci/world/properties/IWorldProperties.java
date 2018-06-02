@@ -3,6 +3,7 @@ package pl.mcpiraci.world.properties;
 import java.util.Map;
 
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.World;
 
 public interface IWorldProperties
@@ -55,7 +56,12 @@ public interface IWorldProperties
      * @return a gamemode that is aplied to the players on that world, null means no gamemode force
      */
     GameMode getGamemode();
-    
+
+    /**
+     * @return a location when players are spawned when teleporting to this world.
+     */
+    Location getSpawn();
+
     /**
      * Reload config file located in world directory
      */

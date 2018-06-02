@@ -14,6 +14,7 @@
                 <dependency>API.Database.Redis.Event</dependency>
                 <dependency>API.Economy</dependency>
                 <dependency>API.Chat.Bukkit</dependency>
+                <dependency>Utils.World.Properties</dependency>
             </dependencies>
             <platforms>
                 <platform>BUKKIT</platform>

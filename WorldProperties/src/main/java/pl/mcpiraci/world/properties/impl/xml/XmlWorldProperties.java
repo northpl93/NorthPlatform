@@ -1,21 +1,22 @@
 package pl.mcpiraci.world.properties.impl.xml;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.bukkit.GameMode;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.google.common.base.Preconditions;
 
+import org.bukkit.GameMode;
+
 import pl.mcpiraci.world.properties.PropertiesConfig;
 import pl.mcpiraci.world.properties.Weather;
+import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "properties")
@@ -29,7 +30,9 @@ public class XmlWorldProperties
     
     @XmlElement(name = "gamerule")
     private List<XmlGamerule> gamerules = new ArrayList<>();
-    
+
+    private XmlLocation spawn;
+
     private GameMode gamemode;
     
     private Boolean physics;
@@ -63,7 +66,12 @@ public class XmlWorldProperties
     {
         return gamerules.stream().collect(Collectors.toMap(XmlGamerule::getName, XmlGamerule::getValue));
     }
-    
+
+    public XmlLocation getSpawn()
+    {
+        return this.spawn;
+    }
+
     public GameMode getGamemode()
     {
         return gamemode;
@@ -80,5 +88,6 @@ public class XmlWorldProperties
         config.setTime(time);
         config.setGamerules(getGamerulesAsMap());
         config.setGamemode(gamemode);
+        config.setSpawn(spawn.toBukkit(null));
     }
 }

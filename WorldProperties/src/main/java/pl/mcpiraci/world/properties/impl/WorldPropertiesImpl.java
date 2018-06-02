@@ -1,21 +1,23 @@
 package pl.mcpiraci.world.properties.impl;
 
-import java.io.File;
-import java.util.Map;
-
 import javax.xml.bind.JAXB;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.bukkit.GameMode;
-import org.bukkit.World;
+import java.io.File;
+import java.util.Map;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.World;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import pl.mcpiraci.world.properties.IWorldProperties;
 import pl.mcpiraci.world.properties.PropertiesConfig;
 import pl.mcpiraci.world.properties.Weather;
-import pl.mcpiraci.world.properties.IWorldProperties;
 import pl.mcpiraci.world.properties.impl.util.GamerulesUtils;
 import pl.mcpiraci.world.properties.impl.xml.XmlWorldProperties;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
@@ -101,7 +103,13 @@ public class WorldPropertiesImpl implements IWorldProperties, ITickable
     {
         return worldConfig.getGamemode();
     }
-    
+
+    @Override
+    public Location getSpawn()
+    {
+        return worldConfig.getSpawn();
+    }
+
     @Override
     public void reloadWorldConfig()
     {
@@ -147,6 +155,7 @@ public class WorldPropertiesImpl implements IWorldProperties, ITickable
         updateGamerules(); 
         updateWorldTime();
         updateWorldWeather();
+        updateSpawn();
     }
     
     private void updateGamerules()
@@ -197,5 +206,18 @@ public class WorldPropertiesImpl implements IWorldProperties, ITickable
         }
         
         logger.debug("Time for world {} updated!");
+    }
+
+    private void updateSpawn()
+    {
+        final Location location = getSpawn();
+
+        if (location == null)
+        {
+            return;
+        }
+
+        world.setSpawnLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+        logger.debug("Spawn location for world {} updated!");
     }
 }

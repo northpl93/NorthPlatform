@@ -45,6 +45,11 @@
             <artifactId>chat</artifactId>
             <version>1.0-INDEV</version>
         </dependency>
+        <dependency>
+            <groupId>pl.north93.zgame</groupId>
+            <artifactId>world-properties</artifactId>
+            <version>1.0-INDEV</version>
+        </dependency>
 
         <!-- NPCty -->
         <dependency>
