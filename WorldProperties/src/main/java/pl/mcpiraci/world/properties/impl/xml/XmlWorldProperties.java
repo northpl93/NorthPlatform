@@ -88,6 +88,6 @@ public class XmlWorldProperties
         config.setTime(time);
         config.setGamerules(getGamerulesAsMap());
         config.setGamemode(gamemode);
-        config.setSpawn(spawn.toBukkit(null));
+        config.setSpawn(spawn != null ? spawn.toBukkit(null) : null);
     }
 }
