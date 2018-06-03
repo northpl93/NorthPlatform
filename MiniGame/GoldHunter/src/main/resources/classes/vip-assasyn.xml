@@ -17,6 +17,7 @@
 	<equipment>
 		<chestplate>
 			<!-- <item ifbuyed="vip.assassin.fireresistance" id="minecraft:chainmail_chestplate" /> -->
+			<item ifbuyed="vip.assassin.chainchest" id="minecraft:chainmail_chestplate" />
 			<item id="minecraft:chainmail_chestplate" /> 
 		</chestplate>
 		
