@@ -53,7 +53,8 @@ public class DataShareManagerImpl implements IDataShareManager
     @Override
     public void savePlayer(final DataSharingGroup group, final Player player, final boolean redis)
     {
-        if (! player.isDataLoaded())
+        //if (! player.isDataLoaded()) // todo
+        if (true)
         {
             final String message = "[PlayerDataShare] savePlayer({0},{1},{2}) has been called, but player data isn't loaded! Skipped saving...";
             this.apiCore.getLogger().warning(format(message, group.getName(), player.getName(), redis));
@@ -131,7 +132,7 @@ public class DataShareManagerImpl implements IDataShareManager
             }
             dataUnit.getSerialization().fromRedis(player, dataUnitDocument);
         }
-        player.setDataLoaded(true);
+        //player.setDataLoaded(true); // todo
 
         final String message = "applyDataTo({0}, {1}, data container with size {2})";
         this.apiCore.getLogger().fine(format(message, group.getName(), player.getName(), data.size()));

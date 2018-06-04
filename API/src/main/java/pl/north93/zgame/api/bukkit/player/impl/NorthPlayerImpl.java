@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.destroystokyo.paper.Title;
+import com.destroystokyo.paper.profile.PlayerProfile;
 
 import org.bukkit.Achievement;
 import org.bukkit.Effect;
@@ -36,6 +37,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.block.PistonMoveReaction;
+import org.bukkit.block.Sign;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
@@ -1123,6 +1125,18 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     }
 
     @Override
+    public PlayerProfile getPlayerProfile()
+    {
+        return this.bukkitPlayer.getPlayerProfile();
+    }
+
+    @Override
+    public void setPlayerProfile(final PlayerProfile playerProfile)
+    {
+        this.bukkitPlayer.setPlayerProfile(playerProfile);
+    }
+
+    @Override
     public Spigot spigot()
     {
         return this.bukkitPlayer.spigot();
@@ -1330,6 +1344,12 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     public void setShoulderEntityRight(final Entity entity)
     {
         this.bukkitPlayer.setShoulderEntityRight(entity);
+    }
+
+    @Override
+    public void openSign(final Sign sign)
+    {
+        this.bukkitPlayer.openSign(sign);
     }
 
     @Override
@@ -2217,30 +2237,6 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     public Set<String> getListeningPluginChannels()
     {
         return this.bukkitPlayer.getListeningPluginChannels();
-    }
-
-    @Override
-    public Object getCompassData()
-    {
-        return this.bukkitPlayer.getCompassData();
-    }
-
-    @Override
-    public void setCompassData(final Object o)
-    {
-        this.bukkitPlayer.setCompassData(o);
-    }
-
-    @Override
-    public boolean isDataLoaded()
-    {
-        return this.bukkitPlayer.isDataLoaded();
-    }
-
-    @Override
-    public void setDataLoaded(final boolean b)
-    {
-        this.bukkitPlayer.setDataLoaded(b);
     }
 
     @Override

@@ -43,7 +43,8 @@ public class PlayerDataListener implements SubscriptionHandler
 
         this.bukkitExecutor.sync(() ->
         {
-            if (player.isDataLoaded())
+            //if (player.isDataLoaded()) // todo
+            if (true)
             {
                 return; // skip data loading...
             }

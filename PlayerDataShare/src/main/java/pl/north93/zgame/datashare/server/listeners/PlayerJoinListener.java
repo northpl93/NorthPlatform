@@ -38,7 +38,8 @@ public class PlayerJoinListener implements Listener
 
         this.executor.mixed(() -> manager.getFromRedisKey(myGroup, player.getUniqueId()), dataContainer ->
         {
-            if (player.isDataLoaded())
+            //if (player.isDataLoaded()) // todo
+            if (true)
             {
                 return; // skip loading if data is already loaded
             }
