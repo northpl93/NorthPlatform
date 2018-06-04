@@ -196,7 +196,13 @@ public class LocalHubServer implements IHubServer
         }
 
         final WorldCreator creator = WorldCreator.name(hubConfig.getWorldName());
-        return creator.createWorld();
+        creator.generatorSettings("0");
+
+        final World world = creator.createWorld();
+        world.setAutoSave(false);
+        world.setKeepSpawnInMemory(true); // na hubach trzymamy spawn w pamieci, aby zapobiec mieleniu dyskiem
+
+        return world;
     }
 
     private ChatRoom getChatRoomFor(final HubConfig hubConfig)

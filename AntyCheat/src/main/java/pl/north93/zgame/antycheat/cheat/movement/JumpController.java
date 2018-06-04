@@ -412,6 +412,11 @@ public class JumpController
     private PlayerProperties getPreviousPlayerProperties()
     {
         final PlayerTickInfo previousPlayerTickInfo = this.playerData.getPreviousPlayerTickInfo(this.startTickInfo.getTick(), 1);
+        if (previousPlayerTickInfo == null)
+        {
+            return this.startTickInfo.getProperties();
+        }
+
         return previousPlayerTickInfo.getProperties();
     }
 

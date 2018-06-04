@@ -5,12 +5,17 @@ import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.observeT
 import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.toNmsEntity;
 
 
+import javax.annotation.Nullable;
+
 import java.util.Collection;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import net.minecraft.server.v1_12_R1.Entity;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftItemFrame;
 import org.bukkit.entity.ItemFrame;
@@ -27,12 +32,14 @@ class MapImpl implements IMap
 {
     private final MapController controller;
     private final BoardImpl     board;
-    private final ItemFrame     itemFrame;
+    private final UUID          frameId;
+    private       ItemFrame     itemFrame;
 
     public MapImpl(final MapController controller, final BoardImpl board, final ItemFrame itemFrame)
     {
         this.controller = controller;
         this.board = board;
+        this.frameId = itemFrame.getUniqueId();
         this.itemFrame = itemFrame;
         this.setupTracker();
     }
@@ -52,7 +59,13 @@ class MapImpl implements IMap
      */
     public int getFrameEntityId()
     {
-        return this.itemFrame.getEntityId();
+        final ItemFrame itemFrame = this.getItemFrame();
+        if (itemFrame == null)
+        {
+            return -1;
+        }
+
+        return itemFrame.getEntityId();
     }
 
     /**
@@ -64,7 +77,7 @@ class MapImpl implements IMap
      */
     public boolean isTrackedBy(final Player player)
     {
-        final EntityTrackerEntry trackerEntry = getTrackerEntry(toNmsEntity(this.itemFrame));
+        final EntityTrackerEntry trackerEntry = getTrackerEntry(this.getNmsEntity());
         for (final EntityPlayer trackedPlayer : trackerEntry.trackedPlayers)
         {
             if (player.equals(trackedPlayer.getBukkitEntity()))
@@ -82,7 +95,7 @@ class MapImpl implements IMap
      */
     public Collection<Player> getTrackingPlayers()
     {
-        final EntityTrackerEntry trackerEntry = getTrackerEntry(toNmsEntity(this.itemFrame));
+        final EntityTrackerEntry trackerEntry = getTrackerEntry(this.getNmsEntity());
         return trackerEntry.trackedPlayers.stream().map(EntityPlayer::getBukkitEntity).collect(Collectors.toSet());
     }
 
@@ -98,19 +111,58 @@ class MapImpl implements IMap
         }
     }
 
+    @Nullable
+    private ItemFrame getItemFrame()
+    {
+        if (this.itemFrame != null && this.itemFrame.isValid())
+        {
+            return this.itemFrame;
+        }
+
+        final ItemFrame newItemFrame = (ItemFrame) Bukkit.getEntity(this.frameId);
+        if ((this.itemFrame = newItemFrame) == null)
+        {
+            return null;
+        }
+
+        this.setupTracker();
+        return newItemFrame;
+    }
+
+    @Nullable
+    private Entity getNmsEntity()
+    {
+        final ItemFrame itemFrame = this.getItemFrame();
+        if (itemFrame == null)
+        {
+            return null;
+        }
+
+        return toNmsEntity(itemFrame);
+    }
+
     /**
      * Zabija ramke nalezaca do tej mapy.
      */
     public void cleanup()
     {
         final CraftItemFrame itemFrame = (CraftItemFrame) this.itemFrame;
-        itemFrame.getHandle().die();
+        if (itemFrame != null)
+        {
+            itemFrame.getHandle().die();
+        }
     }
 
     @Override
     public Location getLocation()
     {
-        return this.itemFrame.getLocation();
+        final ItemFrame itemFrame = this.getItemFrame();
+        if (itemFrame == null)
+        {
+            return null;
+        }
+
+        return this.getItemFrame().getLocation();
     }
 
     @Override
