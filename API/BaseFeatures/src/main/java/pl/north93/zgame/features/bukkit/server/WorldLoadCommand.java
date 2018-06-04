@@ -3,8 +3,9 @@ package pl.north93.zgame.features.bukkit.server;
 import java.io.File;
 
 import org.bukkit.Bukkit;
-import org.bukkit.WorldCreator;
 
+import pl.north93.zgame.api.bukkit.utils.ISyncCallback;
+import pl.north93.zgame.api.bukkit.world.IWorldManager;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
@@ -14,13 +15,15 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 public class WorldLoadCommand extends NorthCommand
 {
 	private final MessagesBox messages;
+	private final IWorldManager worldManager;
 	
-	public WorldLoadCommand(@Messages("Commands") MessagesBox messages)
+	public WorldLoadCommand(@Messages("Commands") MessagesBox messages, IWorldManager worldManager)
 	{
 		super("worldload");
 		setPermission("api.command.worldload");
 		
 		this.messages = messages;
+		this.worldManager = worldManager;
 	}
 	
 	@Override
@@ -53,7 +56,7 @@ public class WorldLoadCommand extends NorthCommand
 		}
 		
 		sender.sendMessage(messages, "command.worldload.loading");
-		Bukkit.createWorld(new WorldCreator(worldToLoad));
-		sender.sendMessage(messages, "command.worldload.loaded");
+		ISyncCallback callback = worldManager.loadWorld(worldToLoad, null, false, false); // TODO: add way to config this
+		callback.onComplete(() -> sender.sendMessage(messages, "command.worldload.loaded"));
 	}
 }

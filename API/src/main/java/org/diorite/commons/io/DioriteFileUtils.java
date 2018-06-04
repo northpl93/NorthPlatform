@@ -61,4 +61,17 @@ public final class DioriteFileUtils
 
         directory.mkdirs();
     }
+    
+    public static boolean contains(File parent, File child)
+    {
+        while ( ( child = child.getParentFile() ) != null )
+        {
+            if ( parent.equals(child) )
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 }
