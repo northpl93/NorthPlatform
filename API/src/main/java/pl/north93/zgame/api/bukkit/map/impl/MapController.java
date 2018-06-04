@@ -5,8 +5,10 @@ import java.util.List;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
@@ -15,7 +17,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import io.netty.channel.Channel;
-import javafx.collections.MapChangeListener;
+import pl.north93.northspigot.event.entity.EntityTrackedPlayerEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
@@ -23,9 +25,8 @@ import pl.north93.zgame.api.bukkit.utils.nms.EntityMetaPacketHelper;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
-class MapController
+class MapController implements Listener
 {
-    @Inject
     private BukkitApiCore     apiCore;
     @Inject
     private IBukkitExecutor   bukkitExecutor;
@@ -33,9 +34,12 @@ class MapController
     private final RendererScheduler rendererScheduler;
 
     @Bean
-    private MapController()
+    private MapController(final BukkitApiCore apiCore)
     {
+        this.apiCore = apiCore;
         this.rendererScheduler = new RendererScheduler(this);
+
+        apiCore.registerEvents(this);
     }
 
     public void handlePlayerEnter(final MapImpl map, final INorthPlayer player)
@@ -127,18 +131,33 @@ class MapController
         player.removeMetadata("PlayerMapData", this.apiCore.getPluginMain());
     }
 
-    public MapChangeListener<? super EntityPlayer, ? super Boolean> trackerListener(final MapImpl map)
+    @EventHandler
+    public void handleMapUploadWhenTracked(final EntityTrackedPlayerEvent event)
     {
-        return change -> this.bukkitExecutor.sync(() ->
+        final MapImpl map = this.getMapFromEntity(event.getEntity());
+        if (map == null)
         {
-            final CraftPlayer craftPlayer = change.getKey().getBukkitEntity();
-            final INorthPlayer player = INorthPlayer.wrap(craftPlayer);
+            return;
+        }
 
-            if (change.wasAdded())
-            {
-                this.handlePlayerEnter(map, player);
-            }
-        });
+        final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
+        this.handlePlayerEnter(map, player);
+    }
+
+    /*default*/ MapImpl getMapFromEntity(final org.bukkit.entity.Entity entity)
+    {
+        final List<MetadataValue> metadata = entity.getMetadata("map_mapImpl");
+        if (metadata.isEmpty())
+        {
+            return null;
+        }
+
+        return (MapImpl) metadata.get(0).value();
+    }
+
+    /*default*/ void updateMapInEntity(final ItemFrame itemFrame, final MapImpl map)
+    {
+        itemFrame.setMetadata("map_mapImpl", new FixedMetadataValue(this.apiCore.getPluginMain(), map));
     }
 
     @Override

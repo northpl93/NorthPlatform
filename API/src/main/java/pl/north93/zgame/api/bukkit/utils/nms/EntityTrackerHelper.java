@@ -63,9 +63,11 @@ public class EntityTrackerHelper
      * Umozliwia to wykrywanie gdy gracz wchodzi w zasieg widzenia
      * danego entity.
      *
+     * @deprecated Powoduje wiele problemów przy unloadowaniu entities.
      * @param entity entity z ktorego zrobic obserwowalna mape.
      * @return Obserwowalna mapa z lista graczy trackujacych dane entity
      */
+    @Deprecated
     public static ObservableMap<EntityPlayer, Boolean> observeTracker(final Entity entity)
     {
         final EntityTrackerEntry trackerEntry = getTrackerEntry(entity);

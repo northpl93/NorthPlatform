@@ -1,7 +1,6 @@
 package pl.north93.zgame.api.bukkit.map.impl;
 
 import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.getTrackerEntry;
-import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.observeTracker;
 import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.toNmsEntity;
 
 
@@ -24,24 +23,20 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import javafx.collections.ObservableMap;
 import pl.north93.zgame.api.bukkit.map.IMap;
-import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 class MapImpl implements IMap
 {
-    private final MapController controller;
     private final BoardImpl     board;
     private final UUID          frameId;
     private       ItemFrame     itemFrame;
 
     public MapImpl(final MapController controller, final BoardImpl board, final ItemFrame itemFrame)
     {
-        this.controller = controller;
         this.board = board;
         this.frameId = itemFrame.getUniqueId();
         this.itemFrame = itemFrame;
-        this.setupTracker();
+        controller.updateMapInEntity(itemFrame, this);
     }
 
     /**
@@ -99,18 +94,6 @@ class MapImpl implements IMap
         return trackerEntry.trackedPlayers.stream().map(EntityPlayer::getBukkitEntity).collect(Collectors.toSet());
     }
 
-    private void setupTracker()
-    {
-        final ObservableMap<EntityPlayer, Boolean> tracker = observeTracker(toNmsEntity(this.itemFrame));
-        tracker.addListener(this.controller.trackerListener(this));
-
-        // renderujemy mape wszystkim juz obecnym graczom
-        for (final Player player : this.getTrackingPlayers())
-        {
-            this.controller.handlePlayerEnter(this, INorthPlayer.wrap(player));
-        }
-    }
-
     @Nullable
     private ItemFrame getItemFrame()
     {
@@ -120,13 +103,7 @@ class MapImpl implements IMap
         }
 
         final ItemFrame newItemFrame = (ItemFrame) Bukkit.getEntity(this.frameId);
-        if ((this.itemFrame = newItemFrame) == null)
-        {
-            return null;
-        }
-
-        this.setupTracker();
-        return newItemFrame;
+        return this.itemFrame = newItemFrame;
     }
 
     @Nullable

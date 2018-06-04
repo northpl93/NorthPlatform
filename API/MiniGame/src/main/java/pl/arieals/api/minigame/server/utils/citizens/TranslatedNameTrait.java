@@ -2,12 +2,9 @@ package pl.arieals.api.minigame.server.utils.citizens;
 
 import java.util.Optional;
 
-import net.minecraft.server.v1_12_R1.EntityPlayer;
-
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -15,12 +12,10 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import javafx.collections.MapChangeListener;
-import javafx.collections.ObservableMap;
 import net.citizensnpcs.api.trait.Trait;
+import pl.north93.northspigot.event.entity.EntityTrackedPlayerEvent;
 import pl.north93.zgame.api.bukkit.hologui.hologram.IHologram;
 import pl.north93.zgame.api.bukkit.hologui.hologram.TranslatableStringLine;
-import pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public class TranslatedNameTrait extends Trait
@@ -70,15 +65,7 @@ public class TranslatedNameTrait extends Trait
         }
 
         final Entity entity = this.getNPC().getEntity();
-        if (entity.getType() == EntityType.PLAYER)
-        {
-            final ObservableMap<EntityPlayer, Boolean> observeTracker = EntityTrackerHelper.observeTracker(((CraftEntity) entity).getHandle());
-            observeTracker.addListener(this::playerStartedTracking);
-        }
-        else
-        {
-            entity.setCustomNameVisible(false);
-        }
+        entity.setCustomNameVisible(false);
 
         this.hologram = IHologram.createWithLowerLocation(entity.getLocation().add(0, entity.getHeight(), 0));
         for (int i = 0; i < this.nameLines.length; i++)
@@ -99,15 +86,17 @@ public class TranslatedNameTrait extends Trait
         this.hologram = null;
     }
 
-    private void playerStartedTracking(final MapChangeListener.Change<? extends EntityPlayer, ? extends Boolean> change)
+    @EventHandler
+    public void handleEntityBeingTracked(final EntityTrackedPlayerEvent event)
     {
-        final CraftPlayer player = change.getKey().getBukkitEntity();
-        final Scoreboard scoreboard = player.getScoreboard();
-
-        if (change.wasRemoved() && change.getValueRemoved() == false)
+        final Entity entity = this.getNPC().getEntity();
+        if (! event.getEntity().equals(entity))
         {
             return;
         }
+
+        final Player player = event.getPlayer();
+        final Scoreboard scoreboard = player.getScoreboard();
 
         final Team hideNameTeam = this.getOrCreateTeam(scoreboard);
         if (hideNameTeam.hasEntry(this.npc.getName()))
