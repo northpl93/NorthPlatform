@@ -5,6 +5,7 @@ import net.minecraft.server.v1_12_R1.PacketPlayOutEntityMetadata;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -12,8 +13,10 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northspigot.event.entity.EntityTrackedPlayerEvent;
 import pl.north93.zgame.api.bukkit.packets.event.AsyncPacketOutEvent;
 import pl.north93.zgame.api.bukkit.packets.wrappers.WrapperPlayOutEntityMetadata;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -23,6 +26,19 @@ public class MapListener implements AutoListener
     private MapManagerImpl mapManager;
     @Inject
     private MapController  mapController;
+
+    @EventHandler
+    public void handleMapUploadWhenTracked(final EntityTrackedPlayerEvent event)
+    {
+        final MapImpl map = this.mapController.getMapFromEntity(event.getEntity());
+        if (map == null)
+        {
+            return;
+        }
+
+        final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
+        this.mapController.handlePlayerEnter(map, player);
+    }
 
     @EventHandler
     public void deletePlayerMapData(final PlayerQuitEvent event)
@@ -38,6 +54,15 @@ public class MapListener implements AutoListener
 
         // Respawn u klienta powoduje zresetowanie wszystkich zcachowanych kanw,
         // dlatego my robimy to samo na serwerze.
+        data.resetAllClientSideCanvases();
+    }
+
+    @EventHandler
+    public void resetCanvasesWhenWorldSwitch(final PlayerChangedWorldEvent event)
+    {
+        final PlayerMapData data = this.mapController.getPlayerMapData(event.getPlayer());
+
+        // Zmiana swiata u klienta powoduje dziwne zachowanie i niewyswietlanie map.
         data.resetAllClientSideCanvases();
     }
 

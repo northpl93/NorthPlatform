@@ -7,7 +7,6 @@ import net.minecraft.server.v1_12_R1.EntityPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -17,7 +16,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import io.netty.channel.Channel;
-import pl.north93.northspigot.event.entity.EntityTrackedPlayerEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
@@ -27,19 +25,17 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 class MapController implements Listener
 {
-    private BukkitApiCore     apiCore;
     @Inject
-    private IBukkitExecutor   bukkitExecutor;
+    private BukkitApiCore   apiCore;
+    @Inject
+    private IBukkitExecutor bukkitExecutor;
 
     private final RendererScheduler rendererScheduler;
 
     @Bean
-    private MapController(final BukkitApiCore apiCore)
+    private MapController()
     {
-        this.apiCore = apiCore;
         this.rendererScheduler = new RendererScheduler(this);
-
-        apiCore.registerEvents(this);
     }
 
     public void handlePlayerEnter(final MapImpl map, final INorthPlayer player)
@@ -129,19 +125,6 @@ class MapController implements Listener
     public void deletePlayerMapData(final Player player)
     {
         player.removeMetadata("PlayerMapData", this.apiCore.getPluginMain());
-    }
-
-    @EventHandler
-    public void handleMapUploadWhenTracked(final EntityTrackedPlayerEvent event)
-    {
-        final MapImpl map = this.getMapFromEntity(event.getEntity());
-        if (map == null)
-        {
-            return;
-        }
-
-        final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
-        this.handlePlayerEnter(map, player);
     }
 
     /*default*/ MapImpl getMapFromEntity(final org.bukkit.entity.Entity entity)
