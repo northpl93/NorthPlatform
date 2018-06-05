@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -13,9 +15,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.citizensnpcs.api.trait.Trait;
+import net.citizensnpcs.npc.ai.NPCHolder;
 import pl.north93.northspigot.event.entity.EntityTrackedPlayerEvent;
 import pl.north93.zgame.api.bukkit.hologui.hologram.IHologram;
 import pl.north93.zgame.api.bukkit.hologui.hologram.TranslatableStringLine;
+import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public class TranslatedNameTrait extends Trait
@@ -86,16 +90,8 @@ public class TranslatedNameTrait extends Trait
         this.hologram = null;
     }
 
-    @EventHandler
-    public void handleEntityBeingTracked(final EntityTrackedPlayerEvent event)
+    private void handleEntityBeingTracked(final Player player)
     {
-        final Entity entity = this.getNPC().getEntity();
-        if (! event.getEntity().equals(entity))
-        {
-            return;
-        }
-
-        final Player player = event.getPlayer();
         final Scoreboard scoreboard = player.getScoreboard();
 
         final Team hideNameTeam = this.getOrCreateTeam(scoreboard);
@@ -122,5 +118,39 @@ public class TranslatedNameTrait extends Trait
     public String toString()
     {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("nameLines", this.nameLines).toString();
+    }
+
+    // uzywamy helpera aby nie rejestrowac duzej ilosci listenerów w Bukkicie
+    public static class TranslatedNameTraitHelper implements AutoListener
+    {
+        @EventHandler(priority = EventPriority.LOWEST)
+        public void removeTeamOnWorldSwitch(final PlayerChangedWorldEvent event)
+        {
+            final Scoreboard scoreboard = event.getPlayer().getScoreboard();
+            final Team team = scoreboard.getTeam(TranslatedNameTrait.TEAM_NAME);
+            if (team != null)
+            {
+                // przy zmianie swiata cos sie buguje w kliencie i najlepiej utworzyc nowy team
+                team.unregister();
+            }
+        }
+
+        @EventHandler
+        public void handleEntityBeingTracked(final EntityTrackedPlayerEvent event)
+        {
+            if (! (event.getEntity() instanceof NPCHolder))
+            {
+                return;
+            }
+
+            final NPCHolder npcHolder = (NPCHolder) event.getEntity();
+            final TranslatedNameTrait translatedNameTrait = npcHolder.getNPC().getTrait(TranslatedNameTrait.class);
+            if (translatedNameTrait == null)
+            {
+                return;
+            }
+
+            translatedNameTrait.handleEntityBeingTracked(event.getPlayer());
+        }
     }
 }
