@@ -14,6 +14,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.npc.ai.NPCHolder;
 import pl.north93.northspigot.event.entity.EntityTrackedPlayerEvent;
@@ -144,12 +145,14 @@ public class TranslatedNameTrait extends Trait
             }
 
             final NPCHolder npcHolder = (NPCHolder) event.getEntity();
-            final TranslatedNameTrait translatedNameTrait = npcHolder.getNPC().getTrait(TranslatedNameTrait.class);
-            if (translatedNameTrait == null)
+
+            final NPC npc = npcHolder.getNPC();
+            if (! npc.hasTrait(TranslatedNameTrait.class))
             {
                 return;
             }
 
+            final TranslatedNameTrait translatedNameTrait = npc.getTrait(TranslatedNameTrait.class);
             translatedNameTrait.handleEntityBeingTracked(event.getPlayer());
         }
     }
