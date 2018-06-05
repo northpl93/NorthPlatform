@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <bundle>
+    <excludedPackages>
+        <excludePackage>org</excludePackage>
+        <excludePackage>groovyjarjarpicocli</excludePackage>
+        <excludePackage>groovyjarjarcommonscli</excludePackage>
+        <excludePackage>groovyjarjarasm</excludePackage>
+        <excludePackage>groovyjarjarantlr</excludePackage>
+        <excludePackage>groovy</excludePackage>
+    </excludedPackages>
+
     <components>
         <component>
             <name>GroovyScript</name>

@@ -222,7 +222,7 @@ public class ChestOpeningController
     }
 
     // zwraca obiekt LocalHub reprezentujacy ten serwer hostujacy huby.
-    private LocalHubServer getThisHubServer()
+    public LocalHubServer getThisHubServer()
     {
         final LobbyManager serverManager = this.miniGameServer.getServerManager();
         return serverManager.getLocalHub();

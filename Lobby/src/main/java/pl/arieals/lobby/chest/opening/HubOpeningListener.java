@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.api.minigame.server.lobby.hub.LocalHubServer;
 import pl.arieals.lobby.chest.loot.LootResult;
 import pl.arieals.lobby.chest.opening.event.BeginChestOpeningEvent;
 import pl.arieals.lobby.chest.opening.event.CloseOpeningGuiEvent;
@@ -76,6 +77,10 @@ public class HubOpeningListener implements AutoListener
 
         // przywracamy widocznosc gracza
         this.entityHider.setVisibility(EntityVisibility.NEUTRAL, Collections.singleton(player));
+
+        // teleportujemy gracza na spawn huba
+        final LocalHubServer hubServer = this.chestOpeningController.getThisHubServer();
+        hubServer.movePlayerToHub(player, hubServer.getHubWorld(player).getHubId());
     }
 
     @EventHandler(priority = EventPriority.LOW)
