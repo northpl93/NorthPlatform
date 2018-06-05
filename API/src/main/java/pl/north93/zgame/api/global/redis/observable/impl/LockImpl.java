@@ -15,6 +15,8 @@ import pl.north93.zgame.api.global.redis.observable.Lock;
 
 class LockImpl implements Lock
 {
+    private static final String LOCK_SCRIPT = "if(redis.call('exists',KEYS[1])==1) then\nreturn false\nelse\nredis.call('setex',KEYS[1],30,1)\nreturn true\nend";
+    private static final String UNLOCK_SCRIPT = "if(redis.call('del',KEYS[1])==1) then\nredis.call('publish',\"unlock\",KEYS[1])\nreturn true\nelse\nreturn false\nend";
     private final ObservationManagerImpl observationManager;
     private final String                 name;
     private final Object                 waiter;
@@ -40,7 +42,6 @@ class LockImpl implements Lock
         final Logger logger = this.observationManager.getMyLogger();
         if (this.tryLock0())
         {
-            this.isLockedLocally.compareAndSet(false, true);
             logger.log(Level.FINE, "[Lock] Successfully acquired lock {0}", this.name);
         }
         else
@@ -49,19 +50,8 @@ class LockImpl implements Lock
             logger.log(Level.FINE, "[Lock] Lock {0} is waiting...", this.name);
             while (! this.tryLock0())
             {
-                try
-                {
-                    synchronized (this.waiter)
-                    {
-                        this.waiter.wait(TimeUnit.SECONDS.toMillis(1)); // after 1 second time out
-                    }
-                }
-                catch (final InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
+                this.awaitUnlockOrTimeout();
             }
-            this.isLockedLocally.compareAndSet(false, true);
             logger.log(Level.FINE, "[Lock] Successfully acquired lock {0}", this.name);
         }
         return this;
@@ -86,22 +76,15 @@ class LockImpl implements Lock
     private synchronized boolean tryLock0()
     {
         final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
-        return ((long) redis.eval("if (redis.call('exists', KEYS[1]) == 1) then\n" +
-                               "return 0\n" +
-                               "else\n" +
-                               "redis.call('setex', KEYS[1], 30, 1)\n" +
-                               "return 1\n" +
-                               "end\n", ScriptOutputType.INTEGER, this.name)) == 1;
+        final boolean result = redis.eval(LOCK_SCRIPT, ScriptOutputType.BOOLEAN, this.name);
+
+        return result && this.isLockedLocally.compareAndSet(false, true);
     }
 
     @Override
     public synchronized void unlock()
     {
         final Logger logger = this.observationManager.getMyLogger();
-        if (! this.isLockedLocally.compareAndSet(true, false))
-        {
-            throw new IllegalStateException("Lock " + this.name + " isn't already locked locally! Lock may be expired or you didn't call Lock#lock()");
-        }
         if (! this.tryUnlock())
         {
             throw new RuntimeException("Failed to unlock " + this.name);
@@ -109,16 +92,12 @@ class LockImpl implements Lock
         logger.log(Level.FINE, "[Lock] Successfully unlocked {0}", this.name);
     }
 
-    private boolean tryUnlock()
+    private synchronized boolean tryUnlock()
     {
         final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
-        return ((long) redis.eval("if (redis.call('del', KEYS[1]) == 1) then\n" +
-                                             "redis.call('publish', \"unlock\", KEYS[1])\n" +
-                                             "return 1\n" +
-                                             "else\n" +
-                                             "return 0\n" +
-                                             "end", ScriptOutputType.INTEGER, this.name)) == 1;
+        final boolean result = redis.eval(UNLOCK_SCRIPT, ScriptOutputType.BOOLEAN, this.name);
 
+        return result && this.isLockedLocally.compareAndSet(true, false);
     }
 
     /*default*/ void remoteUnlock()
@@ -132,6 +111,21 @@ class LockImpl implements Lock
         synchronized (this.waiter)
         {
             this.waiter.notifyAll();
+        }
+    }
+
+    private void awaitUnlockOrTimeout()
+    {
+        try
+        {
+            synchronized (this.waiter)
+            {
+                this.waiter.wait(TimeUnit.SECONDS.toMillis(1)); // after 1 second time out
+            }
+        }
+        catch (final InterruptedException e)
+        {
+            e.printStackTrace();
         }
     }
 

@@ -204,13 +204,19 @@ public class PlayersManager
         final MiniGameConfig miniGame = this.gameHostManager.getMiniGameConfig();
         final int normalSlots = miniGame.getSlots() - miniGame.getVipSlots();
 
-        final int totalPlayers = this.joinInfos.size();
+        final List<PlayerJoinInfo> joinInfos = new ArrayList<>(this.joinInfos.values());
+        joinInfos.addAll(players);
 
-        final long joiningPlayers = players.size();
-        final long joiningVips = players.stream().filter(PlayerJoinInfo::isVip).count();
-        final long joiningNormals = joiningPlayers - joiningVips;
+        final long all = joinInfos.size();
+        final long vips = joinInfos.stream().filter(PlayerJoinInfo::isVip).count();
+        final long normals = all - vips;
 
-        return joiningPlayers + totalPlayers <= normalSlots || joiningNormals + totalPlayers <= normalSlots && joiningPlayers + totalPlayers <= miniGame.getSlots();
+        if (all > miniGame.getSlots() || normals > normalSlots)
+        {
+            return false;
+        }
+
+        return normals + vips - miniGame.getVipSlots() <= normalSlots;
     }
 
     private boolean tryAddSpectators(final List<PlayerJoinInfo> players)
