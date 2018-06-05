@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <components>
+        <component>
+            <name>GroovyScript</name>
+            <mainClass>pl.north93.groovyscript.GroovyScriptComponent</mainClass>
+            <description>Provides scripting infrastructure in Grrovy Language.</description>
+            <packages>
+                <package>pl.north93.groovyscript</package>
+            </packages>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>

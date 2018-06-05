@@ -24,6 +24,7 @@
         <module>../API/BaseFeatures</module>
         <module>../API/Economy</module>
         <module>../API/Chat</module>
+        <module>../GroovyScript</module>
         <module>../Lobby</module>
         <module>../Network Controller</module>
         <module>../Pets</module>
