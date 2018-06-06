@@ -21,7 +21,7 @@ public class BedWarsChatFormatter implements ChatFormatter
         final BaseComponent baseFormat = PermissionsBasedFormatter.INSTANCE.format(player, input);
 
         final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
-        if (playerData == null)
+        if (playerData == null || playerData.getTeam() == null)
         {
             // występuje gdy jesteśmy na etapie lobby
             return baseFormat;

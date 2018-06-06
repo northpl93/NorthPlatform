@@ -2,8 +2,10 @@ package pl.north93.zgame.api.chat.bukkit.engine;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -46,6 +48,9 @@ public class ChatEngine
             return SendMessageResult.NO_ROOM;
         }
 
+        final Object[] logArgs = {mainRoom.getId(), player.getName(), rawMessage};
+        this.apiCore.getLogger().log(Level.INFO, "[{0}] {1}: {2}", logArgs);
+
         final BaseComponent message = mainRoom.getChatFormatter().format(northPlayer, rawMessage);
         if (this.processIfOnlyLocal(mainRoom, message))
         {
@@ -68,7 +73,7 @@ public class ChatEngine
         final Collection<Identity> participants = chatRoom.getParticipants();
 
         final Function<Identity, Player> mapper = identity -> Bukkit.getPlayerExact(identity.getNick());
-        final List<Player> localPlayers = participants.stream().map(mapper).collect(Collectors.toList());
+        final List<Player> localPlayers = participants.stream().map(mapper).filter(Objects::nonNull).collect(Collectors.toList());
 
         if (participants.size() != localPlayers.size())
         {

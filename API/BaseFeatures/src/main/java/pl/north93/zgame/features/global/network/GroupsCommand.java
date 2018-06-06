@@ -1,4 +1,4 @@
-package pl.north93.zgame.features.bukkit.server;
+package pl.north93.zgame.features.global.network;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
