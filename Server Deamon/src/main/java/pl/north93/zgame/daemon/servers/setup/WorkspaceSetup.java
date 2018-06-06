@@ -1,4 +1,4 @@
-package pl.north93.zgame.daemon.servers;
+package pl.north93.zgame.daemon.servers.setup;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +19,9 @@ import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
 import pl.north93.zgame.api.global.network.daemon.config.ServerPatternConfig;
+import pl.north93.zgame.api.global.utils.JavaArguments;
 import pl.north93.zgame.daemon.event.ServerCreatingEvent;
+import pl.north93.zgame.daemon.servers.FilesManager;
 
 public class WorkspaceSetup
 {
@@ -43,6 +45,7 @@ public class WorkspaceSetup
         {
             this.copyComponents(event.getWorkspace(), event.getPattern());
             this.copyApiFiles(event.getWorkspace());
+            this.setupLog4j(event);
         }
         catch (final Exception e)
         {
@@ -69,6 +72,24 @@ public class WorkspaceSetup
         {
             FileUtils.copyDirectory(this.filesManager.getPattern(component), workspace);
         }
+    }
+
+    private void setupLog4j(final ServerCreatingEvent event)
+    {
+        final File config = new File(event.getWorkspace(), "log4j2.xml");
+        if (! config.isFile())
+        {
+            return;
+        }
+
+        final JavaArguments java = event.getArguments();
+
+        java.addEnvVar("log4j.configurationFile", config.getAbsolutePath());
+        java.addEnvVar("logstash-gelf.skipHostnameResolution", "true");
+
+        final String serverId = event.getServerDtoValue().get().getUuid().toString();
+        java.addEnvVar("logstash-gelf.hostname", serverId);
+        java.addEnvVar("logstash-gelf.fqdn.hostname", serverId);
     }
 
     @Override

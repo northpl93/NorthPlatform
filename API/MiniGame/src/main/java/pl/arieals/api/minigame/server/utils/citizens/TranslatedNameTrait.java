@@ -20,7 +20,9 @@ import net.citizensnpcs.npc.ai.NPCHolder;
 import pl.north93.northspigot.event.entity.EntityTrackedPlayerEvent;
 import pl.north93.zgame.api.bukkit.hologui.hologram.IHologram;
 import pl.north93.zgame.api.bukkit.hologui.hologram.TranslatableStringLine;
+import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public class TranslatedNameTrait extends Trait
@@ -124,6 +126,9 @@ public class TranslatedNameTrait extends Trait
     // uzywamy helpera aby nie rejestrowac duzej ilosci listenerów w Bukkicie
     public static class TranslatedNameTraitHelper implements AutoListener
     {
+        @Inject
+        private IBukkitExecutor bukkitExecutor;
+
         @EventHandler(priority = EventPriority.LOWEST)
         public void removeTeamOnWorldSwitch(final PlayerChangedWorldEvent event)
         {
@@ -153,7 +158,13 @@ public class TranslatedNameTrait extends Trait
             }
 
             final TranslatedNameTrait translatedNameTrait = npc.getTrait(TranslatedNameTrait.class);
-            translatedNameTrait.handleEntityBeingTracked(event.getPlayer());
+            this.bukkitExecutor.sync(() -> translatedNameTrait.handleEntityBeingTracked(event.getPlayer()));
+        }
+
+        @Override
+        public String toString()
+        {
+            return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
         }
     }
 }

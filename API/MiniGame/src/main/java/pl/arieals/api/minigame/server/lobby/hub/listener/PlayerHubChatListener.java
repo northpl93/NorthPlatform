@@ -11,6 +11,7 @@ import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
 import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
+import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.chat.global.ChatManager;
 import pl.north93.zgame.api.chat.global.ChatPlayer;
@@ -24,9 +25,11 @@ import pl.north93.zgame.api.global.network.players.Identity;
 public class PlayerHubChatListener implements AutoListener
 {
     @Inject
-    private ChatManager    chatManager;
+    private ChatManager     chatManager;
     @Inject
-    private MiniGameServer miniGameServer;
+    private IBukkitExecutor bukkitExecutor;
+    @Inject
+    private MiniGameServer  miniGameServer;
 
     @EventHandler
     public void switchChatRoomOnHubSwitch(final PlayerSwitchedHubEvent event)
@@ -42,7 +45,16 @@ public class PlayerHubChatListener implements AutoListener
         }
 
         final ChatRoom newChatRoom = newHub.getChatRoom();
-        player.joinRoom(newChatRoom);
+        if (player.isInRoom(newChatRoom))
+        {
+            // jesli gracz przechodzi z innej instancji huba to wystepuje race condition
+            // z racji tego jak dziala Bungee. Opozniamy ponowne dodanie gracza do pokoju.
+            this.delayRoomJoin(player, newChatRoom);
+        }
+        else
+        {
+            player.joinRoom(newChatRoom);
+        }
     }
 
     @EventHandler
@@ -68,6 +80,17 @@ public class PlayerHubChatListener implements AutoListener
         }
 
         chatPlayer.leaveRoom(hubWorld.getChatRoom());
+    }
+
+    private void delayRoomJoin(final ChatPlayer player, final ChatRoom room)
+    {
+        this.bukkitExecutor.syncLater(10, () ->
+        {
+            if (player.isOnline())
+            {
+                player.joinRoom(room);
+            }
+        });
     }
 
     @Override
