@@ -87,6 +87,12 @@ public class WorldPropertiesImpl implements IWorldProperties, ITickable
     }
     
     @Override
+    public boolean isMobSpawningEnabled()
+    {
+        return worldConfig.mobSpawningValue();
+    }
+    
+    @Override
     public int getTime()
     {
         return worldConfig.timeValue();

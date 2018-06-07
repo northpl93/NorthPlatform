@@ -39,6 +39,8 @@ public class XmlWorldProperties
     
     private Boolean hunger;
     
+    private Boolean mobs;
+    
     public Weather getWeather()
     {
         return weather;
@@ -96,6 +98,7 @@ public class XmlWorldProperties
         config.setGamerules(getGamerulesAsMap());
         config.setGamemode(gamemode);
         config.setHungerEnabled(hunger);
+        config.setMobSpawning(mobs);
         config.setSpawn(spawn != null ? spawn.toBukkit(null) : null);
     }
 }

@@ -54,6 +54,11 @@ public interface IWorldProperties
     boolean isHungerEnabled();
     
     /**
+     * @return true whenether mob can spawn on this world.
+     */
+    boolean isMobSpawningEnabled();
+    
+    /**
      * @return a immutable map of gamerules on that world
      */
     Map<String, String> getGamerules();
