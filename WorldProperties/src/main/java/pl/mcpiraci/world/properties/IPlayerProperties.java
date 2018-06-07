@@ -21,4 +21,6 @@ public interface IPlayerProperties
     boolean effectiveCanInteract();
     
     boolean effectiveInvulnerable();
+    
+    boolean effectiveHunger();
 }

@@ -30,6 +30,7 @@ public final class PropertiesConfig
     private Boolean physicsEnabled;
     private GameMode gamemode;
     private Location spawn;
+    private Boolean hungerEnabled;
     
     private Map<String, String> gamerules = Collections.emptyMap();
     
@@ -82,6 +83,16 @@ public final class PropertiesConfig
         }
         
         return parent != null ? parent.playersInvulnerableValue() : DefaultPlayerProperties.PLAYERS_INVULNERABLE;
+    }
+    
+    public boolean hungerEnabledValue()
+    {
+        if ( getHungerEnabled() != null )
+        {
+            return getHungerEnabled().booleanValue();
+        }
+        
+        return parent != null ? parent.hungerEnabledValue() : DefaultPlayerProperties.HUNGER_ENABLED;
     }
     
     public int timeValue()
@@ -186,6 +197,11 @@ public final class PropertiesConfig
         return physicsEnabled;
     }
     
+    public Boolean getHungerEnabled()
+    {
+        return hungerEnabled;
+    }
+    
     public Map<String, String> getGamerules()
     {
         return gamerules;
@@ -254,6 +270,11 @@ public final class PropertiesConfig
         this.spawn = spawn;
         updateModifiedTimestamp();
     }
+    
+    public void setHungerEnabled(Boolean hungerEnabled)
+    {
+        this.hungerEnabled = hungerEnabled;
+    }
 
     public void setDefaultValues()
     {
@@ -280,6 +301,7 @@ public final class PropertiesConfig
                 .append("weather", weather)
                 .append("gamerules", gamerules)
                 .append("spawn", spawn)
+                .append("hungerEnabled", hungerEnabled)
                 .append("effectiveCanBuild", canBuildValue())
                 .append("effectiveCanInteract", canInteractValue())
                 .append("effectivePlayersInvulnerable", playersInvulnerableValue())
@@ -287,6 +309,7 @@ public final class PropertiesConfig
                 .append("effectiveWeather", weatherValue())
                 .append("effectiveGamerules", gamerulesValue())
                 .append("effectiveSpawn", spawnValue())
+                .append("effectiveHungerEnable", hungerEnabledValue())
                 .build();
     }
 }

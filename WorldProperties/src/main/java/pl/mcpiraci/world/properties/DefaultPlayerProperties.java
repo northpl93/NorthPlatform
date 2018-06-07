@@ -8,6 +8,8 @@ public final class DefaultPlayerProperties
     
     public static final boolean PLAYERS_INVULNERABLE = false;
     
+    public static final boolean HUNGER_ENABLED = true;
+    
     private DefaultPlayerProperties()
     {
     }

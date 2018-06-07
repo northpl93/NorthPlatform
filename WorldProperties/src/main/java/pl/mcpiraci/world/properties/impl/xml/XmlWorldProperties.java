@@ -37,6 +37,8 @@ public class XmlWorldProperties
     
     private Boolean physics;
     
+    private Boolean hunger;
+    
     public Weather getWeather()
     {
         return weather;
@@ -77,6 +79,11 @@ public class XmlWorldProperties
         return gamemode;
     }
     
+    public Boolean getHunger()
+    {
+        return hunger;
+    }
+    
     public void applyToConfig(PropertiesConfig config)
     {
         Preconditions.checkArgument(config != null);
@@ -88,6 +95,7 @@ public class XmlWorldProperties
         config.setTime(time);
         config.setGamerules(getGamerulesAsMap());
         config.setGamemode(gamemode);
+        config.setHungerEnabled(hunger);
         config.setSpawn(spawn != null ? spawn.toBukkit(null) : null);
     }
 }

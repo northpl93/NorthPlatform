@@ -7,6 +7,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import pl.mcpiraci.world.properties.IPlayerProperties;
@@ -22,6 +25,18 @@ public class PlayerInvulnerableListener implements AutoListener
     private PlayerInvulnerableListener(IWorldPropertiesManager propertiesManager)
     {
         this.propertiesManager = propertiesManager;
+    }
+    
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event)
+    {
+        makeFullHealthBar(event);
+    }
+    
+    @EventHandler
+    public void onChangeWorld(PlayerChangedWorldEvent event)
+    {
+        makeFullHealthBar(event);
     }
     
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -62,6 +77,17 @@ public class PlayerInvulnerableListener implements AutoListener
         {
             event.getEntity().spigot().respawn();
             logger.warn("Player {} died even though he was invulnerable", event.getEntity());
+        }
+    }
+    
+    @SuppressWarnings("deprecation")
+    private void makeFullHealthBar(PlayerEvent event)
+    {
+        IPlayerProperties playerProperties = propertiesManager.getPlayerProperties(event.getPlayer());
+        
+        if ( !playerProperties.effectiveInvulnerable() )
+        {
+            event.getPlayer().setHealth(event.getPlayer().getMaxHealth());
         }
     }
 }

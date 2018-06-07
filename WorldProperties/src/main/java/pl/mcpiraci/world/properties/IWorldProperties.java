@@ -47,6 +47,12 @@ public interface IWorldProperties
      * @return true whenether block physics is enabled on that world.
      */
     boolean isPhysicsEnabled();
+    
+    /**
+     * @return true whenether hunger is enabled on that world.
+     */
+    boolean isHungerEnabled();
+    
     /**
      * @return a immutable map of gamerules on that world
      */

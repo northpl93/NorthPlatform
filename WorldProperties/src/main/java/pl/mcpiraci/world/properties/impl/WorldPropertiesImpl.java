@@ -81,6 +81,12 @@ public class WorldPropertiesImpl implements IWorldProperties, ITickable
     }
 
     @Override
+    public boolean isHungerEnabled()
+    {
+        return worldConfig.hungerEnabledValue();
+    }
+    
+    @Override
     public int getTime()
     {
         return worldConfig.timeValue();

@@ -76,4 +76,9 @@ public class PlayerPropertiesImpl implements IPlayerProperties
         return godMode || getCurrentWorldProperties().arePlayersInvulnerable();
     }
     
+    @Override
+    public boolean effectiveHunger()
+    {
+        return !godMode && getCurrentWorldProperties().isHungerEnabled();
+    }
 }
