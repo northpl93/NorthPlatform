@@ -4,12 +4,12 @@ import java.util.function.Consumer;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
-import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 import pl.arieals.lobby.gui.bedwars.BwShopMain;
@@ -33,14 +33,14 @@ public class ShopperTrait extends Trait
     }
 
     @EventHandler
-    public void rightClick(final NPCRightClickEvent event)
+    public void rightClick(final PlayerInteractAtEntityEvent event)
     {
-        if (event.getNPC() != this.getNPC())
+        if (event.getRightClicked() != this.getNPC().getEntity())
         {
             return;
         }
 
-        this.shopType.openForPlayer(event.getClicker());
+        this.shopType.openForPlayer(event.getPlayer());
     }
 
     @EventHandler

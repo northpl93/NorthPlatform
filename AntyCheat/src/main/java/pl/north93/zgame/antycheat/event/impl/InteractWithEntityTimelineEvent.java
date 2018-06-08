@@ -1,5 +1,7 @@
 package pl.north93.zgame.antycheat.event.impl;
 
+import javax.annotation.Nullable;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -17,6 +19,7 @@ public class InteractWithEntityTimelineEvent extends AbstractTimelineEvent
         this.action = action;
     }
 
+    @Nullable
     public Entity getEntity()
     {
         return this.entity;

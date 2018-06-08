@@ -1,5 +1,7 @@
 package pl.north93.zgame.antycheat.cheat.fight.check;
 
+import javax.annotation.Nullable;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -9,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -55,6 +58,11 @@ public class AttackTargetCheck implements EventAnalyser<InteractWithEntityTimeli
         final SingleAnalysisResult analysisResult = SingleAnalysisResult.create();
 
         final Entity targetEntity = event.getEntity();
+        if (! this.shouldProcessEntity(targetEntity))
+        {
+            return null;
+        }
+
         final IPosition targetPosition = IPosition.fromBukkit(targetEntity.getLocation());
         final AABB targetAABB = EntityUtils.getAABBOfEntityInLocation(targetEntity, targetPosition).grow(0.1, 0.1, 0.1);
 
@@ -81,6 +89,16 @@ public class AttackTargetCheck implements EventAnalyser<InteractWithEntityTimeli
         this.punishForExceededDistance(distance, analysisResult);
 
         return analysisResult;
+    }
+
+    private boolean shouldProcessEntity(final @Nullable Entity entity)
+    {
+        if (entity == null)
+        {
+            return false;
+        }
+
+        return entity instanceof LivingEntity;
     }
 
     // uzywa kilku lokalizacji z jednego ticku aby zmniejszyc prawdopodobienstwo pomylki

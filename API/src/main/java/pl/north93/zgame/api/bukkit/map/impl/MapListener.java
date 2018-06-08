@@ -3,8 +3,10 @@ package pl.north93.zgame.api.bukkit.map.impl;
 import net.minecraft.server.v1_12_R1.PacketPlayOutEntityMetadata;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Hanging;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -70,6 +72,26 @@ public class MapListener implements AutoListener
     public void onInteractWithMap(final PlayerInteractAtEntityEvent event)
     {
         final Entity entity = event.getRightClicked();
+        if (! (entity instanceof ItemFrame))
+        {
+            return;
+        }
+
+        final int entityId = entity.getEntityId();
+        for (final BoardImpl board : this.mapManager.getBoards())
+        {
+            if (board.isEntityBelongsToBoard(entityId))
+            {
+                event.setCancelled(true);
+                return;
+            }
+        }
+    }
+
+    @EventHandler
+    public void onMapDestroy(final HangingBreakEvent event)
+    {
+        final Hanging entity = event.getEntity();
         if (! (entity instanceof ItemFrame))
         {
             return;
