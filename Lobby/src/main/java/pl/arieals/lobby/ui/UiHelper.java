@@ -2,7 +2,9 @@ package pl.arieals.lobby.ui;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -51,8 +53,11 @@ public final class UiHelper
     {
         final List<DynamicElementData> elements = new ArrayList<>();
 
+        final Comparator<IHubServer> comparator = Comparator.comparing(IHubServer::getServerId);
+        final List<IHubServer> hubs = this.playController.getHubs().stream().sorted(comparator).collect(Collectors.toList());
+
         int counter = 0;
-        for (final IHubServer hubServer : this.playController.getHubs())
+        for (final IHubServer hubServer : hubs)
         {
             final Vars<Object> vars = Vars.of("id", ++counter);
             elements.add(new DynamicElementData(vars, (source, event) ->
