@@ -76,7 +76,7 @@ public class PropertiesManagerImpl implements IWorldPropertiesManager
     public IWorldProperties getProperties(World world)
     {
         Preconditions.checkNotNull(world, "World cannot be null");
-        return propertiesByWorld.computeIfAbsent(world.getName(), name -> loadWorldProperties(world));
+        return Optional.ofNullable(propertiesByWorld.get(world.getName())).orElseGet(() -> loadWorldProperties(world));
     }
     
     @Override
@@ -125,6 +125,8 @@ public class PropertiesManagerImpl implements IWorldPropertiesManager
     private WorldPropertiesImpl loadWorldProperties(World world)
     {
         WorldPropertiesImpl properties = new WorldPropertiesImpl(world);
+        this.propertiesByWorld.put(world.getName(), properties);
+
         properties.reloadWorldConfig();
         properties.updateWorld();
         
