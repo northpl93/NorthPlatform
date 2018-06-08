@@ -79,6 +79,18 @@
                 <icon id="IRON_DOOR" name="@general.back" />
                 <onClick>northplatform://lobby/shop/bedwars/openCategory/main/$playerId</onClick>
             </button>
+
+            <!-- Paski po lewej/prawej -->
+            <button pos="0,0"><icon id="STAINED_GLASS_PANE" data="11" name=""/></button>
+            <button pos="0,1"><icon id="STAINED_GLASS_PANE" data="11" name=""/></button>
+            <button pos="0,2"><icon id="STAINED_GLASS_PANE" data="11" name=""/></button>
+            <button pos="0,3"><icon id="STAINED_GLASS_PANE" data="11" name=""/></button>
+            <button pos="0,4"><icon id="STAINED_GLASS_PANE" data="11" name=""/></button>
+            <button pos="8,0"><icon id="STAINED_GLASS_PANE" data="11" name=""/></button>
+            <button pos="8,1"><icon id="STAINED_GLASS_PANE" data="11" name=""/></button>
+            <button pos="8,2"><icon id="STAINED_GLASS_PANE" data="11" name=""/></button>
+            <button pos="8,3"><icon id="STAINED_GLASS_PANE" data="11" name=""/></button>
+            <button pos="8,4"><icon id="STAINED_GLASS_PANE" data="11" name=""/></button>
         </content>
     </container>
 </gui>

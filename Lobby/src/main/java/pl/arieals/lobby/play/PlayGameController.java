@@ -3,6 +3,7 @@ package pl.arieals.lobby.play;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -19,7 +20,6 @@ import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.hub.IHubServer;
 import pl.arieals.api.minigame.shared.api.party.IParty;
-import pl.arieals.api.minigame.shared.impl.HubsManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -30,11 +30,11 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 public class PlayGameController
 {
     @Inject
+    private Logger         logger;
+    @Inject
     private MiniGameServer miniGameServer;
     @Inject
     private IArenaClient   arenaClient;
-    @Inject
-    private HubsManager    hubsManager;
     @Inject
     private PartyClient    partyClient;
 
@@ -71,7 +71,8 @@ public class PlayGameController
 
     public Collection<? extends IHubServer> getHubs()
     {
-        return this.hubsManager.getAllHubs();
+        final LobbyManager lobby = this.miniGameServer.getServerManager();
+        return lobby.getAllHubServers();
     }
 
     public void playGame(final Player player, final GameIdentity gameIdentity, final boolean allowInProgress, final String worldId)
@@ -94,14 +95,7 @@ public class PlayGameController
             players = party.getPlayers().stream().map(Bukkit::getPlayer).collect(Collectors.toList());
         }
 
-        if (this.doConnect(players, gameIdentity, allowInProgress, worldId))
-        {
-            player.sendMessage("udalo sie znalezc arene");
-        }
-        else
-        {
-            player.sendMessage("brak areny spelniajacej kryteria");
-        }
+        this.doConnect(players, gameIdentity, allowInProgress, worldId);
     }
 
     private boolean doConnect(final Collection<Player> players, final GameIdentity gameIdentity, final boolean allowInProgress, final String worldId)
@@ -114,7 +108,8 @@ public class PlayGameController
 
         final List<PlayerJoinInfo> joinInfos = players.stream().map(player ->
         {
-            return new PlayerJoinInfo(player.getUniqueId(), false, false);
+            final boolean isVip = player.hasPermission("gamejoin.vip");
+            return new PlayerJoinInfo(player.getUniqueId(), isVip, false);
         }).collect(Collectors.toList());
 
         return this.arenaClient.connect(query, joinInfos);

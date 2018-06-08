@@ -9,8 +9,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
-import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
 import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
+import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.chat.global.ChatManager;
@@ -24,6 +24,7 @@ import pl.north93.zgame.api.global.network.players.Identity;
  */
 public class PlayerHubChatListener implements AutoListener
 {
+    private static final int RACE_CONDITION_WAIT = 20;
     @Inject
     private ChatManager     chatManager;
     @Inject
@@ -79,12 +80,12 @@ public class PlayerHubChatListener implements AutoListener
             return;
         }
 
-        chatPlayer.leaveRoom(hubWorld.getChatRoom());
+        chatPlayer.leaveRoom(hubWorld.getChatRoom(), true);
     }
 
     private void delayRoomJoin(final ChatPlayer player, final ChatRoom room)
     {
-        this.bukkitExecutor.syncLater(10, () ->
+        this.bukkitExecutor.asyncLater(RACE_CONDITION_WAIT, () ->
         {
             if (player.isOnline())
             {

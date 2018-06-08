@@ -116,7 +116,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     }
 
     @Override
-    public void leaveRoom(final ChatRoom room)
+    public void leaveRoom(final ChatRoom room, final boolean ignoreOffline)
     {
         final Logger logger = this.chatManager.getLogger();
         final ChatRoomImpl roomImpl = (ChatRoomImpl) room;
@@ -124,7 +124,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
         try (final IPlayerTransaction t = this.chatManager.getPlayersManager().transaction(this.identity))
         {
             final IPlayer player = t.getPlayer();
-            if (t.isOffline())
+            if (! ignoreOffline && t.isOffline())
             {
                 throw new PlayerOfflineException(player);
             }

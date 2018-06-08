@@ -145,6 +145,14 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         }
     }
 
+    /*default*/ void removeWaitingLock(final LockImpl lock)
+    {
+        synchronized (this.waitingLocks)
+        {
+            this.waitingLocks.remove(lock);
+        }
+    }
+
     private void unlockNotify(final String channel, final byte[] message)
     {
         final String lock = new String(message, StandardCharsets.UTF_8);

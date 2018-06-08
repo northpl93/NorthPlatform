@@ -19,7 +19,12 @@ public interface ChatPlayer
 
     void joinRoom(ChatRoom room) throws PlayerOfflineException;
 
-    void leaveRoom(ChatRoom room) throws PlayerOfflineException;
+    void leaveRoom(ChatRoom room, boolean ignoreOffline) throws PlayerOfflineException;
+
+    default void leaveRoom(final ChatRoom room)
+    {
+        this.leaveRoom(room, false);
+    }
 
     @Nullable
     ChatRoom getActiveRoom() throws PlayerOfflineException;

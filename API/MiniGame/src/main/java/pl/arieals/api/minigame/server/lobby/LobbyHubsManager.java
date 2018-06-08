@@ -40,6 +40,11 @@ public class LobbyHubsManager
         return this.localHub;
     }
 
+    public Collection<? extends IHubServer> getAllHubServers()
+    {
+        return this.hubsManager.getAllHubs();
+    }
+
     public void tpToHub(final Collection<Player> players, final String hubId)
     {
         for (final Player player : players)

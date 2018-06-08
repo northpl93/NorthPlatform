@@ -52,6 +52,8 @@ public interface ChatManager
      */
     Collection<ChatRoom> getChatRooms();
 
+    Collection<ChatRoom> findRooms(String regex);
+
     /**
      * Usuwa pokój czatu o podanym identyfikatorze.
      *

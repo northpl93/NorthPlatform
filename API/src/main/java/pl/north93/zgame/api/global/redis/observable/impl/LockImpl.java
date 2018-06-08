@@ -1,10 +1,10 @@
 package pl.north93.zgame.api.global.redis.observable.impl;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.common.base.Preconditions;
 import com.lambdaworks.redis.ScriptOutputType;
 import com.lambdaworks.redis.api.sync.RedisCommands;
 
@@ -20,14 +20,13 @@ class LockImpl implements Lock
     private final ObservationManagerImpl observationManager;
     private final String                 name;
     private final Object                 waiter;
-    private final AtomicBoolean          isLockedLocally;
+    private       boolean                isLockedLocally;
 
     public LockImpl(final ObservationManagerImpl observationManager, final String name)
     {
         this.observationManager = observationManager;
         this.name = name;
         this.waiter = new Object();
-        this.isLockedLocally = new AtomicBoolean(false);
     }
 
     @Override
@@ -63,10 +62,6 @@ class LockImpl implements Lock
         final Logger logger = this.observationManager.getMyLogger();
         if (this.tryLock0())
         {
-            if (! this.isLockedLocally.compareAndSet(false, true))
-            {
-                throw new RuntimeException("Failed to lock " + this.name + ". It's already locked locally.");
-            }
             logger.log(Level.FINE, "[Lock] Successfully acquired lock {0}", this.name);
             return true;
         }
@@ -75,14 +70,17 @@ class LockImpl implements Lock
 
     private synchronized boolean tryLock0()
     {
-        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
-        final boolean result = redis.eval(LOCK_SCRIPT, ScriptOutputType.BOOLEAN, this.name);
+        if (this.isLockedLocally)
+        {
+            return false;
+        }
 
-        return result && this.isLockedLocally.compareAndSet(false, true);
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        return this.isLockedLocally = redis.eval(LOCK_SCRIPT, ScriptOutputType.BOOLEAN, this.name);
     }
 
     @Override
-    public synchronized void unlock()
+    public void unlock()
     {
         final Logger logger = this.observationManager.getMyLogger();
         if (! this.tryUnlock())
@@ -94,22 +92,33 @@ class LockImpl implements Lock
 
     private synchronized boolean tryUnlock()
     {
-        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
-        final boolean result = redis.eval(UNLOCK_SCRIPT, ScriptOutputType.BOOLEAN, this.name);
+        Preconditions.checkState(this.isLockedLocally, "Lock isn't locked locally");
 
-        return result && this.isLockedLocally.compareAndSet(true, false);
+        final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
+        if (redis.eval(UNLOCK_SCRIPT, ScriptOutputType.BOOLEAN, this.name))
+        {
+            this.observationManager.removeWaitingLock(this);
+            this.isLockedLocally = false;
+
+            return true;
+        }
+
+        return false;
     }
 
-    /*default*/ void remoteUnlock()
+    /*default*/ synchronized void remoteUnlock()
     {
         final Logger logger = this.observationManager.getMyLogger();
-        if (this.isLockedLocally.compareAndSet(true, false))
+        if (this.isLockedLocally)
         {
-            logger.log(Level.WARNING, "[Lock] Lock {0} has been unlocked while it's locked locally. It will cause further issues.", this.name);
+            logger.log(Level.SEVERE, "[Lock] Lock {0} has been unlocked while it's locked locally. It will cause further issues.", this.name);
         }
-        logger.log(Level.FINE, "[Lock] Remote unlock {0}", this.name);
+
         synchronized (this.waiter)
         {
+            logger.log(Level.FINE, "[Lock] Remote unlock {0}", this.name);
+
+            this.isLockedLocally = false;
             this.waiter.notifyAll();
         }
     }

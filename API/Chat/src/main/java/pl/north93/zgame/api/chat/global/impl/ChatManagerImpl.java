@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -143,8 +144,29 @@ public class ChatManagerImpl implements ChatManager
         for (final ChatRoomData data : this.chatRooms.values())
         {
             final String roomId = data.getId();
-            final Value<ChatRoomData> value = this.chatRooms.getAsValue(roomId);
 
+            final Value<ChatRoomData> value = this.chatRooms.getAsValue(roomId);
+            rooms.add(new ChatRoomImpl(this, roomId, value));
+        }
+
+        return rooms;
+    }
+
+    @Override
+    public Collection<ChatRoom> findRooms(final String regex)
+    {
+        final Pattern pattern = Pattern.compile(regex);
+
+        final List<ChatRoom> rooms = new ArrayList<>();
+        for (final ChatRoomData data : this.chatRooms.values())
+        {
+            final String roomId = data.getId();
+            if (! pattern.matcher(roomId).matches())
+            {
+                continue;
+            }
+
+            final Value<ChatRoomData> value = this.chatRooms.getAsValue(roomId);
             rooms.add(new ChatRoomImpl(this, roomId, value));
         }
 

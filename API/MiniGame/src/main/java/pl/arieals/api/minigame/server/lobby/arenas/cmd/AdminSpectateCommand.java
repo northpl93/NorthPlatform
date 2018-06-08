@@ -70,7 +70,7 @@ public class AdminSpectateCommand extends NorthCommand
             final InGameStatus gameStatus = (InGameStatus) status;
 
             final IArena arena = this.arenaClient.get(gameStatus.getArenaId());
-            final PlayerJoinInfo joinInfo = new PlayerJoinInfo(player.getUniqueId(), false, true);
+            final PlayerJoinInfo joinInfo = new PlayerJoinInfo(player.getUniqueId(), true, true);
 
             sender.sendMessage("&aPrzenoszenie do gry gracza {0}", identity.getNick());
             sender.sendMessage("&aID serwera: {0}", gameStatus.getServerId());

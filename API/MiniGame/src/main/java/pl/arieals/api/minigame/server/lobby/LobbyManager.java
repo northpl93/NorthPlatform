@@ -74,6 +74,16 @@ public class LobbyManager implements IServerManager
         return this.lobbyHubsManager.getLocalHub();
     }
 
+    /**
+     * Zwraca wszystkie uruchomione w sieci serwery hubów.
+     *
+     * @return Lista wszystkich serwerów hubów.
+     */
+    public Collection<? extends IHubServer> getAllHubServers()
+    {
+        return this.lobbyHubsManager.getAllHubServers();
+    }
+
     @Override
     public String toString()
     {
