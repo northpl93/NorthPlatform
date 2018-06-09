@@ -16,13 +16,17 @@ import pl.north93.zgame.api.bukkit.utils.xml.XmlChunk;
 import pl.north93.zgame.api.bukkit.world.IWorldLoadCallback;
 import pl.north93.zgame.api.bukkit.world.IWorldManager;
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class WorldManagerComponent extends Component implements IWorldManager
 {
+    @Inject
+    private ChunkLoadManager chunkLoadManager;
     
     @Override
     protected void enableComponent()
     {
+        // TODO: handle main world
     }
 
     @Override
@@ -51,13 +55,11 @@ public class WorldManagerComponent extends Component implements IWorldManager
         
         if ( keepEntireWorldLoaded )
         {
-            // TODO:
-            callback.callComplete();
+            chunkLoadManager.start(ChunkLoadTask.loadAllChunks(callback));
         }
         else if ( worldServer.getWorld().getKeepSpawnInMemory() )
         {
-            // TODO:
-            callback.callComplete();
+            chunkLoadManager.start(ChunkLoadTask.loadSpawn(callback));
         }
         else
         {

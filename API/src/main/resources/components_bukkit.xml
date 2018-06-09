@@ -100,8 +100,11 @@
         	<mainClass>pl.north93.zgame.api.bukkit.world.impl.WorldManagerComponent</mainClass>
         	<description>An API to simple manage worlds</description>
         	<packages>
-        		<package>l.north93.zgame.api.bukkit.world</package>
+        		<package>pl.north93.zgame.api.bukkit.world</package>
         	</packages>
+        	<dependencies>
+                <dependency>API.TickableManager</dependency>
+            </dependencies>
         	<platforms>
         		<platform>BUKKIT</platform>
         	</platforms>

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +21,8 @@ import org.diorite.commons.io.DioriteFileUtils;
 
 import com.google.common.base.Preconditions;
 
+import net.minecraft.server.v1_12_R1.ChunkProviderServer;
+import net.minecraft.server.v1_12_R1.ChunkRegionLoader;
 import net.minecraft.server.v1_12_R1.EntityTracker;
 import net.minecraft.server.v1_12_R1.EnumDifficulty;
 import net.minecraft.server.v1_12_R1.EnumGamemode;
@@ -41,8 +44,14 @@ import pl.north93.zgame.api.global.utils.lang.SneakyThrow;
 class NmsWorldUtils
 {
     private static final MethodHandle WORLDS_GETTER = MethodHandlesUtils.unreflectGetter(CraftServer.class, "worlds");
+    private static final MethodHandle CHUNK_QUEUE_GETTER = MethodHandlesUtils.unreflectGetter(ChunkRegionLoader.class, "queue");
     
     private static final Logger logger = LogManager.getLogger();
+    
+    static WorldServer getMinecraftWorld(World bukkitWorld)
+    {
+        return ((CraftWorld) bukkitWorld).getHandle();
+    }
     
     /**
      * Creates only WorldServer instance based world name
@@ -163,9 +172,9 @@ class NmsWorldUtils
         worlds.remove(world.getName().toLowerCase(java.util.Locale.ENGLISH));
         MinecraftServer.getServer().worlds.remove(MinecraftServer.getServer().worlds.indexOf(handle));
         
+        // We have to cancel pending saves if any, because this may left lock on region files in filesystem even if we remove region cache
+        cancelPendingSaves(handle);
         removeRegionCache(handle);
-        
-        // TODO: cancell pending saves if any, because this may left lock on region files in filesystem
         
         return true;
     }
@@ -187,6 +196,20 @@ class NmsWorldUtils
                     CatchException.catchThrowable(() -> entry.getValue().c(), e -> logger.error("Couldn't clenup region file cache for world {}", world.getWorld().getName(), e));
                 }
             }
+        }
+    }
+    
+    private static void cancelPendingSaves(WorldServer world)
+    {
+        ChunkProviderServer chunkProvider = world.getChunkProviderServer();
+        ChunkRegionLoader chunkLoader = (ChunkRegionLoader) NorthChunkProvider.getChunkLoader(chunkProvider);
+        
+        Queue<?> queue = (Queue<?>) SneakyThrow.sneaky(() -> CHUNK_QUEUE_GETTER.invoke(chunkLoader));
+        
+        // Syncronize to avoid race condition with ChunkRegionLoader#processSaveQueueEntry
+        synchronized ( chunkLoader )
+        {
+            queue.clear();
         }
     }
 }

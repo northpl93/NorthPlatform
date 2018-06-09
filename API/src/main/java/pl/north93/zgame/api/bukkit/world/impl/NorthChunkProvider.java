@@ -32,9 +32,9 @@ public class NorthChunkProvider extends ChunkProviderServer
         super(original.world, getChunkLoader(original), original.chunkGenerator);
     }
     
-    private static IChunkLoader getChunkLoader(ChunkProviderServer original)
+    static IChunkLoader getChunkLoader(ChunkProviderServer chunkProvider)
     {
-        return (IChunkLoader) SneakyThrow.sneaky(() -> GET_CHUNK_LOADER.invoke(original));
+        return (IChunkLoader) SneakyThrow.sneaky(() -> GET_CHUNK_LOADER.invoke(chunkProvider));
     }
     
     public static void inject(WorldServer world, boolean keepingEntireWorldLoaded, boolean generateNewChunksDisabled)
@@ -83,6 +83,7 @@ public class NorthChunkProvider extends ChunkProviderServer
         {
             return chunk;
         }
+        
         
         logger.debug("Attempted to load dummy chunk at {}, {}", x, z);
         chunk = new DummyChunk(world, x, z);
@@ -139,14 +140,14 @@ public class NorthChunkProvider extends ChunkProviderServer
     @Override
     public boolean unloadChunk(Chunk chunk, boolean save)
     {
-        logger.debug("Loaded chunks {}", chunks.size());
+        logger.trace("Loaded chunks {}", chunks.size());
         
         if ( !keepingEntireWorldLoaded )
         {
             return super.unloadChunk(chunk, save);
         }
         
-        logger.debug("Unloading chunk {} {}", chunk.locX, chunk.locZ);
+        //logger.debug("Unloading chunk {} {}", chunk.locX, chunk.locZ);
         
         return false;
     }
