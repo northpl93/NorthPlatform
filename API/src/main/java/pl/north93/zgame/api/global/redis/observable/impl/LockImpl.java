@@ -100,6 +100,7 @@ class LockImpl implements Lock
             this.observationManager.removeWaitingLock(this);
             this.isLockedLocally = false;
 
+            this.notifyAllLocalWaiters();
             return true;
         }
 
@@ -114,11 +115,16 @@ class LockImpl implements Lock
             logger.log(Level.SEVERE, "[Lock] Lock {0} has been unlocked while it's locked locally. It will cause further issues.", this.name);
         }
 
+        this.isLockedLocally = false;
+        this.notifyAllLocalWaiters();
+
+        logger.log(Level.FINE, "[Lock] Remote unlock {0}", this.name);
+    }
+
+    private void notifyAllLocalWaiters()
+    {
         synchronized (this.waiter)
         {
-            logger.log(Level.FINE, "[Lock] Remote unlock {0}", this.name);
-
-            this.isLockedLocally = false;
             this.waiter.notifyAll();
         }
     }

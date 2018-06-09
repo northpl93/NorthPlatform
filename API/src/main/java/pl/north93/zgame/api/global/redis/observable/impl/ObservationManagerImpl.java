@@ -1,10 +1,10 @@
 package pl.north93.zgame.api.global.redis.observable.impl;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 
 import com.lambdaworks.redis.api.sync.RedisCommands;
@@ -15,7 +15,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.PlatformConnector;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.storage.StorageConnector;
 import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.observable.Hash;
 import pl.north93.zgame.api.global.redis.observable.ICacheBuilder;
@@ -26,22 +25,25 @@ import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
 import pl.north93.zgame.api.global.redis.observable.SortedSet;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
+import pl.north93.zgame.api.global.storage.StorageConnector;
 import pl.north93.zgame.api.global.utils.ReferenceHashMap;
 
 public class ObservationManagerImpl extends Component implements IObservationManager
 {
-    private final Map<String, CachedValue> cachedValues = new ReferenceHashMap<>();
+    private final Map<String, CachedValue> cachedValues;
+    private final Queue<LockImpl>          waitingLocks;
     private final ValueSubscriptionHandler valueSubHandler;
-    private final List<LockImpl>           waitingLocks = new ArrayList<>();
     @Inject
-    private StorageConnector storageConnector;
+    private       StorageConnector         storageConnector;
     @Inject
-    private TemplateManager  msgPack;
+    private       TemplateManager          msgPack;
     @Inject
-    private RedisSubscriber  redisSubscriber;
+    private       RedisSubscriber          redisSubscriber;
 
     public ObservationManagerImpl()
     {
+        this.cachedValues = new ReferenceHashMap<>();
+        this.waitingLocks = new ConcurrentLinkedQueue<>();
         this.valueSubHandler = new ValueSubscriptionHandler(this);
     }
 
@@ -139,34 +141,26 @@ public class ObservationManagerImpl extends Component implements IObservationMan
 
     /*default*/ void addWaitingLock(final LockImpl lock)
     {
-        synchronized (this.waitingLocks)
-        {
-            this.waitingLocks.add(lock);
-        }
+        this.waitingLocks.add(lock);
     }
 
     /*default*/ void removeWaitingLock(final LockImpl lock)
     {
-        synchronized (this.waitingLocks)
-        {
-            this.waitingLocks.remove(lock);
-        }
+        this.waitingLocks.remove(lock);
     }
 
     private void unlockNotify(final String channel, final byte[] message)
     {
         final String lock = new String(message, StandardCharsets.UTF_8);
-        synchronized (this.waitingLocks)
+
+        final Iterator<LockImpl> lockIter = this.waitingLocks.iterator();
+        while (lockIter.hasNext())
         {
-            final Iterator<LockImpl> lockIter = this.waitingLocks.iterator();
-            while (lockIter.hasNext())
+            final LockImpl waitingLock = lockIter.next();
+            if (waitingLock.getName().equals(lock))
             {
-                final LockImpl waitingLock = lockIter.next();
-                if (waitingLock.getName().equals(lock))
-                {
-                    lockIter.remove();
-                    waitingLock.remoteUnlock();
-                }
+                lockIter.remove();
+                waitingLock.remoteUnlock();
             }
         }
     }
