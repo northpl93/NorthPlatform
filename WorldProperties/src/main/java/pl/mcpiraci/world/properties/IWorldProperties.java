@@ -1,5 +1,7 @@
 package pl.mcpiraci.world.properties;
 
+import javax.annotation.Nullable;
+
 import java.util.Map;
 
 import org.bukkit.GameMode;
@@ -41,6 +43,7 @@ public interface IWorldProperties
     /**
      * @return a fixed weather on world, null means naturally weather cycle.
      */
+    @Nullable
     Weather getWeather();
     
     /**
@@ -66,11 +69,13 @@ public interface IWorldProperties
     /**
      * @return a gamemode that is aplied to the players on that world, null means no gamemode force
      */
+    @Nullable
     GameMode getGamemode();
 
     /**
      * @return a location when players are spawned when teleporting to this world.
      */
+    @Nullable
     Location getSpawn();
 
     /**

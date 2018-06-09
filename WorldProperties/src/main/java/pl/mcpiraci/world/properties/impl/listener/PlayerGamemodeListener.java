@@ -1,12 +1,13 @@
 package pl.mcpiraci.world.properties.impl.listener;
 
+import net.minecraft.server.v1_12_R1.EnumGamemode;
+
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
-import net.minecraft.server.v1_12_R1.EnumGamemode;
+import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import pl.mcpiraci.world.properties.IWorldProperties;
 import pl.mcpiraci.world.properties.IWorldPropertiesManager;

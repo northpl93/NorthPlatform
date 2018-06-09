@@ -113,13 +113,13 @@ public class WorldPropertiesImpl implements IWorldProperties, ITickable
     @Override
     public GameMode getGamemode()
     {
-        return worldConfig.getGamemode();
+        return worldConfig.gamemodeValue();
     }
 
     @Override
     public Location getSpawn()
     {
-        return worldConfig.getSpawn();
+        return worldConfig.spawnValue();
     }
 
     @Override

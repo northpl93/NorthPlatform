@@ -120,7 +120,7 @@ public final class PropertiesConfig
     {
         if ( getPhysicsEnabled() != null )
         {
-            return physicsEnabled.booleanValue();
+            return getPhysicsEnabled().booleanValue();
         }
         
         return parent != null ? parent.physicsEnabledValue() : true;
@@ -130,7 +130,7 @@ public final class PropertiesConfig
     {
         if ( getMobSpawning() != null )
         {
-            return mobSpawning.booleanValue();
+            return getMobSpawning().booleanValue();
         }
         
         return parent != null ? parent.mobSpawningValue() : true;
@@ -160,22 +160,22 @@ public final class PropertiesConfig
     
     public GameMode gamemodeValue()
     {
-        if ( gamemode != null )
+        if ( getGamemode() != null )
         {
-            return gamemode;
+            return getGamemode();
         }
         
-        return parent != null ? parent.getGamemode() : null;
+        return parent != null ? parent.gamemodeValue() : null;
     }
 
     public Location spawnValue()
     {
-        if ( spawn != null )
+        if ( getSpawn() != null )
         {
-            return spawn;
+            return getSpawn();
         }
 
-        return parent != null ? parent.getSpawn() : null;
+        return parent != null ? parent.spawnValue() : null;
     }
 
     public Boolean getCanBuild()
