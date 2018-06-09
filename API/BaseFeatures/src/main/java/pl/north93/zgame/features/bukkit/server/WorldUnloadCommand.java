@@ -16,7 +16,7 @@ public class WorldUnloadCommand extends NorthCommand
 	private final MessagesBox messages;
 	private final IWorldManager worldManager;
 	
-	public WorldUnloadCommand(@Messages("Commands") MessagesBox messages, IWorldManager worldManager)
+	public WorldUnloadCommand(@Messages("BaseFeatures") MessagesBox messages, IWorldManager worldManager)
 	{
 		super("worldunload");
 		setPermission("api.command.worldunload");

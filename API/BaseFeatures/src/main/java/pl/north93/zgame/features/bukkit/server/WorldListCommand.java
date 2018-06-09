@@ -12,7 +12,7 @@ public class WorldListCommand extends NorthCommand
 {
 	private final MessagesBox messages;
 	
-	public WorldListCommand(@Messages("Commands") MessagesBox messages)
+	public WorldListCommand(@Messages("BaseFeatures") MessagesBox messages)
 	{
 		super("worldlist");
 		setPermission("api.command.worldlist");

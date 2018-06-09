@@ -20,7 +20,7 @@ import pl.north93.zgame.api.global.network.players.Identity;
 
 public class LanguageCommand extends NorthCommand
 {
-    @Inject @Messages("Commands")
+    @Inject @Messages("BaseFeatures")
     private MessagesBox     messages;
     @Inject
     private INetworkManager networkManager;

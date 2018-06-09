@@ -17,7 +17,7 @@ import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 
 public class NickCommand extends NorthCommand
 {
-    @Inject @Messages("Commands")
+    @Inject @Messages("BaseFeatures")
     private MessagesBox messages;
     @Inject
     private INetworkManager networkManager;

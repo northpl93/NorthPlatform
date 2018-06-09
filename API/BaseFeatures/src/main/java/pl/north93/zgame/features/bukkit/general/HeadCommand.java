@@ -18,7 +18,7 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 public class HeadCommand extends NorthCommand
 {
     @Inject
-    @Messages("Commands")
+    @Messages("BaseFeatures")
     private MessagesBox messages;
 
     public HeadCommand()

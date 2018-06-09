@@ -22,7 +22,7 @@ public class KickCommand extends NorthCommand
     private ApiCore         apiCore;
     @Inject
     private INetworkManager networkManager;
-    @Inject @Messages("Commands")
+    @Inject @Messages("BaseFeatures")
     private MessagesBox     messages;
 
     public KickCommand()

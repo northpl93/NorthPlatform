@@ -17,7 +17,7 @@ public class WorldLoadCommand extends NorthCommand
 	private final MessagesBox messages;
 	private final IWorldManager worldManager;
 	
-	public WorldLoadCommand(@Messages("Commands") MessagesBox messages, IWorldManager worldManager)
+	public WorldLoadCommand(@Messages("BaseFeatures") MessagesBox messages, IWorldManager worldManager)
 	{
 		super("worldload");
 		setPermission("api.command.worldload");

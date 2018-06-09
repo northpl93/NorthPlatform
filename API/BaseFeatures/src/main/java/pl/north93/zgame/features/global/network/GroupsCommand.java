@@ -22,7 +22,7 @@ public class GroupsCommand extends NorthCommand
     private PermissionsManager permissionsManager;
     @Inject
     private INetworkManager    networkManager;
-    @Inject @Messages("Commands")
+    @Inject @Messages("BaseFeatures")
     private MessagesBox        messages;
 
     public GroupsCommand()

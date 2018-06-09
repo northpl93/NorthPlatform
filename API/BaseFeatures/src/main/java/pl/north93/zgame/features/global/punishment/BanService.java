@@ -35,7 +35,7 @@ public class BanService
 {
     @Inject @NetConfig(type = PunishmentCfg.class, id="punishment")
     private IConfig<PunishmentCfg> config;
-    @Inject @Messages("Commands")
+    @Inject @Messages("BaseFeatures")
     private MessagesBox            messages;
     @Inject
     private INetworkManager        networkManager;

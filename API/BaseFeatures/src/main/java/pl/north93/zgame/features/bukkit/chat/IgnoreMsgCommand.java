@@ -16,7 +16,7 @@ public class IgnoreMsgCommand extends NorthCommand
 {
     @Inject
     private INetworkManager networkManager;
-    @Inject @Messages("Commands")
+    @Inject @Messages("BaseFeatures")
     private MessagesBox     messages;
 
     public IgnoreMsgCommand()
