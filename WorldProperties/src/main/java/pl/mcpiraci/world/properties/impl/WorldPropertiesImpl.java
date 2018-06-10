@@ -217,7 +217,7 @@ public class WorldPropertiesImpl implements IWorldProperties, ITickable
             world.setTime(time);
         }
         
-        logger.debug("Time for world {} updated!", world.getName());
+        logger.debug("Time for world {} updated!");
     }
 
     private void updateSpawn()
@@ -230,6 +230,6 @@ public class WorldPropertiesImpl implements IWorldProperties, ITickable
         }
 
         world.setSpawnLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-        logger.debug("Spawn location for world {} updated!", world.getName());
+        logger.debug("Spawn location for world {} updated!");
     }
 }
