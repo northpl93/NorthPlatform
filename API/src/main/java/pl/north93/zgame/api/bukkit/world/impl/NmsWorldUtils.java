@@ -136,6 +136,12 @@ class NmsWorldUtils
         return world;
     }
     
+    /**
+     * Unloads world without saving.
+     * Note that all pending saves will be cancelled.
+     * If you want to save world you must use save method first.
+     * @return
+     */
     @SuppressWarnings({"deprecation", "unchecked"})
     static boolean unloadWorld(World world, boolean force)
     {
@@ -209,7 +215,30 @@ class NmsWorldUtils
         // Syncronize to avoid race condition with ChunkRegionLoader#processSaveQueueEntry
         synchronized ( chunkLoader )
         {
+            logger.debug("Cancelled saving {} chunks", () -> queue.size());
             queue.clear();
+        }
+    }
+    
+    /**
+     * Force saving world, the save process should be syncronized to main server thread, 
+     * so world will be saved when that method exited
+     */
+    static void forceSave(World bukkitWorld)
+    {
+        logger.debug("Saving chunks for world {}", () -> bukkitWorld.getName());
+        
+        WorldServer handle = getMinecraftWorld(bukkitWorld);
+        
+        try
+        {
+            handle.save(true, null);
+            handle.saveLevel(); // name of this method should be "waitForLevelSaving"
+            logger.debug("Saved chunks for world {}", () -> bukkitWorld.getName());
+        }
+        catch ( Throwable e )
+        {
+            logger.error("Couldn't save world {}", bukkitWorld.getName(), e);
         }
     }
 }

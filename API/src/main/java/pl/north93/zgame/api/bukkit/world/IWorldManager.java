@@ -44,13 +44,23 @@ public interface IWorldManager
     
     /**
      * Try to unload world, if this is not possible return false.
+     * Note that this method won't save chunks. 
      */
     boolean tryUnloadWorld(World world);
     
     /**
      * Forces to unload world, even if there are players or plugin cancelled event.
+     * Note that this method won't save chunks.
      */
     void unloadWorld(World world);
+    
+    /**
+     * Forces given world to save chunks
+     * Note that this method will save chunks synchronously in server thread
+     */
+    void save(World world);
+    
+    // TODO: async save
     
     /**
      * Trim world to contains only given chunk and save it to new directory.

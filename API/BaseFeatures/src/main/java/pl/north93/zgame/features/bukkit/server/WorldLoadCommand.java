@@ -56,7 +56,7 @@ public class WorldLoadCommand extends NorthCommand
 		}
 		
 		sender.sendMessage(messages, "command.worldload.loading");
-		ISyncCallback callback = worldManager.loadWorld(worldToLoad, null, false, false); // TODO: add way to config this
+		ISyncCallback callback = worldManager.loadWorld(worldToLoad, null, true, true); // TODO: add way to config this
 		callback.onComplete(() -> sender.sendMessage(messages, "command.worldload.loaded"));
 	}
 }
