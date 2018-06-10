@@ -371,7 +371,7 @@ public class GoldHunterArena implements IArenaData, ITickable
     
     private void walkover(GameTeam winTeam)
     {
-        players.forEach(p -> p.sendSeparatedMessage("win_game.walkover", winTeam.getColoredBoldGenitive().getValue(p.getPlayer()).toUpperCase()));
+        players.forEach(p -> p.sendSeparatedMessage("win_game.walkover", winTeam.getColoredBoldGenitive().getValue(p.getPlayer()).toLegacyText().toUpperCase()));
     }
     
     @Tick
@@ -444,10 +444,10 @@ public class GoldHunterArena implements IArenaData, ITickable
         Optional<GoldHunterPlayer> second = ListUtils.getIfExists(players, 1);
         Optional<GoldHunterPlayer> third = ListUtils.getIfExists(players, 2);
         
-        players.forEach(p -> p.sendSeparatedMessage("win_game", winnerTeam.getColoredBoldGenitive().getValue(p.getPlayer().getLocale()).toUpperCase(),
-                first.map(GoldHunterPlayer::getDisplayName).orElse("&7&m------"), first.map(x -> x.getStatsTracker().getKills()).orElse(0),
-                second.map(GoldHunterPlayer::getDisplayName).orElse("&7&m------"), second.map(x -> x.getStatsTracker().getKills()).orElse(0),
-                third.map(GoldHunterPlayer::getDisplayName).orElse("&7&m------"), third.map(x -> x.getStatsTracker().getKills()).orElse(0)));
+        players.forEach(p -> p.sendSeparatedMessage("win_game", winnerTeam.getColoredBoldNominative().getValue(p.getPlayer().getLocale()).toLegacyText().toUpperCase(),
+                first.map(GoldHunterPlayer::getDisplayName).orElse("&7&m------&r"), first.map(x -> x.getStatsTracker().getKills() + "").orElse(""),
+                second.map(GoldHunterPlayer::getDisplayName).orElse("&7&m------&r"), second.map(x -> x.getStatsTracker().getKills() + "").orElse(""),
+                third.map(GoldHunterPlayer::getDisplayName).orElse("&7&m------&r"), third.map(x -> x.getStatsTracker().getKills() + "").orElse("")));
         
         players.forEach(p -> localArena.getRewards().renderRewards(messages, p.getPlayer()));
     }
