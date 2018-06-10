@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
+import pl.mcpiraci.world.properties.IPlayerProperties;
 import pl.mcpiraci.world.properties.IWorldProperties;
 import pl.mcpiraci.world.properties.IWorldPropertiesManager;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
@@ -38,8 +39,9 @@ public class PlayerGamemodeListener implements AutoListener
     public void setGamemodeOnWorldChange(PlayerChangedWorldEvent event)
     {
         IWorldProperties properties = propertiesManager.getProperties(event.getPlayer().getWorld());
+        IPlayerProperties playerProperties = propertiesManager.getPlayerProperties(event.getPlayer());
         
-        if ( properties.getGamemode() != null )
+        if ( !playerProperties.canBypassRestrictions() && properties.getGamemode() != null )
         {
             event.getPlayer().setGameMode(properties.getGamemode());
         }

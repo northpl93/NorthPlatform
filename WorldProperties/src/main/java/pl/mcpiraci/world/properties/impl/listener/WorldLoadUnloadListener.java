@@ -1,16 +1,20 @@
 package pl.mcpiraci.world.properties.impl.listener;
 
+import java.io.File;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 
 import pl.mcpiraci.world.properties.impl.PropertiesManagerImpl;
+import pl.mcpiraci.world.properties.impl.WorldPropertiesComponent;
+import pl.north93.zgame.api.bukkit.server.IWorldInitializer;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 
-public class WorldLoadUnloadListener implements AutoListener
+public class WorldLoadUnloadListener implements AutoListener, IWorldInitializer
 {
     private static final Logger logger = LogManager.getLogger();
     
@@ -21,12 +25,17 @@ public class WorldLoadUnloadListener implements AutoListener
         this.propertiesManager = propertiesManager;
     }
     
-    @EventHandler
-    public void onWorldInit(WorldInitEvent event)
+    @Override
+    public void initialiseWorld(World world, File directory)
     {
-        logger.debug("onWorldInit() for {}", () -> event.getWorld().getName());
+        if ( !WorldPropertiesComponent.isEnabled() )
+        {
+            return;
+        }
         
-        propertiesManager.addWorldProperties(event.getWorld());
+        logger.debug("initialiseWorld() for {}", () -> world.getName());
+        
+        propertiesManager.addWorldProperties(world);
     }
     
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -35,5 +44,5 @@ public class WorldLoadUnloadListener implements AutoListener
         logger.debug("onWorldUnload() for {}", () -> event.getWorld().getName());
         
         propertiesManager.removeWorldPropertiesForWorld(event.getWorld());
-    }
+    } 
 }

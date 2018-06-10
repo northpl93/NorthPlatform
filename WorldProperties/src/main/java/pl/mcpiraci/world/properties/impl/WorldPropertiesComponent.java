@@ -10,12 +10,15 @@ public class WorldPropertiesComponent extends Component
     @Inject
     private PropertiesManagerImpl propertiesManager;
     
+    private static boolean enabled;
+    
     @Override
     protected void enableComponent()
     {   
         propertiesManager.reloadServerConfig();
         
         Bukkit.getWorlds().forEach(propertiesManager::addWorldProperties);
+        enabled = true;
     }
 
     @Override
@@ -23,4 +26,8 @@ public class WorldPropertiesComponent extends Component
     {
     }
     
+    public static boolean isEnabled()
+    {
+        return enabled;
+    }
 }
