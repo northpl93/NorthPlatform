@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.server.gamehost.cmd;
+package pl.arieals.api.minigame.server;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 
@@ -18,7 +18,6 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.api.minigame.shared.api.cfg.GameMapConfig;
@@ -47,22 +46,11 @@ public class MapAddChunks extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        if (this.server.getServerManager() instanceof LobbyManager)
-        {
-            sender.sendMessage(this.messages, "cmd.general.only_gamehost");
-            return;
-        }
-
         final Player player = (Player) sender.unwrapped();
-        final LocalArena arena = getArena(player);
 
-        if (arena == null)
-        {
-            player.sendMessage(ChatColor.RED + "Musisz byc na arenie!");
-            return;
-        }
-
-        final GameMapConfig mapConfig = arena.getWorld().getCurrentMapTemplate().getMapConfig();
+        File configFile = new File(player.getWorld().getWorldFolder(), "mapconfig.xml");
+        
+        final GameMapConfig mapConfig = JAXB.unmarshal(configFile, GameMapConfig.class);
 
         final WorldEditPlugin worldEditPlugin = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
         final Selection selection = worldEditPlugin.getSelection(player);
@@ -80,8 +68,7 @@ public class MapAddChunks extends NorthCommand
             mapConfig.getChunks().add(new XmlChunk(chunk.getX(), chunk.getZ()));
         }
 
-        final File mapConfigFile = new File(arena.getWorld().getCurrentMapTemplate().getMapDirectory(), "mapconfig.xml");
-        JAXB.marshal(mapConfig, mapConfigFile);
+        JAXB.marshal(mapConfig, configFile);
         player.sendMessage(ChatColor.GREEN + "Gotowe! Aktualnie na liscie jest " + mapConfig.getChunks().size() + " chunków!");
     }
 
