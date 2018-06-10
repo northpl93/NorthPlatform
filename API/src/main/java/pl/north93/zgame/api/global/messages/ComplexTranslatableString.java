@@ -27,10 +27,12 @@ class ComplexTranslatableString extends TranslatableString
     @Override
     public BaseComponent getValue(Locale locale, Vars<Object> params)
     {
-        return inOrder().stream().map(translatableString -> translatableString.getValue(locale, params)).reduce(new TextComponent(), (l, r) -> {
-            l.addExtra(r);
-            return l;
-        });
+        return inOrder().stream().map(translatableString -> translatableString.getValue(locale, params))
+                .reduce(new TextComponent(), (current, next) ->
+                {
+                    current.addExtra(next);
+                    return next;
+                });
     }
     
     private List<TranslatableString> inOrder()
