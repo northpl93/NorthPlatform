@@ -4,9 +4,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.bukkit.World;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bukkit.World;
 
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
@@ -44,12 +45,12 @@ public class ChunkLoadManager implements ITickable
     @Tick
     private void handleTick()
     {
-        if ( skipTicks > 0 )
+        if ( skipTicks > 0 || tasks.isEmpty() )
         {
             skipTicks--;
             return;
         }
-        
+
         if ( !serverHasEnoughMemory() )
         {
             logger.warn("Server doesn't have enough memory - skipping chunk loading");
