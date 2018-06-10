@@ -38,6 +38,8 @@ import pl.north93.zgame.api.bukkit.gui.IGuiManager;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.Messages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.utils.lang.ListUtils;
 
 public class GoldHunterArena implements IArenaData, ITickable
@@ -48,6 +50,10 @@ public class GoldHunterArena implements IArenaData, ITickable
     
     @Inject
     private IGuiManager guiManager;
+    
+    @Inject
+    @Messages("GoldHunter")
+    private MessagesBox messages;
     
     private final LocalArena localArena;
     
@@ -143,10 +149,12 @@ public class GoldHunterArena implements IArenaData, ITickable
     {
         Preconditions.checkState(players.add(player));
         logger.debug("Player {} joined to the arena", player);
-        
+         
+        scoreboardManager.initializeScoreboardTeams(player);
         player.spawnInLobby();
         
         updatePlayersCount();
+        
         
         scoreboardManager.updateTeamColors();
         player.updateDisplayName();
@@ -440,6 +448,8 @@ public class GoldHunterArena implements IArenaData, ITickable
                 first.map(GoldHunterPlayer::getDisplayName).orElse("&7&m------"), first.map(x -> x.getStatsTracker().getKills()).orElse(0),
                 second.map(GoldHunterPlayer::getDisplayName).orElse("&7&m------"), second.map(x -> x.getStatsTracker().getKills()).orElse(0),
                 third.map(GoldHunterPlayer::getDisplayName).orElse("&7&m------"), third.map(x -> x.getStatsTracker().getKills()).orElse(0)));
+        
+        players.forEach(p -> localArena.getRewards().renderRewards(messages, p.getPlayer()));
     }
 
     public void broadcastDeath(GoldHunterPlayer goldHunterPlayer, GoldHunterPlayer lastDamager)

@@ -24,6 +24,7 @@ import com.google.common.base.Preconditions;
 
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 
+import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
 import pl.arieals.globalshops.server.IGlobalShops;
 import pl.arieals.globalshops.server.domain.Item;
 import pl.arieals.globalshops.server.domain.ItemsGroup;
@@ -46,6 +47,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.zgame.api.global.network.players.Identity;
 
 public class GoldHunterPlayer implements ITickable
 {
@@ -469,6 +471,11 @@ public class GoldHunterPlayer implements ITickable
         {
             return team.getTeamColor() + "§l" + player.getName();
         }
+    }
+    
+    public void addReward(String rewardId, double amount)
+    {
+        arena.getLocalArena().getRewards().addReward(Identity.of(player), new CurrencyReward(rewardId, "minigame", amount));
     }
     
     public String getMessage(String msgKey, Object... args)

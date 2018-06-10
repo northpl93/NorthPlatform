@@ -21,6 +21,7 @@ import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
 import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.network.players.Identity;
 
 public class StatsTracker implements ITickable
 {
@@ -104,6 +105,7 @@ public class StatsTracker implements ITickable
     private void incrementKills()
     {
         kills++;
+        player.addReward("kills", 2);
         updateScoreboardAndDisplayName();
     }
     
@@ -116,6 +118,7 @@ public class StatsTracker implements ITickable
     private void incrementAssists()
     {
         assists++;
+        player.addReward("assists", 1.5);
         updateScoreboardAndDisplayName();
     }
     

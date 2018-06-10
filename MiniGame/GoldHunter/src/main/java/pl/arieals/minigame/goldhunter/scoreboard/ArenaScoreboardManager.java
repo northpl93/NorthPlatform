@@ -66,7 +66,7 @@ public class ArenaScoreboardManager
         player.setScoreboardContext(newContext);
         newContext.set(contextProperties);
         
-        initializeScoreboardTeams(player);
+        //initializeScoreboardTeams(player);
         updateTeamColors(player);
     }
     
@@ -115,7 +115,7 @@ public class ArenaScoreboardManager
                 .forEach(player -> player.getScoreboardContext().set(contextProperties));
     }
     
-    private void initializeScoreboardTeams(GoldHunterPlayer player)
+    public void initializeScoreboardTeams(GoldHunterPlayer player)
     {
         Scoreboard scoreboard = player.getPlayer().getScoreboard();
         
