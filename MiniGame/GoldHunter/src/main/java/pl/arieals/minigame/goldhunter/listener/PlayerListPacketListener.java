@@ -6,6 +6,8 @@ import org.bukkit.event.EventPriority;
 
 import io.netty.channel.Channel;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.server.v1_12_R1.ChatComponentText;
 import net.minecraft.server.v1_12_R1.IChatBaseComponent;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
@@ -74,7 +76,14 @@ public class PlayerListPacketListener implements AutoListener
         }
         
         String statsString = player.getStatsTracker().getStatsString();
-        String classDisplayName = player.getCurrentClass().getDisplayName().getValue(receiver.getPlayer().getLocale());
+        
+        String classDisplayName = "???";
+        if ( receiver.getTeam() == player.getTeam() )
+        {
+            BaseComponent className = player.getCurrentClass().getDisplayName().getValue(receiver.getPlayer().getLocale());
+            classDisplayName = ChatColor.stripColor(className.toLegacyText());
+        }
+        
         GameTeam displayTeam = player.getDisplayTeam();
         
         String listEntry = "§7" + statsString + " " + displayTeam.getSecondaryTeamColor() + "§l" + classDisplayName + " " + player.getDisplayName();
