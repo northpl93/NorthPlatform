@@ -9,6 +9,9 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
+
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.classes.CharacterClass;
 import pl.arieals.minigame.goldhunter.classes.CharacterClassManager;
@@ -87,14 +90,18 @@ class ClassIconRenderer
             infoText = messages.getMessage(player.getPlayer().getLocale(), "select_class.click_to_select");
         }
          
-        String displayName = ( canSelect ? "§a§l" : "§c§l" ) + characterClass.getDisplayName().getValue(player.getPlayer());
+        // String displayName = ( canSelect ? "§a§l" : "§c§l" ) + characterClass.getDisplayName().getValue(player.getPlayer()).toLegacyText();
         
-        ArrayList<String> lore = new ArrayList<>(Arrays.asList(characterClass.getLore().getValue(player.getPlayer()).split("\n")));
+        BaseComponent displayName = characterClass.getDisplayName().getValue(player.getPlayer());
+        displayName.setBold(true);
+        displayName.setColor(canSelect ? ChatColor.GREEN : ChatColor.RED);
+                
+        ArrayList<String> lore = new ArrayList<>(Arrays.asList(characterClass.getLore().getValue(player.getPlayer()).toLegacyText().split("\n")));
         lore.add("");
         lore.add(infoText);
         
         ItemStackBuilder builder = ItemStackBuilder.wrap(characterClass.getIcon().createItemStack())
-                .name(displayName)
+                .name(displayName.toLegacyText())
                 .lore(lore)
                 .flags(ItemFlag.values());
         
