@@ -107,6 +107,6 @@ public class BaseComponentCenteringTest
         final BaseComponent[] cmdClickComponents = ChatUtils.builderFromLegacyText(cmdClickMessage).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party accept")).create();
 
         final BaseComponent centered = ChatUtils.centerMessage(new TextComponent(cmdClickComponents));
-        Assert.assertEquals(centered.toLegacyText(), "§f§f§a        Wpisz §e§l/grupa akceptuj §alub kliknij §e§lTUTAJ");
+        Assert.assertEquals(centered.toLegacyText(), "§f§f§a§f        §aWpisz §e§l/grupa akceptuj §alub kliknij §e§lTUTAJ");
     }
 }

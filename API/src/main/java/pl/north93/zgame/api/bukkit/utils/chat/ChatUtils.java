@@ -1,7 +1,5 @@
 package pl.north93.zgame.api.bukkit.utils.chat;
 
-import javax.annotation.Nonnull;
-
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Iterator;
@@ -10,9 +8,12 @@ import java.util.List;
 import java.util.Queue;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -290,9 +291,25 @@ public final class ChatUtils
         public void addSpaces(final TextComponent startComponent, final int startIndex, final int lineChars, final int amount)
         {
             final String text = startComponent.getText();
-            final String newText = text.substring(0, startIndex) + StringUtils.repeat(' ', amount) + text.substring(startIndex, text.length());
+            final String newText = text.substring(0, startIndex);
             startComponent.setText(newText);
-
+            
+            TextComponent spaces = new TextComponent(StringUtils.repeat(' ', amount));
+            spaces.setBold(false);
+            spaces.setColor(ChatColor.WHITE);
+            
+            TextComponent afterSpaces = new TextComponent(text.substring(startIndex, text.length()));
+            if ( startComponent.getExtra() == null )
+            {
+                startComponent.addExtra(spaces);
+                startComponent.addExtra(afterSpaces);
+            }
+            else
+            {
+                startComponent.getExtra().add(0, afterSpaces);
+                startComponent.getExtra().add(0, spaces);
+            }
+            
             final int newIndex = startIndex + amount + lineChars;
             this.textIterator.setText(newText);
             this.textIterator.setIndex(Math.min(newIndex, this.textIterator.getEndIndex()));
