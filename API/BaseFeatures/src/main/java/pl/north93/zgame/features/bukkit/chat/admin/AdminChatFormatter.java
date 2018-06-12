@@ -10,6 +10,6 @@ public class AdminChatFormatter implements ChatFormatter
     @Override
     public BaseComponent format(final INorthPlayer player, final String input)
     {
-        return ChatUtils.parseLegacyText("&c{0}: {1}", player.getName(), input);
+        return ChatUtils.parseLegacyText("&c[AC] {0}: &f{1}", player.getName(), input);
     }
 }
