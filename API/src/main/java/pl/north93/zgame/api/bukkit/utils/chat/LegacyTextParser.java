@@ -7,7 +7,6 @@ import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternat
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -22,8 +21,6 @@ import net.md_5.bungee.api.chat.TextComponent;
  */
 public final class LegacyTextParser
 {
-    private static final Pattern url = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
-
     private LegacyTextParser()
     {
     }
@@ -61,7 +58,7 @@ public final class LegacyTextParser
     private static BaseComponent[] fromLegacyText(final String message, final Object[] params)
     {
         final ArrayList<BaseComponent> components = new ArrayList<>();
-        final Matcher matcher = url.matcher(message);
+        final Matcher matcher = LegacyTextConverter.URL_PATTERN.matcher(message);
 
         StringBuilder builder = new StringBuilder();
         TextComponent component = new TextComponent();

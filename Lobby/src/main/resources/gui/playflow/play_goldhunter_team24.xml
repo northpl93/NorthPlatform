@@ -4,7 +4,7 @@
         <content>
             <!-- Item do odpalania gry -->
             <button pos="4,1">
-                <icon id="BED" name="@playgui.goldhunter.team24.item_name" lore="@playgui.goldhunter.team24.item_lore"/>
+                <icon id="CHEST" name="@playgui.goldhunter.team24.item_name" lore="@playgui.goldhunter.team24.item_lore"/>
                 <onClick>play</onClick>
             </button>
 

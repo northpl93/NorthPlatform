@@ -15,7 +15,7 @@ public class BaseComponentCenteringTest
     {
         final BaseComponent component = ChatUtils.parseLegacyText("");
 
-        final BaseComponent centered = ChatUtils.centerMessage(component);
+        final BaseComponent centered = ChatCentering.centerMessage(component);
         final String plain = centered.toPlainText();
 
         Assert.assertEquals("", plain);
@@ -26,7 +26,7 @@ public class BaseComponentCenteringTest
     {
         final BaseComponent component = ChatUtils.parseLegacyText("a");
 
-        final BaseComponent centered = ChatUtils.centerMessage(component);
+        final BaseComponent centered = ChatCentering.centerMessage(component);
         final String plain = centered.toPlainText();
 
         Assert.assertEquals("                                   a", plain);
@@ -37,7 +37,7 @@ public class BaseComponentCenteringTest
     {
         final BaseComponent component = ChatUtils.parseLegacyText("test");
 
-        final BaseComponent centered = ChatUtils.centerMessage(component);
+        final BaseComponent centered = ChatCentering.centerMessage(component);
         final String plain = centered.toPlainText();
 
         Assert.assertEquals("                                 test", plain);
@@ -48,7 +48,7 @@ public class BaseComponentCenteringTest
     {
         final BaseComponent component = ChatUtils.parseLegacyText("&a&lABC &rdef &cghi &ljkl");
 
-        final BaseComponent centered = ChatUtils.centerMessage(component);
+        final BaseComponent centered = ChatCentering.centerMessage(component);
         final String plain = centered.toPlainText();
 
         Assert.assertEquals("                         ABC def ghi jkl", plain);
@@ -59,7 +59,7 @@ public class BaseComponentCenteringTest
     {
         final BaseComponent component = ChatUtils.parseLegacyText("line1\nline2");
 
-        final BaseComponent centered = ChatUtils.centerMessage(component);
+        final BaseComponent centered = ChatCentering.centerMessage(component);
         final String plain = centered.toPlainText();
 
         Assert.assertEquals("                                 line1\n                                 line2", plain);
@@ -70,7 +70,7 @@ public class BaseComponentCenteringTest
     {
         final BaseComponent component = ChatUtils.parseLegacyText("\n\n\n");
 
-        final BaseComponent centered = ChatUtils.centerMessage(component);
+        final BaseComponent centered = ChatCentering.centerMessage(component);
         final String plain = centered.toPlainText();
 
         Assert.assertEquals("\n\n\n", plain);
@@ -81,7 +81,7 @@ public class BaseComponentCenteringTest
     {
         final BaseComponent component = ChatUtils.parseLegacyText("\n&aA\n&bB\n");
 
-        final BaseComponent centered = ChatUtils.centerMessage(component);
+        final BaseComponent centered = ChatCentering.centerMessage(component);
         final String plain = centered.toPlainText();
 
         Assert.assertEquals("\n                                   A\n                                   B\n", plain);
@@ -92,7 +92,7 @@ public class BaseComponentCenteringTest
     {
         final BaseComponent component = ChatUtils.parseLegacyText("&f&e&lL &eNorthPL93");
 
-        final BaseComponent centered = ChatUtils.centerMessage(component);
+        final BaseComponent centered = ChatCentering.centerMessage(component);
         final String plain = centered.toPlainText();
 
         Assert.assertEquals("                           L NorthPL93", plain);
@@ -106,7 +106,7 @@ public class BaseComponentCenteringTest
         final String cmdClickMessage = "&aWpisz &e&l/grupa akceptuj &alub kliknij &e&lTUTAJ";
         final BaseComponent[] cmdClickComponents = ChatUtils.builderFromLegacyText(cmdClickMessage).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party accept")).create();
 
-        final BaseComponent centered = ChatUtils.centerMessage(new TextComponent(cmdClickComponents));
+        final BaseComponent centered = ChatCentering.centerMessage(new TextComponent(cmdClickComponents));
         Assert.assertEquals(centered.toLegacyText(), "§f§f§a§f        §aWpisz §e§l/grupa akceptuj §alub kliknij §e§lTUTAJ");
     }
 }

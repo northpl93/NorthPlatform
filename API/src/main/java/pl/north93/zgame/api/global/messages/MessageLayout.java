@@ -2,7 +2,7 @@ package pl.north93.zgame.api.global.messages;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
-import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
+import pl.north93.zgame.api.bukkit.utils.chat.ChatCentering;
 
 /**
  * Klasa odpowiedzialna za formatowanie wiadomości.
@@ -39,7 +39,7 @@ public enum MessageLayout
                 @Override
                 public BaseComponent processMessage(final BaseComponent component)
                 {
-                    return ChatUtils.centerMessage(component);
+                    return ChatCentering.centerMessage(component);
                 }
             },
     SEPARATED_CENTER

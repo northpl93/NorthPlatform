@@ -20,7 +20,7 @@ class CustomTranslatableString extends TranslatableString
     public BaseComponent getValue(final Locale locale, final Vars<Object> params)
     {
         final String legacyText = this.values.getOrDefault(locale, locale.toLanguageTag());
-        return ChatUtils.parseLegacyText(legacyText);
+        return ChatUtils.fromLegacyText(legacyText);
     }
 
     @Override

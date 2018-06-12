@@ -14,7 +14,7 @@ class ConstantTranslatableString extends TranslatableString
 
     ConstantTranslatableString(final String legacyText)
     {
-        this(ChatUtils.parseLegacyText(legacyText));
+        this(ChatUtils.fromLegacyText(legacyText));
     }
 
     ConstantTranslatableString(final BaseComponent fixedValue)
