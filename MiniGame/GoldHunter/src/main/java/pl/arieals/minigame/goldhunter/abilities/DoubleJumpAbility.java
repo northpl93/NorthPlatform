@@ -69,6 +69,11 @@ public class DoubleJumpAbility implements AbilityHandler, AutoListener
         PacketPlayInAbilities packet = (PacketPlayInAbilities) event.getPacket();
         GoldHunterPlayer player = goldHunter.getPlayer(event.getPlayer());
         
+        if ( player == null )
+        {
+            return;
+        }
+        
         if ( !player.isDoubleJumpActive() )
         {
             player.getPlayer().setFlying(packet.isFlying());
