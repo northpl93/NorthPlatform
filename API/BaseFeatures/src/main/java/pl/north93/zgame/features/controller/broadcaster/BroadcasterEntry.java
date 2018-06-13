@@ -12,10 +12,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import org.diorite.commons.math.DioriteRandomUtils;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.zgame.api.chat.global.ChatManager;
 import pl.north93.zgame.api.chat.global.ChatRoom;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.TranslatableString;
 import pl.north93.zgame.features.controller.broadcaster.cfg.BroadcasterEntryCfg;
 import pl.north93.zgame.features.controller.broadcaster.cfg.BroadcasterMessageCfg;
 
@@ -33,22 +34,24 @@ public class BroadcasterEntry implements Runnable
     @Override
     public void run()
     {
-        final TranslatableString message = TranslatableString.custom(this.getRandomMessages());
+        final Map<Locale, BaseComponent> messages = this.getRandomMessages();
 
         final Collection<ChatRoom> rooms = this.findRooms();
         for (final ChatRoom room : rooms)
         {
-            room.broadcast(message);
+            messages.forEach(room::broadcast);
         }
     }
 
-    private Map<Locale, String> getRandomMessages()
+    private Map<Locale, BaseComponent> getRandomMessages()
     {
         final Map<String, List<BroadcasterMessageCfg>> messages = this.entryCfg.getMessages().stream().collect(Collectors.groupingBy(BroadcasterMessageCfg::getLocale));
         return messages.entrySet().stream().collect(Collectors.toMap(entry -> Locale.forLanguageTag(entry.getKey()), entry ->
         {
-            final BroadcasterMessageCfg message = DioriteRandomUtils.getRandom(entry.getValue());
-            return message.getMessage();
+            final BroadcasterMessageCfg messageCfg = DioriteRandomUtils.getRandom(entry.getValue());
+
+            final BaseComponent component = ChatUtils.fromLegacyText(messageCfg.getMessage());
+            return messageCfg.getLayout().processMessage(component);
         }));
     }
 

@@ -19,9 +19,6 @@ import pl.north93.zgame.api.chat.global.ChatPlayer;
 import pl.north93.zgame.api.chat.global.ChatRoom;
 import pl.north93.zgame.api.chat.global.ChatRoomNotFoundException;
 import pl.north93.zgame.api.chat.global.impl.data.BroadcastMessage;
-import pl.north93.zgame.api.global.messages.TranslatableString;
-import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
@@ -97,30 +94,12 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     }
 
     @Override
-    public void broadcast(final TranslatableString translatableString)
+    public void broadcast(final Locale locale, final BaseComponent component)
     {
-        final IPlayersManager playersManager = this.chatManager.getPlayersManager();
-        this.data.update(data ->
-        {
-            this.checkIsPresent(data);
+        final String jsonMessage = ComponentSerializer.toString(component);
+        final BroadcastMessage message = new BroadcastMessage(this.getId(), jsonMessage, locale.toLanguageTag());
 
-            for (final Identity participant : data.getParticipants())
-            {
-                // uzywamy metody unsafe aby nie wywolywac pierdyliarda locków w redisie
-                final Value<IOnlinePlayer> playerValue = playersManager.unsafe().getOnline(participant.getNick());
-                if (! playerValue.isPreset())
-                {
-                    continue;
-                }
-
-                final IOnlinePlayer player = playerValue.get();
-
-                final Locale locale = player.getMyLocale();
-                final BaseComponent component = translatableString.getValue(locale);
-
-                player.sendMessage(component);
-            }
-        });
+        this.chatManager.sendMessage(message);
     }
 
     @Override
