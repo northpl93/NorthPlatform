@@ -10,9 +10,6 @@ import pl.arieals.lobby.play.PlayGameController;
 import pl.north93.zgame.api.bukkit.gui.ClickHandler;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.event.GuiClickEvent;
-import pl.north93.zgame.api.global.commands.Arguments;
-import pl.north93.zgame.api.global.commands.NorthCommandSender;
-import pl.north93.zgame.api.global.commands.annotation.QuickCommand;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -49,12 +46,12 @@ public class JoinGameGui extends Gui
         return "playflow/play_" + gameIdentity.getGameId() + "_" + gameIdentity.getVariantId();
     }
 
-    @QuickCommand(name = "testbwsolo")
+    /*@QuickCommand(name = "testbwsolo")
     public static void testCmd(final NorthCommandSender sender, final Arguments args, final String label)
     {
         final Player player = (Player) sender.unwrapped();
         new JoinGameGui(GameIdentity.create("bedwars", "solo"), false).open(player);
-    }
+    }*/
 
     @Override
     public String toString()
