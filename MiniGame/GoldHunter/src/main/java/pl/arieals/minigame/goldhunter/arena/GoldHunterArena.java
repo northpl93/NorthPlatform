@@ -1,5 +1,7 @@
 package pl.arieals.minigame.goldhunter.arena;
 
+import javax.xml.bind.JAXB;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,20 +12,19 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import javax.xml.bind.JAXB;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
 
-import org.apache.logging.log4j.Logger;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-
-import net.minecraft.server.v1_12_R1.MinecraftServer;
+import org.apache.logging.log4j.Logger;
 
 import pl.arieals.api.minigame.server.gamehost.arena.IArenaData;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
@@ -430,7 +431,11 @@ public class GoldHunterArena implements IArenaData, ITickable
     {
         logger.debug("Team {} win game...", winnerTeam);
         
-        players.forEach(p -> p.getPlayer().setAllowFlight(true));
+        players.forEach(p ->
+        {
+            p.getPlayer().setAllowFlight(true);
+            p.getStatsTracker().onWin(); // todo moze tak byc? wygrana zostanie zaliczona tylko tym ktorzy byli na koncu gry
+        });
         displayWinMessage(winnerTeam);
         localArena.setGamePhase(GamePhase.POST_GAME);
     }

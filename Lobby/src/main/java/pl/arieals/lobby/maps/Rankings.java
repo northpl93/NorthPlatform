@@ -21,8 +21,8 @@ public final class Rankings
     @UriHandler("/lobby/ranking/goldhunter")
     public static RankingMapConfig.IMapRankingData goldHunterRanking(final UriInvocationContext context)
     {
-        final IStatistic<NumberUnit> winsStat = new HigherNumberBetterStatistic("bedwars/wins"); // todo
-        final IStatistic<NumberUnit> killsStat = new HigherNumberBetterStatistic("bedwars/kills"); // todo
+        final IStatistic<NumberUnit> winsStat = new HigherNumberBetterStatistic("goldhunter/wins");
+        final IStatistic<NumberUnit> killsStat = new HigherNumberBetterStatistic("goldhunter/kills"); // todo
 
         return new MiniGameRankingData(winsStat, killsStat);
     }

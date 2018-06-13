@@ -8,12 +8,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.Logger;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
 
 import com.google.common.collect.ImmutableMap;
 
-import net.minecraft.server.v1_12_R1.MinecraftServer;
+import org.apache.logging.log4j.Logger;
 
+import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
+import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
+import pl.arieals.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
+import pl.arieals.api.minigame.shared.api.statistics.unit.NumberUnit;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.effect.BetrayalEffect;
 import pl.arieals.minigame.goldhunter.effect.ShadowEffect;
@@ -21,16 +25,18 @@ import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
 import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.network.players.Identity;
 
 public class StatsTracker implements ITickable
 {
     @Inject
     @GoldHunterLogger
     private static Logger logger;
-    
+
     @Inject
     private static ITickableManager tickableManager;
+
+    @Inject
+    private static IStatisticsManager statisticsManager; // todo ogarnac to sensownie
     
     private final GoldHunterPlayer player;
     
@@ -101,12 +107,23 @@ public class StatsTracker implements ITickable
         
         lastDamagers.clear();
     }
+
+    public void onWin()
+    {
+        logger.debug("{} StatTracker#onWin()", player);
+
+        final IStatisticHolder holder = statisticsManager.getPlayerHolder(player.getPlayer().getUniqueId());
+        holder.increment(new HigherNumberBetterStatistic("goldhunter/wins"), new NumberUnit(1L));
+    }
     
     private void incrementKills()
     {
         kills++;
         player.addReward("kills", 2);
         updateScoreboardAndDisplayName();
+
+        final IStatisticHolder holder = statisticsManager.getPlayerHolder(player.getPlayer().getUniqueId());
+        holder.increment(new HigherNumberBetterStatistic("goldhunter/kills"), new NumberUnit(1L));
     }
     
     private void incrementDeaths()
@@ -120,6 +137,9 @@ public class StatsTracker implements ITickable
         assists++;
         player.addReward("assists", 1.5);
         updateScoreboardAndDisplayName();
+
+        final IStatisticHolder holder = statisticsManager.getPlayerHolder(player.getPlayer().getUniqueId());
+        holder.increment(new HigherNumberBetterStatistic("goldhunter/assists"), new NumberUnit(1L));
     }
     
     private void updateScoreboardAndDisplayName()
