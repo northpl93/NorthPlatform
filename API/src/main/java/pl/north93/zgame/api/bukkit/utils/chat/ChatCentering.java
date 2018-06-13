@@ -228,6 +228,9 @@ public final class ChatCentering
 
             TextComponent spaces = new TextComponent(StringUtils.repeat(' ', amount));
             spaces.setBold(false);
+            spaces.setItalic(false);
+            spaces.setUnderlined(false);
+            spaces.setStrikethrough(false);
             spaces.setColor(ChatColor.WHITE);
 
             TextComponent afterSpaces = new TextComponent(text.substring(startIndex, text.length()));
