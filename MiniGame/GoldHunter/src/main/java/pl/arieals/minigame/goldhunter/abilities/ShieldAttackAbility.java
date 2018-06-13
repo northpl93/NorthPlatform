@@ -50,7 +50,8 @@ public class ShieldAttackAbility implements AbilityHandler
                 continue;
             }
             
-            entity.damage(DAMAGE, player.getPlayer());
+            double toDamage = Math.min(Math.max(entity.getHealth() - 1, 0), DAMAGE);
+            entity.damage(toDamage, player.getPlayer());
             
             Vector velocity = toTarget.multiply(0.819693).setY(0.56969);
             entity.setVelocity(velocity);

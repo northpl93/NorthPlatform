@@ -41,8 +41,8 @@
             	<icon id="WOOD" name="@wojownik.berserker.budulecfolder.name$color" lore="@wojownik.berserker.budulecfolder.lore$color,count,max" />
             	<metadata key="guiName" value="wojownik_berserker_budulec" />
             	<metadata key="folder" value="true" />
-            	<metadata key="item3" value="warrior.berserker.budulec:1" />
-            	<metadata key="item3" value="warrior.berserker.budulec:2" />
+            	<metadata key="item1" value="warrior.berserker.budulec:1" />
+            	<metadata key="item2" value="warrior.berserker.budulec:2" />
             	<metadata key="item3" value="warrior.berserker.budulec:3" />
             	<onClick>open</onClick>
             </button>

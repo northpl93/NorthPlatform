@@ -37,7 +37,7 @@
             
             <button pos="4,2">
             	<icon id="CHAINMAIL_CHESTPLATE" name="@vip.assasyn.armor1.name$color" lore="@vip.assasyn.armor1.lore$color,status,price"/>
-            	<metadata key="item" value="vip.assasyn.ironboots" />
+            	<metadata key="item" value="vip.assasyn.chainchest" />
             	<onClick>buy</onClick>
             </button>
             

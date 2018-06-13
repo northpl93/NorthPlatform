@@ -45,7 +45,7 @@
             </button>
             
             <button pos="5,2">
-            	<icon id="IRON_CHESTPLATE" name="@lucznik.bombowiec.helmet1.name$color" lore="@lucznik.truciciel.helmet1.lore$color,status,price"/>
+            	<icon id="CHAINMAIL_CHESTPLATE" name="@lucznik.bombowiec.helmet1.name$color" lore="@lucznik.truciciel.helmet1.lore$color,status,price"/>
             	<metadata key="item" value="archer.bomb.chainchest" />
             	<onClick>buy</onClick>
             </button>

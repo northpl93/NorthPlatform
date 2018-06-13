@@ -28,7 +28,7 @@
             
             <button pos="5,2">
             	<icon id="WOOD" name="@vip.obronca.budulec1.name$color" lore="@vip.obronca.budulec1.lore$color,status,price" />
-            	<metadata key="item" value="vip.defenedr.budulec" />
+            	<metadata key="item" value="vip.defender.budulec" />
             	<metadata key="level" value="3" />
             	<onClick>buy</onClick>
             </button>

@@ -26,6 +26,8 @@
             	<metadata key="item1" value="warrior.knight.time:1" />
             	<metadata key="item2" value="warrior.knight.time:2" />
             	<metadata key="item3" value="warrior.knight.time:3" />
+            	<metadata key="item4" value="warrior.knight.time:4" />
+            	<metadata key="item5" value="warrior.knight.time:5" />
             	<onClick>open</onClick>
             </button>
             

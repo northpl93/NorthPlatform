@@ -14,13 +14,13 @@
             </button>
             
             <button pos="1,2">
-            	<icon id="minecraft:slime_ball" name="@buy.medyk.polowy.name$color" lore="@buy.medyk.polowy.lore$color,count,max"/>
+            	<icon id="minecraft:slime_ball" name="@buy.medyk.polowy.name$color" lore="@buy.medyk.polowy.lore$color,status,price"/>
             	<metadata key="item" value="class.medic.healer" />
             	<onClick>buy</onClick>
             </button>
             
             <button pos="3,2">
-            	<icon id="WATCH" name="@medyk.polowy.timefolder.name$color" lore="@medyk.polowy.timefolder.lore$color,status,price"/>
+            	<icon id="WATCH" name="@medyk.polowy.timefolder.name$color" lore="@medyk.polowy.timefolder.lore$color,count,max"/>
             	<metadata key="guiName" value="medyk_polowy_czas" />
             	<metadata key="folder" value="true" />
             	<metadata key="item1" value="medic.healer.time:1" />
