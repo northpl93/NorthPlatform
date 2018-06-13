@@ -1,5 +1,6 @@
 package pl.north93.zgame.api.economy;
 
+import java.util.Collection;
 import java.util.UUID;
 
 import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
@@ -8,6 +9,8 @@ import pl.north93.zgame.api.global.network.players.Identity;
 public interface IEconomyManager
 {
     ICurrency getCurrency(String name);
+
+    Collection<ICurrency> getCurrencies();
 
     ICurrencyRanking getRanking(ICurrency currency);
 

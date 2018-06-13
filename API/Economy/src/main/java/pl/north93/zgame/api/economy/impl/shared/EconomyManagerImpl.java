@@ -3,6 +3,8 @@ package pl.north93.zgame.api.economy.impl.shared;
 import static pl.north93.zgame.api.global.utils.lang.CollectionUtils.findInCollection;
 
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 import com.google.common.base.Preconditions;
@@ -46,6 +48,13 @@ public class EconomyManagerImpl implements IEconomyManager
     {
         Preconditions.checkNotNull(name, "Currency name can't be null");
         return findInCollection(this.config.get().getCurrencies(), CurrencyConfig::getName, name);
+    }
+
+    @Override
+    public Collection<ICurrency> getCurrencies()
+    {
+        final EconomyConfig config = this.config.get();
+        return Collections.unmodifiableCollection(config.getCurrencies());
     }
 
     @Override
