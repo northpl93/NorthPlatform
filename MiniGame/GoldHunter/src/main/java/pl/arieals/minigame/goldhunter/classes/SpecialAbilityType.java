@@ -24,7 +24,7 @@ import pl.arieals.minigame.goldhunter.player.AbilityHandler;
 public enum SpecialAbilityType
 {
     // lucznik
-    POISON_ARROW(new PoisonArrowAbility(), "archer.poison.time", 50 * 20, 45 * 20, 40 * 20, 35 * 20),
+    POISON_ARROW(new PoisonArrowAbility(), "archer.poison.time", 45 * 20, 42 * 20, 39 * 20, 36 * 20),
     BOMB_ARROW(new BombArrowAbility(), "archer.bomb.time", 50 * 20, 45 * 20, 40 * 20, 35 * 20),
     
     // wojownik
@@ -44,7 +44,7 @@ public enum SpecialAbilityType
     SUPPLIER(new SupplierAbility(), "engineer.dispenser.time", 50 * 20, 45 * 20, 40 * 20, 35 * 20),
     
     SHADOW(new ShadowAbility(), "vip.assasyn.time", 50 * 20, 45 * 20, 40 * 20, 35 * 2),
-    WALL(new WallAbility(), "vip.defender.time", 50 * 20, 45 * 20, 40 * 20, 35 * 2),
+    WALL(new WallAbility(), "vip.defender.time", 55 * 20, 50 * 20, 45 * 20, 40 * 20),
     
     BETRAYAL(new BetrayalAbility(), "svip.spy.time", 50 * 20, 45 * 20, 40 * 20, 35 * 2),
     REDEMPTION(new RedemptionAbility(), "svip.paladin.time", 55 * 20, 50 * 20, 45 * 20, 40 * 20),
