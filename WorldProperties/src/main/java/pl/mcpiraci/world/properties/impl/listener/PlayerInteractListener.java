@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -38,6 +39,12 @@ public class PlayerInteractListener implements AutoListener
     
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInteract(PlayerInteractEntityEvent event)
+    {
+        handleEvent(event.getPlayer(), event);
+    }
+    
+    @EventHandler
+    public void onInteract(PlayerArmorStandManipulateEvent event)
     {
         handleEvent(event.getPlayer(), event);
     }
