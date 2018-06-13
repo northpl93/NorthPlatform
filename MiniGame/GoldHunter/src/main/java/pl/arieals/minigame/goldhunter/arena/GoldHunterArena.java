@@ -372,7 +372,7 @@ public class GoldHunterArena implements IArenaData, ITickable
     
     private void walkover(GameTeam winTeam)
     {
-        players.forEach(p -> p.sendSeparatedMessage("win_game.walkover", winTeam.getColoredBoldGenitive().getValue(p.getPlayer()).toLegacyText().toUpperCase()));
+        players.forEach(p -> p.sendSeparatedMessage("win_game.walkover", winTeam.getColoredBoldNominative().getValue(p.getPlayer()).toLegacyText().toUpperCase()));
     }
     
     @Tick
