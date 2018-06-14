@@ -45,6 +45,6 @@ public class CharacterClassManager
     
     public CharacterClass getDefaultClass()
     {
-        return Iterables.getFirst(characterClasses.values(), null);
+        return characterClasses.get("wojownik-berserker");
     }
 }
