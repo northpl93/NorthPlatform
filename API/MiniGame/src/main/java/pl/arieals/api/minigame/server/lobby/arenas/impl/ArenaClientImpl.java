@@ -85,7 +85,8 @@ public class ArenaClientImpl implements IArenaClient
     public Collection<IArena> get(final ArenaQuery query)
     {
         final Collection<IArena> arenas = new ArrayList<>(this.arenas.values());
-        return arenas.stream().filter(query).sorted(Comparator.comparing(IArena::getPlayersCount)).collect(Collectors.toList());
+        final Comparator<IArena> comparator = Comparator.comparing(IArena::getPlayersCount).reversed();
+        return arenas.stream().filter(query).sorted(comparator).collect(Collectors.toList());
     }
 
     @Override
