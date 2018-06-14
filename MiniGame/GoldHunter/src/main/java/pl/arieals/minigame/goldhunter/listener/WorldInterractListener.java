@@ -5,6 +5,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -41,7 +42,7 @@ public class WorldInterractListener implements AutoListener
     }
     
     @EventHandler
-    public void onPlaceBlockOnSpawn(BlockBreakEvent event)
+    public void onPlaceBlockOnSpawn(BlockPlaceEvent event)
     {
         GoldHunterArena arena = goldHunter.getArenaForWorld(event.getBlock().getWorld());
         GoldHunterPlayer player = goldHunter.getPlayer(event.getPlayer());
