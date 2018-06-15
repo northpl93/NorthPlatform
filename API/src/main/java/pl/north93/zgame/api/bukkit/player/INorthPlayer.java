@@ -122,6 +122,16 @@ public interface INorthPlayer extends Player, Metadatable, Messageable
      */
     boolean isDataCached();
 
+    /**
+     * Konwertuje komponent na tekst legacy i wysyła go na action bar gracza.
+     *
+     * @param component Komponent do wysłania na action bar gracza.
+     */
+    default void sendActionBar(final BaseComponent component)
+    {
+        this.sendActionBar(component.toLegacyText());
+    }
+
     @Override // trzeba bylo dodac zeby nie bylo bledu kompilacji
     void sendMessage(final String message);
 

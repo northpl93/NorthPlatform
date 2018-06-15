@@ -26,6 +26,7 @@ import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.arena.generator.GeneratorController;
 import pl.arieals.minigame.bedwars.event.BedDestroyedEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
@@ -48,8 +49,9 @@ public class BuildListener implements Listener
     public void onBlockPlace(final BlockPlaceEvent event)
     {
         final Block block = event.getBlock();
-        final LocalArena arena = getArena(block.getWorld());
+        final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
 
+        final LocalArena arena = getArena(block.getWorld());
         if (arena == null || arena.getGamePhase() != GamePhase.STARTED)
         {
             // gdy gra nie wystartowala to nic nie mozna robic
@@ -60,7 +62,7 @@ public class BuildListener implements Listener
         final BedWarsArena arenaData = arena.getArenaData();
         if (this.checkGenerator(arenaData, block) || this.checkSecureRegion(arenaData, block))
         {
-            this.messages.sendMessage(event.getPlayer(), "no_permissions");
+            player.sendActionBar(this.messages.getMessage(player.getMyLocale(), "no_permissions"));
             event.setCancelled(true);
             return;
         }
@@ -72,6 +74,8 @@ public class BuildListener implements Listener
     private void onBlockDestroy(final BlockBreakEvent event)
     {
         final Block block = event.getBlock();
+        final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
+
         final LocalArena arena = getArena(block.getWorld());
         if (arena == null || arena.getGamePhase() != GamePhase.STARTED)
         {
@@ -84,7 +88,7 @@ public class BuildListener implements Listener
         final BedWarsPlayer playerData = getPlayerData(event.getPlayer(), BedWarsPlayer.class);
         if (this.checkSecureRegion(arenaData, block))
         {
-            this.messages.sendMessage(event.getPlayer(), "no_permissions");
+            player.sendActionBar(this.messages.getMessage(player.getMyLocale(), "no_permissions"));
             event.setCancelled(true);
             return;
         }
@@ -100,7 +104,7 @@ public class BuildListener implements Listener
         }
 
         event.setCancelled(true);
-        this.messages.sendMessage(event.getPlayer(), "no_permissions");
+        player.sendActionBar(this.messages.getMessage(player.getMyLocale(), "no_permissions"));
     }
 
     // zwraca true jesli gracz niszczy lozko - wtedy nie wykonujemy reszty kodu w evencie
@@ -163,6 +167,14 @@ public class BuildListener implements Listener
     // zwraca true jesli blok jest w strefie niemodyfikowalnej
     private boolean checkSecureRegion(final BedWarsArena arenaData, final Block block)
     {
+        for (final Team team : arenaData.getTeams())
+        {
+            if (team.getHealArena().contains(block))
+            {
+                return true;
+            }
+        }
+
         for (final Cuboid cuboid : arenaData.getSecureRegions())
         {
             if (cuboid.contains(block))

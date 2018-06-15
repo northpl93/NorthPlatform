@@ -26,8 +26,8 @@ public class Team
     private final LocalArena arena;
     private final BwTeamConfig config;
     private Set<Player> players;
-    private Cuboid      teamArena;
-    private Cuboid      healArena;
+    private Cuboid      teamArena; // teren obejmujacy cala baze
+    private Cuboid      healArena; // teren wewnatrz budynku bazy
     private Location    spawn;
     private Location    bedLocation;
     private boolean     isBedAlive;
