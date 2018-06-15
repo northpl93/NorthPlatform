@@ -37,6 +37,6 @@ public class LobbyHotbar extends HotbarMenu
     @ClickHandler
     public void quit(HotbarClickEvent event)
     {
-        event.getWhoClicked().performCommand("/hub");
+        event.getWhoClicked().performCommand("hub");
     }
 }
