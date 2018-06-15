@@ -46,43 +46,42 @@ public class AdminSpectateCommand extends NorthCommand
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
         final Player player = (Player) sender.unwrapped();
-        if (args.length() == 1)
+        if (args.length() != 1)
         {
-            final Identity identity = Identity.create(null, args.asString(0));
-
-            final IPlayerStatus status;
-            try
-            {
-                status = this.statusManager.getPlayerStatus(identity);
-            }
-            catch (final PlayerNotFoundException exception)
-            {
-                sender.sendMessage("&cPodany gracz nie istnieje");
-                return;
-            }
-
-            if (status.getType() != IPlayerStatus.StatusType.GAME)
-            {
-                sender.sendMessage("&cPodany gracz nie jest w grze lub jest offline");
-                return;
-            }
-
-            final InGameStatus gameStatus = (InGameStatus) status;
-
-            final IArena arena = this.arenaClient.get(gameStatus.getArenaId());
-            final PlayerJoinInfo joinInfo = new PlayerJoinInfo(player.getUniqueId(), true, true);
-
-            sender.sendMessage("&aPrzenoszenie do gry gracza {0}", identity.getNick());
-            sender.sendMessage("&aID serwera: {0}", gameStatus.getServerId());
-            sender.sendMessage("&aID areny: {0}", gameStatus.getArenaId());
-
-            this.arenaClient.spectate(arena, joinInfo);
-            this.teleportAdminToPlayer(player, arena, identity.getNick());
+            sender.sendMessage("&c/adminspec nick");
+            return;
         }
-        else
+
+        final Identity identity = Identity.create(null, args.asString(0));
+
+        final IPlayerStatus status;
+        try
         {
-            sender.sendMessage("&c/adminspec <nick>");
+            status = this.statusManager.getPlayerStatus(identity);
         }
+        catch (final PlayerNotFoundException exception)
+        {
+            sender.sendMessage("&cPodany gracz nie istnieje");
+            return;
+        }
+
+        if (status.getType() != IPlayerStatus.StatusType.GAME)
+        {
+            sender.sendMessage("&cPodany gracz nie jest w grze lub jest offline");
+            return;
+        }
+
+        final InGameStatus gameStatus = (InGameStatus) status;
+
+        final IArena arena = this.arenaClient.get(gameStatus.getArenaId());
+        final PlayerJoinInfo joinInfo = new PlayerJoinInfo(player.getUniqueId(), true, true);
+
+        sender.sendMessage("&aPrzenoszenie do gry gracza {0}", identity.getNick());
+        sender.sendMessage("&aID serwera: {0}", gameStatus.getServerId());
+        sender.sendMessage("&aID areny: {0}", gameStatus.getArenaId());
+
+        this.arenaClient.spectate(arena, joinInfo);
+        this.teleportAdminToPlayer(player, arena, identity.getNick());
     }
 
     private void teleportAdminToPlayer(final Player admin, final IArena arena, final String target)
