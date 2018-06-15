@@ -25,6 +25,7 @@ import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorModeChangeEvent;
+import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorQuitEvent;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
@@ -254,10 +255,13 @@ public class PlayersManager
 
     public void playerDisconnected(final Player player)
     {
+        final BukkitApiCore apiCore = this.gameHostManager.getApiCore();
+
         this.joinInfos.remove(player.getUniqueId());
         if (this.spectators.contains(player))
         {
             this.spectators.remove(player);
+            apiCore.callEvent(new SpectatorQuitEvent(this.arena, player));
             return;
         }
 
@@ -274,7 +278,7 @@ public class PlayersManager
         }
 
         final PlayerQuitArenaEvent event = new PlayerQuitArenaEvent(player, this.arena, "player.quit_arena");
-        Bukkit.getPluginManager().callEvent(event);
+        apiCore.callEvent(event);
         
         if ( event.getQuitMessage() != null )
         {

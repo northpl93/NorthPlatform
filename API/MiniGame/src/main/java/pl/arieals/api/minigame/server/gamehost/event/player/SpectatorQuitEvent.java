@@ -6,15 +6,15 @@ import org.bukkit.event.HandlerList;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 
 /**
- * Event wywolywany gdy spectator wchodzi do gry.
+ * Event wywoływany gdy spectator wychodzi z gry.
  */
-public class SpectatorJoinEvent extends PlayerArenaEvent
+public class SpectatorQuitEvent extends PlayerArenaEvent
 {
     private static final HandlerList handlers = new HandlerList();
 
-    public SpectatorJoinEvent(final Player who, final LocalArena arena)
+    public SpectatorQuitEvent(final LocalArena arena, final Player player)
     {
-        super(arena, who);
+        super(arena, player);
     }
 
     @Override

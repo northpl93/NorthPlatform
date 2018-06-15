@@ -7,10 +7,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
+import pl.arieals.api.minigame.server.gamehost.event.player.PlayerArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorModeChangeEvent;
+import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorQuitEvent;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.north93.zgame.api.chat.global.ChatManager;
 import pl.north93.zgame.api.chat.global.ChatPlayer;
@@ -73,6 +75,18 @@ public class ArenaChatHandler implements Listener
     @EventHandler
     public void removePlayerFromChatWhenQuitArena(final PlayerQuitArenaEvent event)
     {
+        this.removeFromChat(event);
+    }
+
+    @EventHandler
+    public void removeSpectatorFromChatWhenQuitArena(final SpectatorQuitEvent event)
+    {
+        this.removeFromChat(event);
+    }
+
+    // usuwa gracza z pokojów czatu danej areny
+    private void removeFromChat(final PlayerArenaEvent event)
+    {
         final ChatPlayer chatPlayer = this.chatManager.getPlayer(Identity.of(event.getPlayer()));
         if (! chatPlayer.isOnline())
         {
@@ -85,8 +99,8 @@ public class ArenaChatHandler implements Listener
         final ChatRoom chatRoom = playersManager.getChatRoom();
         final ChatRoom spectatorsRoom = playersManager.getSpectatorsRoom();
 
-        chatPlayer.leaveRoom(chatRoom);
-        chatPlayer.leaveRoom(spectatorsRoom);
+        chatPlayer.leaveRoom(chatRoom, true);
+        chatPlayer.leaveRoom(spectatorsRoom, true);
     }
 
     @Override
