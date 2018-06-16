@@ -205,6 +205,11 @@ public class GoldHunterArena implements IArenaData, ITickable
         Preconditions.checkState(structureManager.spawn(chest));
     }
     
+    private Location getSpawn(GameTeam team)
+    {
+        return spawns.get(team).clone();
+    }
+    
     private void setupSpawns()
     {
         World world = localArena.getWorld().getCurrentWorld();
@@ -258,15 +263,20 @@ public class GoldHunterArena implements IArenaData, ITickable
     {
         Vector loc = new Vector(location.getBlockX() + 0.5, location.getBlockY(), location.getBlockZ() + 0.5);
 
-        for ( Location spawnLocation : spawns.values() )
+        for ( GameTeam team : GameTeam.values() )
         {
-            if ( loc.distanceSquared(spawnLocation.clone().toVector()) <= 4.5 * 4.5 )
+            if ( isNearSpawn(team, loc, 4.5) )
             {
                 return false;
             }
         }
         
         return !structureManager.isStructure(location);
+    }
+    
+    public boolean isNearSpawn(GameTeam team, Vector loc, double distance)
+    {
+        return getSpawn(team).toVector().distanceSquared(loc) <= distance * distance;
     }
     
     public void scheduleStart()

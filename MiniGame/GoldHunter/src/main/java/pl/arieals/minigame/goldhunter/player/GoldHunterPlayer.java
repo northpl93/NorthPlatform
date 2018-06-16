@@ -23,6 +23,7 @@ import org.bukkit.util.Vector;
 import com.google.common.base.Preconditions;
 
 import net.minecraft.server.v1_12_R1.EntityPlayer;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
 
 import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
 import pl.arieals.globalshops.server.IGlobalShops;
@@ -608,6 +609,31 @@ public class GoldHunterPlayer implements ITickable
         int diff = maxCount - currentCount;
         is.setAmount(Math.min(diff, is.getAmount()));
         player.getInventory().addItem(is);
+    }
+    
+    @Tick
+    private void showInfoSubtitle()
+    {
+        if ( MinecraftServer.currentTick % 15 != 0 )
+        {
+            return;
+        }
+        
+        String titleMessage = null;
+        if ( !isIngame() && !arena.getSignedPlayers().contains(this) )
+        {
+            titleMessage = getMessage("info.sign_to_game");
+        }
+        else if ( isIngame() && arena.isNearSpawn(team, player.getLocation().toVector(), 2.5) )
+        {
+            titleMessage = getMessage("info.select_class");
+        }
+        
+        
+        if ( titleMessage != null )
+        {
+            player.sendTitle("§0", titleMessage, 0, 10, 12);
+        }
     }
     
     @Override

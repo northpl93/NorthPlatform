@@ -157,7 +157,8 @@ public class SpecialAbilityTracker implements ITickable
         SoundEffect.ABILITY_READY.play(player);
         currentAbilityType.getHandler().onReady(player);
         
-        player.sendMessage("ability_ready");
+        //player.sendMessage("ability_ready");
+        player.getPlayer().sendTitle("", player.getMessage("info.use_ability"), 0, 100, 16);
     }
     
     @Tick
