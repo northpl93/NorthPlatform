@@ -15,6 +15,7 @@ import pl.arieals.api.minigame.server.utils.party.PartyClient;
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
+import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.hub.IHubServer;
 import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
@@ -71,6 +72,17 @@ public class PlayGameController
         final LobbyManager lobby = this.miniGameServer.getServerManager();
         return lobby.getAllHubServers();
     }
+    
+    public void playGame(final Player player, final IArena arena)
+    {
+        if (! this.partyClient.canDecideAboutHimself(player) )
+        {
+            return;
+        }
+
+        final Collection<PlayerJoinInfo> players = this.getPlayerTeamJoinInfos(player);
+        this.arenaClient.connect(arena, players);
+    }
 
     public void playGame(final Player player, final GameIdentity gameIdentity, final boolean allowInProgress, final String worldId)
     {
@@ -80,32 +92,27 @@ public class PlayGameController
             return;
         }
 
-        final Collection<PlayerJoinInfo> players;
-
-        final IParty party = this.partyClient.getPlayerParty(player);
-        if (party == null)
-        {
-            final boolean isVip = player.hasPermission("gamejoin.vip");
-            final PlayerJoinInfo joinInfo = new PlayerJoinInfo(player.getUniqueId(), isVip, false);
-
-            players = Collections.singletonList(joinInfo);
-        }
-        else
-        {
-            players = party.getJoinInfos();
-        }
-
-        this.doConnect(players, gameIdentity, allowInProgress, worldId);
-    }
-
-    private boolean doConnect(final Collection<PlayerJoinInfo> players, final GameIdentity gameIdentity, final boolean allowInProgress, final String worldId)
-    {
         final ArenaQuery query = ArenaQuery.create().miniGame(gameIdentity).gamePhase(GamePhase.LOBBY).world(worldId);
         if (allowInProgress)
         {
             query.gamePhase(GamePhase.STARTED);
         }
 
-        return this.arenaClient.connect(query, players);
+        final Collection<PlayerJoinInfo> players = this.getPlayerTeamJoinInfos(player);
+        this.arenaClient.connect(query, players);
+    }
+
+    private Collection<PlayerJoinInfo> getPlayerTeamJoinInfos(final Player player)
+    {
+        final IParty party = this.partyClient.getPlayerParty(player);
+        if (party == null)
+        {
+            final boolean isVip = player.hasPermission("gamejoin.vip");
+            final PlayerJoinInfo joinInfo = new PlayerJoinInfo(player.getUniqueId(), isVip, false);
+
+            return Collections.singletonList(joinInfo);
+        }
+
+        return party.getJoinInfos();
     }
 }
