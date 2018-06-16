@@ -4,6 +4,7 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import java.time.Duration;
+import java.util.ListIterator;
 
 import com.carrotsearch.hppc.ObjectIntHashMap;
 import com.carrotsearch.hppc.ObjectIntMap;
@@ -91,27 +92,36 @@ public class PlayerItemsListener implements Listener
     @EventHandler
     public void filterDeathItems(final PlayerDeathEvent event)
     {
+        final Player player = event.getEntity();
         event.setKeepInventory(true);
 
-        final Player player = event.getEntity();
-        final ItemStack[] storageContents = player.getInventory().getStorageContents();
-
         final ObjectIntMap<Material> trackedMaterials = new ObjectIntHashMap<>(5, 0.01f);
-        for (int i = 0; i < storageContents.length; i++)
+
+        final ListIterator<ItemStack> iterator = player.getInventory().iterator();
+        while (iterator.hasNext())
         {
-            final ItemStack item = storageContents[i];
+            final ItemStack item = iterator.next();
             if (item == null || item.getType() == Material.AIR)
             {
                 continue;
             }
+
+            final int index = iterator.nextIndex() - 1;
+            if (index >= 36 && index <= 39)
+            {
+                // zbroja nas nie interesuje
+                continue;
+            }
+
             if (this.shopManager.isItemPermanent(item))
             {
                 continue;
             }
 
             this.addTrackedMaterial(trackedMaterials, item);
-            player.getInventory().setItem(i, null);
+            player.getInventory().setItem(index, null);
         }
+
         this.giveItemsToKiller(trackedMaterials, player);
     }
 
