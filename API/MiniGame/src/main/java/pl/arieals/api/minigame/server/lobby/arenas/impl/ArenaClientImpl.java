@@ -88,6 +88,12 @@ public class ArenaClientImpl implements IArenaClient
         final Comparator<IArena> comparator = Comparator.comparing(IArena::getPlayersCount).reversed();
         return arenas.stream().filter(query).sorted(comparator).collect(Collectors.toList());
     }
+    
+    @Override
+    public Collection<IArena> getAll()
+    {
+        return new ArrayList<>(arenas.values());
+    }
 
     @Override
     public synchronized void observe(final ArenaQuery query, final IArenaObserver observer)

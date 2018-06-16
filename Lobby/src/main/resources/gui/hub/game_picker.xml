@@ -9,11 +9,13 @@
             </button>
 
             <button pos="3,2">
-                <icon id="ENDER_CHEST" name="@gamegui.goldhunter.name" lore="@gamegui.goldhunter.lore"/>
+            	<variable name="playersInGame" value="northplatform://lobby/ui/inGamePlayersCount/GoldHunter"/>
+                <icon id="ENDER_CHEST" name="@gamegui.goldhunter.name" lore="@gamegui.goldhunter.lore$playersInGame"/>
                 <onClick>northplatform://lobby/ui/switchHub/goldhunter/$playerId</onClick>
             </button>
             <button pos="5,2">
-                <icon id="BED" name="@gamegui.bedwars.name" lore="@gamegui.bedwars.lore"/>
+            	<variable name="playersInGame" value="northplatform://lobby/ui/inGamePlayersCount/bedwars"/>
+                <icon id="BED" name="@gamegui.bedwars.name" lore="@gamegui.bedwars.lore$playersInGame"/>
                 <onClick>northplatform://lobby/ui/switchHub/bedwars/$playerId</onClick>
             </button>
 

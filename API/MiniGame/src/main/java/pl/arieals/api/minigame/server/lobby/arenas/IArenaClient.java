@@ -13,6 +13,8 @@ public interface IArenaClient
     IArena get(UUID arenaId);
 
     Collection<IArena> get(ArenaQuery query);
+    
+    Collection<IArena> getAll();
 
     void observe(ArenaQuery query, IArenaObserver observer);
 
