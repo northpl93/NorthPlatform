@@ -28,7 +28,7 @@ import pl.north93.zgame.api.global.messages.TranslatableString;
 public class TranslatedNameTrait extends Trait
 {
     private static final String TEAM_NAME = RandomStringUtils.randomAlphanumeric(16);
-    private final TranslatableString[] nameLines;
+    private TranslatableString[] nameLines;
     private IHologram hologram;
 
     public TranslatedNameTrait(final TranslatableString... nameLines)
@@ -36,7 +36,13 @@ public class TranslatedNameTrait extends Trait
         super("translatedName");
         this.nameLines = nameLines;
     }
-
+    
+    public void setNameLines(TranslatableString... nameLines)
+    {
+        this.nameLines = nameLines;
+        updateHologram();
+    }
+    
     @Override
     public void onAttach()
     {
@@ -75,6 +81,11 @@ public class TranslatedNameTrait extends Trait
         entity.setCustomNameVisible(false);
 
         this.hologram = IHologram.createWithLowerLocation(entity.getLocation().add(0, entity.getHeight(), 0));
+        updateHologram();
+    }
+    
+    private void updateHologram()
+    {
         for (int i = 0; i < this.nameLines.length; i++)
         {
             final int messageId = this.nameLines.length - i - 1;

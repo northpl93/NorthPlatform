@@ -11,21 +11,25 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
+
+import pl.arieals.api.minigame.server.lobby.arenas.IArenaClient;
 import pl.arieals.api.minigame.server.utils.citizens.TranslatedNameTrait;
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.lobby.npc.PlayGameTrait;
+import pl.arieals.lobby.npc.PlayNpcNameHandler;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.messages.TranslatableString;
 
 @XmlRootElement(name = "playGame")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PlayGameXmlNpc extends XmlNpc
 {
     @XmlTransient
-    @Inject @Messages("UserInterface")
-    private MessagesBox  uiMessages;
+    @Inject
+    private PlayNpcNameHandler playNpcNameHandler;
+    @XmlTransient
+    @Inject
+    private IArenaClient arenaClient;
+    
     @XmlElement(required = true)
     private GameIdentity gameIdentity;
     @XmlElement
@@ -44,16 +48,10 @@ public class PlayGameXmlNpc extends XmlNpc
     @Override
     protected void postSpawn(final NPC npc)
     {
-        final TranslatableString clickToPlay = TranslatableString.of(this.uiMessages, "@npc.clicktoplay");
-        final TranslatableString gameName = TranslatableString.of(this.uiMessages, this.getNpcNameId());
-        npc.addTrait(new TranslatedNameTrait(clickToPlay, gameName));
+        npc.addTrait(new TranslatedNameTrait());
+        playNpcNameHandler.updateName(npc);
     }
-
-    private String getNpcNameId()
-    {
-        return "@npc." + this.gameIdentity.getGameId() + "_" + this.gameIdentity.getVariantId();
-    }
-
+    
     @Override
     public String toString()
     {
