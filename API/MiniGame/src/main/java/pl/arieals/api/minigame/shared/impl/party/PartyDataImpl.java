@@ -5,12 +5,17 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.arieals.api.minigame.shared.api.party.PartyInvite;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class PartyDataImpl implements IParty
 {
+    @Inject
+    private static PartyManagerImpl partyManager;
+
     private UUID             uuid;
     private UUID             ownerUuid;
     private Set<PartyInvite> invites;
@@ -87,6 +92,12 @@ public class PartyDataImpl implements IParty
     public Set<UUID> getPlayers()
     {
         return Collections.unmodifiableSet(this.players);
+    }
+
+    @Override
+    public Set<PlayerJoinInfo> getJoinInfos()
+    {
+        return partyManager.getJoinInfos(this.players);
     }
 
     @Override

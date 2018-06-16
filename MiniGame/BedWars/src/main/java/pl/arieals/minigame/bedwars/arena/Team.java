@@ -12,13 +12,17 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.minigame.bedwars.cfg.BwTeamConfig;
+import pl.arieals.minigame.bedwars.event.BedDestroyedEvent;
 import pl.arieals.minigame.bedwars.event.TeamEliminatedEvent;
+import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 
 public class Team
@@ -157,6 +161,24 @@ public class Team
     public void setBedAlive(final boolean bedAlive)
     {
         this.isBedAlive = bedAlive;
+    }
+
+    /**
+     * Niszczy łózko danej drużyny, używane w tasku do niszczenia po pewnym czasie.
+     */
+    public void destroyBed(final boolean silent)
+    {
+        if (! this.isBedAlive())
+        {
+            return;
+        }
+
+        this.setBedAlive(false);
+        final Block bedBlock = this.getBedLocation().getBlock();
+        bedBlock.setType(Material.AIR); // usuwamy klasyczna, wolna metoda zeby znikly obydwie czesci lozka.
+
+        final BukkitApiCore apiCore = this.arena.getGameHostManager().getApiCore();
+        apiCore.callEvent(new BedDestroyedEvent(this.arena, null, bedBlock, this, silent));
     }
 
     /**

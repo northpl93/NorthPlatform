@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.api.minigame.server.lobby.hub.event.PlayerPreSwitchHubEvent;
 import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
 import pl.arieals.api.minigame.shared.api.cfg.HubConfig;
 import pl.arieals.api.minigame.shared.api.cfg.HubsConfig;
@@ -118,18 +119,25 @@ public class LocalHubServer implements IHubServer
      */
     public void movePlayerToHub(final Player player, final String hubId)
     {
-        final HubWorld hubWorld = this.getHubWorld(hubId);
-        if (hubWorld == null)
+        final HubWorld newHub = this.getHubWorld(hubId);
+        if (newHub == null)
         {
-            this.apiCore.getLogger().log(Level.WARNING, "Tried teleport {0} to non-existing hub {1}", new Object[]{player.getName(), hubId});
+            final Object[] params = {player.getName(), hubId};
+            this.apiCore.getLogger().log(Level.WARNING, "Tried teleport {0} to non-existing hub {1}", params);
             return;
         }
 
         // stary hub gracza, może być nullem
         final HubWorld oldHub = this.getHubWorld(player);
 
-        hubWorld.teleportPlayerHere(player);
-        this.apiCore.callEvent(new PlayerSwitchedHubEvent(player, oldHub, hubWorld));
+        final PlayerPreSwitchHubEvent event = this.apiCore.callEvent(new PlayerPreSwitchHubEvent(player, oldHub, newHub));
+        if (event.isCancelled())
+        {
+            return;
+        }
+
+        newHub.teleportPlayerHere(player);
+        this.apiCore.callEvent(new PlayerSwitchedHubEvent(player, oldHub, newHub));
     }
 
     /**

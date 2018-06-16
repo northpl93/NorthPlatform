@@ -2,11 +2,8 @@ package pl.arieals.lobby.play;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
@@ -18,7 +15,6 @@ import pl.arieals.api.minigame.server.utils.party.PartyClient;
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
-import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.hub.IHubServer;
 import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
@@ -75,30 +71,6 @@ public class PlayGameController
         final LobbyManager lobby = this.miniGameServer.getServerManager();
         return lobby.getAllHubServers();
     }
-    
-    public void playGame(final Player player, final IArena arena)
-    {
-        if (! this.partyClient.canDecideAboutHimself(player) )
-        {
-            return;
-        }
-        
-        final IParty party = this.partyClient.getPlayerParty(player);
-        if (party == null)
-        {
-            playGame(Collections.singletonList(player), arena);
-        }
-        else
-        {
-            playGame(party.getPlayers().stream().map(Bukkit::getPlayer).collect(Collectors.toList()), arena);
-        }
-    }
-    
-    private boolean playGame(final Collection<Player> players, final IArena arena)
-    {
-        final List<PlayerJoinInfo> joinInfos = players.stream().map(this::createJoinInfo).collect(Collectors.toList());
-        return this.arenaClient.connect(arena, joinInfos);
-    }
 
     public void playGame(final Player player, final GameIdentity gameIdentity, final boolean allowInProgress, final String worldId)
     {
@@ -108,22 +80,25 @@ public class PlayGameController
             return;
         }
 
-        final Collection<Player> players;
+        final Collection<PlayerJoinInfo> players;
 
         final IParty party = this.partyClient.getPlayerParty(player);
         if (party == null)
         {
-            players = Collections.singletonList(player);
+            final boolean isVip = player.hasPermission("gamejoin.vip");
+            final PlayerJoinInfo joinInfo = new PlayerJoinInfo(player.getUniqueId(), isVip, false);
+
+            players = Collections.singletonList(joinInfo);
         }
         else
         {
-            players = party.getPlayers().stream().map(Bukkit::getPlayer).collect(Collectors.toList());
+            players = party.getJoinInfos();
         }
 
         this.doConnect(players, gameIdentity, allowInProgress, worldId);
     }
 
-    private boolean doConnect(final Collection<Player> players, final GameIdentity gameIdentity, final boolean allowInProgress, final String worldId)
+    private boolean doConnect(final Collection<PlayerJoinInfo> players, final GameIdentity gameIdentity, final boolean allowInProgress, final String worldId)
     {
         final ArenaQuery query = ArenaQuery.create().miniGame(gameIdentity).gamePhase(GamePhase.LOBBY).world(worldId);
         if (allowInProgress)
@@ -131,14 +106,6 @@ public class PlayGameController
             query.gamePhase(GamePhase.STARTED);
         }
 
-        final List<PlayerJoinInfo> joinInfos = players.stream().map(this::createJoinInfo).collect(Collectors.toList());
-
-        return this.arenaClient.connect(query, joinInfos);
-    }
-    
-    private PlayerJoinInfo createJoinInfo(Player player)
-    {
-        final boolean isVip = player.hasPermission("gamejoin.vip");
-        return new PlayerJoinInfo(player.getUniqueId(), isVip, false);
+        return this.arenaClient.connect(query, players);
     }
 }

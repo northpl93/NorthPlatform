@@ -146,7 +146,7 @@ public class BuildListener implements Listener
         teamAt.setBedAlive(false); // oznaczamy, ze lozko druzyny zostalo zniszczone
 
         // wywolujemy event zniszczenia lozka
-        this.apiCore.callEvent(new BedDestroyedEvent(arenaData.getArena(), playerData.getBukkitPlayer(), block, teamAt));
+        this.apiCore.callEvent(new BedDestroyedEvent(arenaData.getArena(), playerData.getBukkitPlayer(), block, teamAt, false));
 
         return true;
     }

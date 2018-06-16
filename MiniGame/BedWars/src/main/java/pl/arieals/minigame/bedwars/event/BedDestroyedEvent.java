@@ -19,16 +19,18 @@ import pl.arieals.minigame.bedwars.arena.Team;
 public class BedDestroyedEvent extends ArenaEvent
 {
     private static final HandlerList handlers = new HandlerList();
-    private final Player destroyer;
-    private final Block  bedBlock;
-    private final Team   team;
+    private final Player  destroyer;
+    private final Block   bedBlock;
+    private final Team    team;
+    private final boolean silent;
 
-    public BedDestroyedEvent(final LocalArena arena, final Player destroyer, final Block bedBlock, final Team team)
+    public BedDestroyedEvent(final LocalArena arena, final Player destroyer, final Block bedBlock, final Team team, final boolean silent)
     {
         super(arena);
         this.destroyer = destroyer;
         this.bedBlock = bedBlock;
         this.team = team;
+        this.silent = silent;
     }
 
     /**
@@ -60,6 +62,16 @@ public class BedDestroyedEvent extends ArenaEvent
     public Team getTeam()
     {
         return this.team;
+    }
+
+    /**
+     * Czy zniszczenie powinno pozostac ciche, nie wywolac komunikatu graczom.
+     *
+     * @return True jesli nie powinny pojawic sie zadne komunikaty dot. zniszczenia lozka.
+     */
+    public boolean isSilent()
+    {
+        return this.silent;
     }
 
     @Override

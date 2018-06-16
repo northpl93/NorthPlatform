@@ -10,6 +10,7 @@ import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.arieals.api.minigame.shared.api.party.IPartyAccess;
 import pl.arieals.api.minigame.shared.api.party.PartyInvite;
@@ -226,6 +227,12 @@ import pl.north93.zgame.api.global.network.players.PlayerOfflineException;
     public Set<UUID> getPlayers()
     {
         return this.partyData.getPlayers();
+    }
+
+    @Override
+    public Set<PlayerJoinInfo> getJoinInfos()
+    {
+        return this.partyData.getJoinInfos();
     }
 
     @Override

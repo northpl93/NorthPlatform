@@ -36,7 +36,7 @@ import pl.north93.zgame.api.global.metadata.MetaStore;
 public class LocalArena implements IArena
 {
     private static final int MAX_TIME_TO_DISCONNECT = 30 * 20; // czas po jakim serwer wyrzuci graczy ktorzy nie wylecieli z areny
-    private final GameHostManager gameHostManager;
+    private final GameHostManager     gameHostManager;
     private final ArenaManager        arenaManager;
     private final RemoteArena         data;
     private final ArenaWorld          world;
@@ -245,6 +245,11 @@ public class LocalArena implements IArena
     {
         //noinspection unchecked
         return (T) this.arenaData;
+    }
+
+    public GameHostManager getGameHostManager()
+    {
+        return this.gameHostManager;
     }
 
     /**

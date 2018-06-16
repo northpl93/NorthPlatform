@@ -4,25 +4,27 @@ import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
+import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.arieals.api.minigame.shared.api.party.IPartyAccess;
 import pl.arieals.api.minigame.shared.api.party.IPartyManager;
 import pl.arieals.api.minigame.shared.api.party.PartyInvite;
 import pl.arieals.api.minigame.shared.api.party.PlayerAlreadyHasPartyException;
 import pl.arieals.api.minigame.shared.api.party.event.PartyNetEvent;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.INetworkManager;
@@ -30,6 +32,7 @@ import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.Identity;
+import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
 import pl.north93.zgame.api.global.redis.event.IEventManager;
 import pl.north93.zgame.api.global.redis.observable.Hash;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
@@ -227,6 +230,18 @@ public class PartyManagerImpl implements IPartyManager
             return;
         }
         metaStore.set(PARTY_INVITE, invite);
+    }
+
+    /*default*/ Set<PlayerJoinInfo> getJoinInfos(final Set<UUID> players)
+    {
+        return players.stream().map(uuid ->
+        {
+            final Identity identity = Identity.create(uuid, null);
+            final IPlayer player = this.networkManager.getPlayers().unsafe().getNullable(identity);
+
+            final boolean isVip = player.getGroup().hasPermission("gamejoin.vip");
+            return new PlayerJoinInfo(uuid, isVip, false);
+        }).collect(Collectors.toSet());
     }
 
     private void deleteParty(final UUID partyId)

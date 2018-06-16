@@ -3,6 +3,7 @@ package pl.arieals.api.minigame.shared.api.party;
 import java.util.Set;
 import java.util.UUID;
 
+import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 
 /**
@@ -25,6 +26,14 @@ public interface IParty
     boolean isInvited(UUID playerId);
 
     Set<UUID> getPlayers();
+
+    /**
+     * Pomocnicza metoda konwertująca wszystkich graczy w party na
+     * odpowiadające im {@link PlayerJoinInfo}.
+     *
+     * @return Lista obiektów PlayerJoinInfo wszystkich graczy z party.
+     */
+    Set<PlayerJoinInfo> getJoinInfos();
 
     boolean isAdded(UUID playerId);
 

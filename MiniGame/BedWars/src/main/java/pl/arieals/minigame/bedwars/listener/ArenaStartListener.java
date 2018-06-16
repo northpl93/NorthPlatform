@@ -5,8 +5,8 @@ import javax.xml.bind.JAXB;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -18,6 +18,7 @@ import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
 import pl.arieals.minigame.bedwars.BedWarsChatFormatter;
 import pl.arieals.minigame.bedwars.arena.BedDestroyTask;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
+import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.arena.generator.GeneratorTask;
 import pl.arieals.minigame.bedwars.cfg.BwArenaConfig;
 import pl.arieals.minigame.bedwars.cfg.BwConfig;
@@ -44,12 +45,9 @@ public class ArenaStartListener implements Listener
     }
 
     @EventHandler
-    public void onGameStart(final GameStartEvent event)
+    public void scheduleTasks(final GameStartEvent event)
     {
         final LocalArena arena = event.getArena();
-
-        // niszczymy lobby
-        this.destroyLobby(arena);
 
         // planujemy task generatorów co 1 tick
         arena.getScheduler().runTaskTimer(new GeneratorTask(arena), 1, 1);
@@ -67,8 +65,11 @@ public class ArenaStartListener implements Listener
         }, this.config.getStartDeathMatchAt());
     }
 
-    private void destroyLobby(final LocalArena arena)
+    @EventHandler
+    public void destroyLobby(final GameStartEvent event)
     {
+        final LocalArena arena = event.getArena();
+
         final BedWarsArena arenaData = arena.getArenaData();
         final Cuboid lobby = arenaData.getConfig().getLobbyCuboid().toCuboid(arena.getWorld().getCurrentWorld());
 
@@ -81,14 +82,23 @@ public class ArenaStartListener implements Listener
             }
             FastBlockOp.setType(block, Material.AIR, (byte) 0);
         }
-        System.out.println(System.currentTimeMillis() - l);
+        System.out.println("BedWars lobby destroyed in: " + (System.currentTimeMillis() - l));
     }
 
-    @EventHandler
-    public void onHungerLoss(final FoodLevelChangeEvent event)
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void destroyBedsInEmptyTeams(final GameStartEvent event)
     {
-        // disable hunger loss
-        event.setCancelled(true);
+        final BedWarsArena arenaData = event.getArena().getArenaData();
+
+        for (final Team team : arenaData.getTeams())
+        {
+            if (! team.getPlayers().isEmpty())
+            {
+                continue;
+            }
+
+            team.destroyBed(true);
+        }
     }
 
     @Override

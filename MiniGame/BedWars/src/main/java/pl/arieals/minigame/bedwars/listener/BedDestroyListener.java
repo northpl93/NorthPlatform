@@ -38,8 +38,13 @@ public class BedDestroyListener implements Listener
     private MessagesBox   messages;
 
     @EventHandler
-    public void onBedDestroy(final BedDestroyedEvent event)
+    public void announceBedDestroy(final BedDestroyedEvent event)
     {
+        if (event.isSilent())
+        {
+            return;
+        }
+
         final LocalArena arena = event.getArena();
         final BedWarsArena bedWarsArena = arena.getArenaData();
         final Team team = event.getTeam();
@@ -84,8 +89,12 @@ public class BedDestroyListener implements Listener
 
             player.sendTitle(new Title(title, subtitle, 20, 20, 20));
         }
+    }
 
-        team.checkEliminated();
+    @EventHandler
+    public void triggerTeamEliminationCheck(final BedDestroyedEvent event)
+    {
+        event.getTeam().checkEliminated();
     }
 
     @Override

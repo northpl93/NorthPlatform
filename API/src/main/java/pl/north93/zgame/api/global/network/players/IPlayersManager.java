@@ -108,6 +108,7 @@ public interface IPlayersManager
      */
     interface Unsafe
     {
+        // zwraca gracza online lub offline
         Optional<IPlayer> get(Identity identity); // do not modify returned instance. It will be not saved!
 
         default IPlayer getNullable(final Identity identity) // metoda pomocnicza do tej wyżej
