@@ -19,6 +19,7 @@ import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
+import pl.north93.zgame.api.global.metadata.MetaKey;
 
 public class ArenaListener implements AutoListener
 {
@@ -41,6 +42,7 @@ public class ArenaListener implements AutoListener
         LocalArena localArena = event.getArena();
         if ( localArena.getArenaData() == null )
         {
+            localArena.getMetadata().set(MetaKey.get("signedPlayers"), 0);
             localArena.setArenaData(new GoldHunterArena(localArena));
             tickableManager.addTickableObject((ITickable) localArena.getArenaData());
             logger.info("Add GoldHunter arena with uuid: {}", localArena.getId());

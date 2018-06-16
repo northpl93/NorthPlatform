@@ -18,6 +18,7 @@ import pl.arieals.api.minigame.server.utils.party.PartyClient;
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
+import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.hub.IHubServer;
 import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
@@ -74,6 +75,30 @@ public class PlayGameController
         final LobbyManager lobby = this.miniGameServer.getServerManager();
         return lobby.getAllHubServers();
     }
+    
+    public void playGame(final Player player, final IArena arena)
+    {
+        if (! this.partyClient.canDecideAboutHimself(player) )
+        {
+            return;
+        }
+        
+        final IParty party = this.partyClient.getPlayerParty(player);
+        if (party == null)
+        {
+            playGame(Collections.singletonList(player), arena);
+        }
+        else
+        {
+            playGame(party.getPlayers().stream().map(Bukkit::getPlayer).collect(Collectors.toList()), arena);
+        }
+    }
+    
+    private boolean playGame(final Collection<Player> players, final IArena arena)
+    {
+        final List<PlayerJoinInfo> joinInfos = players.stream().map(this::createJoinInfo).collect(Collectors.toList());
+        return this.arenaClient.connect(arena, joinInfos);
+    }
 
     public void playGame(final Player player, final GameIdentity gameIdentity, final boolean allowInProgress, final String worldId)
     {
@@ -106,12 +131,14 @@ public class PlayGameController
             query.gamePhase(GamePhase.STARTED);
         }
 
-        final List<PlayerJoinInfo> joinInfos = players.stream().map(player ->
-        {
-            final boolean isVip = player.hasPermission("gamejoin.vip");
-            return new PlayerJoinInfo(player.getUniqueId(), isVip, false);
-        }).collect(Collectors.toList());
+        final List<PlayerJoinInfo> joinInfos = players.stream().map(this::createJoinInfo).collect(Collectors.toList());
 
         return this.arenaClient.connect(query, joinInfos);
+    }
+    
+    private PlayerJoinInfo createJoinInfo(Player player)
+    {
+        final boolean isVip = player.hasPermission("gamejoin.vip");
+        return new PlayerJoinInfo(player.getUniqueId(), isVip, false);
     }
 }

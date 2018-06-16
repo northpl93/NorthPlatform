@@ -60,10 +60,10 @@ public final class UiHelper
         for (final IHubServer hubServer : hubs)
         {
             final Vars<Object> vars = Vars.of("id", ++counter);
-            elements.add(new DynamicElementData(vars, (source, event) ->
+            elements.add(DynamicElementData.builder().vars(vars).clickHandler((source, event) ->
             {
                 this.playController.switchHubInstance(event.getWhoClicked(), hubServer);
-            }));
+            }).build());
         }
 
         return elements;

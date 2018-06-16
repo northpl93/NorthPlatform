@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="3" title="@play.dynamic.title.gh12">
+	<container pos="0,0" size="1,3">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+    <dynamicContainer pos="1,0" size="7,2">
+    	<renderer>renderArenas</renderer>
+    </dynamicContainer>
+    <container pos="1,2" size="7,1">
+    	<content>
+    		<button pos="6,0">
+                <icon id="IRON_DOOR" name="@gamegui.back"/>
+                <onClick>closeGui</onClick>
+            </button>
+            <button if="expanded" negated="true" pos="5,0">
+            	<icon id="minecraft:stained_glass" name="@play.dynamic.more" />
+            	<onClick>showMore</onClick>
+            </button>
+            <button if="expanded" negated="false" pos="5,0">
+            	<icon id="minecraft:stained_glass" name="@play.dynamic.less" />
+            	<onClick>showLess</onClick>
+            </button>
+    	</content>
+    </container>
+    <container pos="8,0" size="1,3">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+</gui>

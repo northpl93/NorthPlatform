@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.trait.Trait;
 import pl.arieals.api.minigame.shared.api.GameIdentity;
+import pl.arieals.lobby.ui.JoinDynamicGui;
 import pl.arieals.lobby.ui.JoinGameGui;
 
 public class PlayGameTrait extends Trait
@@ -41,7 +42,14 @@ public class PlayGameTrait extends Trait
             return;
         }
 
-        JoinGameGui.openForPlayerAndGame(event.getPlayer(), this.gameIdentity, this.isDynamic);
+        if ( isDynamic )
+        {
+            JoinDynamicGui.openForPlayerAndGame(event.getPlayer(), gameIdentity);
+        }
+        else
+        {
+            JoinGameGui.openForPlayerAndGame(event.getPlayer(), this.gameIdentity, this.isDynamic);
+        }
     }
 
     @EventHandler
@@ -51,8 +59,15 @@ public class PlayGameTrait extends Trait
         {
             return;
         }
-
-        JoinGameGui.openForPlayerAndGame(event.getClicker(), this.gameIdentity, this.isDynamic);
+        
+        if ( isDynamic )
+        {
+            JoinDynamicGui.openForPlayerAndGame(event.getClicker(), gameIdentity);
+        }
+        else
+        {
+            JoinGameGui.openForPlayerAndGame(event.getClicker(), this.gameIdentity, this.isDynamic);
+        }
     }
 
     @Override

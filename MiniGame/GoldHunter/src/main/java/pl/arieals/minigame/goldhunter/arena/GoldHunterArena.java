@@ -41,6 +41,7 @@ import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.utils.lang.ListUtils;
 
 public class GoldHunterArena implements IArenaData, ITickable
@@ -344,6 +345,9 @@ public class GoldHunterArena implements IArenaData, ITickable
         scoreboardManager.setProperties("signedCount", signedPlayers.size(),
                 "team1Count", signedPlayers.get(GameTeam.RED).size(),
                 "team2Count", signedPlayers.get(GameTeam.BLUE).size());
+        
+        localArena.getMetadata().set(MetaKey.get("signedPlayers"), signedPlayers.size());
+        localArena.uploadRemoteData();
         
         if ( hasGame() && ( signedPlayers.get(GameTeam.RED).size() == 0 || signedPlayers.get(GameTeam.BLUE).size() == 0 ) )
         {
