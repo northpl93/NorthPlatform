@@ -10,6 +10,7 @@ import pl.arieals.api.minigame.server.lobby.arenas.IArenaObserver;
 import pl.arieals.api.minigame.server.utils.citizens.TranslatedNameTrait;
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
+import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
@@ -21,7 +22,8 @@ public class PlayNpcNameHandler implements IArenaObserver
     private final MessagesBox uiMessages;
     
     private final IArenaClient arenaClient;
-    
+
+    @Bean
     private PlayNpcNameHandler(IArenaClient arenaClient, @Messages("UserInterface") MessagesBox uiMessages)
     {
         this.arenaClient = arenaClient;
