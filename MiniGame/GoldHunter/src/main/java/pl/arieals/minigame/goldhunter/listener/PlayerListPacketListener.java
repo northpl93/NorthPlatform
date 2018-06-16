@@ -11,6 +11,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.server.v1_12_R1.ChatComponentText;
 import net.minecraft.server.v1_12_R1.IChatBaseComponent;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
+import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
 
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.player.GameTeam;
@@ -46,8 +47,11 @@ public class PlayerListPacketListener implements AutoListener
             return;
         }
         
-        event.setCancelled(true);
-        event.setPacket(null);
+        if ( packet.getAction() != EnumPlayerInfoAction.ADD_PLAYER )
+        {
+            event.setCancelled(true);
+            event.setPacket(null);
+        }
         
         goldHunter.runTask(() -> syncProcessPacket(player, packet));
     }
