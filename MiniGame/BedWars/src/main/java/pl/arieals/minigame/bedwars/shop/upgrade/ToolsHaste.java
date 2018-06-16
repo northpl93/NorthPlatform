@@ -26,7 +26,8 @@ public class ToolsHaste implements IUpgrade, Listener
     {
         for (final Player player : team.getPlayers())
         {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, level, true, false));
+            final int potionLevel = level - 1;
+            player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, potionLevel, true, false));
         }
     }
 
@@ -40,7 +41,8 @@ public class ToolsHaste implements IUpgrade, Listener
             return;
         }
 
-        player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, upgradeLevel, true, false));
+        final int potionLevel = upgradeLevel - 1;
+        player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, potionLevel, true, false));
     }
 
     @Override
