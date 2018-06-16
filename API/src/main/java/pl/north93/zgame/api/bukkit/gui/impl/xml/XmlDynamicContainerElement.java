@@ -1,8 +1,15 @@
 package pl.north93.zgame.api.bukkit.gui.impl.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.IGuiIcon;
 import pl.north93.zgame.api.bukkit.gui.element.ContainerElement;
 import pl.north93.zgame.api.bukkit.gui.element.dynamic.DynamicContainerElement;
@@ -14,19 +21,19 @@ import pl.north93.zgame.api.bukkit.gui.impl.XmlReaderContext;
 public class XmlDynamicContainerElement extends XmlStaticContainerElement
 {
     @XmlElement
-    private String dataUri;
+    private String renderer;
 
-    @XmlElement
-    private XmlGuiIcon icon;
+    @XmlElement(name = "icon")
+    private List<XmlDynamicGuiIcon> icons = new ArrayList<>();
 
-    public String getDataUri()
+    public String getRenderer()
     {
-        return this.dataUri;
+        return renderer;
     }
 
-    public XmlGuiIcon getIcon()
+    public List<? extends XmlGuiIcon> getIcons()
     {
-        return this.icon;
+        return this.icons;
     }
 
     @Override
@@ -38,12 +45,25 @@ public class XmlDynamicContainerElement extends XmlStaticContainerElement
         final int sizeY = Integer.parseInt(split[1]);
 
         final ElementLocationStrategy strategy = new SimpleElementLocationStrategy();
-        final IGuiIcon baseIcon = this.icon.toGuiIcon(renderContext, this.getVariables());
+        if ( icons == null ) icons = new ArrayList<>(); // TODO: remove this
+        final Map<String, IGuiIcon> baseIcons = icons.stream().collect(Collectors.toMap(XmlDynamicGuiIcon::getIconCase, icon -> icon.toGuiIcon(renderContext, this.getVariables())));
 
-        final DynamicContainerElement result = new DynamicContainerElement(sizeX, sizeY, this.dataUri, strategy, baseIcon);
+        final DynamicContainerElement result = new DynamicContainerElement(sizeX, sizeY, renderer, strategy, baseIcons, (Gui) renderContext.getClickSource());
         result.setBackground(this.getBackground() != null ? this.getBackground().toGuiIcon(renderContext, this.getVariables()) : null);
         result.setBorder(this.getBorder() != null ? this.getBorder().toGuiIcon(renderContext, this.getVariables()) : null);
 
         return result;
     }
 }
+
+class XmlDynamicGuiIcon extends XmlGuiIcon
+{
+    @XmlAttribute(name = "case")
+    private String iconCase = "";
+    
+    public String getIconCase()
+    {
+        return iconCase;
+    }
+}
+

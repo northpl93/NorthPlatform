@@ -7,6 +7,9 @@ public class ButtonElement extends GuiElement
 {
     private IGuiIcon icon;
     
+    private String ifVar;
+    private boolean negated;
+    
     public ButtonElement(IGuiIcon icon)
     {
         super(false);
@@ -24,9 +27,48 @@ public class ButtonElement extends GuiElement
         markDirty();
     }
     
+    public void setIfVar(String ifVar)
+    {
+        this.ifVar = ifVar;
+    }
+    
+    public void setNegated(boolean negated)
+    {
+        this.negated = negated;
+    }
+    
+    public String getIfVar()
+    {
+        return ifVar;
+    }
+    
+    public boolean isNegated()
+    {
+        return negated;
+    }
+    
+    // TODO: move this to GuiElement
+    protected final boolean shouldRender()
+    {
+        if (this.ifVar == null)
+        {
+            return true;
+        }
+ 
+        boolean evaluatedVariable = Boolean.valueOf(getVariables().getValue(this.ifVar).toString());
+        if (this.negated)
+        {
+            evaluatedVariable = !evaluatedVariable;
+        }
+        return evaluatedVariable;
+    }
+    
     @Override
     protected void render0(GuiCanvas content)
     {
-        content.setEntry(getPosX(), getPosY(), icon, this);
+        if ( shouldRender() )
+        {
+            content.setEntry(getPosX(), getPosY(), icon, this);
+        }
     }
 }

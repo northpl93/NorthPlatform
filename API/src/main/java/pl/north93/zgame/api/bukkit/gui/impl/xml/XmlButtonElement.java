@@ -2,6 +2,8 @@ package pl.north93.zgame.api.bukkit.gui.impl.xml;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.google.common.base.Preconditions;
+
 import pl.north93.zgame.api.bukkit.gui.DelegatedGuiIcon;
 import pl.north93.zgame.api.bukkit.gui.element.ButtonElement;
 import pl.north93.zgame.api.bukkit.gui.impl.XmlReaderContext;
@@ -25,18 +27,20 @@ public class XmlButtonElement extends XmlConditionalGuiElement
     @Override
     protected ButtonElement toGuiElement0(XmlReaderContext context)
     {
-        if (! this.shouldShow(context))
+        ButtonElement button = null;
+        if (this.icon != null)
         {
-            return null;
-        }
-        else if (this.icon != null)
-        {
-            return new ButtonElement(icon.toGuiIcon(context, this.getVariables()));
+            button = new ButtonElement(icon.toGuiIcon(context, this.getVariables()));
         }
         else if (this.renderer != null)
         {
-            return new ButtonElement(new DelegatedGuiIcon(this.renderer));
+            button = new ButtonElement(new DelegatedGuiIcon(this.renderer));
         }
-        throw new IllegalStateException("Both icon and renderer are null");
+        
+        Preconditions.checkState(button != null, "Both icon and renderer are null");
+        
+        button.setIfVar(getIfVar());
+        button.setNegated(isNegated());
+        return button;
     }
 }

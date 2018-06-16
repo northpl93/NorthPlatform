@@ -4,7 +4,7 @@
         <content>
 
             <dynamicContainer pos="2,0" size="5,1">
-                <dataUri>northplatform://lobby/ui/instancePicker/instances</dataUri>
+                <renderer>northplatform://lobby/ui/instancePicker/instances</renderer>
                 <icon id="SLIME_BALL" name="@instance.icon.title$id"/>
             </dynamicContainer>
 

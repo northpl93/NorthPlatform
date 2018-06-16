@@ -1,5 +1,6 @@
 package pl.north93.zgame.api.bukkit.gui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.entity.Player;
@@ -89,7 +90,7 @@ public class ConfigGuiIcon implements IGuiIcon
         private TranslatableString name = TranslatableString.empty();
         private TranslatableString lore;
 
-        private List<XmlVariable> variables;
+        private List<XmlVariable> variables = new ArrayList<>();
 
         private Builder()
         {

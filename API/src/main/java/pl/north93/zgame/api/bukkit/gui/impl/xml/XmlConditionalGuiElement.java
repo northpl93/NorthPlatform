@@ -7,8 +7,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.bukkit.gui.impl.XmlReaderContext;
-
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class XmlConditionalGuiElement extends XmlGuiElement
 {
@@ -17,28 +15,14 @@ public abstract class XmlConditionalGuiElement extends XmlGuiElement
     @XmlAttribute
     private boolean negated = false;
 
-    protected final boolean shouldShow(final XmlReaderContext context)
+    public String getIfVar()
     {
-        if (this.ifVar == null)
-        {
-            return true;
-        }
-
-        boolean evaluatedVariable = this.parseVariable(context.getVars().getValue(this.ifVar));
-        if (this.negated)
-        {
-            evaluatedVariable = !evaluatedVariable;
-        }
-        return evaluatedVariable;
+        return ifVar;
     }
-
-    private boolean parseVariable(final Object object)
+    
+    public boolean isNegated()
     {
-        if (object instanceof Boolean)
-        {
-            return ((Boolean) object);
-        }
-        return Boolean.valueOf(object.toString());
+        return negated;
     }
 
     @Override
