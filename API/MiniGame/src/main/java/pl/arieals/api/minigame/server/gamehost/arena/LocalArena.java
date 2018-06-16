@@ -31,6 +31,7 @@ import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDeletedNetEvent;
 import pl.arieals.api.minigame.shared.api.match.IMatchAccess;
 import pl.arieals.api.minigame.shared.impl.ArenaManager;
 import pl.north93.zgame.api.bukkit.utils.StaticTimer;
+import pl.north93.zgame.api.global.metadata.MetaStore;
 
 public class LocalArena implements IArena
 {
@@ -84,13 +85,25 @@ public class LocalArena implements IArena
     @Override
     public String getWorldId()
     {
-        return this.world.getCurrentMapTemplate().getName();
+        return this.data.getWorldId();
     }
 
+    @Override
+    public String getWorldDisplayName()
+    {
+        return this.data.getWorldDisplayName();
+    }
+    
     @Override
     public GamePhase getGamePhase()
     {
         return this.data.getGamePhase();
+    }
+    
+    @Override
+    public MetaStore getMetadata()
+    {
+        return this.data.getMetadata();
     }
 
     public void setGamePhase(final GamePhase gamePhase)
@@ -102,15 +115,16 @@ public class LocalArena implements IArena
 
         this.scheduler.cancelAndClear();
         this.data.setGamePhase(gamePhase);
-        this.uploadRemoteData();
-
-        final String mapName = this.world.getCurrentMapTemplate() != null ? this.world.getCurrentMapTemplate().getName() : "Lobby";
-        this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.getId(), this.getMiniGame(), mapName, gamePhase, this.data.getPlayers().size()));
+        
+        //this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.getId(), this.getMiniGame(), mapName, gamePhase, this.data.getPlayers().size()));
 
         final Logger logger = this.gameHostManager.getApiCore().getLogger();
         logger.log(Level.INFO, "Switched {0} to game phase {1}", new Object[]{this.getId(), gamePhase});
 
         GamePhaseEventFactory.getInstance().callEvent(this);
+        
+        // upload remote data after changes made by listeners
+        this.uploadRemoteData();
     }
 
     /**
@@ -362,9 +376,12 @@ public class LocalArena implements IArena
         this.world.setActiveMap(this.mapVote.getWinner()).onComplete(() -> this.setGamePhase(GamePhase.STARTED));
     }
 
-    /*default*/ void uploadRemoteData()
+    public void uploadRemoteData()
     {
         this.arenaManager.setArena(this.data);
+        
+        //final String mapName = this.world.getCurrentMapTemplate() != null ? this.world.getCurrentMapTemplate().getName() : "Lobby";
+        this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.getId(), this.getMiniGame(), this.getWorldDisplayName(), getGamePhase(), this.data.getPlayers().size()));
     }
     
     @Override

@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
 import pl.north93.zgame.api.global.redis.messaging.templates.HashSetTemplate;
 
@@ -26,6 +27,8 @@ public class RemoteArena implements IArena
     private Integer      maxPlayers;
     @MsgPackCustomTemplate(HashSetTemplate.class)
     private Set<UUID>    players;
+    private String       worldDisplayName;
+    private MetaStore    metadata;
 
     public RemoteArena()
     {
@@ -41,6 +44,7 @@ public class RemoteArena implements IArena
         this.gamePhase = gamePhase;
         this.maxPlayers = maxPlayers;
         this.players = players;
+        this.metadata = new MetaStore();
     }
 
     @Override
@@ -78,6 +82,22 @@ public class RemoteArena implements IArena
         this.worldId = worldId;
     }
 
+    public String getWorldDisplayName()
+    {
+        return worldDisplayName;
+    }
+    
+    public void setWorldDisplayName(String worldDisplayName)
+    {
+        this.worldDisplayName = worldDisplayName;
+    }
+    
+    @Override
+    public MetaStore getMetadata()
+    {
+        return metadata;
+    }
+    
     @Override
     public GamePhase getGamePhase()
     {

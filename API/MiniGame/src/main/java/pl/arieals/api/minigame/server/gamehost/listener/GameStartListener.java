@@ -56,19 +56,27 @@ public class GameStartListener implements Listener
     @EventHandler
     public void onLobbyInit(final LobbyInitEvent event)
     {
-        if ( event.getArena().getPlayersManager().isEnoughToStart() )
+        if ( event.getArena().isDynamic() )
         {
+            // jeżeli gra jest dynamiczna ustawiamy nazwe swiata na "Lobby"
+            event.getArena().getAsRemoteArena().setWorldId("");
+            event.getArena().getAsRemoteArena().setWorldDisplayName("Lobby");
+        }
+        
+        //if ( event.getArena().getPlayersManager().isEnoughToStart() )
+        //{
             // jeśli na arenie zostali gracze z poprzedniego cyklu i jest ich wystarczająca
             // ilosć to odpalamy odliczanie do startu
-            event.getArena().getStartScheduler().scheduleStart();
-        }
+        //    event.getArena().getStartScheduler().scheduleStart();
+        //}
     }
     
     @EventHandler
     public void onPlayerJoin(final PlayerJoinArenaEvent event)
     {
         final LocalArena arena = event.getArena();
-        if ( arena.getGamePhase() != GamePhase.LOBBY )
+        // jeżeli gra jest dynamiczna to start jest uzależniony od graczy zapisanych do gry a nie bedacych aktualnie na arenia
+        if ( arena.getGamePhase() != GamePhase.LOBBY || arena.isDynamic() )
         {
             return;
         }
@@ -83,7 +91,7 @@ public class GameStartListener implements Listener
     public void onPlayerQuit(final PlayerQuitArenaEvent event)
     {
         final LocalArena arena = event.getArena();
-        if ( arena.getGamePhase() != GamePhase.LOBBY)
+        if ( arena.getGamePhase() != GamePhase.LOBBY || arena.isDynamic() )
         {
             return;
         }

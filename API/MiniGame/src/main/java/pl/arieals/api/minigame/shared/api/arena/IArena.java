@@ -6,6 +6,7 @@ import java.util.UUID;
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.status.InGameStatus;
+import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 
 public interface IArena
@@ -48,6 +49,12 @@ public interface IArena
      * @return nazwa aktualnie zaladowanego swiata.
      */
     String getWorldId();
+    
+    /**
+     * 
+     * @return wyswietlana nazwa aktualnie zaladowanego swiata
+     */
+    String getWorldDisplayName();
 
     /**
      * Zwraca aktualny stan gry na danej arenie.
@@ -80,4 +87,11 @@ public interface IArena
     {
         return new InGameStatus(this.getServerId(), this.getId(), this.getMiniGame());
     }
+    
+    /**
+     * 
+     * @return zwraca obiekt metastore umozliwiajacy przypisanie metadaty do areny
+     */
+    MetaStore getMetadata();
+
 }

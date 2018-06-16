@@ -202,6 +202,12 @@ public class PlayersManager
 
     private boolean canJoin(final List<PlayerJoinInfo> players)
     {
+        // jeżeli gra jest dynamiczna pozwalamy wejsc wszystkim - to dana minigra musi obslyzyc zapis do gry we wlasnym zakresie
+        if ( this.arena.isDynamic() )
+        {
+            return true;
+        }
+        
         final MiniGameConfig miniGame = this.gameHostManager.getMiniGameConfig();
         final int normalSlots = miniGame.getSlots() - miniGame.getVipSlots();
 

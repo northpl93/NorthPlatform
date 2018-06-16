@@ -2,32 +2,29 @@ package pl.arieals.api.minigame.server.gamehost.arena;
 
 import static pl.arieals.api.minigame.shared.api.utils.InvalidGamePhaseException.checkGamePhase;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import com.google.common.base.Preconditions;
-
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+
+import com.google.common.base.Preconditions;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.MapSwitchedEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.MapSwitchedEvent.MapSwitchReason;
 import pl.arieals.api.minigame.server.gamehost.world.ILoadingProgress;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
-import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
-import pl.arieals.api.minigame.shared.api.cfg.GameMapConfig;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
-import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDataChangedNetEvent;
+import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
+import pl.arieals.api.minigame.shared.api.cfg.GameMapConfig;
 import pl.north93.zgame.api.bukkit.utils.ISyncCallback;
 import pl.north93.zgame.api.bukkit.utils.SimpleSyncCallback;
 
@@ -130,7 +127,8 @@ public class ArenaWorld
         final SimpleSyncCallback callback = new SimpleSyncCallback();
         progress.onComplete(() ->
         {
-            this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.arena.getId(), this.arena.getMiniGame(), template.getName(), this.arena.getGamePhase(), this.arena.getPlayers().size()));
+//            this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.arena.getId(), this.arena.getMiniGame(), template.getName(), this.arena.getGamePhase(), this.arena.getPlayers().size()));
+            this.arena.uploadRemoteData();
             Bukkit.getPluginManager().callEvent(new MapSwitchedEvent(this.arena, MapSwitchReason.ARENA_INITIALISE));
             callback.callComplete();
         });
@@ -143,6 +141,9 @@ public class ArenaWorld
         this.currentMapTemplate = newMapTemplate;
         this.currentWorld = newWorld;
         this.progress = progress;
+        
+        this.arena.getAsRemoteArena().setWorldId(currentMapTemplate.getName());
+        this.arena.getAsRemoteArena().setWorldDisplayName(currentMapTemplate.getDisplayName());
 
         for (final Map.Entry<String, String> gameRule : newMapTemplate.getMapConfig().getGameRules().entrySet())
         {
