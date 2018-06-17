@@ -5,6 +5,7 @@ import javax.xml.bind.JAXB;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -29,7 +30,6 @@ import org.apache.logging.log4j.Logger;
 import pl.arieals.api.minigame.server.gamehost.arena.IArenaData;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.GamePhase;
-import pl.arieals.api.minigame.shared.api.arena.StandardArenaMetaData;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.arena.structure.GoldChestStructure;
 import pl.arieals.minigame.goldhunter.player.GameTeam;
@@ -42,6 +42,8 @@ import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.zgame.api.global.messages.TranslatableString;
+import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.utils.lang.ListUtils;
 
 public class GoldHunterArena implements IArenaData, ITickable
@@ -222,7 +224,7 @@ public class GoldHunterArena implements IArenaData, ITickable
     {
         logger.debug("Arena gameEnd()");
         
-        localArena.getScheduler().runTaskLater(localArena::prepareNewCycle, 120);
+        localArena.getScheduler().runTaskLater(localArena::prepareNewCycle, 170);
     }
 
     public void gameInit()
@@ -356,14 +358,14 @@ public class GoldHunterArena implements IArenaData, ITickable
                 "team1Count", signedPlayers.get(GameTeam.RED).size(),
                 "team2Count", signedPlayers.get(GameTeam.BLUE).size());
         
-        localArena.getMetadata().set(StandardArenaMetaData.SIGNED_PLAYERS, signedPlayers.size());
+        localArena.getMetadata().set(MetaKey.get("signedPlayers"), signedPlayers.size());
         localArena.uploadRemoteData();
         
         if ( hasGame() && ( signedPlayers.get(GameTeam.RED).size() == 0 || signedPlayers.get(GameTeam.BLUE).size() == 0 ) )
         {
             if ( localArena.getGamePhase() == GamePhase.STARTED )
             {
-                walkover(signedPlayers.get(GameTeam.RED).size() == 0 ? GameTeam.BLUE : GameTeam.RED);
+                winGame(signedPlayers.get(GameTeam.RED).size() == 0 ? GameTeam.BLUE : GameTeam.RED);
             }
             
             localArena.setGamePhase(GamePhase.POST_GAME);
@@ -384,10 +386,10 @@ public class GoldHunterArena implements IArenaData, ITickable
         }
     }
     
-    private void walkover(GameTeam winTeam)
-    {
-        players.forEach(p -> p.sendSeparatedMessage("win_game.walkover", winTeam.getColoredBoldNominative().getValue(p.getPlayer()).toLegacyText().toUpperCase()));
-    }
+//    private void walkover(GameTeam winTeam)
+//    {
+//        players.forEach(p -> p.sendSeparatedMessage("win_game.walkover", winTeam.getColoredBoldNominative().getValue(p.getPlayer()).toLegacyText().toUpperCase()));
+//    }
     
     @Tick
     public void updateStartGameInfo()
@@ -445,30 +447,63 @@ public class GoldHunterArena implements IArenaData, ITickable
     {
         logger.debug("Team {} win game...", winnerTeam);
         
-        players.forEach(p ->
+        signedPlayers.values().forEach(p ->
         {
             p.getPlayer().setAllowFlight(true);
-            p.getStatsTracker().onWin(); // todo moze tak byc? wygrana zostanie zaliczona tylko tym ktorzy byli na koncu gry
+            p.getStatsTracker().onWin();
         });
-        displayWinMessage(winnerTeam);
+        
         localArena.setGamePhase(GamePhase.POST_GAME);
+        displayWinMessage(winnerTeam);
     }
     
     private void displayWinMessage(GameTeam winnerTeam)
     {
+        displayWonTitle(winnerTeam);
+        
+        localArena.getScheduler().runTaskLater(this::displayChestDestroyers, 0);
+        localArena.getScheduler().runTaskLater(this::displayKills, 60);
+        localArena.getScheduler().runTaskLater(this::displayRewards, 120);
+    }
+    
+    private void displayWonTitle(GameTeam winnerTeam)
+    {
+        TranslatableString teamName = winnerTeam.getColoredBoldNominative();
+        TranslatableString subtitle = TranslatableString.of(messages, "@win_game");
+        
+        players.stream().map(GoldHunterPlayer::getPlayer)
+                .forEach(p -> p.sendTitle(teamName.getLegacy(p.getLocale()).asString(), subtitle.getLegacy(p.getLocale()).asString(), 0, 80, 20));
+    }
+    
+    private void displayChestDestroyers()
+    {
+        // TODO:
+    }
+    
+    private void displayKills()
+    {
         ArrayList<GoldHunterPlayer> players = new ArrayList<>(this.players);
-        Collections.sort(players, (p1, p2) -> -Integer.compare(p1.getStatsTracker().getKills(), p2.getStatsTracker().getKills()));
+        Collections.sort(players, Comparator.comparing((GoldHunterPlayer p) -> p.getStatsTracker().getKills()));
         
         Optional<GoldHunterPlayer> first = ListUtils.getIfExists(players, 0);
         Optional<GoldHunterPlayer> second = ListUtils.getIfExists(players, 1);
         Optional<GoldHunterPlayer> third = ListUtils.getIfExists(players, 2);
         
-        players.forEach(p -> p.sendSeparatedMessage("win_game", winnerTeam.getColoredBoldNominative().getValue(p.getPlayer().getLocale()).toLegacyText().toUpperCase(),
+        players.forEach(p -> p.sendSeparatedMessage("kills_ranking",
                 first.map(GoldHunterPlayer::getDisplayName).orElse("&7&m------&r"), first.map(x -> x.getStatsTracker().getKills() + "").orElse(""),
                 second.map(GoldHunterPlayer::getDisplayName).orElse("&7&m------&r"), second.map(x -> x.getStatsTracker().getKills() + "").orElse(""),
                 third.map(GoldHunterPlayer::getDisplayName).orElse("&7&m------&r"), third.map(x -> x.getStatsTracker().getKills() + "").orElse("")));
-        
-        players.forEach(p -> localArena.getRewards().renderRewards(messages, p.getPlayer()));
+    }
+    
+    private void displayRewards()
+    {
+        for ( GoldHunterPlayer player : players )
+        {
+            player.sendMessage("separator");
+            player.sendCenteredMessage("rewards.header");
+            localArena.getRewards().renderRewards(messages, player.getPlayer());
+            player.sendMessage("separator");
+        }
     }
 
     public void broadcastDeath(GoldHunterPlayer goldHunterPlayer, GoldHunterPlayer lastDamager)
