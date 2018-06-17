@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.potion.PotionEffectType;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.deathmatch.DeathMatchLoadedEvent;
@@ -34,16 +35,24 @@ public class BwDeathMatchStartListener implements Listener
 
         for (final Player player : arena.getPlayersManager().getPlayers())
         {
-            final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
-            if (playerData == null)
-            {
-                continue;
-            }
-
-            while (playerData.getLives() > 0)
-            {
-                playerData.removeLife();
-            }
+            this.preparePlayerToDeathMatch(player);
         }
+    }
+
+    private void preparePlayerToDeathMatch(final Player player)
+    {
+        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        if (playerData == null)
+        {
+            return;
+        }
+
+        while (playerData.getLives() > 0)
+        {
+            playerData.removeLife();
+        }
+        
+        // usuwamy efekt nadany przez upgrade Healbot który powinien dzialac tylko na terenie bazy
+        player.removePotionEffect(PotionEffectType.REGENERATION);
     }
 }
