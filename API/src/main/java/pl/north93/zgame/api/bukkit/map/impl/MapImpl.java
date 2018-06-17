@@ -7,6 +7,7 @@ import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.toNmsEnt
 import javax.annotation.Nullable;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -72,7 +73,13 @@ class MapImpl implements IMap
      */
     public boolean isTrackedBy(final Player player)
     {
-        final EntityTrackerEntry trackerEntry = getTrackerEntry(this.getNmsEntity());
+        final Entity nmsEntity = this.getNmsEntity();
+        if (nmsEntity == null)
+        {
+            return false;
+        }
+
+        final EntityTrackerEntry trackerEntry = getTrackerEntry(nmsEntity);
         for (final EntityPlayer trackedPlayer : trackerEntry.trackedPlayers)
         {
             if (player.equals(trackedPlayer.getBukkitEntity()))
@@ -90,7 +97,13 @@ class MapImpl implements IMap
      */
     public Collection<Player> getTrackingPlayers()
     {
-        final EntityTrackerEntry trackerEntry = getTrackerEntry(this.getNmsEntity());
+        final Entity nmsEntity = this.getNmsEntity();
+        if (nmsEntity == null)
+        {
+            return Collections.emptyList();
+        }
+
+        final EntityTrackerEntry trackerEntry = getTrackerEntry(nmsEntity);
         return trackerEntry.trackedPlayers.stream().map(EntityPlayer::getBukkitEntity).collect(Collectors.toSet());
     }
 
