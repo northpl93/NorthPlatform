@@ -65,7 +65,7 @@ public class BedWarsSkeleton extends EntitySkeleton
 
         final BedWarsSkeleton bedWarsSkeleton = new BedWarsSkeleton(craftWorld.getHandle(), ownerTeam);
         bedWarsSkeleton.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-        craftWorld.addEntity(bedWarsSkeleton, CreatureSpawnEvent.SpawnReason.SPAWNER_EGG);
+        craftWorld.addEntity(bedWarsSkeleton, CreatureSpawnEvent.SpawnReason.CUSTOM);
 
         return (Skeleton) bedWarsSkeleton.bukkitEntity;
     }
