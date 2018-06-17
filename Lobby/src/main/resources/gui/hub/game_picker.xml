@@ -9,7 +9,7 @@
             </button>
 
             <button pos="3,2">
-            	<variable name="playersInGame" value="northplatform://lobby/ui/inGamePlayersCount/GoldHunter"/>
+            	<variable name="playersInGame" value="northplatform://lobby/ui/inGamePlayersCount/goldhunter"/>
                 <icon id="ENDER_CHEST" name="@gamegui.goldhunter.name" lore="@gamegui.goldhunter.lore$playersInGame"/>
                 <onClick>northplatform://lobby/ui/switchHub/goldhunter/$playerId</onClick>
             </button>
