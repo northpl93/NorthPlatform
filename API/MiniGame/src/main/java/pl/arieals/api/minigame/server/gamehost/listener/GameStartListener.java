@@ -16,6 +16,8 @@ import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEv
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
+import pl.arieals.api.minigame.shared.api.arena.StandardArenaMetaData;
 import pl.arieals.api.minigame.shared.api.match.IMatchAccess;
 import pl.arieals.api.minigame.shared.api.match.IMatchManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -59,8 +61,9 @@ public class GameStartListener implements Listener
         if ( event.getArena().isDynamic() )
         {
             // jeżeli gra jest dynamiczna ustawiamy nazwe swiata na "Lobby"
-            event.getArena().getAsRemoteArena().setWorldId("");
-            event.getArena().getAsRemoteArena().setWorldDisplayName("Lobby");
+            final RemoteArena remoteArena = event.getArena().getAsRemoteArena();
+            remoteArena.getMetadata().set(StandardArenaMetaData.WORLD_ID, "");
+            remoteArena.getMetadata().set(StandardArenaMetaData.WORLD_NAME, "Lobby");
         }
         
         //if ( event.getArena().getPlayersManager().isEnoughToStart() )

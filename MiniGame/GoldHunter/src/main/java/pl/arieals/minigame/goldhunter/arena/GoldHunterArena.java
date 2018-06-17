@@ -29,6 +29,7 @@ import org.apache.logging.log4j.Logger;
 import pl.arieals.api.minigame.server.gamehost.arena.IArenaData;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.arieals.api.minigame.shared.api.arena.StandardArenaMetaData;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.arena.structure.GoldChestStructure;
 import pl.arieals.minigame.goldhunter.player.GameTeam;
@@ -41,7 +42,6 @@ import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.utils.lang.ListUtils;
 
 public class GoldHunterArena implements IArenaData, ITickable
@@ -356,7 +356,7 @@ public class GoldHunterArena implements IArenaData, ITickable
                 "team1Count", signedPlayers.get(GameTeam.RED).size(),
                 "team2Count", signedPlayers.get(GameTeam.BLUE).size());
         
-        localArena.getMetadata().set(MetaKey.get("signedPlayers"), signedPlayers.size());
+        localArena.getMetadata().set(StandardArenaMetaData.SIGNED_PLAYERS, signedPlayers.size());
         localArena.uploadRemoteData();
         
         if ( hasGame() && ( signedPlayers.get(GameTeam.RED).size() == 0 || signedPlayers.get(GameTeam.BLUE).size() == 0 ) )

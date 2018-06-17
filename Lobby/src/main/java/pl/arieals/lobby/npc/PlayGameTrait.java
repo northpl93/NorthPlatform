@@ -42,9 +42,9 @@ public class PlayGameTrait extends Trait
             return;
         }
 
-        if ( isDynamic )
+        if (this.isDynamic)
         {
-            JoinDynamicGui.openForPlayerAndGame(event.getPlayer(), gameIdentity);
+            JoinDynamicGui.openForPlayerAndGame(event.getPlayer(), this.gameIdentity);
         }
         else
         {
@@ -60,9 +60,9 @@ public class PlayGameTrait extends Trait
             return;
         }
         
-        if ( isDynamic )
+        if (this.isDynamic)
         {
-            JoinDynamicGui.openForPlayerAndGame(event.getClicker(), gameIdentity);
+            JoinDynamicGui.openForPlayerAndGame(event.getClicker(), this.gameIdentity);
         }
         else
         {

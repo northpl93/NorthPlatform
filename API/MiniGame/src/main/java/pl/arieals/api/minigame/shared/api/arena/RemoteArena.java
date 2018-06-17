@@ -22,25 +22,22 @@ public class RemoteArena implements IArena
     private UUID         serverId;
     private GameIdentity miniGame;
     private Boolean      isDynamic;
-    private String       worldId;
     private GamePhase    gamePhase;
     private Integer      maxPlayers;
     @MsgPackCustomTemplate(HashSetTemplate.class)
     private Set<UUID>    players;
-    private String       worldDisplayName;
     private MetaStore    metadata;
 
     public RemoteArena()
     {
     }
 
-    public RemoteArena(final UUID arenaId, final UUID serverId, final GameIdentity miniGame, final Boolean isDynamic, final String worldId, final GamePhase gamePhase, final Integer maxPlayers, final Set<UUID> players)
+    public RemoteArena(final UUID arenaId, final UUID serverId, final GameIdentity miniGame, final Boolean isDynamic, final GamePhase gamePhase, final Integer maxPlayers, final Set<UUID> players)
     {
         this.arenaId = arenaId;
         this.serverId = serverId;
         this.miniGame = miniGame;
         this.isDynamic = isDynamic;
-        this.worldId = worldId;
         this.gamePhase = gamePhase;
         this.maxPlayers = maxPlayers;
         this.players = players;
@@ -70,32 +67,11 @@ public class RemoteArena implements IArena
     {
         return this.isDynamic;
     }
-
-    @Override
-    public String getWorldId()
-    {
-        return this.worldId;
-    }
-
-    public void setWorldId(final String worldId)
-    {
-        this.worldId = worldId;
-    }
-
-    public String getWorldDisplayName()
-    {
-        return worldDisplayName;
-    }
-    
-    public void setWorldDisplayName(String worldDisplayName)
-    {
-        this.worldDisplayName = worldDisplayName;
-    }
     
     @Override
     public MetaStore getMetadata()
     {
-        return metadata;
+        return this.metadata;
     }
     
     @Override
@@ -124,6 +100,6 @@ public class RemoteArena implements IArena
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("arenaId", this.arenaId).append("serverId", this.serverId).append("miniGame", this.miniGame).append("isDynamic", this.isDynamic).append("worldId", this.worldId).append("gamePhase", this.gamePhase).append("maxPlayers", this.maxPlayers).append("players", this.players).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("arenaId", this.arenaId).append("serverId", this.serverId).append("miniGame", this.miniGame).append("isDynamic", this.isDynamic).append("gamePhase", this.gamePhase).append("maxPlayers", this.maxPlayers).append("players", this.players).toString();
     }
 }

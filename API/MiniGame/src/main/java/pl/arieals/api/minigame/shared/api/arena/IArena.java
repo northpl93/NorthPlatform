@@ -44,19 +44,6 @@ public interface IArena
     boolean isDynamic();
 
     /**
-     * Zwraca nazwe aktualnie zaladowanego swiata na arenie.
-     *
-     * @return nazwa aktualnie zaladowanego swiata.
-     */
-    String getWorldId();
-    
-    /**
-     * 
-     * @return wyswietlana nazwa aktualnie zaladowanego swiata
-     */
-    String getWorldDisplayName();
-
-    /**
      * Zwraca aktualny stan gry na danej arenie.
      *
      * @return aktualny stan gry na danej arenie.
@@ -77,6 +64,25 @@ public interface IArena
      * @return maksymalna ilosc graczy na arenie.
      */
     int getMaxPlayers();
+
+    /**
+     * Zwraca nazwe aktualnie zaladowanego swiata na arenie.
+     *
+     * @return nazwa aktualnie zaladowanego swiata.
+     */
+    default String getWorldId()
+    {
+        return this.getMetadata().get(StandardArenaMetaData.WORLD_ID);
+    }
+
+    /**
+     *
+     * @return wyswietlana nazwa aktualnie zaladowanego swiata
+     */
+    default String getWorldDisplayName()
+    {
+        return this.getMetadata().get(StandardArenaMetaData.WORLD_NAME);
+    }
 
     /**
      * Zwraca obiekt statusu reprezentujący grę na tej arenie.

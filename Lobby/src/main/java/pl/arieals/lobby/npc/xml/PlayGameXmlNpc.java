@@ -28,7 +28,7 @@ public class PlayGameXmlNpc extends XmlNpc
     private PlayNpcNameHandler playNpcNameHandler;
     @XmlTransient
     @Inject
-    private IArenaClient arenaClient;
+    private IArenaClient       arenaClient;
     
     @XmlElement(required = true)
     private GameIdentity gameIdentity;
@@ -49,7 +49,7 @@ public class PlayGameXmlNpc extends XmlNpc
     protected void postSpawn(final NPC npc)
     {
         npc.addTrait(new TranslatedNameTrait());
-        playNpcNameHandler.updateName(npc);
+        this.playNpcNameHandler.updateName(npc);
     }
     
     @Override

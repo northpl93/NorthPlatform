@@ -385,8 +385,7 @@ public class LocalArena implements IArena
     {
         this.arenaManager.setArena(this.data);
         
-        //final String mapName = this.world.getCurrentMapTemplate() != null ? this.world.getCurrentMapTemplate().getName() : "Lobby";
-        this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.getId(), this.getMiniGame(), this.getWorldDisplayName(), getGamePhase(), this.data.getPlayers().size()));
+        this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.getId(), this.getMiniGame(), this.getWorldDisplayName(), this.getGamePhase(), this.data.getPlayers().size()));
     }
     
     @Override

@@ -54,7 +54,7 @@ public class LocalArenaManager
         final Boolean dynamic = miniGameConfig.isDynamic();
         final Integer maxPlayers = miniGameConfig.getSlots();
 
-        final RemoteArena arenaData = new RemoteArena(arenaId, serverId, miniGame, dynamic, "", GamePhase.INITIALISING, maxPlayers, new HashSet<>());
+        final RemoteArena arenaData = new RemoteArena(arenaId, serverId, miniGame, dynamic, GamePhase.INITIALISING, maxPlayers, new HashSet<>());
         final LocalArena localArena = new LocalArena(serverManager, arenaManager, arenaData);
         this.arenas.add(localArena);
         arenaManager.setArena(arenaData);
