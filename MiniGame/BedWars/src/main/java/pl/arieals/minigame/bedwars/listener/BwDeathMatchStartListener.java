@@ -51,7 +51,7 @@ public class BwDeathMatchStartListener implements Listener
         {
             playerData.removeLife();
         }
-        
+
         // usuwamy efekt nadany przez upgrade Healbot który powinien dzialac tylko na terenie bazy
         player.removePotionEffect(PotionEffectType.REGENERATION);
     }

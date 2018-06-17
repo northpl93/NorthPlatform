@@ -58,8 +58,8 @@ public class StatisticsManagerImpl implements IStatisticsManager
         final Document sort = statistic.getDbComposer().bestRecordQuery();
 
         final List<Document> aggregation = this.composeStatisticsAggregation(statistic, Arrays.asList(filters));
-        aggregation.add(new Document("$limit", size)); // limitujemy rozmiar przed kolejnym sortowaniem
         aggregation.add(new Document("$sort", sort)); // mongodb gubi kolejnosc po grupowaniu, wiec trzeba jeszcze raz posortowac
+        aggregation.add(new Document("$limit", size)); // limitujemy rozmiar przed pobraniem do klienta
 
         final CompletableFuture<IRanking> future = new CompletableFuture<>();
         this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
