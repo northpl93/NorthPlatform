@@ -158,7 +158,7 @@ public class SpecialAbilityTracker implements ITickable
         currentAbilityType.getHandler().onReady(player);
         
         //player.sendMessage("ability_ready");
-        player.getPlayer().sendTitle("", player.getMessage("info.use_ability"), 0, 100, 16);
+        player.sendActionBar("info.use_ability");
     }
     
     @Tick

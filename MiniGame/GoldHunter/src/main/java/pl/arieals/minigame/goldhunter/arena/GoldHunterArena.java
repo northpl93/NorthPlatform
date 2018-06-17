@@ -509,11 +509,11 @@ public class GoldHunterArena implements IArenaData, ITickable
     {
         if ( lastDamager != null )
         {
-            signedPlayers.values().forEach(p -> p.sendActionBar("kill_message", goldHunterPlayer.getDisplayNameBold(), lastDamager.getDisplayNameBold()));
+            broadcastMessageIngame("kill_message", goldHunterPlayer.getDisplayNameBold(), lastDamager.getDisplayNameBold());
         }
         else
         {
-            signedPlayers.values().forEach(p -> p.sendActionBar("death_message", goldHunterPlayer.getDisplayNameBold()));
+            broadcastMessageIngame("death_message", goldHunterPlayer.getDisplayNameBold());
         }
     }
     
