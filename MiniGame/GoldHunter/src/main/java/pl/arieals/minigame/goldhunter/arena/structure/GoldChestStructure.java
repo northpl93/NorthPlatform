@@ -52,6 +52,7 @@ public class GoldChestStructure extends Structure
         
         breakChestStructure();
         
+        destroyer.getStatsTracker().onChestDestroy();
         getArena().broadcastSeparatedMessageIngame("chest_destroy", destroyer.getDisplayNameBold(), team.getColoredBoldGenitive());
         getArena().updateChestsCount();
     }

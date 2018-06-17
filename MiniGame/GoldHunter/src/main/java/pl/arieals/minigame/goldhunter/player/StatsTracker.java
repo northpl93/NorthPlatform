@@ -116,6 +116,15 @@ public class StatsTracker implements ITickable
         holder.increment(new HigherNumberBetterStatistic("goldhunter/wins"), new NumberUnit(1L));
     }
     
+    public void onChestDestroy()
+    {
+        logger.debug("{} StatTracker#onChestDestroy()", player);
+        
+        player.addReward("chests", 25);
+        IStatisticHolder statisticHolder = statisticsManager.getPlayerHolder(player.getPlayer().getUniqueId());
+        statisticHolder.increment(new HigherNumberBetterStatistic("goldhunter/chestsDestroyed"), new NumberUnit(1L));
+    }
+    
     private void incrementKills()
     {
         kills++;
