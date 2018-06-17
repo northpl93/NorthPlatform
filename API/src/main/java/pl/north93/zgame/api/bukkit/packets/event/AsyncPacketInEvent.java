@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.bukkit.packets.event;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.server.v1_12_R1.Packet;
 
 import org.bukkit.entity.Player;
@@ -24,6 +26,7 @@ public final class AsyncPacketInEvent extends Event implements Cancellable
         this.packet = packet;
     }
 
+    @Nullable
     public Player getPlayer()
     {
         return this.player;

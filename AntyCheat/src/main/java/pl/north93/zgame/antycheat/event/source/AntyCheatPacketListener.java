@@ -32,9 +32,12 @@ public class AntyCheatPacketListener implements AutoListener
     public void onAsyncPacketIn(final AsyncPacketInEvent event)
     {
         final Player player = event.getPlayer();
-        final Packet packet = event.getPacket();
+        if (player == null)
+        {
+            return;
+        }
 
-        //Bukkit.broadcastMessage(packet + "");
+        final Packet packet = event.getPacket();
         if (packet instanceof PacketPlayInFlying)
         {
             final PacketPlayInFlying packetPlayInFlying = (PacketPlayInFlying) packet;
