@@ -42,6 +42,7 @@ public class ArenaScoreboardManager
     {
         GoldHunterScoreboardLayout layout = createLobbyScoreboardLayout(player);
         setScoreboardLayout(player, layout);
+        player.updateSkullsOnScoreboard();
     }
     
     private GoldHunterScoreboardLayout createLobbyScoreboardLayout(GoldHunterPlayer player)
