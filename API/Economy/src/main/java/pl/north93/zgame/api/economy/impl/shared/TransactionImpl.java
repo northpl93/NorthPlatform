@@ -13,13 +13,15 @@ class TransactionImpl implements ITransaction
     private final IPlayerTransaction  playerTransaction;
     private final PlayerAccessor      playerAccessor;
     private final CurrencyRankingImpl currencyRanking;
+    private final ListenerHelper      listener;
     private boolean isClosed;
 
-    public TransactionImpl(final ICurrency currency, final IPlayerTransaction playerTransaction, final CurrencyRankingImpl currencyRanking)
+    public TransactionImpl(final ICurrency currency, final IPlayerTransaction playerTransaction, final CurrencyRankingImpl currencyRanking, final ListenerHelper listener)
     {
         this.playerTransaction = playerTransaction;
         this.playerAccessor = new PlayerAccessor(playerTransaction.getPlayer(), currency);
         this.currencyRanking = currencyRanking;
+        this.listener = listener;
     }
 
     @Override
@@ -85,8 +87,12 @@ class TransactionImpl implements ITransaction
     {
         this.checkClosed();
 
+        // wywolujemy listenery
+        final IPlayer player = this.getAssociatedPlayer();
+        this.listener.amountUpdated(player, this.getCurrency(), this.getAmount());
+
         // aktualizujemy dane w rankingu
-        this.currencyRanking.update(this.getAssociatedPlayer().getUuid(), this.getAmount());
+        this.currencyRanking.update(player.getUuid(), this.getAmount());
 
         // zamykamy transakcje
         this.isClosed = true;

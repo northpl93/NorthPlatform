@@ -21,8 +21,6 @@
 
         <component>
             <name>API.Economy.VaultConnector</name>
-            <!-- powoduje bledy gdy nie ma zainstalowanego Vaulta. Na razie nie potrzebujemy vault. -->
-            <enabled>false</enabled>
             <mainClass>pl.north93.zgame.api.economy.impl.server.EconomyServerComponent</mainClass>
             <description>Connects economy API with Vault.</description>
             <dependencies>

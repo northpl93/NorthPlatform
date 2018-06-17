@@ -34,6 +34,8 @@ public class EconomyManagerImpl implements IEconomyManager
     private IObservationManager  observation;
     @Inject
     private INetworkManager      networkManager;
+    @Inject
+    private ListenerHelper       listenerHelper;
     // - - -
     private Value<EconomyConfig> config;
 
@@ -77,7 +79,7 @@ public class EconomyManagerImpl implements IEconomyManager
         Preconditions.checkNotNull(currency, "Currency can't be null");
         Preconditions.checkNotNull(identity, "Identity can't be null");
         final IPlayerTransaction transaction = this.networkManager.getPlayers().transaction(identity);
-        return new TransactionImpl(currency, transaction, this.getRanking(currency));
+        return new TransactionImpl(currency, transaction, this.getRanking(currency), this.listenerHelper);
     }
 
     public void setConfig(final EconomyConfig economyConfig)
