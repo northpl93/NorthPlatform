@@ -86,6 +86,11 @@ public class TranslatedNameTrait extends Trait
     
     private void updateHologram()
     {
+        if ( hologram == null )
+        {
+            return;
+        }
+        
         for (int i = 0; i < this.nameLines.length; i++)
         {
             final int messageId = this.nameLines.length - i - 1;
