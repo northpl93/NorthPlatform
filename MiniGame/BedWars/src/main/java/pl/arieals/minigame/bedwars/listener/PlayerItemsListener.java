@@ -21,6 +21,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -96,12 +97,31 @@ public class PlayerItemsListener implements Listener
         event.setKeepInventory(true);
 
         final ObjectIntMap<Material> trackedMaterials = new ObjectIntHashMap<>(5, 0.01f);
+        this.handleCursorItem(player, trackedMaterials);
+        this.handleInventoryItems(player.getInventory(), trackedMaterials);
 
-        final ListIterator<ItemStack> iterator = player.getInventory().iterator();
+        this.giveItemsToKiller(trackedMaterials, player);
+    }
+
+    private void handleCursorItem(final Player player, final ObjectIntMap<Material> trackedMaterials)
+    {
+        final ItemStack cursor = player.getItemOnCursor();
+        if (this.shouldSkipItem(cursor))
+        {
+            return;
+        }
+
+        this.addTrackedMaterial(trackedMaterials, cursor);
+        player.setItemOnCursor(null);
+    }
+
+    private void handleInventoryItems(final PlayerInventory inventory, final ObjectIntMap<Material> trackedMaterials)
+    {
+        final ListIterator<ItemStack> iterator = inventory.iterator();
         while (iterator.hasNext())
         {
             final ItemStack item = iterator.next();
-            if (item == null || item.getType() == Material.AIR)
+            if (this.shouldSkipItem(item))
             {
                 continue;
             }
@@ -113,16 +133,14 @@ public class PlayerItemsListener implements Listener
                 continue;
             }
 
-            if (this.shopManager.isItemPermanent(item))
-            {
-                continue;
-            }
-
             this.addTrackedMaterial(trackedMaterials, item);
-            player.getInventory().setItem(index, null);
+            inventory.setItem(index, null);
         }
+    }
 
-        this.giveItemsToKiller(trackedMaterials, player);
+    private boolean shouldSkipItem(final ItemStack item)
+    {
+        return item == null || item.getType() == Material.AIR || this.shopManager.isItemPermanent(item);
     }
 
     // dodaje sledzony material do mapy

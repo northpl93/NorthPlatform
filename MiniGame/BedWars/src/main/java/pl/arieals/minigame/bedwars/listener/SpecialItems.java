@@ -8,6 +8,7 @@ import static pl.north93.zgame.api.global.utils.lang.JavaUtils.instanceOf;
 
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.entity.EntityType;
@@ -166,7 +167,7 @@ public class SpecialItems implements Listener
         }
 
         final Skeleton skeleton = BedWarsSkeleton.create(clickedBlock.getLocation().add(0, 1, 0), playerData.getTeam());
-        skeleton.setMaxHealth(30);
+        skeleton.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(30);
         skeleton.setHealth(30);
 
         final Color color = TeamArmorUtils.chatColorToColor(playerData.getTeam().getColor());
