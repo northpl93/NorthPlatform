@@ -95,6 +95,8 @@ public class GoldHunterPlayer implements ITickable
     
     private boolean shadow;
     
+    private int gameTime;
+    
     public GoldHunterPlayer(Player player, GoldHunterArena arena)
     {
         this.player = player;
@@ -323,6 +325,8 @@ public class GoldHunterPlayer implements ITickable
         Preconditions.checkState(isIngame());
         logger.debug("{} exit game", this);
         
+        gameTime = 0;
+        
         team = null;
         currentClass = null;
         
@@ -511,6 +515,15 @@ public class GoldHunterPlayer implements ITickable
     }
     
     @Tick
+    private void updateGameTime()
+    {
+        if ( isIngame() )
+        {
+            gameTime++;
+        }
+    }
+    
+    @Tick
     private void updateNoFallDamageTicks()
     {
         if ( noFallDamageTicks > 0 )
@@ -624,7 +637,7 @@ public class GoldHunterPlayer implements ITickable
         {
             titleMessage = getMessage("info.sign_to_game");
         }
-        else if ( isIngame() && arena.isNearSpawn(team, player.getLocation().toVector(), 2.5) )
+        else if ( isIngame() && gameTime < 400 && arena.isNearSpawn(team, player.getLocation().toVector(), 2.5) )
         {
             titleMessage = getMessage("info.select_class");
         }
