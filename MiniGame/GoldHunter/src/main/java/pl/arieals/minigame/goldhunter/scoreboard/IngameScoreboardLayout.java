@@ -26,6 +26,8 @@ public class IngameScoreboardLayout extends GoldHunterScoreboardLayout
         
         String stats = context.get("stats") + "";
         
-        return Arrays.asList(player.getMessageLines("scoreboard_ingame", gameTime, team1Count, team2Count, team1Chests, team2Chests, stats));
+        String skulls = context.get("skulls") + "";
+        
+        return Arrays.asList(player.getMessageLines("scoreboard_ingame", gameTime, team1Count, team2Count, team1Chests, team2Chests, stats, skulls));
     }
 }

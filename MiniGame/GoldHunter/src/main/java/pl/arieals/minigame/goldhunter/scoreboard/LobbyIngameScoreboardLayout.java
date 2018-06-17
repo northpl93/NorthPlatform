@@ -21,6 +21,8 @@ public class LobbyIngameScoreboardLayout extends GoldHunterScoreboardLayout
         String team1Count = context.get("team1Count") + "";
         String team2Count = context.get("team2Count") + "";
         
-        return Arrays.asList(player.getMessageLines("scoreboard_lobby_ingame", gameTime, team1Count, team2Count));
+        String skulls = context.get("skulls") + "";
+        
+        return Arrays.asList(player.getMessageLines("scoreboard_lobby_ingame", gameTime, team1Count, team2Count, skulls));
     }
 }

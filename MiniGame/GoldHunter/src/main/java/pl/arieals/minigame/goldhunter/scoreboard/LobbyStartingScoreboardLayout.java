@@ -21,6 +21,8 @@ public class LobbyStartingScoreboardLayout extends GoldHunterScoreboardLayout
         String max = context.get("maxPlayers") + "";
         String counter = context.get("startCounter") + "";
         
-        return Arrays.asList(player.getMessageLines("scoreboard_lobby_starting", players, signed, max, counter));
+        String skulls = context.get("skulls") + "";
+        
+        return Arrays.asList(player.getMessageLines("scoreboard_lobby_starting", players, signed, max, counter, skulls));
     }
 }

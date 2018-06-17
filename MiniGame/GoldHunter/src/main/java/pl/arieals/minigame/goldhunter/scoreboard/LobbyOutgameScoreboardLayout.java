@@ -20,6 +20,8 @@ public class LobbyOutgameScoreboardLayout extends GoldHunterScoreboardLayout
         String signed = context.get("signedCount") + "";
         String max = context.get("maxPlayers") + "";
         
-        return Arrays.asList(this.player.getMessageLines("scoreboard_lobby_outgame", players, signed, max));
+        String skulls = context.get("skulls") + "";
+        
+        return Arrays.asList(this.player.getMessageLines("scoreboard_lobby_outgame", players, signed, max, skulls));
     }
 }

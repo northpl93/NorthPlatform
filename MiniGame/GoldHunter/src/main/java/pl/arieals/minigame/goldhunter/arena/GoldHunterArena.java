@@ -159,7 +159,6 @@ public class GoldHunterArena implements IArenaData, ITickable
         
         updatePlayersCount();
         
-        
         scoreboardManager.updateTeamColors();
         player.updateDisplayName();
     }
@@ -510,11 +509,11 @@ public class GoldHunterArena implements IArenaData, ITickable
     {
         if ( lastDamager != null )
         {
-            broadcastMessageIngame("kill_message", goldHunterPlayer.getDisplayNameBold(), lastDamager.getDisplayNameBold());
+            signedPlayers.values().forEach(p -> p.sendActionBar("kill_message", goldHunterPlayer.getDisplayNameBold(), lastDamager.getDisplayNameBold()));
         }
         else
         {
-            broadcastMessageIngame("death_message", goldHunterPlayer.getDisplayNameBold());
+            signedPlayers.values().forEach(p -> p.sendActionBar("death_message", goldHunterPlayer.getDisplayNameBold()));
         }
     }
     

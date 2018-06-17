@@ -44,6 +44,8 @@ import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
 import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
+import pl.north93.zgame.api.economy.ICurrency;
+import pl.north93.zgame.api.economy.IEconomyManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
@@ -70,6 +72,8 @@ public class GoldHunterPlayer implements ITickable
     @Inject
     @GoldHunterLogger
     private static Logger logger;
+    @Inject
+    private static IEconomyManager economyManager;
     
     private final SpecialAbilityTracker abilityTracker;
     private final EffectTracker effectTracker;
@@ -346,6 +350,7 @@ public class GoldHunterPlayer implements ITickable
         setupPlayerEntity();
         new LobbyHotbar(this).display(player);
         arena.getScoreboardManager().setLobbyScoreboardLayout(this);
+        updateSkullsOnScoreboard();
         
         teleportToLobby();
     }
@@ -367,6 +372,7 @@ public class GoldHunterPlayer implements ITickable
         guiManager.closeHotbarMenu(player);
         
         arena.getScoreboardManager().setIngameScoreboardLoayout(this);
+        updateSkullsOnScoreboard();
         
         statsTracker.clear();
         
@@ -481,6 +487,16 @@ public class GoldHunterPlayer implements ITickable
     public void addReward(String rewardId, double amount)
     {
         arena.getLocalArena().getRewards().addReward(Identity.of(player), new CurrencyReward(rewardId, "minigame", amount));
+        updateSkullsOnScoreboard(); // TODO: make an event
+    }
+    
+    public void updateSkullsOnScoreboard()
+    {
+        if ( scoreboardContext != null )
+        {
+            ICurrency currency = economyManager.getCurrency("minigame");
+            scoreboardContext.set("skulls", (int) economyManager.getUnsafeAccessor(currency, Identity.of(player)).getAmount());
+        }
     }
     
     public String getMessage(String msgKey, Object... args)
@@ -510,6 +526,11 @@ public class GoldHunterPlayer implements ITickable
     public void sendCenteredMessage(String msgKey, Object... args)
     {
         messages.sendMessage(player, msgKey, MessageLayout.CENTER, args);
+    }
+    
+    public void sendActionBar(String msgKey, Object... args)
+    {
+        player.sendActionBar(messages.getLegacyMessage(player.getLocale(), msgKey, args));
     }
     
     public void doubleJump()
