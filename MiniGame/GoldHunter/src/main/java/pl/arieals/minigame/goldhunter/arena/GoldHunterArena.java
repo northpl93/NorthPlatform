@@ -482,7 +482,7 @@ public class GoldHunterArena implements IArenaData, ITickable
     private void displayKills()
     {
         ArrayList<GoldHunterPlayer> players = new ArrayList<>(this.players);
-        Collections.sort(players, Comparator.comparing((GoldHunterPlayer p) -> p.getStatsTracker().getKills()));
+        Collections.sort(players, Comparator.comparing((GoldHunterPlayer p) -> p.getStatsTracker().getKills()).reversed());
         
         Optional<GoldHunterPlayer> first = ListUtils.getIfExists(players, 0);
         Optional<GoldHunterPlayer> second = ListUtils.getIfExists(players, 1);
