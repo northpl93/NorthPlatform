@@ -1,18 +1,18 @@
 package pl.arieals.minigame.goldhunter.listener;
 
-import org.bukkit.craftbukkit.v1_12_R1.util.CraftChatMessage;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-
-import io.netty.channel.Channel;
-
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.server.v1_12_R1.ChatComponentText;
 import net.minecraft.server.v1_12_R1.IChatBaseComponent;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
 
+import org.bukkit.craftbukkit.v1_12_R1.util.CraftChatMessage;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+
+import io.netty.channel.Channel;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.player.GameTeam;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
@@ -40,8 +40,14 @@ public class PlayerListPacketListener implements AutoListener
         
         PacketPlayOutPlayerInfo handle = (PacketPlayOutPlayerInfo) event.getPacket();
         WrapperPlayOutPlayerInfo packet = new WrapperPlayOutPlayerInfo(handle);
-        
-        GoldHunterPlayer player = goldHunter.getPlayer(event.getPlayer());
+
+        Player bukkitPlayer = event.getPlayer();
+        if ( bukkitPlayer == null )
+        {
+            return;
+        }
+
+        GoldHunterPlayer player = goldHunter.getPlayer(bukkitPlayer);
         if ( player == null )
         {
             return;

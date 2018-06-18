@@ -12,6 +12,8 @@ import net.minecraft.server.v1_12_R1.EntityHuman;
 import net.minecraft.server.v1_12_R1.IPlayerFileData;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 
+import com.google.common.base.Preconditions;
+
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
 import org.bukkit.entity.Player;
@@ -195,6 +197,7 @@ public class GameHostManager implements IServerManager
 
     public <T> T getPlayerData(final Player player, final Class<T> clazz)
     {
+        Preconditions.checkNotNull(player, "Player can't be null in getPlayerData");
         final List<MetadataValue> metadata = player.getMetadata(clazz.getName());
         if (metadata.isEmpty())
         {
@@ -206,6 +209,7 @@ public class GameHostManager implements IServerManager
 
     public void setPlayerData(final Player player, final Object data)
     {
+        Preconditions.checkNotNull(player, "Player can't be null in setPlayerData");
         player.setMetadata(data.getClass().getName(), new FixedMetadataValue(this.apiCore.getPluginMain(), data));
     }
 
