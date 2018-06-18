@@ -104,6 +104,9 @@ public class AttackTargetCheck implements EventAnalyser<InteractWithEntityTimeli
     // uzywa kilku lokalizacji z jednego ticku aby zmniejszyc prawdopodobienstwo pomylki
     private void additionalAttackWidthCheck(final PlayerData data, final PlayerTickInfo tickInfo, final AABB attackedAabb, final SingleAnalysisResult analysisResult)
     {
+        // todo na produkcji bardzo zbugowane (duzy spam false positive)
+        // spróbowac zamienic to na dwa wektory pola widzenia gracza i
+        // sprawdzanie czy wektor ataku jest wewnatrz
         final TimelineWalker walkerForScope = data.getTimeline().createWalkerForScope(TimelineAnalyserConfig.Scope.TICK);
 
         final ClientMoveTimelineEvent lastMovement = walkerForScope.last(ClientMoveTimelineEvent.class);

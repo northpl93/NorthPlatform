@@ -1,4 +1,4 @@
-package pl.north93.zgame.antycheat.client.monitor;
+package pl.north93.zgame.antycheat.client.monitor.action;
 
 import org.bukkit.entity.Player;
 
@@ -31,16 +31,24 @@ public class AlertAdminAction implements IAntyCheatAction
         this.adminChatService.broadcast(message);
     }
 
-    enum AlertLevel
+    public enum AlertLevel
     {
         WARNING
                 {
                     @Override
                     public BaseComponent composeMessage(final Player player, final String cheat)
                     {
-                        return ChatUtils.parseLegacyText("&c[CHEAT] {0} podejrzany o {1}", player.getName(), cheat);
+                        return ChatUtils.parseLegacyText("&c[PAC] &7{0} &c&l&m-&c&l> &6&l{1} &cI", player.getName(), cheat);
                     }
-                };
+                },
+        ALERT
+        {
+            @Override
+            public BaseComponent composeMessage(final Player player, final String cheat)
+            {
+                return ChatUtils.parseLegacyText("&c[PAC] &7{0} &c&l&m-&c&l> &6&l{1} &c&lII", player.getName(), cheat);
+            }
+        };
 
         public abstract BaseComponent composeMessage(Player player, String cheat);
     }

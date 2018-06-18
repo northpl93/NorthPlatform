@@ -18,6 +18,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 /*default*/ class AnalysisLogger
 {
+    private static final String  LOG_FORMAT    = "&cP: &e{0} &cV: &e{1} &cFPP: &e{2}\n&cD: &7{3}";
     private static final boolean DEBUG_TO_CHAT = false;
     @Inject
     private Logger logger;
@@ -41,8 +42,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
             final String nick = player.getName();
             final String violationName = violation.getViolation().name();
 
-            this.logLine(format("&cP: &e{0} &cV: &e{1} &cFPP: &e{2}", nick, violationName, probability));
-            this.logLine(format("&cD: &7{0}", violation.getDescription()));
+            this.logLine(format(LOG_FORMAT, nick, violationName, probability, violation.getDescription()));
         }
     }
 

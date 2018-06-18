@@ -37,6 +37,11 @@ public class SingleAnalysisResult
         return Collections.unmodifiableCollection(this.violations);
     }
 
+    public boolean isEmpty()
+    {
+        return this.violations.isEmpty();
+    }
+
     public final class ViolationEntry
     {
         private final Violation                violation;

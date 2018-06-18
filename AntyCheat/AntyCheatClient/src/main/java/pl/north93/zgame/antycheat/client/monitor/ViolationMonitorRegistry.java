@@ -3,7 +3,9 @@ package pl.north93.zgame.antycheat.client.monitor;
 import pl.north93.zgame.antycheat.analysis.impl.AnalysisManager;
 import pl.north93.zgame.antycheat.cheat.fight.FightViolation;
 import pl.north93.zgame.antycheat.cheat.movement.MovementViolation;
-import pl.north93.zgame.antycheat.client.monitor.AlertAdminAction.AlertLevel;
+import pl.north93.zgame.antycheat.client.monitor.action.AlertAdminAction;
+import pl.north93.zgame.antycheat.client.monitor.action.AlertAdminAction.AlertLevel;
+import pl.north93.zgame.antycheat.client.monitor.action.BanPlayerAction;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
 public class ViolationMonitorRegistry
@@ -22,32 +24,35 @@ public class ViolationMonitorRegistry
     {
         final WrappedViolationMonitor monitor = new WrappedViolationMonitor(analysisManager.createMonitor(MovementViolation.ON_GROUND_INCONSISTENCY, 4 * 20));
 
-        monitor.addAction(4, new AlertAdminAction(AlertLevel.WARNING, "no-fall (manipulacja on-ground)"));
-        // 8-10? ban
+        monitor.addAction(5, new AlertAdminAction(AlertLevel.WARNING, "no-fall"));
+        monitor.addAction(10, new AlertAdminAction(AlertLevel.ALERT, "no-fall"));
+        monitor.addAction(20, new BanPlayerAction());
     }
 
     private void survivalFly(final AnalysisManager analysisManager)
     {
         final WrappedViolationMonitor monitor = new WrappedViolationMonitor(analysisManager.createMonitor(MovementViolation.SURVIVAL_FLY, 4 * 20));
 
-        monitor.addAction(4, new AlertAdminAction(AlertLevel.WARNING, "fly/high-jump (niemozliwe ruchy)"));
+        monitor.addAction(5, new AlertAdminAction(AlertLevel.WARNING, "fly/high-jump"));
+        monitor.addAction(10, new AlertAdminAction(AlertLevel.ALERT, "fly/high-jump"));
+        monitor.addAction(20, new BanPlayerAction());
     }
 
     private void hitRatio(final AnalysisManager analysisManager)
     {
-        final WrappedViolationMonitor monitor = new WrappedViolationMonitor(analysisManager.createMonitor(FightViolation.HIT_RATIO, 15 * 20));
+        final WrappedViolationMonitor monitor = new WrappedViolationMonitor(analysisManager.createMonitor(FightViolation.HIT_RATIO, 10 * 20)); // todo AttackFrequencyCheck testujemy 5->1, przywrocic 15
 
-        monitor.addAction(3, new AlertAdminAction(AlertLevel.WARNING, "clicker/aura (podejrzana czestotliwosc uderzen)"));
-
-        // 6 ban - maksymalna ilosc punktów to 18
+        monitor.addAction(3, new AlertAdminAction(AlertLevel.WARNING, "clicker/aura"));
+        monitor.addAction(6, new AlertAdminAction(AlertLevel.ALERT, "clicker/aura"));
+        monitor.addAction(10, new BanPlayerAction());
     }
 
     private void hitTarget(final AnalysisManager analysisManager)
     {
         final WrappedViolationMonitor monitor = new WrappedViolationMonitor(analysisManager.createMonitor(FightViolation.HIT_TARGET, 5 * 20));
 
-        monitor.addAction(2, new AlertAdminAction(AlertLevel.WARNING, "aura (duzy dystans/bicie przez sciany)"));
-
-        // 5 ban?
+        monitor.addAction(3, new AlertAdminAction(AlertLevel.WARNING, "aura"));
+        monitor.addAction(6, new AlertAdminAction(AlertLevel.ALERT, "aura"));
+        monitor.addAction(10, new BanPlayerAction());
     }
 }

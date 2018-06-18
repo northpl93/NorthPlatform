@@ -39,6 +39,7 @@ public class SpectatorListener implements Listener
 
         final Player player = event.getPlayer();
 
+        player.setCollidable(false);
         player.setVisible(false);
         player.setAllowFlight(true);
         player.setFlying(true);
@@ -54,6 +55,7 @@ public class SpectatorListener implements Listener
 
         final Player player = event.getPlayer();
 
+        player.setCollidable(true);
         player.setVisible(true);
         player.setAllowFlight(false);
         player.setFlying(false);

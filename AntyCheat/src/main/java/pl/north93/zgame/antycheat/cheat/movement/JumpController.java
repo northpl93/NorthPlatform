@@ -18,6 +18,7 @@ import pl.north93.zgame.antycheat.timeline.PlayerProperties;
 import pl.north93.zgame.antycheat.timeline.PlayerTickInfo;
 import pl.north93.zgame.antycheat.utils.DistanceUtils;
 import pl.north93.zgame.antycheat.utils.EntityUtils;
+import pl.north93.zgame.antycheat.utils.PlayerUtils;
 import pl.north93.zgame.antycheat.utils.location.RichEntityLocation;
 
 public class JumpController
@@ -90,6 +91,13 @@ public class JumpController
         {
             return SingleAnalysisResult.EMPTY;
         }
+
+        if (! singleAnalysisResult.isEmpty())
+        {
+            // todo klientowi czasami odwala i wyglada jakby chodzil szybciej niz moze
+            PlayerUtils.updateProperties(event.getOwner());
+        }
+
         return singleAnalysisResult;
     }
 
@@ -274,8 +282,6 @@ public class JumpController
         final double horizontalExceeded = horizontalDistanceFromStart - expectedHorizontalDistance;
         if (horizontalExceeded > 1)
         {
-            System.out.println("horizontalDistanceFromStart = " + horizontalDistanceFromStart);
-            System.out.println("horizontalDistanceFromStart = " + expectedHorizontalDistance);
             result.addViolation(MovementViolation.SURVIVAL_FLY, HORIZONTAL_RISING_EXCEEDED, FalsePositiveProbability.LOW);
         }
         else if (horizontalExceeded > 0.5)
@@ -285,6 +291,12 @@ public class JumpController
         else if (horizontalExceeded > 0.25)
         {
             result.addViolation(MovementViolation.SURVIVAL_FLY, HORIZONTAL_RISING_EXCEEDED, FalsePositiveProbability.HIGH);
+        }
+
+        if (horizontalExceeded > 0.25)
+        {
+            // todo debug
+            System.out.println("horizontalDistanceFromStart=" + horizontalDistanceFromStart + " expectedHorizontalDistance=" + expectedHorizontalDistance);
         }
 
         // porównujemy wektor ruchu w tym evencie do początkowego wektora ruchu

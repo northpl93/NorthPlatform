@@ -1,4 +1,4 @@
-package pl.north93.zgame.antycheat.client.monitor;
+package pl.north93.zgame.antycheat.client.monitor.action;
 
 import org.bukkit.entity.Player;
 

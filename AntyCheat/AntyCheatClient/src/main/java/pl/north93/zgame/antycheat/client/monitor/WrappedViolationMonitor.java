@@ -9,6 +9,7 @@ import pl.north93.zgame.antycheat.analysis.reaction.DefaultViolationMapper;
 import pl.north93.zgame.antycheat.analysis.reaction.ITriggerListener;
 import pl.north93.zgame.antycheat.analysis.reaction.IViolationMonitor;
 import pl.north93.zgame.antycheat.analysis.reaction.MappedPointsCondition;
+import pl.north93.zgame.antycheat.client.monitor.action.IAntyCheatAction;
 
 public final class WrappedViolationMonitor
 {

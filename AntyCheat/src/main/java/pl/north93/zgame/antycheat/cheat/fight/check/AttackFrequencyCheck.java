@@ -23,7 +23,7 @@ public class AttackFrequencyCheck implements TimelineAnalyser
     @Override
     public void configure(final TimelineAnalyserConfig config)
     {
-        config.setScope(TimelineAnalyserConfig.Scope.FIVE_SECONDS);
+        config.setScope(TimelineAnalyserConfig.Scope.SECOND); // todo testujemy jedna sekunde
     }
 
     @Override
