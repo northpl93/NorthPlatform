@@ -179,6 +179,7 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
         }
 
         final String latestKnownUsername = result.getString("latestKnownUsername");
+        final boolean premium = result.getBoolean("premium", true);
         final String displayName = result.getString("displayName");
         final Group group = this.permissionsManager.getGroupByName(result.getString("group"));
         final long groupExpireAt = result.getLong("groupExpireAt");
@@ -200,7 +201,7 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
             playerMeta.put(MetaKey.get(entry.getKey()), value);
         }
 
-        return new OfflinePlayerImpl(result.get("uuid", UUID.class), latestKnownUsername, displayName, group, groupExpireAt, store);
+        return new OfflinePlayerImpl(result.get("uuid", UUID.class), premium, latestKnownUsername, displayName, group, groupExpireAt, store);
     }
 
     @Override
@@ -210,6 +211,7 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
 
         playerData.put("savedAt", System.currentTimeMillis());
         playerData.put("uuid", player.getUuid());
+        playerData.put("premium", player.isPremium());
         playerData.put("group", player.getGroup().getName());
         playerData.put("groupExpireAt", player.getGroupExpireAt());
         playerData.put("displayName", player.hasDisplayName() ? player.getDisplayName() : null);

@@ -30,8 +30,6 @@ public interface IOnlinePlayer extends IPlayer, ProvidingRedisKey, Messageable
 
     void setServerId(UUID serverId);
 
-    boolean isPremium();
-
     void kick(BaseComponent message);
 
     void connectTo(ServerProxyData server, IServerJoinAction... actions);

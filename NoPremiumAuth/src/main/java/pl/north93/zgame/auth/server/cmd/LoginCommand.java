@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.mindrot.jbcrypt.BCrypt;
 
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
@@ -17,25 +16,20 @@ import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.auth.api.player.AuthPlayer;
-import pl.north93.zgame.auth.server.AuthServerComponent;
-import pl.north93.zgame.auth.sharedimpl.AuthManagerImpl;
+import pl.north93.zgame.api.global.network.players.Identity;
+import pl.north93.zgame.auth.api.IAuthManager;
+import pl.north93.zgame.auth.api.IAuthPlayer;
 
-public class LoginCmd extends NorthCommand
+public class LoginCommand extends NorthCommand
 {
-    @Inject
-    private INetworkManager     networkManager;
     @Inject @Messages("NoPremiumAuth")
-    private MessagesBox         messages;
+    private MessagesBox  messages;
     @Inject
-    private AuthServerComponent authServer;
+    private IAuthManager authManager;
     @Inject
-    private Logger              logger;
+    private Logger       logger;
 
-    public LoginCmd()
+    public LoginCommand()
     {
         super("login", "l", "zaloguj");
         this.setAsync(true);
@@ -44,16 +38,14 @@ public class LoginCmd extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        final AuthManagerImpl authManager = this.authServer.getAuthManager();
         final Player player = (Player) sender.unwrapped();
-        if (authManager.isLoggedIn(player.getUniqueId()))
+        if (this.authManager.isLoggedIn(player.getName()))
         {
             sender.sendMessage(this.messages, "error.already_logged_in");
             return;
         }
 
-        final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getPlayers().unsafe().getOnline(player.getName());
-        final AuthPlayer authPlayer = AuthPlayer.get(onlinePlayer);
+        final IAuthPlayer authPlayer = this.authManager.getPlayer(Identity.of(player));
         if (! authPlayer.isRegistered())
         {
             sender.sendMessage(this.messages, "error.register_first");
@@ -66,14 +58,14 @@ public class LoginCmd extends NorthCommand
             return;
         }
 
-        if (! BCrypt.checkpw(args.asString(0), authPlayer.getPassword()))
+        if (! authPlayer.checkPassword(args.asString(0)))
         {
             this.logger.info(format("User {0} specified invalid password!", player.getName()));
             sender.sendMessage(this.messages, "error.password_does_not_match");
             return;
         }
 
-        authManager.setLoggedInStatus(player.getUniqueId(), true);
+        this.authManager.setLoggedInStatus(Identity.of(player), true);
         this.logger.info(format("User {0} successfully logged-in! (no-premium password)", player.getName()));
         sender.sendMessage(this.messages, "info.successfully_logged");
     }

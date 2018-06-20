@@ -38,23 +38,24 @@ public class BungeeCommandsManager implements ICommandsManager
 
         public WrappedCommand(final NorthCommand northCommand)
         {
-            super(northCommand.getName(), northCommand.getPermission(), northCommand.getAliases().toArray(new String[]{}));
+            super(northCommand.getName(), northCommand.getPermission(), northCommand.getAliases().toArray(new String[0]));
             this.northCommand = northCommand;
         }
 
         @Override
         public void execute(final CommandSender commandSender, final String[] strings)
         {
+            final String label = this.northCommand.getName();
             if (this.northCommand.isAsync())
             {
                 API.getApiCore().getPlatformConnector().runTaskAsynchronously(() ->
                 {
-                    this.northCommand.execute(new WrappedSender(commandSender), new Arguments(strings), ""); // TODO
+                    this.northCommand.execute(new WrappedSender(commandSender), new Arguments(strings), label);
                 });
             }
             else
             {
-                this.northCommand.execute(new WrappedSender(commandSender), new Arguments(strings), ""); // TODO
+                this.northCommand.execute(new WrappedSender(commandSender), new Arguments(strings), label);
             }
         }
 

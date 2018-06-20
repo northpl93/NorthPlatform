@@ -28,6 +28,13 @@ public interface IPlayer extends Metadatable
     Identity getIdentity();
 
     /**
+     * Określa czy to konto zostało utworzone w online-mode.
+     *
+     * @return True jeśli to jest konto online-mode.
+     */
+    boolean isPremium();
+
+    /**
      * Sprawdza czy dany gracz ma ustawiona niestandardowa nazwe
      * wyswietlana.
      * @return true jesli gracz ma niestandardowa nazwe wyswietlana.

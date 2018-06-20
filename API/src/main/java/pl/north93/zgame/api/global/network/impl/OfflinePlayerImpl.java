@@ -13,6 +13,7 @@ import pl.north93.zgame.api.global.permissions.Group;
 public class OfflinePlayerImpl implements IOfflinePlayer
 {
     private UUID    uuid;
+    private Boolean premium;
     private String  latestNick;
     private String  displayName;
     private Group   group;
@@ -23,9 +24,10 @@ public class OfflinePlayerImpl implements IOfflinePlayer
     {
     }
 
-    public OfflinePlayerImpl(final UUID uuid, final String latestNick, final String displayName, final Group group, final Long groupExpireAt, final MetaStore meta)
+    public OfflinePlayerImpl(final UUID uuid, final Boolean premium, final String latestNick, final String displayName, final Group group, final Long groupExpireAt, final MetaStore meta)
     {
         this.uuid = uuid;
+        this.premium = premium;
         this.latestNick = latestNick;
         this.displayName = displayName;
         this.group = group;
@@ -36,6 +38,7 @@ public class OfflinePlayerImpl implements IOfflinePlayer
     public OfflinePlayerImpl(final IOnlinePlayer onlinePlayer)
     {
         this.uuid = onlinePlayer.getUuid();
+        this.premium = onlinePlayer.isPremium();
         this.latestNick = onlinePlayer.getLatestNick();
         if (onlinePlayer.hasDisplayName())
         {
@@ -56,6 +59,12 @@ public class OfflinePlayerImpl implements IOfflinePlayer
     public UUID getUuid()
     {
         return this.uuid;
+    }
+
+    @Override
+    public boolean isPremium()
+    {
+        return this.premium;
     }
 
     @Override

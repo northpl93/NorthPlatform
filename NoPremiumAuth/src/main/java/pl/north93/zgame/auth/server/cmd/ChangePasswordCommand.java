@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.mindrot.jbcrypt.BCrypt;
 
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
@@ -17,24 +16,20 @@ import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.redis.observable.Value;
-import pl.north93.zgame.auth.api.player.AuthPlayer;
-import pl.north93.zgame.auth.server.AuthServerComponent;
+import pl.north93.zgame.api.global.network.players.Identity;
+import pl.north93.zgame.auth.api.IAuthManager;
+import pl.north93.zgame.auth.api.IAuthPlayer;
 
-public class ChangePasswordCmd extends NorthCommand
+public class ChangePasswordCommand extends NorthCommand
 {
-    @Inject
-    private INetworkManager     networkManager;
     @Inject @Messages("NoPremiumAuth")
-    private MessagesBox         messages;
+    private MessagesBox  messages;
     @Inject
-    private AuthServerComponent authServer;
+    private IAuthManager authManager;
     @Inject
-    private Logger              logger;
+    private Logger       logger;
 
-    public ChangePasswordCmd()
+    public ChangePasswordCommand()
     {
         super("changepassword", "zmienhaslo");
         this.setAsync(true);
@@ -44,10 +39,9 @@ public class ChangePasswordCmd extends NorthCommand
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
         final Player player = (Player) sender.unwrapped();
-        final Value<IOnlinePlayer> onlinePlayer = this.networkManager.getPlayers().unsafe().getOnline(player.getName());
-        final AuthPlayer authPlayer = AuthPlayer.get(onlinePlayer);
+        final IAuthPlayer authPlayer = this.authManager.getPlayer(Identity.of(player));
 
-        if (! authPlayer.isRegistered())
+        if (authPlayer.isPremium() || ! authPlayer.isRegistered())
         {
             sender.sendMessage(this.messages, "error.premium_cant_change_password");
             return;
@@ -59,14 +53,14 @@ public class ChangePasswordCmd extends NorthCommand
             return;
         }
 
-        if (! BCrypt.checkpw(args.asString(0), authPlayer.getPassword()))
+        if (! authPlayer.checkPassword(args.asString(0)))
         {
-            this.logger.info(format("User {0} specified invalid old password", player.getName()));
+            this.logger.info(format("User {0} specified invalid old password (no-premium password)", player.getName()));
             sender.sendMessage(this.messages, "cmd.changepassword.old_password_not_match");
             return;
         }
 
-        authPlayer.setPassword(BCrypt.hashpw(args.asString(1), BCrypt.gensalt()));
+        authPlayer.setPassword(args.asString(1));
         this.logger.info(format("User {0} successfully changed password! (no-premium password)", player.getName()));
         sender.sendMessage(this.messages, "cmd.changepassword.success");
     }

@@ -1,12 +1,14 @@
 package pl.north93.zgame.auth.api;
 
-import java.util.UUID;
+import pl.north93.zgame.api.global.network.players.Identity;
 
 public interface IAuthManager
 {
-    boolean isLoggedIn(UUID uuid);
+    IAuthPlayer getPlayer(Identity identity);
 
-    void setLoggedInStatus(UUID uuid, boolean status);
+    boolean isLoggedIn(String name);
 
-    void deleteStatus(UUID uuid);
+    void setLoggedInStatus(Identity identity, boolean status);
+
+    void deleteStatus(Identity identity);
 }

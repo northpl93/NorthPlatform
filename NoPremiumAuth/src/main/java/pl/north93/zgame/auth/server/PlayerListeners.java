@@ -1,11 +1,13 @@
 package pl.north93.zgame.auth.server;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -20,37 +22,41 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
+import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.auth.api.IAuthManager;
-import pl.north93.zgame.auth.api.player.AuthPlayer;
+import pl.north93.zgame.auth.api.IAuthPlayer;
 
-public class PlayerListeners implements Listener
+public class PlayerListeners implements AutoListener
 {
+    private final List<String> allowedCommands;
     @Inject
     private INetworkManager networkManager;
     @Inject @Messages("NoPremiumAuth")
     private MessagesBox     messages;
     private IAuthManager    authManager;
 
-    public PlayerListeners(final IAuthManager authManager)
+    private PlayerListeners(final IAuthManager authManager)
     {
+        this.allowedCommands = Arrays.asList("/login", "/zaloguj", "/l", "/register", "/zarejestruj");
         this.authManager = authManager;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(final PlayerJoinEvent event)
     {
         final Player player = event.getPlayer();
-        if (this.authManager.isLoggedIn(player.getUniqueId()))
+        if (this.authManager.isLoggedIn(player.getName()))
         {
             return;
         }
 
-        final AuthPlayer authPlayer = AuthPlayer.get(this.networkManager.getPlayers().unsafe().getOnline(player.getName()));
+        final IAuthPlayer authPlayer = this.authManager.getPlayer(Identity.of(player));
 
         this.sendMessage(player, "separator");
         if (authPlayer.isRegistered())
@@ -64,29 +70,27 @@ public class PlayerListeners implements Listener
         this.sendMessage(player, "separator");
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onChat(final AsyncPlayerChatEvent event)
     {
         final Player player = event.getPlayer();
-        if (! this.authManager.isLoggedIn(player.getUniqueId()))
+        if (! this.authManager.isLoggedIn(player.getName()))
         {
             this.sendMessage(event.getPlayer(), "error.first_login_or_register");
             event.setCancelled(true);
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCommand(final PlayerCommandPreprocessEvent event)
     {
-        if (this.authManager.isLoggedIn(event.getPlayer().getUniqueId()))
+        if (this.authManager.isLoggedIn(event.getPlayer().getName()))
         {
             return;
         }
 
         final String cmd = StringUtils.split(event.getMessage(), ' ')[0];
-
-        if (cmd.equalsIgnoreCase("/l") || cmd.equalsIgnoreCase("/login") || cmd.equalsIgnoreCase("/zaloguj") ||
-                    cmd.equalsIgnoreCase("/register") || cmd.equalsIgnoreCase("/zarejestruj"))
+        if (this.allowedCommands.contains(cmd))
         {
             return;
         }
@@ -95,7 +99,7 @@ public class PlayerListeners implements Listener
         this.sendMessage(event.getPlayer(), "error.first_login_or_register");
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onMove(final PlayerMoveEvent event)
     {
         final Location from = event.getFrom();
@@ -107,7 +111,7 @@ public class PlayerListeners implements Listener
         }
 
         final Player player = event.getPlayer();
-        if (this.authManager.isLoggedIn(player.getUniqueId()))
+        if (this.authManager.isLoggedIn(player.getName()))
         {
             return;
         }
@@ -115,52 +119,52 @@ public class PlayerListeners implements Listener
         event.setCancelled(true);
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onInventoryClick(final InventoryClickEvent event)
     {
         final HumanEntity player = event.getWhoClicked();
-        if (! this.authManager.isLoggedIn(player.getUniqueId()))
+        if (! this.authManager.isLoggedIn(player.getName()))
         {
             event.setCancelled(true);
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onItemDrop(final PlayerDropItemEvent event)
     {
         final Player player = event.getPlayer();
-        if (! this.authManager.isLoggedIn(player.getUniqueId()))
+        if (! this.authManager.isLoggedIn(player.getName()))
         {
             this.sendMessage(event.getPlayer(), "error.first_login_or_register");
             event.setCancelled(true);
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHeldItemChange(final PlayerItemHeldEvent event)
     {
         final Player player = event.getPlayer();
-        if (! this.authManager.isLoggedIn(player.getUniqueId()))
+        if (! this.authManager.isLoggedIn(player.getName()))
         {
             event.setCancelled(true);
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEat(final PlayerItemConsumeEvent event)
     {
         final Player player = event.getPlayer();
-        if (! this.authManager.isLoggedIn(player.getUniqueId()))
+        if (! this.authManager.isLoggedIn(player.getName()))
         {
             event.setCancelled(true);
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onInteract(final PlayerInteractEvent event)
     {
         final Player player = event.getPlayer();
-        if (! this.authManager.isLoggedIn(player.getUniqueId()))
+        if (! this.authManager.isLoggedIn(player.getName()))
         {
             this.sendMessage(event.getPlayer(), "error.first_login_or_register");
             event.setCancelled(true);

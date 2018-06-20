@@ -1,51 +1,84 @@
 package pl.north93.zgame.auth.sharedimpl;
 
-import java.util.UUID;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.redis.observable.Cache;
-import pl.north93.zgame.api.global.redis.observable.IObservationManager;
-import pl.north93.zgame.api.global.redis.observable.ObjectKey;
+import pl.north93.zgame.api.global.metadata.MetaStore;
+import pl.north93.zgame.api.global.network.INetworkManager;
+import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
+import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
+import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.auth.api.IAuthManager;
+import pl.north93.zgame.auth.api.IAuthPlayer;
 
-public class AuthManagerImpl implements IAuthManager
+/*default*/ class AuthManagerImpl implements IAuthManager
 {
     @Inject
-    private IObservationManager  observer;
-    private Cache<UUID, Boolean> logInStatus;
+    private INetworkManager networkManager;
 
-    public AuthManagerImpl()
+    @Bean
+    private AuthManagerImpl()
     {
-        this.logInStatus = this.observer.cacheBuilder(UUID.class, Boolean.class)
-                                        .name("auth:")
-                                        .keyMapper(key -> new ObjectKey(key.toString()))
-                                        .build();
     }
 
     @Override
-    public boolean isLoggedIn(final UUID uuid)
+    public IAuthPlayer getPlayer(final Identity identity)
     {
-        final Boolean isAuth = this.logInStatus.getValue(uuid).get();
-        if (isAuth == null)
+        return new AuthPlayerImpl(this.networkManager, identity);
+    }
+
+    @Override
+    public boolean isLoggedIn(final String name)
+    {
+        final IOnlinePlayer player = this.networkManager.getPlayers().unsafe().getOnline(name).get();
+        if (player == null)
         {
             return false;
         }
-        return isAuth;
+        else if (player.isPremium())
+        {
+            return true;
+        }
+
+        final MetaStore metaStore = player.getMetaStore();
+        if (metaStore.contains(IAuthPlayer.LOGGED_IN))
+        {
+            return metaStore.get(IAuthPlayer.LOGGED_IN);
+        }
+
+        return false;
     }
 
     @Override
-    public void setLoggedInStatus(final UUID uuid, final boolean status)
+    public void setLoggedInStatus(final Identity identity, final boolean status)
     {
-        this.logInStatus.put(uuid, status);
+        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(identity))
+        {
+            if (t.isOffline())
+            {
+                return;
+            }
+
+            final MetaStore metaStore = t.getPlayer().getMetaStore();
+            metaStore.set(IAuthPlayer.LOGGED_IN, status);
+        }
     }
 
     @Override
-    public void deleteStatus(final UUID uuid)
+    public void deleteStatus(final Identity identity)
     {
-        this.logInStatus.remove(uuid);
+        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(identity))
+        {
+            if (t.isOffline())
+            {
+                return;
+            }
+
+            final MetaStore metaStore = t.getPlayer().getMetaStore();
+            metaStore.remove(IAuthPlayer.LOGGED_IN);
+        }
     }
 
     @Override
