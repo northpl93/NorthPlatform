@@ -185,7 +185,7 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
         entry.onCloseInventory();
     }
     
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event)
     {
         GuiTrackerEntry entry = getEntry((Player) event.getWhoClicked());
@@ -241,7 +241,7 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent event)
     {
         if ( event.getAction() == Action.PHYSICAL )

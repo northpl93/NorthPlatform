@@ -21,7 +21,7 @@ public class AsyncChatListener implements AutoListener
     @Inject
     private ChatEngine    chatEngine;
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void routeChat(final AsyncPlayerChatEvent event)
     {
         event.setCancelled(true);
