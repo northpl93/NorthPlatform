@@ -3,13 +3,12 @@ package pl.north93.zgame.features.bukkit.server;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.bukkit.selections.Selection;
+
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.bukkit.selections.Selection;
 
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlChunk;
@@ -45,7 +44,7 @@ public class WorldTrim extends NorthCommand
 		
 		if ( args.length() != 1 )
 		{
-			sender.sendMessage(messages, "command.usage", "<target>");
+			sender.sendMessage(messages, "command.usage", label, "<target>");
 			return;
 		}
 		

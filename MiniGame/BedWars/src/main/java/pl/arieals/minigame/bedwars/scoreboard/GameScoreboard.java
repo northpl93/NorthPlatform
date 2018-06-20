@@ -127,7 +127,7 @@ public class GameScoreboard implements IScoreboardLayout
 
     private void buildTeamList(final ContentBuilder builder, final BedWarsArena arenaData, final Player renderingPlayer)
     {
-        final String locale = renderingPlayer.spigot().getLocale();
+        final String locale = renderingPlayer.getLocale();
 
         builder.add("");
         arenaData.getTeams().stream().sorted(comparing(Team::getScoreboardOrder)).forEach(team ->

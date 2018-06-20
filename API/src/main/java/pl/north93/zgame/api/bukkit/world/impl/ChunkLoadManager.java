@@ -16,7 +16,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
 public class ChunkLoadManager implements ITickable
 {
-    private static final int MIN_MEMORY = 196 * 1024 * 1024;
+    private static final int MIN_MEMORY = 128 * 1024 * 1024;
     
     private static final Logger logger = LogManager.getLogger();
     

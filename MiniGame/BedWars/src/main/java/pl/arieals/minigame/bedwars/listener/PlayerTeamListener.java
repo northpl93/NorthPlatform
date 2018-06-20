@@ -21,9 +21,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
+import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
+import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
@@ -72,7 +75,8 @@ public class PlayerTeamListener implements Listener
         final LocalArena arena = event.getArena();
         final BedWarsArena arenaData = arena.getArenaData();
 
-        for (final Player player : arena.getPlayersManager().getPlayers())
+        final PlayersManager playersManager = arena.getPlayersManager();
+        for (final Player player : playersManager.getPlayers())
         {
             final Team smallestTeam = arenaData.getTeams()
                                                .stream()
@@ -97,13 +101,28 @@ public class PlayerTeamListener implements Listener
             playerData.switchTeam(smallestTeam);
             arenaData.getPlayers().add(playerData);
 
-            this.scoreboardManager.setLayout(player, new GameScoreboard());
-
             final String teamNameDative = this.messages.getMessage(player.getLocale(), "team.dative." + smallestTeam.getName());
             this.messages.sendMessage(player, "separator");
             this.messages.sendMessage(player, "welcome", MessageLayout.CENTER, smallestTeam.getColor(), teamNameDative);
             this.messages.sendMessage(player, "separator");
         }
+
+        for (final Player player : playersManager.getAllPlayers())
+        {
+            this.scoreboardManager.setLayout(player, new GameScoreboard());
+        }
+    }
+
+    @EventHandler
+    public void showScoreboardToSpectators(final SpectatorJoinEvent event)
+    {
+        final LocalArena arena = event.getArena();
+        if (arena.getGamePhase() != GamePhase.STARTED)
+        {
+            return;
+        }
+
+        this.scoreboardManager.setLayout(event.getPlayer(), new GameScoreboard());
     }
 
     @EventHandler
