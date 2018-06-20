@@ -1,5 +1,6 @@
 package pl.north93.zgame.api.bukkit.server.impl;
 
+import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -78,6 +79,9 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
     protected void disableComponent()
     {
         this.changeState(ServerState.STOPPING);
+
+        final UUID serverId = this.apiCore.getServerId();
+        this.getLogger().log(Level.INFO, "Server {0} forced into STOPPING state by BukkitServerManagerImpl", serverId);
     }
 
     @Override

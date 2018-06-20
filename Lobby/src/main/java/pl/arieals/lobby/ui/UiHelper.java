@@ -9,14 +9,12 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import pl.arieals.api.minigame.server.lobby.arenas.ArenaQuery;
 import pl.arieals.api.minigame.server.lobby.arenas.IArenaClient;
 import pl.arieals.api.minigame.server.lobby.hub.visibility.DefaultHubVisibilityPolicy;
 import pl.arieals.api.minigame.server.lobby.hub.visibility.HubVisibilityService;
 import pl.arieals.api.minigame.server.lobby.hub.visibility.IHubVisibilityPolicy;
 import pl.arieals.api.minigame.server.lobby.hub.visibility.NobodyHubVisibilityPolicy;
 import pl.arieals.api.minigame.server.lobby.hub.visibility.PartyHubVisibilityPolicy;
-import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.hub.IHubServer;
 import pl.arieals.lobby.play.PlayGameController;
@@ -48,10 +46,23 @@ public final class UiHelper
     @UriHandler("/lobby/ui/inGamePlayersCount/:gameId")
     public int getInGamePlayersCount(final UriInvocationContext context)
     {
-        String gameId = context.asString("gameId");
+        final String gameId = context.asString("gameId");
         
-        return arenaClient.getAll().stream().filter(arena -> arena.getMiniGame().getGameId().equals(gameId))
-                .mapToInt(IArena::getPlayersCount).sum();
+        return arenaClient.getAll().stream().filter(arena ->
+        {
+            if (arena == null) // todo usunac to po jakims czasie jak bug nie bedzie juz wystepowal
+            {
+                System.err.println("arena is null!");
+                return false;
+            }
+            else if (arena.getMiniGame() == null)
+            {
+                System.err.println("arena.getMiniGame is null in arena: " + arena);
+                return false;
+            }
+
+            return arena.getMiniGame().getGameId().equals(gameId);
+        }).mapToInt(IArena::getPlayersCount).sum();
     }
     
     @UriHandler("/lobby/ui/switchHub/:hubId/:playerId")

@@ -34,6 +34,7 @@ import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.utils.JavaArguments;
 import pl.north93.zgame.daemon.event.ServerCreatingEvent;
+import pl.north93.zgame.daemon.event.ServerDeathEvent;
 import pl.north93.zgame.daemon.event.ServerExitedEvent;
 
 /**
@@ -112,10 +113,14 @@ public class LocalServersManager
     public void onServerExited(final ServerExitedEvent event)
     {
         final Value<ServerDto> serverValue = event.getInstance().getServerDto();
+
         final ServerDto server = serverValue.get();
+        if (server.getServerState() != ServerState.STOPPING)
+        {
+            this.eventBus.post(new ServerDeathEvent(server));
+        }
 
         this.logger.log(Level.INFO, "Server {0} exited", server.getUuid());
-
         synchronized (this.instances)
         {
             this.instances.remove(server.getUuid());

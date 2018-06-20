@@ -163,10 +163,14 @@ public class ArenaClientImpl implements IArenaClient
     private synchronized void onArenaCreate(final ArenaCreatedNetEvent event)
     {
         final UUID arenaId = event.getArenaId();
+
         final RemoteArena arena = this.arenaManager.getArena(arenaId);
+        if (arena == null)
+        {
+            return;
+        }
 
         this.arenas.put(arenaId, arena);
-
         this.fireObservers(arena, observer -> observer.arenaCreated(arena));
     }
 
@@ -174,17 +178,27 @@ public class ArenaClientImpl implements IArenaClient
     private synchronized void onArenaUpdate(final ArenaDataChangedNetEvent event)
     {
         final UUID arenaId = event.getArenaId();
+
         final RemoteArena arena = this.arenaManager.getArena(arenaId);
+        if (arena == null)
+        {
+            this.doRemoveArena(arenaId);
+            return;
+        }
 
         this.arenas.put(arenaId, arena);
-
         this.fireObservers(arena, observer -> observer.arenaUpdated(arena));
     }
 
     @NetEventSubscriber(ArenaDeletedNetEvent.class)
     private synchronized void onArenaDelete(final ArenaDeletedNetEvent event)
     {
-        final IArena arena = this.arenas.remove(event.getArenaId());
+        this.doRemoveArena(event.getArenaId());
+    }
+
+    private synchronized void doRemoveArena(final UUID arenaId)
+    {
+        final IArena arena = this.arenas.remove(arenaId);
         if (arena != null)
         {
             this.fireObservers(arena, observer -> observer.arenaRemoved(arena));
