@@ -167,6 +167,7 @@ class NmsWorldUtils
         
         WorldUnloadEvent event = force ? new ForceWorldUnloadEvent(world) : new WorldUnloadEvent(world);
         
+        Bukkit.getPluginManager().callEvent(event);
         if ( event.isCancelled() )
         {
             return false;
@@ -177,6 +178,8 @@ class NmsWorldUtils
         
         worlds.remove(world.getName().toLowerCase(java.util.Locale.ENGLISH));
         MinecraftServer.getServer().worlds.remove(MinecraftServer.getServer().worlds.indexOf(handle));
+        
+        // XXX: shall we unload all chunks here in case of the world referece is keeped by someone else?
         
         // We have to cancel pending saves if any, because this may left lock on region files in filesystem even if we remove region cache
         cancelPendingSaves(handle);
