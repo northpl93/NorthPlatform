@@ -33,6 +33,10 @@ public class PlayNpcNameHandler implements IArenaObserver
     public void updateAllNPCs()
     {
         final NPCRegistry namedNPCRegistry = CitizensAPI.getNamedNPCRegistry("hub");
+        if (namedNPCRegistry == null)
+        {
+            return;
+        }
 
         namedNPCRegistry.forEach(this::handleNPC);
     }
