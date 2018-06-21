@@ -1,5 +1,6 @@
 package pl.arieals.lobby.game.main;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
@@ -9,6 +10,7 @@ import pl.arieals.lobby.game.HubListener;
 import pl.arieals.lobby.ui.HubHotbar;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.auth.server.event.PlayerSuccessfullyAuthEvent;
 
 public class MainHubListener extends HubListener
 {
@@ -18,16 +20,33 @@ public class MainHubListener extends HubListener
     @EventHandler(priority = EventPriority.HIGH)
     public void playerJoinHub(final PlayerSwitchedHubEvent event)
     {
-        // ten listener pierwszy raz po wlaczeniu serwera zajmuje duza ilosc czasu
-        // bo wywola leniwe wczytywanie plików *.xml z GUI i hotbarami.
         if (! this.isMyHub(event.getNewHub()))
         {
             return;
         }
 
-        this.scoreboardManager.setLayout(event.getPlayer(), new MainHubScoreboard());
+        final Player player = event.getPlayer();
+        if (this.isLoggedIn(player))
+        {
+            // jesli gracz jest premium to od razu pokazujemy mu interfejs uzytkownika
+            this.doShowGui(player);
+        }
+    }
 
-        new HubHotbar().display(event.getPlayer());
+    @EventHandler
+    public void showGuiWhenNoPremiumPlayerLogIn(final PlayerSuccessfullyAuthEvent event)
+    {
+        // ten event wywolywany jest tylko dla logujacych sie graczy no-premium
+        this.doShowGui(event.getPlayer());
+    }
+
+    private void doShowGui(final Player player)
+    {
+        this.scoreboardManager.setLayout(player, new MainHubScoreboard());
+
+        // ta metoda pierwszy raz po wlaczeniu serwera zajmuje duza ilosc czasu
+        // bo wywola leniwe wczytywanie plików *.xml z GUI i hotbarami.
+        new HubHotbar().display(player);
     }
 
     @Override

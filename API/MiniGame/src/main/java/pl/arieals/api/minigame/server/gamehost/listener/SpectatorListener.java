@@ -77,14 +77,14 @@ public class SpectatorListener implements Listener
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.HIGH)
     public void disableInteract(final PlayerInteractEvent event)
     {
         final Player player = event.getPlayer();
         this.cancelIfNecessary(event, player);
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.HIGH)
     public void disableDamage(final EntityDamageEvent event)
     {
         final Player player = instanceOf(event.getEntity(), Player.class);
@@ -109,35 +109,35 @@ public class SpectatorListener implements Listener
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void disableBowShoot(final EntityShootBowEvent event)
     {
         final Player player = instanceOf(event.getEntity(), Player.class);
         this.cancelIfNecessary(event, player);
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.HIGH)
     public void blockBreak(final BlockBreakEvent event)
     {
         final Player player = instanceOf(event.getPlayer(), Player.class);
         this.cancelIfNecessary(event, player);
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.HIGH)
     public void blockPlace(final BlockPlaceEvent event)
     {
         final Player player = instanceOf(event.getPlayer(), Player.class);
         this.cancelIfNecessary(event, player);
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.HIGH)
     public void disableItemPickup(final EntityPickupItemEvent event)
     {
         final Player player = instanceOf(event.getEntity(), Player.class);
         this.cancelIfNecessary(event, player);
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.HIGH)
     public void disableItemDrop(final PlayerDropItemEvent event)
     {
         final Player player = event.getPlayer();

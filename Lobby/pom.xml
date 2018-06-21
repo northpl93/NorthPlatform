@@ -27,13 +27,13 @@
             <version>1.0-INDEV</version>
         </dependency>
         <dependency>
-            <groupId>pl.north93.zgame</groupId>
-            <artifactId>pets</artifactId>
+            <groupId>pl.arieals</groupId>
+            <artifactId>globalshops</artifactId>
             <version>1.0-INDEV</version>
         </dependency>
         <dependency>
-            <groupId>pl.arieals</groupId>
-            <artifactId>globalshops</artifactId>
+            <groupId>pl.north93.zgame</groupId>
+            <artifactId>auth</artifactId>
             <version>1.0-INDEV</version>
         </dependency>
     </dependencies>

@@ -1,6 +1,7 @@
 package pl.arieals.lobby.game;
 
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -11,6 +12,7 @@ import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.auth.api.IAuthManager;
 
 /**
  * Klasa abstrakcyjna która po rozszerzeniu zostanie automatycznie
@@ -26,6 +28,8 @@ public abstract class HubListener implements AutoListener
     protected BukkitApiCore  apiCore;
     @Inject
     protected MiniGameServer miniGameServer;
+    @Inject
+    protected IAuthManager   authManager;
 
     /**
      * Sprawdza czy ten listener obsluguje danego huba.
@@ -40,6 +44,11 @@ public abstract class HubListener implements AutoListener
     {
         final LobbyManager serverManager = this.miniGameServer.getServerManager();
         return serverManager.getLocalHub().getHubWorld(world);
+    }
+
+    protected final boolean isLoggedIn(final Player player)
+    {
+        return this.authManager.isLoggedIn(player.getName());
     }
 
     @Override

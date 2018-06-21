@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <hotbar>
     <entry pos="8">
-        <icon id="WOOD_DOOR" name="@hotbar.quit" />
-        <onClick>northplatform://minigameapi/lobby</onClick>
+        <icon id="WOOD_DOOR" name="@spectator.hotbar.quit" />
+        <onClick>kickPlayerToLobby</onClick>
     </entry>
 </hotbar>

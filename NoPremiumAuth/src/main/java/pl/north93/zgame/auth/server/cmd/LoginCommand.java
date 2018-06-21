@@ -5,6 +5,7 @@ import static java.text.MessageFormat.format;
 
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -19,6 +20,7 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.auth.api.IAuthManager;
 import pl.north93.zgame.auth.api.IAuthPlayer;
+import pl.north93.zgame.auth.server.event.PlayerSuccessfullyAuthEvent;
 
 public class LoginCommand extends NorthCommand
 {
@@ -68,6 +70,7 @@ public class LoginCommand extends NorthCommand
         this.authManager.setLoggedInStatus(Identity.of(player), true);
         this.logger.info(format("User {0} successfully logged-in! (no-premium password)", player.getName()));
         sender.sendMessage(this.messages, "info.successfully_logged");
+        Bukkit.getPluginManager().callEvent(new PlayerSuccessfullyAuthEvent(player)); // todo zrobić fasadę na Bukkitową część API
     }
 
     @Override
