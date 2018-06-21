@@ -9,6 +9,7 @@
                 <dependency>API.GuiManager</dependency>
                 <dependency>GlobalShops.Server</dependency>
                 <dependency>MiniGameApi.Server</dependency>
+                <dependency>NoPremiumAuth.Server</dependency>
             </dependencies>
             <platforms>
                 <platform>BUKKIT</platform>
