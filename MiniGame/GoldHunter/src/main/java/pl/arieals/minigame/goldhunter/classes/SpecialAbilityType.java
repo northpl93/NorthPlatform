@@ -11,6 +11,7 @@ import pl.arieals.minigame.goldhunter.abilities.BombArrowAbility;
 import pl.arieals.minigame.goldhunter.abilities.BrigdeAbility;
 import pl.arieals.minigame.goldhunter.abilities.CallOfBloodAbility;
 import pl.arieals.minigame.goldhunter.abilities.DazzleAbility;
+import pl.arieals.minigame.goldhunter.abilities.DeathArrowAbility;
 import pl.arieals.minigame.goldhunter.abilities.DoubleJumpAbility;
 import pl.arieals.minigame.goldhunter.abilities.PoisonArrowAbility;
 import pl.arieals.minigame.goldhunter.abilities.RedemptionAbility;
@@ -48,6 +49,8 @@ public enum SpecialAbilityType
     
     BETRAYAL(new BetrayalAbility(), "svip.spy.time", 50 * 20, 45 * 20, 40 * 20, 35 * 2),
     REDEMPTION(new RedemptionAbility(), "svip.paladin.time", 55 * 20, 50 * 20, 45 * 20, 40 * 20),
+    
+    DEATH_ARROW(new DeathArrowAbility(), "svip.paladin.time", 55 * 20, 50 * 20, 45 * 20, 40 * 20), // TODO:
     ;
     
     private static final Map<String, SpecialAbilityType> byName = new HashMap<>();
