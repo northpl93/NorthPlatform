@@ -4,9 +4,11 @@ import static org.bukkit.event.EventPriority.MONITOR;
 
 
 import java.time.Duration;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -16,6 +18,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
+import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorQuitEvent;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.match.IMatchAccess;
 import pl.arieals.api.minigame.shared.api.match.StandardMatchStatistics;
@@ -31,10 +34,21 @@ public class ArenaEndListener implements Listener
     private IBukkitExecutor bukkitExecutor;
 
     @EventHandler(priority = MONITOR)
-    public void stopEmptyArena(final PlayerQuitArenaEvent event)
+    public void stopEmptyArenaWhenPlayerQuit(final PlayerQuitArenaEvent event)
     {
-        final LocalArena arena = event.getArena();
-        if (! arena.getPlayersManager().getPlayers().isEmpty())
+        this.checkArenaShouldEnd(event.getArena());
+    }
+
+    @EventHandler(priority = MONITOR)
+    public void stopEmptyArenaWhenSpectatorQuit(final SpectatorQuitEvent event)
+    {
+        this.checkArenaShouldEnd(event.getArena());
+    }
+
+    private void checkArenaShouldEnd(final LocalArena arena)
+    {
+        final List<Player> allPlayers = arena.getPlayersManager().getAllPlayers();
+        if (! allPlayers.isEmpty())
         {
             return;
         }

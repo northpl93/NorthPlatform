@@ -57,7 +57,7 @@ public class GamePhaseCmd extends NorthCommand
             return;
         }
         arena.setGamePhase(gamePhase);
-        arena.getPlayersManager().broadcast(this.messages, "arena.forced_gamephase", gamePhase);
+        arena.getChatManager().broadcast(this.messages, "arena.forced_gamephase", gamePhase);
     }
 
     @Override

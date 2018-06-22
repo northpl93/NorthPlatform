@@ -19,8 +19,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.api.minigame.server.gamehost.arena.ArenaChatManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
@@ -75,10 +75,10 @@ public class ArenaStartListener implements Listener
         final ElytraRaceArena arenaData = arena.getArenaData();
         this.setupPlayers(arena, arenaData);
 
-        final PlayersManager playersManager = arena.getPlayersManager();
-        playersManager.broadcast(this.messages, "separator");
-        playersManager.broadcast(this.messages, arenaData.getGameMode() == ElytraRaceMode.SCORE_MODE ? "score.welcome" : "race.welcome", MessageLayout.CENTER);
-        playersManager.broadcast(this.messages, "separator");
+        final ArenaChatManager chatManager = arena.getChatManager();
+        chatManager.broadcast(this.messages, "separator");
+        chatManager.broadcast(this.messages, arenaData.getGameMode() == ElytraRaceMode.SCORE_MODE ? "score.welcome" : "race.welcome", MessageLayout.CENTER);
+        chatManager.broadcast(this.messages, "separator");
 
         // odpalamy taska generujacego efekty lotu
         arena.getScheduler().runTaskTimer(new ElytraEffectTask(arena), 2, 2);

@@ -41,6 +41,7 @@ public class LocalArena implements IArena
     private final RemoteArena         data;
     private final ArenaWorld          world;
     private final PlayersManager      playersManager;
+    private final ArenaChatManager    chatManager;
     private final StaticTimer         timer;
     private final ArenaScheduler      scheduler;
     private final DeathMatch          deathMatch;
@@ -57,6 +58,7 @@ public class LocalArena implements IArena
         this.data = data;
         this.world = new ArenaWorld(gameHostManager, this);
         this.playersManager = new PlayersManager(gameHostManager, this);
+        this.chatManager = new ArenaChatManager(gameHostManager, this);
         this.timer = new StaticTimer();
         this.scheduler = new ArenaScheduler(this);
         this.deathMatch = new DeathMatch(gameHostManager, this);
@@ -216,6 +218,11 @@ public class LocalArena implements IArena
     public PlayersManager getPlayersManager()
     {
         return this.playersManager;
+    }
+
+    public ArenaChatManager getChatManager()
+    {
+        return this.chatManager;
     }
 
     public RemoteArena getAsRemoteArena()

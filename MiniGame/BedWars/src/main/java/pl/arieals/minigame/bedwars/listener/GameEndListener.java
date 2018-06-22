@@ -18,8 +18,8 @@ import org.bukkit.event.Listener;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.api.minigame.server.gamehost.arena.ArenaChatManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
@@ -78,7 +78,7 @@ public class GameEndListener implements Listener
         }
 
         final TranslatableString teamName = TranslatableString.of(this.messages, "@team.nominative." + team.getName());
-        arena.getPlayersManager().broadcast(this.messages, "team_eliminated", MessageLayout.SEPARATED, team.getColor(), teamName);
+        arena.getChatManager().broadcast(this.messages, "team_eliminated", MessageLayout.SEPARATED, team.getColor(), teamName);
 
         final BedWarsArena arenaData = arena.getArenaData();
         final Predicate<Team> isEliminated = Team::isEliminated;
@@ -127,11 +127,13 @@ public class GameEndListener implements Listener
     @EventHandler
     public void onGameEnd(final GameEndEvent event)
     {
-        final BedWarsArena arenaData = event.getArena().getArenaData();
-        final PlayersManager players = event.getArena().getPlayersManager();
+        final LocalArena arena = event.getArena();
 
-        players.broadcast(this.messages, "separator");
-        players.broadcast(this.messages, "end.header", MessageLayout.CENTER);
+        final BedWarsArena arenaData = arena.getArenaData();
+        final ArenaChatManager chatManager = arena.getChatManager();
+
+        chatManager.broadcast(this.messages, "separator");
+        chatManager.broadcast(this.messages, "end.header", MessageLayout.CENTER);
 
         final Predicate<Team> isEliminatedPredicate = Team::isEliminated;
         final Optional<Team> winner = arenaData.getTeams().stream().filter(isEliminatedPredicate.negate()).findAny();
@@ -139,15 +141,15 @@ public class GameEndListener implements Listener
         {
             final Team winnerTeam = winner.get();
             // obslugujemy zwyciestwo danego teamu (nagrody, licznik zwyciestw)
-            this.handleTeamWin(event.getArena(), arenaData, winnerTeam);
+            this.handleTeamWin(arena, arenaData, winnerTeam);
 
             final TranslatableString teamNameKey = TranslatableString.of(this.messages, "@team.scoreboard." + winnerTeam.getName());
             final String nicks = this.playersList(winnerTeam);
 
-            players.broadcast(this.messages, "end.winner_list", MessageLayout.CENTER, winnerTeam.getColor(), teamNameKey, nicks);
+            chatManager.broadcast(this.messages, "end.winner_list", MessageLayout.CENTER, winnerTeam.getColor(), teamNameKey, nicks);
         }
 
-        players.broadcast(this.messages, "end.top_kills", MessageLayout.CENTER);
+        chatManager.broadcast(this.messages, "end.top_kills", MessageLayout.CENTER);
 
         final ArrayList<BedWarsPlayer> ranking = new ArrayList<>(arenaData.getPlayers());
         ranking.sort(Comparator.comparing(BedWarsPlayer::getKills).reversed());
@@ -156,18 +158,18 @@ public class GameEndListener implements Listener
         {
             final BedWarsPlayer next = iterator.next();
             final int place = i + 1;
-            players.broadcast(this.messages, "end.place." + place, MessageLayout.CENTER, next.getBukkitPlayer().getDisplayName(), next.getKills());
+            chatManager.broadcast(this.messages, "end.place." + place, MessageLayout.CENTER, next.getBukkitPlayer().getDisplayName(), next.getKills());
         }
 
-        players.broadcast(this.messages, "empty_line");
-        players.broadcast(this.messages, "separator");
-        players.broadcast(this.messages, "end.rewards", MessageLayout.CENTER);
-        for (final Player player : players.getPlayers())
+        chatManager.broadcast(this.messages, "empty_line");
+        chatManager.broadcast(this.messages, "separator");
+        chatManager.broadcast(this.messages, "end.rewards", MessageLayout.CENTER);
+        for (final Player player : arena.getPlayersManager().getPlayers())
         {
-            event.getArena().getRewards().renderRewards(this.messages, player);
+            arena.getRewards().renderRewards(this.messages, player);
         }
 
-        players.broadcast(this.messages, "separator");
+        chatManager.broadcast(this.messages, "separator");
     }
 
     private String playersList(final Team team)

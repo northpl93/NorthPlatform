@@ -15,8 +15,8 @@ import org.bukkit.event.Listener;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.api.minigame.server.gamehost.arena.ArenaChatManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
 import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
@@ -49,7 +49,7 @@ public class BedDestroyListener implements Listener
         final BedWarsArena bedWarsArena = arena.getArenaData();
         final Team team = event.getTeam();
 
-        final PlayersManager playersManager = arena.getPlayersManager();
+        final ArenaChatManager chatManager = arena.getChatManager();
         if (event.getDestroyer() != null)
         {
             final BedWarsPlayer destroyerData = getPlayerData(event.getDestroyer(), BedWarsPlayer.class);
@@ -58,18 +58,18 @@ public class BedDestroyListener implements Listener
             final int currencyAmount = bedWarsArena.getBedWarsConfig().getRewards().getBedDestroy();
             arena.getRewards().addReward(Identity.of(event.getDestroyer()), new CurrencyReward("bedDestroy", "minigame", currencyAmount));
 
-            playersManager.broadcast(isInTeam(team), this.messages,
+            chatManager.broadcast(isInTeam(team), this.messages,
                     "bed_destroyed.you", MessageLayout.SEPARATED,
                     team.getColor(),
                     destroyerData.getTeam().getColor(),
                     destroyerData.getBukkitPlayer().getDisplayName());
 
             final TranslatableString teamName = TranslatableString.of(this.messages, "@team.genitive." + team.getName());
-            playersManager.broadcast(notInTeam(team), this.messages, "bed_destroyed.global", MessageLayout.SEPARATED, team.getColor(), teamName, destroyerData.getTeam().getColor(), destroyerData.getBukkitPlayer().getDisplayName());
+            chatManager.broadcast(notInTeam(team), this.messages, "bed_destroyed.global", MessageLayout.SEPARATED, team.getColor(), teamName, destroyerData.getTeam().getColor(), destroyerData.getBukkitPlayer().getDisplayName());
         }
         else
         {
-            playersManager.broadcast(isInTeam(team), this.messages,
+            chatManager.broadcast(isInTeam(team), this.messages,
                     "bed_destroyed.you_no_destroyer", MessageLayout.SEPARATED,
                     team.getColor());
         }

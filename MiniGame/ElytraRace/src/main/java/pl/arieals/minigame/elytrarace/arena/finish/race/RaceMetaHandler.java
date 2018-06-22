@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.api.minigame.server.gamehost.arena.ArenaChatManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
@@ -45,9 +46,10 @@ public class RaceMetaHandler implements IFinishHandler
         final long playerTime = arena.getTimer().getCurrentTime(TimeUnit.MILLISECONDS);
         this.finishInfo.add(new RaceFinishInfo(player.getUniqueId(), player.getDisplayName(), playerTime, playerPlace));
 
+        final ArenaChatManager chatManager = arena.getChatManager();
         if (playerPlace == 1)
         {
-            arena.getPlayersManager().broadcast(
+            chatManager.broadcast(
                     this.messages,
                     "race.finish.broadcast_first",
                     player.getDisplayName(),
@@ -55,7 +57,7 @@ public class RaceMetaHandler implements IFinishHandler
         }
         else
         {
-            arena.getPlayersManager().broadcast(
+            chatManager.broadcast(
                     this.messages,
                     "race.finish.broadcast",
                     player.getDisplayName(),

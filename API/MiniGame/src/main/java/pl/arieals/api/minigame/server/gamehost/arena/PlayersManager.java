@@ -7,24 +7,21 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
+import pl.arieals.api.minigame.server.gamehost.MiniGameApi;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
-import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorModeChangeEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorQuitEvent;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
@@ -32,11 +29,7 @@ import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.cfg.MiniGameConfig;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.chat.global.ChatRoom;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.MessageLayout;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
 
 /**
  * Każda LocalArena ma swojego PlayersManagera
@@ -44,14 +37,10 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 public class PlayersManager
 {
     private static final long PLAYER_JOIN_TIMEOUT = TimeUnit.SECONDS.toMillis(30);
-    @Inject @Messages("MiniGameApi")
-    private MessagesBox                     messages;
     @Inject
     private Logger                          logger;
     private final GameHostManager           gameHostManager;
     private final LocalArena                arena;
-    private final ChatRoom                  chatRoom; // pokój czatu
-    private final ChatRoom                  spectatorsRoom; // pokój czatu spectatorów
     private final List<Player>              players; // lista połączonych już graczy
     private final List<Player>              spectators; // lista polaczonych spectatorow
     private final Map<UUID, PlayerJoinInfo> joinInfos; // lista graczy chcacych wejsc na arene juz na niej bedacych
@@ -61,33 +50,9 @@ public class PlayersManager
         this.gameHostManager = gameHostManager;
         this.arena = arena;
 
-        final LocalArenaManager arenaManager = gameHostManager.getArenaManager();
-        this.chatRoom = arenaManager.getChatRoomFor(arena, false);
-        this.spectatorsRoom = arenaManager.getChatRoomFor(arena, true);
-
         this.players = new ArrayList<>();
         this.spectators = new ArrayList<>(0); // zakladamy brak spectatorow
         this.joinInfos = new ConcurrentHashMap<>(); // may be accessed by server thread and rpc method executor in tryAddPlayers
-    }
-
-    /**
-     * Zwraca pokój czatu powiązany z tą areną i przeznaczony dla
-     * graczy biorących udział w rozgrywce.
-     * @return Pokój czatu przeznaczony dla graczy biorących udział w rozgrywce.
-     */
-    public ChatRoom getChatRoom()
-    {
-        return this.chatRoom;
-    }
-
-    /**
-     * Zwraca pokój czatu powiązany z tą areną i przeznaczony dla
-     * graczy oglądających grę.
-     * @return Pokój czatu przeznaczony dla graczy oglądających grę.
-     */
-    public ChatRoom getSpectatorsRoom()
-    {
-        return this.spectatorsRoom;
     }
 
     /**
@@ -246,16 +211,16 @@ public class PlayersManager
         {
             this.spectators.add(player);
             apiCore.callEvent(new SpectatorJoinEvent(player, this.arena));
-            this.updateStatus(player, PlayerStatus.SPECTATOR);
+            MiniGameApi.setPlayerStatus(player, PlayerStatus.SPECTATOR);
             return;
         }
 
         this.players.add(player);
-        this.updateStatus(player, PlayerStatus.PLAYING);
+        MiniGameApi.setPlayerStatus(player, PlayerStatus.PLAYING);
         final PlayerJoinArenaEvent event = apiCore.callEvent(new PlayerJoinArenaEvent(player, this.arena, false, "player.joined_arena"));
         if ( event.getJoinMessage() != null )
         {
-            this.announceJoinLeft(player, event.getJoinMessage());
+            this.arena.getChatManager().announceJoinLeft(player, event.getJoinMessage());
         }
     }
 
@@ -288,7 +253,7 @@ public class PlayersManager
         
         if ( event.getQuitMessage() != null )
         {
-            this.announceJoinLeft(player, event.getQuitMessage());
+            this.arena.getChatManager().announceJoinLeft(player, event.getQuitMessage());
         }
     }
 
@@ -308,111 +273,6 @@ public class PlayersManager
             this.logger.log(Level.INFO, "Player {0} join timeout on arena {1}", new Object[]{joinInfo.getUuid(), this.arena.getId()});
             joinInfos.remove();
         }
-    }
-
-    // = = = AKTUALNY STAN GRACZA = = = //
-
-    public PlayerStatus getStatus(final Player player)
-    {
-        final List<MetadataValue> minigameApiStatus = player.getMetadata("minigameApiStatus");
-        if (minigameApiStatus.isEmpty())
-        {
-            return null;
-        }
-        return (PlayerStatus) minigameApiStatus.get(0).value();
-    }
-
-    public void updateStatus(final Player player, final PlayerStatus newStatus)
-    {
-        final PlayerStatus oldStatus = this.getStatus(player);
-        if (newStatus == PlayerStatus.SPECTATOR && ! this.spectators.contains(player))
-        {
-            throw new IllegalArgumentException("You can't set SPECTATOR status for player that isn't spectating.");
-        }
-        else if (newStatus != PlayerStatus.SPECTATOR && this.spectators.contains(player))
-        {
-            throw new IllegalArgumentException("You can't set any other status than SPECTATING for spectating player.");
-        }
-
-        player.setMetadata("minigameApiStatus", new FixedMetadataValue(this.gameHostManager.getPlugin(), newStatus));
-        this.gameHostManager.getApiCore().callEvent(new SpectatorModeChangeEvent(this.arena, player, oldStatus, newStatus));
-    }
-
-    // = = = WYSYLANIE WIADOMOSCI = = = //
-
-    /**
-     * Wysyła przetłumaczoną wiadomość do graczy znajdujących się na tej arenie.
-     * Dodatkowo uwzględnia warunek wysłania wiadomości.
-     *
-     * @param condition warunek który musi spełnić gracz aby otrzymać wiadomość.
-     * @param messagesBox obiekt przechowujący wiadomości.
-     * @param messageKey klucz wiadomości.
-     * @param layout Wyglad tej wiadomości.
-     * @param args argumenty.
-     */
-    public void broadcast(final Predicate<Player> condition, final MessagesBox messagesBox, final String messageKey, final MessageLayout layout, final Object... args)
-    {
-        for (final Player player : this.players)
-        {
-            if (! condition.test(player))
-            {
-                continue;
-            }
-            messagesBox.sendMessage(player, messageKey, layout, args);
-        }
-    }
-
-    /**
-     * Wysyła przetłumaczoną wiadomość do graczy znajdujących się na tej arenie
-     * z domyślnym layoutem.
-     * Dodatkowo uwzględnia warunek wysłania wiadomości.
-     *
-     * @param condition warunek który musi spełnić gracz aby otrzymać wiadomość.
-     * @param messagesBox obiekt przechowujący wiadomości.
-     * @param messageKey klucz wiadomości.
-     * @param args argumenty.
-     */
-    public void broadcast(final Predicate<Player> condition, final MessagesBox messagesBox, final String messageKey, final Object... args)
-    {
-        this.broadcast(condition, messagesBox, messageKey, MessageLayout.DEFAULT, args);
-    }
-
-    /**
-     * Wysyła przetłumaczoną wiadomość do graczy znajdujących się na tej arenie.
-     *
-     * @param messagesBox obiekt przechowujący wiadomości.
-     * @param messageKey klucz wiadomości.
-     * @param layout Wyglad tej wiadomości.
-     * @param args argumenty.
-     */
-    public void broadcast(final MessagesBox messagesBox, final String messageKey, final MessageLayout layout, final Object... args)
-    {
-        for (final Player player : this.players)
-        {
-            messagesBox.sendMessage(player, messageKey, layout, args);
-        }
-    }
-
-    /**
-     * Wysyła przetłumaczoną wiadomość do graczy znajdujących się na tej arenie
-     * z domyślnym layoutem.
-     *
-     * @param messagesBox obiekt przechowujący wiadomości.
-     * @param messageKey klucz wiadomości.
-     * @param args argumenty.
-     */
-    public void broadcast(final MessagesBox messagesBox, final String messageKey, final Object... args)
-    {
-        this.broadcast(messagesBox, messageKey, MessageLayout.DEFAULT, args);
-    }
-    
-    private void announceJoinLeft(final Player player, final String messageKey)
-    {
-        final String name = player.getName();
-        final int playersCount = this.joinInfos.size();
-        final int maxPlayers = this.gameHostManager.getMiniGameConfig().getSlots();
-
-        this.broadcast(this.messages, messageKey, name, playersCount, maxPlayers);
     }
 
     @Override

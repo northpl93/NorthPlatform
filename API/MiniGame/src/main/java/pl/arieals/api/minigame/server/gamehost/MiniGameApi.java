@@ -7,7 +7,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -17,6 +16,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.server.gamehost.arena.PlayerDataManager;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -24,7 +24,9 @@ public final class MiniGameApi
 {
     private static MiniGameApi INSTANCE;
     @Inject
-    private MiniGameServer server;
+    private MiniGameServer    server;
+    @Inject
+    private PlayerDataManager playerDataManager;
 
     MiniGameApi() // package-local constructor
     {
@@ -56,29 +58,23 @@ public final class MiniGameApi
     @Nullable
     public static <T> T getPlayerData(final Player player, final Class<T> clazz)
     {
-        final GameHostManager manager = INSTANCE.server.getServerManager();
-        return manager.getPlayerData(player, clazz);
+        return INSTANCE.playerDataManager.getPlayerData(player, clazz);
     }
 
     public static void setPlayerData(final Player player, final Object data)
     {
-        final GameHostManager manager = INSTANCE.server.getServerManager();
-        manager.setPlayerData(player, data);
+        INSTANCE.playerDataManager.setPlayerData(player, data);
     }
 
     @Nullable
     public static PlayerStatus getPlayerStatus(final Player player)
     {
-        final GameHostManager manager = INSTANCE.server.getServerManager();
-        return manager.getArenaManager().getArenaAssociatedWith(player.getUniqueId())
-                      .map(arena -> arena.getPlayersManager().getStatus(player)).orElse(null);
+        return INSTANCE.playerDataManager.getStatus(player);
     }
 
     public static void setPlayerStatus(final Player player, final PlayerStatus newStatus)
     {
-        final GameHostManager manager = INSTANCE.server.getServerManager();
-        final Optional<LocalArena> arena = manager.getArenaManager().getArenaAssociatedWith(player.getUniqueId());
-        arena.ifPresent(localArena -> localArena.getPlayersManager().updateStatus(player, newStatus));
+        INSTANCE.playerDataManager.updateStatus(player, newStatus);
     }
 
     @Override

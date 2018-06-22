@@ -41,7 +41,7 @@ public class ArenaStartListener implements Listener
 
         // ustawiamy formatter naszemu głównemu pokojowi czatu,
         // obsługuje on sytuacje gdy jesteśmy na etapie lobby (nie walnie NPE)
-        arena.getPlayersManager().getChatRoom().setChatFormatter(BedWarsChatFormatter.INSTANCE);
+        arena.getChatManager().getChatRoom().setChatFormatter(BedWarsChatFormatter.INSTANCE);
     }
 
     @EventHandler

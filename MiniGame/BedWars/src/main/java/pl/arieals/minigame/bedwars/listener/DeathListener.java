@@ -214,7 +214,7 @@ public class DeathListener implements Listener
         final String deathMessageKey = this.getDeathMessageKey(player, elimination);
         if (elimination)
         {
-            arena.getPlayersManager().broadcast(this.messages, deathMessageKey,
+            arena.getChatManager().broadcast(this.messages, deathMessageKey,
                     team.getColor(),
                     player.getDisplayName(),
                     damagerData.getTeam().getColor(),
@@ -222,7 +222,7 @@ public class DeathListener implements Listener
         }
         else
         {
-            arena.getPlayersManager().broadcast(this.messages, deathMessageKey,
+            arena.getChatManager().broadcast(this.messages, deathMessageKey,
                     team.getColor(),
                     player.getDisplayName(),
                     damagerData.getTeam().getColor(),

@@ -44,7 +44,7 @@ public class ScoreMetaHandler implements IFinishHandler
 
         final ElytraScorePlayer scoreData = getPlayerData(player, ElytraScorePlayer.class);
 
-        arena.getPlayersManager().broadcast(
+        arena.getChatManager().broadcast(
                 this.messages,
                 "score.finish.broadcast",
                 player.getDisplayName(),

@@ -4,21 +4,10 @@ import javax.xml.bind.JAXB;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
-import net.minecraft.server.v1_12_R1.DedicatedPlayerList;
-import net.minecraft.server.v1_12_R1.EntityHuman;
-import net.minecraft.server.v1_12_R1.IPlayerFileData;
-import net.minecraft.server.v1_12_R1.NBTTagCompound;
-
-import com.google.common.base.Preconditions;
-
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -49,8 +38,8 @@ import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.arena.netevent.IArenaNetEvent;
 import pl.arieals.api.minigame.shared.api.cfg.MiniGameConfig;
 import pl.arieals.api.minigame.shared.api.hub.IHubServer;
-import pl.arieals.api.minigame.shared.api.status.InGameStatus;
 import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
+import pl.arieals.api.minigame.shared.api.status.InGameStatus;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.exceptions.ConfigurationException;
@@ -76,8 +65,6 @@ public class GameHostManager implements IServerManager
     public void start()
     {
         SpigotConfig.config.set("verbose", false); // disable map-loading spam
-        this.disableSavePlayerData();
-        
         this.loadConfig();
 
         this.rpcManager.addRpcImplementation(IGameHostRpc.class, new GameHostRpcImpl(this));
@@ -195,24 +182,6 @@ public class GameHostManager implements IServerManager
         return this.regionManager;
     }
 
-    public <T> T getPlayerData(final Player player, final Class<T> clazz)
-    {
-        Preconditions.checkNotNull(player, "Player can't be null in getPlayerData");
-        final List<MetadataValue> metadata = player.getMetadata(clazz.getName());
-        if (metadata.isEmpty())
-        {
-            return null;
-        }
-        //noinspection unchecked
-        return (T) metadata.get(0).value();
-    }
-
-    public void setPlayerData(final Player player, final Object data)
-    {
-        Preconditions.checkNotNull(player, "Player can't be null in setPlayerData");
-        player.setMetadata(data.getClass().getName(), new FixedMetadataValue(this.apiCore.getPluginMain(), data));
-    }
-
     public void publishArenaEvent(final IArenaNetEvent event)
     {
         this.eventManager.callEvent(event);
@@ -244,34 +213,5 @@ public class GameHostManager implements IServerManager
         {
             SneakyThrow.sneaky(e);
         }
-    }
-    
-    private void disableSavePlayerData()
-    {
-        DedicatedPlayerList playerList = ((CraftServer) Bukkit.getServer()).getHandle();
-        IPlayerFileData current = playerList.playerFileData;
-        
-        IPlayerFileData data = new IPlayerFileData()
-        {
-            
-            @Override
-            public void save(EntityHuman player)
-            {
-            }
-            
-            @Override
-            public NBTTagCompound load(EntityHuman player)
-            {
-                return current.load(player);
-            }
-            
-            @Override
-            public String[] getSeenPlayers()
-            {
-                return current.getSeenPlayers();
-            }
-        };
-        
-        playerList.playerFileData = data;
     }
 }

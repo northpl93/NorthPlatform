@@ -112,19 +112,19 @@ public class MapVote
     
     public void printStartVoteInfo()
     {;
-        arena.getPlayersManager().broadcast(this.messages, "vote.started");
+        arena.getChatManager().broadcast(this.messages, "vote.started");
 
         for (int i = 0; i < this.getOptions().length; i++)
         {
             final MapTemplate gameMap = this.getOptions()[i];
-            arena.getPlayersManager().broadcast(this.messages, "vote.option_line", i + 1, gameMap.getDisplayName());
+            arena.getChatManager().broadcast(this.messages, "vote.option_line", i + 1, gameMap.getDisplayName());
         }
     }
 
     public void printVotingResult()
     {
         final MapTemplate winner = this.getWinner();
-        arena.getPlayersManager().broadcast(this.messages, "vote.winner", winner.getDisplayName());
+        arena.getChatManager().broadcast(this.messages, "vote.winner", winner.getDisplayName());
     }
 
     @Override

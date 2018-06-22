@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
+import pl.arieals.api.minigame.server.gamehost.arena.ArenaChatManager;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
@@ -29,9 +29,9 @@ public class ArenaChatHandler implements Listener
     public void addPlayerToChatWhenJoinArena(final PlayerJoinArenaEvent event)
     {
         final ChatPlayer chatPlayer = this.chatManager.getPlayer(Identity.of(event.getPlayer()));
-        final PlayersManager playersManager = event.getArena().getPlayersManager();
+        final ArenaChatManager chatManager = event.getArena().getChatManager();
 
-        final ChatRoom chatRoom = playersManager.getChatRoom();
+        final ChatRoom chatRoom = chatManager.getChatRoom();
 
         chatPlayer.joinRoom(chatRoom);
     }
@@ -40,9 +40,9 @@ public class ArenaChatHandler implements Listener
     public void addSpectatorToChatWhenJoinArena(final SpectatorJoinEvent event)
     {
         final ChatPlayer chatPlayer = this.chatManager.getPlayer(Identity.of(event.getPlayer()));
-        final PlayersManager playersManager = event.getArena().getPlayersManager();
+        final ArenaChatManager chatManager = event.getArena().getChatManager();
 
-        final ChatRoom chatRoom = playersManager.getChatRoom();
+        final ChatRoom chatRoom = chatManager.getChatRoom();
 
         chatPlayer.joinRoom(chatRoom);
     }
@@ -59,9 +59,9 @@ public class ArenaChatHandler implements Listener
         }
 
         final ChatPlayer chatPlayer = this.chatManager.getPlayer(Identity.of(event.getPlayer()));
-        final PlayersManager playersManager = event.getArena().getPlayersManager();
+        final ArenaChatManager chatManager = event.getArena().getChatManager();
 
-        final ChatRoom spectatorsRoom = playersManager.getSpectatorsRoom();
+        final ChatRoom spectatorsRoom = chatManager.getSpectatorsRoom();
         if (oldStatus.isSpectator() && newStatus.isPlaying())
         {
             chatPlayer.leaveRoom(spectatorsRoom);
@@ -94,10 +94,10 @@ public class ArenaChatHandler implements Listener
             return;
         }
 
-        final PlayersManager playersManager = event.getArena().getPlayersManager();
+        final ArenaChatManager chatManager = event.getArena().getChatManager();
 
-        final ChatRoom chatRoom = playersManager.getChatRoom();
-        final ChatRoom spectatorsRoom = playersManager.getSpectatorsRoom();
+        final ChatRoom chatRoom = chatManager.getChatRoom();
+        final ChatRoom spectatorsRoom = chatManager.getSpectatorsRoom();
 
         chatPlayer.leaveRoom(chatRoom, true);
         chatPlayer.leaveRoom(spectatorsRoom, true);
