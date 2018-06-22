@@ -17,7 +17,7 @@ public class XmlClassEquipmentInfo
 {
     private XmlClassEquipmentSlot chestplate = new XmlClassEquipmentSlot();
     
-    private XmlClassEquipmentSlot leggins = new XmlClassEquipmentSlot();
+    private XmlClassEquipmentSlot leggings = new XmlClassEquipmentSlot();
     
     private XmlClassEquipmentSlot boots = new XmlClassEquipmentSlot();
     
@@ -31,7 +31,7 @@ public class XmlClassEquipmentInfo
     
     public XmlClassEquipmentSlot getLeggins()
     {
-        return leggins;
+        return leggings;
     }
     
     public XmlClassEquipmentSlot getBoots()
@@ -51,7 +51,7 @@ public class XmlClassEquipmentInfo
         inv.setContents(getInventoryContents(player));
         
         inv.setChestplate(chestplate.getItemStack(player));
-        inv.setLeggings(leggins.getItemStack(player));
+        inv.setLeggings(leggings.getItemStack(player));
         inv.setBoots(boots.getItemStack(player));
     }
     
