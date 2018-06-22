@@ -17,6 +17,8 @@ public class FastAbilityCommand extends NorthCommand
     public FastAbilityCommand(final GoldHunter goldHunter)
     {
         super("ghdebug-fastability", "ghd-fa");
+        setPermission("goldhunter.debug");
+        
         this.goldHunter = goldHunter;
     }
     

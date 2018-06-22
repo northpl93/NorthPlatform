@@ -16,6 +16,8 @@ public class SelectClassCommand extends NorthCommand
     public SelectClassCommand(CharacterClassManager classManager)
     {
         super("ghdebug-selectclass", "ghd-sc");
+        setPermission("goldhunter.debug");
+        
         this.classManager = classManager;
     }
     
