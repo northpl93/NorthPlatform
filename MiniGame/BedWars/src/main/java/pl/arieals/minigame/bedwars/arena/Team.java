@@ -182,6 +182,29 @@ public class Team
     }
 
     /**
+     * @return True jeśli w teamie jest conajmniej jeden żywy gracz online.
+     */
+    public boolean isAnyPlayerAlive()
+    {
+        for (final Player player : this.players)
+        {
+            if (! player.isOnline())
+            {
+                // jesli gracz jest offline to nie uwzgledniamy go przy sprawdzaniu
+                continue;
+            }
+
+            final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+            if (playerData != null && ! playerData.isEliminated())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Sprawdza czy ten team zostal juz wywliminowany.
      * Uwaga, to pobiera zawartosc zmiennej, nie sprawdza
      * stanu faktycznego.
@@ -198,15 +221,12 @@ public class Team
      */
     public void checkEliminated()
     {
-        if (this.isAlreadyEliminated)
+        if (this.isAlreadyEliminated || this.isTeamAlive())
         {
             return;
         }
 
-        if (! this.isTeamAlive())
-        {
-            this.forceEliminate();
-        }
+        this.forceEliminate();
     }
 
     /**
@@ -220,21 +240,8 @@ public class Team
         {
             return true;
         }
-        for (final Player player : this.players)
-        {
-            if (! player.isOnline())
-            {
-                // jesli gracz jest offline to nie uwzgledniamy go przy sprawdzaniu eliminacji teamu.
-                continue;
-            }
 
-            final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
-            if (playerData != null && ! playerData.isEliminated())
-            {
-                return true;
-            }
-        }
-        return false;
+        return this.isAnyPlayerAlive();
     }
 
     private void forceEliminate()

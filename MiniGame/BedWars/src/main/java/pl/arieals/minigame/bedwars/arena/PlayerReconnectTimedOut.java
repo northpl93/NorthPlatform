@@ -3,6 +3,8 @@ package pl.arieals.minigame.bedwars.arena;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.entity.Player;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -22,18 +24,27 @@ public class PlayerReconnectTimedOut implements Runnable
     @Override
     public void run()
     {
-        if (this.player.getBukkitPlayer().isOnline())
+        final Player bukkitPlayer = this.player.getBukkitPlayer();
+        if (bukkitPlayer.isOnline())
         {
             // gracz wrocil na czas
             return;
         }
 
-        this.logger.log(Level.INFO, "Player {0} doesn't returned in time, marked as eliminated.", this.player.getBukkitPlayer().getName());
+        // eliminujemy tego gracza
         this.player.eliminate();
+        this.logger.log(Level.INFO, "Player {0} doesn't returned in time, marked as eliminated.", bukkitPlayer.getName());
 
-        // sprawdzamy czy team powinien zostac wyeliminowany
-        // to tylko zabezpieczenie bo teoretycznie na 100% bedzie tu wyeliminowany, albo nie bedzie musial byc wyeliminowany
-        this.player.getTeam().checkEliminated();
+        final Team team = this.player.getTeam();
+        if (team.isAnyPlayerAlive())
+        {
+            // w teamie został inny grający gracz, więc nic dalej nie kombinujemy
+            return;
+        }
+
+        // niszczymy łózko tego zespołu bo nie został w nim żaden żywy gracz online
+        // to powinno także oznaczyć team jako wyeliminowany
+        team.destroyBed(true);
     }
 
     @Override
