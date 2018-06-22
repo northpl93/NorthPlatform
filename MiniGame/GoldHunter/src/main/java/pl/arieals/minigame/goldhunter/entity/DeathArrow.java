@@ -1,32 +1,23 @@
 package pl.arieals.minigame.goldhunter.entity;
 
-import org.apache.logging.log4j.Logger;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 
 import net.minecraft.server.v1_12_R1.MinecraftServer;
 
-import pl.arieals.minigame.goldhunter.GoldHunterLogger;
-import pl.arieals.minigame.goldhunter.effect.PoisonEffect;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
-public class PoisonArrow extends HomingArrow
+public class DeathArrow extends SpecialArrow
 {
-    @Inject
-    @GoldHunterLogger
-    private static Logger logger;
-    
-    public PoisonArrow(World world, LivingEntity shooter, LivingEntity target)
+    public DeathArrow(World world, LivingEntity shooter)
     {
-        super(world, shooter, target);
+        super(world, shooter);
     }
-    
+
     @Override
     protected void onTick()
     {
-        super.onTick();
         spawnParticle();
     }
     
@@ -51,14 +42,13 @@ public class PoisonArrow extends HomingArrow
             
             this.world.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, locX, locY, locZ, 1, offsetX, offsetY, offsetZ, 0, null);
         }
+        
+        System.out.println("");
     }
     
     @Override
     protected void onHitPlayer(GoldHunterPlayer player)
     {
-        if ( player != null && player.isIngame() )
-        {
-            player.getEffectTracker().addEffect(new PoisonEffect(), 200);
-        }
+        // TODO Auto-generated method stub
     }
 }

@@ -38,14 +38,12 @@ public class HomingArrowAbility implements AutoListener
         {
             PoisonArrow arrow = new PoisonArrow(player.getPlayer().getWorld(), player.getPlayer(), findNearestTarget(player));
             arrow.shoot(event.getForce());
-            arrow.addEntityToWorld();
             event.setProjectile(arrow.getBukkitEntity());
         }
         if ( player.getEffectTracker().removeEffect(BombArrowEffect.class) )
         {
             BombArrow arrow = new BombArrow(player.getPlayer().getWorld(), player.getPlayer(), findNearestTarget(player));
             arrow.shoot(event.getForce());
-            arrow.addEntityToWorld();
             event.setProjectile(arrow.getBukkitEntity());
         }
     }

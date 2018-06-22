@@ -6,6 +6,8 @@ import org.bukkit.entity.LivingEntity;
 
 import net.minecraft.server.v1_12_R1.EntityLiving;
 
+import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
+
 public class BombArrow extends HomingArrow
 {
     public BombArrow(World world, LivingEntity shooter, LivingEntity target)
@@ -40,7 +42,7 @@ public class BombArrow extends HomingArrow
     }
     
     @Override
-    protected void a(EntityLiving entityliving)
+    protected void onHitPlayer(GoldHunterPlayer player)
     {
         makeExplosion();
     }

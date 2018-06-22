@@ -28,8 +28,6 @@ public class DazzleAbility implements AbilityHandler
     @EventHandler
     public void onHitByFishHook(ProjectileHitEvent event)
     {
-        System.out.println(event.getEntity());
-        
         if ( !( event.getEntity() instanceof FishHook ) || !( event.getHitEntity() instanceof Player ) )
         {
             return;
