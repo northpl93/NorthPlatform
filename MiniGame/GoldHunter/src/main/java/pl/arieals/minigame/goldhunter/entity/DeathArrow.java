@@ -3,9 +3,9 @@ package pl.arieals.minigame.goldhunter.entity;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.util.Vector;
 
-import net.minecraft.server.v1_12_R1.MinecraftServer;
-
+import pl.arieals.minigame.goldhunter.effect.DeathEffect;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 
 public class DeathArrow extends SpecialArrow
@@ -27,28 +27,42 @@ public class DeathArrow extends SpecialArrow
         {
             for (int i = 0; i < 4; i++)
             {
-                double offsetX = random.nextGaussian() * 0.09;
-                double offsetY = random.nextGaussian() * 0.09;
-                double offsetZ = random.nextGaussian() * 0.09;
-                
-                this.world.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, this.locX + this.motX * i / 4.0, this.locY + this.motY * i / 4.0, this.locZ + this.motZ * i / 4.0, 2, offsetX, offsetY, offsetZ, 0, null);
+                for ( int j = 0; j < 3; j++ )
+                {
+                    double offsetX = random.nextGaussian() * 0.091997;
+                    double offsetY = random.nextGaussian() * 0.091997;
+                    double offsetZ = random.nextGaussian() * 0.091997;
+                    
+                    double x = locX + motX * i / 4 + offsetX;
+                    double y = locY + motY * i / 4 + offsetY;
+                    double z = locZ + motZ * i / 4 + offsetZ;
+                    
+                    double color = Math.max(Float.MIN_VALUE, Math.abs(random.nextFloat() % 0.1696969));
+                    this.world.getWorld().spawnParticle(Particle.REDSTONE, x, y, z, 0, color, color, color, 1, null);
+                }
             }
         }
-        else if ( MinecraftServer.currentTick % 20 == 0 )
+        else
         {
-            double offsetX = random.nextGaussian() * 0.22;
-            double offsetY = random.nextGaussian() * 0.22;
-            double offsetZ = random.nextGaussian() * 0.22;
+            int count = random.nextInt(3);
+            Vector dir = getBukkitEntity().getLocation().getDirection().multiply(1/3.0).multiply(new Vector(1, 1, -1));
             
-            this.world.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, locX, locY, locZ, 1, offsetX, offsetY, offsetZ, 0, null);
+            for ( int i = 0; i < count; i++ )
+            {
+                double x = locX + dir.getX() + random.nextGaussian() * 0.22;
+                double y = locY + dir.getY() + random.nextGaussian() * 0.22;
+                double z = locZ + dir.getZ() + random.nextGaussian() * 0.22;
+                
+                double color = Math.max(Float.MIN_VALUE, Math.abs(random.nextFloat() % 0.1696969));
+                
+                this.world.getWorld().spawnParticle(Particle.REDSTONE, x, y, z, 0, color, color, color, 1, null);
+            }
         }
-        
-        System.out.println("");
     }
     
     @Override
     protected void onHitPlayer(GoldHunterPlayer player)
     {
-        // TODO Auto-generated method stub
+        player.getEffectTracker().addEffect(new DeathEffect());
     }
 }

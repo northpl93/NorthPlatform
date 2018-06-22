@@ -37,6 +37,21 @@ public class DamageListener implements AutoListener
         }
     }
     
+    @EventHandler
+    public void onPlayerDamageByWitherEffect(EntityDamageEvent event)
+    {
+        if ( !( event.getEntity() instanceof Player ) )
+        {
+            return;
+        }
+        
+        GoldHunterPlayer player = goldHunter.getPlayer((Player) event.getEntity());
+        if ( player != null && event.getCause() == DamageCause.WITHER )
+        {
+            event.setCancelled(true);
+        }
+    }
+    
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDamageByPlayer(EntityDamageByEntityEvent event)
     {

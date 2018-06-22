@@ -19,6 +19,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class PlayerDeathListener implements AutoListener
 {
+    @Inject
     @GoldHunterLogger
     private Logger logger;
     

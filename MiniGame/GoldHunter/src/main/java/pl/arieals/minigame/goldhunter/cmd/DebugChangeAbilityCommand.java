@@ -37,7 +37,7 @@ public class DebugChangeAbilityCommand extends NorthCommand
             return;
         }
         
-        if ( args.length() != 0 )
+        if ( args.length() != 1 )
         {
             player.getPlayer().sendMessage("&c&lGHD: &cMozliwe wartosci: " + String.join("§c, §4", Arrays.stream(SpecialAbilityType.values()).map(SpecialAbilityType::name)
                     .toArray(i -> new String[i])));

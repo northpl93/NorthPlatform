@@ -22,6 +22,7 @@ import org.bukkit.util.Vector;
 
 import com.google.common.base.Preconditions;
 
+import net.minecraft.server.v1_12_R1.DamageSource;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.MinecraftServer;
 
@@ -426,6 +427,12 @@ public class GoldHunterPlayer implements ITickable
         setDoubleJumpActive(false);
         
         player.getActivePotionEffects().forEach(e -> player.removePotionEffect(e.getType()));
+    }
+    
+    public void damage(double value)
+    {
+        logger.debug("call GoldHunterPlayer#damage() with {}", value);
+        getMinecraftPlayer().damageEntity(DamageSource.GENERIC, (float) value);
     }
     
     public void die()
