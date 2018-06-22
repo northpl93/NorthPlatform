@@ -4,8 +4,6 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 
-import net.minecraft.server.v1_12_R1.EntityLiving;
-
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 
 public class BombArrow extends HomingArrow

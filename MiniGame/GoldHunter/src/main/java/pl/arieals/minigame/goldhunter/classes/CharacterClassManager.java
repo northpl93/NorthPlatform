@@ -5,8 +5,6 @@ import java.util.Map;
 
 import javax.xml.bind.JAXB;
 
-import com.google.common.collect.Iterables;
-
 import pl.arieals.minigame.goldhunter.classes.xml.XmlClassDesc;
 import pl.arieals.minigame.goldhunter.classes.xml.XmlClasses;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
