@@ -84,13 +84,13 @@ class StatisticHolderImpl implements IStatisticHolder
         final Document find = this.composeConditions(statistic, new ArrayList<>(0));
 
         final Document setContent = new Document("owner", this.holder.asBson()).append("statId", id).append("time", System.currentTimeMillis());
-        final Document insertDocument = new Document("$set", setContent);
+        value.toDocument(setContent);
 
         final CompletableFuture<IRecord<UNIT>> future = new CompletableFuture<>();
         this.manager.getApiCore().getPlatformConnector().runTaskAsynchronously(() ->
         {
             final FindOneAndUpdateOptions options = new FindOneAndUpdateOptions().sort(TIME_SORT).upsert(true);
-            final Document previous = collection.findOneAndUpdate(find, insertDocument, options);
+            final Document previous = collection.findOneAndUpdate(find, new Document("$set", setContent), options);
             if (previous != null)
             {
                 previous.remove("_id");
