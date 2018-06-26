@@ -90,10 +90,15 @@ public class CharacterClass
         return equipmentInfo;
     }
     
+    public void applyEffects(GoldHunterPlayer player)
+    {
+        player.getPlayer().getActivePotionEffects().forEach(effect -> player.getPlayer().removePotionEffect(effect.getType()));
+        effects.forEach(effect -> effect.applyToPlayer(player));
+    }
+    
     public void applyEquipment(GoldHunterPlayer player)
     {
         equipmentInfo.applyToPlayer(player);
-        effects.forEach(effect -> effect.applyToPlayer(player));
     }
     
     public List<XmlInventoryRefilRule> getInventoryRefilRules()

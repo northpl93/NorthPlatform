@@ -27,7 +27,7 @@ public class XmlPotionEffect
     
     public void applyToPlayer(GoldHunterPlayer player)
     {
-        player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.getByName(type), Integer.MAX_VALUE, level, true, true), true);
+        player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.getByName(type), Integer.MAX_VALUE, level, true, false), true);
     }
 }
 

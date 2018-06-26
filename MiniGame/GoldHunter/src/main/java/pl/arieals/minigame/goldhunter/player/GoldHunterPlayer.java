@@ -270,6 +270,7 @@ public class GoldHunterPlayer implements ITickable
         Preconditions.checkState(selectedClass != null);
         
         currentClass = selectedClass;
+        currentClass.applyEffects(this);
         currentClass.applyEquipment(this);
         abilityTracker.setNewAbilityType(currentClass.getSpecialAbility());
         
