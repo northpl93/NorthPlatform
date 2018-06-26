@@ -56,7 +56,7 @@
 	</equipment>
 	
 	<effects>
-		<effect type="SPEED" level="1" />
+		<effect type="SPEED" />
 	</effects>
 	
 	<invRefilRule maxCount="2" period="50" id="minecraft:snowball" />

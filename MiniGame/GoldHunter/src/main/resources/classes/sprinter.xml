@@ -54,9 +54,9 @@
 	</equipment>
 	
 	<effects>
-		<effect type="SPEED" level="1" />
+		<effect type="SPEED" />
 		<!-- <effect type="minecraft:speed" level="1" /> -->
-		<effect type="JUMP" level="1" />
+		<effect type="JUMP" />
 		<!-- <effect type="minecraft:jump_boost" level="1" /> -->
 	</effects>
 </class>
