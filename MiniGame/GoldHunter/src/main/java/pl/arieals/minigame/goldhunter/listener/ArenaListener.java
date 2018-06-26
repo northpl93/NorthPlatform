@@ -1,10 +1,9 @@
 package pl.arieals.minigame.goldhunter.listener;
 
-import org.bukkit.event.EventHandler;
-
 import org.apache.logging.log4j.Logger;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 
-import pl.arieals.api.minigame.server.gamehost.MiniGameApi;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.ArenaStartScheduledEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
@@ -80,8 +79,7 @@ public class ArenaListener implements AutoListener
         GoldHunterArena arena = event.getArena().getArenaData();
         GoldHunterPlayer player = new GoldHunterPlayer(event.getPlayer(), arena);
         
-        MiniGameApi.setPlayerData(event.getPlayer(), arena);
-        MiniGameApi.setPlayerData(event.getPlayer(), player);
+        goldHunter.addPlayer(player);
         
         arena.playerJoin(player);
     }
@@ -92,7 +90,10 @@ public class ArenaListener implements AutoListener
         event.setQuitMessage(null);
         
         GoldHunterArena arena = event.getArena().getArenaData();
-        arena.playerLeft(MiniGameApi.getPlayerData(event.getPlayer(), GoldHunterPlayer.class));
+        GoldHunterPlayer player = goldHunter.getPlayer(event.getPlayer());
+        
+        arena.playerLeft(player);
+        goldHunter.removePlayer(player);
     }
     
     @EventHandler

@@ -2,16 +2,16 @@
 <classes>
 	<class>lucznik-truciciel</class>
 	<class>lucznik-bombowiec</class>
-	<class>medyk-bojowy</class>
-	<class>medyk-polowy</class>
-	<class>svip-paladyn</class>
-	<class>svip-szpieg</class>
-	<class>technik-architekt</class>
-	<class>technik-dozownik</class>
-	<class>vip-assasyn</class>
-	<class>vip-obronca</class>
-	<class>wojownik-berserker</class>
-	<class>wojownik-rycerz</class>
-	<class>zwiadowca-procarz</class>
-	<class>zwiadowca-sprinter</class>
+	<class>szaman</class>
+	<class>medyk</class>
+	<class>paladyn</class>
+	<class>ninja</class>
+	<class>architekt</class>
+	<class>dostawca</class>
+	<class>assasyn</class>
+	<class>obronca</class>
+	<class>berserker</class>
+	<class>rycerz</class>
+	<class>procarz</class>
+	<class>sprinter</class>
 </classes>

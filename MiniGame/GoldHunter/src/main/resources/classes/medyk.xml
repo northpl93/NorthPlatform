@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class>
+	<displayName>@medic</displayName>
+	<lore>@medic.lore</lore>
+	
+	<icon id="minecraft:slime_ball" />
+	
+	<!-- <shopItem>medic.access</shopItem> -->
+	
+	<specialAbility type="HEAL">
+		<loading ifbuyed="medic.loadingtime:5" seconds="35" />
+		<loading ifbuyed="medic.loadingtime:4" seconds="38" />
+		<loading ifbuyed="medic.loadingtime:3" seconds="41" />
+		<loading ifbuyed="medic.loadingtime:2" seconds="44" />
+		<loading ifbuyed="medic.loadingtime:1" seconds="47" />
+		<loading seconds="50" />
+	</specialAbility>
+	
+	<equipment>
+		<chestplate>
+			<item ifbuyed="medic.chestplate" id="minecraft:golden_chestplate" />
+			<item id="minecraft:leather_chestplate" /> 
+		</chestplate>
+		
+		<leggings>
+			<item ifbuyed="medic.leggings" id="minecraft:leather_leggings" /> 
+		</leggings>
+				
+		<boots>
+			<item id="minecraft:golden_boots" /> 
+		</boots>
+		
+		<inv slot="0" >
+			<item id="minecraft:golden_sword" />
+		</inv>
+	
+		<inv slot="3" >
+			<item id="minecraft:iron_axe" />
+		</inv>
+
+		<inv slot="4" >
+			<item id="minecraft:diamond_pickaxe" />
+		</inv>		
+
+		<inv slot="8" >
+			<item ifbuyed="medic.budulec:3" id="minecraft:planks" count="35" />
+			<item ifbuyed="medic.budulec:3" id="minecraft:planks" count="32" />
+			<item ifbuyed="medic.budulec:3" id="minecraft:planks" count="29" />
+			<item ifbuyed="medic.budulec:2" id="minecraft:planks" count="26" />
+			<item ifbuyed="medic.budulec:1" id="minecraft:planks" count="23" />
+			<item id="minecraft:planks" count="20" />
+		</inv>
+	</equipment>
+	
+	<invRefilRule maxCount="5" period="100" id="minecraft:splash_potion" >
+		<potionMeta>
+			<potionData type="INSTANT_HEAL" upgraded="true" />
+		</potionMeta>
+	</invRefilRule>
+	
+	<invRefilRule maxCount="2" period="100" id="minecraft:splash_potion" >
+		<potionMeta>
+			<potionData type="REGEN" />
+		</potionMeta>
+	</invRefilRule>
+	
+</class>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class>
+	<displayName>@berserker</displayName>
+	<lore>@berserker.lore</lore>
+	
+	<icon id="STONE_SWORD" />
+	
+	<specialAbility type="CALL_OF_BLOOD">
+		<loading ifbuyed="berserker.loadingtime:3" seconds="21" />
+		<loading ifbuyed="berserker.loadingtime:2" seconds="24" />
+		<loading ifbuyed="berserker.loadingtime:1" seconds="27" />
+		<loading seconds="30" />
+	</specialAbility>
+	
+	<equipment>
+		<chestplate>
+			<item ifbuyed="berserker.chestplate:2" id="minecraft:iron_chestplate" />
+			<item ifbuyed="berserker.chestplate:1" id="minecraft:golden_chestplate" />
+			<item id="minecraft:leather_chestplate" /> 
+		</chestplate>
+		
+		<boots>
+			<item id="minecraft:chainmail_boots" /> 
+		</boots>
+		
+		<inv slot="0" >
+			<item ifbuyed="berserker.sword" id="minecraft:iron_sword" />
+			<item id="minecraft:stone_sword" />
+		</inv>
+	
+	<!-- SIEKIERA -->
+		<inv slot="1" >
+			<item id="minecraft:iron_axe" />
+		</inv>
+	<!-- KILOF -->		
+		<inv slot="2" >
+			<item id="minecraft:diamond_pickaxe" />
+		</inv>		
+	<!-- BUDULEC -->		
+		<inv slot="8" >
+			<item ifbuyed="berserker.budulec:3" id="minecraft:planks" count="30" />
+			<item ifbuyed="berserker.budulec:2" id="minecraft:planks" count="25" />
+			<item ifbuyed="berserker.budulec:1" id="minecraft:planks" count="20" />
+			<item id="minecraft:planks" count="15" />
+		
+		</inv>
+	</equipment>
+
+</class>

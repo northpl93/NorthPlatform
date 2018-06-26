@@ -1,35 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <class>
-	<!-- @nazwa_klasy.nazwa_podklasy -->
-	<displayName>@archer.bomb</displayName>
-	<!-- @nazwa_klasy -->
-	<shortName>@archer</shortName>
-	<!-- @nazwa_klasy -->
-	<lore>@archer.bomb.lore</lore>
+	<displayName>@archer_bomb</displayName>
+	<lore>@archer_bomb.lore</lore>
 
-	<!-- KLASA DODATKOWA -->
 	<icon id="minecraft:tipped_arrow">
 		<potionMeta>
 			<potionData type="INSTANT_HEAL" />
 		</potionMeta>
 	</icon>
             	
-    <shopItem>class.archer.bomb</shopItem>
+    <!-- <shopItem>archer_bomb.access</shopItem> -->
     
-	<specialAbility>BOMB_ARROW</specialAbility>
+	<specialAbility type="BOMB_ARROW">
+		<loading ifbuyed="archer_bomb.loadingtime:3" seconds="30" />
+		<loading ifbuyed="archer_bomb.loadingtime:2" seconds="35" />
+		<loading ifbuyed="archer_bomb.loadingtime:1" seconds="40" />
+		<loading seconds="45" />
+	</specialAbility>
 	
 	<equipment>
 		<chestplate>
-			<item ifbuyed="archer.bomb.chainchest" id="minecraft:chainmail_chestplate" />
 			<item id="minecraft:leather_chestplate" /> 
 		</chestplate>
 		
-		<leggings>
-			<item id="minecraft:iron_leggings" /> 
-		</leggings>
-		
 		<boots>
-			<!-- <item ifbuyed="archer.bomb.boots" id="minecraft:leather_boots" /> -->
+			<item ifbuyed="archer_bomb.boots" id="minecraft:iron_boots" />
 		</boots>
 		
 		<inv slot="0" >
@@ -37,7 +32,11 @@
 		</inv>
 
 		<inv slot="1" >
-			<item ifbuyed="archer.bomb.punchbow" id="minecraft:bow" />
+			<item ifbuyed="archer_bomb.punchbow" id="minecraft:bow">
+				<enchants>
+					<enchant enchantment="ARROW_DAMAGE" level="1" />
+				</enchants>
+			</item>
 			<item id="minecraft:bow" />
 		</inv>		
 	<!-- SIEKIERA -->
@@ -50,13 +49,13 @@
 		</inv>		
 	<!-- BUDULEC -->		
 		<inv slot="8" >
-			<item ifbuyed="archer.bomb.budulec:3" id="minecraft:planks" count="35" />
-			<item ifbuyed="archer.bomb.budulec:2" id="minecraft:planks" count="30" />
-			<item ifbuyed="archer.bomb.budulec:1" id="minecraft:planks" count="25" />
-			<item id="minecraft:planks" count="20" />
+			<item ifbuyed="archer_bomb.budulec:3" id="minecraft:planks" count="30" />
+			<item ifbuyed="archer_bomb.budulec:2" id="minecraft:planks" count="25" />
+			<item ifbuyed="archer_bomb.budulec:1" id="minecraft:planks" count="20" />
+			<item id="minecraft:planks" count="15" />
 		</inv>
 	</equipment>
 	
-	<invRefilRule>LUCZNIK</invRefilRule>
-	<invRefilTime>50</invRefilTime>
+	<invRefilRule maxCount="3" period="50" id="minecraft:arrow" />
+
 </class>

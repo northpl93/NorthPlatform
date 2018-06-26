@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class>
+	<displayName>@shaman</displayName>
+	<lore>@shaman.lore</lore>
+	
+	<icon id="minecraft:magma_cream" />
+	
+	<specialAbility type="BATTLE_SCREAM">
+		<loading ifbuyed="shaman.loadingtime:5" seconds="30" />
+		<loading ifbuyed="shaman.loadingtime:4" seconds="33" />
+		<loading ifbuyed="shaman.loadingtime:3" seconds="36" />
+		<loading ifbuyed="shaman.loadingtime:2" seconds="39" />
+		<loading ifbuyed="shaman.loadingtime:1" seconds="42" />
+		<loading seconds="45" />
+	</specialAbility>
+	
+	<equipment>
+		<chestplate>
+			<item ifbuyed="shaman.chestplate:1" id="minecraft:golden_chestplate" />
+			<item id="minecraft:leather_chestplate" /> 
+		</chestplate>
+		
+		<leggings>
+			<item id="minecraft:leather_leggings" /> 
+		</leggings>
+				
+		<boots>
+			<item id="minecraft:golden_boots" /> 
+		</boots>
+		
+		<inv slot="0" >
+			<item id="minecraft:golden_sword" />
+		</inv>
+		
+			<!-- POTY -->
+		<inv slot="1" >
+			<!-- potka 5x Instant Damage (co 5s 1 potka)-->
+		</inv>
+		
+		<inv slot="2" >
+			<!-- potka 2x poison (co 5s 1 potka)--> 
+		</inv>
+	
+	<!-- SIEKIERA -->
+		<inv slot="3" >
+			<item id="minecraft:iron_axe" />
+		</inv>
+	<!-- KILOF -->		
+		<inv slot="4" >
+			<item id="minecraft:diamond_pickaxe" />
+		</inv>		
+	<!-- BUDULEC -->		
+		<inv slot="8" >
+			<item ifbuyed="shaman.budulec:3" id="minecraft:planks" count="35" />
+			<item ifbuyed="shaman.budulec:3" id="minecraft:planks" count="32" />
+			<item ifbuyed="shaman.budulec:3" id="minecraft:planks" count="29" />
+			<item ifbuyed="shaman.budulec:2" id="minecraft:planks" count="26" />
+			<item ifbuyed="shaman.budulec:1" id="minecraft:planks" count="23" />
+			<item id="minecraft:planks" count="20" />
+		</inv>
+		
+	</equipment>
+	
+	<invRefilRule maxCount="5" period="100" id="minecraft:splash_potion" >
+		<potionMeta>
+			<potionData type="INSTANT_DAMAGE" />
+		</potionMeta>
+	</invRefilRule>
+	
+	<invRefilRule maxCount="2" period="100" id="minecraft:splash_potion" >
+		<potionMeta>
+			<potionData type="POISON" />
+		</potionMeta>
+	</invRefilRule>
+</class>

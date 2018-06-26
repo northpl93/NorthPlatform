@@ -5,14 +5,22 @@ import java.util.Map;
 
 import javax.xml.bind.JAXB;
 
+import org.apache.logging.log4j.Logger;
+
+import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.classes.xml.XmlClassDesc;
 import pl.arieals.minigame.goldhunter.classes.xml.XmlClasses;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class CharacterClassManager
 {
+    @Inject
+    @GoldHunterLogger
+    public static Logger logger;
+    
     private final Map<String, CharacterClass> characterClasses = new LinkedHashMap<>();
     
     private final MessagesBox messages;
@@ -32,8 +40,15 @@ public class CharacterClassManager
     
     private void loadCharacterClass(String className)
     {
-        XmlClassDesc classDesc = JAXB.unmarshal(getClass().getResourceAsStream("/classes/" + className + ".xml"), XmlClassDesc.class);
-        characterClasses.put(className, classDesc.toCharacterClass(messages));
+        try
+        {
+            XmlClassDesc classDesc = JAXB.unmarshal(getClass().getResourceAsStream("/classes/" + className + ".xml"), XmlClassDesc.class);
+            characterClasses.put(className, classDesc.toCharacterClass(messages));
+        }
+        catch ( Exception e )
+        {
+            logger.error("Erorr when load class {}", className, e);
+        }
     }
     
     public CharacterClass getByName(String name)
@@ -43,6 +58,6 @@ public class CharacterClassManager
     
     public CharacterClass getDefaultClass()
     {
-        return characterClasses.get("wojownik-berserker");
+        return characterClasses.get("berserker");
     }
 }

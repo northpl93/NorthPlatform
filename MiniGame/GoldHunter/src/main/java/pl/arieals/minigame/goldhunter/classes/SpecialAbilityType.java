@@ -6,7 +6,6 @@ import java.util.Map;
 import com.google.common.base.Preconditions;
 
 import pl.arieals.minigame.goldhunter.abilities.BattlecryAbility;
-import pl.arieals.minigame.goldhunter.abilities.BetrayalAbility;
 import pl.arieals.minigame.goldhunter.abilities.BombArrowAbility;
 import pl.arieals.minigame.goldhunter.abilities.BrigdeAbility;
 import pl.arieals.minigame.goldhunter.abilities.CallOfBloodAbility;
@@ -24,48 +23,33 @@ import pl.arieals.minigame.goldhunter.player.AbilityHandler;
 
 public enum SpecialAbilityType
 {
-    // lucznik
-    POISON_ARROW(new PoisonArrowAbility(), "archer.poison.time", 45 * 20, 42 * 20, 39 * 20, 36 * 20),
-    BOMB_ARROW(new BombArrowAbility(), "archer.bomb.time", 50 * 20, 45 * 20, 40 * 20, 35 * 20),
+    BATTLE_SCREAM(new BattlecryAbility(), "info.ability.press_q"),
+    BOMB_ARROW(new BombArrowAbility(), "info.ability.press_q"),
+    BRIDGE(new BrigdeAbility(), "info.ability.press_q"),
+    CALL_OF_BLOOD(new CallOfBloodAbility(), "info.ability.press_q"),
+    DAZZLE(new DazzleAbility(), "info.ability.press_q"),
+    DEATH_ARROW(new DeathArrowAbility(), "info.ability.press_q"),
+    DIVINE_SHIELD(new RedemptionAbility(), "info.ability.press_q"), // TODO:
+    DOUBLE_JUMP(new DoubleJumpAbility(), "info.ability.press_double_space"),
+    HEAL(new SirenTearsAbility(), "info.ability.press_q"),
+    POISON_ARROW(new PoisonArrowAbility(), "info.ability.press_q"),
+    SHADOW(new ShadowAbility(), "info.ability.press_q"),
+    SHIELD_ATTACK(new ShieldAttackAbility(), "info.ability.press_q"),
+    SUPPLIER(new SupplierAbility(), "info.ability.press_q"),
+    WALL(new WallAbility(), "info.ability.press_q"),
     
-    // wojownik
-    CALL_OF_BLOOD(new CallOfBloodAbility(), "warrior.berserker.time", 50 * 20, 45 * 20, 40 * 20, 35 * 20),
-    SHIELD_ATTACK(new ShieldAttackAbility(), "warrior.knight.time", 50 * 20, 45 * 20, 40 * 20, 35 * 20),
-    
-    // zwiadowca
-    DOUBLE_JUMP(new DoubleJumpAbility(), "scout.sprinter.time", 23 * 20, 20 * 20, 17 * 20, 14 * 20),
-    DAZZLE(new DazzleAbility(), "scout.slinger.time", 40 * 20, 35 * 20, 30 * 20, 25 * 20),
-    
-    // Medyk
-    BATTLECRY(new BattlecryAbility(), "medic.battle.time", 55 * 20, 50 * 20, 45 * 20, 40 * 20),
-    SIRENS_TEARS(new SirenTearsAbility(), "medic.healer.time", 50 * 20, 45 * 20, 40 * 20, 35 * 20),
-    
-    // Technik
-    BRIDGE(new BrigdeAbility(), "engineer.architect.time", 50 * 20, 45 * 20, 40 * 20, 35 * 20),
-    SUPPLIER(new SupplierAbility(), "engineer.dispenser.time", 50 * 20, 45 * 20, 40 * 20, 35 * 20),
-    
-    SHADOW(new ShadowAbility(), "vip.assasyn.time", 50 * 20, 45 * 20, 40 * 20, 35 * 2),
-    WALL(new WallAbility(), "vip.defender.time", 55 * 20, 50 * 20, 45 * 20, 40 * 20),
-    
-    BETRAYAL(new BetrayalAbility(), "svip.spy.time", 50 * 20, 45 * 20, 40 * 20, 35 * 2),
-    REDEMPTION(new RedemptionAbility(), "svip.paladin.time", 55 * 20, 50 * 20, 45 * 20, 40 * 20),
-    
-    DEATH_ARROW(new DeathArrowAbility(), "svip.paladin.time", 55 * 20, 50 * 20, 45 * 20, 40 * 20), // TODO:
     ;
     
     private static final Map<String, SpecialAbilityType> byName = new HashMap<>();
     
     private final AbilityHandler handler;
-    private final String shopItemName;
-    private final int[] loadingTimes;
+    private final String abilityReadyMessage;
     
-    private SpecialAbilityType(AbilityHandler handler, String shopItem, int... loadingTimesInSeconds)
+    private SpecialAbilityType(AbilityHandler handler, String abilityReadyMessage)
     {
         Preconditions.checkNotNull(handler);
-        
         this.handler = handler;
-        this.shopItemName = shopItem;
-        this.loadingTimes = loadingTimesInSeconds;
+        this.abilityReadyMessage = abilityReadyMessage;
     }
     
     public AbilityHandler getHandler()
@@ -73,19 +57,9 @@ public enum SpecialAbilityType
         return handler;
     }
     
-    public String getShopItemName()
+    public String getAbilityReadyMessage()
     {
-        return shopItemName;
-    }
-    
-    public int[] getLoadingTimes()
-    {
-        return loadingTimes;
-    }
-    
-    public int getLoadingTimeAtLevel(int level)
-    {
-        return loadingTimes[Math.min(level, loadingTimes.length - 1)];
+        return abilityReadyMessage;
     }
 
     public static SpecialAbilityType byName(String name)
@@ -93,8 +67,8 @@ public enum SpecialAbilityType
         return byName.get(name);
     }
     
-    static {
-        
+    static
+    {
         for ( SpecialAbilityType value : values() )
         {
             byName.put(value.name(), value);

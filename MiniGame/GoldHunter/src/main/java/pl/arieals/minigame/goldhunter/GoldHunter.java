@@ -1,5 +1,7 @@
 package pl.arieals.minigame.goldhunter;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,7 +16,6 @@ import org.bukkit.scheduler.BukkitTask;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
-import pl.arieals.api.minigame.server.gamehost.MiniGameApi;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.goldhunter.arena.GoldHunterArena;
 import pl.arieals.minigame.goldhunter.classes.CharacterClassManager;
@@ -36,6 +37,8 @@ public class GoldHunter
     private final CharacterClassManager characterClassManager;
     
     private final GameHostManager gameHostManager;
+    
+    private final Map<UUID, GoldHunterPlayer> players = new HashMap<>();
     
     @Bean
     private GoldHunter(BukkitApiCore apiCore, CharacterClassManager characterClassManager)
@@ -59,15 +62,24 @@ public class GoldHunter
         
     }
     
+    public void addPlayer(GoldHunterPlayer player)
+    {
+        players.put(player.getPlayer().getUniqueId(), player);
+    }
+    
+    public void removePlayer(GoldHunterPlayer player)
+    {
+        players.remove(player.getPlayer().getUniqueId());
+    }
+    
     public GoldHunterPlayer getPlayer(UUID uuid)
     {
-        Player player = Bukkit.getPlayer(uuid);
-        return player != null ? getPlayer(player) : null;
+        return players.get(uuid);
     }
     
     public GoldHunterPlayer getPlayer(Player bukkitPlayer)
     {
-        return MiniGameApi.getPlayerData(bukkitPlayer, GoldHunterPlayer.class);
+        return getPlayer(bukkitPlayer.getUniqueId());
     }
     
     public GoldHunterPlayer getPlayer(HumanEntity humanEntity)

@@ -14,8 +14,11 @@ public class GoldHunterEntityUtils
 {
     public static void registerGoldHunterEntities()
     {
+        /*
         registerCustomEntity(PoisonArrow.class, 10);
         registerCustomEntity(BombArrow.class, 10);
+        registerCustomEntity(DeathArrow.class, 10);
+        */
     }
     
     private static void registerCustomEntity(Class<? extends Entity> entityClass, int typeId)

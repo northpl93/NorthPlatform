@@ -1,12 +1,17 @@
 package pl.arieals.minigame.goldhunter.classes.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.google.common.collect.ImmutableList;
+
 import pl.arieals.minigame.goldhunter.classes.CharacterClass;
-import pl.arieals.minigame.goldhunter.classes.InventoryRefilRule;
-import pl.arieals.minigame.goldhunter.classes.SpecialAbilityType;
 import pl.arieals.minigame.goldhunter.player.PlayerRank;
 import pl.north93.zgame.api.bukkit.utils.xml.itemstack.XmlItemStack;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -21,24 +26,22 @@ public class XmlClassDesc
     private XmlItemStack icon;
     
     private String displayName;
-    private String shortName;
     private String lore;
     
-    private String specialAbility;
-    
-    private String invRefilRule;
-    private int invRefilTime;
+    private XmlSpecialAbilityInfo specialAbility;
     
     private XmlClassEquipmentInfo equipment;
+    
+    @XmlElement(name = "invRefilRule")
+    private List<XmlInventoryRefilRule> invRefilRules = new ArrayList<>();
+    
+    @XmlElementWrapper(name = "effects")
+    @XmlElement(name = "effect")
+    private List<XmlPotionEffect> effects = new ArrayList<>();
     
     public String getDisplayName()
     {
         return displayName;
-    }
-    
-    public String getShortName()
-    {
-        return shortName;
     }
     
     public String getLore()
@@ -46,7 +49,7 @@ public class XmlClassDesc
         return lore;
     }
     
-    public String getSpecialAbility()
+    public XmlSpecialAbilityInfo getSpecialAbility()
     {
         return specialAbility;
     }
@@ -62,11 +65,10 @@ public class XmlClassDesc
                 shopItem,
                 icon != null ? icon : new XmlItemStack("BEDROCK"),
                 TranslatableString.of(messagesBox, displayName),
-                TranslatableString.of(messagesBox, shortName),
                 TranslatableString.of(messagesBox, lore),
-                SpecialAbilityType.byName(specialAbility),
+                specialAbility,
                 equipment,
-                InventoryRefilRule.byName(invRefilRule),
-                invRefilTime);
+                ImmutableList.copyOf(invRefilRules),
+                effects);
     }
 }

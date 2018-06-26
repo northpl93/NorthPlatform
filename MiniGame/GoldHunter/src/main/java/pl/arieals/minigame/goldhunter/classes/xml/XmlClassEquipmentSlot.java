@@ -26,6 +26,6 @@ public class XmlClassEquipmentSlot
     public ItemStack getItemStack(GoldHunterPlayer player)
     {
         return items.stream().filter(condition -> condition.check(player)).findFirst()
-                .map(condition -> condition.createItemStack()).map(ItemStackUtils::hideAttributesAndMakeUnbreakable).orElse(null);
+                .map(condition -> condition.createItemStack()).map(is -> ItemStackUtils.prepareItem(player, is)).orElse(null);
     }
 }

@@ -87,7 +87,7 @@ public class PlayerDeathListener implements AutoListener
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event)
     {
-        GoldHunterPlayer player = MiniGameApi.getPlayerData(event.getPlayer(), GoldHunterPlayer.class);
+        GoldHunterPlayer player = goldHunter.getPlayer(event.getPlayer());
         
         if ( player.isIngame() )
         {

@@ -34,6 +34,7 @@ public class PoisonArrow extends HomingArrow
     {
         if ( !isInGround() )
         {
+            /*
             for (int i = 0; i < 4; i++)
             {
                 double offsetX = random.nextGaussian() * 0.09;
@@ -41,6 +42,24 @@ public class PoisonArrow extends HomingArrow
                 double offsetZ = random.nextGaussian() * 0.09;
                 
                 this.world.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, this.locX + this.motX * i / 4.0, this.locY + this.motY * i / 4.0, this.locZ + this.motZ * i / 4.0, 2, offsetX, offsetY, offsetZ, 0, null);
+            }*/
+            
+            for (int i = 0; i < 10; i++)
+            {
+                for ( int j = 0; j < 4; j++ )
+                {
+                    double offsetX = random.nextGaussian() * 0.111997;
+                    double offsetY = random.nextGaussian() * 0.111997;
+                    double offsetZ = random.nextGaussian() * 0.111997;
+                    
+                    double x = locX + motX * i / 4 + offsetX;
+                    double y = locY + motY * i / 4 + offsetY;
+                    double z = locZ + motZ * i / 4 + offsetZ;
+                    
+                    double color = Math.max(0.28F, Math.abs(random.nextFloat() % 0.3596969));
+                    
+                    this.world.getWorld().spawnParticle(Particle.REDSTONE, x, y, z, 0, Float.MIN_VALUE, 1, color, 1, null);
+                }
             }
         }
         else if ( MinecraftServer.currentTick % 20 == 0 )

@@ -2,7 +2,7 @@ package pl.arieals.minigame.goldhunter.cmd;
 
 import org.bukkit.entity.Player;
 
-import pl.arieals.api.minigame.server.gamehost.MiniGameApi;
+import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.player.GameTeam;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.arieals.minigame.goldhunter.player.PlayerRank;
@@ -12,9 +12,13 @@ import pl.north93.zgame.api.global.commands.NorthCommandSender;
 
 public class SignCommand extends NorthCommand
 {
-    public SignCommand()
+    private final GoldHunter goldHunter;
+    
+    public SignCommand(GoldHunter goldHunter)
     {
         super("sign", "zapisz");
+        
+        this.goldHunter = goldHunter;
     }
     
     @Override
@@ -25,7 +29,7 @@ public class SignCommand extends NorthCommand
             return;
         }
         
-        GoldHunterPlayer player = MiniGameApi.getPlayerData((Player) sender.unwrapped(), GoldHunterPlayer.class);
+        GoldHunterPlayer player = goldHunter.getPlayer((Player) sender.unwrapped());
         if ( player == null )
         {
             return;

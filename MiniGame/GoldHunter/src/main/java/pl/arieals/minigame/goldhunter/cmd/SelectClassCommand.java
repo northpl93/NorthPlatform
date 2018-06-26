@@ -2,7 +2,7 @@ package pl.arieals.minigame.goldhunter.cmd;
 
 import org.bukkit.entity.Player;
 
-import pl.arieals.api.minigame.server.gamehost.MiniGameApi;
+import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.classes.CharacterClassManager;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.global.commands.Arguments;
@@ -11,13 +11,15 @@ import pl.north93.zgame.api.global.commands.NorthCommandSender;
 
 public class SelectClassCommand extends NorthCommand
 {
+    private final GoldHunter goldHunter;
     private final CharacterClassManager classManager;
     
-    public SelectClassCommand(CharacterClassManager classManager)
+    public SelectClassCommand(GoldHunter goldHunter, CharacterClassManager classManager)
     {
         super("ghdebug-selectclass", "ghd-sc");
         setPermission("goldhunter.debug");
         
+        this.goldHunter = goldHunter;
         this.classManager = classManager;
     }
     
@@ -29,7 +31,7 @@ public class SelectClassCommand extends NorthCommand
             return; // TODO: send command not found message
         }
         
-        GoldHunterPlayer player = MiniGameApi.getPlayerData((Player) sender.unwrapped(), GoldHunterPlayer.class);
+        GoldHunterPlayer player = goldHunter.getPlayer((Player) sender.unwrapped());
         player.selectClass(classManager.getByName(args.asString(0)));
     }
     

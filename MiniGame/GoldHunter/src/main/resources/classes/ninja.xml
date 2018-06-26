@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class>
+	<displayName>@ninja</displayName>
+	<lore>@ninja.lore</lore>
+
+	<icon id="minecraft:name_tag" />
+	
+	<rank>SVIP</rank>
+	
+	<specialAbility type="DEATH_ARROW">
+		<loading ifbuyed="ninja.loadingtime:3" seconds="36" />
+		<loading ifbuyed="ninja.loadingtime:2" seconds="40" />
+		<loading ifbuyed="ninja.loadingtime:1" seconds="44" />
+		<loading seconds="48" />
+	</specialAbility>
+	
+	<equipment>
+		<chestplate>
+			<item ifbuyed="ninja.chestplate:2" id="minecraft:chainmail_chestplate" />
+			<item ifbuyed="ninja.chestplate:1" id="minecraft:leather_chestplate" />
+		</chestplate>
+		
+		<leggings>
+			<item id="minecraft:leather_leggings" /> 
+		</leggings>
+				
+		<boots>
+			<item ifbuyed="ninja.boots" id="minecraft:chainmail_boots" />
+		</boots>
+		
+		<inv slot="0" >
+			<item id="minecraft:stone_sword" />
+		</inv>
+		
+		<inv slot="1" >
+			<item id="minecraft:bow" />
+		</inv>
+		
+		<inv slot="2" >
+			<item id="minecraft:iron_axe" />
+		</inv>
+		
+		<inv slot="3" >
+			<item id="minecraft:diamond_pickaxe" />
+		</inv>
+					
+		<inv slot="8" >
+			<item ifbuyed="ninja.budulec:3" id="minecraft:planks" count="35" />
+			<item ifbuyed="ninja.budulec:2" id="minecraft:planks" count="30" />
+			<item ifbuyed="ninja.budulec:1" id="minecraft:planks" count="25" />
+			<item id="minecraft:planks" count="20" />
+		</inv>
+		
+	</equipment>
+	
+	<effects>
+		<effect type="JUMP" />
+	</effects>
+	
+	<invRefilRule maxCount="3" period="50" id="minecraft:arrow" />
+	
+</class>

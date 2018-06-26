@@ -88,8 +88,7 @@ public class SpecialAbilityTracker implements ITickable
             return;
         }
         
-        int abilityLevel = player.getAbilityLevel(currentAbilityType);
-        loadingTicks = currentAbilityType.getLoadingTimeAtLevel(abilityLevel);
+        loadingTicks = player.getCurrentClass().getAbilityLoadingTicks(player);
         loadingTicksLeft = loadingTicks;
         
         suspended = false;
@@ -156,9 +155,15 @@ public class SpecialAbilityTracker implements ITickable
         
         SoundEffect.ABILITY_READY.play(player);
         currentAbilityType.getHandler().onReady(player);
-        
-        //player.sendMessage("ability_ready");
-        player.sendActionBar("info.use_ability");
+    }
+    
+    @Tick
+    private void showActionBarMessage()
+    {
+        if ( isAbilityReady() && currentAbilityType != null )
+        {
+            player.sendActionBar(currentAbilityType.getAbilityReadyMessage());
+        }
     }
     
     @Tick

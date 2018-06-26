@@ -35,9 +35,9 @@ public class GoldHunterShopGui extends Gui
 {
 	private static final String GOLD_HUNTER_GROUP_NAME = "GoldHunterShop";
 	
-	@Inject
-	@Messages("GoldHunterShop")
-	private static MessagesBox messages;
+	//@Inject
+	//@Messages("GoldHunterShop")
+	//private static MessagesBox messages;
 	@Inject
 	private static IGlobalShops globalShops;
 	@Inject
@@ -47,7 +47,7 @@ public class GoldHunterShopGui extends Gui
 	
 	private GoldHunterShopGui(IPlayerContainer playerContainer, String guiName)
 	{
-		super(messages, "goldhunter/shop/" + guiName);
+		super(new MessagesBox(GoldHunterShopGui.class.getClassLoader(), "goldhunter/shop/" + guiName), "goldhunter/shop/" + guiName);
 		this.playerContainer = playerContainer;
 	}
 
@@ -90,7 +90,7 @@ public class GoldHunterShopGui extends Gui
 		
 		element.addVariables(Vars.<Object>of("color", itemState.getMainColor())
 				.and("status", itemState.getBuyText())
-				.and("price", TranslatableString.of(messages, "@itemstate.price$priceValue"))
+				.and("price", TranslatableString.of(getMessagesBox(), "@itemstate.price$priceValue"))
                 .and("priceValue", price));
 	}
 	
@@ -195,6 +195,13 @@ public class GoldHunterShopGui extends Gui
 	
 	public static GoldHunterShopGui openMainGui(Player player)
 	{
+	    player.sendMessage("§c&lWybacz kamracie, ale nasz dostawca nie wrócil jeszcze z rejsu. Wróc za kilka dni!");
+	    
+	    if ( true )
+	    {
+	        return null;    
+	    }
+	    
 		GoldHunterShopGui gui = new GoldHunterShopGui(globalShops.getPlayer(player), "main");
 		gui.open(player);
 		return gui;

@@ -4,11 +4,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ScoreboardManagerListener implements AutoListener
 {
+    @Inject
+    private ScoreboardManagerImpl scoreboardManager;
+    
     @EventHandler(priority = EventPriority.LOWEST)
     public void createPrivateScoreboardAtJoin(final PlayerJoinEvent event)
     {
@@ -16,5 +21,11 @@ public class ScoreboardManagerListener implements AutoListener
         // ustawiamy natychmiastowo przy wejsciu prywatny scoreboard kazdemu graczowi
         final Player player = event.getPlayer();
         player.setScoreboard(player.getServer().getScoreboardManager().getNewScoreboard());
+    }
+    
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void deleteScoreboardOnExit(PlayerQuitEvent event)
+    {
+        scoreboardManager.removeScoreboard(event.getPlayer());
     }
 }

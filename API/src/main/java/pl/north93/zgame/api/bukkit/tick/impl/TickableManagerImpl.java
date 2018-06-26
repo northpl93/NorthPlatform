@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.logging.Level;
 
 import com.google.common.base.Preconditions;
 
@@ -194,7 +195,6 @@ public class TickableManagerImpl extends Component implements ITickableManager
     private void reportTickHandlerException(ITickable tickable, InvocationTargetException e)
     {
         Throwable cause = e.getCause();
-        apiCore.getLogger().severe("An exception was thrown when ticking (" + tickable.toString() + "):");
-        cause.printStackTrace();
+        apiCore.getLogger().log(Level.SEVERE, "An exception was thrown when ticking (" + tickable.toString() + "):", cause);
     }
 }

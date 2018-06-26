@@ -12,7 +12,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -35,7 +34,6 @@ import pl.arieals.minigame.goldhunter.arena.ArenaBuilder;
 import pl.arieals.minigame.goldhunter.arena.GoldHunterArena;
 import pl.arieals.minigame.goldhunter.classes.CharacterClass;
 import pl.arieals.minigame.goldhunter.classes.CharacterClassManager;
-import pl.arieals.minigame.goldhunter.classes.SpecialAbilityType;
 import pl.arieals.minigame.goldhunter.gui.LobbyHotbar;
 import pl.arieals.minigame.goldhunter.utils.Direction;
 import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
@@ -79,8 +77,9 @@ public class GoldHunterPlayer implements ITickable
     private final SpecialAbilityTracker abilityTracker;
     private final EffectTracker effectTracker;
     private final StatsTracker statsTracker;
+    private final InventoryRefilTracker inventoryRefilTracker;
     
-    private final Player player;
+    private /*final*/ Player player;
     private final GoldHunterArena arena;
     
     private IScoreboardContext scoreboardContext;
@@ -96,8 +95,6 @@ public class GoldHunterPlayer implements ITickable
     
     private boolean buildBridgeActive;
     
-    private int toRefilEquipmentTicks;
-    
     private boolean shadow;
     
     private int gameTime;
@@ -109,9 +106,11 @@ public class GoldHunterPlayer implements ITickable
         this.abilityTracker = new SpecialAbilityTracker(this);
         this.effectTracker = new EffectTracker(this);
         this.statsTracker = new StatsTracker(this);
+        this.inventoryRefilTracker = new InventoryRefilTracker(this);
         
         tickableManager.addTickableObject(this);
         tickableManager.addTickableObject(abilityTracker);
+        tickableManager.addTickableObject(inventoryRefilTracker);
     }
     
     public GoldHunterArena getArena()
@@ -232,11 +231,6 @@ public class GoldHunterPlayer implements ITickable
     public boolean hasBuyed(String shopItemName, int shopItemLevel)
     {
         return getShopItemLevel(shopItemName) >= shopItemLevel;
-    }
-    
-    public int getAbilityLevel(SpecialAbilityType ability)
-    {
-        return getShopItemLevel(ability.getShopItemName());
     }
     
     public CharacterClass getCurrentClass()
@@ -398,8 +392,6 @@ public class GoldHunterPlayer implements ITickable
         setDisplayTeam(team);
          
         changeClass();
-        
-        toRefilEquipmentTicks = currentClass.getInventoryRefilTime();
          
         return arena.getTeamSpawn(team);
     }
@@ -549,7 +541,7 @@ public class GoldHunterPlayer implements ITickable
     
     @Tick
     private void updateGameTime()
-    {
+    {   
         if ( isIngame() )
         {
             gameTime++;
@@ -602,62 +594,6 @@ public class GoldHunterPlayer implements ITickable
     }
     
     @Tick
-    public void updateRefilEquipmentTicks()
-    {
-        if ( !isIngame() || currentClass.getInventoryRefilRule() == null )
-        {
-            return;
-        }
-        
-        if ( toRefilEquipmentTicks > 0 )
-        {
-            toRefilEquipmentTicks--;
-        }
-        
-        if ( toRefilEquipmentTicks == 0 )
-        {
-            currentClass.getInventoryRefilRule().tryRefilEquipment(this);
-            toRefilEquipmentTicks = currentClass.getInventoryRefilTime();
-        }
-    }
-    
-    public void tryRefilItem(ItemStack is, int maxCount)
-    {
-        int currentCount = 0;
-        
-        InventoryView openInventory = player.getOpenInventory();
-        if ( openInventory.getCursor() != null && openInventory.getCursor().getType() == is.getType() )
-        {
-            currentCount += openInventory.getCursor().getAmount();
-        }
-        
-        for ( ItemStack item : openInventory.getTopInventory().getContents() )
-        {
-            if ( item != null && item.getType() == is.getType() )
-            {
-                currentCount += item.getAmount();
-            }
-        }
-        
-        for ( ItemStack item : openInventory.getBottomInventory().getContents() )
-        {
-            if ( item != null && item.getType() == is.getType() )
-            {
-                currentCount += item.getAmount();
-            }
-        }
-        
-        if ( currentCount >= maxCount )
-        {
-            return;
-        }
-        
-        int diff = maxCount - currentCount;
-        is.setAmount(Math.min(diff, is.getAmount()));
-        player.getInventory().addItem(is);
-    }
-    
-    @Tick
     private void showInfoSubtitle()
     {
         if ( MinecraftServer.currentTick % 15 != 0 )
@@ -687,4 +623,6 @@ public class GoldHunterPlayer implements ITickable
     {
         return player.getName();
     }
+
+    
 }

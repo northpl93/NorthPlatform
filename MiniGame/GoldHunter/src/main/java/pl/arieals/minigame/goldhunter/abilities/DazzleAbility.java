@@ -1,7 +1,7 @@
 package pl.arieals.minigame.goldhunter.abilities;
 
-import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.ProjectileHitEvent;
 
@@ -28,19 +28,19 @@ public class DazzleAbility implements AbilityHandler
     @EventHandler
     public void onHitByFishHook(ProjectileHitEvent event)
     {
-        if ( !( event.getEntity() instanceof FishHook ) || !( event.getHitEntity() instanceof Player ) )
+        if ( !( event.getEntity() instanceof Snowball ) || !( event.getHitEntity() instanceof Player ) )
         {
             return;
         }
         
-        FishHook hook = (FishHook) event.getEntity();
+        Snowball ball = (Snowball) event.getEntity();
         
-        if ( !( hook.getShooter() instanceof Player ) )
+        if ( !( ball.getShooter() instanceof Player ) )
         {
             return;
         }
         
-        GoldHunterPlayer shooter = goldHunter.getPlayer((Player) hook.getShooter());
+        GoldHunterPlayer shooter = goldHunter.getPlayer((Player) ball.getShooter());
         GoldHunterPlayer attacked = goldHunter.getPlayer((Player) event.getHitEntity());
         
         if ( attacked != null && shooter != null && shooter.getEffectTracker().removeEffect(DazzleAbilityEffect.class) )

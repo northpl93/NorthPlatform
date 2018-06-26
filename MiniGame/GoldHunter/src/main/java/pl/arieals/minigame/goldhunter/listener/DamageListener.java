@@ -1,5 +1,6 @@
 package pl.arieals.minigame.goldhunter.listener;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -66,7 +67,7 @@ public class DamageListener implements AutoListener
             return;
         }
         
-        if ( !MaterialUtils.isSword(damager.getPlayer().getInventory().getItemInMainHand().getType()) )
+        if ( !MaterialUtils.isSword(damager.getPlayer().getInventory().getItemInMainHand().getType()) && damager.getPlayer().getInventory().getItemInMainHand().getType() != Material.STICK )
         {
             event.setDamage(1);
         }

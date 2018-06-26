@@ -59,6 +59,8 @@ public class ScoreboardManagerImpl extends Component implements IScoreboardManag
     @Override
     public void removeScoreboard(final Player player)
     {
+        player.removeMetadata("scoreboard_context", this.apiCore.getPluginMain());
+        
         final ScoreboardContextImpl context = this.getContext(player);
         if (context == null)
         {
@@ -66,7 +68,6 @@ public class ScoreboardManagerImpl extends Component implements IScoreboardManag
         }
 
         context.cleanup();
-        player.removeMetadata("scoreboard_context", this.apiCore.getPluginMain());
     }
 
     private void setContext(final Player player, final ScoreboardContextImpl scoreboardContext)

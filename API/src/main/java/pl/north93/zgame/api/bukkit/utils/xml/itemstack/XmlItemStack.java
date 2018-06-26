@@ -11,9 +11,11 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -21,6 +23,7 @@ import org.diorite.commons.math.DioriteMathUtils;
 
 import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlEnchant;
+import pl.north93.zgame.api.global.API;
 
 @XmlRootElement(name = "item")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -47,6 +50,8 @@ public class XmlItemStack
     @XmlElementWrapper(name = "enchants")
     @XmlElement(name = "enchant")
     private List<XmlEnchant> enchants = new ArrayList<>(0);
+    
+    private List<XmlItemMetadataStorage> metadataStorage = new ArrayList<>(0);
     
     public XmlItemStack()
     {
@@ -148,7 +153,7 @@ public class XmlItemStack
     private Material toMaterial()
     {
         final Integer numberId = DioriteMathUtils.asInt(this.id);
-        final Material material;
+        Material material;
 
         if ( numberId != null )
         {
@@ -157,6 +162,11 @@ public class XmlItemStack
         else if ( this.id.startsWith("minecraft:") )
         {
             material = Bukkit.getUnsafe().getMaterialFromInternalName(this.id);
+            
+            if ( material == Material.AIR && !this.id.equals("minecraft:air") ) // Bukkit's unsafe returns AIR when minecraft key is invalid
+            {
+                material = null;
+            }
         }
         else
         {
@@ -172,7 +182,7 @@ public class XmlItemStack
         if ( material == null )
         {
             // Print error stack trace without throw an exception
-            new IllegalArgumentException("Cannot recognize item by id: " + this.id).printStackTrace();
+            API.getLogger().log(Level.WARNING, "Couldn't create item", new IllegalArgumentException("Cannot recognize item by id: " + this.id));
             return null;
         }
         
@@ -189,7 +199,7 @@ public class XmlItemStack
 
         this.enchants.forEach(builder::enchant);
 
-        final ItemStack build = builder.build();
+        ItemStack build = builder.build();
         if (this.itemMeta != null)
         {
             final ItemMeta itemMeta = build.getItemMeta();
@@ -197,6 +207,13 @@ public class XmlItemStack
             build.setItemMeta(itemMeta);
         }
 
+        if ( metadataStorage.size() > 0 )
+        {
+            net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(build);
+            metadataStorage.forEach(metadata -> metadata.apply(nmsStack));
+            build = CraftItemStack.asCraftMirror(nmsStack);
+        }
+        
         return build;
     }
 }

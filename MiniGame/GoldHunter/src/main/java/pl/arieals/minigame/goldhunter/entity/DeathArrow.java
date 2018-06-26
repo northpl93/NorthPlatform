@@ -27,11 +27,11 @@ public class DeathArrow extends SpecialArrow
         {
             for (int i = 0; i < 4; i++)
             {
-                for ( int j = 0; j < 3; j++ )
+                for ( int j = 0; j < 10; j++ )
                 {
-                    double offsetX = random.nextGaussian() * 0.091997;
-                    double offsetY = random.nextGaussian() * 0.091997;
-                    double offsetZ = random.nextGaussian() * 0.091997;
+                    double offsetX = random.nextGaussian() * 0.111997;
+                    double offsetY = random.nextGaussian() * 0.111997;
+                    double offsetZ = random.nextGaussian() * 0.111997;
                     
                     double x = locX + motX * i / 4 + offsetX;
                     double y = locY + motY * i / 4 + offsetY;

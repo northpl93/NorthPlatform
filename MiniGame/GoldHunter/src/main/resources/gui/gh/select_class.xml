@@ -22,68 +22,68 @@
 			</button>
 			
 			<button pos="1,1">
-				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/wojownik-berserker/$playerId</renderer>
-				<metadata key="class" value="wojownik-berserker" />
+				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/berserker/$playerId</renderer>
+				<metadata key="class" value="berserker" />
 				<onClick>select</onClick>
 			</button>
 			<button pos="1,2">
-				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/wojownik-rycerz/$playerId</renderer>
-				<metadata key="class" value="wojownik-rycerz" />
+				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/rycerz/$playerId</renderer>
+				<metadata key="class" value="rycerz" />
 				<onClick>select</onClick>
 			</button>
 			
 			<button pos="2,1">
-				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/zwiadowca-procarz/$playerId</renderer>
-				<metadata key="class" value="zwiadowca-procarz" />
+				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/procarz/$playerId</renderer>
+				<metadata key="class" value="procarz" />
 				<onClick>select</onClick>
 			</button>
 			<button pos="2,2">
-				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/zwiadowca-sprinter/$playerId</renderer>
-				<metadata key="class" value="zwiadowca-sprinter" />
+				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/sprinter/$playerId</renderer>
+				<metadata key="class" value="sprinter" />
 				<onClick>select</onClick>
 			</button>
 			
 			<button pos="3,1">
-				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/medyk-bojowy/$playerId</renderer>
-				<metadata key="class" value="medyk-bojowy" />
+				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/szaman/$playerId</renderer>
+				<metadata key="class" value="szaman" />
 				<onClick>select</onClick>
 			</button>
 			<button pos="3,2">
-				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/medyk-polowy/$playerId</renderer>
-				<metadata key="class" value="medyk-polowy" />
+				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/medyk/$playerId</renderer>
+				<metadata key="class" value="medyk" />
 				<onClick>select</onClick>
 			</button>
 			
 			<button pos="4,1">
-				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/technik-architekt/$playerId</renderer>
-				<metadata key="class" value="technik-architekt" />
+				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/architekt/$playerId</renderer>
+				<metadata key="class" value="architekt" />
 				<onClick>select</onClick>
 			</button>
 			<button pos="4,2">
-				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/technik-dozownik/$playerId</renderer>
-				<metadata key="class" value="technik-dozownik" />
+				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/dostawca/$playerId</renderer>
+				<metadata key="class" value="dostawca" />
 				<onClick>select</onClick>
 			</button>
 			
 			<button pos="5,1">
-				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/vip-assasyn/$playerId</renderer>
-				<metadata key="class" value="vip-assasyn" />
+				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/assasyn/$playerId</renderer>
+				<metadata key="class" value="assasyn" />
 				<onClick>select</onClick>
 			</button>
 			<button pos="5,2">
-				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/vip-obronca/$playerId</renderer>
-				<metadata key="class" value="vip-obronca" />
+				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/obronca/$playerId</renderer>
+				<metadata key="class" value="obronca" />
 				<onClick>select</onClick>
 			</button>
 			
 			<button pos="6,1">
-				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/svip-szpieg/$playerId</renderer>
-				<metadata key="class" value="svip-szpieg" />
+				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/ninja/$playerId</renderer>
+				<metadata key="class" value="ninja" />
 				<onClick>select</onClick>
 			</button>
 			<button pos="6,2">
-				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/svip-paladyn/$playerId</renderer>
-				<metadata key="class" value="svip-paladyn" />
+				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/paladyn/$playerId</renderer>
+				<metadata key="class" value="paladyn" />
 				<onClick>select</onClick>
 			</button>
 		</content>

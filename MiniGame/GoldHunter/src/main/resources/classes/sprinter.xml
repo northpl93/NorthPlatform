@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class>
+	<displayName>@sprinter</displayName>
+	<lore>@sprinter.lore</lore>
+	
+	<icon id="minecraft:leather_boots" />
+	
+	<!-- <shopItem>sprinter.access</shopItem> -->
+	
+	<specialAbility type="DOUBLE_JUMP">
+		<loading ifbuyed="sprinter.loadingtime:5" seconds="15" />
+		<loading ifbuyed="sprinter.loadingtime:4" seconds="17" />
+		<loading ifbuyed="sprinter.loadingtime:3" seconds="19" />
+		<loading ifbuyed="sprinter.loadingtime:2" seconds="21" />
+		<loading ifbuyed="sprinter.loadingtime:1" seconds="23" />
+		<loading seconds="25" />
+	</specialAbility>
+	
+	<equipment>
+		<chestplate>
+			<item id="minecraft:leather_chestplate" /> 
+		</chestplate>
+		
+		<leggings>
+		<item ifbuyed="sprinter.leggings" id="minecraft:leather_leggings" />
+		</leggings>
+				
+		<boots>
+			<!-- <item ifbuyed="sprinter.diamondboots" id="minecraft:diamond_boots" /> -->
+			<item ifbuyed="sprinter.boots" id="minecraft:chainmail_boots" />
+		</boots>
+		
+		<inv slot="0" >
+			<!-- <item ifbuyed="sprinter.sharpsword:2" id="minecraft:wooden_sword" /> -->
+			<!-- <item ifbuyed="sprinter.sharpsword:1" id="minecraft:wooden_sword" /> -->
+			<item id="minecraft:wooden_sword" />
+		</inv>
+		
+		<inv slot="2" >
+			<item id="minecraft:iron_axe" />
+		</inv>
+		
+		<inv slot="3" >
+			<item id="minecraft:diamond_pickaxe" />
+		</inv>
+		
+		<inv slot="8" >
+			<item ifbuyed="sprinter.budulec:3" id="minecraft:planks" count="30" />
+			<item ifbuyed="sprinter.budulec:2" id="minecraft:planks" count="25" />
+			<item ifbuyed="sprinter.budulec:1" id="minecraft:planks" count="20" />
+			<item id="minecraft:planks" count="15" />
+		</inv>
+		
+	</equipment>
+	
+	<effects>
+		<effect type="SPEED" level="1" />
+		<!-- <effect type="minecraft:speed" level="1" /> -->
+		<effect type="JUMP" level="1" />
+		<!-- <effect type="minecraft:jump_boost" level="1" /> -->
+	</effects>
+</class>
