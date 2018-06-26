@@ -5,11 +5,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import pl.arieals.minigame.goldhunter.GoldHunter;
+import pl.arieals.minigame.goldhunter.effect.RespawnProtection;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.bukkit.utils.itemstack.MaterialUtils;
@@ -48,6 +50,17 @@ public class DamageListener implements AutoListener
         
         GoldHunterPlayer player = goldHunter.getPlayer((Player) event.getEntity());
         if ( player != null && event.getCause() == DamageCause.WITHER )
+        {
+            event.setCancelled(true);
+        }
+    }
+    
+    @EventHandler
+    public void cancelDamageWhenRespawnProtection(EntityDamageEvent event)
+    {
+        GoldHunterPlayer player = goldHunter.getPlayer(event.getEntity());
+        
+        if ( player.getEffectTracker().hasEffectOfType(RespawnProtection.class) )
         {
             event.setCancelled(true);
         }

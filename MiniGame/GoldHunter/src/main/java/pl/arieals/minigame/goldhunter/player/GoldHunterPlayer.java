@@ -34,6 +34,7 @@ import pl.arieals.minigame.goldhunter.arena.ArenaBuilder;
 import pl.arieals.minigame.goldhunter.arena.GoldHunterArena;
 import pl.arieals.minigame.goldhunter.classes.CharacterClass;
 import pl.arieals.minigame.goldhunter.classes.CharacterClassManager;
+import pl.arieals.minigame.goldhunter.effect.RespawnProtection;
 import pl.arieals.minigame.goldhunter.gui.LobbyHotbar;
 import pl.arieals.minigame.goldhunter.utils.Direction;
 import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
@@ -393,6 +394,8 @@ public class GoldHunterPlayer implements ITickable
         setDisplayTeam(team);
          
         changeClass();
+        
+        effectTracker.addEffect(new RespawnProtection(), 70);
          
         return arena.getTeamSpawn(team);
     }

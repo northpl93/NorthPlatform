@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -82,11 +83,11 @@ public class GoldHunter
         return getPlayer(bukkitPlayer.getUniqueId());
     }
     
-    public GoldHunterPlayer getPlayer(HumanEntity humanEntity)
+    public GoldHunterPlayer getPlayer(Entity entity)
     {
-        if ( humanEntity instanceof Player )
+        if ( entity instanceof Player )
         {
-            return getPlayer((Player) humanEntity);
+            return getPlayer((Player) entity);
         }
         
         return null;
