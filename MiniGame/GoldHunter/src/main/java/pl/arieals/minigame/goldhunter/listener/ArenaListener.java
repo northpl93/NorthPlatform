@@ -95,15 +95,4 @@ public class ArenaListener implements AutoListener
         arena.playerLeft(player);
         goldHunter.removePlayer(player);
     }
-    
-    @EventHandler
-    public void onStartScheduled(ArenaStartScheduledEvent event)
-    {
-        GoldHunterArena arena = event.getArena().getArenaData();
-        
-        if ( !arena.isEnoughSignedPlayersToStart() )
-        {
-            event.setCancelled(true);
-        }
-    }
 }
