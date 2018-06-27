@@ -15,7 +15,7 @@ public class BlindnessEffect extends Effect
     protected void onStart()
     {
         getPlayer().getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false), true);
-        getPlayer().getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 0, false, false), true);
+        getPlayer().getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 1, false, false), true);
     }
     
     @Override
