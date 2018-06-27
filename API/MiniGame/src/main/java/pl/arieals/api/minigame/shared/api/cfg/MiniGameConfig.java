@@ -28,6 +28,8 @@ public class MiniGameConfig
     @XmlElement
     private Boolean          isDynamic; // Czy gra jest dynamiczna (pozwalajaca na wchodzenie w trakcie gry)
     @XmlElement
+    private ReconnectConfig  reconnect; // Ustawienia powrotu do gry
+    @XmlElement
     private Integer          slots; // Maksymalna ilość graczy na arenie
     @XmlElement
     private Integer          vipSlots; // Sloty zarezerwowane dla VIPów (odejmowane od wartości slots)
@@ -68,6 +70,11 @@ public class MiniGameConfig
     public Boolean isDynamic()
     {
         return this.isDynamic;
+    }
+
+    public ReconnectConfig getReconnect()
+    {
+        return this.reconnect;
     }
 
     public Integer getSlots()

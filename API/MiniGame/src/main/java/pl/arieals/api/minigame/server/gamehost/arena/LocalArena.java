@@ -15,6 +15,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
+import pl.arieals.api.minigame.server.gamehost.arena.player.ArenaChatManager;
+import pl.arieals.api.minigame.server.gamehost.arena.player.PlayersManager;
+import pl.arieals.api.minigame.server.gamehost.arena.world.ArenaWorld;
+import pl.arieals.api.minigame.server.gamehost.arena.world.DeathMatch;
+import pl.arieals.api.minigame.server.gamehost.arena.world.MapVote;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
 import pl.arieals.api.minigame.server.gamehost.region.IRegionManager;
 import pl.arieals.api.minigame.server.gamehost.reward.IArenaRewards;
@@ -29,27 +34,27 @@ import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDataChangedNetEvent;
 import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDeletedNetEvent;
 import pl.arieals.api.minigame.shared.api.match.IMatchAccess;
-import pl.arieals.api.minigame.shared.impl.ArenaManager;
+import pl.arieals.api.minigame.shared.impl.arena.ArenaManager;
 import pl.north93.zgame.api.bukkit.utils.StaticTimer;
 import pl.north93.zgame.api.global.metadata.MetaStore;
 
 public class LocalArena implements IArena
 {
-    private static final int MAX_TIME_TO_DISCONNECT = 30 * 20; // czas po jakim serwer wyrzuci graczy ktorzy nie wylecieli z areny
-    private final GameHostManager     gameHostManager;
-    private final ArenaManager        arenaManager;
-    private final RemoteArena         data;
-    private final ArenaWorld          world;
-    private final PlayersManager      playersManager;
-    private final ArenaChatManager    chatManager;
-    private final StaticTimer         timer;
-    private final ArenaScheduler      scheduler;
-    private final DeathMatch          deathMatch;
-    private final IArenaRewards       rewards;
-    private final ArenaStartScheduler startScheduler;
-    private       IMatchAccess        match;
-    private       IArenaData          arenaData;
-    private       MapVote             mapVote;
+    private static final int                 MAX_TIME_TO_DISCONNECT = 30 * 20; // czas po jakim serwer wyrzuci graczy ktorzy nie wylecieli z areny
+    private final        GameHostManager     gameHostManager;
+    private final        ArenaManager        arenaManager;
+    private final        RemoteArena         data;
+    private final        ArenaWorld          world;
+    private final        PlayersManager      playersManager;
+    private final        ArenaChatManager    chatManager;
+    private final        StaticTimer         timer;
+    private final        ArenaScheduler      scheduler;
+    private final        DeathMatch          deathMatch;
+    private final        IArenaRewards       rewards;
+    private final        ArenaStartScheduler startScheduler;
+    private              IMatchAccess        match;
+    private              IArenaData          arenaData;
+    private              MapVote             mapVote;
 
     public LocalArena(final GameHostManager gameHostManager, final ArenaManager arenaManager, final RemoteArena data)
     {

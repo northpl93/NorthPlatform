@@ -187,16 +187,16 @@ public class PartyClient
     }
 
     /**
-     * Sprawdza czy gracz aktualnie może decydować o tym w co gra.
+     * Sprawdza czy gracz aktualnie NIE może decydować o tym w co gra.
      * Gdy jest w party i nie jest liderem to nie może.
      *
      * @param player Gracz do sprawdzenia.
-     * @return True jeśli może samodzielnie dołączyć do gry i zmienić hub.
+     * @return True jeśli gracz nie może samodzielnie zmienić hubu i dołączyć do gry.
      */
-    public boolean canDecideAboutHimself(final Player player)
+    public boolean cantDecideAboutHimself(final Player player)
     {
         final IParty playerParty = this.getPlayerParty(player);
-        return playerParty == null || playerParty.isOwner(player.getUniqueId());
+        return playerParty != null && ! playerParty.isOwner(player.getUniqueId());
     }
 
     public void changePartyLocation(final IParty party, final IPlayerStatus location)

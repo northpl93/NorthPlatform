@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.arena.MapVote;
+import pl.arieals.api.minigame.server.gamehost.arena.world.MapVote;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;

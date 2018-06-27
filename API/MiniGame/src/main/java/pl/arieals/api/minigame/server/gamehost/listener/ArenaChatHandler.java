@@ -1,12 +1,11 @@
 package pl.arieals.api.minigame.server.gamehost.listener;
 
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.arena.ArenaChatManager;
+import pl.arieals.api.minigame.server.gamehost.arena.player.ArenaChatManager;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
@@ -14,13 +13,14 @@ import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorModeChangeEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorQuitEvent;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
+import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.chat.global.ChatManager;
 import pl.north93.zgame.api.chat.global.ChatPlayer;
 import pl.north93.zgame.api.chat.global.ChatRoom;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.players.Identity;
 
-public class ArenaChatHandler implements Listener
+public class ArenaChatHandler implements AutoListener
 {
     @Inject
     private ChatManager chatManager;

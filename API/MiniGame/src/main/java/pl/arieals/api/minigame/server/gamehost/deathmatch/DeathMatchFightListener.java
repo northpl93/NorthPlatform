@@ -6,13 +6,13 @@ import static pl.north93.zgame.api.global.utils.lang.JavaUtils.instanceOf;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.zgame.api.bukkit.utils.AutoListener;
 
-public class DeathMatchFightListener implements Listener
+public class DeathMatchFightListener implements AutoListener
 {
     @EventHandler(ignoreCancelled = true)
     public void blockDamageBeforeDeathMatchStart(final EntityDamageEvent event)

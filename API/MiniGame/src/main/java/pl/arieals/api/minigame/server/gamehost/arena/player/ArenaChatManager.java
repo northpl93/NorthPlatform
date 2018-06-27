@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.server.gamehost.arena;
+package pl.arieals.api.minigame.server.gamehost.arena.player;
 
 import java.util.function.Predicate;
 
@@ -8,6 +8,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
+import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.north93.zgame.api.chat.global.ChatRoom;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;

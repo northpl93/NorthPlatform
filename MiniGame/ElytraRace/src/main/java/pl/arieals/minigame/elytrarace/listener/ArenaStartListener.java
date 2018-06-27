@@ -19,7 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.arena.ArenaChatManager;
+import pl.arieals.api.minigame.server.gamehost.arena.player.ArenaChatManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;

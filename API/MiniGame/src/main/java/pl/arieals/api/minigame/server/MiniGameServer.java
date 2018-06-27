@@ -5,7 +5,7 @@ import static pl.north93.zgame.api.global.network.server.ServerType.NORMAL;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
-import pl.arieals.api.minigame.shared.impl.ArenaManager;
+import pl.arieals.api.minigame.shared.impl.arena.ArenaManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.server.IBukkitServerManager;
 import pl.north93.zgame.api.global.component.Component;

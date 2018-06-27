@@ -22,7 +22,7 @@ import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
+import pl.arieals.api.minigame.server.gamehost.arena.player.PlayersManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;

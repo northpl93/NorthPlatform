@@ -7,12 +7,11 @@ import java.util.stream.Collectors;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 
 import pl.arieals.api.minigame.server.gamehost.arena.ArenaStartScheduler;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.shared.api.GamePhase;
@@ -20,10 +19,11 @@ import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.arena.StandardArenaMetaData;
 import pl.arieals.api.minigame.shared.api.match.IMatchAccess;
 import pl.arieals.api.minigame.shared.api.match.IMatchManager;
+import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.players.Identity;
 
-public class GameStartListener implements Listener
+public class GameStartListener implements AutoListener
 {
     @Inject
     private IMatchManager matchManager;

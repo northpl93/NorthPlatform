@@ -43,7 +43,7 @@ public class PlayGameController
 
     public void switchHub(final Player player, final String hubId)
     {
-        if (! this.partyClient.canDecideAboutHimself(player))
+        if (this.partyClient.cantDecideAboutHimself(player))
         {
             // gracz jest w grupie i nie jest liderem więc nie może decydować gdzie gra
             return;
@@ -55,7 +55,7 @@ public class PlayGameController
 
     public void switchHubInstance(final Player player, final IHubServer hubServer)
     {
-        if (! this.partyClient.canDecideAboutHimself(player))
+        if (this.partyClient.cantDecideAboutHimself(player))
         {
             // gracz jest w grupie i nie jest liderem więc nie może decydować gdzie gra
             return;
@@ -75,7 +75,7 @@ public class PlayGameController
     
     public void playGame(final Player player, final IArena arena)
     {
-        if (! this.partyClient.canDecideAboutHimself(player) )
+        if (this.partyClient.cantDecideAboutHimself(player))
         {
             return;
         }
@@ -86,7 +86,7 @@ public class PlayGameController
 
     public void playGame(final Player player, final GameIdentity gameIdentity, final boolean allowInProgress, final String worldId)
     {
-        if (! this.partyClient.canDecideAboutHimself(player))
+        if (this.partyClient.cantDecideAboutHimself(player))
         {
             // gracz jest w grupie i nie jest liderem więc nie może decydować gdzie gra
             return;

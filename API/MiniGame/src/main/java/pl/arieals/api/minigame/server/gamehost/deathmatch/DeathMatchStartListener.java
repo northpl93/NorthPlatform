@@ -3,7 +3,6 @@ package pl.arieals.api.minigame.server.gamehost.deathmatch;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -11,17 +10,18 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
-import pl.arieals.api.minigame.server.gamehost.arena.ArenaWorld;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.server.gamehost.arena.world.ArenaWorld;
 import pl.arieals.api.minigame.server.gamehost.event.arena.deathmatch.DeathMatchFightStartEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.deathmatch.DeathMatchLoadedEvent;
 import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
+import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
-public class DeathMatchStartListener implements Listener
+public class DeathMatchStartListener implements AutoListener
 {
     @Inject
     private MiniGameServer server;

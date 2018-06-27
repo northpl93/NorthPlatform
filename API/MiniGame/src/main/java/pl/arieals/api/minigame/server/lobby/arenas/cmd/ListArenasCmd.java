@@ -13,7 +13,7 @@ import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
-import pl.arieals.api.minigame.shared.impl.ArenaManager;
+import pl.arieals.api.minigame.shared.impl.arena.ArenaManager;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;

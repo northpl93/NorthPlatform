@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.server.gamehost.arena;
+package pl.arieals.api.minigame.server.gamehost.arena.player;
 
 import java.util.List;
 
@@ -13,6 +13,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
+import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorModeChangeEvent;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;

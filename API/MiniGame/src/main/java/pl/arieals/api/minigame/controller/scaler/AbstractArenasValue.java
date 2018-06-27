@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
-import pl.arieals.api.minigame.shared.impl.ArenaManager;
+import pl.arieals.api.minigame.shared.impl.arena.ArenaManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.server.Server;

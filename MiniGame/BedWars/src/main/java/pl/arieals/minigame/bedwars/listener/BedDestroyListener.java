@@ -15,7 +15,7 @@ import org.bukkit.event.Listener;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.arena.ArenaChatManager;
+import pl.arieals.api.minigame.server.gamehost.arena.player.ArenaChatManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;

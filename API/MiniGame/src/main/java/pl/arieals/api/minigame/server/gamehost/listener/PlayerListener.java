@@ -14,7 +14,6 @@ import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -25,16 +24,17 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
+import pl.arieals.api.minigame.server.gamehost.arena.player.PlayersManager;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinWithoutArenaEvent;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.status.IPlayerStatusManager;
 import pl.arieals.api.minigame.shared.api.status.InGameStatus;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
+import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.players.Identity;
 
-public class PlayerListener implements Listener
+public class PlayerListener implements AutoListener
 {
     @Inject
     private MiniGameServer       server;

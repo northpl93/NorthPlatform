@@ -13,6 +13,9 @@ import com.google.common.base.Preconditions;
 
 import org.bukkit.World;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
@@ -22,7 +25,7 @@ import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaCreatedNetEvent;
 import pl.arieals.api.minigame.shared.api.cfg.MiniGameConfig;
-import pl.arieals.api.minigame.shared.impl.ArenaManager;
+import pl.arieals.api.minigame.shared.impl.arena.ArenaManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.chat.global.ChatManager;
 import pl.north93.zgame.api.chat.global.ChatRoom;
@@ -111,7 +114,7 @@ public class LocalArenaManager
         }
     }
 
-    /*default*/ ChatRoom getChatRoomFor(final IArena arena, final boolean spectators)
+    public ChatRoom getChatRoomFor(final IArena arena, final boolean spectators)
     {
         if (spectators)
         {
@@ -123,5 +126,11 @@ public class LocalArenaManager
             final String id = "arena:" + arena.getId();
             return this.chatManager.getOrCreateRoom(id, PermissionsBasedFormatter.INSTANCE, ChatRoomPriority.NORMAL);
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("arenas", this.arenas).toString();
     }
 }

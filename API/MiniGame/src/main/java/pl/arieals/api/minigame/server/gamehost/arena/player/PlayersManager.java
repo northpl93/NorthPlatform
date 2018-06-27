@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.server.gamehost.arena;
+package pl.arieals.api.minigame.server.gamehost.arena.player;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,6 +19,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.MiniGameApi;
+import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.server.gamehost.arena.world.MapVote;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
@@ -27,6 +29,7 @@ import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
+import pl.arieals.api.minigame.shared.api.arena.reconnect.ReconnectTicket;
 import pl.arieals.api.minigame.shared.api.cfg.MiniGameConfig;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -40,6 +43,7 @@ public class PlayersManager
     @Inject
     private Logger                          logger;
     private final GameHostManager           gameHostManager;
+    private final ReconnectHandler          reconnectHandler;
     private final LocalArena                arena;
     private final List<Player>              players; // lista połączonych już graczy
     private final List<Player>              spectators; // lista polaczonych spectatorow
@@ -50,6 +54,7 @@ public class PlayersManager
         this.gameHostManager = gameHostManager;
         this.arena = arena;
 
+        this.reconnectHandler = new ReconnectHandler(gameHostManager, arena);
         this.players = new ArrayList<>();
         this.spectators = new ArrayList<>(0); // zakladamy brak spectatorow
         this.joinInfos = new ConcurrentHashMap<>(); // may be accessed by server thread and rpc method executor in tryAddPlayers
@@ -127,6 +132,25 @@ public class PlayersManager
     // = = = OBSLUGA WEJSCIA GRACZA = = = //
 
     /**
+     * Metoda próbuje rozpocząć proces powrotu danego gracza do gry.
+     *
+     * @param ticket Bilet powrotu do gry pobrany z obiektu gracza.
+     * @return True jeśli gracz może wrócić do gry.
+     */
+    public synchronized boolean tryReconnect(final ReconnectTicket ticket)
+    {
+        if (this.reconnectHandler.tryReconnect(ticket))
+        {
+            final PlayerJoinInfo joinInfo = new PlayerJoinInfo(ticket.getPlayerId(), false, false);
+            this.joinInfos.put(ticket.getPlayerId(), joinInfo);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Metoda probuje dodac graczy do tej areny.
      * Zsynchronizowana na this zeby moglo byc przetwarzane tylko jedno zadanie.
      *
@@ -202,41 +226,84 @@ public class PlayersManager
         return true;
     }
 
-    public void playerConnected(final Player player) // TODO support for reconnecting
+    /**
+     * Punkt wejścia obsługujący właściwe wejście gracza na serwer.
+     *
+     * @param player Gracz który wchodzi na serwer do tej areny.
+     */
+    public void playerConnected(final Player player)
     {
-        final BukkitApiCore apiCore = this.gameHostManager.getApiCore();
-
         final PlayerJoinInfo playerJoinInfo = this.joinInfos.get(player.getUniqueId());
         if (playerJoinInfo.isSpectator())
         {
-            this.spectators.add(player);
-            apiCore.callEvent(new SpectatorJoinEvent(player, this.arena));
-            MiniGameApi.setPlayerStatus(player, PlayerStatus.SPECTATOR);
-            return;
+            this.connectSpectator(player);
         }
-
-        this.players.add(player);
-        MiniGameApi.setPlayerStatus(player, PlayerStatus.PLAYING);
-        final PlayerJoinArenaEvent event = apiCore.callEvent(new PlayerJoinArenaEvent(player, this.arena, false, "player.joined_arena"));
-        if ( event.getJoinMessage() != null )
+        else
         {
-            this.arena.getChatManager().announceJoinLeft(player, event.getJoinMessage());
+            this.connectPlayer(player);
         }
     }
 
+    private void connectSpectator(final Player player)
+    {
+        this.spectators.add(player);
+
+        final BukkitApiCore apiCore = this.gameHostManager.getApiCore();
+        apiCore.callEvent(new SpectatorJoinEvent(player, this.arena));
+
+        MiniGameApi.setPlayerStatus(player, PlayerStatus.SPECTATOR);
+    }
+
+    private void connectPlayer(final Player player)
+    {
+        this.players.add(player);
+
+        final boolean isReconnected = this.reconnectHandler.handleReconnect(player);
+        final PlayerJoinArenaEvent event = new PlayerJoinArenaEvent(player, this.arena, isReconnected, "player.joined_arena");
+        this.gameHostManager.getApiCore().callEvent(event);
+
+        if (event.getJoinMessage() != null)
+        {
+            this.arena.getChatManager().announceJoinLeft(player, event.getJoinMessage());
+        }
+
+        MiniGameApi.setPlayerStatus(player, PlayerStatus.PLAYING);
+    }
+
+    /**
+     * Punkt wejścia obsługujący wyjście gracza z serwera.
+     *
+     * @param player Gracz wychodzący z serwera/
+     */
     public void playerDisconnected(final Player player)
     {
-        final BukkitApiCore apiCore = this.gameHostManager.getApiCore();
-
         this.joinInfos.remove(player.getUniqueId());
         if (this.spectators.contains(player))
         {
-            this.spectators.remove(player);
-            apiCore.callEvent(new SpectatorQuitEvent(this.arena, player));
-            return;
+            this.disconnectSpectator(player);
         }
+        else
+        {
+            this.disconnectPlayer(player);
+        }
+    }
 
+    private void disconnectSpectator(final Player player)
+    {
+        this.spectators.remove(player);
+        this.gameHostManager.getApiCore().callEvent(new SpectatorQuitEvent(this.arena, player));
+    }
+
+    private void disconnectPlayer(final Player player)
+    {
+        final BukkitApiCore apiCore = this.gameHostManager.getApiCore();
         this.players.remove(player);
+
+        final PlayerQuitArenaEvent event = apiCore.callEvent(new PlayerQuitArenaEvent(player, this.arena, this.shouldBeAbleToReconnect(), "player.quit_arena"));
+        if (event.canReconnect())
+        {
+            this.reconnectHandler.addReconnectCandidate(player);
+        }
 
         final RemoteArena remoteArena = this.arena.getAsRemoteArena();
         remoteArena.getPlayers().remove(player.getUniqueId());
@@ -248,13 +315,20 @@ public class PlayersManager
             mapVote.removeVote(player);
         }
 
-        final PlayerQuitArenaEvent event = new PlayerQuitArenaEvent(player, this.arena, "player.quit_arena");
-        apiCore.callEvent(event);
-        
-        if ( event.getQuitMessage() != null )
+        if (event.getQuitMessage() != null)
         {
             this.arena.getChatManager().announceJoinLeft(player, event.getQuitMessage());
         }
+    }
+
+    private boolean shouldBeAbleToReconnect()
+    {
+        if (this.arena.getGamePhase() != GamePhase.STARTED)
+        {
+            return false;
+        }
+
+        return this.reconnectHandler.isReconnectSupported();
     }
 
     public synchronized void checkTimeouts()

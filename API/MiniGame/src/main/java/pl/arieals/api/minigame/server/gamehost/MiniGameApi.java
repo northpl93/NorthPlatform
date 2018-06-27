@@ -16,7 +16,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.arena.PlayerDataManager;
+import pl.arieals.api.minigame.server.gamehost.arena.player.PlayerDataManager;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 

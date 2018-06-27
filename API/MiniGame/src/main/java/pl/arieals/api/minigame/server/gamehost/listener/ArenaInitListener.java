@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -21,9 +20,10 @@ import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
 import pl.north93.zgame.api.bukkit.server.IBukkitServerManager;
+import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
-public class ArenaInitListener implements Listener
+public class ArenaInitListener implements AutoListener
 {
     @Inject
     private MiniGameServer       server;

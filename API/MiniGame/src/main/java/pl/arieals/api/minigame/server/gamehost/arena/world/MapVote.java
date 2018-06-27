@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.server.gamehost.arena;
+package pl.arieals.api.minigame.server.gamehost.arena.world;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +15,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.diorite.commons.math.DioriteRandomUtils;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
+import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
@@ -23,7 +24,7 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 public class MapVote
 {
     private final GameHostManager gameHostManager;
-    private final LocalArena arena;
+    private final LocalArena      arena;
     
     private final Map<Player, MapTemplate> votes = new WeakHashMap<>();
     private MapTemplate[] options;

@@ -25,6 +25,12 @@
     <!-- czy gracze moga wchodzic na arene w trakcie gry -->
     <isDynamic>false</isDynamic>
 
+    <!-- konfiguracja powrotu do gry po opuszczeniu -->
+    <reconnect>
+        <enabled>false</enabled>
+        <maxTime>60</maxTime>
+    </reconnect>
+
     <!-- maksymalna ilosc graczy -->
     <slots>12</slots>
 

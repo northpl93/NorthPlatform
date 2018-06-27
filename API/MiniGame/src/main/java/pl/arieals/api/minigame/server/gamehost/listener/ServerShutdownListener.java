@@ -2,16 +2,16 @@ package pl.arieals.api.minigame.server.gamehost.listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.north93.zgame.api.bukkit.server.event.ShutdownCancelledEvent;
 import pl.north93.zgame.api.bukkit.server.event.ShutdownScheduledEvent;
+import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
-public class ServerShutdownListener implements Listener
+public class ServerShutdownListener implements AutoListener
 {
     @Inject
     private MiniGameServer miniGameServer;

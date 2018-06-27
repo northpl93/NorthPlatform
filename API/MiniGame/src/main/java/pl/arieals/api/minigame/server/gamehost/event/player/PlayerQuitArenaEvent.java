@@ -11,12 +11,24 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 public class PlayerQuitArenaEvent extends PlayerArenaEvent
 {
     private static final HandlerList handlers = new HandlerList();
-    private String quitMessage;
+    private boolean canReconnect;
+    private String  quitMessage;
     
-    public PlayerQuitArenaEvent(final Player who, final LocalArena arena, final String quitMessage)
+    public PlayerQuitArenaEvent(final Player who, final LocalArena arena, final boolean canReconnect, final String quitMessage)
     {
         super(arena, who);
+        this.canReconnect = canReconnect;
         this.quitMessage = quitMessage;
+    }
+
+    public boolean canReconnect()
+    {
+        return this.canReconnect;
+    }
+
+    public void disallowReconnect()
+    {
+        this.canReconnect = false;
     }
 
     public String getQuitMessage()
@@ -24,7 +36,7 @@ public class PlayerQuitArenaEvent extends PlayerArenaEvent
         return this.quitMessage;
     }
     
-    public void setQuitMessage(String quitMessage)
+    public void setQuitMessage(final String quitMessage)
     {
         this.quitMessage = quitMessage;
     }

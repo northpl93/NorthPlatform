@@ -9,6 +9,7 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.IGameHostRpc;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
+import pl.arieals.api.minigame.shared.api.arena.reconnect.ReconnectTicket;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class GameHostRpcImpl implements IGameHostRpc
@@ -40,5 +41,18 @@ public class GameHostRpcImpl implements IGameHostRpc
         }
 
         return arena.getPlayersManager().tryAddPlayers(players, spectator);
+    }
+
+    @Override
+    public Boolean tryReconnect(final ReconnectTicket ticket)
+    {
+        final LocalArena arena = this.manager.getArenaManager().getArena(ticket.getArenaId());
+        if (arena == null)
+        {
+            this.logger.warning("arena is null in tryReconnect()");
+            return false;
+        }
+
+        return arena.getPlayersManager().tryReconnect(ticket);
     }
 }

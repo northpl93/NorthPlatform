@@ -21,7 +21,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
+import pl.arieals.api.minigame.server.gamehost.arena.player.PlayersManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;

@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDeletedNetEvent;
-import pl.arieals.api.minigame.shared.impl.ArenaManager;
+import pl.arieals.api.minigame.shared.impl.arena.ArenaManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.event.ServerDeathNetEvent;
 import pl.north93.zgame.api.global.network.impl.ServerDto;

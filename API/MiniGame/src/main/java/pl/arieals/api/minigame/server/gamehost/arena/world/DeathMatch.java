@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.server.gamehost.arena;
+package pl.arieals.api.minigame.server.gamehost.arena.world;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -15,6 +15,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
+import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.deathmatch.FightStartCountdown;
 import pl.arieals.api.minigame.server.gamehost.deathmatch.IFightManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.deathmatch.DeathMatchLoadedEvent;
@@ -32,14 +33,14 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class DeathMatch
 {
-    private final GameHostManager manager;
-    private final LocalArena      arena;
-    private DeathMatchState       state; // stan deathmatchu
-    private FightStartCountdown   fightStart; // task startujacy walke
+    private final GameHostManager     manager;
+    private final LocalArena          arena;
+    private       DeathMatchState     state; // stan deathmatchu
+    private       FightStartCountdown fightStart; // task startujacy walke
     @Inject
-    private BukkitApiCore   apiCore;
+    private       BukkitApiCore       apiCore;
     @Inject
-    private Logger          logger;
+    private       Logger              logger;
 
     public DeathMatch(final GameHostManager manager, final LocalArena arena)
     {

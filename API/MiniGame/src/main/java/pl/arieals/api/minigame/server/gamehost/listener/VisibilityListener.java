@@ -7,7 +7,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -18,9 +17,10 @@ import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinWithoutAre
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.Main;
+import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
-public class VisibilityListener implements Listener
+public class VisibilityListener implements AutoListener
 {
     @Inject
     private BukkitApiCore apiCore;

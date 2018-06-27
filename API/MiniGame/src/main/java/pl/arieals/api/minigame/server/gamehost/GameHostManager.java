@@ -16,17 +16,6 @@ import org.spigotmc.SpigotConfig;
 
 import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
-import pl.arieals.api.minigame.server.gamehost.arena.PlayerTimeoutChecker;
-import pl.arieals.api.minigame.server.gamehost.deathmatch.DeathMatchFightListener;
-import pl.arieals.api.minigame.server.gamehost.deathmatch.DeathMatchStartListener;
-import pl.arieals.api.minigame.server.gamehost.listener.ArenaChatHandler;
-import pl.arieals.api.minigame.server.gamehost.listener.ArenaEndListener;
-import pl.arieals.api.minigame.server.gamehost.listener.ArenaInitListener;
-import pl.arieals.api.minigame.server.gamehost.listener.GameStartListener;
-import pl.arieals.api.minigame.server.gamehost.listener.PlayerListener;
-import pl.arieals.api.minigame.server.gamehost.listener.ServerShutdownListener;
-import pl.arieals.api.minigame.server.gamehost.listener.SpectatorListener;
-import pl.arieals.api.minigame.server.gamehost.listener.VisibilityListener;
 import pl.arieals.api.minigame.server.gamehost.region.impl.RegionManagerImpl;
 import pl.arieals.api.minigame.server.gamehost.world.IMapTemplateManager;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
@@ -65,29 +54,16 @@ public class GameHostManager implements IServerManager
     public void start()
     {
         SpigotConfig.config.set("verbose", false); // disable map-loading spam
+
         this.loadConfig();
+        this.loadMapTemplates();
 
         this.rpcManager.addRpcImplementation(IGameHostRpc.class, new GameHostRpcImpl(this));
 
-        this.apiCore.registerEvents(
-                new ServerShutdownListener(), // zezwala na wylaczenie serwera
-                new PlayerListener(), // dodaje graczy do aren
-                new SpectatorListener(), // pilnuje trybu spectatora
-                new ArenaChatHandler(), // zarządza pokojami czatu
-                new VisibilityListener(), // zarzadza widocznoscia graczy i czatu
-                new ArenaInitListener(), // inicjuje arene po dodaniu/zakonczeniu poprzedniej gry
-                new GameStartListener(), // inicjuje gre po starcie
-                new DeathMatchStartListener(), // pilnuje starty death matchu
-                new DeathMatchFightListener(), // pilnuje walki na deathmatchu
-                new ArenaEndListener()); // pilnuje by arena nie stala pusta i wykonuje czynnosci koncowe
-        
-        this.loadMapTemplates();
-        
         new MiniGameApi(); // inicjuje zmienne w klasie i statyczną INSTANCE
 
         final BukkitScheduler scheduler = Bukkit.getScheduler();
         scheduler.runTask(this.apiCore.getPluginMain(), this::createArenas);
-        scheduler.runTaskTimer(this.apiCore.getPluginMain(), new PlayerTimeoutChecker(this.arenaManager), 100, 100);
     }
 
     private void createArenas()

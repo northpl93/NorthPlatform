@@ -20,7 +20,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import io.netty.buffer.ByteBuf;
-import pl.arieals.api.minigame.server.gamehost.arena.PlayersManager;
+import pl.arieals.api.minigame.server.gamehost.arena.player.PlayersManager;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.cfg.BwGeneratorItemConfig;
 import pl.arieals.minigame.bedwars.cfg.BwGeneratorType;

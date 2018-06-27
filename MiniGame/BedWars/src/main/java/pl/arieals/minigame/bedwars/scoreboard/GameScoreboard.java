@@ -21,7 +21,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.Pair;
 
-import pl.arieals.api.minigame.server.gamehost.arena.DeathMatch;
+import pl.arieals.api.minigame.server.gamehost.arena.world.DeathMatch;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;

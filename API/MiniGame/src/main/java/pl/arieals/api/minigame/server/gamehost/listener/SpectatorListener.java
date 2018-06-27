@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -21,13 +20,14 @@ import org.bukkit.util.Vector;
 
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorModeChangeEvent;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
+import pl.north93.zgame.api.bukkit.utils.AutoListener;
 
 /**
  * Nasluchujemy na uruchomienie i wylaczenie trybu spectatora.
  * Nasluchujemy na rzeczy ktorych spectator nie powinien
  * robic.
  */
-public class SpectatorListener implements Listener
+public class SpectatorListener implements AutoListener
 {
     @EventHandler
     public void onSpectatorEnable(final SpectatorModeChangeEvent event)
