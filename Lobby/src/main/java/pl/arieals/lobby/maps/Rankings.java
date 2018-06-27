@@ -18,6 +18,15 @@ public final class Rankings
         return new MiniGameRankingData(winsStat, killsStat);
     }
 
+    @UriHandler("/lobby/ranking/elytra")
+    public static RankingMapConfig.IMapRankingData elytraRanking(final UriInvocationContext context)
+    {
+        final IStatistic<NumberUnit> winsStat = new HigherNumberBetterStatistic("elytra/totalWins");
+        final IStatistic<NumberUnit> pointsStat = new HigherNumberBetterStatistic("elytra/totalScorePoints");
+
+        return new MiniGameRankingData(winsStat, pointsStat);
+    }
+
     @UriHandler("/lobby/ranking/goldhunter")
     public static RankingMapConfig.IMapRankingData goldHunterRanking(final UriInvocationContext context)
     {

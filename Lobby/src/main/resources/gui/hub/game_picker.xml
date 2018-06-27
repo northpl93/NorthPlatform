@@ -8,12 +8,17 @@
                 <icon id="COMPASS" name="@gamegui.head_item.name" lore="@gamegui.head_item.lore$onlinePlayers"/>
             </button>
 
-            <button pos="3,2">
+            <button pos="2,2">
             	<variable name="playersInGame" value="northplatform://lobby/ui/inGamePlayersCount/goldhunter"/>
                 <icon id="ENDER_CHEST" name="@gamegui.goldhunter.name" lore="@gamegui.goldhunter.lore$playersInGame"/>
                 <onClick>northplatform://lobby/ui/switchHub/goldhunter/$playerId</onClick>
             </button>
-            <button pos="5,2">
+            <button pos="4,2">
+                <variable name="playersInGame" value="northplatform://lobby/ui/inGamePlayersCount/elytra"/>
+                <icon id="ELYTRA" name="@gamegui.elytra.name" lore="@gamegui.elytra.lore$playersInGame"/>
+                <onClick>northplatform://lobby/ui/switchHub/elytra/$playerId</onClick>
+            </button>
+            <button pos="6,2">
             	<variable name="playersInGame" value="northplatform://lobby/ui/inGamePlayersCount/bedwars"/>
                 <icon id="BED" name="@gamegui.bedwars.name" lore="@gamegui.bedwars.lore$playersInGame"/>
                 <onClick>northplatform://lobby/ui/switchHub/bedwars/$playerId</onClick>
