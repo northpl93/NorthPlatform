@@ -10,7 +10,7 @@ public class ShadowAbility implements AbilityHandler
     public boolean onUse(GoldHunterPlayer player)
     {
         player.getAbilityTracker().suspendAbilityLoading();
-        player.getEffectTracker().addEffect(new ShadowEffect(), 120 + 40 * player.getShopItemLevel("vip.assasyn.time2"))
+        player.getEffectTracker().addEffect(new ShadowEffect(), 70 + 10 * player.getShopItemLevel("assasin.abilityduration"))
                 .onComplete(player.getAbilityTracker()::resetAbilityLoading);
         return true;
     }
