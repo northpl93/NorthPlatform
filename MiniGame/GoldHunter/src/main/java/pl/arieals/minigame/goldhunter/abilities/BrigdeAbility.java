@@ -6,12 +6,15 @@ import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 
 public class BrigdeAbility implements AbilityHandler
 {
-    private static final int ABILITY_TIME = 100; // TODO:
+    private static final int BASE_DURATION = 30; // TODO:
+    private static final int PER_LEVEL = 10;
+    
     @Override
     public boolean onUse(GoldHunterPlayer player)
     {
         player.getAbilityTracker().suspendAbilityLoading();
-        player.getEffectTracker().addEffect(new BridgeEffect(), ABILITY_TIME).onComplete(player.getAbilityTracker()::resetAbilityLoading);
+        int duration = BASE_DURATION + player.getShopItemLevel("architect.abilityduration") * PER_LEVEL;
+        player.getEffectTracker().addEffect(new BridgeEffect(), duration).onComplete(player.getAbilityTracker()::resetAbilityLoading);
         return true;
     }
 }
