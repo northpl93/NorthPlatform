@@ -11,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -21,7 +20,6 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.goldhunter.arena.GoldHunterArena;
 import pl.arieals.minigame.goldhunter.classes.CharacterClassManager;
 import pl.arieals.minigame.goldhunter.classes.SpecialAbilityType;
-import pl.arieals.minigame.goldhunter.entity.GoldHunterEntityUtils;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
@@ -52,7 +50,7 @@ public class GoldHunter
     void enable()
     {
         characterClassManager.initClasses();
-        GoldHunterEntityUtils.registerGoldHunterEntities();
+
         runTask(() -> setWorldProperties(Bukkit.getWorlds().get(0)));
         
         registerAbilityHandlersListener();
