@@ -1,13 +1,9 @@
 package pl.arieals.minigame.goldhunter.player;
 
-import java.util.HashMap;
-
 import org.apache.logging.log4j.Logger;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-
-import com.google.common.base.Preconditions;
 
 import net.minecraft.server.v1_12_R1.MinecraftServer;
 
@@ -116,7 +112,7 @@ public class InventoryRefilTracker implements ITickable
             }
         }
         
-        Preconditions.checkState(is.getAmount() > 0);
+        assert is.getAmount() > 0;
         player.getInventory().addItem(is);
     }
     
