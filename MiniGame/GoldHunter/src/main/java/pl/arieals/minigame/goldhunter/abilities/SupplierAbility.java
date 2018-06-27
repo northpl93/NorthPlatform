@@ -17,7 +17,7 @@ public class SupplierAbility implements AbilityHandler
             return false;
         }
         
-        int time = 60 * 20 + player.getShopItemLevel("engineer.dispenser.time2") * 15 * 20;
+        int time = 40 * 20 + player.getShopItemLevel("supplier.abilityduration") * 15 * 20;
         SupplierStructure supplier = new SupplierStructure(targetBlock.add(0, 1, 0).toVector().toBlockVector(), player, time);
         
         if ( !player.getArena().getStructureManager().spawn(supplier) )
