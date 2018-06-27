@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.bungee.proxy.impl;
 
+import static java.util.Collections.synchronizedMap;
+
+
 import java.net.InetSocketAddress;
 import java.util.Iterator;
 import java.util.Map;
@@ -20,11 +23,18 @@ import pl.north93.zgame.api.global.network.server.ServerProxyData;
 
 class ProxyServerListImpl implements IProxyServerList
 {
-    private final ProxyServer proxyServer = ProxyServer.getInstance();
+    private final ProxyServer             proxyServer;
+    private final Map<String, ServerInfo> servers;
     @Inject
     private Logger          logger;
     @Inject
     private INetworkManager networkManager;
+
+    public ProxyServerListImpl()
+    {
+        this.proxyServer = ProxyServer.getInstance();
+        this.servers = synchronizedMap(this.proxyServer.getConfig().getServers());
+    }
 
     @Override
     public void synchronizeServers()
@@ -45,16 +55,15 @@ class ProxyServerListImpl implements IProxyServerList
 
         final ServerInfo serverInfo = this.proxyServer.constructServerInfo(name, address, name, false);
 
-        this.proxyServer.getConfig().getServers().put(name, serverInfo);
+        this.servers.put(name, serverInfo);
     }
 
     @Override
     public void removeServer(final ServerProxyData proxyData)
     {
-        final Map<String, ServerInfo> servers = this.proxyServer.getConfig().getServers();
         final String proxyName = proxyData.getProxyName();
 
-        final ServerInfo serverInfo = servers.get(proxyName);
+        final ServerInfo serverInfo = this.servers.get(proxyName);
         if (serverInfo == null)
         {
             // z jakiegos powodu serwer juz nie istnieje, zabezpieczenie przed ewentualnym NPE
@@ -63,13 +72,13 @@ class ProxyServerListImpl implements IProxyServerList
         }
 
         serverInfo.getPlayers().forEach(ProxiedPlayer::disconnect);
-        servers.remove(proxyName);
+        this.servers.remove(proxyName);
     }
 
     @Override
     public void removeAllServers()
     {
-        final Iterator<ServerInfo> iterator = this.proxyServer.getConfig().getServers().values().iterator();
+        final Iterator<ServerInfo> iterator = this.servers.values().iterator();
         while (iterator.hasNext())
         {
             final ServerInfo server = iterator.next();
