@@ -6,10 +6,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import org.bukkit.Bukkit;
+
 import com.google.common.base.Preconditions;
 
+import pl.arieals.minigame.goldhunter.event.EffectAttachEvent;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
 import pl.north93.zgame.api.bukkit.utils.ISyncCallback;
+import pl.north93.zgame.api.bukkit.utils.SimpleSyncCallback;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class EffectTracker
@@ -41,9 +45,20 @@ public class EffectTracker
         Preconditions.checkNotNull(effect);
         Preconditions.checkArgument(duration >= -1);
         
+        EffectAttachEvent event = new EffectAttachEvent(player, effect, duration);
+        Bukkit.getPluginManager().callEvent(event);
+        
+        if ( event.isCancelled() || event.getEffect() == null )
+        {
+            SimpleSyncCallback callback = new SimpleSyncCallback();
+            callback.callComplete();
+            return callback;
+        }
+        
+        effect = event.getEffect();
         removeEffect(effect.getClass());
         
-        effect.attach(this, duration);
+        effect.attach(this, event.getDuration());
         tickableManager.addTickableObject(effect);
         activeEffects.put(effect.getClass(), effect);
         

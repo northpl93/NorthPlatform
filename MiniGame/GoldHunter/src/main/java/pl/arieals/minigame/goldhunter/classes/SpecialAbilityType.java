@@ -13,7 +13,7 @@ import pl.arieals.minigame.goldhunter.abilities.DazzleAbility;
 import pl.arieals.minigame.goldhunter.abilities.DeathArrowAbility;
 import pl.arieals.minigame.goldhunter.abilities.DoubleJumpAbility;
 import pl.arieals.minigame.goldhunter.abilities.PoisonArrowAbility;
-import pl.arieals.minigame.goldhunter.abilities.RedemptionAbility;
+import pl.arieals.minigame.goldhunter.abilities.DivineShieldAbility;
 import pl.arieals.minigame.goldhunter.abilities.ShadowAbility;
 import pl.arieals.minigame.goldhunter.abilities.ShieldAttackAbility;
 import pl.arieals.minigame.goldhunter.abilities.SirenTearsAbility;
@@ -29,7 +29,7 @@ public enum SpecialAbilityType
     CALL_OF_BLOOD(new CallOfBloodAbility(), "info.ability.press_q"),
     DAZZLE(new DazzleAbility(), "info.ability.press_q"),
     DEATH_ARROW(new DeathArrowAbility(), "info.ability.press_q"),
-    DIVINE_SHIELD(new RedemptionAbility(), "info.ability.press_q"), // TODO:
+    DIVINE_SHIELD(new DivineShieldAbility(), "info.ability.press_q"), // TODO:
     DOUBLE_JUMP(new DoubleJumpAbility(), "info.ability.press_double_space"),
     HEAL(new SirenTearsAbility(), "info.ability.press_q"),
     POISON_ARROW(new PoisonArrowAbility(), "info.ability.press_q"),
