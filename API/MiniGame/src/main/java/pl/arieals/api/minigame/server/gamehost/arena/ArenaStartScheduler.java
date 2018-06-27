@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
+import pl.arieals.api.minigame.server.gamehost.event.arena.ArenaStartCancelledEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.ArenaStartScheduledEvent;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.north93.zgame.api.bukkit.utils.SimpleCountdown;
@@ -69,9 +70,12 @@ public class ArenaStartScheduler
     public void cancelStarting()
     {
         Preconditions.checkState(this.startCountdown != null, "Game start isn't scheduled now");
+        
         this.startCountdown.stop();
         this.startCountdown = null;
         this.arena.getTimer().stop();
+        
+        Bukkit.getPluginManager().callEvent(new ArenaStartCancelledEvent(arena));
     }
     
     
