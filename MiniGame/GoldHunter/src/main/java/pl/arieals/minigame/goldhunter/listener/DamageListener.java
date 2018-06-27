@@ -1,5 +1,6 @@
 package pl.arieals.minigame.goldhunter.listener;
 
+import org.apache.logging.log4j.Logger;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -8,16 +9,23 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.util.Vector;
 
 import pl.arieals.minigame.goldhunter.GoldHunter;
+import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.effect.RespawnProtection;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
+import pl.arieals.minigame.goldhunter.utils.ItemStackUtils;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.bukkit.utils.itemstack.MaterialUtils;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class DamageListener implements AutoListener
 {
+    @Inject
+    @GoldHunterLogger
+    private Logger logger;
+    
     @Inject
     private GoldHunter goldHunter;
     
@@ -62,6 +70,37 @@ public class DamageListener implements AutoListener
         if ( player.getEffectTracker().hasEffectOfType(RespawnProtection.class) )
         {
             event.setCancelled(true);
+        }
+    }
+    
+    @EventHandler
+    public void onDamageByAssasinDagger(EntityDamageByEntityEvent event)
+    {
+        GoldHunterPlayer damager = goldHunter.getPlayer(event.getDamager());
+        GoldHunterPlayer damaged = goldHunter.getPlayer(event.getEntity());
+        if ( damager == null || damaged == null )
+        {
+            return;
+        }
+        
+        if ( !ItemStackUtils.isAssasinDagger(damager.getPlayer().getInventory().getItemInMainHand()) )
+        {
+            return;
+        }
+        
+        Vector damagerDir = damager.getPlayer().getLocation().getDirection().setY(0).normalize();
+        Vector damagedDir = damaged.getPlayer().getLocation().getDirection().setY(0).normalize();
+        
+        double angle = Math.toDegrees(damagerDir.angle(damagedDir));
+        
+        logger.debug("angle {}", angle);
+        
+        if ( angle >= -45 && angle < 45 )
+        {
+            logger.debug("Assasin dagger critical damage with angle {}", angle);
+            
+            //SoundEffect.DAGGER_CRITICAL.play(damaged.getPlayer().getLocation());
+            event.setDamage(event.getDamage() * 2);
         }
     }
     

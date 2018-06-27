@@ -17,7 +17,6 @@ import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.global.utils.lang.MethodHandlesUtils;
 import pl.north93.zgame.api.global.utils.lang.SneakyThrow;
 
-
 public final class ItemStackUtils
 {
     private static final MethodHandle HANDLE_GETTER = MethodHandlesUtils.unreflectGetter(CraftItemStack.class, "handle");
@@ -43,22 +42,29 @@ public final class ItemStackUtils
         return is;
     }
     
-    private static void tryPrepareAssasinDagger(GoldHunterPlayer player, ItemStack is)
+    public static boolean isAssasinDagger(ItemStack is)
     {
-        // TODO: add way to configure this!
         if ( !( is instanceof CraftItemStack ) )
         {
-            return;
+            return false;
         }
         
         net.minecraft.server.v1_12_R1.ItemStack nms = (net.minecraft.server.v1_12_R1.ItemStack) SneakyThrow.sneaky(() -> HANDLE_GETTER.invoke(is));
-        
         NBTTagCompound ghmetadata = nms.d("goldhunter");
-        if ( ghmetadata == null || !ghmetadata.hasKey("assasinDagger") )
+        return ghmetadata != null && ghmetadata.hasKey("assasinDagger");
+    }
+    
+    private static void tryPrepareAssasinDagger(GoldHunterPlayer player, ItemStack is)
+    {
+        if ( !isAssasinDagger(is) )
         {
             return;
         }
         
+        // TODO: add way to configure this!
+        
+        net.minecraft.server.v1_12_R1.ItemStack nms = (net.minecraft.server.v1_12_R1.ItemStack) SneakyThrow.sneaky(() -> HANDLE_GETTER.invoke(is));
+        NBTTagCompound ghmetadata = nms.d("goldhunter");
         ghmetadata.setString("message", "There aren't any easter eggs here! Go away!");
         
         NBTTagCompound modifier = new NBTTagCompound();

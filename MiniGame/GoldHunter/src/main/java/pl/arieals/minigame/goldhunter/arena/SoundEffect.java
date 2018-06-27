@@ -11,6 +11,7 @@ public enum SoundEffect
     ABILITY_READY("entity.player.levelup", 2),
     ABILITY_USE("entity.experience_orb.pickup"),
     CHEST_DESTROY("entity.wither.death"),
+    //DAGGER_CRITICAL("block.anvil.destroy"),
     
     ;
     
