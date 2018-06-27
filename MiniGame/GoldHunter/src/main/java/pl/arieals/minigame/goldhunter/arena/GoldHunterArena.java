@@ -291,16 +291,14 @@ public class GoldHunterArena implements IArenaData, ITickable
     public void scheduleStart()
     {
         localArena.getStartScheduler().scheduleStart();
-        updateLobbyScoreboardLayout();
     }
     
     public void cancelStart()
     {
         localArena.getStartScheduler().cancelStarting();
-        updateLobbyScoreboardLayout();
     }
     
-    private void updateLobbyScoreboardLayout()
+    public void updateLobbyScoreboardLayout()
     {
         if ( !hasGame() )
         {

@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.server.gamehost.event.arena.ArenaStartCancelledEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.ArenaStartScheduledEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameInitEvent;
@@ -94,5 +95,19 @@ public class ArenaListener implements AutoListener
         
         arena.playerLeft(player);
         goldHunter.removePlayer(player);
+    }
+    
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onStartScheduled(ArenaStartScheduledEvent event)
+    {
+        GoldHunterArena arena = event.getArena().getArenaData();
+        event.getArena().getScheduler().runTaskLater(arena::updateLobbyScoreboardLayout, 0);
+    }
+    
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onStartCancelled(ArenaStartCancelledEvent event)
+    {
+        GoldHunterArena arena = event.getArena().getArenaData();
+        arena.updateLobbyScoreboardLayout();
     }
 }
