@@ -25,6 +25,7 @@ import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorQuitEvent;
+import pl.arieals.api.minigame.server.utils.MetadataUtils;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
@@ -303,6 +304,11 @@ public class PlayersManager
         if (event.canReconnect())
         {
             this.reconnectHandler.addReconnectCandidate(player);
+        }
+        else
+        {
+            // gracz i tak juz nie wroci na ten serwer, a pozostale dane moga powodowac memory-leak
+            MetadataUtils.removePlayerMetadata(player);
         }
 
         final RemoteArena remoteArena = this.arena.getAsRemoteArena();
