@@ -67,7 +67,7 @@ public class DamageListener implements AutoListener
     {
         GoldHunterPlayer player = goldHunter.getPlayer(event.getEntity());
         
-        if ( player.getEffectTracker().hasEffectOfType(RespawnProtection.class) )
+        if ( player != null && player.getEffectTracker().hasEffectOfType(RespawnProtection.class) )
         {
             event.setCancelled(true);
         }
