@@ -175,8 +175,10 @@ public class GoldHunterPlayer implements ITickable
     public void setShadow(boolean shadow)
     {
         this.shadow = shadow;
-
+        
         arena.getSignedPlayers().forEach(p -> p.updatePlayersVisibility());
+        
+        getMinecraftPlayer().setInvisible(shadow);
     }
     
     public boolean canSee(GoldHunterPlayer other)

@@ -1,8 +1,5 @@
 package pl.arieals.minigame.goldhunter.effect;
 
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
 import pl.arieals.minigame.goldhunter.player.Effect;
 
 public class ShadowEffect extends Effect
@@ -15,13 +12,11 @@ public class ShadowEffect extends Effect
     protected void onStart()
     {
         getPlayer().setShadow(true);
-        getPlayer().getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, true, false), true);
     }
     
     @Override
     protected void onEnd()
     {
         getPlayer().setShadow(false);
-        getPlayer().getPlayer().removePotionEffect(PotionEffectType.INVISIBILITY);
     }
 }
