@@ -3,7 +3,11 @@
 	<displayName>@ninja</displayName>
 	<lore>@ninja.lore</lore>
 
-	<icon id="minecraft:name_tag" />
+	<icon id="minecraft:tipped_arrow">
+		<potionMeta>
+			<potionData type="WEAKNESS" />
+		</potionMeta>
+	</icon>
 	
 	<rank>SVIP</rank>
 	

@@ -3,7 +3,7 @@
 	<displayName>@defender</displayName>
 	<lore>@defender.lore</lore>
 	
-	<icon id="minecraft:iron_chestplate" />	
+	<icon id="minecraft:cobblestone" />	
 	<rank>VIP</rank>
 	
 	<!-- <shopItem>defender.access</shopItem> -->

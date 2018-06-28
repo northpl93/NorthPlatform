@@ -3,7 +3,7 @@
 	<displayName>@berserker</displayName>
 	<lore>@berserker.lore</lore>
 	
-	<icon id="STONE_SWORD" />
+	<icon id="minecraft:diamond_sword" />
 	
 	<specialAbility type="CALL_OF_BLOOD">
 		<loading ifbuyed="berserker.loadingtime:3" seconds="21" />

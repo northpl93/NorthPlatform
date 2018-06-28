@@ -3,7 +3,7 @@
 	<displayName>@knight</displayName>
 	<lore>@knight.lore</lore>
 	
-	<icon id="minecraft:diamond_chestplate" />
+	<icon id="minecraft:iron_chestplate" />
 	
 	<!-- <shopItem>knight.access</shopItem> -->
 	

@@ -3,7 +3,7 @@
 	<displayName>@paladin</displayName>
 	<lore>@paladin.lore</lore>
 	
-	<icon id="minecraft:golden_apple" />
+	<icon id="minecraft:golden_helmet" />
 	<rank>SVIP</rank>
 	
 	<!-- <shopItem>class.paladin</shopItem> -->

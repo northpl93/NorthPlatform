@@ -5,7 +5,7 @@
 	
 	<icon id="minecraft:dropper" />
 	
-	<shopItem>supplier.access</shopItem>
+	<!-- <shopItem>supplier.access</shopItem> -->
 
 	<specialAbility type="SUPPLIER">
 		<loading ifbuyed="suplier.loadingtime:3" seconds="30" />

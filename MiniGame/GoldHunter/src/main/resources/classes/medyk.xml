@@ -3,7 +3,7 @@
 	<displayName>@medic</displayName>
 	<lore>@medic.lore</lore>
 	
-	<icon id="minecraft:slime_ball" />
+	<icon id="minecraft:dye" data="1" />
 	
 	<!-- <shopItem>medic.access</shopItem> -->
 	

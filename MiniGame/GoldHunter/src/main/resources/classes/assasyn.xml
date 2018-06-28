@@ -3,7 +3,7 @@
 	<displayName>@assassin</displayName>
 	<lore>@assassin.lore</lore>
 	
-	<icon id="minecraft:leather_helmet" />
+	<icon id="minecraft:stick" />
 	
 	<rank>VIP</rank>
 	
