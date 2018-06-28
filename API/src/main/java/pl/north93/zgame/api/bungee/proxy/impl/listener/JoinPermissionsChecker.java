@@ -1,9 +1,10 @@
 package pl.north93.zgame.api.bungee.proxy.impl.listener;
 
+import static org.diorite.commons.arrays.DioriteArrayUtils.EMPTY_OBJECT;
+
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import org.diorite.commons.arrays.DioriteArrayUtils;
 
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -16,12 +17,13 @@ import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.NetworkMeta;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
+import pl.north93.zgame.api.global.permissions.Group;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
 public class JoinPermissionsChecker implements Listener
 {
     @Inject @Messages("Messages")
-    private MessagesBox     apiMessages;
+    private MessagesBox     messages;
     @Inject
     private INetworkManager networkManager;
 
@@ -32,22 +34,34 @@ public class JoinPermissionsChecker implements Listener
         final IOnlinePlayer cache = player.get();
 
         final NetworkMeta networkMeta = this.networkManager.getNetworkConfig().get();
+        if (networkMeta == null)
+        {
+            event.setCancelled(this.messages.getMessage("pl-PL", "kick.generic_error", "networkMeta==null"));
+            return;
+        }
+
         final JoiningPolicy joiningPolicy = networkMeta.joiningPolicy;
+        final Group group = cache.getGroup();
+
         if (joiningPolicy == JoiningPolicy.NOBODY)
         {
-            event.setCancelled(this.apiMessages.getMessage("pl-PL", "join.access_locked", DioriteArrayUtils.EMPTY_OBJECT));
+            event.setCancelled(this.messages.getMessage("pl-PL", "join.access_locked", EMPTY_OBJECT));
         }
-        else if (joiningPolicy == JoiningPolicy.ONLY_ADMIN && ! cache.getGroup().hasPermission("join.admin")) // wpuszczanie tylko adminów
+        else if (joiningPolicy == JoiningPolicy.ONLY_ADMIN && ! group.hasPermission("join.admin")) // wpuszczanie tylko adminów
         {
-            event.setCancelled(this.apiMessages.getMessage("pl-PL", "join.access_locked", DioriteArrayUtils.EMPTY_OBJECT));
+            event.setCancelled(this.messages.getMessage("pl-PL", "join.access_locked", EMPTY_OBJECT));
         }
-        else if (joiningPolicy == JoiningPolicy.ONLY_VIP && ! cache.getGroup().hasPermission("join.vip"))
+        else if (joiningPolicy == JoiningPolicy.ONLY_VIP && ! group.hasPermission("join.vip"))
         {
-            event.setCancelled(this.apiMessages.getMessage("pl-PL", "join.access_locked", DioriteArrayUtils.EMPTY_OBJECT));
+            event.setCancelled(this.messages.getMessage("pl-PL", "join.access_locked", EMPTY_OBJECT));
         }
-        else if (this.networkManager.getProxies().onlinePlayersCount() > networkMeta.displayMaxPlayers && ! cache.getGroup().hasPermission("join.bypass"))
+        else
         {
-            event.setCancelled(this.apiMessages.getMessage("pl-PL", "join.server_full", DioriteArrayUtils.EMPTY_OBJECT));
+            final int onlinePlayersCount = this.networkManager.getProxies().onlinePlayersCount();
+            if (onlinePlayersCount > networkMeta.displayMaxPlayers && ! group.hasPermission("join.bypass"))
+            {
+                event.setCancelled(this.messages.getMessage("pl-PL", "join.server_full", EMPTY_OBJECT));
+            }
         }
     }
 

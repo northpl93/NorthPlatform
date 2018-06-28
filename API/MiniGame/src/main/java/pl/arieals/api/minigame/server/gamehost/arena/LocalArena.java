@@ -40,21 +40,21 @@ import pl.north93.zgame.api.global.metadata.MetaStore;
 
 public class LocalArena implements IArena
 {
-    private static final int                 MAX_TIME_TO_DISCONNECT = 30 * 20; // czas po jakim serwer wyrzuci graczy ktorzy nie wylecieli z areny
-    private final        GameHostManager     gameHostManager;
-    private final        ArenaManager        arenaManager;
-    private final        RemoteArena         data;
-    private final        ArenaWorld          world;
-    private final        PlayersManager      playersManager;
-    private final        ArenaChatManager    chatManager;
-    private final        StaticTimer         timer;
-    private final        ArenaScheduler      scheduler;
-    private final        DeathMatch          deathMatch;
-    private final        IArenaRewards       rewards;
-    private final        ArenaStartScheduler startScheduler;
-    private              IMatchAccess        match;
-    private              IArenaData          arenaData;
-    private              MapVote             mapVote;
+    private static final int MAX_TIME_TO_DISCONNECT = 30 * 20; // czas po jakim serwer wyrzuci graczy ktorzy nie wylecieli z areny
+    private final GameHostManager     gameHostManager;
+    private final ArenaManager        arenaManager;
+    private final RemoteArena         data;
+    private final ArenaWorld          world;
+    private final PlayersManager      playersManager;
+    private final ArenaChatManager    chatManager;
+    private final StaticTimer         timer;
+    private final ArenaScheduler      scheduler;
+    private final DeathMatch          deathMatch;
+    private final IArenaRewards       rewards;
+    private final ArenaStartScheduler startScheduler;
+    private       IMatchAccess        match;
+    private       IArenaData          arenaData;
+    private       MapVote             mapVote;
 
     public LocalArena(final GameHostManager gameHostManager, final ArenaManager arenaManager, final RemoteArena data)
     {
