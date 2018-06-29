@@ -1,7 +1,10 @@
 package pl.arieals.lobby.game;
 
+import org.bukkit.GameMode;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
+import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
@@ -23,5 +26,17 @@ public class GlobalHubListener implements AutoListener
 
         // scoreboardy zwykle mają w sobie zapisany stan waluty
         context.update();
+    }
+
+    @EventHandler
+    public void enableFlyWhenHavePermissions(final PlayerSwitchedHubEvent event)
+    {
+        final Player player = event.getPlayer();
+        if (player.getGameMode() != GameMode.ADVENTURE)
+        {
+            return;
+        }
+
+        player.setAllowFlight(player.hasPermission("hub.fly"));
     }
 }
