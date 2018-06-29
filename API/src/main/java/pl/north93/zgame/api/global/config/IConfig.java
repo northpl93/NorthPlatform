@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.global.config;
 
+import javax.annotation.Nullable;
+
 import java.util.function.Consumer;
 
 /**
@@ -17,9 +19,11 @@ public interface IConfig<T>
 
     /**
      * Zwraca aktualna klase przechowujaca dane configu.
+     * Moze byc nullem jesli config nie jest zaladowany.
      *
      * @return Klasa przechowujaca dane configu.
      */
+    @Nullable
     T get();
 
     /**

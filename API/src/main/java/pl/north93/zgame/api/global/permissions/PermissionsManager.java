@@ -1,7 +1,10 @@
 package pl.north93.zgame.api.global.permissions;
 
+import javax.annotation.Nullable;
+
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -23,13 +26,7 @@ public class PermissionsManager extends Component
     @Override
     protected void enableComponent()
     {
-        final GroupsContainer groupsContainer = this.groups.get();
-        if (groupsContainer == null)
-        {
-            this.getLogger().info("Skipped groups synchronization because config isn't loaded yet.");
-            return;
-        }
-        this.synchronizeGroups(groupsContainer);
+        this.synchronizeGroups(this.groups.get());
     }
 
     @Override
@@ -68,9 +65,15 @@ public class PermissionsManager extends Component
     /**
      * Pobiera z Redisa listę grup i zapisuje ją w liście
      */
-    private void synchronizeGroups(final GroupsContainer groupsContainer)
+    private void synchronizeGroups(final @Nullable GroupsContainer groupsContainer)
     {
-        this.getLogger().info("Updating groups...");
+        final Logger logger = this.getLogger();
+        if (groupsContainer == null)
+        {
+            logger.info("Skipped groups synchronization because config isn't loaded yet.");
+            return;
+        }
+
         // Fetched from redis. Now load it into List
         this.cachedGroups.clear();
         for (final GroupsContainer.GroupEntry groupEntry : groupsContainer.groups)
@@ -79,6 +82,7 @@ public class PermissionsManager extends Component
             groupEntry.permissions.forEach(group::addPermission);
             this.cachedGroups.add(group);
         }
+
         // All groups populated. Now link the inheritance.
         for (final GroupsContainer.GroupEntry groupEntry : groupsContainer.groups)
         {
@@ -93,8 +97,9 @@ public class PermissionsManager extends Component
                 group.addInheritGroup(this.getGroupByName(inheritGroup));
             }
         }
+
         this.defaultGroup = this.getGroupByName(groupsContainer.defaultGroup);
-        this.getLogger().info("Loaded " + this.cachedGroups.size() + " groups!");
+        logger.info("Loaded " + this.cachedGroups.size() + " groups!");
     }
 
     @Override
