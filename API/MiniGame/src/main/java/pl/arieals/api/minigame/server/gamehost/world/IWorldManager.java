@@ -13,8 +13,6 @@ public interface IWorldManager
 
     ILoadingProgress regenWorld(String name, File source, Set<XmlChunk> chunks);
 
-    boolean unloadWorld(String name);
-
     boolean clearWorld(String name);
 
     void trimWorld(World source, String targetName, Set<XmlChunk> chunks);

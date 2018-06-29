@@ -1,8 +1,5 @@
 package pl.arieals.api.minigame.server.lobby.hub;
 
-import static java.util.Optional.ofNullable;
-
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,10 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -24,8 +18,6 @@ import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
 import pl.arieals.api.minigame.shared.api.cfg.HubConfig;
 import pl.arieals.api.minigame.shared.api.cfg.HubsConfig;
 import pl.arieals.api.minigame.shared.api.hub.IHubServer;
-import pl.mcpiraci.world.properties.IWorldProperties;
-import pl.mcpiraci.world.properties.IWorldPropertiesManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.chat.global.ChatManager;
 import pl.north93.zgame.api.chat.global.ChatRoom;
@@ -45,7 +37,7 @@ public class LocalHubServer implements IHubServer
     @Inject
     private ChatManager             chatManager;
     @Inject
-    private IWorldPropertiesManager worldPropertiesManager;
+    private HubWorldManager         hubWorldManager;
     @Inject @NetConfig(type = HubsConfig.class, id = "hubs")
     private IConfig<HubsConfig>     hubsConfig;
     private Map<String, HubWorld>   hubWorlds = new HashMap<>();
@@ -181,36 +173,11 @@ public class LocalHubServer implements IHubServer
 
     private void createNewHubWorld(final HubConfig hubConfig)
     {
-        final World bukkitWorld = this.createWorld(hubConfig);
         final ChatRoom room = this.getChatRoomFor(hubConfig);
-
-        final HubWorld hubWorld = new HubWorld(hubConfig.getHubId(), bukkitWorld, room);
-        hubWorld.updateConfig(hubConfig);
-
-        final IWorldProperties properties = this.worldPropertiesManager.getProperties(bukkitWorld);
-        final Location spawn = ofNullable(properties.getSpawn()).orElse(bukkitWorld.getSpawnLocation());
-        hubWorld.setSpawn(new Location(bukkitWorld, spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getYaw(), spawn.getPitch()));
+        final HubWorld hubWorld = this.hubWorldManager.createHubWorld(hubConfig, room);
 
         this.hubWorlds.put(hubConfig.getHubId(), hubWorld);
         this.apiCore.getLogger().log(Level.INFO, "Created hub with ID {0}", hubConfig.getHubId());
-    }
-
-    private World createWorld(final HubConfig hubConfig)
-    {
-        final String mainHubName = this.hubsConfig.get().getMainHub();
-        if (mainHubName.equals(hubConfig.getHubId()))
-        {
-            return Bukkit.getWorlds().get(0);
-        }
-
-        final WorldCreator creator = WorldCreator.name(hubConfig.getWorldName());
-        creator.generatorSettings("0");
-
-        final World world = creator.createWorld();
-        world.setAutoSave(false);
-        world.setKeepSpawnInMemory(true); // na hubach trzymamy spawn w pamieci, aby zapobiec mieleniu dyskiem
-
-        return world;
     }
 
     private ChatRoom getChatRoomFor(final HubConfig hubConfig)

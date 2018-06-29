@@ -116,7 +116,6 @@ public class WorldManager implements IWorldManager, Listener
         return this.loadWorld(name, source, chunks);
     }
 
-    @Override
     public boolean unloadWorld(final String name)
     {
         final World world = Bukkit.getWorld(name);
