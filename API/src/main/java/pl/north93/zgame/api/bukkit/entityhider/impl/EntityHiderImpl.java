@@ -2,21 +2,23 @@ package pl.north93.zgame.api.bukkit.entityhider.impl;
 
 import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.getTrackerEntry;
 
+
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.bukkit.Bukkit;
+import net.minecraft.server.v1_12_R1.EntityPlayer;
+import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
+
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
-import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.Main;
@@ -36,15 +38,18 @@ public class EntityHiderImpl extends Component implements IEntityHider
     {
         final VisibilityController controller = this.getController(player);
         entities.forEach(entity -> controller.setVisibility(entity, visibility));
-        
-        refreshEntities(entities);
     }
 
     @Override
     public void setVisibility(final EntityVisibility visibility, final Collection<Entity> entities)
     {
         entities.forEach(entity -> this.globalVisibility.setGlobalEntityStatus(entity, visibility));
-        refreshEntities(entities);
+        /*for (final Entity entity : entities) // kod wymuszajacy zaktualizowanie trackerow, zmniejsza opoznienie ale to chyba zbedne
+        {
+            final CraftEntity craftEntity = (CraftEntity) entity;
+            final EntityTrackerEntry tracker = EntityTrackerHelper.getTrackerEntry(craftEntity.getHandle());
+            tracker.updatePlayer(((CraftPlayer) player).getHandle());
+        }*/
     }
 
     @Override
@@ -66,9 +71,9 @@ public class EntityHiderImpl extends Component implements IEntityHider
                 continue;
             }
 
-            for (final Player player : Bukkit.getOnlinePlayers() )
+            for (final EntityPlayer trackedPlayer : new HashSet<>(tracker.trackedPlayers))
             {
-                tracker.updatePlayer(((CraftPlayer) player).getHandle());
+                tracker.updatePlayer(trackedPlayer);
             }
         }
     }
