@@ -97,7 +97,7 @@ public class JoinDynamicGui extends Gui
     
     private DynamicElementData createElementForArena(IArena arena)
     {
-        ItemStack is = new ItemStackBuilder().material(isAlmostEmpty(arena) || isAlmostFull(arena) ? Material.CHEST : Material.ENDER_CHEST)
+        ItemStack is = new ItemStackBuilder().material(isEmpty(arena) || isAlmostEmpty(arena) || isAlmostFull(arena) ? Material.CHEST : Material.ENDER_CHEST)
                 .amount(Math.max(1, getSignedPlayers(arena))).build();
         
         IGuiIcon icon = ConfigGuiIcon.builder().itemStack(is).name(TranslatableString.of(messages, "@play.dynamic.icon.name"))
