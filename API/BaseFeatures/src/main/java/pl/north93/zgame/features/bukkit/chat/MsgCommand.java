@@ -61,16 +61,19 @@ public class MsgCommand extends NorthCommand
                     sender.sendMessage(this.messages, "command.msg.disabled");
                     return;
                 case FROM_FRIENDS:
+                default:
                     // TODO
                     // return;
                     break;
+                    
+                
             }
         }
 
         final boolean colorText = player.hasPermission("api.command.msg.colorize");
         final String message = colorText ? args.asText(1) : StringUtils.replace(args.asText(1), "&", "");
-        sender.sendMessage(this.messages, "command.msg.message", this.messages.getMessage("command.msg.you"), receiver.getNick(), message);
-        receiver.sendMessage(this.messages, "command.msg.message", sender.getName(), this.messages.getMessage("command.msg.you"), message);
+        sender.sendMessage(this.messages, "command.msg.from_you_message", receiver.getNick(), message);
+        receiver.sendMessage(this.messages, "command.msg.to_you_message", sender.getName(), message);
 
         this.networkManager.getPlayers().access(receiver.getNick(), iPlayer ->
         {

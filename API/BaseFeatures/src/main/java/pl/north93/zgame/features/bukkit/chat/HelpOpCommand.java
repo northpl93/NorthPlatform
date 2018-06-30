@@ -2,8 +2,11 @@ package pl.north93.zgame.features.bukkit.chat;
 
 import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.parseLegacyText;
 
-
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
@@ -21,7 +24,7 @@ public class HelpOpCommand extends NorthCommand
 
     public HelpOpCommand()
     {
-        super("helpop");
+        super("helpop", "report", "modreq");
     }
 
     @Override
@@ -36,7 +39,27 @@ public class HelpOpCommand extends NorthCommand
         final String message = args.asText(0);
         sender.sendMessage(this.messages, "command.helpop.message", message);
 
-        final BaseComponent adminMessage = parseLegacyText("&a[HELPOP] &7{0}: {1}", sender.getName(), message);
+        final BaseComponent adminMessage = prepareMessage(sender, message);
         this.adminChatService.broadcast(adminMessage);
+    }
+    
+    private BaseComponent prepareMessage(NorthCommandSender sender, String message)
+    {
+    	TextComponent result = new TextComponent("[HP] ");
+    	result.setColor(ChatColor.GREEN);
+    	result.setBold(true);
+    	
+    	TextComponent senderName = new TextComponent(sender.getName());
+    	senderName.setColor(ChatColor.GRAY);
+    	senderName.setBold(false);
+    	
+    	senderName.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/hr " + sender.getName() + " "));
+    	
+    	TextComponent msg = new TextComponent(parseLegacyText("§7: §a" + message));
+    	
+    	result.addExtra(senderName);
+    	result.addExtra(msg);
+    	
+    	return result;
     }
 }
