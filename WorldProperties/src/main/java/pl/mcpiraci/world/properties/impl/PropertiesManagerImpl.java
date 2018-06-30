@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.WeakHashMap;
 
 import javax.xml.bind.JAXB;
 
@@ -13,25 +12,29 @@ import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.google.common.base.Preconditions;
 
 import pl.mcpiraci.world.properties.IPlayerProperties;
-import pl.mcpiraci.world.properties.PropertiesConfig;
 import pl.mcpiraci.world.properties.IWorldProperties;
 import pl.mcpiraci.world.properties.IWorldPropertiesManager;
+import pl.mcpiraci.world.properties.PropertiesConfig;
 import pl.mcpiraci.world.properties.impl.xml.XmlWorldProperties;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
+import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
-public class PropertiesManagerImpl implements IWorldPropertiesManager
+public class PropertiesManagerImpl implements IWorldPropertiesManager, AutoListener
 {
     private static Logger logger = LogManager.getLogger();
     
     private final PropertiesConfig serverConfig = new PropertiesConfig(null);
     private final Map<String, WorldPropertiesImpl> propertiesByWorld = new HashMap<>();
-    private final Map<Player, IPlayerProperties> playerProperties = new WeakHashMap<>();
+    private final Map<Player, IPlayerProperties> playerProperties = new HashMap<>();
     
     private final BukkitApiCore apiCore;
     
@@ -137,5 +140,9 @@ public class PropertiesManagerImpl implements IWorldPropertiesManager
         logger.debug("Removed properties for world {}", () -> world.getName());
     }
 
-    
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void removePlayerData(PlayerQuitEvent event)
+    {
+        playerProperties.remove(event.getPlayer());
+    }
 }
