@@ -1,6 +1,7 @@
-package pl.north93.zgame.api.bukkit.hologui.hologram;
+package pl.north93.zgame.api.bukkit.hologui.hologram.impl;
 
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +13,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
+import pl.north93.zgame.api.bukkit.hologui.hologram.HologramRenderContext;
+import pl.north93.zgame.api.bukkit.hologui.hologram.IHologram;
+import pl.north93.zgame.api.bukkit.hologui.hologram.IHologramMessage;
+import pl.north93.zgame.api.bukkit.hologui.hologram.IHologramVisibility;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -24,50 +29,34 @@ final class HologramImpl implements IHologram
 
     private final IHologramVisibility hologramVisibility;
     private final Location            location;
-    private final boolean             lowerLocation;
+    private final HologramCache       hologramCache;
     private final List<HoloLine>      lines;
-
-    public HologramImpl(final IHologramVisibility hologramVisibility, final Location location, final boolean lowerLocation)
-    {
-        this.hologramVisibility = hologramVisibility;
-        this.location = location;
-        this.lowerLocation = lowerLocation;
-        this.lines = new LinkedList<>();
-    }
 
     public HologramImpl(final IHologramVisibility hologramVisibility, final Location location)
     {
-        this(hologramVisibility, location, false);
+        this.hologramVisibility = hologramVisibility;
+        this.location = location;
+        this.hologramCache = new HologramCache();
+        this.lines = new LinkedList<>();
+
+        // kazdy hologram musi miec przynajmniej jedna linijke
+        this.ensureLineCount(1);
     }
 
     @Override
-    public void clearLine(final int line)
+    public void setMessage(final IHologramMessage text)
     {
-        final HoloLine holoLine = this.ensureLine(line, false);
-        if (holoLine == null)
+        this.hologramCache.setMessage(text);
+        for (final HoloLine line : new ArrayList<>(this.lines))
         {
-            return;
+            line.broadcastUpdate();
         }
-        holoLine.cleanup();
-        this.lines.remove(holoLine);
     }
 
     @Override
     public double getLinesSpacing()
     {
         return 0.3;
-    }
-
-    public boolean isLowerLocation()
-    {
-        return this.lowerLocation;
-    }
-
-    @Override
-    public void setLine(final int line, final IHologramLine text)
-    {
-        //noinspection ConstantConditions
-        this.ensureLine(line, true).setText(text);
     }
 
     @Override
@@ -86,24 +75,29 @@ final class HologramImpl implements IHologram
         return this.location;
     }
 
-    private HoloLine ensureLine(final int line, final boolean create)
+    /*default*/ String getLine(final HologramRenderContext context, final int lineId)
     {
-        for (final HoloLine holoLine : this.lines)
-        {
-            if (holoLine.getLineNo() == line)
-            {
-                return holoLine;
-            }
-        }
+        final HologramCacheEntry cache = this.hologramCache.getEntry(context);
+        this.ensureLineCount(cache.linesCount());
 
-        if (! create)
-        {
-            return null;
-        }
+        return cache.getLine(lineId);
+    }
 
-        final HoloLine holoLine = new HoloLine(this, line);
+    private void ensureLineCount(final int count)
+    {
+        for (int i = this.lines.size(); i < count; i++)
+        {
+            this.createNextLine();
+        }
+    }
+
+    private void createNextLine()
+    {
+        final int nextLine = this.lines.size();
+
+        final HoloLine holoLine = new HoloLine(this, nextLine);
         this.lines.add(holoLine);
-        return holoLine;
+        holoLine.createArmorStand();
     }
 
     public void setupVisibility(final ArmorStand armorStand)

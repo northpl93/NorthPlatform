@@ -24,86 +24,54 @@ import pl.arieals.api.minigame.server.gamehost.arena.player.PlayersManager;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.cfg.BwGeneratorItemConfig;
 import pl.arieals.minigame.bedwars.cfg.BwGeneratorType;
-import pl.north93.zgame.api.bukkit.hologui.hologram.IHologram;
-import pl.north93.zgame.api.bukkit.hologui.hologram.TranslatedLine;
 import pl.north93.zgame.api.bukkit.utils.nms.EntityMetaPacketHelper;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
-class GeneratorHudHandler
+class GeneratorHudHandlerImpl implements IGeneratorHudHandler
 {
     @Inject @Messages("BedWars")
-    private MessagesBox               messages;
+    private       MessagesBox         messages;
     private final GeneratorController generator;
-    private final boolean             enabled;
-    private final IHologram           hologram;
+    private final GeneratorHologram   hologram;
     private final ArmorStand          item;
     private       float               itemPose;
 
-    public GeneratorHudHandler(final GeneratorController generator, final boolean enabled)
+    public GeneratorHudHandlerImpl(final GeneratorController generator)
     {
         this.generator = generator;
-        this.enabled = enabled;
-        if (enabled)
-        {
-            final Location location = generator.getLocation();
+        this.hologram = new GeneratorHologram(generator);
 
-            this.hologram = IHologram.create(location.clone().add(0, 4, 0));
-            // ArmorStand nie zespawnuje sie gdy arena nie ma skonfigurowanej listy chunków.
-            this.item = (ArmorStand) location.getWorld().spawnEntity(location.clone().add(0, 1.3, 0), EntityType.ARMOR_STAND);
-            this.item.setVisible(false);
-            this.item.setGravity(false);
-            this.item.setHelmet(new ItemStack(generator.getGeneratorType().getHudItem()));
-            this.item.setMarker(true);
+        final Location location = generator.getLocation();
 
-            final BwGeneratorItemConfig current = this.generator.getEntries().get(0).getCurrent();
-            if (current != null)
-            {
-                // wylaczamy wywalanie powiadomien o  generatorach wlaczonych od
-                // poczatku
-                this.generator.getArenaData().getAnnouncedItems().add(current);
-            }
-        }
-        else
+        // ArmorStand nie zespawnuje sie gdy arena nie ma skonfigurowanej listy chunków.
+        this.item = (ArmorStand) location.getWorld().spawnEntity(location.clone().add(0, 1.3, 0), EntityType.ARMOR_STAND);
+        this.item.setVisible(false);
+        this.item.setGravity(false);
+        this.item.setHelmet(new ItemStack(generator.getGeneratorType().getHudItem()));
+        this.item.setMarker(true);
+
+        final BwGeneratorItemConfig current = this.generator.getEntries().get(0).getCurrent();
+        if (current != null)
         {
-            this.hologram = null;
-            this.item = null;
+            // wylaczamy wywalanie powiadomien o  generatorach wlaczonych od
+            // poczatku
+            this.generator.getArenaData().getAnnouncedItems().add(current);
         }
     }
 
+    @Override
     public void tick(final BwGeneratorItemConfig currentItem, final int timer)
     {
-        if (! this.enabled)
-        {
-            return;
-        }
-
+        this.hologram.update(currentItem, timer);
         this.checkAnnouncement(currentItem);
-
-        final MessagesBox messages = this.messages;
-        this.hologram.setLine(0, new TranslatedLine(messages, "generator.tier", currentItem.getName()));
-        this.hologram.setLine(1, new TranslatedLine(messages, "generator.type.nominative." + this.generator.getGeneratorType().getName()));
-
-        if (currentItem.getStartAt() > this.generator.getGameTime())
-        {
-            this.hologram.setLine(2, new TranslatedLine(messages, "generator.disabled"));
-        }
-        else
-        {
-            final int timeTo = (currentItem.getEvery() - timer) / 20;
-            this.hologram.setLine(2, new TranslatedLine(messages, "generator.next_item_in", timeTo));
-        }
     }
 
+    @Override
     public void handleItemRotation()
     {
-        if (! this.enabled)
-        {
-            return;
-        }
-
         final EntityTrackerEntry tracker = getTrackerEntry(((CraftArmorStand) this.item).getHandle());
         if (this.itemPose >= 360)
         {
@@ -127,25 +95,16 @@ class GeneratorHudHandler
         return packetHelper.complete();
     }
 
+    @Override
     public void markOverload()
     {
-        if (! this.enabled)
-        {
-            return;
-        }
-
-        this.hologram.setLine(2, new TranslatedLine(this.messages, "generator.overload"));
+        this.hologram.overload();
         this.checkAnnouncement(null);
     }
 
     // Wysyla komunikaty o nowym itemie w generatorze
     private void checkAnnouncement(final BwGeneratorItemConfig item)
     {
-        if (! this.enabled)
-        {
-            return;
-        }
-
         final BwGeneratorItemConfig current;
         if (item == null)
         {
@@ -172,7 +131,7 @@ class GeneratorHudHandler
         for (final Player player : playersManager.getPlayers())
         {
             final BwGeneratorType type = this.generator.getGeneratorType();
-            final String generatorName = this.messages.getMessage(player.spigot().getLocale(), "generator.type.genitive." + type.getName());
+            final String generatorName = this.messages.getMessage(player.getLocale(), "generator.type.genitive." + type.getName());
 
             final long generatorsCount = this.countSameGenerators();
             final String msgName = generatorsCount == 1 ? "generator.upgrade.singular" : "generator.upgrade.plural";
@@ -191,6 +150,6 @@ class GeneratorHudHandler
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("enabled", this.enabled).append("hologram", this.hologram).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("hologram", this.hologram).toString();
     }
 }

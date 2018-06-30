@@ -35,7 +35,7 @@ public class GeneratorController
     private final BwGeneratorType          generatorType;
     private final Location                 location;
     private final List<ItemGeneratorEntry> entries;
-    private final GeneratorHudHandler      hudHandler;
+    private final IGeneratorHudHandler     hudHandler;
 
     public GeneratorController(final LocalArena arena, final BwConfig bwConfig, final BedWarsArena arenaData, final BwGenerator config)
     {
@@ -45,7 +45,7 @@ public class GeneratorController
         this.location = config.getLocation().toBukkit(arena.getWorld().getCurrentWorld());
         this.entries = new ArrayList<>();
         this.setupEntries();
-        this.hudHandler = new GeneratorHudHandler(this, this.entries.size() == 1); // enable hud if we have only one item
+        this.hudHandler = this.entries.size() == 1 ? new GeneratorHudHandlerImpl(this) : new DummyGeneratorHudHandler(); // enable hud if we have only one item
     }
 
     public void tick()
@@ -79,7 +79,7 @@ public class GeneratorController
         return this.generatorType;
     }
 
-    public GeneratorHudHandler getHudHandler()
+    public IGeneratorHudHandler getHudHandler()
     {
         return this.hudHandler;
     }

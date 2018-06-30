@@ -1,12 +1,8 @@
 package pl.north93.zgame.api.bukkit.hologui.hologram;
 
-import org.bukkit.Location;
-
 public interface IHologram
 {
-    void setLine(int line, IHologramLine text);
-
-    void clearLine(int line);
+    void setMessage(IHologramMessage text);
 
     /**
      * Zwraca odleglosc miedzy kolejnymi linijkami tekstu.
@@ -16,24 +12,4 @@ public interface IHologram
     double getLinesSpacing();
 
     void remove();
-
-    static IHologram create(final Location location)
-    {
-        return create(DefaultVisibility.INSTANCE, location);
-    }
-
-    static IHologram createWithLowerLocation(final Location location)
-    {
-        return createWithLowerLocation(DefaultVisibility.INSTANCE, location);
-    }
-
-    static IHologram create(final IHologramVisibility hologramVisibility, final Location location)
-    {
-        return new HologramImpl(hologramVisibility, location);
-    }
-
-    static IHologram createWithLowerLocation(final IHologramVisibility hologramVisibility, final Location location)
-    {
-        return new HologramImpl(hologramVisibility, location, true);
-    }
 }

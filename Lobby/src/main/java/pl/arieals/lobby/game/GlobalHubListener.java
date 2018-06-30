@@ -23,6 +23,11 @@ public class GlobalHubListener implements AutoListener
     public void updateScoreboardOnCurrencyChange(final PlayerCurrencyChangedEvent event)
     {
         final IScoreboardContext context = this.scoreboardManager.getContext(event.getPlayer());
+        if (context == null)
+        {
+            // gracz nie zawsze musi mieć otwarty scoreboard
+            return;
+        }
 
         // scoreboardy zwykle mają w sobie zapisany stan waluty
         context.update();

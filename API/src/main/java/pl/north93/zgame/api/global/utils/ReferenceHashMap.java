@@ -290,7 +290,14 @@ public class ReferenceHashMap<K, V> implements Map<K, V>
         try
         {
             this.lock.writeLock().lock();
-            this.map.remove(key);
+
+            final Reference<V> removedReference = this.map.remove(key);
+            if (removedReference != null && removedReference.get() != null)
+            {
+                // teoretycznie istnieje mozliwosc, ze ktos doda cos do mapy pomiedzy
+                // faktycznym usunieciem obiektu przez GC, a wywolaniem tej metody
+                this.map.put(key, removedReference);
+            }
         }
         finally
         {

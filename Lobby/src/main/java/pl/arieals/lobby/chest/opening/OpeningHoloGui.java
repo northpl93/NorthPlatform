@@ -18,7 +18,8 @@ import pl.north93.zgame.api.bukkit.hologui.IIcon;
 import pl.north93.zgame.api.bukkit.hologui.IconPosition;
 import pl.north93.zgame.api.bukkit.hologui.hologram.IHologram;
 import pl.north93.zgame.api.bukkit.hologui.hologram.PlayerVisibility;
-import pl.north93.zgame.api.bukkit.hologui.hologram.TranslatableStringLine;
+import pl.north93.zgame.api.bukkit.hologui.hologram.impl.HologramFactory;
+import pl.north93.zgame.api.bukkit.hologui.hologram.message.LegacyHologramLines;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
@@ -147,8 +148,8 @@ class OpeningHoloGui extends BaseOpeningHoloGui
 
         final PlayerVisibility hologramVisibility = new PlayerVisibility(player);
 
-        this.hitMeHologram = IHologram.create(hologramVisibility, location);
-        this.hitMeHologram.setLine(0, new TranslatableStringLine(TranslatableString.of(this.messages, "@hitme")));
+        this.hitMeHologram = HologramFactory.create(hologramVisibility, location);
+        this.hitMeHologram.setMessage(new LegacyHologramLines(new TranslatableString[]{TranslatableString.of(this.messages, "@hitme")}));
     }
 
     private void removeHologram()

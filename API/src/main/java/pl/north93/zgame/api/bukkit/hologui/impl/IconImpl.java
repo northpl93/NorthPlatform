@@ -28,7 +28,8 @@ import pl.north93.zgame.api.bukkit.hologui.IconNameLocation;
 import pl.north93.zgame.api.bukkit.hologui.IconPosition;
 import pl.north93.zgame.api.bukkit.hologui.hologram.IHologram;
 import pl.north93.zgame.api.bukkit.hologui.hologram.PlayerVisibility;
-import pl.north93.zgame.api.bukkit.hologui.hologram.TranslatableStringLine;
+import pl.north93.zgame.api.bukkit.hologui.hologram.impl.HologramFactory;
+import pl.north93.zgame.api.bukkit.hologui.hologram.message.LegacyHologramLines;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
@@ -184,13 +185,10 @@ class IconImpl implements IIcon
                 final PlayerVisibility hologramVisibility = new PlayerVisibility(this.holoContext.getPlayer());
                 final Location location = this.iconNameLocation.calculate(this);
 
-                this.hologram = IHologram.create(hologramVisibility, location);
+                this.hologram = HologramFactory.create(hologramVisibility, location);
             }
 
-            for (int i = 0; i < this.name.length; i++)
-            {
-                this.hologram.setLine(i, new TranslatableStringLine(this.name[i]));
-            }
+            this.hologram.setMessage(new LegacyHologramLines(this.name));
         }
         else if (this.hologram != null)
         {

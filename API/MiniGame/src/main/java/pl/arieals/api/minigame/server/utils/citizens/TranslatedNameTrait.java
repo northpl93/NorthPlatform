@@ -19,7 +19,8 @@ import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.npc.ai.NPCHolder;
 import pl.north93.northspigot.event.entity.EntityTrackedPlayerEvent;
 import pl.north93.zgame.api.bukkit.hologui.hologram.IHologram;
-import pl.north93.zgame.api.bukkit.hologui.hologram.TranslatableStringLine;
+import pl.north93.zgame.api.bukkit.hologui.hologram.impl.HologramFactory;
+import pl.north93.zgame.api.bukkit.hologui.hologram.message.LegacyHologramLines;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -80,7 +81,7 @@ public class TranslatedNameTrait extends Trait
         final Entity entity = this.getNPC().getEntity();
         entity.setCustomNameVisible(false);
 
-        this.hologram = IHologram.createWithLowerLocation(entity.getLocation().add(0, entity.getHeight(), 0));
+        this.hologram = HologramFactory.create(entity.getLocation().add(0, entity.getHeight(), 0));
         updateHologram();
     }
     
@@ -90,12 +91,8 @@ public class TranslatedNameTrait extends Trait
         {
             return;
         }
-        
-        for (int i = 0; i < this.nameLines.length; i++)
-        {
-            final int messageId = this.nameLines.length - i - 1;
-            this.hologram.setLine(i, new TranslatableStringLine(this.nameLines[messageId]));
-        }
+
+        this.hologram.setMessage(new LegacyHologramLines(this.nameLines));
     }
 
     private void destroy()
