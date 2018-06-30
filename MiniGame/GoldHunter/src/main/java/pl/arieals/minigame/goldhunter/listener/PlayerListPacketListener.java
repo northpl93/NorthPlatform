@@ -19,6 +19,7 @@ import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.packets.event.AsyncPacketOutEvent;
 import pl.north93.zgame.api.bukkit.packets.wrappers.WrapperPlayOutPlayerInfo;
 import pl.north93.zgame.api.bukkit.packets.wrappers.WrapperPlayOutPlayerInfo.PlayerInfoData;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 
 public class PlayerListPacketListener implements AutoListener
@@ -46,8 +47,6 @@ public class PlayerListPacketListener implements AutoListener
         {
             return;
         }
-
-        GoldHunterPlayer player = goldHunter.getPlayer(bukkitPlayer);
         
         if ( packet.getAction() != EnumPlayerInfoAction.ADD_PLAYER && packet.getAction() != EnumPlayerInfoAction.UPDATE_DISPLAY_NAME )
         {
@@ -60,24 +59,24 @@ public class PlayerListPacketListener implements AutoListener
             event.setPacket(null);
         }
         
-        goldHunter.runTask(() -> syncProcessPacket(player, packet));
+        goldHunter.runTask(() -> syncProcessPacket(bukkitPlayer, packet));
     }
     
-    private void syncProcessPacket(GoldHunterPlayer receiver, WrapperPlayOutPlayerInfo originalPacket)
+    private void syncProcessPacket(Player receiver, WrapperPlayOutPlayerInfo originalPacket)
     {
         WrapperPlayOutPlayerInfo newPacket = new WrapperPlayOutPlayerInfo(new PacketPlayOutPlayerInfo());
         newPacket.setAction(EnumPlayerInfoAction.UPDATE_DISPLAY_NAME);
         
         originalPacket.getPlayerData().forEach(data -> newPacket.addPlayerData(processEntry(receiver, data)));
         
-        Channel channel = receiver.getMinecraftPlayer().playerConnection.networkManager.channel;
+        Channel channel = INorthPlayer.asCraftPlayer(receiver).getHandle().playerConnection.networkManager.channel;
         
         // skip handling event with our packet, to prevent infinite loop
         // TODO: add a way to get a tiny protocol handler name instead hardcoded one
         channel.eventLoop().execute(() -> channel.pipeline().context("tiny-API-1").write(newPacket.getPacket())); 
     }
     
-    private PlayerInfoData processEntry(GoldHunterPlayer receiver, PlayerInfoData originalData)
+    private PlayerInfoData processEntry(Player receiver, PlayerInfoData originalData)
     {
         GoldHunterPlayer player = goldHunter.getPlayer(originalData.getGameProfile().getId());
         
@@ -86,14 +85,16 @@ public class PlayerListPacketListener implements AutoListener
             return originalData;
         }
         
+        GoldHunterPlayer receiverPlayer = goldHunter.getPlayer(receiver);
+        
         String statsString = player.getStatsTracker().getStatsString();
         
         String classDisplayName = "???";
         
-        // null reveiver means that player isn't on the arena or is a spectator
-        if ( receiver == null || receiver.getTeam() == player.getTeam() || receiver.getPlayer().hasPermission("goldhunter.enemyclasses") )
+        // null reveiverPlayer means that player isn't on the arena or is a spectator
+        if ( receiverPlayer == null || receiverPlayer.getTeam() == player.getTeam() || receiver.hasPermission("goldhunter.enemyclasses") )
         {
-            BaseComponent className = player.getCurrentClass().getDisplayName().getValue(receiver.getPlayer().getLocale());
+            BaseComponent className = player.getCurrentClass().getDisplayName().getValue(receiver.getLocale());
             classDisplayName = ChatColor.stripColor(className.toLegacyText());
         }
         
