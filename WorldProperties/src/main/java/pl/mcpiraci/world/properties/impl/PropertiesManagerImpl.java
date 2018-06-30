@@ -1,22 +1,24 @@
 package pl.mcpiraci.world.properties.impl;
 
+import javax.xml.bind.JAXB;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.xml.bind.JAXB;
+import com.google.common.base.Preconditions;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import com.google.common.base.Preconditions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import pl.mcpiraci.world.properties.IPlayerProperties;
 import pl.mcpiraci.world.properties.IWorldProperties;
@@ -25,10 +27,9 @@ import pl.mcpiraci.world.properties.PropertiesConfig;
 import pl.mcpiraci.world.properties.impl.xml.XmlWorldProperties;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
-import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
-public class PropertiesManagerImpl implements IWorldPropertiesManager, AutoListener
+public class PropertiesManagerImpl implements IWorldPropertiesManager, Listener
 {
     private static Logger logger = LogManager.getLogger();
     
@@ -43,6 +44,7 @@ public class PropertiesManagerImpl implements IWorldPropertiesManager, AutoListe
     {
         this.apiCore = apiCore;
         tickableManager.addTickableObjectsCollection(propertiesByWorld.values());
+        apiCore.registerEvents(this);
     }
     
     @Override
