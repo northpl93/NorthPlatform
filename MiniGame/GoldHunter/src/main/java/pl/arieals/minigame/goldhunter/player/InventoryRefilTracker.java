@@ -79,7 +79,6 @@ public class InventoryRefilTracker implements ITickable
         
         if ( currentCount >= maxCount )
         {
-            System.out.println("current count: " + currentCount);
             return;
         }
         
