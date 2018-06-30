@@ -3,6 +3,8 @@ package pl.arieals.lobby.ui;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -16,14 +18,15 @@ import pl.arieals.api.minigame.server.lobby.arenas.IArenaClient;
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.lobby.play.PlayGameController;
-import pl.north93.zgame.api.bukkit.gui.ClickHandler;
 import pl.north93.zgame.api.bukkit.gui.ConfigGuiIcon;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.IGuiIcon;
 import pl.north93.zgame.api.bukkit.gui.element.dynamic.DynamicElementData;
 import pl.north93.zgame.api.bukkit.gui.element.dynamic.DynamicRenderer;
-import pl.north93.zgame.api.bukkit.gui.event.ClickEvent;
 import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
+import pl.north93.zgame.api.global.commands.Arguments;
+import pl.north93.zgame.api.global.commands.NorthCommandSender;
+import pl.north93.zgame.api.global.commands.annotation.QuickCommand;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -44,80 +47,41 @@ public class JoinDynamicGui extends Gui
     
     private final GameIdentity gameIdentity;
     private final boolean viewAll;
-    private final boolean isVip;
     
     private boolean isExpanded;
     
-    public JoinDynamicGui(GameIdentity gameIdentity, boolean viewAll, boolean isVip)
+    public JoinDynamicGui(GameIdentity gameIdentity, boolean viewAll)
     {
         super(messages, getGuiName(gameIdentity));
         this.gameIdentity = gameIdentity;
         this.viewAll = viewAll;
-        this.isVip = isVip;
         
         this.getContent().setVariables(Vars.of("expanded", isExpanded));
     }
 
     public static void openForPlayerAndGame(final Player player, final GameIdentity gameIdentity)
     {
-        new JoinDynamicGui(gameIdentity, player.hasPermission("dynamicplay.viewall"), player.hasPermission("gamejoin.vip")).open(player);
-    }
-
-    @ClickHandler
-    public void showMore(ClickEvent event)
-    {
-        isExpanded = true;
-        getContent().setVariables(Vars.of("expanded", isExpanded));
-        markDirty();
-    }
-    
-    @ClickHandler
-    public void showLess(ClickEvent event)
-    {
-        isExpanded = false;
-        getContent().setVariables(Vars.of("expanded", isExpanded));
-        markDirty();
+        new JoinDynamicGui(gameIdentity, player.hasPermission("dynamicplay.viewall")).open(player);
     }
     
     @DynamicRenderer
     public Collection<DynamicElementData> renderArenas()
     {
-        return isExpanded ? renderExpandedArenas() : renderRecomendedArenas();
-    }
-    
-    private Collection<DynamicElementData> renderRecomendedArenas()
-    {
-        Collection<DynamicElementData> result = new ArrayList<>();
-        Collection<IArena> arenas = getArenas();
-        
-        arenas.stream().filter(this::isAlmostFull).sorted(ARENA_COMPARATOR).limit(1).forEach(arena -> result.add(createElementForArena(arena)));
-        arenas.stream().filter(this::isAlmostEmpty).sorted(ARENA_COMPARATOR).limit(1).forEach(arena -> result.add(createElementForArena(arena)));
-        
-        if ( isVip )
-        {
-            arenas.stream().filter(this::isFull).sorted(ARENA_COMPARATOR).limit(1).forEach(arena -> result.add(createElementForArena(arena)));
-        }
-        
-        if ( result.size() == 0 )
-        {
-            result.add(createNonArenaElement());
-        }
-        
-        return result;
-    }
-    
-    private Collection<DynamicElementData> renderExpandedArenas()
-    {
         Collection<DynamicElementData> result = new ArrayList<>();
         Collection<IArena> arenas = getArenas();
         
         arenas.stream().filter(this::isAlmostFull).sorted(ARENA_COMPARATOR).forEach(arena -> result.add(createElementForArena(arena)));
-        arenas.stream().filter(this::isAlmostEmpty).sorted(ARENA_COMPARATOR).limit(viewAll ? Long.MAX_VALUE : 1).forEach(arena -> result.add(createElementForArena(arena)));
         
-        if ( isVip || viewAll )
+        List<IArena> almostEmpty = arenas.stream().filter(this::isAlmostEmpty).sorted(ARENA_COMPARATOR).collect(Collectors.toList());
+        almostEmpty.forEach(arena -> result.add(createElementForArena(arena)));
+        
+        if ( almostEmpty.size() == 0 || viewAll )
         {
-            arenas.stream().filter(this::isFull).sorted(ARENA_COMPARATOR).forEach(arena -> result.add(createElementForArena(arena)));
+            arenas.stream().filter(this::isEmpty).sorted(ARENA_COMPARATOR).limit(viewAll ? Long.MAX_VALUE : 1).forEach(arena -> result.add(createElementForArena(arena)));
         }
+
+        arenas.stream().filter(this::isFull).sorted(ARENA_COMPARATOR).forEach(arena -> result.add(createElementForArena(arena)));
+        
         if ( viewAll )
         {
             arenas.stream().filter(this::isOverFull).sorted(ARENA_COMPARATOR).forEach(arena -> result.add(createElementForArena(arena)));
@@ -158,9 +122,14 @@ public class JoinDynamicGui extends Gui
         return arenaClient.get(new ArenaQuery().miniGame(gameIdentity));
     }
     
+    private boolean isEmpty(IArena arena)
+    {
+        return getSignedPlayers(arena) == 0;
+    }
+    
     private boolean isAlmostEmpty(IArena arena)
     {
-        return getSignedPlayers(arena) < DioriteMathUtils.ceil(arena.getMaxPlayers() * 0.65);
+        return getSignedPlayers(arena) > 0 && getSignedPlayers(arena) < DioriteMathUtils.ceil(arena.getMaxPlayers() * 0.65);
     }
     
     private boolean isAlmostFull(IArena arena)
@@ -191,12 +160,17 @@ public class JoinDynamicGui extends Gui
         return "playdynamic/play_" + gameIdentity.getGameId().toLowerCase() + "_" + gameIdentity.getVariantId();
     }
 
-    /*@QuickCommand(name = "testbwsolo")
+    @QuickCommand(name = "testplaydynamic")
     public static void testCmd(final NorthCommandSender sender, final Arguments args, final String label)
     {
+        if ( System.getProperty("debug") == null )
+        {
+            return;
+        }
+        
         final Player player = (Player) sender.unwrapped();
-        new JoinGameGui(GameIdentity.create("bedwars", "solo"), false).open(player);
-    }*/
+        openForPlayerAndGame(player, GameIdentity.create("GoldHunter", "team12"));
+    }
 
     @Override
     public String toString()

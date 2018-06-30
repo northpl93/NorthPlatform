@@ -12,14 +12,6 @@
                 <icon id="IRON_DOOR" name="@gamegui.back"/>
                 <onClick>closeGui</onClick>
             </button>
-            <button if="expanded" negated="true" pos="5,0">
-            	<icon id="minecraft:stained_glass" name="@play.dynamic.more" />
-            	<onClick>showMore</onClick>
-            </button>
-            <button if="expanded" negated="false" pos="5,0">
-            	<icon id="minecraft:stained_glass" name="@play.dynamic.less" />
-            	<onClick>showLess</onClick>
-            </button>
     	</content>
     </container>
     <container pos="8,0" size="1,3">
