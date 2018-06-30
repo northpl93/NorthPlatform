@@ -41,7 +41,7 @@
 		</boots>
 		
 		<inv slot="0" >
-			<item id="minecraft:iron_sword" />
+			<item id="minecraft:golden_sword" />
 		</inv>
 		
 		<inv slot="2" >
