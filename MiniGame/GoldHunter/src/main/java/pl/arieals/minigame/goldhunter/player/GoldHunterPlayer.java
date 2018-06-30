@@ -1,6 +1,8 @@
 package pl.arieals.minigame.goldhunter.player;
 
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
@@ -24,6 +26,8 @@ import com.google.common.base.Preconditions;
 import net.minecraft.server.v1_12_R1.DamageSource;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.MinecraftServer;
+import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
+import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
 
 import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
 import pl.arieals.globalshops.server.IGlobalShops;
@@ -338,6 +342,7 @@ public class GoldHunterPlayer implements ITickable
         setDisplayTeam(null);
         
         updateDisplayName();
+        updatePlayersDisplayName();
         spawnInLobby();
     }
     
@@ -364,6 +369,7 @@ public class GoldHunterPlayer implements ITickable
         Preconditions.checkState(!isIngame());
         logger.debug("{} join to {}", this, team);
         
+        updatePlayersDisplayName();
         updatePlayersVisibility();
         this.team = team;
         this.displayTeam = team;
@@ -463,6 +469,14 @@ public class GoldHunterPlayer implements ITickable
             player.setDisplayName(getDisplayName());
             player.setPlayerListName(getDisplayName());
         }
+    }
+    
+    private void updatePlayersDisplayName()
+    {
+        List<EntityPlayer> players = arena.getPlayers().stream().map(GoldHunterPlayer::getMinecraftPlayer).collect(Collectors.toList());
+        
+        PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(EnumPlayerInfoAction.UPDATE_DISPLAY_NAME, players);
+        getMinecraftPlayer().playerConnection.sendPacket(packet);
     }
     
     public String getDisplayName()

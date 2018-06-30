@@ -48,7 +48,8 @@ public class PlayerListPacketListener implements AutoListener
         }
 
         GoldHunterPlayer player = goldHunter.getPlayer(bukkitPlayer);
-        if ( player == null )
+        
+        if ( packet.getAction() != EnumPlayerInfoAction.ADD_PLAYER && packet.getAction() != EnumPlayerInfoAction.UPDATE_DISPLAY_NAME )
         {
             return;
         }
@@ -65,7 +66,7 @@ public class PlayerListPacketListener implements AutoListener
     private void syncProcessPacket(GoldHunterPlayer receiver, WrapperPlayOutPlayerInfo originalPacket)
     {
         WrapperPlayOutPlayerInfo newPacket = new WrapperPlayOutPlayerInfo(new PacketPlayOutPlayerInfo());
-        newPacket.setAction(originalPacket.getAction());
+        newPacket.setAction(EnumPlayerInfoAction.UPDATE_DISPLAY_NAME);
         
         originalPacket.getPlayerData().forEach(data -> newPacket.addPlayerData(processEntry(receiver, data)));
         
@@ -88,7 +89,9 @@ public class PlayerListPacketListener implements AutoListener
         String statsString = player.getStatsTracker().getStatsString();
         
         String classDisplayName = "???";
-        if ( receiver.getTeam() == player.getTeam() )
+        
+        // null reveiver means that player isn't on the arena or is a spectator
+        if ( receiver == null || receiver.getTeam() == player.getTeam() || receiver.getPlayer().hasPermission("goldhunter.enemyclasses") )
         {
             BaseComponent className = player.getCurrentClass().getDisplayName().getValue(receiver.getPlayer().getLocale());
             classDisplayName = ChatColor.stripColor(className.toLegacyText());
