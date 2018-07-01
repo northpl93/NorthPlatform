@@ -2,7 +2,6 @@ package pl.north93.zgame.api.bukkit.map.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Location;
@@ -39,7 +38,7 @@ public class MapManagerImpl extends Component implements IMapManager
     @Override
     public Collection<BoardImpl> getBoards()
     {
-        return Collections.unmodifiableCollection(this.boards);
+        return new ArrayList<>(this.boards);
     }
 
     @Override
