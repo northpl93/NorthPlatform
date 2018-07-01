@@ -1,13 +1,15 @@
-package pl.arieals.api.minigame.server.utils;
+package pl.north93.zgame.api.bukkit.utils;
 
 import static org.diorite.commons.reflections.DioriteReflectionUtils.getField;
 
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_12_R1.metadata.EntityMetadataStore;
 import org.bukkit.craftbukkit.v1_12_R1.metadata.PlayerMetadataStore;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.MetadataStoreBase;
@@ -31,6 +33,17 @@ public final class MetadataUtils
     }
 
     /**
+     * Usuwa wszystkie metadane entity o UUID podanym w argumencie.
+     *
+     * @param entityId UUID entity któremu usuwamy metadane.
+     */
+    public static void removeEntityMetadata(final UUID entityId)
+    {
+        final String keyStart = entityId + ":";
+        removeMetadata(getEntityMetadata(), keyStart);
+    }
+
+    /**
      * Usuwa wszystkie metadane gracza podanego w argumencie.
      *
      * @param player Gracz któremu kasujemy metadane.
@@ -38,16 +51,26 @@ public final class MetadataUtils
     public static void removePlayerMetadata(final Player player)
     {
         final String keyStart = player.getName().toLowerCase(Locale.ROOT) + ":";
-
-        final Map<String, Map<Plugin, MetadataValue>> map = internalMap.get(getPlayerMetadata());
-        assert map != null;
-
-        map.entrySet().removeIf(entry -> StringUtils.startsWith(entry.getKey(), keyStart));
+        removeMetadata(getPlayerMetadata(), keyStart);
     }
 
-    public static PlayerMetadataStore getPlayerMetadata()
+    private static EntityMetadataStore getEntityMetadata()
+    {
+        final CraftServer server = (CraftServer) Bukkit.getServer();
+        return server.getEntityMetadata();
+    }
+
+    private static PlayerMetadataStore getPlayerMetadata()
     {
         final CraftServer server = (CraftServer) Bukkit.getServer();
         return server.getPlayerMetadata();
+    }
+
+    private static void removeMetadata(final MetadataStoreBase<?> metadataStoreBase, final String keyStart)
+    {
+        final Map<String, Map<Plugin, MetadataValue>> map = internalMap.get(metadataStoreBase);
+        assert map != null;
+
+        map.entrySet().removeIf(entry -> StringUtils.startsWith(entry.getKey(), keyStart));
     }
 }

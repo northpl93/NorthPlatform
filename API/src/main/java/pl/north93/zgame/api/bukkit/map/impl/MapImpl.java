@@ -25,12 +25,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.map.IMap;
+import pl.north93.zgame.api.bukkit.utils.MetadataUtils;
 
 class MapImpl implements IMap
 {
-    private final BoardImpl     board;
-    private final UUID          frameId;
-    private       ItemFrame     itemFrame;
+    private final BoardImpl board;
+    private final UUID      frameId;
+    private       ItemFrame itemFrame;
 
     public MapImpl(final MapController controller, final BoardImpl board, final ItemFrame itemFrame)
     {
@@ -136,11 +137,16 @@ class MapImpl implements IMap
      */
     public void cleanup()
     {
+        MetadataUtils.removeEntityMetadata(this.frameId);
+
         final CraftItemFrame itemFrame = (CraftItemFrame) this.itemFrame;
-        if (itemFrame != null)
+        if (itemFrame == null)
         {
-            itemFrame.getHandle().die();
+            return;
         }
+
+        this.itemFrame = null;
+        itemFrame.getHandle().die();
     }
 
     @Override
@@ -152,7 +158,7 @@ class MapImpl implements IMap
             return null;
         }
 
-        return this.getItemFrame().getLocation();
+        return itemFrame.getLocation();
     }
 
     @Override

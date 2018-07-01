@@ -2,6 +2,7 @@ package pl.north93.zgame.api.bukkit.map.impl;
 
 import net.minecraft.server.v1_12_R1.PacketPlayOutEntityMetadata;
 
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.ItemFrame;
@@ -11,6 +12,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.world.WorldUnloadEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -69,6 +71,20 @@ public class MapListener implements AutoListener
     }
 
     @EventHandler
+    public void deleteBoardWhenWorldUnloads(final WorldUnloadEvent event)
+    {
+        final World world = event.getWorld();
+        for (final BoardImpl board : this.mapManager.getBoards())
+        {
+            if (world.equals(board.getWorld()))
+            {
+                // pozostawienie tablic w niezaladowanych swiatach powoduje wyciek pamieci
+                this.mapManager.removeBoard(board);
+            }
+        }
+    }
+
+    @EventHandler
     public void onInteractWithMap(final PlayerInteractAtEntityEvent event)
     {
         final Entity entity = event.getRightClicked();
@@ -77,14 +93,9 @@ public class MapListener implements AutoListener
             return;
         }
 
-        final int entityId = entity.getEntityId();
-        for (final BoardImpl board : this.mapManager.getBoards())
+        if (this.isEntityBelongsToAnyBoard(entity.getEntityId()))
         {
-            if (board.isEntityBelongsToBoard(entityId))
-            {
-                event.setCancelled(true);
-                return;
-            }
+            event.setCancelled(true);
         }
     }
 
@@ -97,14 +108,9 @@ public class MapListener implements AutoListener
             return;
         }
 
-        final int entityId = entity.getEntityId();
-        for (final BoardImpl board : this.mapManager.getBoards())
+        if (this.isEntityBelongsToAnyBoard(entity.getEntityId()))
         {
-            if (board.isEntityBelongsToBoard(entityId))
-            {
-                event.setCancelled(true);
-                return;
-            }
+            event.setCancelled(true);
         }
     }
 
@@ -121,16 +127,24 @@ public class MapListener implements AutoListener
         final PacketPlayOutEntityMetadata packet = (PacketPlayOutEntityMetadata) event.getPacket();
         final WrapperPlayOutEntityMetadata wrapper = new WrapperPlayOutEntityMetadata(packet);
 
-        final int entityId = wrapper.getEntityId();
+        // blokujemy wszystkie Entity Metadata dotyczace naszej ramki
+        if (this.isEntityBelongsToAnyBoard(wrapper.getEntityId()))
+        {
+            event.setCancelled(true);
+        }
+    }
+
+    private boolean isEntityBelongsToAnyBoard(final int entityId)
+    {
         for (final BoardImpl board : this.mapManager.getBoards())
         {
             if (board.isEntityBelongsToBoard(entityId))
             {
-                // blokujemy wszystkie Entity Metadata dotyczace naszej ramki
-                event.setCancelled(true);
-                return;
+                return true;
             }
         }
+
+        return false;
     }
 
     @Override

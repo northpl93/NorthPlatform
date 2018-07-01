@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import pl.north93.zgame.api.bukkit.map.IBoard;
@@ -24,6 +25,13 @@ class BoardImpl implements IBoard
         this.width = width;
         this.height = height;
         this.maps = maps;
+    }
+
+    @Override
+    public World getWorld()
+    {
+        final MapImpl firstMap = this.maps[0][0];
+        return firstMap.getLocation().getWorld();
     }
 
     @Override

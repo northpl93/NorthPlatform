@@ -25,7 +25,7 @@ import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorQuitEvent;
-import pl.arieals.api.minigame.server.utils.MetadataUtils;
+import pl.north93.zgame.api.bukkit.utils.MetadataUtils;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
