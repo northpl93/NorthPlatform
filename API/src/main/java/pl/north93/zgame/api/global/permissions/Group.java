@@ -85,6 +85,24 @@ public class Group
         return Collections.unmodifiableCollection(this.inheritance);
     }
 
+    public boolean isInheritsFrom(final Group group)
+    {
+        if (this.inheritance.contains(group))
+        {
+            return true;
+        }
+
+        for (final Group inheritGroup : this.inheritance)
+        {
+            if (inheritGroup.isInheritsFrom(group))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void addInheritGroup(final Group group)
     {
         this.inheritance.add(group);

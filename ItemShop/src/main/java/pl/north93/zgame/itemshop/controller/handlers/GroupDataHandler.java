@@ -1,6 +1,5 @@
 package pl.north93.zgame.itemshop.controller.handlers;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -72,11 +71,6 @@ public class GroupDataHandler implements IDataHandler
             return true;
         }
 
-        final Collection<Group> inheritance = newGroup.getInheritance();
-        if (inheritance.isEmpty())
-        {
-            return true;
-        }
-        return inheritance.contains(oldGroup);
+        return newGroup.isInheritsFrom(oldGroup);
     }
 }
