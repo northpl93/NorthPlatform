@@ -1,13 +1,14 @@
 package pl.arieals.minigame.bedwars.arena;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
 
 
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,24 +28,24 @@ import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 
 public class Team
 {
-    private final LocalArena arena;
-    private final BwTeamConfig config;
-    private Set<Player> players;
-    private Cuboid      teamArena; // teren obejmujacy cala baze
-    private Cuboid      healArena; // teren wewnatrz budynku bazy
-    private Location    spawn;
-    private Location    bedLocation;
-    private boolean     isBedAlive;
-    private boolean     isAlreadyEliminated;
-    private Upgrades    upgrades;
+    private final LocalArena         arena;
+    private final BwTeamConfig       config;
+    private final Set<BedWarsPlayer> players;
+    private Cuboid   teamArena; // teren obejmujacy cala baze
+    private Cuboid   healArena; // teren wewnatrz budynku bazy
+    private Location spawn;
+    private Location bedLocation;
+    private boolean  isBedAlive;
+    private boolean  isAlreadyEliminated;
+    private Upgrades upgrades;
 
     public Team(final LocalArena arena, final BwTeamConfig config)
     {
         this.arena = arena;
         this.config = config;
+        this.players = new HashSet<>();
 
         final World currentWorld = arena.getWorld().getCurrentWorld();
-        this.players = new HashSet<>();
         this.teamArena = config.getTeamRegion().toCuboid(currentWorld);
         this.healArena = config.getHealRegion().toCuboid(currentWorld);
         this.spawn = config.getSpawnLocation().toBukkit(currentWorld);
@@ -98,18 +99,36 @@ public class Team
         return this.getColor().name().toLowerCase(Locale.ROOT);
     }
 
-    public Set<Player> getPlayers()
+    /**
+     * Zwraca listę wszystkich BedWarsPlayer przypisanych do tej drużyny.
+     * Mogą oni być już offline jeśli opuścili serwer minigry, ale
+     * mogą wrócić jeśli system reconnectu zezwoli.
+     *
+     * @return Lista wszystkich graczy w drużynie.
+     */
+    public Set<BedWarsPlayer> getPlayers()
     {
         return this.players;
     }
 
+    public Stream<Player> getBukkitPlayersAsStream()
+    {
+        return this.players.stream().map(BedWarsPlayer::getBukkitPlayer);
+    }
+
+    public Set<Player> getBukkitPlayers()
+    {
+        return this.getBukkitPlayersAsStream().collect(Collectors.toSet());
+    }
+
     /**
-     * Zwraca graczy zyjacych (BEZ wyeliminowanych i o czekujacych na respawn)
+     * Zwraca graczy zyjacych (BEZ oczekujacych na reconnect, wyeliminowanych i oczekujacych na respawn)
      * @return gracze zyjacy/grajacy.
      */
     public Set<Player> getAlivePlayers()
     {
-        return this.players.stream().filter(player -> getPlayerStatus(player) == PlayerStatus.PLAYING).collect(Collectors.toSet());
+        final Predicate<Player> predicate = player -> getPlayerStatus(player) == PlayerStatus.PLAYING;
+        return this.getBukkitPlayersAsStream().filter(predicate).collect(Collectors.toSet());
     }
 
     /**
@@ -118,7 +137,10 @@ public class Team
      */
     public Set<Player> getNotEliminatedPlayers()
     {
-        return this.players.stream().filter(player -> ! getPlayerData(player, BedWarsPlayer.class).isEliminated()).collect(Collectors.toSet());
+        return this.players.stream()
+                           .filter(player -> ! player.isEliminated())
+                           .map(BedWarsPlayer::getBukkitPlayer)
+                           .collect(Collectors.toSet());
     }
 
     /**
@@ -126,7 +148,7 @@ public class Team
      */
     public int countAdditionalLives()
     {
-        return this.players.stream().mapToInt(player -> getPlayerData(player, BedWarsPlayer.class).getLives()).sum();
+        return this.players.stream().mapToInt(BedWarsPlayer::getLives).sum();
     }
 
     public Cuboid getTeamArena()
@@ -186,16 +208,15 @@ public class Team
      */
     public boolean isAnyPlayerAlive()
     {
-        for (final Player player : this.players)
+        for (final BedWarsPlayer playerData : this.players)
         {
-            if (! player.isOnline())
+            if (! playerData.isOnline())
             {
                 // jesli gracz jest offline to nie uwzgledniamy go przy sprawdzaniu
                 continue;
             }
 
-            final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
-            if (playerData != null && ! playerData.isEliminated())
+            if (! playerData.isEliminated())
             {
                 return true;
             }

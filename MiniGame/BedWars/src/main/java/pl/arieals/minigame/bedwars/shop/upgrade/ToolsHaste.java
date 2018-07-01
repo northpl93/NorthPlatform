@@ -24,7 +24,7 @@ public class ToolsHaste implements IUpgrade, Listener
     @Override
     public void apply(final LocalArena arena, final Team team, final int level)
     {
-        for (final Player player : team.getPlayers())
+        for (final Player player : team.getBukkitPlayers())
         {
             final int potionLevel = level - 1;
             player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, potionLevel, true, false));

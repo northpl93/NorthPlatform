@@ -21,7 +21,7 @@ public class Healbot implements IUpgrade
         final ITrackedRegion healArena = arena.getRegionManager().create(team.getHealArena());
         healArena.whenEnter(player ->
         {
-            if (team.getPlayers().contains(player))
+            if (team.getBukkitPlayers().contains(player))
             {
                 this.applyEffect(player);
             }
@@ -32,7 +32,7 @@ public class Healbot implements IUpgrade
     private void addEffectToPlayersInRegion(final Team team)
     {
         final Cuboid healArena = team.getHealArena();
-        for (final Player player : team.getPlayers())
+        for (final Player player : team.getBukkitPlayers())
         {
             if (healArena.contains(player.getLocation()))
             {

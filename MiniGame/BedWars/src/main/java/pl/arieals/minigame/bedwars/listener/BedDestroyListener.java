@@ -80,7 +80,7 @@ public class BedDestroyListener implements Listener
             player.playSound(player.getLocation(), Sound.ENTITY_ENDERDRAGON_GROWL, 1, 1.5f); // volume, pitch
         }
 
-        for (final Player player : team.getPlayers())
+        for (final Player player : team.getBukkitPlayers())
         {
             final String locale = player.getLocale();
 

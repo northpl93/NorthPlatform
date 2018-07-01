@@ -65,15 +65,10 @@ public class GameEndListener implements Listener
         this.logger.log(Level.INFO, "Team {0} eliminated on arena {1}", new Object[]{event.getEliminatedTeam().getName(), arena.getId()});
 
         final Team team = event.getEliminatedTeam();
-        for (final Player player : team.getPlayers())
+        for (final BedWarsPlayer playerData : team.getPlayers())
         {
             // jesli gracz jest offline to wtedy mogl nie dostac statusu wyeliminowanego
             // wiec recznie sie upewniamy, ze wszystko jest ok
-            final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
-            if (playerData == null)
-            {
-                continue;
-            }
             playerData.eliminate();
         }
 
@@ -175,7 +170,7 @@ public class GameEndListener implements Listener
     private String playersList(final Team team)
     {
         final StringBuilder nicks = new StringBuilder();
-        final Iterator<Player> playersIterator = team.getPlayers().iterator();
+        final Iterator<Player> playersIterator = team.getBukkitPlayers().iterator();
         while (playersIterator.hasNext())
         {
             nicks.append("&7");
@@ -203,7 +198,7 @@ public class GameEndListener implements Listener
         final int currencyAmount = bedWarsArena.getBedWarsConfig().getRewards().getWin();
         final CurrencyReward reward = new CurrencyReward("win", "minigame", currencyAmount);
 
-        for (final Player player : team.getPlayers())
+        for (final Player player : team.getBukkitPlayers())
         {
             final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(player.getUniqueId());
             holder.increment(winsStat, numberUnit);

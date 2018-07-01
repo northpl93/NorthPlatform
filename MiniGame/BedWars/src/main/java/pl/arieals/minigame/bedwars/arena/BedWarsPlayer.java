@@ -25,6 +25,11 @@ public class BedWarsPlayer
         this.eliminationEffect = eliminationEffect;
     }
 
+    public boolean isOnline()
+    {
+        return this.bukkitPlayer.isOnline();
+    }
+
     public Player getBukkitPlayer()
     {
         return this.bukkitPlayer;
@@ -44,10 +49,10 @@ public class BedWarsPlayer
     {
         if (this.team != null)
         {
-            this.team.getPlayers().remove(this.bukkitPlayer);
+            this.team.getPlayers().remove(this);
         }
         this.team = team;
-        team.getPlayers().add(this.bukkitPlayer);
+        team.getPlayers().add(this);
         this.bukkitPlayer.teleport(team.getSpawn());
         TeamArmorUtils.updateArmor(this.bukkitPlayer, team);
     }

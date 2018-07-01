@@ -1,5 +1,6 @@
 package pl.arieals.minigame.bedwars.shop.upgrade;
 
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -22,9 +23,9 @@ public class MoreHearts implements IUpgrade
     @Override
     public void apply(final LocalArena arena, final Team team, final int level)
     {
-        for (final Player player : team.getPlayers())
+        for (final Player player : team.getBukkitPlayers())
         {
-            player.setMaxHealth(this.calculateMaxHp(level));
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(this.calculateMaxHp(level));
         }
     }
 

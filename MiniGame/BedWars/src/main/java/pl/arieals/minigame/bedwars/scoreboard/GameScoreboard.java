@@ -148,7 +148,7 @@ public class GameScoreboard implements IScoreboardLayout
                 status = "&a" + team.getNotEliminatedPlayers().size();
             }
 
-            final boolean renderFlag = !team.isEliminated() && (!team.isBedAlive() || team.getPlayers().contains(renderingPlayer));
+            final boolean renderFlag = !team.isEliminated() && (!team.isBedAlive() || team.getBukkitPlayers().contains(renderingPlayer));
             final int lives = team.countAdditionalLives();
             if (renderFlag && lives > 0)
             {

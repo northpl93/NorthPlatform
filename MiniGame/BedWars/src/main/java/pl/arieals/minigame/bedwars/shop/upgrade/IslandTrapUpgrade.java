@@ -63,13 +63,14 @@ public class IslandTrapUpgrade implements IUpgrade
 
     private void announceRemoved(final Team team)
     {
-        for (final Player player : team.getPlayers())
+        for (final BedWarsPlayer playerData : team.getPlayers())
         {
-            final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
-            if (playerData == null || playerData.isEliminated())
+            if (playerData.isEliminated())
             {
                 continue;
             }
+
+            final Player player = playerData.getBukkitPlayer();
 
             final BaseComponent title = TranslatableString.of(this.bedWarsMessages, "@trap_used.title").getValue(player);
             final BaseComponent subtitle = TranslatableString.of(this.bedWarsMessages, "@trap_used.subtitle").getValue(player);

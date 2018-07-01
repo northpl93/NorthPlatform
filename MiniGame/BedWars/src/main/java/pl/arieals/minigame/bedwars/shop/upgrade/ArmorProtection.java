@@ -29,7 +29,7 @@ public class ArmorProtection implements IUpgrade, Listener
     @Override
     public void apply(final LocalArena arena, final Team team, final int level)
     {
-        for (final Player player : team.getPlayers())
+        for (final Player player : team.getBukkitPlayers())
         {
             for (final ItemStack itemStack : player.getInventory().getArmorContents())
             {

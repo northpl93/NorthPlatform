@@ -110,8 +110,7 @@ public class NpcCreator implements Listener
 
     private Pair<NpcItem, NpcItem> getTeamNpc(final ItemsGroup group, final Team team)
     {
-        final Iterator<NpcItem> skins = team.getPlayers()
-                                            .stream()
+        final Iterator<NpcItem> skins = team.getBukkitPlayersAsStream()
                                             .map(player -> this.globalShops.getPlayer(player).getActiveItem(group))
                                             .filter(Objects::nonNull)
                                             .map(NpcItem::new)

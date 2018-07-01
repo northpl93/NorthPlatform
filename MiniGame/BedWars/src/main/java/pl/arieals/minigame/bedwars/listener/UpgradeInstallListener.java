@@ -72,7 +72,7 @@ public class UpgradeInstallListener implements Listener
         }
 
         final Player issuer = event.getIssuer();
-        for (final Player player : event.getTeam().getPlayers())
+        for (final Player player : event.getTeam().getBukkitPlayers())
         {
             final String messageKey = "upgrade_gui." + event.getUpgrade().getName() + ".name";
             final String upgradeName = this.messagesShop.getLegacyMessage(player.getLocale(), messageKey, "&e");
@@ -89,7 +89,7 @@ public class UpgradeInstallListener implements Listener
             return;
         }
 
-        for (final Player player : event.getTeam().getPlayers())
+        for (final Player player : event.getTeam().getBukkitPlayers())
         {
             if (event.isCancelled())
             {
