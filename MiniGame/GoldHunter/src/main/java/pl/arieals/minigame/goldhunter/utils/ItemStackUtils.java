@@ -50,6 +50,11 @@ public final class ItemStackUtils
         }
         
         net.minecraft.server.v1_12_R1.ItemStack nms = (net.minecraft.server.v1_12_R1.ItemStack) SneakyThrow.sneaky(() -> HANDLE_GETTER.invoke(is));
+        if ( nms == null )
+        {
+            return false;
+        }
+        
         NBTTagCompound ghmetadata = nms.d("goldhunter");
         return ghmetadata != null && ghmetadata.hasKey("assasinDagger");
     }
