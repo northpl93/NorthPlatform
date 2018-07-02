@@ -61,15 +61,33 @@ public abstract class Component implements IBeanContext
     }
 
     @Override
+    public boolean isBeanExists(final Class<?> clazz)
+    {
+        return this.componentBundle.getBeanContext().isBeanExists(clazz);
+    }
+
+    @Override
     public <T> T getBean(final String beanName)
     {
         return this.componentBundle.getBeanContext().getBean(beanName);
     }
 
     @Override
+    public boolean isBeanExists(final String beanName)
+    {
+        return this.componentBundle.getBeanContext().isBeanExists(beanName);
+    }
+
+    @Override
     public <T> T getBean(final IBeanQuery query)
     {
         return this.componentBundle.getBeanContext().getBean(query);
+    }
+
+    @Override
+    public boolean isBeanExists(final IBeanQuery query)
+    {
+        return this.componentBundle.getBeanContext().isBeanExists(query);
     }
 
     // = = = INTERNAL IMPLEMENTATION METHODS = = = //

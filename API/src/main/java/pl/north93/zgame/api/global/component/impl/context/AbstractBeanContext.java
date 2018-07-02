@@ -58,6 +58,12 @@ public abstract class AbstractBeanContext implements IBeanContext
         return (T) this.getBeanContainer(query).getValue(null);
     }
 
+    @Override
+    public boolean isBeanExists(final IBeanQuery query)
+    {
+        return this.getBeanContainer0(query) != null;
+    }
+
     public final AbstractBeanContainer getBeanContainer(final IBeanQuery query)
     {
         final AbstractBeanContainer result = this.getBeanContainer0(query);
@@ -94,9 +100,21 @@ public abstract class AbstractBeanContext implements IBeanContext
     }
 
     @Override
+    public boolean isBeanExists(final Class<?> clazz)
+    {
+        return this.isBeanExists(new BeanQuery().type(clazz));
+    }
+
+    @Override
     public <T> T getBean(final String beanName)
     {
         return this.getBean(new BeanQuery().name(beanName));
+    }
+
+    @Override
+    public boolean isBeanExists(final String beanName)
+    {
+        return this.isBeanExists(new BeanQuery().name(beanName));
     }
 
     @Override

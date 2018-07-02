@@ -8,7 +8,13 @@ public interface IBeanContext
 
     <T> T getBean(IBeanQuery query);
 
+    boolean isBeanExists(IBeanQuery query);
+
     <T> T getBean(Class<T> clazz);
 
+    boolean isBeanExists(Class<?> clazz);
+
     <T> T getBean(String beanName);
+
+    boolean isBeanExists(String beanName);
 }

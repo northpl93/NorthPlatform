@@ -62,7 +62,7 @@ class InstancesAggregator implements IAggregator
     public void call(final AbstractBeanContext beanContext, final CtClass ctClass, final Class<?> javaClass, final LazyValue<Object> instance, final Method listener)
     {
         final TemporaryBeanContext tempContext = new TemporaryBeanContext(beanContext);
-        tempContext.put(javaClass, instance.get());
+        tempContext.putIfAbsent(javaClass, instance.get()); // instancja moze byc zarejestrowanym beanem
 
         if (Modifier.isStatic(listener.getModifiers()))
         {
