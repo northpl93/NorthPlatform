@@ -37,6 +37,7 @@ import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.arena.structure.GoldChestStructure;
 import pl.arieals.minigame.goldhunter.player.GameTeam;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
+import pl.arieals.minigame.goldhunter.player.PlayerRank;
 import pl.arieals.minigame.goldhunter.scoreboard.ArenaScoreboardManager;
 import pl.arieals.minigame.goldhunter.utils.TimeStringUtils;
 import pl.north93.zgame.api.bukkit.gui.IGuiManager;
@@ -308,6 +309,24 @@ public class GoldHunterArena implements IArenaData, ITickable
         {
             getPlayers().stream().filter(p -> !p.isIngame()).forEach(p -> scoreboardManager.setLobbyScoreboardLayout(p));
         }
+    }
+    
+    public boolean trySignToTeam(GoldHunterPlayer player, GameTeam team)
+    {
+        if ( signedPlayers.size() >= localArena.getMaxPlayers() && !PlayerRank.VIP.has(player) )
+        {
+            player.sendMessage("arena_full");
+            return false;
+        }
+        
+        if ( team != null && !PlayerRank.VIP.has(player) )
+        {
+            player.sendMessage("cannot_select_team");
+            return false;
+        }
+        
+        signToTeam(player, team);
+        return true;
     }
     
     public void signToTeam(GoldHunterPlayer player, GameTeam team)

@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.player.GameTeam;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.arieals.minigame.goldhunter.player.PlayerRank;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
@@ -16,7 +15,7 @@ public class SignCommand extends NorthCommand
     
     public SignCommand(GoldHunter goldHunter)
     {
-        super("sign", "zapisz");
+        super("sign", "zapisz", "dolacz", "join");
         
         this.goldHunter = goldHunter;
     }
@@ -36,11 +35,11 @@ public class SignCommand extends NorthCommand
         }
         
         GameTeam team = null;
-        if ( args.has(0) && player.getPlayer().hasPermission(PlayerRank.VIP.getPermission()) )
+        if ( args.has(0) )
         {
             team = GameTeam.valueOf(args.asString(0).toUpperCase());
         }
         
-        player.getArena().signToTeam(player, team);
+        player.getArena().trySignToTeam(player, team);
     }
 }

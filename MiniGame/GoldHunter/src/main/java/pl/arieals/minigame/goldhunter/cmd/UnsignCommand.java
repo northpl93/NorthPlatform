@@ -14,7 +14,7 @@ public class UnsignCommand extends NorthCommand
     
     public UnsignCommand(GoldHunter goldHunter)
     {
-        super("unsign", "leave", "oposc");
+        super("unsign", "leave", "oposc", "wyjdz", "wypisz");
         
         this.goldHunter = goldHunter;
     }
