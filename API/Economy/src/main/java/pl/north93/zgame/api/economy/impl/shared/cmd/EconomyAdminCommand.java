@@ -33,38 +33,42 @@ public class EconomyAdminCommand extends NorthCommand
     {
         if (args.isEmpty())
         {
-            this.showHelp(sender);
+            this.showHelp(sender, label);
             return;
         }
 
         switch (args.asString(0))
         {
             case "get":
-                this.get(sender, args);
+                this.get(sender, args, label);
                 break;
             case "set":
-                this.set(sender, args);
+                this.set(sender, args, label);
+                break;
+            case "add":
+                this.add(sender, args, label);
                 break;
             default:
-                this.showHelp(sender);
+                this.showHelp(sender, label);
         }
     }
 
-    private void showHelp(final NorthCommandSender sender)
+    private void showHelp(final NorthCommandSender sender, final String label)
     {
         final Collection<ICurrency> currencies = this.economyManager.getCurrencies();
         final String list = currencies.stream().map(ICurrency::getName).collect(Collectors.joining(", "));
 
         sender.sendMessage("&cDostepne waluty: {0}", list);
-        sender.sendMessage("&c/economyadmin get <player> <waluta>");
-        sender.sendMessage("&c/economyadmin set <player> <waluta> <ilosc>");
+        sender.sendMessage("&c/{0} get <player> <waluta>", label);
+        sender.sendMessage("&c/{0} set <player> <waluta> <ilosc>", label);
+        sender.sendMessage("&c/{0} add <player> <waluta> <ilosc>", label);
     }
 
-    private void get(final NorthCommandSender sender, final Arguments args)
+    private void get(final NorthCommandSender sender, final Arguments args, final String label)
     {
         if (args.length() < 3)
         {
-            this.showHelp(sender);
+            this.showHelp(sender, label);
             return;
         }
 
@@ -80,11 +84,11 @@ public class EconomyAdminCommand extends NorthCommand
         sender.sendMessage("&aStan konta {0} dla waluty {1} to {2}", nick, currency.getName(), accessor.getAmount());
     }
 
-    private void set(final NorthCommandSender sender, final Arguments args)
+    private void set(final NorthCommandSender sender, final Arguments args, final String label)
     {
         if (args.length() < 4)
         {
-            this.showHelp(sender);
+            this.showHelp(sender, label);
             return;
         }
 
@@ -104,6 +108,35 @@ public class EconomyAdminCommand extends NorthCommand
         }
         catch (final Exception e)
         {
+            e.printStackTrace();
+        }
+    }
+
+    private void add(final NorthCommandSender sender, final Arguments args, final String label)
+    {
+        if (args.length() < 4)
+        {
+            this.showHelp(sender, label);
+            return;
+        }
+
+        final String who = args.asString(1);
+        final String currencyName = args.asString(2);
+        final Integer amount = args.asInt(3);
+
+        final Identity identity = Identity.create(null, who);
+        final ICurrency currency = this.economyManager.getCurrency(currencyName);
+
+        try (final ITransaction t = this.economyManager.openTransaction(currency, identity))
+        {
+            t.add(amount);
+
+            final String nick = t.getAssociatedPlayer().getLatestNick();
+            sender.sendMessage("&aStan konta {0} dla waluty {1} ustawiony na {2}", nick, currency.getName(), t.getAmount());
+        }
+        catch (final Exception e)
+        {
+            sender.sendMessage("&cWystapil blad podczas wykonywania");
             e.printStackTrace();
         }
     }
