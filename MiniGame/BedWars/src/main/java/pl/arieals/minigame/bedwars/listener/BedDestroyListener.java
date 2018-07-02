@@ -53,7 +53,7 @@ public class BedDestroyListener implements Listener
         if (event.getDestroyer() != null)
         {
             final BedWarsPlayer destroyerData = getPlayerData(event.getDestroyer(), BedWarsPlayer.class);
-            assert destroyerData != null; // tu nie moze byc nullem
+            assert destroyerData != null; // tu nie moze byc nullem, bo gracz niszczacy na pewno bedzie online
 
             final int currencyAmount = bedWarsArena.getBedWarsConfig().getRewards().getBedDestroy();
             arena.getRewards().addReward(Identity.of(event.getDestroyer()), new CurrencyReward("bedDestroy", "minigame", currencyAmount));

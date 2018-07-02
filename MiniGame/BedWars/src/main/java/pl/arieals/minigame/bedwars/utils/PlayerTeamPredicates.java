@@ -18,11 +18,19 @@ public final class PlayerTeamPredicates
 
     public static Predicate<Player> isInTeam(final Team team)
     {
-        return player -> getPlayerData(player, BedWarsPlayer.class).getTeam() == team;
+        return player ->
+        {
+            final BedWarsPlayer data = getPlayerData(player, BedWarsPlayer.class);
+            return data != null && data.getTeam() == team;
+        };
     }
 
     public static Predicate<Player> notInTeam(final Team team)
     {
-        return player -> getPlayerData(player, BedWarsPlayer.class).getTeam() != team;
+        return player ->
+        {
+            final BedWarsPlayer data = getPlayerData(player, BedWarsPlayer.class);
+            return data == null || data.getTeam() != team;
+        };
     }
 }
