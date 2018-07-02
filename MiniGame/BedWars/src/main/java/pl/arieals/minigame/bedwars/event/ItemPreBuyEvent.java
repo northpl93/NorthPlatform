@@ -8,17 +8,15 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.event.arena.ArenaEvent;
 import pl.arieals.minigame.bedwars.cfg.BwShopEntry;
 
 /**
  * Event wywolywany przed zakupem itemu i
  * podczas sprawdzania czy gracz moze go kupic.
  */
-public class ItemPreBuyEvent extends ArenaEvent
+public class ItemPreBuyEvent extends BedWarsPlayerArenaEvent
 {
     private static final HandlerList handlers = new HandlerList();
-    private final Player      player;
     private final BwShopEntry shopEntry;
     private final ItemStack   price;
     private final boolean     isCheck;
@@ -26,17 +24,11 @@ public class ItemPreBuyEvent extends ArenaEvent
 
     public ItemPreBuyEvent(final LocalArena arena, final Player player, final BwShopEntry shopEntry, final ItemStack price, final boolean isCheck)
     {
-        super(arena);
-        this.player = player;
+        super(arena, player);
         this.shopEntry = shopEntry;
         this.price = price;
         this.isCheck = isCheck;
         this.buyStatus = BuyStatus.CAN_BUY;
-    }
-
-    public Player getPlayer()
-    {
-        return this.player;
     }
 
     public BwShopEntry getShopEntry()
@@ -97,6 +89,6 @@ public class ItemPreBuyEvent extends ArenaEvent
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("player", this.player).append("shopEntry", this.shopEntry).append("price", this.price).append("isCheck", this.isCheck).append("buyStatus", this.buyStatus).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("shopEntry", this.shopEntry).append("price", this.price).append("isCheck", this.isCheck).append("buyStatus", this.buyStatus).toString();
     }
 }

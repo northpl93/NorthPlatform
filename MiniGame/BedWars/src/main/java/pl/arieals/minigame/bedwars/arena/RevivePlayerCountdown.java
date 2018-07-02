@@ -54,7 +54,7 @@ public class RevivePlayerCountdown extends AbstractCountdown
     @Override
     protected void end()
     {
-        if (! this.player.isOnline())
+        if (this.bedWarsPlayer.isOffline())
         {
             return;
         }

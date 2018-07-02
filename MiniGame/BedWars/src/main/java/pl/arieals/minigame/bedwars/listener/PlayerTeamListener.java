@@ -1,6 +1,5 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.setPlayerData;
 
@@ -139,18 +138,6 @@ public class PlayerTeamListener implements Listener
             // jesli gracz jest wyeliminowany to nie wysylamy komunikatu wyjscia
             event.setQuitMessage(null);
         }
-
-        /*final Team team = playerData.getTeam();
-        if (team != null)
-        {
-            team.getPlayers().remove(event.getPlayer());
-            if (! playerData.isEliminated() && ! team.isTeamAlive())
-            {
-                // jesli gracz byl ostatni zyjacy w teamie i team nie mial lozka
-                // to go eliminujemy
-                this.apiCore.callEvent(new TeamEliminatedEvent(event.getArena(), team));
-            }
-        }*/ // zmiana wymagan, obsluga reconnectu do gry, etc
     }
 
     @EventHandler
@@ -171,21 +158,20 @@ public class PlayerTeamListener implements Listener
             return;
         }
 
-        final BedWarsArena arenaData = getArena(player).getArenaData();
+        final BedWarsArena arenaData = playerData.getTeam().getArena().getArenaData();
         final Team teamAt = arenaData.getTeamAt(block);
-        if (teamAt == playerData.getTeam())
+        if (teamAt == playerData.getTeam() || teamAt.isEliminated())
         {
+            // gracz moze otwierac skrzynki na terenie swojej druzyny
+            // jak team jest wyeliminowany to zawsze mozna otwierac skrzynki
             return;
         }
 
-        if (teamAt.isBedAlive() || !teamAt.getAlivePlayers().isEmpty())
-        {
-            // jesli team ma lozko lub zywych graczy to anulujemy otwarcie skrzynki
-            event.setCancelled(true);
+        // jesli team nie jest wyeliminowany to blokujemy otwarcie skrzynki
+        final String teamName = this.messages.getMessage(player.getLocale(), "team.nominative." + teamAt.getName());
+        this.messages.sendMessage(player, "chest_blocked", teamAt.getColor(), teamName);
 
-            final String teamName = this.messages.getMessage(player.getLocale(), "team.nominative." + teamAt.getName());
-            this.messages.sendMessage(player, "chest_blocked", teamAt.getColor(), teamName);
-        }
+        event.setCancelled(true);
     }
 
     @Override

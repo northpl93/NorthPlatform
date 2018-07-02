@@ -202,7 +202,7 @@ public class PlayerItemsListener implements Listener
     @EventHandler // dodajemy drewniany miecz gdy gracz sie respawni
     public void giveWoodSwordWhenPlayerRespawn(final PlayerRevivedEvent event)
     {
-        final Player bukkitPlayer = event.getBedWarsPlayer().getBukkitPlayer();
+        final Player bukkitPlayer = event.getPlayer();
         this.giveWoodSword(bukkitPlayer);
     }
 

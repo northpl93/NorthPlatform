@@ -1,11 +1,16 @@
 package pl.arieals.minigame.bedwars.arena;
 
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
+
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.minigame.bedwars.event.PlayerEliminatedEvent;
 import pl.arieals.minigame.bedwars.shop.elimination.IEliminationEffect;
 import pl.arieals.minigame.bedwars.utils.TeamArmorUtils;
@@ -27,7 +32,33 @@ public class BedWarsPlayer
 
     public boolean isOnline()
     {
-        return this.bukkitPlayer.isOnline();
+        return ! this.isOffline();
+    }
+
+    /**
+     * Sprawdza czy ten BedWarsPlayer jest offline.
+     *
+     * @return True jesli gracz jest offline, nie ma go na arenie.
+     */
+    public boolean isOffline()
+    {
+        final BedWarsPlayer newData = getPlayerData(this.bukkitPlayer, BedWarsPlayer.class);
+        if (this.bukkitPlayer.isOnline())
+        {
+            return this != newData;
+        }
+
+        return true;
+    }
+
+    /**
+     * Sprawdza czy gracz jest online i ma status {@link PlayerStatus#PLAYING}.
+     * @return True jesli gracz jest online i aktywnie uczestniczy w grze (nie jest spectatorem).
+     */
+    public boolean isOnlineAndPlaying()
+    {
+        final PlayerStatus playerStatus = getPlayerStatus(this.bukkitPlayer);
+        return playerStatus != null && ! this.isOffline() && playerStatus == PlayerStatus.PLAYING;
     }
 
     public Player getBukkitPlayer()
@@ -69,7 +100,7 @@ public class BedWarsPlayer
             return;
         }
         this.eliminated = true;
-        Bukkit.getPluginManager().callEvent(new PlayerEliminatedEvent(this.team.getArena(), this.bukkitPlayer));
+        Bukkit.getPluginManager().callEvent(new PlayerEliminatedEvent(this.team.getArena(), this));
     }
 
     public int getKills()

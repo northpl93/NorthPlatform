@@ -1,8 +1,5 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
-
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,7 +32,7 @@ public class PlayerEliminationListener implements Listener
         final Player player = event.getPlayer();
 
         this.logger.log(Level.INFO, "Player eliminated event called for {0} on arena {1}", new Object[]{player.getName(), event.getArena().getId()});
-        if (! player.isOnline())
+        if (event.getBedWarsPlayer().isOffline())
         {
             // gracz nie jest online gdy zostal wyeliminowany
             return;
@@ -46,9 +43,9 @@ public class PlayerEliminationListener implements Listener
         // czyscimy ekwipunek, nie jest potrzebny spectatorowi
         player.getInventory().clear();
 
-        final String locale = player.spigot().getLocale();
-        final String title = translateAlternateColorCodes(this.messages.getMessage(locale, "die.norespawn.title"));
-        final String subtitle = translateAlternateColorCodes(this.messages.getMessage(locale, "die.norespawn.subtitle"));
+        final String locale = player.getLocale();
+        final String title = this.messages.getMessage(locale, "die.norespawn.title");
+        final String subtitle = this.messages.getMessage(locale, "die.norespawn.subtitle");
         player.sendTitle(new Title(title, subtitle, 20, 20, 20));
 
         final SpectatorHotbar spectatorHotbar = new SpectatorHotbar();

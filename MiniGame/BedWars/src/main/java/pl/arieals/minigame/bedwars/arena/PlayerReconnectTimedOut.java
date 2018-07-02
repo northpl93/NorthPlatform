@@ -24,8 +24,7 @@ public class PlayerReconnectTimedOut implements Runnable
     @Override
     public void run()
     {
-        final Player bukkitPlayer = this.player.getBukkitPlayer();
-        if (bukkitPlayer.isOnline())
+        if (this.player.isOnline())
         {
             // gracz wrocil na czas
             return;
@@ -33,6 +32,8 @@ public class PlayerReconnectTimedOut implements Runnable
 
         // eliminujemy tego gracza
         this.player.eliminate();
+
+        final Player bukkitPlayer = this.player.getBukkitPlayer();
         this.logger.log(Level.INFO, "Player {0} doesn't returned in time, marked as eliminated.", bukkitPlayer.getName());
 
         final Team team = this.player.getTeam();

@@ -1,12 +1,8 @@
 package pl.arieals.minigame.bedwars.arena;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
-
-
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,7 +15,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.minigame.bedwars.cfg.BwTeamConfig;
 import pl.arieals.minigame.bedwars.event.BedDestroyedEvent;
 import pl.arieals.minigame.bedwars.event.TeamEliminatedEvent;
@@ -122,16 +117,6 @@ public class Team
     }
 
     /**
-     * Zwraca graczy zyjacych (BEZ oczekujacych na reconnect, wyeliminowanych i oczekujacych na respawn)
-     * @return gracze zyjacy/grajacy.
-     */
-    public Set<Player> getAlivePlayers()
-    {
-        final Predicate<Player> predicate = player -> getPlayerStatus(player) == PlayerStatus.PLAYING;
-        return this.getBukkitPlayersAsStream().filter(predicate).collect(Collectors.toSet());
-    }
-
-    /**
      * Zwraca graczy zyjacych i oczekujacych na respawn (ALE NIE wyeliminowanych)
      * @return gracze zyjacy i czekajacy na respawn.
      */
@@ -210,7 +195,7 @@ public class Team
     {
         for (final BedWarsPlayer playerData : this.players)
         {
-            if (! playerData.isOnline())
+            if (playerData.isOffline())
             {
                 // jesli gracz jest offline to nie uwzgledniamy go przy sprawdzaniu
                 continue;
