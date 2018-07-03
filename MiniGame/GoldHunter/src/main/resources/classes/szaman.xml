@@ -61,7 +61,7 @@
 		
 	</equipment>
 	
-	<invRefilRule maxCount="5" period="100" id="minecraft:splash_potion" >
+	<invRefilRule maxCount="2" period="100" id="minecraft:splash_potion" >
 		<potionMeta>
 			<potionData type="INSTANT_DAMAGE" />
 		</potionMeta>
