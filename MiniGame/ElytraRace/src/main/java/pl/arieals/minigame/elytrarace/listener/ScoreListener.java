@@ -78,15 +78,16 @@ public class ScoreListener implements Listener
 
     private void addPoints(final Player player, final ElytraRaceArena arena, final Score score)
     {
-        final ScoreGroup scoreGroup = arena.getScoreGroup(score.getScoreGroup());
         final ElytraRacePlayer racePlayer = getPlayerData(player, ElytraRacePlayer.class);
-        final ElytraScorePlayer scorePlayer = getPlayerData(player, ElytraScorePlayer.class);
-
-        if (racePlayer.isFinished())
+        if (racePlayer == null || racePlayer.isFinished())
         {
+            // gracz moze byc nullem jesli spectator wejdzie w region mety
             // nie naliczamy punktów graczom ktorzy ukonczyli gre
             return;
         }
+
+        final ScoreGroup scoreGroup = arena.getScoreGroup(score.getScoreGroup());
+        final ElytraScorePlayer scorePlayer = racePlayer.asScorePlayer();
 
         // gracz moze zaliczyc tylko jeden score z danej achieveGroup
         final String achieveGroup = score.getAchieveGroup();

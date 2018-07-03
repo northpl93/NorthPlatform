@@ -45,10 +45,17 @@ public class PlayerDataManager
         return (T) metadata.get(0).value();
     }
 
-    public void setPlayerData(final Player player, final Object data)
+    public <T> void setPlayerData(final Player player, final T data)
+    {
+        @SuppressWarnings("unchecked")
+        final Class<T> aClass = (Class<T>) data.getClass();
+        this.setPlayerData(player, aClass, data);
+    }
+
+    public <T> void setPlayerData(final Player player, final Class<T> clazz, final T data)
     {
         Preconditions.checkNotNull(player, "Player can't be null in setPlayerData");
-        player.setMetadata(data.getClass().getName(), new FixedMetadataValue(this.apiCore.getPluginMain(), data));
+        player.setMetadata(clazz.getName(), new FixedMetadataValue(this.apiCore.getPluginMain(), data));
     }
 
     public PlayerStatus getStatus(final Player player)

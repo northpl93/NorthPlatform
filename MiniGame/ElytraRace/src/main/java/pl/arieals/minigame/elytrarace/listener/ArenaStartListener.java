@@ -7,6 +7,7 @@ import static pl.arieals.minigame.elytrarace.ElytraRaceMode.fromVariantId;
 import javax.xml.bind.JAXB;
 
 import java.util.Iterator;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,8 +20,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.arena.player.ArenaChatManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.server.gamehost.arena.player.ArenaChatManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
@@ -96,17 +97,27 @@ public class ArenaStartListener implements Listener
     {
         final Iterator<XmlLocation> locations = elytraRaceArena.getArenaConfig().getStartLocations().iterator();
 
+        final Set<ElytraRacePlayer> elytraPlayers = elytraRaceArena.getPlayers();
         for (final Player player : arena.getPlayersManager().getPlayers())
         {
+            final IElytraEffect elytraEffect = this.getEffect(player);
             final Location startLoc = locations.next().toBukkit(arena.getWorld().getCurrentWorld());
 
-            setPlayerData(player, new ElytraRacePlayer(this.getEffect(player), startLoc));
+            final ElytraRacePlayer data;
             if (elytraRaceArena.getGameMode() == ElytraRaceMode.SCORE_MODE)
             {
-                // w trybie score ustawiamy graczowi dodatkowy obiekt
+                // w trybie score ustawiamy graczowi dodatkowy rozszerzony obiekt
                 // sledzacy ilosc punktów, combo itp.
-                setPlayerData(player, new ElytraScorePlayer());
+                data = new ElytraScorePlayer(player, elytraEffect, startLoc);
             }
+            else
+            {
+                // w trybie race ustawiamy standardowy obiekt
+                data = new ElytraRacePlayer(player, elytraEffect, startLoc);
+            }
+
+            elytraPlayers.add(data);
+            setPlayerData(player, ElytraRacePlayer.class, data);
 
             player.teleport(startLoc);
             player.getInventory().setChestplate(this.createElytra());

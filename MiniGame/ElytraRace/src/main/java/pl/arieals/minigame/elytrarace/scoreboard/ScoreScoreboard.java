@@ -17,6 +17,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
+import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.north93.zgame.api.bukkit.scoreboard.ContentBuilder;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
@@ -27,8 +29,7 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class ScoreScoreboard implements IScoreboardLayout
 {
-    @Inject
-    @Messages("ElytraRace")
+    @Inject @Messages("ElytraRace")
     private MessagesBox msg;
 
     // Score Attack
@@ -37,10 +38,10 @@ public class ScoreScoreboard implements IScoreboardLayout
     //
     // Top3
     // 68 NorthPL93
-    // 67 Wodzio
-    // -1 lucek_flower
+    // 67 _Wodzio_
+    // -1 _Pitbull_
     //
-    // mc.piraci.pl
+    // mcpiraci.pl
     @Override
     public String getTitle(final IScoreboardContext context)
     {
@@ -51,29 +52,33 @@ public class ScoreScoreboard implements IScoreboardLayout
     public List<String> getContent(final IScoreboardContext context)
     {
         final Player player = context.getPlayer();
-
         final LocalArena arena = getArena(player);
-        final ElytraScorePlayer playerData = getPlayerData(player, ElytraScorePlayer.class);
-        if (arena == null || playerData == null)
+
+        final ElytraRacePlayer racePlayer = getPlayerData(player, ElytraRacePlayer.class);
+        if (arena == null || racePlayer == null)
         {
             return Collections.emptyList();
         }
+
+        final ElytraScorePlayer scorePlayer = racePlayer.asScorePlayer();
 
         final ContentBuilder builder = IScoreboardLayout.builder();
         builder.box(this.msg).locale(player.getLocale());
 
         builder.add("");
-        builder.translated("scoreboard.score.points", playerData.getPoints());
+        builder.translated("scoreboard.score.points", scorePlayer.getPoints());
         builder.add("");
         builder.translated("scoreboard.score.top");
 
-        final Map<Player, Integer> ranking = this.getRanking(arena, 5);
+        final Map<ElytraScorePlayer, Integer> ranking = this.getRanking(arena, 5);
 
+        // maksymalna ilosc punktów posiadanych przez gracza w tym rankingu
         final int max = ranking.values().iterator().next();
 
-        for (final Map.Entry<Player, Integer> entry : ranking.entrySet())
+        for (final Map.Entry<ElytraScorePlayer, Integer> entry : ranking.entrySet())
         {
-            builder.translated("scoreboard.score.top_line", this.align(max, entry.getValue()), entry.getKey().getDisplayName());
+            final String displayName = entry.getKey().getPlayer().getDisplayName();
+            builder.translated("scoreboard.score.top_line", this.align(max, entry.getValue()), displayName);
         }
 
         builder.add("");
@@ -89,13 +94,15 @@ public class ScoreScoreboard implements IScoreboardLayout
         return StringUtils.repeat('0', Math.max(0, maxLength - pointsString.length())) + pointsString;
     }
 
-    private Map<Player, Integer> getRanking(final LocalArena arena, int limit)
+    private Map<ElytraScorePlayer, Integer> getRanking(final LocalArena arena, final int limit)
     {
-        final Map<Player, Integer> ranking = new LinkedHashMap<>();
-        for (final Player player : arena.getPlayersManager().getPlayers())
+        final Map<ElytraScorePlayer, Integer> ranking = new LinkedHashMap<>();
+
+        final ElytraRaceArena arenaData = arena.getArenaData();
+        for (final ElytraRacePlayer racePlayer : arenaData.getPlayers())
         {
-            final ElytraScorePlayer playerData = getPlayerData(player, ElytraScorePlayer.class);
-            ranking.put(player, playerData.getPoints());
+            final ElytraScorePlayer playerData = racePlayer.asScorePlayer();
+            ranking.put(playerData, playerData.getPoints());
         }
 
         return ranking.entrySet()
@@ -105,7 +112,7 @@ public class ScoreScoreboard implements IScoreboardLayout
                       .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
 
-    private int rankingComparator(final Map.Entry<Player, Integer> p1, final Map.Entry<Player, Integer> p2)
+    private int rankingComparator(final Map.Entry<ElytraScorePlayer, Integer> p1, final Map.Entry<ElytraScorePlayer, Integer> p2)
     {
         return p2.getValue() - p1.getValue();
     }

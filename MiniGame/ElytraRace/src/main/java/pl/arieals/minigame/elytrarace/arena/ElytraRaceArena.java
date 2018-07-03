@@ -5,7 +5,9 @@ import static pl.north93.zgame.api.global.utils.lang.CollectionUtils.findInColle
 
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -25,6 +27,7 @@ public class ElytraRaceArena implements IArenaData
     private final ArenaConfig                 arenaConfig;
     private final ElytraRaceMode              gameMode;
     private final IFinishHandler              metaHandler;
+    private final Set<ElytraRacePlayer>       players;
     private final Map<Score, ScoreController> scoreControllers; // w trybie score mapuje score do jego kontrolera
     private       boolean                     isStarted; // czy odliczanie do startu dobieglo konca
 
@@ -33,6 +36,7 @@ public class ElytraRaceArena implements IArenaData
         this.arenaConfig = arenaConfig;
         this.gameMode = gameMode;
         this.metaHandler = gameMode == RACE_MODE ? new RaceMetaHandler() : new ScoreMetaHandler();
+        this.players = new HashSet<>();
         this.scoreControllers = new HashMap<>();
     }
 
@@ -59,6 +63,11 @@ public class ElytraRaceArena implements IArenaData
     public IFinishHandler getMetaHandler()
     {
         return this.metaHandler;
+    }
+
+    public Set<ElytraRacePlayer> getPlayers()
+    {
+        return this.players;
     }
 
     public Map<Score, ScoreController> getScoreControllers()

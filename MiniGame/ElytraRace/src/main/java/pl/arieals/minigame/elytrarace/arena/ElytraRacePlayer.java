@@ -1,6 +1,7 @@
 package pl.arieals.minigame.elytrarace.arena;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -10,16 +11,23 @@ import pl.arieals.minigame.elytrarace.shop.effects.IElytraEffect;
 
 public class ElytraRacePlayer
 {
+    private Player        player;
     private Location      startLocation;
     private boolean       isDev;
     private boolean       finished;
     private Checkpoint    checkpoint;
     private IElytraEffect effect;
 
-    public ElytraRacePlayer(final IElytraEffect effect, final Location startLocation)
+    public ElytraRacePlayer(final Player player, final IElytraEffect effect, final Location startLocation)
     {
+        this.player = player;
         this.effect = effect;
         this.startLocation = startLocation;
+    }
+
+    public Player getPlayer()
+    {
+        return this.player;
     }
 
     public IElytraEffect getEffect()
@@ -74,6 +82,11 @@ public class ElytraRacePlayer
             checkpointNumber = this.checkpoint.getNumber();
         }
         return checkpointNumber;
+    }
+
+    public ElytraScorePlayer asScorePlayer()
+    {
+        return (ElytraScorePlayer) this;
     }
 
     @Override

@@ -5,7 +5,7 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
@@ -16,6 +16,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.statistics.IRecord;
 import pl.arieals.api.minigame.shared.api.statistics.unit.NumberUnit;
+import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
@@ -26,14 +27,14 @@ import pl.north93.zgame.api.global.network.INetworkManager;
 public class ScoreMessage
 {
     @Inject @Messages("ElytraRace")
-    private       MessagesBox                   messages;
+    private       MessagesBox           messages;
     @Inject
-    private       INetworkManager               network;
-    private final Map<ScoreFinishInfo, Integer> top;
-    private final IRecord<NumberUnit>           record;
-    private final boolean                       isPartial;
+    private       INetworkManager       network;
+    private final List<ScoreFinishInfo> top;
+    private final IRecord<NumberUnit>   record;
+    private final boolean               isPartial;
 
-    public ScoreMessage(final Map<ScoreFinishInfo, Integer> top, final IRecord<NumberUnit> record, final boolean isPartial)
+    public ScoreMessage(final List<ScoreFinishInfo> top, final IRecord<NumberUnit> record, final boolean isPartial)
     {
         this.top = top;
         this.record = record;
@@ -75,26 +76,24 @@ public class ScoreMessage
 
     private void fullResults(final Player player)
     {
-        final Iterator<Map.Entry<ScoreFinishInfo, Integer>> topIter = this.top.entrySet().iterator();
+        final Iterator<ScoreFinishInfo> topIter = this.top.iterator();
         for (int place = 1; topIter.hasNext() && place < 4; place++)
         {
-            final Map.Entry<ScoreFinishInfo, Integer> placeInfo = topIter.next();
-            final ScoreFinishInfo key = placeInfo.getKey();
+            final ScoreFinishInfo finishInfo = topIter.next();
 
-            this.messages.sendMessage(player, "finish.score.place." + place, MessageLayout.CENTER, key.getDisplayName(), placeInfo.getValue());
+            this.messages.sendMessage(player, "finish.score.place." + place, MessageLayout.CENTER, finishInfo.getDisplayName(), finishInfo.getPoints());
         }
     }
 
     private void partialResults(final Player player)
     {
-        final Iterator<Map.Entry<ScoreFinishInfo, Integer>> topIter = this.top.entrySet().iterator();
+        final Iterator<ScoreFinishInfo> topIter = this.top.iterator();
         this.messages.sendMessage(player, "finish.partial_results", MessageLayout.CENTER);
         for (int place = 0; topIter.hasNext() && place < 3; place++)
         {
-            final Map.Entry<ScoreFinishInfo, Integer> placeInfo = topIter.next();
-            final ScoreFinishInfo key = placeInfo.getKey();
+            final ScoreFinishInfo finishInfo = topIter.next();
 
-            this.messages.sendMessage(player, "finish.score.partial_place", MessageLayout.CENTER, key.getDisplayName(), placeInfo.getValue());
+            this.messages.sendMessage(player, "finish.score.partial_place", MessageLayout.CENTER, finishInfo.getDisplayName(), finishInfo.getPoints());
         }
         final int others = this.top.size() - 3;
         if (others > 0)
@@ -106,7 +105,13 @@ public class ScoreMessage
     private void yourInfo(final Player player)
     {
         player.sendMessage("");
-        this.messages.sendMessage(player, "finish.score.your_points", MessageLayout.CENTER, getPlayerData(player, ElytraScorePlayer.class).getPoints());
+
+        final ElytraRacePlayer racePlayer = getPlayerData(player, ElytraRacePlayer.class);
+        assert racePlayer != null; // tutaj nie moze byc nullem, bo jakos ukonczyl ta arene...
+
+        final ElytraScorePlayer scorePlayer = racePlayer.asScorePlayer();
+
+        this.messages.sendMessage(player, "finish.score.your_points", MessageLayout.CENTER, scorePlayer.getPoints());
         if (this.record != null)
         {
             final UUID uniqueId = this.record.getHolder().getIdentity().getUuid();

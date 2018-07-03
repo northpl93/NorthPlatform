@@ -1,11 +1,14 @@
 package pl.arieals.minigame.elytrarace.arena.finish.score;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static java.util.Comparator.comparing;
 
 
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
 
@@ -13,6 +16,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
 import pl.arieals.api.minigame.shared.api.statistics.IRecord;
 import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
@@ -20,29 +24,31 @@ import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
 import pl.arieals.api.minigame.shared.api.statistics.filter.BestRecordFilter;
 import pl.arieals.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.unit.NumberUnit;
+import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
+import pl.arieals.minigame.elytrarace.arena.finish.ElytraWinReward;
 import pl.arieals.minigame.elytrarace.arena.finish.IFinishHandler;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.utils.lang.MapCollector;
+import pl.north93.zgame.api.global.network.players.Identity;
 
 public class ScoreMetaHandler implements IFinishHandler
 {
     @Inject @Messages("ElytraRace")
-    private MessagesBox        messages;
+    private       MessagesBox          messages;
     @Inject
-    private IStatisticsManager statisticsManager;
-    private IRecord            currentGlobalRecord;
-    private final Map<ScoreFinishInfo, Integer> points = new HashMap<>(); // uzywane w SCORE_MODE do wyswietlania wynikow
+    private       IStatisticsManager   statisticsManager;
+    private       IRecord              currentGlobalRecord;
+    private final Set<ScoreFinishInfo> points = new HashSet<>(); // uzywane w SCORE_MODE do wyswietlania wynikow
 
     @Override
     public void handle(final LocalArena arena, final Player player, final ElytraRacePlayer playerData)
     {
         playerData.setFinished(true);
 
-        final ElytraScorePlayer scoreData = getPlayerData(player, ElytraScorePlayer.class);
+        final ElytraScorePlayer scoreData = playerData.asScorePlayer();
 
         arena.getChatManager().broadcast(
                 this.messages,
@@ -53,7 +59,7 @@ public class ScoreMetaHandler implements IFinishHandler
         final IStatistic<NumberUnit> scoreStatistic = this.getScoreStatistic(arena);
         final IStatisticHolder statisticsHolder = this.statisticsManager.getPlayerHolder(player.getUniqueId());
 
-        this.points.put(new ScoreFinishInfo(player.getUniqueId(), player.getDisplayName()), scoreData.getPoints());
+        this.points.add(new ScoreFinishInfo(player.getUniqueId(), player.getDisplayName(), scoreData.getPoints()));
 
         final boolean isFinished = IFinishHandler.checkFinished(arena);
 
@@ -62,17 +68,17 @@ public class ScoreMetaHandler implements IFinishHandler
         {
             statisticsHolder.record(scoreStatistic, points).whenComplete((record, throwable2) ->
             {
-                final ScoreMessage raceMessage = new ScoreMessage(this.getTop(), bestRecord, !isFinished);
+                final ScoreMessage scoreMessage = new ScoreMessage(this.getTop(), bestRecord, !isFinished);
                 if (isFinished)
                 {
                     for (final Player playerInArena : arena.getPlayersManager().getPlayers())
                     {
-                        raceMessage.print(playerInArena);
+                        scoreMessage.print(playerInArena);
                     }
                 }
                 else
                 {
-                    raceMessage.print(player);
+                    scoreMessage.print(player);
                 }
             });
         });
@@ -87,10 +93,10 @@ public class ScoreMetaHandler implements IFinishHandler
         }
     }
 
-    private Map<ScoreFinishInfo, Integer> getTop()
+    private List<ScoreFinishInfo> getTop()
     {
-        final Comparator<Map.Entry<ScoreFinishInfo, Integer>> reversed = Map.Entry.<ScoreFinishInfo, Integer>comparingByValue().reversed();
-        return this.points.entrySet().stream().sorted(reversed).collect(MapCollector.toMap());
+        final Comparator<ScoreFinishInfo> comparator = comparing(ScoreFinishInfo::getPoints);
+        return this.points.stream().sorted(comparator).collect(Collectors.toList());
     }
 
     @Override
@@ -104,10 +110,10 @@ public class ScoreMetaHandler implements IFinishHandler
         final HigherNumberBetterStatistic scoreStatistic = this.getScoreStatistic(arena);
         this.statisticsManager.getRecord(scoreStatistic, new BestRecordFilter()).whenComplete((result, throwable) ->
         {
-            final ScoreMessage raceMessage = new ScoreMessage(this.getTop(), result, false);
+            final ScoreMessage scoreMessage = new ScoreMessage(this.getTop(), result, false);
             for (final Player playerInArena : arena.getPlayersManager().getPlayers())
             {
-                raceMessage.print(playerInArena);
+                scoreMessage.print(playerInArena);
             }
         });
 
@@ -117,16 +123,7 @@ public class ScoreMetaHandler implements IFinishHandler
     @Override
     public void gameEnd(final LocalArena arena)
     {
-        this.bumpWinsCount();
-    }
-
-    /**
-     * Podnosi o jeden statystyke przechowujaca liczbe zwyciestw na elytrze.
-     * Potrzebne do scoreboardu na lobby
-     */
-    private void bumpWinsCount()
-    {
-        final Map<ScoreFinishInfo, Integer> top = this.getTop(); // pobiera topke graczy
+        final List<ScoreFinishInfo> top = this.getTop(); // pobiera topke graczy
         if (top.isEmpty())
         {
             // nikt nie ukonczyl areny, malo prawdopodobne, ale moze sie zdazyc
@@ -134,7 +131,31 @@ public class ScoreMetaHandler implements IFinishHandler
             return;
         }
 
-        final ScoreFinishInfo firstPlayer = top.keySet().iterator().next(); // pobiera pierwszego gracza z topki
+        final ElytraRaceArena arenaData = arena.getArenaData();
+
+        final Iterator<ScoreFinishInfo> iterator = top.iterator();
+        for (int place = 0; iterator.hasNext(); place++)
+        {
+            final ScoreFinishInfo finishInfo = iterator.next();
+            if (place == 0)
+            {
+                // pierwszy gracz z topki jest zwyciezca
+                this.bumpWinsCount(finishInfo);
+            }
+
+            final int reward = ElytraWinReward.calculateReward(arenaData.getPlayers().size(), place);
+            final Identity identity = Identity.create(finishInfo.getUuid(), null);
+
+            arena.getRewards().addReward(identity, new CurrencyReward("place", "minigame", reward));
+        }
+    }
+
+    /**
+     * Podnosi o jeden statystyke przechowujaca liczbe zwyciestw na elytrze.
+     * Potrzebne do scoreboardu na lobby
+     */
+    private void bumpWinsCount(final ScoreFinishInfo firstPlayer)
+    {
         final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(firstPlayer.getUuid());
 
         final HigherNumberBetterStatistic totalElytraWins = new HigherNumberBetterStatistic("elytra/totalWins");

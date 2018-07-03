@@ -10,8 +10,9 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.arena.player.ArenaChatManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.server.gamehost.arena.player.ArenaChatManager;
+import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
 import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
@@ -20,11 +21,14 @@ import pl.arieals.api.minigame.shared.api.statistics.type.LongerTimeBetterStatis
 import pl.arieals.api.minigame.shared.api.statistics.type.ShorterTimeBetterStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.unit.DurationUnit;
 import pl.arieals.api.minigame.shared.api.statistics.unit.NumberUnit;
+import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
+import pl.arieals.minigame.elytrarace.arena.finish.ElytraWinReward;
 import pl.arieals.minigame.elytrarace.arena.finish.IFinishHandler;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.zgame.api.global.network.players.Identity;
 
 public class RaceMetaHandler implements IFinishHandler
 {
@@ -94,6 +98,11 @@ public class RaceMetaHandler implements IFinishHandler
         // podbijamy statystyke calkowitego przelecianego czasu
         final LongerTimeBetterStatistic totalRaceTimeStat = new LongerTimeBetterStatistic("elytra/totalRaceTime");
         holder.increment(totalRaceTimeStat, playerTimeDuration);
+
+        // przyznajemy nagrode
+        final ElytraRaceArena arenaData = arena.getArenaData();
+        final int reward = ElytraWinReward.calculateReward(arenaData.getPlayers().size(), this.place - 1);
+        arena.getRewards().addReward(Identity.of(player), new CurrencyReward("place", "minigame", reward));
 
         if (isFinished)
         {

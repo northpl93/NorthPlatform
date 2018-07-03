@@ -3,19 +3,28 @@ package pl.arieals.minigame.elytrarace.arena;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.minigame.elytrarace.cfg.Score;
 import pl.arieals.minigame.elytrarace.cfg.ScoreGroup;
+import pl.arieals.minigame.elytrarace.shop.effects.IElytraEffect;
 
-public class ElytraScorePlayer // uzywane w SCORE_MODE
+public class ElytraScorePlayer extends ElytraRacePlayer // uzywane w SCORE_MODE
 {
     private int          points;
     private ScoreGroup   latestScoreGroup;
     private int          combo;
     private List<Score>  reachedScores        = new ArrayList<>();
     private List<String> reachedAchieveGroups = new ArrayList<>();
+
+    public ElytraScorePlayer(final Player player, final IElytraEffect effect, final Location startLocation)
+    {
+        super(player, effect, startLocation);
+    }
 
     public int getPoints()
     {

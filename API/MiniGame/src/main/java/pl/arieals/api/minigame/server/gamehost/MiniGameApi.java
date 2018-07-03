@@ -66,6 +66,11 @@ public final class MiniGameApi
         INSTANCE.playerDataManager.setPlayerData(player, data);
     }
 
+    public static <T> void setPlayerData(final Player player, final Class<T> clazz, final T data)
+    {
+        INSTANCE.playerDataManager.setPlayerData(player, clazz, data);
+    }
+
     @Nullable
     public static PlayerStatus getPlayerStatus(final Player player)
     {
