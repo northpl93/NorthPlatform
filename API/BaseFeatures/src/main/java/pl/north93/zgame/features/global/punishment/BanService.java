@@ -110,6 +110,7 @@ public class BanService
     public BaseComponent getBanMessage(final AbstractBan ban, final Locale locale)
     {
         final BaseComponent reason = this.getBanReason(ban, locale);
+        final String adminNick = this.getAdminNick(ban);
 
         final BaseComponent expiration;
         if (ban.getDuration() == null)
@@ -124,7 +125,7 @@ public class BanService
             expiration = this.messages.getMessage(locale, "join.banned.expire_at", formattedTime);
         }
 
-        return this.messages.getMessage(locale, "join.banned", reason, expiration);
+        return this.messages.getMessage(locale, "join.banned", reason, adminNick, expiration);
     }
 
     @Nullable
@@ -191,6 +192,14 @@ public class BanService
         }
 
         return null;
+    }
+
+    private String getAdminNick(final AbstractBan abstractBan)
+    {
+        return Optional.ofNullable(abstractBan.getAdminId()).flatMap(adminId ->
+        {
+            return this.networkManager.getPlayers().getNickFromUuid(adminId);
+        }).orElse("SERVER");
     }
 
     @Override

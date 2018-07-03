@@ -51,7 +51,7 @@ public class BanCommand extends NorthCommand
         }
         else if (args.length() == 2)
         {
-            final PredefinedBanCfg config = this.banService.getConfigByName(args.asString(1));
+            final PredefinedBanCfg config = this.getBanCfg(args, 1);
             if (config == null)
             {
                 sender.sendMessage("Niepoprawna nazwa bana {0}", args.asString(1));
@@ -74,6 +74,17 @@ public class BanCommand extends NorthCommand
         {
             sender.sendMessage("&c/ban nick powód");
         }
+    }
+
+    private PredefinedBanCfg getBanCfg(final Arguments args, final int argNum)
+    {
+        final Integer banNumber = args.asInt(argNum);
+        if (banNumber == null)
+        {
+            return this.banService.getConfigByName(args.asString(argNum));
+        }
+
+        return this.banService.getConfigById(banNumber);
     }
 
     private UUID getAdminId(final NorthCommandSender sender)
