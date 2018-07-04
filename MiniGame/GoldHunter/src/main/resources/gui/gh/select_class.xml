@@ -71,12 +71,14 @@
 				<metadata key="class" value="procarz" />
 				<onClick>select</onClick>
 			</button>
+			<!--
 			<button pos="2,2">
 				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/sprinter/$playerId</renderer>
 				<metadata key="class" value="sprinter" />
 				<onClick>select</onClick>
 			</button>
-			<button pos="3,2">
+			-->
+			<button pos="2,2">
 				<renderer>northplatform://gh/gui/selectClass/renderClassIcon/szaman/$playerId</renderer>
 				<metadata key="class" value="szaman" />
 				<onClick>select</onClick>
