@@ -41,6 +41,7 @@ import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.event.PlayerJoinNetEvent;
 import pl.north93.zgame.api.global.network.event.PlayerQuitNetEvent;
 import pl.north93.zgame.api.global.network.impl.OnlinePlayerImpl;
+import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
@@ -49,6 +50,7 @@ import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.players.NameSizeMistakeException;
 import pl.north93.zgame.api.global.network.players.UsernameDetails;
 import pl.north93.zgame.api.global.redis.event.IEventManager;
+import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
@@ -58,14 +60,16 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 public class PlayerNetworkListener implements Listener
 {
     private static final Pattern  NICK_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{3,16}$");
-    @Inject
-    private BungeeApiCore   bungeeApiCore;
     @Inject @Messages("Messages")
-    private MessagesBox     apiMessages;
+    private MessagesBox         apiMessages;
     @Inject
-    private INetworkManager networkManager;
+    private BungeeApiCore       bungeeApiCore;
     @Inject
-    private IEventManager   eventManager;
+    private IObservationManager observer;
+    @Inject
+    private INetworkManager     networkManager;
+    @Inject
+    private IEventManager       eventManager;
 
     @EventHandler
     public void onLogin(final PreLoginEvent event)
@@ -111,6 +115,8 @@ public class PlayerNetworkListener implements Listener
     @EventHandler(priority = EventPriority.NORMAL)
     public void onJoin(final LoginEvent event)
     {
+        final Logger logger = this.bungeeApiCore.getLogger();
+
         final PendingConnection conn = event.getConnection();
         this.runIntent(event, () ->
         {
@@ -132,7 +138,7 @@ public class PlayerNetworkListener implements Listener
             {
                 event.setCancelled(true);
                 event.setCancelReason(this.apiMessages.getMessage("pl-PL", "kick.generic_error", "failed to load player data: " + e));
-                e.printStackTrace();
+                logger.log(Level.SEVERE, "Failed to load player data", e);
                 return;
             }
 
@@ -143,6 +149,7 @@ public class PlayerNetworkListener implements Listener
                 player.delete(); // delete player data if event is cancelled.
                 event.setCancelled(true);
                 event.setCancelReason(joinEvent.getCancelReason());
+                logger.log(Level.INFO, "Cancelled user {0} login by server", conn.getName());
             }
         });
     }
@@ -151,10 +158,12 @@ public class PlayerNetworkListener implements Listener
     public void postJoin(final PostLoginEvent event)
     {
         final IPlayersManager.Unsafe unsafe = this.networkManager.getPlayers().unsafe();
-        final Value<IOnlinePlayer> onlineValue = unsafe.getOnline(event.getPlayer().getName());
+        final Value<IOnlinePlayer> onlineValue = unsafe.getOnlineValue(event.getPlayer().getName());
 
         // wywolujemy sieciowy event dolaczenia gracza
         this.eventManager.callEvent(new PlayerJoinNetEvent((OnlinePlayerImpl) onlineValue.get()));
+
+        this.bungeeApiCore.getLogger().log(Level.INFO, "Successfully logged-in user {0}", event.getPlayer().getName());
     }
 
     @EventHandler
@@ -163,36 +172,38 @@ public class PlayerNetworkListener implements Listener
         final Logger logger = this.bungeeApiCore.getLogger();
 
         final String name = event.getConnection().getName();
-        final Value<IOnlinePlayer> onlineValue = this.networkManager.getPlayers().unsafe().getOnline(name);
+        final Value<IOnlinePlayer> onlineValue = this.networkManager.getPlayers().unsafe().getOnlineValue(name);
 
         onlineValue.delete();
-        logger.log(Level.INFO, "User {0} cancelled login", name);
+        logger.log(Level.INFO, "User {0} cancelled login before post-login", name);
     }
 
     @EventHandler
     public void onLeave(final PlayerDisconnectEvent event)
     {
-        final Logger logger = this.bungeeApiCore.getLogger();
         final IPlayersManager players = this.networkManager.getPlayers();
-
+        final Logger logger = this.bungeeApiCore.getLogger();
         final ProxiedPlayer proxyPlayer = event.getPlayer();
-        final Value<IOnlinePlayer> player = players.unsafe().getOnline(proxyPlayer.getName());
+
+        final Value<IOnlinePlayer> onlineValue = players.unsafe().getOnlineValue(proxyPlayer.getName());
+        final Value<IOfflinePlayer> offlineValue = players.unsafe().getOfflineValue(proxyPlayer.getUniqueId());
 
         // wywołujemy event w którym spokojnie można obsłużyć wyjście gracza
-        this.bungeeApiCore.callEvent(new HandlePlayerProxyQuitEvent(proxyPlayer, player));
+        this.bungeeApiCore.callEvent(new HandlePlayerProxyQuitEvent(proxyPlayer, onlineValue));
 
-        try (final Lock lock = player.lock())
+        final Lock multiLock = this.observer.getMultiLock(onlineValue.getLock(), offlineValue.getLock());
+        try (final Lock lock = multiLock.lock())
         {
-            final IOnlinePlayer onlinePlayer = player.getWithoutCache();
+            final IOnlinePlayer onlinePlayer = onlineValue.getWithoutCache();
             if (onlinePlayer == null)
             {
-                logger.warning("onlinePlayer==null in onLeave. " + event);
+                logger.severe("onlinePlayer==null in onLeave. " + event);
                 return;
             }
 
             this.eventManager.callEvent(new PlayerQuitNetEvent((OnlinePlayerImpl) onlinePlayer));
             players.getInternalData().savePlayer(onlinePlayer);
-            player.delete();
+            onlineValue.delete();
         }
         catch (final Exception e)
         {
@@ -208,7 +219,7 @@ public class PlayerNetworkListener implements Listener
         final IPlayersManager playersManager = this.networkManager.getPlayers();
         try (final IPlayerTransaction transaction = playersManager.transaction(Identity.of(event.getPlayer())))
         {
-            if (! transaction.isOnline())
+            if (transaction.isOffline())
             {
                 logger.log(Level.WARNING, "Player {0} is offline in onServerChange", transaction.getPlayer().getUuid());
                 return;

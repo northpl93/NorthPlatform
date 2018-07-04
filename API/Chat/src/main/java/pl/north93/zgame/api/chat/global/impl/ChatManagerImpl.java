@@ -179,7 +179,7 @@ public class ChatManagerImpl implements ChatManager
         final IPlayersManager manager = this.getPlayersManager();
 
         final Identity validIdentity = manager.completeIdentity(identity);
-        final Value<IOnlinePlayer> playerValue = manager.unsafe().getOnline(validIdentity.getNick());
+        final Value<IOnlinePlayer> playerValue = manager.unsafe().getOnlineValue(validIdentity.getNick());
 
         return new ChatPlayerImpl(this, validIdentity, playerValue);
     }

@@ -116,13 +116,15 @@ public interface IPlayersManager
             return this.get(identity).orElse(null);
         }
 
-        Value<IOnlinePlayer> getOnline(String nick);
+        Value<IOnlinePlayer> getOnlineValue(String nick);
 
-        Optional<Value<IOnlinePlayer>> getOnline(UUID uuid);
+        Optional<Value<IOnlinePlayer>> getOnlineValue(UUID uuid);
+
+        Value<IOfflinePlayer> getOfflineValue(UUID uuid);
 
         Optional<IOfflinePlayer> getOffline(String nick); // do not modify returned instance. It will be not saved!
 
-        Optional<IOfflinePlayer> getOffline(UUID nick); // do not modify returned instance. It will be not saved!
+        Optional<IOfflinePlayer> getOffline(UUID uuid); // do not modify returned instance. It will be not saved!
     }
 
     IPlayersDataManager getInternalData();

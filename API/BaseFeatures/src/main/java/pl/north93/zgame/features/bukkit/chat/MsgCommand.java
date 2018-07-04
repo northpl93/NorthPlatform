@@ -45,7 +45,7 @@ public class MsgCommand extends NorthCommand
         final Player player = (Player) sender.unwrapped();
 
         // todo rewrite
-        final Value<IOnlinePlayer> networkPlayer = this.networkManager.getPlayers().unsafe().getOnline(args.asString(0));
+        final Value<IOnlinePlayer> networkPlayer = this.networkManager.getPlayers().unsafe().getOnlineValue(args.asString(0));
         if (! networkPlayer.isPreset())
         {
             sender.sendMessage(this.messages, "command.no_player");

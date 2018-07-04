@@ -32,7 +32,7 @@ import pl.north93.zgame.auth.api.IAuthPlayer;
     @Override
     public boolean isLoggedIn(final String name)
     {
-        final IOnlinePlayer player = this.networkManager.getPlayers().unsafe().getOnline(name).get();
+        final IOnlinePlayer player = this.networkManager.getPlayers().unsafe().getOnlineValue(name).get();
         if (player == null)
         {
             return false;

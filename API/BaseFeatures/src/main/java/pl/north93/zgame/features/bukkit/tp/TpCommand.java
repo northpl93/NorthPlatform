@@ -65,8 +65,8 @@ public class TpCommand extends NorthCommand
 
         this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
         {
-            final IOnlinePlayer playerSender = this.networkManager.getPlayers().unsafe().getOnline(origin).get();
-            final IOnlinePlayer player = this.networkManager.getPlayers().unsafe().getOnline(destination).get();
+            final IOnlinePlayer playerSender = this.networkManager.getPlayers().unsafe().getOnlineValue(origin).get();
+            final IOnlinePlayer player = this.networkManager.getPlayers().unsafe().getOnlineValue(destination).get();
             if (player == null || playerSender == null)
             {
                 sender.sendMessage("&cGracz jest offline");

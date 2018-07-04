@@ -90,7 +90,7 @@ public class MessageHandler
             return false;
         }
 
-        final IOnlinePlayer player = this.networkManager.getPlayers().unsafe().getOnline(participant.getNick()).get();
+        final IOnlinePlayer player = this.networkManager.getPlayers().unsafe().getOnlineValue(participant.getNick()).get();
         if (player == null)
         {
             return true;

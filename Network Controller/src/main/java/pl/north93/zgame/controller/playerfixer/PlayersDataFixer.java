@@ -55,7 +55,7 @@ public class PlayersDataFixer extends Component implements Runnable
 
     private void checkPlayer(final String nick)
     {
-        final Value<IOnlinePlayer> player = this.networkManager.getPlayers().unsafe().getOnline(nick);
+        final Value<IOnlinePlayer> player = this.networkManager.getPlayers().unsafe().getOnlineValue(nick);
         final IOnlinePlayer cache = player.get();
         if (cache == null)
         {

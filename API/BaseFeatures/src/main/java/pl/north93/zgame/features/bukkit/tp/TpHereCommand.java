@@ -48,8 +48,8 @@ public class TpHereCommand extends NorthCommand
 
         this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
         {
-            final IOnlinePlayer playerSender = this.networkManager.getPlayers().unsafe().getOnline(sender.getName()).get();
-            final IOnlinePlayer player = this.networkManager.getPlayers().unsafe().getOnline(origin).get();
+            final IOnlinePlayer playerSender = this.networkManager.getPlayers().unsafe().getOnlineValue(sender.getName()).get();
+            final IOnlinePlayer player = this.networkManager.getPlayers().unsafe().getOnlineValue(origin).get();
             if (player == null || playerSender == null)
             {
                 sender.sendMessage("&cGracz jest offline");

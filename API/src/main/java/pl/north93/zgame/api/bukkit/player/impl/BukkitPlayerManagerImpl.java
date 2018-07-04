@@ -59,7 +59,7 @@ public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
     @Override
     public INorthPlayer getPlayer(final Player player)
     {
-        final Value<IOnlinePlayer> onlinePlayerData = this.networkManager.getPlayers().unsafe().getOnline(player.getName());
+        final Value<IOnlinePlayer> onlinePlayerData = this.networkManager.getPlayers().unsafe().getOnlineValue(player.getName());
         return this.wrapNorthPlayer(player, onlinePlayerData);
     }
 

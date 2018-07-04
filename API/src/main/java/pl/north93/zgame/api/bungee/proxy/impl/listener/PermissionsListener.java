@@ -20,7 +20,7 @@ public class PermissionsListener implements Listener
     public void onPermissionCheck(final PermissionCheckEvent event)
     {
         // todo rewrite
-        final IOnlinePlayer online = this.networkManager.getPlayers().unsafe().getOnline(event.getSender().getName()).get();
+        final IOnlinePlayer online = this.networkManager.getPlayers().unsafe().getOnlineValue(event.getSender().getName()).get();
         if (online == null)
         {
             return;

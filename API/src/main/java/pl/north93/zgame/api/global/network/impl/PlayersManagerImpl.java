@@ -194,7 +194,7 @@ class PlayersManagerImpl implements IPlayersManager
                 return Optional.empty();
             }
 
-            final Optional<IPlayer> online = Optional.ofNullable(completed.getNick()).map(this::getOnline).map(Value::get);
+            final Optional<IPlayer> online = Optional.ofNullable(completed.getNick()).map(this::getOnlineValue).map(Value::get);
             if (online.isPresent())
             {
                 return online;
@@ -204,15 +204,22 @@ class PlayersManagerImpl implements IPlayersManager
         }
 
         @Override
-        public Value<IOnlinePlayer> getOnline(final String nick)
+        public Value<IOnlinePlayer> getOnlineValue(final String nick)
         {
             return PlayersManagerImpl.this.nickToOnlinePlayerValue(nick);
         }
 
         @Override
-        public Optional<Value<IOnlinePlayer>> getOnline(final UUID uuid)
+        public Optional<Value<IOnlinePlayer>> getOnlineValue(final UUID uuid)
         {
             return PlayersManagerImpl.this.uuidToOnlinePlayerValue(uuid);
+        }
+
+        @Override
+        public Value<IOfflinePlayer> getOfflineValue(final UUID uuid)
+        {
+            // zwróci null tylko w przypadku gdy uuid będzie nullem
+            return PlayersManagerImpl.this.playersDataManager.getOfflinePlayerValue(uuid).orElse(null);
         }
 
         @Override

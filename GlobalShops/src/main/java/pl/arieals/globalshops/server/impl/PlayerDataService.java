@@ -25,7 +25,7 @@ class PlayerDataService
 
     public PlayerData getData(final Player player)
     {
-        final Value<IOnlinePlayer> value = this.networkManager.getPlayers().unsafe().getOnline(player.getName());
+        final Value<IOnlinePlayer> value = this.networkManager.getPlayers().unsafe().getOnlineValue(player.getName());
 
         final IOnlinePlayer onlinePlayer = value.get();
         if (onlinePlayer == null)

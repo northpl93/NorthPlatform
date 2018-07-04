@@ -86,7 +86,7 @@ public class AdminSpectateCommand extends NorthCommand
 
     private void teleportAdminToPlayer(final Player admin, final IArena arena, final String target)
     {
-        final Value<IOnlinePlayer> value = this.networkManager.getPlayers().unsafe().getOnline(admin.getName());
+        final Value<IOnlinePlayer> value = this.networkManager.getPlayers().unsafe().getOnlineValue(admin.getName());
         if (! value.isPreset())
         {
             return;

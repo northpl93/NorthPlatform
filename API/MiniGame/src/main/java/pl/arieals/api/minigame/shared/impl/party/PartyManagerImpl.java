@@ -65,7 +65,7 @@ public class PartyManagerImpl implements IPartyManager
         final IPlayersManager players = this.networkManager.getPlayers();
 
         final UUID playerUuid = players.completeIdentity(identity).getUuid();
-        return players.unsafe().getOnline(playerUuid)
+        return players.unsafe().getOnlineValue(playerUuid)
                       .flatMap(Value::getOptional)
                       .map(this::getPartyFromPlayer).orElse(null);
     }

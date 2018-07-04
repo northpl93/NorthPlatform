@@ -45,7 +45,7 @@ public class HelpOpResponseCommand extends NorthCommand
             return;
         }
 
-        Value<IOnlinePlayer> receiverValue = this.networkManager.getPlayers().unsafe().getOnline(args.asString(0));
+        Value<IOnlinePlayer> receiverValue = this.networkManager.getPlayers().unsafe().getOnlineValue(args.asString(0));
         if ( !receiverValue.isPreset() )
         {
         	sender.sendMessage(this.messages, "command.hr.no_player");

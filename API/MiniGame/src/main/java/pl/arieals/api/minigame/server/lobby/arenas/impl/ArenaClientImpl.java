@@ -148,7 +148,7 @@ public class ArenaClientImpl implements IArenaClient
         for (final PlayerJoinInfo player : players)
         {
             final IPlayersManager.Unsafe unsafe = this.networkManager.getPlayers().unsafe();
-            unsafe.getOnline(player.getUuid()).ifPresent(playerValue -> playerValue.get().connectTo(server));
+            unsafe.getOnlineValue(player.getUuid()).ifPresent(playerValue -> playerValue.get().connectTo(server));
         }
         return true;
     }

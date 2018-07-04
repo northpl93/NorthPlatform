@@ -58,7 +58,7 @@ public abstract class HubScoreboardLayout implements IScoreboardLayout
 
     protected final String getPlayerBooster(final INorthPlayer player)
     {
-        final Value<IOnlinePlayer> value = this.networkManager.getPlayers().unsafe().getOnline(player.getName());
+        final Value<IOnlinePlayer> value = this.networkManager.getPlayers().unsafe().getOnlineValue(player.getName());
         if (! value.isPreset())
         {
             return "?";
