@@ -87,6 +87,11 @@ public class PlayerListener implements AutoListener
         boolean isTeammate = shooter.getTeam() == target.getTeam();
         if ( effect.getType().equals(PotionEffectType.HEAL) || effect.getType().equals(PotionEffectType.REGENERATION) )
         {
+            if ( shooter != target && !target.getCurrentClass().canBeHealedByPotion() )
+            {
+                return false;
+            }
+            
             return isTeammate;
         }
         else if ( effect.getType().equals(PotionEffectType.HARM) || effect.getType().equals(PotionEffectType.POISON) )

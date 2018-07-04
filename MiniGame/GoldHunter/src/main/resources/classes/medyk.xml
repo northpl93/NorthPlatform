@@ -7,6 +7,8 @@
 	
 	<!-- <shopItem>medic.access</shopItem> -->
 	
+	<canBeHealedByPotion>false</canBeHealedByPotion>
+	
 	<specialAbility type="HEAL">
 		<loading ifbuyed="medic.loadingtime:5" seconds="35" />
 		<loading ifbuyed="medic.loadingtime:4" seconds="38" />

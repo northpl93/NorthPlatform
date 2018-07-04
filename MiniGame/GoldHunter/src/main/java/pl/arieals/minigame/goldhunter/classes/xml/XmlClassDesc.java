@@ -32,6 +32,8 @@ public class XmlClassDesc
     
     private XmlClassEquipmentInfo equipment;
     
+    private boolean canBeHealedByPotion = true;
+    
     @XmlElement(name = "invRefilRule")
     private List<XmlInventoryRefilRule> invRefilRules = new ArrayList<>();
     
@@ -69,6 +71,7 @@ public class XmlClassDesc
                 specialAbility,
                 equipment,
                 ImmutableList.copyOf(invRefilRules),
-                effects);
+                effects,
+                canBeHealedByPotion);
     }
 }

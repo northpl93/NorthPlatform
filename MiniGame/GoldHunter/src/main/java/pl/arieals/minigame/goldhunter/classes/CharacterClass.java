@@ -30,9 +30,12 @@ public class CharacterClass
     
     private final List<XmlPotionEffect> effects;
     
+    private final boolean canBeHealedByPotion;
+    
+    // XXX: rewrite this
     public CharacterClass(PlayerRank rank, String shopItem, XmlItemStack icon, TranslatableString displayName, TranslatableString lore, 
             XmlSpecialAbilityInfo specialAbility, XmlClassEquipmentInfo equipmentInfo, List<XmlInventoryRefilRule> inventoryRefilRules, 
-            List<XmlPotionEffect> effects)
+            List<XmlPotionEffect> effects, boolean canBeHealedByPotion)
     {
         this.rank = rank;
         this.shopItem = shopItem;
@@ -43,6 +46,7 @@ public class CharacterClass
         this.equipmentInfo = equipmentInfo;
         this.inventoryRefilRules = inventoryRefilRules;
         this.effects = effects;
+        this.canBeHealedByPotion = canBeHealedByPotion;
     }
     
     public PlayerRank getRank()
@@ -68,6 +72,11 @@ public class CharacterClass
     public TranslatableString getLore()
     {
         return lore;
+    }
+    
+    public boolean canBeHealedByPotion()
+    {
+        return canBeHealedByPotion;
     }
     
     public XmlSpecialAbilityInfo getSpecialAbilityInfo()
