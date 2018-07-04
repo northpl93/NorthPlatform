@@ -7,6 +7,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.base.Preconditions;
 
+import pl.north93.zgame.api.global.API;
+
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
@@ -60,6 +62,11 @@ public class XmlEnchant
 
     public void apply(final ItemStack itemStack)
     {
+        if ( this.getEnchantment() == null )
+        {
+            API.getLogger().warning("Couldn't find enchantment by name: '" + enchantment + "'");
+        }
+        
         itemStack.addUnsafeEnchantment(this.getEnchantment(), this.level);
     }
 
