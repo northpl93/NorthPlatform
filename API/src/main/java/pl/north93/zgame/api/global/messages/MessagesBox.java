@@ -36,7 +36,7 @@ public class MessagesBox
         }
         catch (final MissingResourceException e)
         {
-            e.printStackTrace();
+            //e.printStackTrace();
             if (! locale.toLanguageTag().equals("pl-PL")) // zapobiegamy Stackoverflow gdy faktycznie takiego bundla nie ma
             {
                 return this.getBundle(Locale.forLanguageTag("pl-PL"));
@@ -48,7 +48,7 @@ public class MessagesBox
     public String getMessage(final Locale locale, final String key)
     {
         ResourceBundle bundle = this.getBundle(locale);
-        if ( bundle.containsKey(key) )
+        if ( bundle != null && bundle.containsKey(key) )
         {
             return translateAlternateColorCodes(bundle.getString(key));
         }
