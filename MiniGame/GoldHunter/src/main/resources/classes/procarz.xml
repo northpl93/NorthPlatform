@@ -6,9 +6,9 @@
 	<icon id="minecraft:snowball" />
 	
 	<specialAbility type="DAZZLE">
-		<loading ifbuyed="slinger.loadingtime:5" seconds="18" />
-		<loading ifbuyed="slinger.loadingtime:4" seconds="21" />
-		<loading ifbuyed="slinger.loadingtime:3" seconds="24" />
+		<loading ifbuyed="slinger.loadingtime:3" seconds="18" />
+		<loading ifbuyed="slinger.loadingtime:2" seconds="21" />
+		<loading ifbuyed="slinger.loadingtime:1" seconds="24" />
 		<loading seconds="27" />
 	</specialAbility>
 	

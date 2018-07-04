@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<gui height="5" title="@main.window_title">
+<gui height="5" title="@window_title">
 	<container pos="0,0" size="1,5">
 		<background id="STAINED_GLASS_PANE" data="14" />
 	</container>
@@ -8,33 +8,35 @@
 	</container>
     <container pos="1,0" size="7,5">
         <content>
-            <button pos="3,0">
-                <icon id="WOOD" name="@main.lucznik.truciciel.budulecfolder.name$color" />
-            </button>
 
-            <button pos="1,2">
-            	<icon id="WOOD" name="@lucznik.truciciel.budulec1.name$color" lore="@lucznik.truciciel.budulec1.lore$color,status,price" />
-            	<metadata key="item" value="archer.poison.budulec" />
-            	<metadata key="level" value="1" />
+            <button pos="3,0">
+            	<icon id="minecraft:tipped_arrow" name="@title">
+            		<potionMeta>
+            			<potionData type="POISON" />
+            		</potionMeta>
+            	</icon>
+            </button>
+            
+            <button pos="2,2">
+            	<icon id="minecraft:planks" count="1" name="@budulec1.name$color" lore="@budulec1.lore$color,status,price"/>
+            	<metadata key="item" value="archer_poison.budulec:1" />
             	<onClick>buy</onClick>
             </button>
             
             <button pos="3,2">
-            	<icon id="WOOD" name="@lucznik.truciciel.budulec1.name$color" lore="@lucznik.truciciel.budulec1.lore$color,status,price" />
-            	<metadata key="item" value="archer.poison.budulec" />
-            	<metadata key="level" value="2" />
+            	<icon id="minecraft:planks" count="2" name="@budulec2.name$color" lore="@budulec2.lore$color,status,price"/>
+            	<metadata key="item" value="archer_poison.budulec:2" />
             	<onClick>buy</onClick>
             </button>
             
-            <button pos="5,2">
-            	<icon id="WOOD" name="@lucznik.truciciel.budulec1.name$color" lore="@lucznik.truciciel.budulec1.lore$color,status,price" />
-            	<metadata key="item" value="archer.poison.budulec" />
-            	<metadata key="level" value="3" />
+            <button pos="4,2">
+            	<icon id="minecraft:planks" count="3" name="@budulec3.name$color" lore="@budulec3.lore$color,status,price"/>
+            	<metadata key="item" value="archer_poison.budulec:3" />
             	<onClick>buy</onClick>
             </button>
             
             <button pos="6,4">
-            	<icon id="minecraft:iron_door" name="@main.return" />
+            	<icon id="minecraft:iron_door" name="@return" />
             	<metadata key="guiName" value="lucznik_truciciel" />
             	<onClick>open</onClick>
             </button>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<gui height="5" title="@main.window_title">
+<gui height="5" title="@window_title">
 	<container pos="0,0" size="1,5">
 		<background id="STAINED_GLASS_PANE" data="14" />
 	</container>
@@ -10,59 +10,48 @@
         <content>
 
             <button pos="3,0">
-            	<icon id="minecraft:tipped_arrow" name="@main.lucznik.bombowiec.name$color">
+            	<icon id="minecraft:tipped_arrow" name="@title">
             		<potionMeta>
             			<potionData type="INSTANT_HEAL" />
             		</potionMeta>
             	</icon>
             </button>
             
-            <button pos="0,2">
-            	<icon id="minecraft:tipped_arrow" name="@buy.lucznik.bombowiec.name$color" lore="@buy.lucznik.bombowiec.lore$color,status,price">
-            		<potionMeta>
-            			<potionData type="INSTANT_HEAL" />
-            		</potionMeta>
-            	</icon>
-            	
-            	<metadata key="item" value="class.archer.bomb" />
-            	<onClick>buy</onClick>
-            </button>
-            
-            <button pos="2,2">
-            	<icon id="WATCH" name="@lucznik.bombowiec.timefolder.name$color" lore="@lucznik.bombowiec.timefolder.lore$color,count,max"/>
+            <button pos="1,2">
+            	<icon id="minecraft:clock" name="@loadingtime.name$color" lore="@loadingtime.lore$color,count,max"/>
             	<metadata key="guiName" value="lucznik_bombowiec_czas" />
             	<metadata key="folder" value="true" />
-            	<metadata key="item1" value="archer.bomb.time:1" />
-            	<metadata key="item2" value="archer.bomb.time:2" />
-            	<metadata key="item3" value="archer.bomb.time:3" />
+            	<metadata key="item1" value="archer_bomb.loadingtime:1" />
+            	<metadata key="item2" value="archer_bomb.loadingtime:2" />
+            	<metadata key="item3" value="archer_bomb.loadingtime:3" />
             	<onClick>open</onClick>
             </button>
             
+            <button pos="2,2">
+            	<icon id="minecraft:bow" name="@punchbow.name$color" lore="@punchbow.lore$color,status,price" />
+            	<metadata key="item" value="archer_bomb.punchbow" />
+            	<onClick>buy</onClick>
+            </button>
+            
             <button pos="3,2">
-            	<icon id="minecraft:enchanted_book" name="@lucznik.bombowiec.ench1.name$color" lore="@lucznik.truciciel.ench1.lore$color,status,price"/>
-            	<metadata key="item" value="archer.bomb.enchant" />
+            	<icon id="minecraft:iron_boots" name="@boots.name$color" lore="@boots.lore$color,status,price"/>
+            	<metadata key="item" value="archer_bomb.boots" />
             	<onClick>buy</onClick>
             </button>
             
             <button pos="5,2">
-            	<icon id="CHAINMAIL_CHESTPLATE" name="@lucznik.bombowiec.helmet1.name$color" lore="@lucznik.truciciel.helmet1.lore$color,status,price"/>
-            	<metadata key="item" value="archer.bomb.chainchest" />
-            	<onClick>buy</onClick>
-            </button>
-            
-            <button pos="6,2">
-            	<icon id="WOOD" name="@lucznik.bombowiec.budulecfolder.name$color" lore="@lucznik.bombowiec.budulecfolder.lore$color,count,max" />
+            	<icon id="minecraft:planks" name="@budulec.name$color" lore="@budulec.lore$color,count,max" />
             	<metadata key="guiName" value="lucznik_bombowiec_budulec" />
             	<metadata key="folder" value="true" />
-            	<metadata key="item1" value="archer.bomb.budulec:1" />
-            	<metadata key="item2" value="archer.bomb.budulec:2" />
-            	<metadata key="item3" value="archer.bomb.budulec:3" />
+            	<metadata key="item1" value="archer_bomb.budulec:1" />
+            	<metadata key="item2" value="archer_bomb.budulec:2" />
+            	<metadata key="item3" value="archer_bomb.budulec:3" />
             	<onClick>open</onClick>
             </button>
             
             <button pos="6,4">
-            	<icon id="minecraft:iron_door" name="@main.return" />
-            	<metadata key="guiName" value="lucznik" />
+            	<icon id="minecraft:iron_door" name="@return" />
+            	<metadata key="guiName" value="main" />
             	<onClick>open</onClick>
             </button>
         </content>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="5" title="@window_title">
+	<container pos="0,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="4" />
+	</container>
+	<container pos="8,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="4" />
+	</container>
+    <container pos="1,0" size="7,5">
+        <content>
+
+            <button pos="3,0">
+            	<icon id="minecraft:dropper" name="@title" />
+            </button>
+            
+            <button pos="2,2">
+            	<icon id="minecraft:clock" count="1" name="@loadingtime1.name$color" lore="@loadingtime1.lore$color,status,price"/>
+            	<metadata key="item" value="supplier.loadingtime:1" />
+            	<onClick>buy</onClick>
+            </button>
+            
+            <button pos="3,2">
+            	<icon id="minecraft:clock" count="2" name="@loadingtime2.name$color" lore="@loadingtime2.lore$color,status,price"/>
+            	<metadata key="item" value="supplier.loadingtime:2" />
+            	<onClick>buy</onClick>
+            </button>
+            
+            <button pos="4,2">
+            	<icon id="minecraft:clock" count="3" name="@loadingtime3.name$color" lore="@loadingtime3.lore$color,status,price"/>
+            	<metadata key="item" value="supplier.loadingtime:3" />
+            	<onClick>buy</onClick>
+            </button>
+            
+            <button pos="6,4">
+            	<icon id="minecraft:iron_door" name="@return" />
+            	<metadata key="guiName" value="dostawca" />
+            	<onClick>open</onClick>
+            </button>
+            
+        </content>
+    </container>
+</gui>

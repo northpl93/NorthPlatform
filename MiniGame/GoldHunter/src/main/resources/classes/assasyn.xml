@@ -8,21 +8,21 @@
 	<rank>VIP</rank>
 	
 	<specialAbility type="SHADOW">
-		<loading ifbuyed="assassin.loadingtime:3" seconds="21" />
-		<loading ifbuyed="assassin.loadingtime:2" seconds="24" />
-		<loading ifbuyed="assassin.loadingtime:1" seconds="27" />
+		<loading ifbuyed="assasin.loadingtime:3" seconds="21" />
+		<loading ifbuyed="assasin.loadingtime:2" seconds="24" />
+		<loading ifbuyed="assasin.loadingtime:1" seconds="27" />
 		<loading seconds="30" />
 	</specialAbility>
 	
 	<equipment>
 		<chestplate>
 			<!-- <item ifbuyed="vip.assassin.fireresistance" id="minecraft:chainmail_chestplate" /> -->
-			<item ifbuyed="assassin.chestplate" id="minecraft:iron_chestplate" />
+			<item ifbuyed="assasin.chestplate" id="minecraft:iron_chestplate" />
 			<item id="minecraft:chainmail_chestplate" /> 
 		</chestplate>
 				
 		<boots>
-			<item ifbuyed="assasyn.boots" id="minecraft:iron_boots" />
+			<item ifbuyed="assasin.boots" id="minecraft:iron_boots" />
 			<item id="minecraft:chainmail_boots" /> 
 		</boots>
 		
@@ -43,9 +43,9 @@
 		</inv>		
 	<!-- BUDULEC -->		
 		<inv slot="8" >
-			<item ifbuyed="assassin.budulec:3" id="minecraft:planks" count="30" />
-			<item ifbuyed="assassin.budulec:2" id="minecraft:planks" count="25" />
-			<item ifbuyed="assassin.budulec:1" id="minecraft:planks" count="20" />
+			<item ifbuyed="assasin.budulec:3" id="minecraft:planks" count="30" />
+			<item ifbuyed="assasin.budulec:2" id="minecraft:planks" count="25" />
+			<item ifbuyed="assasin.budulec:1" id="minecraft:planks" count="20" />
 			<item id="minecraft:planks" count="15" />
 		</inv>
 		

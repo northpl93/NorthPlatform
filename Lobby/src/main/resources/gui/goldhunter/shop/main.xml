@@ -1,20 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<gui height="5" title="@window_title">
-	<container pos="0,0" size="1,5">
-		<background id="STAINED_GLASS_PANE" data="14" />
+<gui height="6" title="@window_title">
+	<container pos="0,0" size="1,6">
+		<background id="STAINED_GLASS_PANE" data="7" />
+		<content>
+			<button pos="0,2">
+				<icon id="STAINED_GLASS_PANE" data="14" />
+			</button>
+			<button pos="0,3">
+				<icon id="STAINED_GLASS_PANE" data="11" />
+			</button>
+			<button pos="0,4">
+				<icon id="STAINED_GLASS_PANE" data="4" />
+			</button>
+		</content>
 	</container>
-	<container pos="8,0" size="1,5">
-		<background id="STAINED_GLASS_PANE" data="14" />
+	<container pos="8,0" size="1,6">
+		<background id="STAINED_GLASS_PANE" data="7" />
+		<content>
+			<button pos="0,2">
+				<icon id="STAINED_GLASS_PANE" data="14" />
+			</button>
+			<button pos="0,3">
+				<icon id="STAINED_GLASS_PANE" data="11" />
+			</button>
+			<button pos="0,4">
+				<icon id="STAINED_GLASS_PANE" data="4" />
+			</button>
+		</content>
 	</container>
-    <container pos="1,0" size="7,5">
+	
+    <container pos="1,0" size="7,6">
         <content>
         
             <button pos="3,0">
                 <icon id="CHEST" name="@title" />
             </button>
 
-            <button pos="0,2">
-            	<icon id="minecraft:arrow" name="@lucznik_truciciel.name" lore="@lucznik_truciciel.lore">
+            <button pos="1,2">
+            	<icon id="minecraft:tipped_arrow" name="@lucznik_truciciel.name" lore="@lucznik_truciciel.lore">
             		<potionMeta>
             			<potionData type="POISON" />
             		</potionMeta>
@@ -23,8 +46,8 @@
             	<onClick>open</onClick>
             </button>
             
-            <button pos="0,3">
-            	<icon id="minecraft:arrow" name="@lucznik_bombowiec.name" lore="@lucznik_bombowiec.lore" >
+            <button pos="2,2">
+            	<icon id="minecraft:tipped_arrow" name="@lucznik_bombowiec.name" lore="@lucznik_bombowiec.lore" >
             		<potionMeta>
             			<potionData type="INSTANT_HEAL" />
             		</potionMeta>
@@ -33,75 +56,80 @@
             	<onClick>open</onClick>
             </button>
             
-            <button pos="1,2">
-            	<icon id="minecraft:stone_sword" name="@berserker.name" lore="@berserker.lore" />
+            <button pos="3,2">
+            	<icon id="minecraft:diamond_sword" name="@berserker.name" lore="@berserker.lore" />
             	<metadata key="guiName" value="berserker" />
             	<onClick>open</onClick>
             </button>
             
+            <button pos="4,2">
+            	<icon id="minecraft:stick" name="@assasyn.name" lore="@assasyn.lore" />
+            	<metadata key="guiName" value="assasyn" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="5,2">
+            	<icon id="minecraft:tipped_arrow" name="@ninja.name" lore="@ninja.lore">
+            		<potionMeta>
+            			<potionData type="WEAKNESS" />
+            		</potionMeta>
+            	</icon>
+            	<metadata key="guiName" value="ninja" />
+            	<onClick>open</onClick>
+            </button>
+            
             <button pos="1,3">
-            	<icon id="minecraft:diamond_chestplate" name="@rycerz.name" lore="@rycerz.lore" />
+            	<icon id="minecraft:iron_chestplate" name="@rycerz.name" lore="@rycerz.lore" />
             	<metadata key="guiName" value="rycerz" />
             	<onClick>open</onClick>
             </button>
             
-            <button pos="2,2">
-            	<icon id="minecraft:snowball" name="@procarz.name" lore="@procarz.lore" />
-            	<metadata key="guiName" value="procarz" />
-            	<onClick>open</onClick>
-            </button>
-            
             <button pos="2,3">
-            	<icon id="minecraft:leather_boots" name="@sprinter.name" lore="@sprinter.lore" />
-            	<metadata key="guiName" value="sprinter" />
-            	<onClick>open</onClick>
-            </button>
-            
-            <button pos="3,2">
-            	<icon id="minecraft:magma_cream" name="@szaman.name" lore="@szaman.lore" />
-            	<metadata key="guiName" value="szaman" />
-            	<onClick>open</onClick>
-            </button>
-            
-            <button pos="3,3">
-            	<icon id="minecraft:slime_ball" name="@medyk.name" lore="@medyk.lore" />
-            	<metadata key="guiName" value="medyk" />
-            	<onClick>open</onClick>
-            </button>
-            
-            <button pos="4,2">
             	<icon id="minecraft:armor_stand" name="@architekt.name" lore="@architekt.lore" />
             	<metadata key="guiName" value="architekt" />
             	<onClick>open</onClick>
             </button>
             
             <button pos="4,3">
-            	<icon id="minecraft:dropper" name="@dostawca.name" lore="@dostawca.lore" />
-            	<metadata key="guiName" value="dostawca" />
-            	<onClick>open</onClick>
-            </button>
-            
-            <button pos="5,2">
-            	<icon id="minecraft:leather_helmet" name="@assasyn.name" lore="@assasyn.lore" />
-            	<metadata key="guiName" value="assasyn" />
-            	<onClick>open</onClick>
-            </button>
-            
-            <button pos="5,3">
-            	<icon id="minecraft:iron_chestplate" name="@obronca.name" lore="@obronca.lore" />
+            	<icon id="minecraft:cobblestone" name="@obronca.name" lore="@obronca.lore" />
             	<metadata key="guiName" value="obronca" />
             	<onClick>open</onClick>
             </button>
             
-            <button pos="6,2">
-            	<icon id="minecraft:name_tag" name="@ninja.name" lore="@ninja.lore" />
-            	<metadata key="guiName" value="ninja" />
+            <button pos="5,3">
+            	<icon id="minecraft:golden_helmet" name="@paladyn.name" lore="@paladyn.lore" />
+            	<metadata key="guiName" value="paladyn" />
             	<onClick>open</onClick>
             </button>
             
-            <button pos="6,3">
-            	<icon id="minecraft:golden_apple" name="@paladyn.name" lore="@paladyn.lore" />
-            	<metadata key="guiName" value="paladyn" />
+            
+            <button pos="1,4">
+            	<icon id="minecraft:snowball" name="@procarz.name" lore="@procarz.lore" />
+            	<metadata key="guiName" value="procarz" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="2,4">
+            	<icon id="minecraft:leather_boots" name="@sprinter.name" lore="@sprinter.lore" />
+            	<metadata key="guiName" value="sprinter" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="3,4">
+            	<icon id="minecraft:magma_cream" name="@szaman.name" lore="@szaman.lore" />
+            	<metadata key="guiName" value="szaman" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="4,4">
+            	<icon id="minecraft:dye" data="1" name="@medyk.name" lore="@medyk.lore" />
+            	<metadata key="guiName" value="medyk" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="5,4">
+            	<icon id="minecraft:dropper" name="@dostawca.name" lore="@dostawca.lore" />
+            	<metadata key="guiName" value="dostawca" />
             	<onClick>open</onClick>
             </button>
 

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="5" title="@window_title">
+	<container pos="0,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+	<container pos="8,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+    <container pos="1,0" size="7,5">
+        <content>
+
+            <button pos="3,0">
+            	<icon id="minecraft:tipped_arrow" name="@title">
+            		<potionMeta>
+            			<potionData type="WEAKNESS" />
+            		</potionMeta>
+            	</icon>
+            </button>
+            
+            <button pos="1,2">
+            	<icon id="minecraft:clock" count="1" name="@loadingtime1.name$color" lore="@loadingtime1.lore$color,status,price"/>
+            	<metadata key="item" value="ninja.loadingtime:1" />
+            	<onClick>buy</onClick>
+            </button>
+            
+            <button pos="3,2">
+            	<icon id="minecraft:clock" count="2" name="@loadingtime2.name$color" lore="@loadingtime2.lore$color,status,price"/>
+            	<metadata key="item" value="ninja.loadingtime:2" />
+            	<onClick>buy</onClick>
+            </button>
+            
+            <button pos="5,2">
+            	<icon id="minecraft:clock" count="3" name="@loadingtime3.name$color" lore="@loadingtime3.lore$color,status,price"/>
+            	<metadata key="item" value="ninja.loadingtime:3" />
+            	<onClick>buy</onClick>
+            </button>
+            
+            <button pos="6,4">
+            	<icon id="minecraft:iron_door" name="@return" />
+            	<metadata key="guiName" value="ninja" />
+            	<onClick>open</onClick>
+            </button>
+        </content>
+    </container>
+</gui>

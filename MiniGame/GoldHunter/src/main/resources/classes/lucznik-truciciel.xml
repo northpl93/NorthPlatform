@@ -38,7 +38,7 @@
 		<inv slot="1" >
 			<item ifbuyed="archer_poison.punchbow" id="minecraft:bow">
 				<enchants>
-					<enchant enchantment="ARROW_PUNCH" level="1" />
+					<enchant enchantment="ARROW_KNOCKBACK" level="1" />
 				</enchants>
 			</item>
 			<item id="minecraft:bow" />

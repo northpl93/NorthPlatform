@@ -4,14 +4,13 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.base.Preconditions;
-
-import net.md_5.bungee.api.chat.BaseComponent;
-
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import org.apache.commons.lang3.tuple.Pair;
+import com.google.common.base.Preconditions;
+
+import net.md_5.bungee.api.chat.BaseComponent;
 
 import pl.arieals.globalshops.server.IGlobalShops;
 import pl.arieals.globalshops.server.IPlayerContainer;
@@ -26,7 +25,6 @@ import pl.north93.zgame.api.bukkit.gui.element.ButtonElement;
 import pl.north93.zgame.api.bukkit.gui.element.GuiElement;
 import pl.north93.zgame.api.bukkit.gui.event.GuiClickEvent;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 import pl.north93.zgame.api.global.utils.Vars;
@@ -47,7 +45,7 @@ public class GoldHunterShopGui extends Gui
 	
 	private GoldHunterShopGui(IPlayerContainer playerContainer, String guiName)
 	{
-		super(new MessagesBox(GoldHunterShopGui.class.getClassLoader(), "goldhunter/shop/" + guiName), "goldhunter/shop/" + guiName);
+		super(new MessagesBox(GoldHunterShopGui.class.getClassLoader(), "gui/goldhunter/shop/" + guiName), "goldhunter/shop/" + guiName);
 		this.playerContainer = playerContainer;
 	}
 
@@ -155,9 +153,10 @@ public class GoldHunterShopGui extends Gui
 			return null;
 		}
 		
-		int level = Integer.parseInt(metadata.getOrDefault("level", "1"));
+		//int level = Integer.parseInt(metadata.getOrDefault("level", "1"));
 		
-		return Pair.of(globalShops.getItem(getGoldHunterItemsGroup(), itemId), level);
+		//return Pair.of(globalShops.getItem(getGoldHunterItemsGroup(), itemId), level);
+		return getShopItemFromString(itemId);
 	}
 	
 	private ItemsGroup getGoldHunterItemsGroup()
@@ -194,14 +193,7 @@ public class GoldHunterShopGui extends Gui
 	}
 	
 	public static GoldHunterShopGui openMainGui(Player player)
-	{
-	    player.sendMessage("§c&lWybacz kamracie, ale nasz dostawca nie wrócil jeszcze z rejsu. Wróc za kilka dni!");
-	    
-	    if ( true )
-	    {
-	        return null;    
-	    }
-	    
+	{	    
 		GoldHunterShopGui gui = new GoldHunterShopGui(globalShops.getPlayer(player), "main");
 		gui.open(player);
 		return gui;

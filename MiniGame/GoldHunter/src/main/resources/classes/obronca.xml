@@ -23,12 +23,12 @@
 		</chestplate>
 		
 		<leggings>
-			<item id="minecraft:leather_leggings" /> 
+			<item id="minecraft:leather_leggings" />
 		</leggings>
 				
 		<boots>
 			<item ifbuyed="defender.boots:2" id="minecraft:diamond_boots" />
-			<item ifbuyed="defender.boots:2" id="minecraft:iron_boots" />
+			<item ifbuyed="defender.boots:1" id="minecraft:iron_boots" />
 			<item id="minecraft:chainmail_boots" /> 
 		</boots>
 		
