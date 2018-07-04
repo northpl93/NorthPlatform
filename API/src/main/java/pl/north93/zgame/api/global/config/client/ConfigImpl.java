@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.global.config.client;
 
+import java.util.Optional;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -29,6 +31,12 @@ class ConfigImpl<T> implements IConfig<T>
     public T get()
     {
         return this.config.get();
+    }
+
+    @Override
+    public Optional<T> getOptional()
+    {
+        return this.config.getOptional();
     }
 
     @Override

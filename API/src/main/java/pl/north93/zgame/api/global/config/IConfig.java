@@ -2,6 +2,7 @@ package pl.north93.zgame.api.global.config;
 
 import javax.annotation.Nullable;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -18,13 +19,21 @@ public interface IConfig<T>
     String getId();
 
     /**
-     * Zwraca aktualna klase przechowujaca dane configu.
+     * Zwraca aktualny obiekt przechowujacy dane configu.
      * Moze byc nullem jesli config nie jest zaladowany.
      *
-     * @return Klasa przechowujaca dane configu.
+     * @return Obiekt przechowujacy dane configu.
      */
     @Nullable
     T get();
+
+    /**
+     * Zwraca aktualny obiekt przechowujacy dane configu
+     * opakowany w {@link Optional}.
+     *
+     * @return Obiekt przechowujacy dane configu jako Optional.
+     */
+    Optional<T> getOptional();
 
     /**
      * Aktualizuje wartosc configu.
