@@ -1,39 +1,33 @@
 package pl.north93.zgame.api.bukkit.hologui.hologram.impl;
 
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
 import pl.north93.zgame.api.bukkit.hologui.hologram.HologramRenderContext;
 import pl.north93.zgame.api.bukkit.hologui.hologram.IHologram;
 import pl.north93.zgame.api.bukkit.hologui.hologram.IHologramMessage;
 import pl.north93.zgame.api.bukkit.hologui.hologram.IHologramVisibility;
-import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 final class HologramImpl implements IHologram
 {
-    @Inject
-    private IEntityHider              entityHider;
-    @Inject
-    private IBukkitExecutor           bukkitExecutor;
-
+    private final HologramManager     hologramManager;
     private final IHologramVisibility hologramVisibility;
     private final Location            location;
     private final HologramCache       hologramCache;
     private final List<HoloLine>      lines;
 
-    public HologramImpl(final IHologramVisibility hologramVisibility, final Location location)
+    public HologramImpl(final HologramManager hologramManager, final IHologramVisibility hologramVisibility, final Location location)
     {
+        this.hologramManager = hologramManager;
         this.hologramVisibility = hologramVisibility;
         this.location = location;
         this.hologramCache = new HologramCache();
@@ -62,25 +56,12 @@ final class HologramImpl implements IHologram
     @Override
     public void remove()
     {
-        final Iterator<HoloLine> iterator = this.lines.iterator();
-        while (iterator.hasNext())
-        {
-            iterator.next().cleanup();
-            iterator.remove();
-        }
+        this.hologramManager.remove(this);
     }
 
     public Location getLocation()
     {
         return this.location;
-    }
-
-    /*default*/ String getLine(final HologramRenderContext context, final int lineId)
-    {
-        final HologramCacheEntry cache = this.hologramCache.getEntry(context);
-        this.ensureLineCount(cache.linesCount());
-
-        return cache.getLine(lineId);
     }
 
     private void ensureLineCount(final int count)
@@ -100,14 +81,44 @@ final class HologramImpl implements IHologram
         holoLine.createArmorStand();
     }
 
-    public void setupVisibility(final ArmorStand armorStand)
+    // ponownie inicjuje hologram po zaladowaniu chunka
+    /*default*/ void tryInitHologram()
     {
-        this.hologramVisibility.setup(this.entityHider, armorStand);
+        final Chunk chunk = this.location.getChunk();
+        if (! chunk.isLoaded())
+        {
+            return;
+        }
+
+        this.lines.forEach(HoloLine::createArmorStand);
     }
 
-    public IBukkitExecutor getBukkitExecutor()
+    /*default*/ String getLine(final HologramRenderContext context, final int lineId)
     {
-        return this.bukkitExecutor;
+        final HologramCacheEntry cache = this.hologramCache.getEntry(context);
+        this.ensureLineCount(cache.linesCount());
+
+        return cache.getLine(lineId);
+    }
+
+    /*default*/ void setupVisibility(final ArmorStand armorStand)
+    {
+        this.hologramVisibility.setup(this.hologramManager.getEntityHider(), armorStand);
+    }
+
+    /*default*/ void cleanup()
+    {
+        final Iterator<HoloLine> iterator = this.lines.iterator();
+        while (iterator.hasNext())
+        {
+            iterator.next().cleanup();
+            iterator.remove();
+        }
+    }
+
+    /*default*/ HologramManager getHologramManager()
+    {
+        return this.hologramManager;
     }
 
     @Override

@@ -22,7 +22,7 @@ import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.arena.generator.GeneratorTask;
 import pl.arieals.minigame.bedwars.cfg.BwArenaConfig;
 import pl.arieals.minigame.bedwars.cfg.BwConfig;
-import pl.north93.zgame.api.bukkit.utils.FastBlockOp;
+import pl.north93.zgame.api.bukkit.utils.nms.FastBlockOp;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 

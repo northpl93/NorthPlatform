@@ -5,12 +5,16 @@ import org.bukkit.Location;
 import pl.north93.zgame.api.bukkit.hologui.hologram.DefaultVisibility;
 import pl.north93.zgame.api.bukkit.hologui.hologram.IHologram;
 import pl.north93.zgame.api.bukkit.hologui.hologram.IHologramVisibility;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 /**
  * Statyczne metody tworzące nowe instancje {@link IHologram}.
  */
 public final class HologramFactory
 {
+    @Inject
+    private static HologramManager hologramManager;
+
     private HologramFactory()
     {
     }
@@ -22,6 +26,6 @@ public final class HologramFactory
 
     public static IHologram create(final IHologramVisibility hologramVisibility, final Location location)
     {
-        return new HologramImpl(hologramVisibility, location);
+        return hologramManager.createHologram(hologramVisibility, location);
     }
 }

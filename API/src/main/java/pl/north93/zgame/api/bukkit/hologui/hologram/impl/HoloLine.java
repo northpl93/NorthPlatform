@@ -26,6 +26,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.hologui.hologram.HologramRenderContext;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
+import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.bukkit.utils.nms.EntityMetaPacketHelper;
 
 final class HoloLine
@@ -81,7 +82,8 @@ final class HoloLine
         final INorthPlayer northPlayer = INorthPlayer.wrap(bukkitPlayer);
         final EntityPlayer entityPlayer = northPlayer.getCraftPlayer().getHandle();
 
-        this.hologram.getBukkitExecutor().syncLater(1, () -> this.sendUpdateTo(entityPlayer, northPlayer.getMyLocale()));
+        final IBukkitExecutor bukkitExecutor = this.hologram.getHologramManager().getBukkitExecutor();
+        bukkitExecutor.syncLater(1, () -> this.sendUpdateTo(entityPlayer, northPlayer.getMyLocale()));
     }
 
     /*default*/ void broadcastUpdate()

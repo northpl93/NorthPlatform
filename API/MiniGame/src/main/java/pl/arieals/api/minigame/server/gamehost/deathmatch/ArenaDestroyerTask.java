@@ -14,7 +14,7 @@ import org.diorite.commons.math.DioriteRandomUtils;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
-import pl.north93.zgame.api.bukkit.utils.FastBlockOp;
+import pl.north93.zgame.api.bukkit.utils.nms.FastBlockOp;
 import pl.north93.zgame.api.bukkit.utils.nms.NorthFallingBlock;
 
 public class ArenaDestroyerTask extends BukkitRunnable

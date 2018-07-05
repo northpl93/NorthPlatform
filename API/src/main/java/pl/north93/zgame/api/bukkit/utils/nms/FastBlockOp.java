@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.bukkit.utils;
+package pl.north93.zgame.api.bukkit.utils.nms;
 
 import net.minecraft.server.v1_12_R1.Chunk;
 import net.minecraft.server.v1_12_R1.ChunkSection;

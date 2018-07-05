@@ -24,7 +24,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.elytrarace.cfg.Score;
 import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
-import pl.north93.zgame.api.bukkit.utils.FastBlockOp;
+import pl.north93.zgame.api.bukkit.utils.nms.FastBlockOp;
 import pl.north93.zgame.api.bukkit.utils.nms.NorthFallingBlock;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;

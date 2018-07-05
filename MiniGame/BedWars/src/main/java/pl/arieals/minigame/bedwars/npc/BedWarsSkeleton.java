@@ -1,21 +1,16 @@
 package pl.arieals.minigame.bedwars.npc;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import net.minecraft.server.v1_12_R1.EntityHuman;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.EntitySkeleton;
-import net.minecraft.server.v1_12_R1.EntityTypes;
-import net.minecraft.server.v1_12_R1.MinecraftKey;
 import net.minecraft.server.v1_12_R1.PathfinderGoalHurtByTarget;
 import net.minecraft.server.v1_12_R1.PathfinderGoalLookAtPlayer;
 import net.minecraft.server.v1_12_R1.PathfinderGoalNearestAttackableTarget;
 import net.minecraft.server.v1_12_R1.PathfinderGoalRandomLookaround;
 import net.minecraft.server.v1_12_R1.PathfinderGoalRandomStroll;
-import net.minecraft.server.v1_12_R1.RegistryMaterials;
 import net.minecraft.server.v1_12_R1.World;
 
 import org.bukkit.Location;
@@ -25,10 +20,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-import org.diorite.commons.reflections.DioriteReflectionUtils;
-
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
+import pl.north93.zgame.api.bukkit.utils.nms.EntityUtils;
 
 @SuppressWarnings("unchecked")
 public class BedWarsSkeleton extends EntitySkeleton
@@ -37,14 +31,7 @@ public class BedWarsSkeleton extends EntitySkeleton
 
     static
     {
-        final RegistryMaterials registryMaterials = DioriteReflectionUtils.<RegistryMaterials>getField(EntityTypes.class, "b").get(null);
-        checkNotNull(registryMaterials, "Field b of EntityTypes is null");
-
-        final MinecraftKey skeletonKey = new MinecraftKey("skeleton");
-        registryMaterials.a(51, skeletonKey, BedWarsSkeleton.class);
-
-        EntityTypes.clsToKeyMap.put(BedWarsSkeleton.class, skeletonKey);
-        EntityTypes.clsToTypeMap.put(BedWarsSkeleton.class, EntityType.SKELETON);
+        EntityUtils.registerCustomEntity("skeleton", 51, EntityType.SKELETON, BedWarsSkeleton.class);
 
         /*final Map<Class<? extends Entity>, String> entityToName = DioriteReflectionUtils.<Map<Class<? extends Entity>, String>>getField(EntityTypes.class, "d").get(null);
         final Map<Class<? extends Entity>, Integer> entityToId = DioriteReflectionUtils.<Map<Class<? extends Entity>, Integer>>getField(EntityTypes.class, "f").get(null);

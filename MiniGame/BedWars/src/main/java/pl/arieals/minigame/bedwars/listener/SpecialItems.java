@@ -38,7 +38,7 @@ import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.npc.BedWarsSkeleton;
 import pl.arieals.minigame.bedwars.utils.TeamArmorUtils;
-import pl.north93.zgame.api.bukkit.utils.FastBlockOp;
+import pl.north93.zgame.api.bukkit.utils.nms.FastBlockOp;
 
 public class SpecialItems implements Listener
 {
