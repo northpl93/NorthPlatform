@@ -1,11 +1,13 @@
 package pl.north93.zgame.api.bukkit.hologui.hologram.impl;
 
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
 import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.getTrackerEntry;
+import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.toNmsEntity;
 
 
 import java.util.Locale;
 
-import net.minecraft.server.v1_12_R1.EntityArmorStand;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
 import net.minecraft.server.v1_12_R1.WorldServer;
@@ -84,8 +86,12 @@ final class HoloLine
 
     /*default*/ void broadcastUpdate()
     {
-        final EntityArmorStand entityArmorStand = ((CraftArmorStand) this.armorStand).getHandle();
-        final EntityTrackerEntry trackerEntry = getTrackerEntry(entityArmorStand);
+        final EntityTrackerEntry trackerEntry = getTrackerEntry(toNmsEntity(this.armorStand));
+        if (trackerEntry == null)
+        {
+            // tak moze byc w przypadku gdy hologram zespawnuje sie poza zaladowanym terenem
+            return;
+        }
 
         for (final EntityPlayer trackedPlayer : trackerEntry.trackedPlayers)
         {
@@ -102,6 +108,8 @@ final class HoloLine
         final EntityMetaPacketHelper packetHelper = new EntityMetaPacketHelper(this.armorStand.getEntityId());
         // 2=custom name http://wiki.vg/Entities#Entity
         packetHelper.addMeta(2, EntityMetaPacketHelper.MetaType.STRING, newText);
+        // 3=custom name visible
+        packetHelper.addMeta(3, EntityMetaPacketHelper.MetaType.BOOLEAN, isNotEmpty(newText));
 
         entityPlayer.playerConnection.networkManager.channel.writeAndFlush(packetHelper.complete());
     }
@@ -115,7 +123,6 @@ final class HoloLine
         armorStand.setMarker(true);
         armorStand.setSilent(true);
         armorStand.setInvulnerable(true);
-        armorStand.setCustomNameVisible(true);
     }
 
     @Override

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!-- Przykładowy plik konfiguracyjny hologramów który należy umieścić w katalogu świata -->
+<holograms>
+    <hologram>
+        <location x="25" y="25" z="25" />
+        <message locale="pl-PL">
+Test linia 1
+Test linia 2
+        </message>
+    </hologram>
+</holograms>
