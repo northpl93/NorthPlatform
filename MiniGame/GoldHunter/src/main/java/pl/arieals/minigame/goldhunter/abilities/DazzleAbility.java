@@ -43,7 +43,7 @@ public class DazzleAbility implements AbilityHandler
         GoldHunterPlayer shooter = goldHunter.getPlayer((Player) ball.getShooter());
         GoldHunterPlayer attacked = goldHunter.getPlayer((Player) event.getHitEntity());
         
-        if ( attacked != null && shooter != null && shooter.getEffectTracker().removeEffect(DazzleAbilityEffect.class) )
+        if ( attacked != null && shooter != null && attacked.getTeam() != shooter.getTeam() && shooter.getEffectTracker().removeEffect(DazzleAbilityEffect.class) )
         {
             attacked.getEffectTracker().addEffect(new BlindnessEffect(), 50 + 10 * shooter.getShopItemLevel("scout.slinger.time2"));
         }
