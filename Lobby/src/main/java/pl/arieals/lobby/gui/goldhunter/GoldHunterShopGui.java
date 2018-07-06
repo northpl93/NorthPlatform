@@ -4,14 +4,14 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.tuple.Pair;
+import com.google.common.base.Preconditions;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import com.google.common.base.Preconditions;
+import org.apache.commons.lang3.tuple.Pair;
 
 import net.md_5.bungee.api.chat.BaseComponent;
-
 import pl.arieals.globalshops.server.IGlobalShops;
 import pl.arieals.globalshops.server.IPlayerContainer;
 import pl.arieals.globalshops.server.IPlayerExperienceService;
@@ -193,7 +193,7 @@ public class GoldHunterShopGui extends Gui
 	}
 	
 	public static GoldHunterShopGui openMainGui(Player player)
-	{	    
+	{
 		GoldHunterShopGui gui = new GoldHunterShopGui(globalShops.getPlayer(player), "main");
 		gui.open(player);
 		return gui;
@@ -248,7 +248,86 @@ public class GoldHunterShopGui extends Gui
 			return ItemState.CAN_BUY;
 		}
 	}
-	
+
+	public static void main2(String[] args)
+	{
+		String dupa = "archer.poison.enchant\n" +
+							  "archer.poison.time\n" +
+							  "archer.poison.chainchest\n" +
+							  "archer.poison.budulec\n" +
+							  "class.archer.bomb\n" +
+							  "archer.bomb.enchant\n" +
+							  "archer.bomb.time\n" +
+							  "archer.bomb.chainchest\n" +
+							  "archer.bomb.budulec\n" +
+							  "class.warrior.knight\n" +
+							  "warrior.knight.time\n" +
+							  "warrior.knight.ironchest\n" +
+							  "warrior.knight.budulec\n" +
+							  "warrior.berserker.ironsword\n" +
+							  "warrior.berserker.time\n" +
+							  "warrior.berserker.ironchest\n" +
+							  "warrior.berserker.budulec\n" +
+							  "scout.slinger.time\n" +
+							  "scout.slinger.time2\n" +
+							  "scout.slinger.ironboots\n" +
+							  "scout.slinger.budulec\n" +
+							  "class.scout.sprinter\n" +
+							  "scout.sprinter.time\n" +
+							  "scout.sprinter.ironboots\n" +
+							  "scout.sprinter.budulec\n" +
+							  "medic.battle.time\n" +
+							  "medic.battle.budulec\n" +
+							  "class.medic.healer\n" +
+							  "medic.healer.time\n" +
+							  "medic.healer.potion\n" +
+							  "medic.healer.budulec\n" +
+							  "engineer.architect.time\n" +
+							  "engineer.architect.chainchest\n" +
+							  "engineer.architect.budulec\n" +
+							  "class.engineer.dispenser\n" +
+							  "engineer.dispenser.time\n" +
+							  "engineer.dispenser.time2\n" +
+							  "engineer.dispenser.chainchest\n" +
+							  "engineer.dispenser.budulec\n" +
+							  "class.vip.defender\n" +
+							  "vip.defender.time\n" +
+							  "vip.defender.ability\n" +
+							  "vip.defender.diamondchest\n" +
+							  "vip.defender.budulec\n" +
+							  "vip.assasyn.time\n" +
+							  "vip.assasyn.time2\n" +
+							  "vip.assasyn.chainchest\n" +
+							  "vip.assasyn.ironboots\n" +
+							  "vip.assasyn.budulec\n" +
+							  "svip.spy.time\n" +
+							  "svip.spy.time2\n" +
+							  "svip.spy.ironboots\n" +
+							  "svip.spy.budulec\n" +
+							  "svip.paladin.time\n" +
+							  "svip.paladin.diamondleggins\n" +
+							  "svip.paladin.budulec\n" +
+							  "class.svip.paladin";
+
+		final String[] classess = dupa.split("\n");
+
+//        final StringBuilder builder = new StringBuilder("$unset: { ");
+//        for (final String s : classess)
+//        {
+//            builder.append("\"metadata.globalShops_bought.GoldHunterShop$").append(s).append("\": 1, ");
+//        }
+//        builder.append(" }");
+
+		final StringBuilder builder = new StringBuilder("db.getCollection('players').updateMany({}, { ");
+		for (final String s : classess)
+		{
+			builder.append("$unset: { 'metadata.globalShops_bought.GoldHunterShop$").append(s).append("': 1 }, ");
+		}
+		builder.append(" })");
+
+		System.out.println(builder);
+	}
+
 	public static void main(String[] args)
 	{
 		System.out.println(Arrays.toString("cxcxcXc:3".split(":")));

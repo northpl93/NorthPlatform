@@ -27,6 +27,7 @@ public class BwConfigGenerator extends NorthCommand
     public BwConfigGenerator()
     {
         super("bwgenerator");
+        this.setPermission("dev");
     }
 
     @Override

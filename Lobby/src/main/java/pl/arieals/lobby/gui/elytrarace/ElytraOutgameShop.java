@@ -11,6 +11,7 @@ public class ElytraOutgameShop extends NorthCommand
     public ElytraOutgameShop()
     {
         super("elytraoutgame");
+        this.setPermission("dev");
     }
 
     @Override

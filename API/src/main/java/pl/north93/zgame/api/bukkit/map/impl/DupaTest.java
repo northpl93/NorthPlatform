@@ -27,6 +27,7 @@ public class DupaTest extends NorthCommand
     public DupaTest()
     {
         super("testboard");
+        this.setPermission("dev");
     }
 
     @Override
