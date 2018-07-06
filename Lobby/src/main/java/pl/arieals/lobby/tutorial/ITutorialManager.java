@@ -21,7 +21,18 @@ public interface ITutorialManager
 
     boolean canStartTutorial(Player player);
 
-    void startTutorial(Player player);
+    void startTutorial(Player player, String tutorialId);
+
+    default void startTutorial(final Player player)
+    {
+        final String hub = this.getTutorialId(player);
+        if (hub == null)
+        {
+            return;
+        }
+
+        this.startTutorial(player, hub);
+    }
 
     void exitTutorial(Player player);
 

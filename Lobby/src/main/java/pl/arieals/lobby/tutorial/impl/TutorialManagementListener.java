@@ -64,7 +64,7 @@ public class TutorialManagementListener implements AutoListener
         }
 
         this.tutorialManager.updateStatus(Identity.of(player), tutorialHub, TutorialStatus.PLAYED_ABORTED);
-        this.tutorialManager.startTutorial(player);
+        this.tutorialManager.startTutorial(player, tutorialHub);
         event.setCancelled(true);
     }
 

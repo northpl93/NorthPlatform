@@ -93,17 +93,9 @@ import pl.north93.zgame.api.global.uri.UriInvocationContext;
     }
 
     @Override
-    public void startTutorial(final Player player)
+    public void startTutorial(final Player player, final String tutorialId)
     {
-        final HubWorld hubWorld = this.getThisHubServer().getHubWorld(player);
-
-        final String tutorialHub = this.getTutorialHub(hubWorld);
-        if (tutorialHub == null)
-        {
-            return;
-        }
-
-        this.getThisHubServer().movePlayerToHub(player, tutorialHub);
+        this.getThisHubServer().movePlayerToHub(player, tutorialId);
     }
 
     @Override
