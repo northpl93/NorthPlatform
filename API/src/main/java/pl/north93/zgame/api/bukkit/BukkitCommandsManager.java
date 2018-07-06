@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.bukkit;
 
+import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
+
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
@@ -7,14 +10,12 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -136,27 +137,24 @@ public class BukkitCommandsManager implements ICommandsManager
             super(wrapped.getName());
             this.wrapped = wrapped;
             this.setAliases(wrapped.getAliases());
+
+            this.setPermission(wrapped.getPermission()); // bukit sam sprawdzi uprawnienia
+            this.setPermissionMessage(translateAlternateColorCodes(BukkitCommandsManager.this.apiMessages.getString("command.no_permissions")));
         }
 
         @Override
-        public boolean execute(final CommandSender commandSender, final String s, final String[] strings)
+        public boolean execute(final CommandSender commandSender, final String label, final String[] args)
         {
-            final String permission = this.wrapped.getPermission();
-            if (!StringUtils.isEmpty(permission) && !commandSender.hasPermission(permission))
-            {
-                commandSender.sendMessage(ChatColor.translateAlternateColorCodes('&', BukkitCommandsManager.this.apiMessages.getString("command.no_permissions")));
-                return true;
-            }
             if (this.wrapped.isAsync())
             {
                 API.getApiCore().getPlatformConnector().runTaskAsynchronously(() ->
                 {
-                    this.wrapped.execute(new WrappedSender(commandSender), new Arguments(strings), s);
+                    this.wrapped.execute(new WrappedSender(commandSender), new Arguments(args), label);
                 });
             }
             else
             {
-                this.wrapped.execute(new WrappedSender(commandSender), new Arguments(strings), s);
+                this.wrapped.execute(new WrappedSender(commandSender), new Arguments(args), label);
             }
 
             return true;
