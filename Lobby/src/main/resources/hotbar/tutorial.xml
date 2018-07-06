@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<hotbar>
+    <entry pos="8">
+        <icon id="WOOD_DOOR" name="@tutorial.hotbar.exit" />
+        <onClick>exitTutorial</onClick>
+    </entry>
+</hotbar>

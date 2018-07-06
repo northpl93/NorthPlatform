@@ -1,5 +1,8 @@
 package pl.arieals.lobby.tutorial.impl;
 
+import java.util.logging.Level;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -11,6 +14,7 @@ import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
 import pl.arieals.api.minigame.server.lobby.hub.LocalHubServer;
 import pl.arieals.lobby.tutorial.ITutorialManager;
 import pl.arieals.lobby.tutorial.TutorialStatus;
+import pl.arieals.lobby.tutorial.event.TutorialStatusChangedEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -19,6 +23,8 @@ import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.Identity;
+import pl.north93.zgame.api.global.uri.UriHandler;
+import pl.north93.zgame.api.global.uri.UriInvocationContext;
 
 /*default*/ class TutorialManagerImpl implements ITutorialManager
 {
@@ -56,6 +62,34 @@ import pl.north93.zgame.api.global.network.players.Identity;
     public boolean isTutorialHub(final HubWorld hubWorld)
     {
         return hubWorld.getHubId().endsWith("_tutorial");
+    }
+
+    @Override
+    public boolean isInTutorial(final Player player)
+    {
+        final LocalHubServer hubServer = this.getThisHubServer();
+        return this.isTutorialHub(hubServer.getHubWorld(player));
+    }
+
+    @Override
+    public String getTutorialId(final Player player)
+    {
+        final LocalHubServer hubServer = this.getThisHubServer();
+
+        final HubWorld playerHub = hubServer.getHubWorld(player);
+        if (this.isTutorialHub(playerHub))
+        {
+            return playerHub.getHubId();
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean canStartTutorial(final Player player)
+    {
+        final LocalHubServer hubServer = this.getThisHubServer();
+        return this.getTutorialHub(hubServer.getHubWorld(player)) != null;
     }
 
     @Override
@@ -114,6 +148,29 @@ import pl.north93.zgame.api.global.network.players.Identity;
 
             metaStore.set(tutorialStatusKey, status.name());
         }
+        catch (final Exception e)
+        {
+            this.apiCore.getLogger().log(Level.SEVERE, "Failed to update tutorial status", e);
+            return;
+        }
+
+        this.apiCore.callEvent(new TutorialStatusChangedEvent(identity, tutorialId, status));
+    }
+
+    @UriHandler("/lobby/tutorial/complete/:uuid")
+    public void markTutorialAsCompleted(final UriInvocationContext context)
+    {
+        final Player player = Bukkit.getPlayer(context.asUuid("uuid"));
+        final LocalHubServer hubServer = this.getThisHubServer();
+
+        final HubWorld hubWorld = hubServer.getHubWorld(player);
+        if (! this.isTutorialHub(hubWorld))
+        {
+            return;
+        }
+
+        this.exitTutorial(player);
+        this.updateStatus(Identity.of(player), hubWorld.getHubId(), TutorialStatus.PLAYED_COMPLETED);
     }
 
     private MetaKey getTutorialStatusKey(final String tutorialId)

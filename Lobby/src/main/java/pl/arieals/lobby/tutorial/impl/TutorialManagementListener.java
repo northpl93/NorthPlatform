@@ -10,6 +10,7 @@ import pl.arieals.api.minigame.server.utils.party.PartyClient;
 import pl.arieals.lobby.tutorial.ITutorialManager;
 import pl.arieals.lobby.tutorial.TutorialStatus;
 import pl.arieals.lobby.tutorial.event.PlayerEnterTutorialEvent;
+import pl.arieals.lobby.tutorial.event.PlayerExitTutorialEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -27,9 +28,15 @@ public class TutorialManagementListener implements AutoListener
     @EventHandler
     public void callStartTutorialEvent(final PlayerSwitchedHubEvent event)
     {
-        final HubWorld newHub = event.getNewHub();
         final Player player = event.getPlayer();
 
+        final HubWorld oldHub = event.getOldHub();
+        if (this.tutorialManager.isTutorialHub(oldHub))
+        {
+            this.apiCore.callEvent(new PlayerExitTutorialEvent(player, oldHub));
+        }
+
+        final HubWorld newHub = event.getNewHub();
         if (this.tutorialManager.isTutorialHub(newHub))
         {
             this.apiCore.callEvent(new PlayerEnterTutorialEvent(player, newHub));
