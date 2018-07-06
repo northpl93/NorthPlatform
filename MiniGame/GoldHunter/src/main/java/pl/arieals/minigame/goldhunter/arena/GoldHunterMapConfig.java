@@ -30,6 +30,8 @@ public class GoldHunterMapConfig
     @XmlElement(name = "chest")
     private List<XmlLocation> chestsBlue = new ArrayList<>();
     
+    private int buildLimit = 255;
+    
     public XmlLocation getSpawn1()
     {
         return spawnRed;
@@ -60,9 +62,15 @@ public class GoldHunterMapConfig
         return chestsBlue;
     }
     
+    public int getBuildLimit()
+    {
+        return buildLimit;
+    }
+    
     public void validateConfig() throws IllegalArgumentException
     {
         Preconditions.checkArgument(chestsRed.size() == chestsBlue.size(), "Both teams must have the same number of chests");
         Preconditions.checkArgument(chestsBlue.size() > 0, "Each team must have at least one chest");
+        Preconditions.checkArgument(buildLimit > 0 && buildLimit <= 255, "Build limit must be between 0 and 255");
     }
 }

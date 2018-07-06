@@ -101,6 +101,11 @@ public class GoldHunterArena implements IArenaData, ITickable
         return localArena;
     }
     
+    public int getBuildLimit()
+    {
+        return mapConfig != null ? mapConfig.getBuildLimit() : 255;
+    }
+    
     public World getCurrentWorld()
     {
         return localArena.getWorld().getCurrentWorld();
@@ -281,7 +286,7 @@ public class GoldHunterArena implements IArenaData, ITickable
             }
         }
         
-        return !structureManager.isStructure(location);
+        return !structureManager.isStructure(location) && location.getBlockX() <= getBuildLimit();
     }
     
     public boolean isNearSpawn(GameTeam team, Vector loc, double distance)
