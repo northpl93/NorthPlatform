@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.bukkit.server.impl;
 
+import static java.text.MessageFormat.format;
+
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,10 +60,19 @@ public class WorldInitializationHandler implements Listener
     private void callInitializer(final IWorldInitializer initializer, final World world)
     {
         final String initializerName = initializer.getClass().getSimpleName();
-        this.logger.log(Level.INFO, "Calling initializer {0} for world {1}", new Object[]{initializerName, world.getName()});
+
+        final Object[] params = {initializerName, world.getName()};
+        this.logger.log(Level.INFO, "Calling initializer {0} for world {1}", params);
 
         final File worldDir = new File(Bukkit.getWorldContainer(), world.getName());
-        initializer.initialiseWorld(world, worldDir);
+        try
+        {
+            initializer.initialiseWorld(world, worldDir);
+        }
+        catch (final Exception e)
+        {
+            this.logger.log(Level.SEVERE, format("Initializer {0} throw exception for world {1}", params), e);
+        }
     }
 
     @Override
