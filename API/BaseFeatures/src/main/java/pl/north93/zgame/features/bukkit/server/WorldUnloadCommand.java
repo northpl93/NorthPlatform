@@ -61,7 +61,7 @@ public class WorldUnloadCommand extends NorthCommand
 			sender.sendMessage(messages, "command.worldunload.not_loaded", worldToUnload);
 			return;
 		}
-		
+
 		worldManager.unloadWorld(world);
 		sender.sendMessage(messages, "command.worldunload.unloaded");
 	}
