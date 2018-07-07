@@ -286,7 +286,7 @@ public class GoldHunterArena implements IArenaData, ITickable
             }
         }
         
-        return !structureManager.isStructure(location) && location.getBlockX() <= getBuildLimit();
+        return !structureManager.isStructure(location) && location.getBlockY() <= getBuildLimit();
     }
     
     public boolean isNearSpawn(GameTeam team, Vector loc, double distance)
