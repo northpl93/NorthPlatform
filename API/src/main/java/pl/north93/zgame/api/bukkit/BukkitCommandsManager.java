@@ -16,6 +16,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -145,6 +146,12 @@ public class BukkitCommandsManager implements ICommandsManager
         @Override
         public boolean execute(final CommandSender commandSender, final String label, final String[] args)
         {
+            final String permission = this.wrapped.getPermission();
+            if (! StringUtils.isEmpty(permission) && ! commandSender.hasPermission(permission))
+            {
+                commandSender.sendMessage(translateAlternateColorCodes(BukkitCommandsManager.this.apiMessages.getString("command.no_permissions")));
+                return true;
+            }
             if (this.wrapped.isAsync())
             {
                 API.getApiCore().getPlatformConnector().runTaskAsynchronously(() ->
