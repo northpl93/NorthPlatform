@@ -23,6 +23,7 @@ import pl.arieals.lobby.chest.opening.event.OpenOpeningGuiEvent;
 import pl.arieals.lobby.chest.opening.event.PresentOpeningResultsEvent;
 import pl.north93.zgame.api.bukkit.entityhider.EntityVisibility;
 import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
+import pl.north93.zgame.api.bukkit.gui.impl.GuiTracker;
 import pl.north93.zgame.api.bukkit.hologui.ActionBarKeeper;
 import pl.north93.zgame.api.bukkit.hologui.IHoloContext;
 import pl.north93.zgame.api.bukkit.hologui.IHoloGuiManager;
@@ -44,6 +45,8 @@ public class HubOpeningListener implements AutoListener
     private IHoloGuiManager        holoGuiManager;
     @Inject
     private ActionBarKeeper        actionBarKeeper;
+    @Inject
+    private GuiTracker             guiTracker;
     @Inject @Messages("ChestOpening")
     private MessagesBox            messages;
 
@@ -51,6 +54,9 @@ public class HubOpeningListener implements AutoListener
     public void onStartOpening(final OpenOpeningGuiEvent event)
     {
         final Player player = event.getPlayer();
+
+        // zamykamy hotbara aby nic sie nie bugowalo
+        this.guiTracker.closeHotbarMenu(player);
 
         // ukrywamy gracza przed teleportacja zeby nie mignelo
         final Set<Entity> playerSet = Collections.singleton(player);

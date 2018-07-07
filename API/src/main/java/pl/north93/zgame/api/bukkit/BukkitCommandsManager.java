@@ -123,7 +123,7 @@ public class BukkitCommandsManager implements ICommandsManager
             this.wrapped = wrapped;
             this.setAliases(wrapped.getAliases());
 
-            this.setPermission(wrapped.getPermission()); // bukit sam sprawdzi uprawnienia
+            this.setPermission(wrapped.getPermission()); // dodajemy, aby dzialalo wsparcie dla auto-uzupelniania
             this.setPermissionMessage(translateAlternateColorCodes(BukkitCommandsManager.this.apiMessages.getString("command.no_permissions")));
         }
 
