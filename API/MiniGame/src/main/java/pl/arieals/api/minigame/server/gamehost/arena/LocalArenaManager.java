@@ -116,16 +116,33 @@ public class LocalArenaManager
 
     public ChatRoom getChatRoomFor(final IArena arena, final boolean spectators)
     {
+        final ChatRoom room;
         if (spectators)
         {
             final String id = "spectators:" + arena.getId();
-            return this.chatManager.getOrCreateRoom(id, PermissionsBasedFormatter.INSTANCE, ChatRoomPriority.HIGH);
+            room = this.chatManager.getOrCreateRoom(id, PermissionsBasedFormatter.INSTANCE, ChatRoomPriority.HIGH);
         }
         else
         {
             final String id = "arena:" + arena.getId();
-            return this.chatManager.getOrCreateRoom(id, PermissionsBasedFormatter.INSTANCE, ChatRoomPriority.NORMAL);
+            room =  this.chatManager.getOrCreateRoom(id, PermissionsBasedFormatter.INSTANCE, ChatRoomPriority.NORMAL);
         }
+
+        if (room.getParent() == null)
+        {
+            // jesli pokój areny nie ma rodzica to dodajemy go jako dziecko do ogólnego pokoju minigry
+            this.getGameRoom().addChild(room);
+        }
+
+        return room;
+    }
+
+    private ChatRoom getGameRoom()
+    {
+        final GameHostManager serverManager = this.miniGameServer.getServerManager();
+
+        final String roomId = "game:" + serverManager.getMiniGameConfig().getGameIdentity().getGameId();
+        return this.chatManager.getOrCreateRoom(roomId, PermissionsBasedFormatter.INSTANCE, ChatRoomPriority.NORMAL);
     }
 
     @Override

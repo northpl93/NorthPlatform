@@ -86,7 +86,7 @@ class ListenerScriptResource implements IScriptResource<Listener>, Listener
             return;
         }
 
-        final FieldAccessor<HandlerList> field = getField(this.eventClass, "handlerList");
+        final FieldAccessor<HandlerList> field = getField(this.eventClass, HandlerList.class, 0);
 
         final HandlerList handlerList = field.get(null);
         assert handlerList != null;

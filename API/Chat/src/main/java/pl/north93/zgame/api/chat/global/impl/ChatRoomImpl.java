@@ -1,13 +1,18 @@
 package pl.north93.zgame.api.chat.global.impl;
 
+import static java.text.MessageFormat.format;
 import static java.util.Collections.unmodifiableCollection;
 
 
+import javax.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -39,6 +44,76 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     public String getId()
     {
         return this.id;
+    }
+
+    @Nullable
+    @Override
+    public ChatRoom getParent()
+    {
+        final ChatRoomData roomData = this.data.get();
+        this.checkIsPresent(roomData);
+
+        return Optional.ofNullable(roomData.getParent())
+                       .map(this.chatManager::getRoom)
+                       .orElse(null);
+    }
+
+    @Override
+    public Collection<ChatRoom> getChildren()
+    {
+        final ChatRoomData roomData = this.data.get();
+        this.checkIsPresent(roomData);
+
+        return roomData.getChildren().stream()
+                       .map(this.chatManager::getRoom)
+                       .collect(Collectors.toList());
+    }
+
+    @Override
+    public void addChild(final ChatRoom chatRoom)
+    {
+        this.update(parentData ->
+        {
+            final ChatRoomImpl childImpl = (ChatRoomImpl) chatRoom;
+            childImpl.update(childData ->
+            {
+                if (childData.getParent() != null)
+                {
+                    throw new IllegalStateException(format("Channel {0} already has parent {1}", childData.getId(), childData.getParent()));
+                }
+
+                childData.setParent(this.id);
+                parentData.getChildren().add(childData.getId());
+            });
+        });
+    }
+
+    @Override
+    public void removeChild(final ChatRoom chatRoom)
+    {
+        this.update(parentData ->
+        {
+            final ChatRoomImpl childImpl = (ChatRoomImpl) chatRoom;
+            childImpl.update(childData ->
+            {
+                if (! this.id.equals(childData.getParent()))
+                {
+                    throw new IllegalStateException(format("Channel {0} is not child of {1}", childData.getId(), this.id));
+                }
+
+                childData.setParent(null);
+                parentData.getChildren().remove(childData.getId());
+            });
+        });
+    }
+
+    @Override
+    public boolean isChild(final ChatRoom chatRoom)
+    {
+        final ChatRoomData roomData = this.data.get();
+        this.checkIsPresent(roomData);
+
+        return roomData.getChildren().contains(chatRoom.getId());
     }
 
     @Override
@@ -75,11 +150,9 @@ import pl.north93.zgame.api.global.redis.observable.Value;
         final Logger logger = this.chatManager.getLogger();
         final String formatterId = this.chatManager.getFormatterId(chatFormatter);
 
-        this.data.update(roomData ->
+        this.update(roomData ->
         {
-            this.checkIsPresent(roomData);
             roomData.setFormatterId(formatterId);
-
             logger.log(Level.INFO, "Changed formatter of {0} to {1}", new Object[]{this.id, formatterId});
         });
     }
@@ -143,6 +216,9 @@ import pl.north93.zgame.api.global.redis.observable.Value;
                 logger.log(Level.WARNING, "Failed to kick user from room", e);
             }
         });
+
+        // usuwamy z tego kanalu wszystkie dzieci, moze troche nieoptymalnie
+        this.getChildren().forEach(this::removeChild);
 
         // teoretycznie istnieje niebezpieczeństwo że ktoś dołączy do pokoju po usunięciu graczy,
         // ale na razie można to zignorować - i tak chyba nikt nie doda graczy do pokoju który umyślnie usuwa?

@@ -2,7 +2,9 @@ package pl.north93.zgame.api.chat.bungee.listener;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -111,7 +113,19 @@ public class MessageHandler
             return Collections.emptyList();
         }
 
-        return room.getParticipants();
+        final Set<Identity> identities = new HashSet<>();
+        this.recursivelyGetParticipants(room, identities);
+        return identities;
+    }
+
+    private void recursivelyGetParticipants(final ChatRoom chatRoom, final Set<Identity> identities)
+    {
+        identities.addAll(chatRoom.getParticipants());
+
+        for (final ChatRoom child : chatRoom.getChildren())
+        {
+            this.recursivelyGetParticipants(child, identities);
+        }
     }
 
     @Override
