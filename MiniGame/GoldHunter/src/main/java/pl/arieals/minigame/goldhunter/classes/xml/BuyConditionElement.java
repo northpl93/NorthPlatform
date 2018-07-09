@@ -21,7 +21,7 @@ public interface BuyConditionElement
         int shopItemLevel = 1;
         if ( split.length > 1 ) 
         {
-            Integer.parseInt(split[1]);
+            shopItemLevel = Integer.parseInt(split[1]);
         }
         
         return player.hasBuyed(shopItemName, shopItemLevel);
