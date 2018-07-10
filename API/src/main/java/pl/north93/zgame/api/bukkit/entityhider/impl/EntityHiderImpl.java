@@ -1,17 +1,16 @@
 package pl.north93.zgame.api.bukkit.entityhider.impl;
 
 import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.getTrackerEntry;
+import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.toNmsEntity;
 
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Level;
 
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
 
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -38,18 +37,14 @@ public class EntityHiderImpl extends Component implements IEntityHider
     {
         final VisibilityController controller = this.getController(player);
         entities.forEach(entity -> controller.setVisibility(entity, visibility));
+        this.refreshEntities(entities);
     }
 
     @Override
     public void setVisibility(final EntityVisibility visibility, final Collection<Entity> entities)
     {
         entities.forEach(entity -> this.globalVisibility.setGlobalEntityStatus(entity, visibility));
-        /*for (final Entity entity : entities) // kod wymuszajacy zaktualizowanie trackerow, zmniejsza opoznienie ale to chyba zbedne
-        {
-            final CraftEntity craftEntity = (CraftEntity) entity;
-            final EntityTrackerEntry tracker = EntityTrackerHelper.getTrackerEntry(craftEntity.getHandle());
-            tracker.updatePlayer(((CraftPlayer) player).getHandle());
-        }*/
+        this.refreshEntities(entities);
     }
 
     @Override
@@ -63,9 +58,7 @@ public class EntityHiderImpl extends Component implements IEntityHider
     {
         for (final Entity entity : entities)
         {
-            final CraftEntity craftEntity = (CraftEntity) entity;
-
-            final EntityTrackerEntry tracker = getTrackerEntry(craftEntity.getHandle());
+            final EntityTrackerEntry tracker = getTrackerEntry(toNmsEntity(entity));
             if (tracker == null)
             {
                 continue;
@@ -73,7 +66,8 @@ public class EntityHiderImpl extends Component implements IEntityHider
 
             for (final EntityPlayer trackedPlayer : new HashSet<>(tracker.trackedPlayers))
             {
-                tracker.updatePlayer(trackedPlayer);
+                tracker.clear(trackedPlayer); // kasujemy gracza z listy sledzacych
+                tracker.updatePlayer(trackedPlayer); // próbujemy zaktualizowac status sledzenia
             }
         }
     }
@@ -84,10 +78,9 @@ public class EntityHiderImpl extends Component implements IEntityHider
         if (metadata.isEmpty())
         {
             final Main pluginMain = this.apiCore.getPluginMain();
-            final VisibilityController controller = new VisibilityController(this.globalVisibility);
 
+            final VisibilityController controller = new VisibilityController(this.globalVisibility);
             player.setMetadata("API.EntityHider/controller", new FixedMetadataValue(pluginMain, controller));
-            player.setMetadata("API.EntityHider/hideFunction", new FixedMetadataValue(pluginMain, controller.getHideFunction()));
 
             return controller;
         }
@@ -97,14 +90,6 @@ public class EntityHiderImpl extends Component implements IEntityHider
     @Override
     protected void enableComponent()
     {
-        try
-        {
-            EntityTrackerEntryPatcher.applyChange(this.apiCore.getInstrumentationClient());
-        }
-        catch (final Exception e)
-        {
-            this.apiCore.getLogger().log(Level.SEVERE, "Failed to apply EntityHider patch.", e);
-        }
     }
 
     @Override

@@ -2,7 +2,6 @@ package pl.north93.zgame.api.bukkit.entityhider.impl;
 
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.function.Function;
 
 import org.bukkit.entity.Entity;
 
@@ -22,17 +21,6 @@ class VisibilityController
     VisibilityController(final GlobalVisibility globalVisibility)
     {
         this.globalVisibility = globalVisibility;
-    }
-
-    /**
-     * Przygotowuje funkcje sprawdzajaca czy dane entity powinno byc ukryte.
-     * Zwraca true jesli entity powinno byc ukryte.
-     *
-     * @return Funkcja sprawdzajaca widocznosc entity.
-     */
-    Function<net.minecraft.server.v1_12_R1.Entity, Boolean> getHideFunction()
-    {
-        return entity -> ! this.isEntityVisible(entity.getBukkitEntity());
     }
 
     private EntityVisibility getPlayerVisibility(final Entity entity)
