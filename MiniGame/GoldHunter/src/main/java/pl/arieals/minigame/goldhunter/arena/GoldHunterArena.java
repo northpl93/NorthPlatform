@@ -8,10 +8,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import net.minecraft.server.v1_12_R1.MinecraftServer;
 
@@ -511,7 +513,7 @@ public class GoldHunterArena implements IArenaData, ITickable
     
     private void displayKills()
     {
-        ArrayList<GoldHunterPlayer> players = new ArrayList<>(this.players);
+        List<GoldHunterPlayer> players = this.players.stream().filter(GoldHunterPlayer::isIngame).collect(Collectors.toCollection(ArrayList::new));
         Collections.sort(players, Comparator.comparing((GoldHunterPlayer p) -> p.getStatsTracker().getKills()).reversed());
         
         Optional<GoldHunterPlayer> first = ListUtils.getIfExists(players, 0);
