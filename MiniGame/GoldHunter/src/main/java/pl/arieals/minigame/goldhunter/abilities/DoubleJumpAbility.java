@@ -14,6 +14,7 @@ import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.player.AbilityHandler;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.packets.event.AsyncPacketInEvent;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -69,14 +70,18 @@ public class DoubleJumpAbility implements AbilityHandler, AutoListener
         PacketPlayInAbilities packet = (PacketPlayInAbilities) event.getPacket();
         GoldHunterPlayer player = goldHunter.getPlayer(event.getPlayer());
         
-        if ( player == null )
+        if ( player == null || !player.isDoubleJumpActive() )
         {
-            return;
-        }
-        
-        if ( !player.isDoubleJumpActive() )
-        {
-            player.getPlayer().setFlying(packet.isFlying());
+            EntityPlayer playerEntity = INorthPlayer.asCraftPlayer(event.getPlayer()).getHandle();
+            
+            if ( !playerEntity.abilities.canFly && packet.isFlying() )
+            {
+                playerEntity.updateAbilities();
+            }
+            else
+            {
+                playerEntity.playerConnection.a(packet);
+            }
             return;
         }
         
