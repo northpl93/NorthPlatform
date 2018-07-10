@@ -13,6 +13,7 @@ import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEv
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
+import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.arena.StandardArenaMetaData;
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
@@ -61,8 +62,18 @@ public class ArenaListener implements AutoListener
     public void onGameStart(GameStartEvent event)
     {
         GoldHunterArena arena = event.getArena().getArenaData();
-        goldHunter.setWorldProperties(event.getArena().getWorld().getCurrentWorld());
-        arena.gameStart();
+        
+        try
+        {
+            arena.gameStart();
+            goldHunter.setWorldProperties(event.getArena().getWorld().getCurrentWorld());
+        }
+        catch ( Exception e )
+        {
+            logger.error("Couldn't start game for arena {} with map {}", arena, arena.getLocalArena().getWorld().getCurrentMapTemplate().getName());
+            arena.getPlayers().forEach(p -> p.sendMessage("game_start_fail"));
+            arena.getLocalArena().setGamePhase(GamePhase.POST_GAME);
+        }
     }
     
     @EventHandler
