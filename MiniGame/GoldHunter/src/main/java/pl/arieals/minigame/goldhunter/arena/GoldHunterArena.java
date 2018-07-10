@@ -213,7 +213,7 @@ public class GoldHunterArena implements IArenaData, ITickable
     private void addChest(BlockVector location, GameTeam team)
     {
         GoldChestStructure chest = new GoldChestStructure(location, team);
-        Preconditions.checkState(structureManager.spawn(chest));
+        Preconditions.checkState(structureManager.spawn(chest), "Cannot add chest with location " + location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ());
     }
     
     private Location getSpawn(GameTeam team)
