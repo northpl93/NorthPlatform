@@ -5,11 +5,14 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
+import org.bukkit.entity.Player;
+
 import net.minecraft.server.v1_12_R1.Entity;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
 
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
@@ -33,6 +36,11 @@ public class EntityTrackerHelper
 
     public static Entity toNmsEntity(final org.bukkit.entity.Entity bukkitEntity)
     {
+        if ( bukkitEntity instanceof Player )
+        {
+            return INorthPlayer.asCraftPlayer((Player) bukkitEntity).getHandle();
+        }
+        
         final CraftEntity craftEntity = (CraftEntity) bukkitEntity;
         return craftEntity.getHandle();
     }

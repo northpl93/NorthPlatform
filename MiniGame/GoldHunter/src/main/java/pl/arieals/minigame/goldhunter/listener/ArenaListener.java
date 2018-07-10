@@ -78,7 +78,7 @@ public class ArenaListener implements AutoListener
         event.setJoinMessage(null);
         
         GoldHunterArena arena = event.getArena().getArenaData();
-        GoldHunterPlayer player = new GoldHunterPlayer(event.getPlayer(), arena);
+        GoldHunterPlayer player = new GoldHunterPlayer(event.getPlayer().getCraftPlayer(), arena);
         
         goldHunter.addPlayer(player);
         

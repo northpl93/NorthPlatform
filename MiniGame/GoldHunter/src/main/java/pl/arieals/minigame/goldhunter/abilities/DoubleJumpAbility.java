@@ -38,7 +38,7 @@ public class DoubleJumpAbility implements AbilityHandler, AutoListener
     {
         logger.debug("Double jump ready for {}", player);
         
-        EntityPlayer ep = ((CraftPlayer) player.getPlayer()).getHandle();
+        EntityPlayer ep = player.getMinecraftPlayer();
         PlayerAbilities current = ep.abilities;
         
         PlayerAbilities newAbilities = new PlayerAbilities();

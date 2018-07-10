@@ -43,6 +43,7 @@ import pl.arieals.minigame.goldhunter.gui.LobbyHotbar;
 import pl.arieals.minigame.goldhunter.utils.Direction;
 import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
 import pl.north93.zgame.api.bukkit.gui.IGuiManager;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
@@ -299,7 +300,7 @@ public class GoldHunterPlayer implements ITickable
     
     public EntityPlayer getMinecraftPlayer()
     {
-        return ((CraftPlayer) player).getHandle();
+        return INorthPlayer.asCraftPlayer(player).getHandle();
     }
     
     public void addLeatherHatToInventory()
