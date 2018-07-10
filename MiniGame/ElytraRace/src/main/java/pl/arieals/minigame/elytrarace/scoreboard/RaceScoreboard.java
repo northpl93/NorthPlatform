@@ -18,7 +18,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.statistics.IRecord;
-import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
 import pl.arieals.api.minigame.shared.api.statistics.type.ShorterTimeBetterStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.unit.DurationUnit;
@@ -48,9 +47,8 @@ public class RaceScoreboard implements IScoreboardLayout
         final String statKey = "elytra/race/" + arena.getWorld().getCurrentMapTemplate().getName();
         final ShorterTimeBetterStatistic statistic = new ShorterTimeBetterStatistic(statKey);
 
-        final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(context.getPlayer().getUniqueId());
-
-        context.setCompletableFuture("avgTime", holder.getBest(statistic));
+        // odczytujemy asynchronicznie sredni czas graczy na tej mapie
+        context.setCompletableFuture("avgTime", this.statisticsManager.getAverage(statistic));
     }
 
     @Override

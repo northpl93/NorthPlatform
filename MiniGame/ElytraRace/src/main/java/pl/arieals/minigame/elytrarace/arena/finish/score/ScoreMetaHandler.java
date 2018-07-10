@@ -95,7 +95,7 @@ public class ScoreMetaHandler implements IFinishHandler
 
     private List<ScoreFinishInfo> getTop()
     {
-        final Comparator<ScoreFinishInfo> comparator = comparing(ScoreFinishInfo::getPoints);
+        final Comparator<ScoreFinishInfo> comparator = comparing(ScoreFinishInfo::getPoints).reversed();
         return this.points.stream().sorted(comparator).collect(Collectors.toList());
     }
 
