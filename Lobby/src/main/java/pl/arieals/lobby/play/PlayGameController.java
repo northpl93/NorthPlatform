@@ -11,6 +11,7 @@ import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.api.minigame.server.lobby.arenas.ArenaQuery;
 import pl.arieals.api.minigame.server.lobby.arenas.IArenaClient;
 import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
+import pl.arieals.api.minigame.server.lobby.hub.LocalHubServer;
 import pl.arieals.api.minigame.server.utils.party.PartyClient;
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.GamePhase;
@@ -71,6 +72,12 @@ public class PlayGameController
     {
         final LobbyManager lobby = this.miniGameServer.getServerManager();
         return lobby.getAllHubServers();
+    }
+
+    public LocalHubServer getThisHubServer()
+    {
+        final LobbyManager lobby = this.miniGameServer.getServerManager();
+        return lobby.getLocalHub();
     }
     
     public void playGame(final Player player, final IArena arena)

@@ -1,5 +1,8 @@
 package pl.arieals.lobby.ui;
 
+import static pl.north93.zgame.api.bukkit.gui.element.dynamic.DynamicElementData.builder;
+
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -10,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import pl.arieals.api.minigame.server.lobby.arenas.IArenaClient;
+import pl.arieals.api.minigame.server.lobby.hub.LocalHubServer;
 import pl.arieals.api.minigame.server.lobby.hub.visibility.DefaultHubVisibilityPolicy;
 import pl.arieals.api.minigame.server.lobby.hub.visibility.HubVisibilityService;
 import pl.arieals.api.minigame.server.lobby.hub.visibility.IHubVisibilityPolicy;
@@ -86,13 +90,24 @@ public final class UiHelper
         for (final IHubServer hubServer : hubs)
         {
             final Vars<Object> vars = Vars.of("id", ++counter);
-            elements.add(DynamicElementData.builder().vars(vars).clickHandler((source, event) ->
+            elements.add(builder().vars(vars).iconCase(this.getIconCase(hubServer)).clickHandler((source, event) ->
             {
                 this.playController.switchHubInstance(event.getWhoClicked(), hubServer);
             }).build());
         }
 
         return elements;
+    }
+
+    // zwraca wariant ikony do wyswietlenia w dynamicznym kontenerze z lista hubów
+    private String getIconCase(final IHubServer hubServer)
+    {
+        final LocalHubServer thisHubServer = this.playController.getThisHubServer();
+        if (thisHubServer.getServerId().equals(hubServer.getServerId()))
+        {
+            return "actual";
+        }
+        return "nonactual";
     }
 
     @UriHandler("/lobby/ui/visibility/:mode/:playerId")

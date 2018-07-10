@@ -5,7 +5,8 @@
 
             <dynamicContainer pos="2,0" size="5,1">
                 <renderer>northplatform://lobby/ui/instancePicker/instances</renderer>
-                <icon id="SLIME_BALL" name="@instance.icon.title$id"/>
+                <icon case="actual" id="MAGMA_CREAM" name="@instance.icon.title$id"/>
+                <icon case="nonactual" id="SLIME_BALL" name="@instance.icon.title$id"/>
             </dynamicContainer>
 
             <!-- Paski po lewej/prawej -->
