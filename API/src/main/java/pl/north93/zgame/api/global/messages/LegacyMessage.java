@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 
 import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
@@ -48,6 +49,11 @@ public class LegacyMessage
         return this.message;
     }
 
+    public String asNonColoredString()
+    {
+        return ChatColor.stripColor(message);
+    }
+    
     public String asNonEmptyString()
     {
         if (StringUtils.isEmpty(this.message))
@@ -64,6 +70,15 @@ public class LegacyMessage
         {
             messageable.sendMessage(line);
         }
+    }
+    
+    /**
+     * Creates LegacyMessage from string
+     * Note that this method translates alternate color codes.
+     */
+    public static LegacyMessage fromString(String legacyString)
+    {
+        return new LegacyMessage(ChatUtils.translateAlternateColorCodes(legacyString));
     }
 
     @Override
