@@ -34,6 +34,7 @@ import pl.arieals.minigame.bedwars.scoreboard.GameScoreboard;
 import pl.arieals.minigame.bedwars.scoreboard.LobbyScoreboard;
 import pl.arieals.minigame.bedwars.shop.EliminationEffectManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
@@ -56,7 +57,7 @@ public class PlayerTeamListener implements Listener
     @EventHandler
     public void playerJoin(final PlayerJoinArenaEvent event)
     {
-        final Player player = event.getPlayer();
+        final INorthPlayer player = event.getPlayer();
 
         final BedWarsArena arenaData = event.getArena().getArenaData();
         final BedWarsPlayer playerData = new BedWarsPlayer(player, this.eliminationEffect.getEffectOf(player));
@@ -75,7 +76,7 @@ public class PlayerTeamListener implements Listener
         final BedWarsArena arenaData = arena.getArenaData();
 
         final PlayersManager playersManager = arena.getPlayersManager();
-        for (final Player player : playersManager.getPlayers())
+        for (final INorthPlayer player : playersManager.getPlayers())
         {
             final Team smallestTeam = arenaData.getTeams()
                                                .stream()
@@ -100,10 +101,10 @@ public class PlayerTeamListener implements Listener
             playerData.switchTeam(smallestTeam);
             arenaData.getPlayers().add(playerData);
 
-            final String teamNameDative = this.messages.getMessage(player.getLocale(), "team.dative." + smallestTeam.getName());
-            this.messages.sendMessage(player, "separator");
-            this.messages.sendMessage(player, "welcome", MessageLayout.CENTER, smallestTeam.getColor(), teamNameDative);
-            this.messages.sendMessage(player, "separator");
+            final String teamNameDative = this.messages.getString(player.getLocale(), "team.dative." + smallestTeam.getName());
+            player.sendMessage(this.messages, "separator");
+            player.sendMessage(this.messages, "welcome", MessageLayout.CENTER, smallestTeam.getColor(), teamNameDative);
+            player.sendMessage(this.messages, "separator");
         }
 
         for (final Player player : playersManager.getAllPlayers())
@@ -143,7 +144,7 @@ public class PlayerTeamListener implements Listener
     @EventHandler
     public void chestOpen(final PlayerInteractEvent event)
     {
-        final Player player = event.getPlayer();
+        final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
         final Block block = event.getClickedBlock();
 
         if (block == null || block.getType() != Material.CHEST)
@@ -168,8 +169,8 @@ public class PlayerTeamListener implements Listener
         }
 
         // jesli team nie jest wyeliminowany to blokujemy otwarcie skrzynki
-        final String teamName = this.messages.getMessage(player.getLocale(), "team.nominative." + teamAt.getName());
-        this.messages.sendMessage(player, "chest_blocked", teamAt.getColor(), teamName);
+        final String teamName = this.messages.getString(player.getMyLocale(), "team.nominative." + teamAt.getName());
+        player.sendMessage(this.messages, "chest_blocked", teamAt.getColor(), teamName);
 
         event.setCancelled(true);
     }

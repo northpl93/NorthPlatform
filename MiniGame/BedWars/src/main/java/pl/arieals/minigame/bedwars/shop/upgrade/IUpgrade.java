@@ -36,7 +36,7 @@ public interface IUpgrade
 
     default String getLoreDescription(final MessagesBox messagesBox, final Team team, final Player player)
     {
-        return messagesBox.getMessage(player.spigot().getLocale(), "upgrade_gui." + this.getName() + ".lore");
+        return messagesBox.getString(player.getLocale(), "upgrade_gui." + this.getName() + ".lore");
     }
 
     void apply(LocalArena arena, Team team, int level);

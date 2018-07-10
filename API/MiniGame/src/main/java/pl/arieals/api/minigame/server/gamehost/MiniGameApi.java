@@ -18,6 +18,7 @@ import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.arena.player.PlayerDataManager;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public final class MiniGameApi
@@ -72,12 +73,12 @@ public final class MiniGameApi
     }
 
     @Nullable
-    public static PlayerStatus getPlayerStatus(final Player player)
+    public static PlayerStatus getPlayerStatus(final INorthPlayer player)
     {
         return INSTANCE.playerDataManager.getStatus(player);
     }
 
-    public static void setPlayerStatus(final Player player, final PlayerStatus newStatus)
+    public static void setPlayerStatus(final INorthPlayer player, final PlayerStatus newStatus)
     {
         INSTANCE.playerDataManager.updateStatus(player, newStatus);
     }

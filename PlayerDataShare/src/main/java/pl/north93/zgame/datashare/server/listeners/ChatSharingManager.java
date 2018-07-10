@@ -127,14 +127,14 @@ public class ChatSharingManager implements Listener
 
             if (! chatEnabled)
             {
-                player.sendMessage(translateAlternateColorCodes('&', this.messages.getMessage(player.getLocale(), "chat.is_now_disabled")));
+                player.sendMessage(translateAlternateColorCodes('&', this.messages.getString(player.getLocale(), "chat.is_now_disabled")));
                 event.setCancelled(true);
             }
             else if (! this.chatCooldown.hasExpiredOrAdd(player.getUniqueId(), COOLDOWN_TIME))
             {
                 final CooldownEntry<UUID> entry = this.chatCooldown.getEntry(player.getUniqueId());
                 final long time = (entry.getStartTime() + entry.getCooldownTime() - System.currentTimeMillis()) / 1000;
-                final String message = MessageFormat.format(this.messages.getMessage(player.getLocale(), "chat.cooldown"), time);
+                final String message = MessageFormat.format(this.messages.getString(player.getLocale(), "chat.cooldown"), time);
                 player.sendMessage(translateAlternateColorCodes('&', message));
                 event.setCancelled(true);
             }

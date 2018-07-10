@@ -47,7 +47,7 @@ public class ElytraHubScoreboard extends HubScoreboardLayout
     @Override
     public String getTitle(final IScoreboardContext context)
     {
-        return this.messages.getMessage(context.getLocale(), "scoreboard.title");
+        return this.messages.getString(context.getLocale(), "scoreboard.title");
     }
 
     @Override

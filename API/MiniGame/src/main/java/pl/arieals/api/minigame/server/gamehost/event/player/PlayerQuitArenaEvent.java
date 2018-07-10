@@ -1,12 +1,12 @@
 package pl.arieals.api.minigame.server.gamehost.event.player;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 public class PlayerQuitArenaEvent extends PlayerArenaEvent
 {
@@ -14,7 +14,7 @@ public class PlayerQuitArenaEvent extends PlayerArenaEvent
     private boolean canReconnect;
     private String  quitMessage;
     
-    public PlayerQuitArenaEvent(final Player who, final LocalArena arena, final boolean canReconnect, final String quitMessage)
+    public PlayerQuitArenaEvent(final INorthPlayer who, final LocalArena arena, final boolean canReconnect, final String quitMessage)
     {
         super(arena, who);
         this.canReconnect = canReconnect;

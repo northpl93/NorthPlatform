@@ -27,12 +27,14 @@ import pl.arieals.minigame.bedwars.shop.gui.ShopMaterials;
 import pl.arieals.minigame.bedwars.shop.gui.ShopSwords;
 import pl.arieals.minigame.bedwars.shop.gui.ShopTools;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.PluralForm;
 import pl.north93.zgame.api.global.uri.UriHandler;
+import pl.north93.zgame.api.global.uri.UriInvocationContext;
 
 public final class ShopGuiManager
 {
@@ -92,10 +94,10 @@ public final class ShopGuiManager
     }
 
     @UriHandler("/minigame/bedwars/shop/nameColor/:name/:playerId")
-    public String getNameColor(final String calledUri, final Map<String, String> parameters)
+    public String getNameColor(final UriInvocationContext context)
     {
-        final Player player = Bukkit.getPlayer(UUID.fromString(parameters.get("playerId")));
-        final String name = parameters.get("name");
+        final INorthPlayer player = INorthPlayer.get(context.asUuid("playerId"));
+        final String name = context.asString("name");
 
         final BwShopEntry shopEntry = this.shopManager.getShopEntry(name);
         final ItemStack price = shopEntry.getPrice().createItemStack();
@@ -109,35 +111,35 @@ public final class ShopGuiManager
     }
 
     @UriHandler("/minigame/bedwars/shop/lore/:name/:playerId")
-    public String getLore(final String calledUri, final Map<String, String> parameters)
+    public String getLore(final UriInvocationContext context)
     {
-        final Player player = Bukkit.getPlayer(UUID.fromString(parameters.get("playerId")));
-        final String name = parameters.get("name");
-        final String locale = player.spigot().getLocale();
+        final INorthPlayer player = INorthPlayer.get(context.asUuid("playerId"));
+        final String name = context.asString("name");
+        final String locale = player.getLocale();
 
         final BwShopEntry shopEntry = this.shopManager.getShopEntry(name);
         final ItemStack priceItem = shopEntry.getPrice().createItemStack();
 
         final String currencyKey = "currency." + priceItem.getType().name().toLowerCase(Locale.ROOT);
         final String priceMsgKey = PluralForm.transformKey(currencyKey, priceItem.getAmount());
-        final String price = this.shopMessages.getLegacyMessage(locale, priceMsgKey, priceItem.getAmount());
+        final String price = this.shopMessages.getString(locale, priceMsgKey, priceItem.getAmount());
 
-        final String description = this.shopMessages.getMessage(locale, "item." + name + ".lore");
+        final String description = this.shopMessages.getString(locale, "item." + name + ".lore");
 
         final ItemPreBuyEvent preBuyEvent = this.apiCore.callEvent(new ItemPreBuyEvent(getArena(player), player, shopEntry, priceItem, true));
         final ItemPreBuyEvent.BuyStatus buyStatus = preBuyEvent.getBuyStatus();
 
         if (buyStatus.canBuy())
         {
-            return this.shopMessages.getLegacyMessage(locale,
+            return this.shopMessages.getString(locale,
                     "gui.shop.item_lore.available",
                     description,
                     price);
         }
         else if (buyStatus == ItemPreBuyEvent.BuyStatus.NOT_ENOUGH_CURRENCY)
         {
-            final String currencyName = ChatUtils.stripColor(this.shopMessages.getLegacyMessage(locale, currencyKey + ".many", ""));
-            return this.shopMessages.getLegacyMessage(locale,
+            final String currencyName = ChatUtils.stripColor(this.shopMessages.getString(locale, currencyKey + ".many", ""));
+            return this.shopMessages.getString(locale,
                     "gui.shop.item_lore.no_money",
                     description,
                     price,
@@ -145,7 +147,7 @@ public final class ShopGuiManager
         }
         else
         {
-            return this.shopMessages.getLegacyMessage(locale,
+            return this.shopMessages.getString(locale,
                     "gui.shop.item_lore.already_had",
                     description,
                     price);

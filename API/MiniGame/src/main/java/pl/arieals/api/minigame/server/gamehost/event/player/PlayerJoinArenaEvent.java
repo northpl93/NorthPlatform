@@ -1,12 +1,12 @@
 package pl.arieals.api.minigame.server.gamehost.event.player;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 /**
  * Event wywolywany gdy gracz wchodzi na arene.
@@ -19,7 +19,7 @@ public class PlayerJoinArenaEvent extends PlayerArenaEvent
     private final boolean reconnected;
     private String joinMessage;
 
-    public PlayerJoinArenaEvent(final Player who, final LocalArena arena, final boolean reconnected, final String joinMessage)
+    public PlayerJoinArenaEvent(final INorthPlayer who, final LocalArena arena, final boolean reconnected, final String joinMessage)
     {
         super(arena, who);
         this.reconnected = reconnected;

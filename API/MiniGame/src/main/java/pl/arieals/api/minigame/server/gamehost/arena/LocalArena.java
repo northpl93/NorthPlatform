@@ -1,6 +1,5 @@
 package pl.arieals.api.minigame.server.gamehost.arena;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -8,8 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.common.base.Preconditions;
-
-import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -35,6 +32,7 @@ import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDataChangedNetEven
 import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDeletedNetEvent;
 import pl.arieals.api.minigame.shared.api.match.IMatchAccess;
 import pl.arieals.api.minigame.shared.impl.arena.ArenaManager;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.StaticTimer;
 import pl.north93.zgame.api.global.metadata.MetaStore;
 
@@ -335,7 +333,7 @@ public class LocalArena implements IArena
         final Logger logger = this.gameHostManager.getApiCore().getLogger();
         logger.log(Level.WARNING, "There are still connected players to {0}, kicking them...", this.getId());
 
-        final List<Player> players = this.playersManager.getAllPlayers();
+        final Set<INorthPlayer> players = this.playersManager.getAllPlayers();
         players.forEach(player -> player.kickPlayer(""));
     }
 

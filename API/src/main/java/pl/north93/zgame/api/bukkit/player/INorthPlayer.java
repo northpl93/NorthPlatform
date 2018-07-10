@@ -9,8 +9,10 @@ import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.BaseComponent;
+import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messageable;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.metadata.Metadatable;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.Identity;
@@ -39,9 +41,19 @@ public interface INorthPlayer extends Player, Metadatable, Messageable
         return bukkitPlayers.getPlayer(nick);
     }
 
+    static INorthPlayer getExact(final String exactNick)
+    {
+        return bukkitPlayers.getPlayerExact(exactNick);
+    }
+
     static INorthPlayer wrap(final Player player)
     {
         return bukkitPlayers.getPlayer(player);
+    }
+
+    static INorthPlayer wrap(final NorthCommandSender northCommandSender)
+    {
+        return bukkitPlayers.getPlayer(northCommandSender);
     }
 
     /**
@@ -130,6 +142,18 @@ public interface INorthPlayer extends Player, Metadatable, Messageable
     default void sendActionBar(final BaseComponent component)
     {
         this.sendActionBar(component.toLegacyText());
+    }
+
+    /**
+     * Wysyła przetłumaczony tekst na action bar gracza.
+     *
+     * @param messagesBox Obiekt przechowujący wiadomości.
+     * @param key Klucz wiadomości.
+     * @param params Parametry wiadomości.
+     */
+    default void sendActionBar(final MessagesBox messagesBox, final String key, final Object... params)
+    {
+        this.sendActionBar(messagesBox.getString(this.getMyLocale(), key, params));
     }
 
     @Override // trzeba bylo dodac zeby nie bylo bledu kompilacji

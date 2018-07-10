@@ -1,9 +1,9 @@
 package pl.arieals.api.minigame.server.gamehost.event.player;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 /**
  * Event wywolywany gdy spectator wchodzi do gry.
@@ -12,7 +12,7 @@ public class SpectatorJoinEvent extends PlayerArenaEvent
 {
     private static final HandlerList handlers = new HandlerList();
 
-    public SpectatorJoinEvent(final Player who, final LocalArena arena)
+    public SpectatorJoinEvent(final INorthPlayer who, final LocalArena arena)
     {
         super(arena, who);
     }

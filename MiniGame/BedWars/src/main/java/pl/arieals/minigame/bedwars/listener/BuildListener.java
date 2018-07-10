@@ -48,8 +48,8 @@ public class BuildListener implements Listener
     @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(final BlockPlaceEvent event)
     {
-        final Block block = event.getBlock();
         final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
+        final Block block = event.getBlock();
 
         final LocalArena arena = getArena(block.getWorld());
         if (arena == null || arena.getGamePhase() != GamePhase.STARTED)
@@ -62,7 +62,7 @@ public class BuildListener implements Listener
         final BedWarsArena arenaData = arena.getArenaData();
         if (this.checkGenerator(arenaData, block) || this.checkSecureRegion(arenaData, block))
         {
-            player.sendActionBar(this.messages.getMessage(player.getMyLocale(), "no_permissions"));
+            player.sendActionBar(this.messages, "no_permissions");
             event.setCancelled(true);
             return;
         }
@@ -73,8 +73,8 @@ public class BuildListener implements Listener
     @EventHandler(ignoreCancelled = true)
     private void onBlockDestroy(final BlockBreakEvent event)
     {
-        final Block block = event.getBlock();
         final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
+        final Block block = event.getBlock();
 
         final LocalArena arena = getArena(block.getWorld());
         if (arena == null || arena.getGamePhase() != GamePhase.STARTED)
@@ -88,7 +88,7 @@ public class BuildListener implements Listener
         final BedWarsPlayer playerData = getPlayerData(event.getPlayer(), BedWarsPlayer.class);
         if (this.checkSecureRegion(arenaData, block))
         {
-            player.sendActionBar(this.messages.getMessage(player.getMyLocale(), "no_permissions"));
+            player.sendActionBar(this.messages, "no_permissions");
             event.setCancelled(true);
             return;
         }
@@ -104,7 +104,7 @@ public class BuildListener implements Listener
         }
 
         event.setCancelled(true);
-        player.sendActionBar(this.messages.getMessage(player.getMyLocale(), "no_permissions"));
+        player.sendActionBar(this.messages, "no_permissions");
     }
 
     // zwraca true jesli gracz niszczy lozko - wtedy nie wykonujemy reszty kodu w evencie

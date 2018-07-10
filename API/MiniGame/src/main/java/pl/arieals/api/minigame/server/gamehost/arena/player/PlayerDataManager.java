@@ -1,6 +1,7 @@
 package pl.arieals.api.minigame.server.gamehost.arena.player;
 
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.base.Preconditions;
 
@@ -18,6 +19,7 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorModeChangeEvent;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -58,7 +60,7 @@ public class PlayerDataManager
         player.setMetadata(clazz.getName(), new FixedMetadataValue(this.apiCore.getPluginMain(), data));
     }
 
-    public PlayerStatus getStatus(final Player player)
+    public PlayerStatus getStatus(final INorthPlayer player)
     {
         final List<MetadataValue> minigameApiStatus = player.getMetadata("minigameApiStatus");
         if (minigameApiStatus.isEmpty())
@@ -68,14 +70,14 @@ public class PlayerDataManager
         return (PlayerStatus) minigameApiStatus.get(0).value();
     }
 
-    public void updateStatus(final Player player, final PlayerStatus newStatus)
+    public void updateStatus(final INorthPlayer player, final PlayerStatus newStatus)
     {
         final LocalArenaManager arenaManager = this.getGameHost().getArenaManager();
         final LocalArena arena = arenaManager.getArenaAssociatedWith(player.getUniqueId())
                                              .orElseThrow(IllegalStateException::new);
 
         final PlayerStatus oldStatus = this.getStatus(player);
-        final List<Player> spectators = arena.getPlayersManager().getSpectators();
+        final Set<INorthPlayer> spectators = arena.getPlayersManager().getSpectators();
 
         if (newStatus == PlayerStatus.SPECTATOR && ! spectators.contains(player))
         {

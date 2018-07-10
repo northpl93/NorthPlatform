@@ -11,14 +11,11 @@ import static pl.north93.zgame.api.global.utils.lang.CollectionUtils.findInColle
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -34,12 +31,14 @@ import pl.arieals.minigame.bedwars.shop.specialentry.IShopSpecialEntry;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.IGuiManager;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.itemstack.ItemTransaction;
 import pl.north93.zgame.api.bukkit.utils.xml.itemstack.XmlItemStack;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.uri.UriHandler;
+import pl.north93.zgame.api.global.uri.UriInvocationContext;
 
 /**
  * Klasa zarzadzajaca sklepem bedwarsów.
@@ -100,10 +99,10 @@ public class ShopManager
     }
 
     @UriHandler("/minigame/bedwars/shop/buy/:name/:playerId")
-    public boolean restHandler(final String calledUri, final Map<String, String> parameters)
+    public boolean restHandler(final UriInvocationContext context)
     {
-        final String name = parameters.get("name");
-        final Player player = Bukkit.getPlayer(UUID.fromString(parameters.get("playerId")));
+        final String name = context.asString("name");
+        final INorthPlayer player = INorthPlayer.get(context.asUuid("playerId"));
 
         return this.buy(player, name);
     }
@@ -124,7 +123,7 @@ public class ShopManager
      * @param name nazwa wewnetrzna shop entry.
      * @return czy sie udalo kupic i dodac przedmioty do ekwipunku.
      */
-    public boolean buy(final Player player, final String name)
+    public boolean buy(final INorthPlayer player, final String name)
     {
         final BwShopEntry entry = this.getShopEntry(name);
         final ItemStack price = entry.getPrice().createItemStack();

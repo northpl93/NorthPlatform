@@ -17,6 +17,7 @@ import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 public class BwSpectatorListener implements Listener
 {
@@ -35,7 +36,7 @@ public class BwSpectatorListener implements Listener
     @EventHandler
     public void keepY(final PlayerMoveEvent event)
     {
-        final Player player = event.getPlayer();
+        final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
 
         final PlayerStatus playerStatus = getPlayerStatus(player);
         if (playerStatus == null || ! playerStatus.isSpectator() || player.hasPermission("bedwars.ignoreYKeeper"))

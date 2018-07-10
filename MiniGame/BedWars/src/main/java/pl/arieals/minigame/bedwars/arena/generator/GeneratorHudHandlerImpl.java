@@ -131,7 +131,7 @@ class GeneratorHudHandlerImpl implements IGeneratorHudHandler
         for (final Player player : playersManager.getPlayers())
         {
             final BwGeneratorType type = this.generator.getGeneratorType();
-            final String generatorName = this.messages.getMessage(player.getLocale(), "generator.type.genitive." + type.getName());
+            final String generatorName = this.messages.getString(player.getLocale(), "generator.type.genitive." + type.getName());
 
             final long generatorsCount = this.countSameGenerators();
             final String msgName = generatorsCount == 1 ? "generator.upgrade.singular" : "generator.upgrade.plural";

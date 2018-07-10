@@ -17,6 +17,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.player.IBukkitPlayers;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
+import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
@@ -59,26 +60,32 @@ public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
     @Override
     public INorthPlayer getPlayer(final Player player)
     {
-        final Value<IOnlinePlayer> onlinePlayerData = this.networkManager.getPlayers().unsafe().getOnlineValue(player.getName());
-        return this.wrapNorthPlayer(player, onlinePlayerData);
+        return this.wrapNorthPlayer(player);
+    }
+
+    @Override
+    public INorthPlayer getPlayer(final NorthCommandSender northCommandSender)
+    {
+        final Player bukkitPlayer = (Player) northCommandSender.unwrapped();
+        return this.wrapNorthPlayer(bukkitPlayer);
     }
 
     @Override
     public INorthPlayer getPlayer(final UUID uuid)
     {
-        return Optional.ofNullable(Bukkit.getPlayer(uuid)).map(this::getPlayer).orElse(null);
+        return Optional.ofNullable(Bukkit.getPlayer(uuid)).map(this::wrapNorthPlayer).orElse(null);
     }
 
     @Override
     public INorthPlayer getPlayer(final String nick)
     {
-        return Optional.ofNullable(Bukkit.getPlayer(nick)).map(this::getPlayer).orElse(null);
+        return Optional.ofNullable(Bukkit.getPlayer(nick)).map(this::wrapNorthPlayer).orElse(null);
     }
 
     @Override
     public INorthPlayer getPlayerExact(final String exactNick)
     {
-        return Optional.ofNullable(Bukkit.getPlayerExact(exactNick)).map(this::getPlayer).orElse(null);
+        return Optional.ofNullable(Bukkit.getPlayerExact(exactNick)).map(this::wrapNorthPlayer).orElse(null);
     }
 
     @Override
@@ -100,15 +107,17 @@ public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
     @Override
     public Stream<INorthPlayer> getStream()
     {
-        return Bukkit.getOnlinePlayers().stream().map(this::getPlayer);
+        return Bukkit.getOnlinePlayers().stream().map(this::wrapNorthPlayer);
     }
 
-    private INorthPlayer wrapNorthPlayer(final Player player, final Value<IOnlinePlayer> playerData)
+    private INorthPlayer wrapNorthPlayer(final Player player)
     {
         if (player instanceof NorthPlayerImpl)
         {
             return (INorthPlayer) player;
         }
+
+        final Value<IOnlinePlayer> playerData = this.networkManager.getPlayers().unsafe().getOnlineValue(player.getName());
         return new NorthPlayerImpl(this.networkManager, player, playerData);
     }
 

@@ -115,7 +115,7 @@ public class GameScoreboard implements IScoreboardLayout
 
     private void buildGeneratorUpgrade(final ContentBuilder builder, final Pair<BwGeneratorType, BwGeneratorItemConfig> nextUpgrade, final LocalArena arena, final String locale)
     {
-        final String generatorName = this.messages.getMessage(locale, "generator.type.nominative." + nextUpgrade.getKey().getName());
+        final String generatorName = this.messages.getString(locale, "generator.type.nominative." + nextUpgrade.getKey().getName());
         final long timeTo = (nextUpgrade.getValue().getStartAt() / 20) - arena.getTimer().getCurrentTime(TimeUnit.SECONDS);
         final String humanTime = FORMAT.format(LocalDateTime.ofEpochSecond(timeTo, 0, ZoneOffset.UTC));
 
@@ -132,16 +132,16 @@ public class GameScoreboard implements IScoreboardLayout
         builder.add("");
         arenaData.getTeams().stream().sorted(comparing(Team::getScoreboardOrder)).forEach(team ->
         {
-            final String teamName = this.messages.getMessage(locale, "team.scoreboard." + team.getName());
+            final String teamName = this.messages.getString(locale, "team.scoreboard." + team.getName());
 
             final String status;
             if (team.isBedAlive())
             {
-                status = this.messages.getMessage(locale, "scoreboard.tick");
+                status = this.messages.getString(locale, "scoreboard.tick");
             }
             else if (team.isEliminated())
             {
-                status = this.messages.getMessage(locale, "scoreboard.cross");
+                status = this.messages.getString(locale, "scoreboard.cross");
             }
             else
             {

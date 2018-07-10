@@ -1,6 +1,5 @@
 package pl.arieals.minigame.bedwars.event;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
@@ -9,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.cfg.BwShopEntry;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 /**
  * Event wywolywany przed zakupem itemu i
@@ -22,7 +22,7 @@ public class ItemPreBuyEvent extends BedWarsPlayerArenaEvent
     private final boolean     isCheck;
     private       BuyStatus   buyStatus;
 
-    public ItemPreBuyEvent(final LocalArena arena, final Player player, final BwShopEntry shopEntry, final ItemStack price, final boolean isCheck)
+    public ItemPreBuyEvent(final LocalArena arena, final INorthPlayer player, final BwShopEntry shopEntry, final ItemStack price, final boolean isCheck)
     {
         super(arena, player);
         this.shopEntry = shopEntry;

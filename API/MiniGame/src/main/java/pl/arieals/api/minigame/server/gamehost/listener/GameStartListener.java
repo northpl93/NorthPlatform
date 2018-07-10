@@ -1,10 +1,10 @@
 package pl.arieals.api.minigame.server.gamehost.listener;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
@@ -19,6 +19,7 @@ import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.arena.StandardArenaMetaData;
 import pl.arieals.api.minigame.shared.api.match.IMatchAccess;
 import pl.arieals.api.minigame.shared.api.match.IMatchManager;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.players.Identity;
@@ -49,7 +50,7 @@ public class GameStartListener implements AutoListener
     // metoda pomocnicza tworząca nowy IMatchAccess na podstawie podanej areny
     private IMatchAccess createMatch(final LocalArena arena)
     {
-        final List<Player> players = arena.getPlayersManager().getPlayers();
+        final Set<INorthPlayer> players = arena.getPlayersManager().getPlayers();
         final List<Identity> identities = players.stream().map(Identity::of).collect(Collectors.toList());
 
         return this.matchManager.createMatch(arena.getId(), arena.getMiniGame(), arena.getServerId(), identities);

@@ -3,7 +3,6 @@ package pl.arieals.api.minigame.server.gamehost.event.player;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -11,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 /**
  * Event wywoływany gdy zmieniany jest tryb spectatora dla danego gracza.
@@ -21,7 +21,7 @@ public class SpectatorModeChangeEvent extends PlayerArenaEvent
     private final PlayerStatus oldStatus;
     private final PlayerStatus newStatus;
 
-    public SpectatorModeChangeEvent(final LocalArena arena, final Player who, final PlayerStatus oldStatus, final PlayerStatus newStatus)
+    public SpectatorModeChangeEvent(final LocalArena arena, final INorthPlayer who, final PlayerStatus oldStatus, final PlayerStatus newStatus)
     {
         super(arena, who);
         this.oldStatus = oldStatus;

@@ -3,8 +3,6 @@ package pl.arieals.api.minigame.server.gamehost.cmd;
 import java.util.Collections;
 import java.util.List;
 
-import org.bukkit.entity.Player;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,6 +11,7 @@ import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
@@ -49,7 +48,7 @@ public class SingleServerJoin extends NorthCommand
             return;
         }
 
-        final Player player = (Player) sender.unwrapped();
+        final INorthPlayer player = INorthPlayer.wrap(sender);
         final GameHostManager serverManager = this.server.getServerManager();
 
         if (serverManager.getArenaManager().getArenaAssociatedWith(player.getUniqueId()).isPresent())

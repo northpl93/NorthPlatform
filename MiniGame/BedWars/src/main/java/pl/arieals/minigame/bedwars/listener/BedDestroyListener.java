@@ -84,8 +84,8 @@ public class BedDestroyListener implements Listener
         {
             final String locale = player.getLocale();
 
-            final String title = this.messages.getMessage(locale, "bed_destroyed.title.title");
-            final String subtitle = this.messages.getMessage(locale, "bed_destroyed.title.subtitle");
+            final String title = this.messages.getString(locale, "bed_destroyed.title.title");
+            final String subtitle = this.messages.getString(locale, "bed_destroyed.title.subtitle");
 
             player.sendTitle(new Title(title, subtitle, 20, 20, 20));
         }

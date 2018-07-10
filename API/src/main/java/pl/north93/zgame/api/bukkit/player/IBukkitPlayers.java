@@ -9,6 +9,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import pl.north93.zgame.api.global.commands.NorthCommandSender;
+
 /**
  * Komponent pomocniczy umożliwiający używanie Bukkitowych interfejsow
  * wraz z danymi z systemu North Platform.
@@ -26,6 +28,16 @@ public interface IBukkitPlayers
      * @return Obiekt INorthPlayer.
      */
     INorthPlayer getPlayer(Player player);
+
+    /**
+     * Wrapuje podany obiekt {@link NorthCommandSender} w INorthPlayer.
+     * Nalezy wczesniej upewnic sie, ze jest on graczem.
+     *
+     * @throws ClassCastException Kiedy podamy sendera który nie jest graczem.
+     * @param northCommandSender Obiekt do zwrapowania.
+     * @return Obiekt INorthPlayer.
+     */
+    INorthPlayer getPlayer(NorthCommandSender northCommandSender);
 
     /**
      * Zwraca obiekt gracza bedacego lokalnie na serwerze

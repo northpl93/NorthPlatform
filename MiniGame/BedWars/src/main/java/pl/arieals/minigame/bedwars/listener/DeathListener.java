@@ -32,6 +32,7 @@ import pl.arieals.minigame.bedwars.shop.elimination.IEliminationEffect;
 import pl.arieals.minigame.bedwars.shop.stattrack.StatTrackManager;
 import pl.arieals.minigame.bedwars.shop.stattrack.TrackedStatistic;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageContainer;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageEntry;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageTracker;
@@ -52,8 +53,8 @@ public class DeathListener implements Listener
     @EventHandler
     public void onVoidDamage(final EntityDamageEvent event)
     {
-        final Player player = instanceOf(event.getEntity(), Player.class);
-        if (player == null)
+        final Player bukkitPlayer = instanceOf(event.getEntity(), Player.class);
+        if (bukkitPlayer == null)
         {
             return;
         }
@@ -62,6 +63,8 @@ public class DeathListener implements Listener
         {
             return;
         }
+
+        final INorthPlayer player = INorthPlayer.wrap(bukkitPlayer);
 
         final PlayerStatus playerStatus = getPlayerStatus(player);
         if (playerStatus == PlayerStatus.PLAYING)
@@ -92,7 +95,7 @@ public class DeathListener implements Listener
     @EventHandler
     public void onPlayerDeath(final PlayerDeathEvent event)
     {
-        final Player player = event.getEntity();
+        final INorthPlayer player = INorthPlayer.wrap(event.getEntity());
         final LocalArena arena = getArena(player);
         final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
 
@@ -117,7 +120,7 @@ public class DeathListener implements Listener
         team.checkEliminated();
     }
 
-    private void handleRespawn(final Player player, final LocalArena arena, final BedWarsPlayer playerData)
+    private void handleRespawn(final INorthPlayer player, final LocalArena arena, final BedWarsPlayer playerData)
     {
         final Team team = playerData.getTeam();
         if (team.isBedAlive())

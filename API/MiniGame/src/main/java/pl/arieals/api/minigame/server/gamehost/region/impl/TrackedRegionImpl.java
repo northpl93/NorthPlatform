@@ -4,20 +4,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.bukkit.entity.Player;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.region.IRegion;
 
 class TrackedRegionImpl implements ITrackedRegion
 {
     private final RegionManagerImpl manager;
     private final IRegion           region;
-    private final List<Consumer<Player>> onEnter = new LinkedList<>();
-    private final List<Consumer<Player>> onExit = new LinkedList<>();
+    private final List<Consumer<INorthPlayer>> onEnter = new LinkedList<>();
+    private final List<Consumer<INorthPlayer>> onExit = new LinkedList<>();
 
     public TrackedRegionImpl(final RegionManagerImpl manager, final IRegion region)
     {
@@ -38,30 +37,30 @@ class TrackedRegionImpl implements ITrackedRegion
     }
 
     @Override
-    public ITrackedRegion whenEnter(final Consumer<Player> player)
+    public ITrackedRegion whenEnter(final Consumer<INorthPlayer> player)
     {
         this.onEnter.add(player);
         return this;
     }
 
     @Override
-    public ITrackedRegion whenLeave(final Consumer<Player> player)
+    public ITrackedRegion whenLeave(final Consumer<INorthPlayer> player)
     {
         this.onExit.add(player);
         return this;
     }
 
-    void fireEntered(final Player player)
+    void fireEntered(final INorthPlayer player)
     {
-        for (final Consumer<Player> event : this.onEnter)
+        for (final Consumer<INorthPlayer> event : this.onEnter)
         {
             event.accept(player);
         }
     }
 
-    void fireExited(final Player player)
+    void fireExited(final INorthPlayer player)
     {
-        for (final Consumer<Player> event : this.onExit)
+        for (final Consumer<INorthPlayer> event : this.onExit)
         {
             event.accept(player);
         }

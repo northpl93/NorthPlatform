@@ -3,7 +3,6 @@ package pl.arieals.api.minigame.server.gamehost;
 import javax.xml.bind.JAXB;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -88,13 +87,13 @@ public class GameHostManager implements IServerManager
     }
 
     @Override
-    public void tpToHub(final Collection<Player> players, final String hubId)
+    public void tpToHub(final Iterable<? extends Player> players, final String hubId)
     {
         this.gameHostHubsManager.tpToHub(players, hubId);
     }
 
     @Override
-    public void tpToHub(final Collection<Player> players, final IHubServer hubServer, final String hubId)
+    public void tpToHub(final Iterable<? extends Player> players, final IHubServer hubServer, final String hubId)
     {
         this.gameHostHubsManager.tpToHub(players, hubServer, hubId);
     }

@@ -19,7 +19,7 @@ public class BukkitTransactionListener implements ITransactionListener
     @Override
     public void amountUpdated(final IPlayer player, final ICurrency currency, final double newAmount)
     {
-        final INorthPlayer northPlayer = INorthPlayer.get(player.getLatestNick());
+        final INorthPlayer northPlayer = INorthPlayer.getExact(player.getLatestNick());
         if (northPlayer == null)
         {
             return;

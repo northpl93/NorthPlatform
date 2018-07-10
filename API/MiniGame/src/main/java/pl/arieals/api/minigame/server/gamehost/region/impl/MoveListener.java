@@ -5,7 +5,6 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -13,6 +12,8 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 class MoveListener implements Listener
 {
@@ -29,7 +30,8 @@ class MoveListener implements Listener
         final Location from = event.getFrom();
         final Location to = event.getTo();
 
-        this.handleRegionDiff(event.getPlayer(), from, to);
+        final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
+        this.handleRegionDiff(player, from, to);
     }
 
     @EventHandler
@@ -43,10 +45,11 @@ class MoveListener implements Listener
             return;
         }
 
-        this.handleMovement(event.getPlayer(), from, to);
+        final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
+        this.handleMovement(player, from, to);
     }
 
-    private void handleMovement(final Player player, final Location from, final Location to)
+    private void handleMovement(final INorthPlayer player, final Location from, final Location to)
     {
         if (this.isMoreThanBlock(from, to))
         {
@@ -60,7 +63,7 @@ class MoveListener implements Listener
     }
 
     @SuppressWarnings("unchecked")
-    private void handleRegionDiff(final Player player, final Location from, final Location to)
+    private void handleRegionDiff(final INorthPlayer player, final Location from, final Location to)
     {
         final Set<TrackedRegionImpl> regionsFrom = (Set) this.manager.getRegions(from);
         final Set<TrackedRegionImpl> regionsTo = (Set) this.manager.getRegions(to);

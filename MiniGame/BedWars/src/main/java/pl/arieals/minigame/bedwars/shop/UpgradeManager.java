@@ -12,10 +12,8 @@ import javax.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -33,6 +31,7 @@ import pl.arieals.minigame.bedwars.shop.upgrade.IUpgrade;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.bukkit.gui.impl.GuiTracker;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
@@ -41,6 +40,7 @@ import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.PluralForm;
 import pl.north93.zgame.api.global.uri.UriHandler;
+import pl.north93.zgame.api.global.uri.UriInvocationContext;
 
 public class UpgradeManager
 {
@@ -68,10 +68,10 @@ public class UpgradeManager
     }
 
     @UriHandler("/minigame/bedwars/upgrade/:name/:playerId/buy")
-    public boolean upgradeUri(final String calledUri, final Map<String, String> parameters)
+    public boolean upgradeUri(final UriInvocationContext context)
     {
-        final IUpgrade upgrade = this.getUpgrade(parameters);
-        final Player player = Bukkit.getPlayer(UUID.fromString(parameters.get("playerId")));
+        final IUpgrade upgrade = this.getUpgrade(context);
+        final INorthPlayer player = INorthPlayer.get(context.asUuid("playerId"));
 
         final LocalArena arena = getArena(player);
         final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
@@ -97,10 +97,10 @@ public class UpgradeManager
     }
 
     @UriHandler("/minigame/bedwars/upgrade/:name/:playerId/getNameColor")
-    public String getNameColor(final String calledUri, final Map<String, String> parameters)
+    public String getNameColor(final UriInvocationContext context)
     {
-        final IUpgrade upgrade = this.getUpgrade(parameters);
-        final Player player = Bukkit.getPlayer(UUID.fromString(parameters.get("playerId")));
+        final IUpgrade upgrade = this.getUpgrade(context);
+        final INorthPlayer player = INorthPlayer.get(context.asUuid("playerId"));
 
         final LocalArena arena = getArena(player);
         final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
@@ -122,10 +122,10 @@ public class UpgradeManager
     }
 
     @UriHandler("/minigame/bedwars/upgrade/:name/:playerId/composeLore")
-    public String composeLore(final String calledUri, final Map<String, String> parameters)
+    public String composeLore(final UriInvocationContext context)
     {
-        final Player player = Bukkit.getPlayer(UUID.fromString(parameters.get("playerId")));
-        final IUpgrade upgrade = this.getUpgrade(parameters);
+        final IUpgrade upgrade = this.getUpgrade(context);
+        final INorthPlayer player = INorthPlayer.get(context.asUuid("playerId"));
 
         final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
         final Team team = playerData.getTeam();
@@ -166,12 +166,12 @@ public class UpgradeManager
         return this.upgrades.get(upgradeName);
     }
 
-    private IUpgrade getUpgrade(final Map<String, String> parameters)
+    private IUpgrade getUpgrade(final UriInvocationContext context)
     {
-        final IUpgrade upgrade = this.upgrades.get(parameters.get("name"));
+        final IUpgrade upgrade = this.upgrades.get(context.asString("name"));
         if (upgrade == null)
         {
-            throw new IllegalArgumentException(format("Not found upgrade with name {0}", parameters.get("name")));
+            throw new IllegalArgumentException(format("Not found upgrade with name {0}", context.asString("name")));
         }
         return upgrade;
     }

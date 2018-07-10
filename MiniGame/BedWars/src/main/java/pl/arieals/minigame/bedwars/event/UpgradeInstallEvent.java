@@ -1,6 +1,5 @@
 package pl.arieals.minigame.bedwars.event;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
@@ -10,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.shop.upgrade.IUpgrade;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 public class UpgradeInstallEvent extends BedWarsPlayerArenaEvent implements Cancellable
 {
@@ -20,7 +20,7 @@ public class UpgradeInstallEvent extends BedWarsPlayerArenaEvent implements Canc
     private final boolean  isInstalling;
     private       boolean  cancelled;
 
-    public UpgradeInstallEvent(final LocalArena arena, final Team team, final Player issuer, final IUpgrade upgrade, final int level, final boolean isInstalling)
+    public UpgradeInstallEvent(final LocalArena arena, final Team team, final INorthPlayer issuer, final IUpgrade upgrade, final int level, final boolean isInstalling)
     {
         super(arena, issuer);
         this.team = team;
@@ -34,7 +34,7 @@ public class UpgradeInstallEvent extends BedWarsPlayerArenaEvent implements Canc
         return this.team;
     }
 
-    public Player getIssuer()
+    public INorthPlayer getIssuer()
     {
         return this.getPlayer();
     }

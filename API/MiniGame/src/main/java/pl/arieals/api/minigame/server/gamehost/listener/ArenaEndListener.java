@@ -4,11 +4,10 @@ import static org.bukkit.event.EventPriority.MONITOR;
 
 
 import java.time.Duration;
-import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -22,6 +21,7 @@ import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.match.IMatchAccess;
 import pl.arieals.api.minigame.shared.api.match.StandardMatchStatistics;
 import pl.arieals.api.minigame.shared.api.statistics.unit.DurationUnit;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -47,7 +47,7 @@ public class ArenaEndListener implements AutoListener
 
     private void checkArenaShouldEnd(final LocalArena arena)
     {
-        final List<Player> allPlayers = arena.getPlayersManager().getAllPlayers();
+        final Set<INorthPlayer> allPlayers = arena.getPlayersManager().getAllPlayers();
         if (! allPlayers.isEmpty())
         {
             return;

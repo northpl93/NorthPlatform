@@ -3,10 +3,7 @@ package pl.arieals.minigame.bedwars.shop.specialentry;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
-import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -21,11 +18,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.minigame.bedwars.shop.ShopGuiManager;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.itemstack.ItemTransaction;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 import pl.north93.zgame.api.global.uri.UriHandler;
+import pl.north93.zgame.api.global.uri.UriInvocationContext;
 import pl.north93.zgame.api.global.utils.Vars;
 
 public class WeaknessTippedArrow implements IShopSpecialEntry
@@ -49,12 +48,13 @@ public class WeaknessTippedArrow implements IShopSpecialEntry
     }
 
     @UriHandler("/minigame/bedwars/shop/render/WeaknessTippedArrow/:name/:playerId")
-    public ItemStack restRenderer(final String calledUri, final Map<String, String> parameters)
+    public ItemStack restRenderer(final UriInvocationContext context)
     {
-        final Player player = Bukkit.getPlayer(UUID.fromString(parameters.get("playerId")));
+        // uzywamy Player zamiast INorthPlayer aby uniknac bledów w getValue(player ...)
+        final Player player = INorthPlayer.get(context.asUuid("playerId"));
 
-        final String nameColor = this.guiManager.getNameColor(calledUri, parameters);
-        final String lore = this.guiManager.getLore(calledUri, parameters);
+        final String nameColor = this.guiManager.getNameColor(context);
+        final String lore = this.guiManager.getLore(context);
 
         final ItemStack itemStack = this.createBase();
         final ItemMeta itemMeta = itemStack.getItemMeta();

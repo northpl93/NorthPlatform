@@ -45,7 +45,7 @@ public class LobbyHubsManager
         return this.hubsManager.getAllHubs();
     }
 
-    public void tpToHub(final Collection<Player> players, final String hubId)
+    public void tpToHub(final Iterable<? extends Player> players, final String hubId)
     {
         for (final Player player : players)
         {
@@ -53,7 +53,7 @@ public class LobbyHubsManager
         }
     }
 
-    public void tpToHub(final Collection<Player> players, final IHubServer hubServer, final String hubId)
+    public void tpToHub(final Iterable<? extends Player> players, final IHubServer hubServer, final String hubId)
     {
         final UUID targetServerId = hubServer.getServerId();
         if (targetServerId.equals(this.localHub.getServerId()))

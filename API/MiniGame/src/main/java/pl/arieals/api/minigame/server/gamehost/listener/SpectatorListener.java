@@ -20,6 +20,7 @@ import org.bukkit.util.Vector;
 
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorModeChangeEvent;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 
 /**
@@ -63,12 +64,14 @@ public class SpectatorListener implements AutoListener
 
     // = = = BLOKOWANIE ZLYCH RZECZY SPECTATOROM = = = //
 
-    private void cancelIfNecessary(final Cancellable cancellable, final Player player)
+    private void cancelIfNecessary(final Cancellable cancellable, final Player bukkitPlayer)
     {
-        if (player == null)
+        if (bukkitPlayer == null)
         {
             return;
         }
+
+        final INorthPlayer player = INorthPlayer.wrap(bukkitPlayer);
 
         final PlayerStatus playerStatus = getPlayerStatus(player);
         if (playerStatus != null && playerStatus.isSpectator())

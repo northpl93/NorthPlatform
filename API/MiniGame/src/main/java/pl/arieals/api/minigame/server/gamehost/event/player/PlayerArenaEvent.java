@@ -1,21 +1,20 @@
 package pl.arieals.api.minigame.server.gamehost.event.player;
 
-import org.bukkit.entity.Player;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.ArenaEvent;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 /**
  * Event dotyczacy gracza powiazanego z dana arena.
  */
 public abstract class PlayerArenaEvent extends ArenaEvent
 {
-    private final Player player;
+    private final INorthPlayer player;
 
-    public PlayerArenaEvent(final LocalArena arena, final Player player)
+    public PlayerArenaEvent(final LocalArena arena, final INorthPlayer player)
     {
         super(arena);
         this.player = player;
@@ -25,7 +24,7 @@ public abstract class PlayerArenaEvent extends ArenaEvent
      * Zwraca gracza ktorego dotyczy ten event.
      * @return gracz ktorego dotyczy event.
      */
-    public Player getPlayer()
+    public INorthPlayer getPlayer()
     {
         return this.player;
     }

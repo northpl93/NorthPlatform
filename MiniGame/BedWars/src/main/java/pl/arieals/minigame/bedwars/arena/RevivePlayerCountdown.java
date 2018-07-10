@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import com.destroystokyo.paper.Title;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -19,6 +18,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.minigame.bedwars.event.PlayerRevivedEvent;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.AbstractCountdown;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
@@ -30,10 +30,10 @@ public class RevivePlayerCountdown extends AbstractCountdown
     private MessagesBox messages;
     @Inject
     private Logger              logger;
-    private final Player        player;
+    private final INorthPlayer  player;
     private final BedWarsPlayer bedWarsPlayer;
 
-    public RevivePlayerCountdown(final Player player, final BedWarsPlayer bedWarsPlayer)
+    public RevivePlayerCountdown(final INorthPlayer player, final BedWarsPlayer bedWarsPlayer)
     {
         super(5);
         this.player = player;

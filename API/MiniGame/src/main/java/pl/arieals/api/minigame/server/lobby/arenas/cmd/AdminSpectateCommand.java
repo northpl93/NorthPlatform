@@ -1,6 +1,5 @@
 package pl.arieals.api.minigame.server.lobby.arenas.cmd;
 
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -122,7 +121,7 @@ class TeleportAdminToPlayer implements IServerJoinAction
         player.setGameMode(GameMode.CREATIVE);
         player.setCollidable(false);
 
-        final Player target = Bukkit.getPlayer(this.playerName);
+        final INorthPlayer target = INorthPlayer.getExact(this.playerName);
         if (target != null)
         {
             player.teleport(target, PlayerTeleportEvent.TeleportCause.PLUGIN);

@@ -5,7 +5,6 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerStatu
 
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -14,17 +13,18 @@ import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.minigame.bedwars.event.PlayerEliminatedEvent;
 import pl.arieals.minigame.bedwars.shop.elimination.IEliminationEffect;
 import pl.arieals.minigame.bedwars.utils.TeamArmorUtils;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 public class BedWarsPlayer
 {
-    private final Player             bukkitPlayer;
+    private final INorthPlayer       bukkitPlayer;
     private final IEliminationEffect eliminationEffect;
     private Team    team;
     private boolean eliminated;
     private int     kills;
     private int     lives; // ilosc dodatkowych zyc
 
-    public BedWarsPlayer(final Player bukkitPlayer, final IEliminationEffect eliminationEffect)
+    public BedWarsPlayer(final INorthPlayer bukkitPlayer, final IEliminationEffect eliminationEffect)
     {
         this.bukkitPlayer = bukkitPlayer;
         this.eliminationEffect = eliminationEffect;
@@ -61,7 +61,7 @@ public class BedWarsPlayer
         return playerStatus != null && ! this.isOffline() && playerStatus == PlayerStatus.PLAYING;
     }
 
-    public Player getBukkitPlayer()
+    public INorthPlayer getBukkitPlayer()
     {
         return this.bukkitPlayer;
     }

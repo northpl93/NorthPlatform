@@ -46,13 +46,13 @@ public class LobbyManager implements IServerManager
     }
 
     @Override
-    public void tpToHub(final Collection<Player> players, final String hubId)
+    public void tpToHub(final Iterable<? extends Player> players, final String hubId)
     {
         this.lobbyHubsManager.tpToHub(players, hubId);
     }
 
     @Override
-    public void tpToHub(final Collection<Player> players, final IHubServer hubServer, final String hubId)
+    public void tpToHub(final Iterable<? extends Player> players, final IHubServer hubServer, final String hubId)
     {
         this.lobbyHubsManager.tpToHub(players, hubServer, hubId);
     }

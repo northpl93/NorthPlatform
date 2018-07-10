@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -31,6 +30,7 @@ import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.shop.ShopGuiManager;
 import pl.arieals.minigame.bedwars.shop.gui.ShopMain;
 import pl.arieals.minigame.bedwars.shop.gui.UpgradesGui;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
@@ -86,7 +86,7 @@ public class NpcCreator implements Listener
             return;
         }
 
-        final Player player = event.getPlayer();
+        final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
 
         // spectatorzy nie moga klikac na npcty
         final PlayerStatus playerStatus = getPlayerStatus(player);

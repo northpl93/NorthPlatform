@@ -3,14 +3,13 @@ package pl.arieals.minigame.bedwars.event;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
-import org.bukkit.entity.Player;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerArenaEvent;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 /**
  * Event powiązany z graczem BedWars i areną.
@@ -38,7 +37,7 @@ public abstract class BedWarsPlayerArenaEvent extends PlayerArenaEvent
      * @param arena Arena na której gra gracz.
      * @param player Player z którego zostani pobrany BedWarsPlayer.
      */
-    public BedWarsPlayerArenaEvent(final LocalArena arena, final Player player)
+    public BedWarsPlayerArenaEvent(final LocalArena arena, final INorthPlayer player)
     {
         super(arena, player);
 

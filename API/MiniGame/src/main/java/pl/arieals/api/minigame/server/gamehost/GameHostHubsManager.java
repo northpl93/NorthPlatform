@@ -1,6 +1,5 @@
 package pl.arieals.api.minigame.server.gamehost;
 
-import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,7 +41,7 @@ public class GameHostHubsManager
      * @param players Gracze do teleportacji.
      * @param hubId ID huba na ktorego maja trafic gracze.
      */
-    public void tpToHub(final Collection<Player> players, final String hubId)
+    public void tpToHub(final Iterable<? extends Player> players, final String hubId)
     {
         final RemoteHub hub = DioriteRandomUtils.getRandom(this.hubsManager.getAllHubs());
         if (hub == null)
@@ -61,7 +60,7 @@ public class GameHostHubsManager
      * @param hubServer Instancja serwera z hubami.
      * @param hubId ID huba na ktorego maja trafic gracze.
      */
-    public void tpToHub(final Collection<Player> players, final IHubServer hubServer, final String hubId)
+    public void tpToHub(final Iterable<? extends Player> players, final IHubServer hubServer, final String hubId)
     {
         final Server server = this.networkManager.getServers().withUuid(hubServer.getServerId());
         for (final Player player : players)

@@ -81,7 +81,7 @@ public class MessagesBox
         return getComponent(Locale.forLanguageTag(locale), key, args);
     }
 
-    public String getMessageForKey(Locale locale, String key)
+    private String getMessageForKey(Locale locale, String key)
     {
         ResourceBundle bundle = this.getBundle(locale);
         if ( bundle != null && bundle.containsKey(key) )

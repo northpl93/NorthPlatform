@@ -2,6 +2,7 @@ package pl.arieals.api.minigame.server.gamehost.listener;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.north93.zgame.api.bukkit.player.INorthPlayer.asCraftPlayer;
+import static pl.north93.zgame.api.bukkit.player.INorthPlayer.wrap;
 import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.getTrackerEntry;
 import static pl.north93.zgame.api.global.utils.lang.JavaUtils.instanceOf;
 
@@ -29,6 +30,7 @@ import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinWithoutAre
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.status.IPlayerStatusManager;
 import pl.arieals.api.minigame.shared.api.status.InGameStatus;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -46,7 +48,7 @@ public class PlayerListener implements AutoListener
     @EventHandler
     public void onPlayerJoin(final PlayerJoinEvent event)
     {
-        final Player player = event.getPlayer();
+        final INorthPlayer player = wrap(event.getPlayer());
 
         final GameHostManager gameHostManager = this.server.getServerManager();
         final Optional<LocalArena> arena = gameHostManager.getArenaManager().getArenaAssociatedWith(player.getUniqueId());
@@ -118,7 +120,7 @@ public class PlayerListener implements AutoListener
     @EventHandler
     public void onPlayerQuit(final PlayerQuitEvent event)
     {
-        final Player player = event.getPlayer();
+        final INorthPlayer player = wrap(event.getPlayer());
 
         final GameHostManager gameHostManager = this.server.getServerManager();
         final Optional<LocalArena> arena = gameHostManager.getArenaManager().getArenaAssociatedWith(player.getUniqueId());

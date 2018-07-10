@@ -19,6 +19,7 @@ import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
@@ -39,7 +40,7 @@ public class IslandTrapUpgrade implements IUpgrade
         region.whenEnter(player -> this.onEnter(region, team, player));
     }
 
-    private void onEnter(final ITrackedRegion region, final Team owningTeam, final Player player)
+    private void onEnter(final ITrackedRegion region, final Team owningTeam, final INorthPlayer player)
     {
         final PlayerStatus playerStatus = getPlayerStatus(player);
         if (playerStatus != null && playerStatus.isSpectator())

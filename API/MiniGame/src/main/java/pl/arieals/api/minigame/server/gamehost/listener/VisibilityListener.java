@@ -1,6 +1,6 @@
 package pl.arieals.api.minigame.server.gamehost.listener;
 
-import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,6 +17,7 @@ import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinWithoutAre
 import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.Main;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
@@ -41,9 +42,10 @@ public class VisibilityListener implements AutoListener
     {
         final Main plugin = this.apiCore.getPluginMain();
 
-        final List<Player> arenaPlayers = event.getArena().getPlayersManager().getAllPlayers();
+        final Set<INorthPlayer> arenaPlayers = event.getArena().getPlayersManager().getAllPlayers();
         for (final Player player : Bukkit.getOnlinePlayers())
         {
+            //noinspection SuspiciousMethodCalls NorthPlayerImpl deleguje equals i hashCode do CraftPlayer
             if (arenaPlayers.contains(player))
             {
                 continue;

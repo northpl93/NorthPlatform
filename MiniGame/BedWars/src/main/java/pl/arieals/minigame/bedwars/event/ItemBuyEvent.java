@@ -2,7 +2,6 @@ package pl.arieals.minigame.bedwars.event;
 
 import java.util.List;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
@@ -11,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.cfg.BwShopEntry;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 /**
  * Event wywoływany gdy gracz kupuje przedmiot ze sklepu.
@@ -25,7 +25,7 @@ public class ItemBuyEvent extends BedWarsPlayerArenaEvent
     private final BwShopEntry     shopEntry;
     private final List<ItemStack> items;
 
-    public ItemBuyEvent(final LocalArena arena, final Player player, final BwShopEntry shopEntry, final List<ItemStack> items)
+    public ItemBuyEvent(final LocalArena arena, final INorthPlayer player, final BwShopEntry shopEntry, final List<ItemStack> items)
     {
         super(arena, player);
         this.shopEntry = shopEntry;
