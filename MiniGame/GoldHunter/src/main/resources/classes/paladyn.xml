@@ -41,6 +41,11 @@
 		</boots>
 		
 		<inv slot="0" >
+			<item ifbuyed="paladin.sword" id="minecraft:golden_sword" >
+				<enchants>
+					<enchant enchantment="DAMAGE_ALL" level="1" />
+				</enchants>
+			</item>
 			<item id="minecraft:golden_sword" />
 		</inv>
 		

@@ -18,19 +18,19 @@
             </button>
             
             <button pos="1,2">
-            	<icon id="minecraft:planks" count="1" name="@budulec1.name$color" lore="@budulec1.lore$color,count,max"/>
+            	<icon id="minecraft:planks" count="1" name="@budulec1.name$color" lore="@budulec1.lore$color,status,price"/>
             	<metadata key="item" value="archer_bomb.budulec:1" />
             	<onClick>buy</onClick>
             </button>
             
             <button pos="3,2">
-            	<icon id="minecraft:planks" count="2" name="@budulec2.name$color" lore="@budulec2.lore$color,count,max"/>
+            	<icon id="minecraft:planks" count="2" name="@budulec2.name$color" lore="@budulec2.lore$color,status,price"/>
             	<metadata key="item" value="archer_bomb.budulec:2" />
             	<onClick>buy</onClick>
             </button>
             
             <button pos="5,2">
-            	<icon id="minecraft:planks" count="3" name="@budulec3.name$color" lore="@budulec3.lore$color,count,max"/>
+            	<icon id="minecraft:planks" count="3" name="@budulec3.name$color" lore="@budulec3.lore$color,status,price"/>
             	<metadata key="item" value="archer_bomb.budulec:3" />
             	<onClick>buy</onClick>
             </button>

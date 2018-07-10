@@ -29,6 +29,12 @@
             	<onClick>buy</onClick>
             </button>
             
+            <button pos="3,2">
+            	<icon id="minecraft:leather_leggings" name="@leggings.name$color" lore="@leggings.lore$color,status,price" />
+            	<metadata key="item" value="assasin.leggings" />
+            	<onClick>buy</onClick>
+            </button>
+            
             <button pos="4,2">
             	<icon id="minecraft:iron_chestplate" name="@chestplate.name$color" lore="@chestplate.lore$color,status,price"/>
             	<metadata key="item" value="assasin.chestplate" />

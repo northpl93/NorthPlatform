@@ -21,6 +21,10 @@
 			<item id="minecraft:chainmail_chestplate" /> 
 		</chestplate>
 				
+		<leggings>
+			<item ifbuyed="assasin.leggings" id="minecraft:leather_leggings" />
+		</leggings>
+		
 		<boots>
 			<item ifbuyed="assasin.boots" id="minecraft:iron_boots" />
 			<item id="minecraft:chainmail_boots" /> 
