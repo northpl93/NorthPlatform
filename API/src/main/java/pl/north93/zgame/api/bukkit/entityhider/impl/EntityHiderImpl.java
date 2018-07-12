@@ -8,8 +8,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import net.minecraft.server.v1_12_R1.EntityHuman;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
+import net.minecraft.server.v1_12_R1.World;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -64,10 +66,23 @@ public class EntityHiderImpl extends Component implements IEntityHider
                 continue;
             }
 
-            for (final EntityPlayer trackedPlayer : new HashSet<>(tracker.trackedPlayers))
+            final World nmsWorld = tracker.b().world;
+            for (final EntityHuman possibleHumanObserver : new HashSet<>(nmsWorld.players)) // todo is copying needed?
             {
-                tracker.clear(trackedPlayer); // kasujemy gracza z listy sledzacych
-                tracker.updatePlayer(trackedPlayer); // próbujemy zaktualizowac status sledzenia
+                final EntityPlayer playerObserver = (EntityPlayer) possibleHumanObserver;
+
+                final VisibilityController controller = this.getController(playerObserver.getBukkitEntity());
+                if (controller.isEntityVisible(entity))
+                {
+                    // podany gracz powinien widziec to entity, wiec prosimy Minecrafta o sprawdzenie czy
+                    // trzeba rozpoczac trackowanie
+                    tracker.updatePlayer(playerObserver);
+                }
+                else
+                {
+                    // podany gracz ma nie widziec tego entity wiec kasujemy go z listy sledzacych
+                    tracker.clear(playerObserver);
+                }
             }
         }
     }
