@@ -17,7 +17,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.shared.api.statistics.IRecord;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
 import pl.arieals.api.minigame.shared.api.statistics.type.ShorterTimeBetterStatistic;
 import pl.arieals.api.minigame.shared.api.statistics.unit.DurationUnit;
@@ -87,10 +86,10 @@ public class RaceScoreboard implements IScoreboardLayout
 
     private String getAvgTime(final IScoreboardContext ctx)
     {
-        final Optional<IRecord<DurationUnit>> avgTime = ctx.getCompletableFuture("avgTime");
+        final Optional<DurationUnit> avgTime = ctx.getCompletableFuture("avgTime");
         return avgTime.map(record ->
         {
-            final Duration averageDuration = record.getValue().getValue();
+            final Duration averageDuration = record.getValue();
             final LocalTime time = LocalTime.ofNanoOfDay(averageDuration.toNanos());
 
             return FORMAT.format(time);
