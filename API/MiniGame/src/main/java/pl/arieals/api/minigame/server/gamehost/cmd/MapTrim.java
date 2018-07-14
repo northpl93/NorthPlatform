@@ -20,6 +20,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
+@Deprecated
 public class MapTrim extends NorthCommand
 {
     @Inject @Messages("MiniGameApi")
@@ -30,7 +31,7 @@ public class MapTrim extends NorthCommand
     public MapTrim()
     {
         super("maptrim");
-        this.setPermission("dev");
+        this.setPermission("minigameapi.cmd.maptrim");
     }
 
     @Override

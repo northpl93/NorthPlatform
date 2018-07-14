@@ -38,7 +38,7 @@ public class AdminSpectateCommand extends NorthCommand
     public AdminSpectateCommand()
     {
         super("adminspectate", "adminspec");
-        this.setPermission("dev");
+        this.setPermission("minigameapi.cmd.adminspectate");
     }
 
     @Override

@@ -17,7 +17,7 @@ public class ScheduleShutdownCommand extends NorthCommand
     public ScheduleShutdownCommand()
     {
         super("scheduleshutdown");
-        this.setPermission("dev");
+        this.setPermission("basefeatures.cmd.scheduleshutdown");
     }
 
     @Override

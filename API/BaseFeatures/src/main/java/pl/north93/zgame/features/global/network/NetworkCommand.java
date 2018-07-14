@@ -25,7 +25,7 @@ public class NetworkCommand extends NorthCommand
     public NetworkCommand()
     {
         super("network", "net");
-        this.setPermission("api.command.network");
+        this.setPermission("basefeatures.cmd.network");
     }
 
     @Override

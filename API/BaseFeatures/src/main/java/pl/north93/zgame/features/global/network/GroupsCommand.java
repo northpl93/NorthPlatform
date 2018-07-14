@@ -36,7 +36,7 @@ public class GroupsCommand extends NorthCommand
     public GroupsCommand()
     {
         super("groups", "group");
-        this.setPermission("api.command.groups");
+        this.setPermission("basefeatures.cmd.groups");
         this.setAsync(true);
     }
 

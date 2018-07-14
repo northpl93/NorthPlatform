@@ -21,7 +21,7 @@ public class UnbanAllCommand extends NorthCommand
     public UnbanAllCommand()
     {
         super("unbanall");
-        this.setPermission("api.command.unbanall");
+        this.setPermission("basefeatures.cmd.unbanall");
     }
 
     @Override

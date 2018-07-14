@@ -23,7 +23,7 @@ public class PlayerInfoCommand extends NorthCommand
     public PlayerInfoCommand()
     {
         super("playerinfo", "pinfo");
-        this.setPermission("api.command.playerinfo");
+        this.setPermission("basefeatures.cmd.playerinfo");
         this.setAsync(true);
     }
 

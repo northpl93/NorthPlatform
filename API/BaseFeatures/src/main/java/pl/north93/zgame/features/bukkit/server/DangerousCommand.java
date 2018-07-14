@@ -9,7 +9,7 @@ public class DangerousCommand extends NorthCommand
     public DangerousCommand()
     {
         super("dangerous", "stop", "reload", "rl");
-        this.setPermission("api.command.dangerous");
+        this.setPermission("basefeatures.cmd.dangerous");
     }
 
     @Override

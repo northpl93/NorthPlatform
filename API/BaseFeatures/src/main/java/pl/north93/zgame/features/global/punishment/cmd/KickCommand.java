@@ -28,7 +28,7 @@ public class KickCommand extends NorthCommand
     public KickCommand()
     {
         super("kick");
-        this.setPermission("api.command.kick");
+        this.setPermission("basefeatures.cmd.kick");
         this.setAsync(true);
     }
 

@@ -24,7 +24,7 @@ public class HeadCommand extends NorthCommand
     public HeadCommand()
     {
         super("head");
-        this.setPermission("api.command.head");
+        this.setPermission("basefeatures.cmd.head");
     }
 
     @Override

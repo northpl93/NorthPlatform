@@ -18,7 +18,7 @@ public class WorldSaveCommand extends NorthCommand
     public WorldSaveCommand(@Messages("BaseFeatures") MessagesBox messages, IWorldManager worldManager)
     {
         super("worldsave");
-        setPermission("api.command.worldsave");
+        setPermission("basefeatures.cmd.worldsave");
 
         this.messages = messages;
         this.worldManager = worldManager;

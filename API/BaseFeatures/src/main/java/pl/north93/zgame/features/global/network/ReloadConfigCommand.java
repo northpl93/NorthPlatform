@@ -17,7 +17,7 @@ public class ReloadConfigCommand extends NorthCommand
     public ReloadConfigCommand()
     {
         super("reloadconfig", "configreload");
-        this.setPermission("dev");
+        this.setPermission("basefeatures.cmd.reloadconfig");
     }
 
     @Override

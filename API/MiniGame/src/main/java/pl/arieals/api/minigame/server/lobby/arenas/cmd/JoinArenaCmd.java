@@ -35,7 +35,7 @@ public class JoinArenaCmd extends NorthCommand
     {
         super("joinarena");
         this.setAsync(true);
-        this.setPermission("dev");
+        this.setPermission("minigameapi.cmd.joinarena");
     }
 
     @Override

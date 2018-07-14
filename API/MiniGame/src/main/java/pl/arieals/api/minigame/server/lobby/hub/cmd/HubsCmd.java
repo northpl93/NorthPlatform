@@ -26,7 +26,7 @@ public class HubsCmd extends NorthCommand
     public HubsCmd()
     {
         super("hubs");
-        this.setPermission("dev");
+        this.setPermission("minigameapi.cmd.hubs");
     }
 
     @Override

@@ -30,7 +30,7 @@ public class StartDeathMatch extends NorthCommand
     public StartDeathMatch()
     {
         super("startdeathmatch");
-        this.setPermission("dev");
+        this.setPermission("minigameapi.cmd.startdeathmatch");
     }
 
     @Override

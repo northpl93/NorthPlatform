@@ -29,7 +29,7 @@ public class GamePhaseCmd extends NorthCommand
     public GamePhaseCmd()
     {
         super("gamephase");
-        this.setPermission("dev");
+        this.setPermission("minigameapi.cmd.gamephase");
     }
 
     @Override

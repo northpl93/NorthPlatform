@@ -26,7 +26,7 @@ public class TpCommand extends NorthCommand
     public TpCommand()
     {
         super("tp");
-        this.setPermission("api.command.tp");
+        this.setPermission("basefeatures.cmd.tp");
     }
 
     @Override

@@ -12,7 +12,7 @@ public class FlyCommand extends NorthCommand
     public FlyCommand()
     {
         super("fly");
-        this.setPermission("api.command.fly");
+        this.setPermission("basefeatures.cmd.fly");
     }
 
     @Override

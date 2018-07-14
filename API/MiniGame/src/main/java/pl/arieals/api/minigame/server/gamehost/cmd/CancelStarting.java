@@ -29,7 +29,7 @@ public class CancelStarting extends NorthCommand
     public CancelStarting()
     {
         super("cancelstarting", "abortstarting");
-        this.setPermission("dev");
+        this.setPermission("minigameapi.cmd.cancelstarting");
     }
 
     @Override

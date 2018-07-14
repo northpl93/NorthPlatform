@@ -18,7 +18,7 @@ public class WtfServerCommand extends NorthCommand
     public WtfServerCommand()
     {
         super("wtfserver");
-        this.setPermission("api.command.wtfserver");
+        this.setPermission("basefeatures.cmd.wtfserver");
     }
 
     @Override

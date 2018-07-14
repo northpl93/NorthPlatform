@@ -11,7 +11,7 @@ public class EnderchestCommand extends NorthCommand
     public EnderchestCommand()
     {
         super("enderchest", "echest");
-        this.setPermission("api.command.enderchest");
+        this.setPermission("basefeatures.cmd.enderchest");
     }
 
     @Override

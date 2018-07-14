@@ -24,7 +24,7 @@ public class EconomyAdminCommand extends NorthCommand
     public EconomyAdminCommand()
     {
         super("economyadmin", "ecoadm");
-        this.setPermission("dev");
+        this.setPermission("economy.cmd.economyadmin");
         this.setAsync(true);
     }
 

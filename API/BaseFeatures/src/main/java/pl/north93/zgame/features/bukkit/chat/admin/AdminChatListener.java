@@ -21,7 +21,7 @@ public class AdminChatListener implements AutoListener
     {
         final INorthPlayer player = event.getPlayer();
 
-        if (! player.hasPermission("admin.chatroom"))
+        if (! player.hasPermission("basefeatures.cmd.adminchat"))
         {
             return;
         }

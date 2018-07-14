@@ -15,7 +15,7 @@ public class WorldListCommand extends NorthCommand
 	public WorldListCommand(@Messages("BaseFeatures") MessagesBox messages)
 	{
 		super("worldlist");
-		setPermission("api.command.worldlist");
+		setPermission("basefeatures.cmd.worldlist");
 		
 		this.messages = messages;
 	}

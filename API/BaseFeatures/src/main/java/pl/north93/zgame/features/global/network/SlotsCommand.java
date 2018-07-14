@@ -18,7 +18,7 @@ public class SlotsCommand extends NorthCommand
     public SlotsCommand()
     {
         super("slots");
-        this.setPermission("api.command.slots");
+        this.setPermission("basefeatures.cmd.slots");
         this.setAsync(true); // causes tick drop
     }
 

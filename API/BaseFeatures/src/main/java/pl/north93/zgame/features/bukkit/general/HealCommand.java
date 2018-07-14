@@ -18,7 +18,7 @@ public class HealCommand extends NorthCommand
     public HealCommand()
     {
         super("heal");
-        this.setPermission("api.command.heal");
+        this.setPermission("basefeatures.cmd.heal");
     }
 
     @Override

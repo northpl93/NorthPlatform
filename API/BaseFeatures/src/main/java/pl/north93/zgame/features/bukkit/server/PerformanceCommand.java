@@ -24,7 +24,7 @@ public class PerformanceCommand extends NorthCommand
     public PerformanceCommand()
     {
         super("performance", "gc");
-        this.setPermission("api.command.performance");
+        this.setPermission("basefeatures.cmd.performance");
         this.setAsync(true); // causes tick drop
     }
 

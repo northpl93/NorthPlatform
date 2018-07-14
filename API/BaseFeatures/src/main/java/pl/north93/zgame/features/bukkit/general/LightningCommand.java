@@ -17,7 +17,7 @@ public class LightningCommand extends NorthCommand
     public LightningCommand()
     {
         super("lightning", "thor");
-        this.setPermission("api.command.lightning");
+        this.setPermission("basefeatures.cmd.lightning");
     }
 
     @Override

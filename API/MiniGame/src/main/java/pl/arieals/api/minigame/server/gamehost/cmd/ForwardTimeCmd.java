@@ -31,7 +31,7 @@ public class ForwardTimeCmd extends NorthCommand
     public ForwardTimeCmd()
     {
         super("forwardtime");
-        this.setPermission("dev");
+        this.setPermission("minigameapi.cmd.forwardtime");
     }
 
     @Override

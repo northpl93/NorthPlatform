@@ -26,7 +26,7 @@ public class TpHereCommand extends NorthCommand
     public TpHereCommand()
     {
         super("tphere", "s");
-        this.setPermission("api.command.tp");
+        this.setPermission("basefeatures.cmd.tphere");
     }
 
     @Override

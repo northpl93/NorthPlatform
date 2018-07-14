@@ -29,7 +29,7 @@ public class ListArenasCmd extends NorthCommand
     public ListArenasCmd()
     {
         super("listarenas");
-        this.setPermission("dev");
+        this.setPermission("minigameapi.cmd.listarenas");
     }
 
     @Override

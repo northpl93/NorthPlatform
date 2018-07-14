@@ -25,7 +25,7 @@ public class NickCommand extends NorthCommand
     public NickCommand()
     {
         super("nick");
-        this.setPermission("api.command.nick");
+        this.setPermission("basefeatures.cmd.nick");
         this.setAsync(true);
     }
 

@@ -26,6 +26,7 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
  *   3. Wejdz na bungee (powinienes trafic od razu na serwer hostujacy gre i otrzymac komunikat o wejsciu bez areny)
  *   4. Wpisz ta komende, trafisz na arene gry
  */
+@Deprecated
 public class SingleServerJoin extends NorthCommand
 {
     @Inject @Messages("MiniGameApi")
@@ -36,7 +37,7 @@ public class SingleServerJoin extends NorthCommand
     public SingleServerJoin()
     {
         super("singleserverjoin", "ssjoin");
-        this.setPermission("dev");
+        this.setPermission("minigameapi.cmd.singleserverjoin");
     }
 
     @Override

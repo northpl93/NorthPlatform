@@ -28,7 +28,7 @@ public class AdminChangePasswordCommand extends NorthCommand
     public AdminChangePasswordCommand()
     {
         super("adminchangepassword", "achangepassword");
-        this.setPermission("dev");
+        this.setPermission("nopremiumauth.cmd.adminchangepassword");
     }
 
     @Override

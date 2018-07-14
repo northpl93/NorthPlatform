@@ -19,7 +19,7 @@ public class UnbanCommand extends NorthCommand
     public UnbanCommand()
     {
         super("unban");
-        this.setPermission("api.command.unban");
+        this.setPermission("basefeatures.cmd.unban");
         this.setAsync(true);
     }
 

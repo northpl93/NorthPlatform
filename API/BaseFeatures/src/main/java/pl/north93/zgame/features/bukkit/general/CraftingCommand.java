@@ -11,7 +11,7 @@ public class CraftingCommand extends NorthCommand
     public CraftingCommand()
     {
         super("crafting", "craft");
-        this.setPermission("api.command.crafting");
+        this.setPermission("basefeatures.cmd.crafting");
     }
 
     @Override

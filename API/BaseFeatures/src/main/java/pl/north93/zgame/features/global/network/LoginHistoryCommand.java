@@ -27,7 +27,7 @@ public class LoginHistoryCommand extends NorthCommand
     {
         super("loginhistory", "lh");
         this.setAsync(true);
-        this.setPermission("api.command.loginhistory");
+        this.setPermission("basefeatures.cmd.loginhistory");
     }
 
     @Override

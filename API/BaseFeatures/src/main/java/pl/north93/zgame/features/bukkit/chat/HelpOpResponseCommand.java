@@ -32,7 +32,7 @@ public class HelpOpResponseCommand extends NorthCommand
     public HelpOpResponseCommand()
     {
         super("hr");
-        setPermission("api.command.hr");
+        setPermission("basefeatures.cmd.hr");
         setAsync(true);
     }
 

@@ -17,7 +17,7 @@ public class AnvilCommand extends NorthCommand
     public AnvilCommand()
     {
         super("anvil", "kowadlo");
-        this.setPermission("api.command.anvil");
+        this.setPermission("basefeatures.cmd.anvil");
     }
 
     @Override

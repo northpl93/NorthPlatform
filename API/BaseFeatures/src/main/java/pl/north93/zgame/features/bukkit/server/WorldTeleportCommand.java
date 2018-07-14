@@ -17,7 +17,7 @@ public class WorldTeleportCommand extends NorthCommand
 	public WorldTeleportCommand(@Messages("BaseFeatures") MessagesBox messages)
 	{
 		super("worldteleport", "wtp");
-		setPermission("api.command.worldlist");
+		setPermission("basefeatures.cmd.worldteleport");
 		
 		this.messages = messages;
 	}

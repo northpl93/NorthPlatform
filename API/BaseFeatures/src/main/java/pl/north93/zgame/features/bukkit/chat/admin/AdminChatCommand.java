@@ -21,7 +21,7 @@ public class AdminChatCommand extends NorthCommand
     public AdminChatCommand()
     {
         super("adminchat", "ac");
-        this.setPermission("admin.chatroom");
+        this.setPermission("basefeatures.cmd.adminchat");
     }
 
     @Override

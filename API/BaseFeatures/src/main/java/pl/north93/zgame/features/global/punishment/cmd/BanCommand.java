@@ -28,7 +28,7 @@ public class BanCommand extends NorthCommand
     public BanCommand()
     {
         super("ban");
-        this.setPermission("api.command.ban");
+        this.setPermission("basefeatures.cmd.ban");
     }
 
     @Override

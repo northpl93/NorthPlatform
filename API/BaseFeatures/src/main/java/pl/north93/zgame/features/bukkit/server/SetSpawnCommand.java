@@ -13,7 +13,7 @@ public class SetSpawnCommand extends NorthCommand
     public SetSpawnCommand()
     {
         super("setspawn");
-        this.setPermission("api.command.setspawn");
+        this.setPermission("basefeatures.cmd.setspawn");
     }
 
     @Override

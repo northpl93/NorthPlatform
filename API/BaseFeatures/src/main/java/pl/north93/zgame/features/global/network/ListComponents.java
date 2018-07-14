@@ -16,7 +16,7 @@ public class ListComponents extends NorthCommand
     public ListComponents()
     {
         super("listcomponents", "components");
-        //this.setPermission("api.command.listcomponents");
+        //this.setPermission("basefeatures.cmd.listcomponents");
     }
 
     @Override

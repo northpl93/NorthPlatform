@@ -27,7 +27,7 @@ public class WorldTrim extends NorthCommand
 	private WorldTrim(IWorldManager worldManager, @Messages("BaseFeatures") MessagesBox messages)
 	{
 		super("worldtrim");
-		setPermission("api.command.worldtrim");
+		setPermission("basefeatures.cmd.worldtrim");
 		
 		this.messages = messages;
 		this.worldManager = worldManager;

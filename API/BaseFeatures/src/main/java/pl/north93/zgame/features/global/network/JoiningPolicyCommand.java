@@ -21,7 +21,7 @@ public class JoiningPolicyCommand extends NorthCommand
     public JoiningPolicyCommand()
     {
         super("joiningpolicy", "joinpolicy");
-        this.setPermission("api.command.joiningpolicy");
+        this.setPermission("basefeatures.cmd.joiningpolicy");
     }
 
     @Override
