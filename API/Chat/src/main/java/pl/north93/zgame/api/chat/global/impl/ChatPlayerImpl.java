@@ -155,7 +155,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
             for (final String roomId : playerData.getRooms())
             {
-                final ChatRoomImpl room = this.chatManager.getRoom(roomId);
+                final ChatRoomImpl room = this.chatManager.getRoom0(roomId);
                 room.update(roomData -> roomData.getParticipants().remove(this.identity));
             }
         }
@@ -163,7 +163,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
     private ChatRoom getBestMainRoom(final ChatPlayerData player)
     {
-        final Stream<ChatRoomImpl> playerRooms = player.getRooms().stream().map(this.chatManager::getRoom);
+        final Stream<ChatRoomImpl> playerRooms = player.getRooms().stream().map(this.chatManager::getRoom0);
         return playerRooms.max(Comparator.comparing(ChatRoom::getPriority)).orElse(null);
     }
 }

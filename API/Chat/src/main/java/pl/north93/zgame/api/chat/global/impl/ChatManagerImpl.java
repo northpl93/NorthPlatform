@@ -5,9 +5,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -39,12 +41,14 @@ public class ChatManagerImpl implements ChatManager
     private IEventManager   eventManager;
     @Inject
     private INetworkManager networkManager;
+    private final RootChatRoom               rootChatRoom;
     private final Map<String, ChatFormatter> formatters;
     private final Hash<ChatRoomData>         chatRooms;
 
     @Bean
     private ChatManagerImpl(final IObservationManager observationManager)
     {
+        this.rootChatRoom = new RootChatRoom(this);
         this.formatters = new HashMap<>();
         this.chatRooms = observationManager.getHash(ChatRoomData.class, "chatRooms");
     }
@@ -74,6 +78,12 @@ public class ChatManagerImpl implements ChatManager
     public IPlayersManager getPlayersManager()
     {
         return this.networkManager.getPlayers();
+    }
+
+    @Override
+    public RootChatRoom getRootRoom()
+    {
+        return this.rootChatRoom;
     }
 
     @Override
@@ -120,14 +130,24 @@ public class ChatManagerImpl implements ChatManager
     public void deleteRoom(final String id) throws ChatRoomNotFoundException
     {
         // to od razu zweryfikuje czy pokój istnieje
-        final ChatRoomImpl room = this.getRoom(id);
+        final ChatRoomImpl room = this.getRoom0(id);
 
         // wyrzuca wszystkich graczy i usuwa pokój z redisa
         room.kickAllAndDelete();
     }
 
     @Override
-    public ChatRoomImpl getRoom(final String id) throws ChatRoomNotFoundException
+    public ChatRoom getRoom(final String id) throws ChatRoomNotFoundException
+    {
+        if (this.rootChatRoom.id.equals(id))
+        {
+            return this.rootChatRoom;
+        }
+
+        return this.getRoom0(id);
+    }
+
+    public ChatRoomImpl getRoom0(final String id) throws ChatRoomNotFoundException
     {
         final Value<ChatRoomData> value = this.chatRooms.getAsValue(id);
         if (! value.isPreset())
@@ -140,16 +160,18 @@ public class ChatManagerImpl implements ChatManager
     @Override
     public Collection<ChatRoom> getChatRooms()
     {
-        final List<ChatRoom> rooms = new ArrayList<>();
-        for (final ChatRoomData data : this.chatRooms.values())
+        return this.getChatRooms(chatRoomData -> true);
+    }
+
+    public Collection<ChatRoom> getChatRooms(final Predicate<ChatRoomData> filter)
+    {
+        return this.chatRooms.values().stream().filter(filter).map(data ->
         {
             final String roomId = data.getId();
 
             final Value<ChatRoomData> value = this.chatRooms.getAsValue(roomId);
-            rooms.add(new ChatRoomImpl(this, roomId, value));
-        }
-
-        return rooms;
+            return new ChatRoomImpl(this, roomId, value);
+        }).collect(Collectors.toList());
     }
 
     @Override

@@ -7,7 +7,6 @@ import static java.util.Collections.unmodifiableCollection;
 import javax.annotation.Nullable;
 
 import java.util.Collection;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -17,33 +16,21 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
 import pl.north93.zgame.api.chat.global.ChatFormatter;
 import pl.north93.zgame.api.chat.global.ChatPlayer;
 import pl.north93.zgame.api.chat.global.ChatRoom;
 import pl.north93.zgame.api.chat.global.ChatRoomNotFoundException;
-import pl.north93.zgame.api.chat.global.impl.data.BroadcastMessage;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
-/*default*/ class ChatRoomImpl implements ChatRoom
+/*default*/ class ChatRoomImpl extends AbstractChatRoom
 {
-    private final ChatManagerImpl     chatManager;
-    private final String              id;
     private final Value<ChatRoomData> data;
 
     public ChatRoomImpl(final ChatManagerImpl chatManager, final String id, final Value<ChatRoomData> data)
     {
-        this.chatManager = chatManager;
-        this.id = id;
+        super(chatManager, id);
         this.data = data;
-    }
-
-    @Override
-    public String getId()
-    {
-        return this.id;
     }
 
     @Nullable
@@ -158,24 +145,6 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     }
 
     @Override
-    public void broadcast(final BaseComponent component)
-    {
-        final String jsonMessage = ComponentSerializer.toString(component);
-        final BroadcastMessage message = new BroadcastMessage(this.getId(), jsonMessage);
-
-        this.chatManager.sendMessage(message);
-    }
-
-    @Override
-    public void broadcast(final Locale locale, final BaseComponent component)
-    {
-        final String jsonMessage = ComponentSerializer.toString(component);
-        final BroadcastMessage message = new BroadcastMessage(this.getId(), jsonMessage, locale.toLanguageTag());
-
-        this.chatManager.sendMessage(message);
-    }
-
-    @Override
     public void delete()
     {
         this.kickAllAndDelete();
@@ -229,6 +198,6 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("id", this.id).append("data", this.data).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("data", this.data).toString();
     }
 }

@@ -12,6 +12,15 @@ import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
 public interface ChatManager
 {
     /**
+     * Zwraca specjalny pokój posiadający wszystkie utworzone pokoje ustawione jako dzieci.
+     * Używany do ogłaszania wiadomości do wszystkich graczy na serwerze.
+     * Nie jest zarejestrowany w bazie danych, nie występuje na liście pokoi.
+     *
+     * @return Pokój przeznaczony do ogłaszania wiadomości na serwerze.
+     */
+    ChatRoom getRootRoom();
+
+    /**
      * Tworzy nowy pokój czatu o podanym ID.
      *
      * @param id Unikalne ID nowo tworzonego pokoju czatu.
@@ -52,6 +61,12 @@ public interface ChatManager
      */
     Collection<ChatRoom> getChatRooms();
 
+    /**
+     * Szuka pokojów czatu o identyfikatorze pasującym do podanego wyrażenia regularnego.
+     *
+     * @param regex Wyrażenie regularne używane do sprawdzania id.
+     * @return Kolekcja znalezionych pokojów.
+     */
     Collection<ChatRoom> findRooms(String regex);
 
     /**
