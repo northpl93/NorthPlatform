@@ -240,7 +240,10 @@ public class GoldHunterArena implements IArenaData, ITickable
     {
         for ( GoldHunterPlayer player : signedPlayers.values() )
         {
-            player.exitGame();
+            if ( player.isIngame() )
+            {
+                player.exitGame();
+            }
         }
 
         Location lobbyLocation = Bukkit.getWorlds().get(0).getSpawnLocation();

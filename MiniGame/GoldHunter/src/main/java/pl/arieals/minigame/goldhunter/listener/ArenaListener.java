@@ -70,8 +70,8 @@ public class ArenaListener implements AutoListener
         }
         catch ( Exception e )
         {
-            logger.error("Couldn't start game for arena {} with map {}", arena, arena.getLocalArena().getWorld().getCurrentMapTemplate().getName());
-            arena.getPlayers().forEach(p -> p.sendMessage("game_start_fail"));
+            logger.error("Couldn't start game for arena {} with map {}", arena, arena.getLocalArena().getWorld().getCurrentMapTemplate().getName(), e);
+            arena.getPlayers().forEach(p -> p.sendMessage("game_start_fail", arena.getLocalArena().getWorld().getCurrentMapTemplate().getDisplayName()));
             arena.getLocalArena().setGamePhase(GamePhase.POST_GAME);
         }
     }
