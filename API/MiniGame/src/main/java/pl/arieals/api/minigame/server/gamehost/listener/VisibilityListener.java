@@ -51,10 +51,12 @@ public class VisibilityListener implements AutoListener
                 continue;
             }
 
-            for (final Player arenaPlayer : arenaPlayers)
+            for (final INorthPlayer arenaPlayer : arenaPlayers)
             {
-                arenaPlayer.hidePlayer(plugin, player);
-                player.hidePlayer(plugin, arenaPlayer);
+                final Player craftPlayer = arenaPlayer.getCraftPlayer(); // ClassCastException przez NorthPlayerImpl
+
+                craftPlayer.hidePlayer(plugin, player);
+                player.hidePlayer(plugin, craftPlayer);
             }
         }
     }
