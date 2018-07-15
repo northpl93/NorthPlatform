@@ -115,11 +115,13 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
     public void scheduleShutdown()
     {
         Preconditions.checkState(! this.isShutdownScheduled(), "Shutdown already scheduled");
+
         this.getLogger().log(Level.INFO, "Scheduling server shutdown...");
         this.serverValue.update(server ->
         {
             server.setShutdownScheduled(true);
         });
+
         this.tryShutdown();
     }
 
@@ -128,6 +130,12 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
     {
         Preconditions.checkState(this.isShutdownScheduled(), "Shutdown isn't scheduled");
         Preconditions.checkState(this.isWorking(), "Server is already stopping");
+
+        this.getLogger().log(Level.INFO, "Server shutdown cancelled...");
+        this.serverValue.update(server ->
+        {
+            server.setShutdownScheduled(false);
+        });
 
         this.countdown.stop();
         this.apiCore.callEvent(new ShutdownCancelledEvent());
