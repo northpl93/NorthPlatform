@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.chat.global.ChatRoom;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.MessageLayout;
@@ -102,9 +103,9 @@ public class ArenaChatManager
      */
     public void broadcast(final MessagesBox messagesBox, final String messageKey, final MessageLayout layout, final Object... args)
     {
-        for (final Player player : this.arena.getPlayersManager().getAllPlayers())
+        for (final INorthPlayer player : this.arena.getPlayersManager().getAllPlayers())
         {
-            messagesBox.sendMessage(player, messageKey, layout, args);
+            player.sendMessage(messagesBox, messageKey, layout, args);
         }
     }
 

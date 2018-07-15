@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -14,9 +15,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import org.diorite.commons.math.DioriteRandomUtils;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.server.gamehost.arena.player.ArenaChatManager;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
@@ -59,16 +65,16 @@ public class MapVote
         this.votes.remove(player);
     }
 
-    public boolean vote(final Player player, final int option)
+    public MapTemplate vote(final Player player, final int option)
     {
         if (this.options == null || option > this.options.length || option <= 0)
         {
-            return false;
+            return null;
         }
         final MapTemplate selectedMap = this.options[option - 1];
 
         this.votes.put(player, selectedMap);
-        return true;
+        return selectedMap;
     }
 
     public MapTemplate[] getOptions()
@@ -112,20 +118,38 @@ public class MapVote
     }
     
     public void printStartVoteInfo()
-    {;
-        arena.getChatManager().broadcast(this.messages, "vote.started");
+    {
+        final ArenaChatManager chatManager = this.arena.getChatManager();
+        chatManager.broadcast(this.messages, "vote.started");
 
         for (int i = 0; i < this.getOptions().length; i++)
         {
             final MapTemplate gameMap = this.getOptions()[i];
-            arena.getChatManager().broadcast(this.messages, "vote.option_line", i + 1, gameMap.getDisplayName());
+            this.printVoteOption(i, gameMap);
+        }
+    }
+
+    private void printVoteOption(final int number, final MapTemplate template)
+    {
+        final int friendlyNumber = number + 1;
+        for (final INorthPlayer player : this.arena.getPlayersManager().getAllPlayers())
+        {
+            final Locale locale = player.getMyLocale();
+            final BaseComponent line = this.messages.getComponent(locale, "vote.option_line", friendlyNumber, template.getDisplayName());
+
+            line.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/mapvote " + friendlyNumber));
+
+            final BaseComponent hover = this.messages.getComponent(locale, "vote.click_to_vote");
+            line.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{hover}));
+
+            player.sendMessage(line);
         }
     }
 
     public void printVotingResult()
     {
         final MapTemplate winner = this.getWinner();
-        arena.getChatManager().broadcast(this.messages, "vote.winner", winner.getDisplayName());
+        this.arena.getChatManager().broadcast(this.messages, "vote.winner", winner.getDisplayName());
     }
 
     @Override

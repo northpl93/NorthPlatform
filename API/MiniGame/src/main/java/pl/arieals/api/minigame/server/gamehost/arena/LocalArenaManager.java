@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import com.google.common.base.Preconditions;
 
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -99,6 +100,21 @@ public class LocalArenaManager
         for (final LocalArena arena : this.arenas)
         {
             if (world.equals(arena.getWorld().getCurrentWorld()))
+            {
+                return arena;
+            }
+        }
+        return null;
+    }
+
+    public LocalArena getArena(final Player player)
+    {
+        Preconditions.checkNotNull(player, "player can't be null");
+
+        final UUID uniqueId = player.getUniqueId();
+        for (final LocalArena arena : this.arenas)
+        {
+            if (arena.getPlayers().contains(uniqueId))
             {
                 return arena;
             }
