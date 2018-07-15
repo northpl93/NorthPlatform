@@ -53,7 +53,7 @@ public class GameStartListener implements AutoListener
         final Set<INorthPlayer> players = arena.getPlayersManager().getPlayers();
         final List<Identity> identities = players.stream().map(Identity::of).collect(Collectors.toList());
 
-        return this.matchManager.createMatch(arena.getId(), arena.getMiniGame(), arena.getServerId(), identities);
+        return this.matchManager.createMatch(arena.getId(), arena.getMiniGame(), arena.getServerId(), arena.getWorldId(), identities);
     }
     
     @EventHandler

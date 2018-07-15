@@ -39,11 +39,11 @@ public class MatchManagerImpl implements IMatchManager
     }
 
     @Override
-    public IMatchAccess createMatch(final UUID arenaId, final GameIdentity identity, final UUID serverId, final Collection<Identity> startParticipants)
+    public IMatchAccess createMatch(final UUID arenaId, final GameIdentity identity, final UUID serverId, final String mapId, final Collection<Identity> startParticipants)
     {
         final Instant startTime = Instant.now();
 
-        final MatchData data = new MatchData(UUID.randomUUID(), arenaId, serverId, identity, startTime, startParticipants);
+        final MatchData data = new MatchData(UUID.randomUUID(), arenaId, serverId, identity, mapId, startTime, startParticipants);
 
         final Document document = data.toDocument();
         this.matchesCollection.insertOne(document);

@@ -20,6 +20,8 @@ public interface IMatch
 
     Instant getStartedAt();
 
+    String getMapId();
+
     Collection<Identity> getStartParticipants();
 
     boolean isEnded();

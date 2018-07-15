@@ -63,6 +63,12 @@ import pl.north93.zgame.api.global.network.players.Identity;
     }
 
     @Override
+    public String getMapId()
+    {
+        return this.data.getMapId();
+    }
+
+    @Override
     public Collection<Identity> getStartParticipants()
     {
         return this.data.getStartParticipants();

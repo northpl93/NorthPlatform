@@ -10,7 +10,7 @@ import pl.north93.zgame.api.global.network.players.Identity;
 
 public interface IMatchManager
 {
-    IMatchAccess createMatch(UUID arenaId, GameIdentity identity, UUID serverId, Collection<Identity> startParticipants);
+    IMatchAccess createMatch(UUID arenaId, GameIdentity identity, UUID serverId, String mapId, Collection<Identity> startParticipants);
 
     IMatch getMatch(ObjectId matchId);
 }
