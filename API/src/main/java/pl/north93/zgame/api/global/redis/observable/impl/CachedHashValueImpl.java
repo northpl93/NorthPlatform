@@ -2,8 +2,6 @@ package pl.north93.zgame.api.global.redis.observable.impl;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -59,24 +57,6 @@ class CachedHashValueImpl<T> extends CachedValue<T>
     }
 
     @Override
-    public T getOr(final Supplier<T> defaultValue)
-    {
-        if (this.isCached())
-        {
-            return this.cache;
-        }
-        else if (this.isAvailable())
-        {
-            return this.getFromRedis();
-        }
-        else
-        {
-            this.set(defaultValue.get());
-            return this.cache;
-        }
-    }
-
-    @Override
     public T getAndDelete()
     {
         final T value = this.hash.getAndDelete(this.name);
@@ -93,22 +73,6 @@ class CachedHashValueImpl<T> extends CachedValue<T>
     }
 
     @Override
-    public boolean update(final Function<T, T> update)
-    {
-        try (final Lock lock = this.lock())
-        {
-            final T t = this.get();
-            if (t != null)
-            {
-                this.set(update.apply(t));
-                return true;
-            }
-
-            return false;
-        }
-    }
-
-    @Override
     public void get(final Consumer<T> callback)
     {
         if (this.isCached())
@@ -118,16 +82,6 @@ class CachedHashValueImpl<T> extends CachedValue<T>
         else
         {
             this.observationManager.getPlatformConnector().runTaskAsynchronously(() -> callback.accept(this.getFromRedis()));
-        }
-    }
-
-    @Override
-    public void ifPresent(final Consumer<T> action)
-    {
-        final T value = this.get();
-        if (value != null)
-        {
-            action.accept(value);
         }
     }
 

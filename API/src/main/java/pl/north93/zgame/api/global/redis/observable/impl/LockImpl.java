@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.global.redis.observable.impl;
 
+import static java.lang.management.ManagementFactory.*;
+
+
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,7 +66,7 @@ class LockImpl implements Lock
 
     private synchronized boolean tryLock0()
     {
-        final long threadId = Thread.currentThread().getId();
+        final long threadId = this.getVmThreadIdentifier();
 
         return LockScripts.lock(this.observationManager, this.name, threadId);
     }
@@ -81,7 +84,7 @@ class LockImpl implements Lock
 
     private synchronized boolean tryUnlock()
     {
-        final long threadId = Thread.currentThread().getId();
+        final long threadId = this.getVmThreadIdentifier();
 
         final int result = LockScripts.unlock(this.observationManager, this.name, threadId);
         switch (result)
@@ -125,6 +128,16 @@ class LockImpl implements Lock
         {
             e.printStackTrace();
         }
+    }
+
+    private long getVmThreadIdentifier()
+    {
+        final String processName = getRuntimeMXBean().getName();
+        final long processId = Long.parseLong(processName.split("@")[0]);
+
+        final long threadId = Thread.currentThread().getId();
+
+        return processId * 1000 + threadId;
     }
 
     @Override

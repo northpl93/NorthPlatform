@@ -1,5 +1,9 @@
 package pl.north93.zgame.api.global.redis.observable.impl;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,6 +17,56 @@ abstract class CachedValue<T> implements Value<T>
     public CachedValue(final ObservationManagerImpl observationManager)
     {
         this.observationManager = observationManager;
+    }
+
+    @Override
+    public T getOr(final Supplier<T> defaultValue)
+    {
+        final T optimisticResult = this.get();
+        if (optimisticResult != null)
+        {
+            return optimisticResult;
+        }
+
+        // optymistyczna sciezka nie udala sie
+        try (final Lock lock = this.lock())
+        {
+            final T secondTry = this.get();
+            if (secondTry != null)
+            {
+                return secondTry;
+            }
+
+            final T newValue = defaultValue.get();
+            this.set(newValue);
+            return newValue;
+        }
+    }
+
+    @Override
+    public boolean update(final Function<T, T> update)
+    {
+        try (final Lock lock = this.lock())
+        {
+            final T t = this.get();
+            if (t != null)
+            {
+                this.set(update.apply(t));
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    @Override
+    public void ifPresent(final Consumer<T> action)
+    {
+        final T value = this.get();
+        if (value != null)
+        {
+            action.accept(value);
+        }
     }
 
     @Override

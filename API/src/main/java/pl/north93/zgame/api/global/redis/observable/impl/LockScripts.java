@@ -9,20 +9,30 @@ import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 {
     private static final String LOCK_SCRIPT =
                     "if(redis.call('exists',KEYS[1])==1) then\n" +
-                        "return false\n" +
+                        "if(redis.call('hexists',KEYS[1],ARGV[1])==1) then\n" +
+                            "redis.call('hincrby',KEYS[1],ARGV[1],1)\n" +
+                            "return true\n" +
+                        "else\n" +
+                            "return false\n" +
+                        "end\n" +
                     "else\n" +
-                        "redis.call('setex',KEYS[1],30,ARGV[1])\n" +
+                        "redis.call('hset',KEYS[1],ARGV[1],1)\n" +
+                        "redis.call('expire',KEYS[1],30)\n" +
                         "return true\n" +
                     "end";
 
     private static final String UNLOCK_SCRIPT =
                     "if(redis.call('exists',KEYS[1])==1) then\n" +
-                        "if(redis.call('get',KEYS[1])==ARGV[1]) then\n" +
+                        "local result = redis.call('hget',KEYS[1],ARGV[1])\n" + // z jakiegos powodu to jest stringiem...
+                        "if(result=='0') then\n" +
+                            "return 2\n" +
+                        "elseif(result=='1') then\n" +
                             "redis.call('del',KEYS[1])\n" +
-                            "redis.call('publish',\"unlock\",KEYS[1])\n" +
+                            "redis.call('publish',\"unlock\",KEYS[1])\n" + // wysylamy info o unlocku tylko gdy calkowicie wychodzimy z locka
                             "return 1\n" +
                         "else\n" +
-                            "return 2\n" +
+                            "redis.call('hincrby',KEYS[1],ARGV[1],-1)\n" +
+                            "return 1\n" +
                         "end\n" +
                     "else\n" +
                         "return 0\n" +
