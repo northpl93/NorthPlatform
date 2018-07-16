@@ -2,7 +2,6 @@ package pl.north93.zgame.api.bukkit;
 
 import static pl.north93.zgame.api.global.redis.RedisKeys.SERVER;
 
-
 import java.io.File;
 import java.net.URLEncoder;
 import java.util.Properties;
@@ -14,18 +13,17 @@ import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
-
 import org.spigotmc.SpigotConfig;
 
-import javassist.ClassPool;
-import javassist.LoaderClassPath;
-import pl.north93.zgame.api.bukkit.packets.PacketsHandler;
 import pl.north93.zgame.api.bukkit.windows.WindowManager;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.component.impl.general.ComponentManagerImpl;
 import pl.north93.zgame.api.global.exceptions.ConfigurationException;
 import pl.north93.zgame.api.global.utils.lang.SneakyThrow;
+
+import javassist.ClassPool;
+import javassist.LoaderClassPath;
 
 public class BukkitApiCore extends ApiCore
 {
@@ -98,7 +96,6 @@ public class BukkitApiCore extends ApiCore
         {
             throw new RuntimeException("Something went wrong ;/", e);
         }
-        new PacketsHandler(this.pluginMain);
     }
 
     @Override

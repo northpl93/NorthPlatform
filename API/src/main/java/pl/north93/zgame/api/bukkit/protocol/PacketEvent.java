@@ -41,16 +41,6 @@ public interface PacketEvent<P extends Packet<?>>
     Player getPlayer();
     
     /**
-     * @return true whenether packet instance associated with this event is sent to client (clientbound)
-     */
-    boolean isClientbound();
-    
-    /**
-     * @return true whenether this event is handled in main server thread
-     */
-    boolean isSync();
-    
-    /**
      * Registers a new intent.
      * Similar concept to BungeeCord's async event intents.
      * 

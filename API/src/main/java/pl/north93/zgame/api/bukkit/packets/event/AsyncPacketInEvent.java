@@ -12,6 +12,7 @@ import org.bukkit.event.HandlerList;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+@Deprecated
 public final class AsyncPacketInEvent extends Event implements Cancellable
 {
     private static final HandlerList handlers = new HandlerList();

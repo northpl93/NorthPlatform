@@ -81,11 +81,6 @@ public class ServerConnectionPatcher
         {
             action.accept(channel);
         }
-        
-        static
-        {
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$ Initialize with " + ( InitChannelHelper.class.getClassLoader() == ClassLoader.getSystemClassLoader() ));
-        }
     }
 }
 

@@ -18,15 +18,4 @@ public @interface PacketHandler
      * when true the handler will be executed in main server thread.
      */
     boolean sync() default false;
-    
-    public enum HandlerPriority
-    {
-        LOWEST,
-        LOW,
-        NORMAL,
-        HIGH,
-        HIGHEST,
-        MONITOR,
-        ;
-    }
 }

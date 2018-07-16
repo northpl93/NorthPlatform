@@ -9,13 +9,11 @@ import org.apache.logging.log4j.Logger;
 import org.bukkit.entity.Player;
 import org.spigotmc.SpigotConfig;
 
-import com.google.common.base.Preconditions;
-
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 
 import net.minecraft.server.v1_12_R1.MinecraftServer;
-import net.minecraft.server.v1_12_R1.NetworkManager;
+import net.minecraft.server.v1_12_R1.PlayerConnection;
 
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.protocol.ChannelWrapper;
@@ -29,6 +27,9 @@ public class ProtocolManagerComponent extends Component implements ProtocolManag
 {
     private static final Logger logger = LogManager.getLogger();
     
+    private final PacketEventDispatcher asyncDispatcher = new PacketEventDispatcher();
+    //private final PacketEventDispatcher syncDispatcher = new PacketEventDispatcher();
+    
     @Override
     protected void enableComponent()
     {
@@ -39,14 +40,23 @@ public class ProtocolManagerComponent extends Component implements ProtocolManag
     @Override
     protected void disableComponent()
     {
-        // XXX: shall we clean up that shit we made?
+        // XXX: shall we clean up that mess in pipeline we made?
     }
 
     @Aggregator(PacketHandler.class)
     public void aggregatePacketHandlers(PacketHandler packetHandlerAnnotation, @Named("Target") Method method, @Named("MethodOwner") Object instance)
     {
         logger.debug("Called aggregator method for {} on method {} object {}", packetHandlerAnnotation, method.getName(), instance);
-        // TODO: implement this
+        
+        if ( packetHandlerAnnotation.sync() )
+        {
+            // TODO: sync handler calling
+            //syncDispatcher.addMethod(method, instance, packetHandlerAnnotation.priority());
+        }
+        else
+        {
+            asyncDispatcher.addMethod(method, instance, packetHandlerAnnotation.priority());
+        }
     }
     
     @Override
@@ -58,42 +68,51 @@ public class ProtocolManagerComponent extends Component implements ProtocolManag
     @Override
     public ChannelWrapper getChannelWrapper(Channel channel)
     {
-        // TODO:
-        throw new RuntimeException("Not implemented yet");
+        NorthChannelHandler channelHandler = channel.pipeline().get(NorthChannelHandler.class);
+        return channelHandler != null ? channelHandler.getChannelWrapper() : null;
     }
 
     @Override
     public ChannelWrapper getChannelWrapper(Player player)
     {
-        // TODO:
-        throw new RuntimeException("Not implemented yet");
+        PlayerConnection playerConnection = INorthPlayer.asCraftPlayer(player).getHandle().playerConnection;
+        return playerConnection != null ? getChannelWrapper(playerConnection.networkManager.channel) : null;
     }
     
     @Override
     public ChannelFuture startNewListener(InetAddress address, int port)
     {
-        // TODO Auto-generated method stub
         throw new RuntimeException("Not implemented yet");
     }
 
     @Override
     public Collection<ChannelFuture> getActiveListeners()
     {
-        // TODO Auto-generated method stub
         throw new RuntimeException("Not implemented yet");
     }
- 
+    
+    PacketEventDispatcher getAsyncDispatcher()
+    {
+        return asyncDispatcher;
+    }
+    
+    PacketEventDispatcher getSyncDispatcher()
+    {
+        //return syncDispatcher;
+        return null;
+    }
+    
     void initChannel(Channel channel)
     {
-        NetworkManager networkManager = channel.pipeline().get(NetworkManager.class);
-        Preconditions.checkState(networkManager != null);
+        channel.pipeline().addBefore("packet_handler", "north_packet_handler", new NorthChannelHandler());
+        channel.pipeline().addBefore("north_packet_handler", "north_legacy_event_handler", new NorthLegacyEventHandler());
         
         logger.debug("Injected own channel initializer for: " + channel);
     }
     
     @SuppressWarnings("deprecation")
     private void closeListenerIfAlreadyOpened()
-    {
+    {   
         // we must close channels that was opened before we apply the patches to channel initializer
         // if we don't do it there might be players that are unhandled by our packet handler
         
