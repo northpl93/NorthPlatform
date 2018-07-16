@@ -1,45 +1,42 @@
 package pl.arieals.minigame.goldhunter.listener;
 
+import org.bukkit.craftbukkit.v1_12_R1.util.CraftChatMessage;
+import org.bukkit.entity.Player;
+
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.server.v1_12_R1.ChatComponentText;
 import net.minecraft.server.v1_12_R1.IChatBaseComponent;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
 
-import org.bukkit.craftbukkit.v1_12_R1.util.CraftChatMessage;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-
-import io.netty.channel.Channel;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.player.GameTeam;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.north93.zgame.api.bukkit.packets.event.AsyncPacketOutEvent;
 import pl.north93.zgame.api.bukkit.packets.wrappers.WrapperPlayOutPlayerInfo;
 import pl.north93.zgame.api.bukkit.packets.wrappers.WrapperPlayOutPlayerInfo.PlayerInfoData;
-import pl.north93.zgame.api.bukkit.player.INorthPlayer;
+import pl.north93.zgame.api.bukkit.protocol.ChannelWrapper;
+import pl.north93.zgame.api.bukkit.protocol.HandlerPriority;
+import pl.north93.zgame.api.bukkit.protocol.PacketEvent;
+import pl.north93.zgame.api.bukkit.protocol.PacketHandler;
+import pl.north93.zgame.api.bukkit.protocol.ProtocolManager;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 
 public class PlayerListPacketListener implements AutoListener
 {    
     private final GoldHunter goldHunter;
+    private final ProtocolManager protocolManager;
     
-    public PlayerListPacketListener(GoldHunter goldHunter)
+    public PlayerListPacketListener(GoldHunter goldHunter, ProtocolManager protocolManager)
     {
         this.goldHunter = goldHunter;
+        this.protocolManager = protocolManager;
     }
     
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onUpdateNameOnPlayerList(AsyncPacketOutEvent event)
+    @PacketHandler(priority = HandlerPriority.HIGHEST)
+    public void onUpdateNameOnPlayerList(PacketEvent<PacketPlayOutPlayerInfo> event)
     {
-        if ( !( event.getPacket() instanceof PacketPlayOutPlayerInfo ) )
-        {
-            return;
-        }
-        
-        PacketPlayOutPlayerInfo handle = (PacketPlayOutPlayerInfo) event.getPacket();
+        PacketPlayOutPlayerInfo handle = event.getPacket();
         WrapperPlayOutPlayerInfo packet = new WrapperPlayOutPlayerInfo(handle);
 
         Player bukkitPlayer = event.getPlayer();
@@ -56,7 +53,7 @@ public class PlayerListPacketListener implements AutoListener
         if ( packet.getAction() != EnumPlayerInfoAction.ADD_PLAYER )
         {
             event.setCancelled(true);
-            event.setPacket(null);
+            //event.setPacket(null);
         }
         
         goldHunter.runTask(() -> syncProcessPacket(bukkitPlayer, packet));
@@ -69,11 +66,8 @@ public class PlayerListPacketListener implements AutoListener
         
         originalPacket.getPlayerData().forEach(data -> newPacket.addPlayerData(processEntry(receiver, data)));
         
-        Channel channel = INorthPlayer.asCraftPlayer(receiver).getHandle().playerConnection.networkManager.channel;
-        
-        // skip handling event with our packet, to prevent infinite loop
-        // TODO: add a way to get a tiny protocol handler name instead hardcoded one
-        channel.eventLoop().execute(() -> channel.pipeline().context("tiny-API-1").write(newPacket.getPacket())); 
+        ChannelWrapper channelWrapper = protocolManager.getChannelWrapper(receiver);
+        channelWrapper.writePacket(newPacket.getPacket());
     }
     
     private PlayerInfoData processEntry(Player receiver, PlayerInfoData originalData)
