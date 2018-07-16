@@ -109,5 +109,15 @@
         		<platform>BUKKIT</platform>
         	</platforms>
         </component>
+        
+        <component>
+            <name>API.ProtocolManager</name>
+            <mainClass>pl.north93.zgame.api.bukkit.protocol.impl.ProtocolManagerComponent</mainClass>
+            <description>An API to deal with minecraft protocol.</description>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
+        
     </components>
 </bundle>
