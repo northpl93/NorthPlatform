@@ -7,6 +7,8 @@ import java.util.Collection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.spigotmc.SpigotConfig;
 
 import io.netty.channel.Channel;
@@ -15,26 +17,33 @@ import io.netty.channel.ChannelFuture;
 import net.minecraft.server.v1_12_R1.MinecraftServer;
 import net.minecraft.server.v1_12_R1.PlayerConnection;
 
+import pl.north93.northspigot.event.ChannelInitializeEvent;
+import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.protocol.ChannelWrapper;
 import pl.north93.zgame.api.bukkit.protocol.PacketHandler;
 import pl.north93.zgame.api.bukkit.protocol.ProtocolManager;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
+import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
 
-public class ProtocolManagerComponent extends Component implements ProtocolManager
+public class ProtocolManagerComponent extends Component implements ProtocolManager, Listener
 {
     private static final Logger logger = LogManager.getLogger();
     
     private final PacketEventDispatcher asyncDispatcher = new PacketEventDispatcher();
     //private final PacketEventDispatcher syncDispatcher = new PacketEventDispatcher();
     
+    @Inject
+    private BukkitApiCore apiCore;
+    
     @Override
     protected void enableComponent()
     {
         closeListenerIfAlreadyOpened();
-        applyPatches();
+        
+        apiCore.registerEvents(this);
     }
 
     @Override
@@ -102,8 +111,10 @@ public class ProtocolManagerComponent extends Component implements ProtocolManag
         return null;
     }
     
-    void initChannel(Channel channel)
+    @EventHandler
+    public void onInitChannel(ChannelInitializeEvent event)
     {
+        Channel channel = event.getChannel();
         channel.pipeline().addBefore("packet_handler", "north_packet_handler", new NorthChannelHandler());
         channel.pipeline().addBefore("north_packet_handler", "north_legacy_event_handler", new NorthLegacyEventHandler());
         
@@ -124,18 +135,6 @@ public class ProtocolManagerComponent extends Component implements ProtocolManag
             
             // we set lateBing to true to server initialize listeners again after enabling all plugins
             SpigotConfig.lateBind = true;
-        }
-    }
-    
-    private void applyPatches()
-    {
-        try
-        {
-            ServerConnectionPatcher.patch();
-        }
-        catch ( Throwable e )
-        {
-            logger.error("Couldn't apply patches for ProtocolManagerComponent:", e);
         }
     }
 }
