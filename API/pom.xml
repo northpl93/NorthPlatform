@@ -31,7 +31,7 @@
         <dependency>
             <groupId>pl.north93.zgame</groupId>
             <artifactId>install-deps</artifactId>
-            <version>7</version>
+            <version>8</version>
             <type>pom</type>
         </dependency>
 
