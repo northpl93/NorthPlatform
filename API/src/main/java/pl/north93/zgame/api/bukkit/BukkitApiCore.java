@@ -2,6 +2,7 @@ package pl.north93.zgame.api.bukkit;
 
 import static pl.north93.zgame.api.global.redis.RedisKeys.SERVER;
 
+
 import java.io.File;
 import java.net.URLEncoder;
 import java.util.Properties;
@@ -13,40 +14,31 @@ import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+
 import org.spigotmc.SpigotConfig;
 
-import pl.north93.zgame.api.bukkit.windows.WindowManager;
+import javassist.ClassPool;
+import javassist.LoaderClassPath;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.component.impl.general.ComponentManagerImpl;
 import pl.north93.zgame.api.global.exceptions.ConfigurationException;
 import pl.north93.zgame.api.global.utils.lang.SneakyThrow;
 
-import javassist.ClassPool;
-import javassist.LoaderClassPath;
-
 public class BukkitApiCore extends ApiCore
 {
-    private final Main          pluginMain;
-    private final WindowManager windowManager;
-    private       UUID          serverId;
+    private final Main pluginMain;
+    private       UUID serverId;
 
     public BukkitApiCore(final Main plugin)
     {
         super(Platform.BUKKIT, new BukkitPlatformConnector(plugin));
         this.pluginMain = plugin;
-        this.windowManager = new WindowManager();
     }
 
     public final Main getPluginMain()
     {
         return this.pluginMain;
-    }
-
-    @Deprecated // mamy nowy menadzer gui
-    public WindowManager getWindowManager()
-    {
-        return this.windowManager;
     }
 
     public final org.bukkit.Server getBukkit()
@@ -102,8 +94,6 @@ public class BukkitApiCore extends ApiCore
     protected void start() throws Exception
     {
         SpigotConfig.bungee = true; // force enable IP forwarding
-
-        this.registerEvents(this.windowManager);
     }
 
     @Override
