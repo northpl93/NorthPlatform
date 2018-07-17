@@ -1,12 +1,14 @@
 package pl.north93.zgame.api.bukkit.protocol;
 
-import org.bukkit.entity.Player;
-
-import io.netty.channel.Channel;
+import javax.annotation.Nullable;
 
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.NetworkManager;
 import net.minecraft.server.v1_12_R1.Packet;
+
+import org.bukkit.entity.Player;
+
+import io.netty.channel.Channel;
 
 /**
  * Helper class for manipule sending and receiving packets via particular channel.
@@ -21,11 +23,13 @@ public interface ChannelWrapper
     /**
      * @return a player instance associated for that channel, note that method will return null when login proccess isn't completed.
      */
+    @Nullable
     Player getPlayer();
     
     /**
      * @return a player entity instance associated for that channel, note that method will return null when login proccess isn't completed.
      */
+    @Nullable
     EntityPlayer getMinecraftPlayer();
     
     /**

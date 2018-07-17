@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.bukkit.protocol;
 
+import javax.annotation.Nullable;
+
 import java.net.InetAddress;
 import java.util.Collection;
 
@@ -13,16 +15,19 @@ public interface ProtocolManager
     /**
      * @return a channel for particular channel.
      */
+    @Nullable
     Channel getChannel(Player player);
     
     /**
      * @return a channel wrapper for particular channel.
      */
+    @Nullable
     ChannelWrapper getChannelWrapper(Channel channel);
     
     /**
      * @return a channel wrapper for particular player.
      */
+    @Nullable
     ChannelWrapper getChannelWrapper(Player player);
     
     /**
