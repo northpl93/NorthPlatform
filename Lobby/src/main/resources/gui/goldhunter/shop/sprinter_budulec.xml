@@ -15,19 +15,19 @@
             
             <button pos="2,2">
             	<icon id="minecraft:planks" count="1" name="@budulec1.name$color" lore="@budulec1.lore$color,status,price"/>
-            	<metadata key="item" value="slinger.budulec:1" />
+            	<metadata key="item" value="sprinter.budulec:1" />
             	<onClick>buy</onClick>
             </button>
             
             <button pos="3,2">
             	<icon id="minecraft:planks" count="2" name="@budulec2.name$color" lore="@budulec2.lore$color,status,price"/>
-            	<metadata key="item" value="slinger.budulec:2" />
+            	<metadata key="item" value="sprinter.budulec:2" />
             	<onClick>buy</onClick>
             </button>
             
             <button pos="4,2">
             	<icon id="minecraft:planks" count="3" name="@budulec3.name$color" lore="@budulec3.lore$color,status,price"/>
-            	<metadata key="item" value="slinger.budulec:3" />
+            	<metadata key="item" value="sprinter.budulec:3" />
             	<onClick>buy</onClick>
             </button>
             
