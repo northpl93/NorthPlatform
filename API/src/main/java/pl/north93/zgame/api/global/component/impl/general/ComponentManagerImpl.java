@@ -1,7 +1,5 @@
 package pl.north93.zgame.api.global.component.impl.general;
 
-import static java.text.MessageFormat.format;
-
 import static pl.north93.zgame.api.global.utils.lang.CollectionUtils.findInCollection;
 
 
@@ -18,8 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,6 +23,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javassist.ClassPool;
 import javassist.LoaderClassPath;
@@ -48,6 +46,7 @@ import pl.north93.zgame.api.global.component.impl.scanner.ClassloaderScanningTas
 public class ComponentManagerImpl implements IComponentManager
 {
     public static ComponentManagerImpl instance;
+    private final Logger                logger;
     private final ApiCore               apiCore;
     private final List<ComponentBundle> components;
     private final ClassPool             rootClassPool;
@@ -62,6 +61,7 @@ public class ComponentManagerImpl implements IComponentManager
     public ComponentManagerImpl(final ApiCore apiCore)
     {
         instance = this;
+        this.logger = LoggerFactory.getLogger(ComponentManagerImpl.class);
         this.apiCore = apiCore;
         this.components = new ArrayList<>();
 
@@ -78,7 +78,6 @@ public class ComponentManagerImpl implements IComponentManager
     {
         final BeanFactory factory = BeanFactory.INSTANCE;
         factory.createStaticBeanManually(this.rootBeanCtx, this.apiCore.getClass(), "ApiCore", this.apiCore);
-        factory.createStaticBeanManually(this.rootBeanCtx, Logger.class, "ApiLogger", this.apiCore.getLogger());
 
         if (this.apiCore.getPlatform() == Platform.BUKKIT)
         {
@@ -97,7 +96,7 @@ public class ComponentManagerImpl implements IComponentManager
         {
             return; // skip loading of component
         }
-        this.apiCore.getLogger().log(Level.INFO, "Loading component {0}", componentDescription.getName());
+        this.logger.info("Loading component {}", componentDescription.getName());
 
         final AbstractBeanContext componentBeanContext;
         if (classLoader instanceof JarComponentLoader)
@@ -273,7 +272,7 @@ public class ComponentManagerImpl implements IComponentManager
 
     private void loadComponentsFromFile(final File file)
     {
-        this.apiCore.debug(format("Loading components from file {0}", file.getAbsolutePath()));
+        this.logger.debug("Loading components from file {}", file.getAbsolutePath());
 
         final JarComponentLoader loader;
         try
@@ -282,7 +281,7 @@ public class ComponentManagerImpl implements IComponentManager
         }
         catch (final MalformedURLException e)
         {
-            this.apiCore.getLogger().log(Level.SEVERE, "Failed to load components from file", e);
+            this.logger.error("Failed to load components from file", e);
             return;
         }
 
@@ -310,7 +309,7 @@ public class ComponentManagerImpl implements IComponentManager
             }
             else
             {
-                this.apiCore.getLogger().warning("Can't resolve dependencies for " + component.getName());
+                this.logger.warn("Can't resolve dependencies for {}", component.getName());
             }
         }
     }

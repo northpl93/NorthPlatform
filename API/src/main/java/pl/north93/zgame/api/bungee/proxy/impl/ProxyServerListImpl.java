@@ -6,11 +6,11 @@ import static java.util.Collections.synchronizedMap;
 import java.net.InetSocketAddress;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -23,10 +23,9 @@ import pl.north93.zgame.api.global.network.server.ServerProxyData;
 
 class ProxyServerListImpl implements IProxyServerList
 {
+    private final Logger logger = LoggerFactory.getLogger(ProxyServerListImpl.class);
     private final ProxyServer             proxyServer;
     private final Map<String, ServerInfo> servers;
-    @Inject
-    private Logger          logger;
     @Inject
     private INetworkManager networkManager;
 
@@ -67,7 +66,7 @@ class ProxyServerListImpl implements IProxyServerList
         if (serverInfo == null)
         {
             // z jakiegos powodu serwer juz nie istnieje, zabezpieczenie przed ewentualnym NPE
-            this.logger.log(Level.WARNING, "Tried to removeServer({0}), but server doesnt exist", proxyData.getProxyName());
+            this.logger.warn("Tried to removeServer({}), but server doesnt exist", proxyData.getProxyName());
             return;
         }
 

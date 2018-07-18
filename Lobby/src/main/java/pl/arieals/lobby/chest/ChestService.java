@@ -1,6 +1,5 @@
 package pl.arieals.lobby.chest;
 
-import static java.text.MessageFormat.format;
 import static java.util.Collections.unmodifiableCollection;
 
 import static pl.north93.zgame.api.global.utils.lang.CollectionUtils.findInCollection;
@@ -12,8 +11,6 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.common.base.Preconditions;
 
@@ -21,6 +18,8 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -35,8 +34,7 @@ import pl.north93.zgame.api.global.network.players.Identity;
  */
 public class ChestService
 {
-    @Inject
-    private Logger          logger;
+    private final Logger logger = LoggerFactory.getLogger(ChestService.class);
     @Inject
     private INetworkManager networkManager;
     private ChestTypeConfig typeConfig;
@@ -94,7 +92,7 @@ public class ChestService
 
     public boolean takeChest(final Player player, final ChestType type)
     {
-        this.logger.log(Level.FINE, "Taking chest {0} from {1}", new Object[]{type.getName(), player.getName()});
+        this.logger.debug("Taking chest {} from {}", type.getName(), player.getName());
 
         return this.updateChests(player, chestData ->
         {
@@ -110,7 +108,7 @@ public class ChestService
     public boolean addChests(final Player player, final ChestType type, final int amount)
     {
         Preconditions.checkState(amount > 0, "Amount must be greater than 0");
-        this.logger.log(Level.FINE, "Adding {0} chests of type {1} to {2}", new Object[]{amount, type.getName(), player.getName()});
+        this.logger.debug("Adding {} chests of type {} to {}", amount, type.getName(), player.getName());
 
         return this.updateChests(player, chestData ->
         {
@@ -121,7 +119,7 @@ public class ChestService
 
     public boolean setChests(final Player player, final ChestType type, final int amount)
     {
-        this.logger.log(Level.FINE, "Setting chests {0} amount of {1} to {2}", new Object[]{type.getName(), player.getName(), amount});
+        this.logger.debug("Setting chests {} amount of {} to {}", type.getName(), player.getName(), amount);
         return this.updateChests(player, chestData -> chestData.setChests(type, amount));
     }
 
@@ -136,7 +134,7 @@ public class ChestService
         }
         catch (final Exception e)
         {
-            this.logger.log(Level.SEVERE, format("Failed to update chests amount for {0}", player.getName()), e);
+            this.logger.error("Failed to update chests amount for {}", player.getName(), e);
             return false;
         }
     }

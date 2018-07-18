@@ -2,7 +2,6 @@ package pl.north93.zgame.antycheat.timeline.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import net.minecraft.server.v1_12_R1.MinecraftServer;
 
@@ -10,6 +9,8 @@ import org.bukkit.Bukkit;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
@@ -17,9 +18,10 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 /*default*/ class TickController
 {
+    private final Logger logger = LoggerFactory.getLogger(TickController.class);
+    private final List<TickHandler> handlers = new ArrayList<>();
     @Inject
     private BukkitApiCore bukkitApiCore;
-    private final List<TickHandler> handlers = new ArrayList<>();
 
     @Bean
     private TickController()
@@ -57,7 +59,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
             }
             catch (final Exception e)
             {
-                this.bukkitApiCore.getLogger().log(Level.SEVERE, "Exception occurred in post-tick code. Prevented server crash.", e);
+                this.logger.error("Exception occurred in post-tick code. Prevented server crash.", e);
             }
         }
     }

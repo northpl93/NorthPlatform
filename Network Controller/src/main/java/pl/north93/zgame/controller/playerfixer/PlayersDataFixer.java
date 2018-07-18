@@ -1,22 +1,21 @@
 package pl.north93.zgame.controller.playerfixer;
 
-import java.text.MessageFormat;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.lambdaworks.redis.api.sync.RedisCommands;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.storage.StorageConnector;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.redis.observable.Value;
+import pl.north93.zgame.api.global.storage.StorageConnector;
 
 /**
  * Klasa ma za zadanie usuwać z Redisa dane graczy których już nie ma na bungee
@@ -25,8 +24,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
  */
 public class PlayersDataFixer extends Component implements Runnable
 {
-    @Inject
-    private Logger           logger;
+    private final Logger logger = LoggerFactory.getLogger(PlayersDataFixer.class);
     @Inject
     private StorageConnector storage;
     @Inject
@@ -71,16 +69,14 @@ public class PlayersDataFixer extends Component implements Runnable
         }
         catch (final Exception exception) // RpcException
         {
-            final String msg = "[PlayersDataFixer] Exception occurred while checking player {0}";
-            this.logger.log(Level.WARNING, MessageFormat.format(msg, nick), exception);
+            this.logger.warn("[PlayersDataFixer] Exception occurred while checking player {0}", nick, exception);
             return;
         }
 
         this.networkManager.getPlayers().getInternalData().savePlayer(cache);
         player.delete();
 
-        final String msg = "[PlayersDataFixer] Flushed data of player {0} because he isn't online in bungee";
-        this.logger.info(MessageFormat.format(msg, nick));
+        this.logger.info("[PlayersDataFixer] Flushed data of player {0} because he isn't online in bungee", nick);
     }
 
     @Override

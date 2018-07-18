@@ -4,17 +4,21 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.PlatformConnector;
 
 public class StandalonePlatformConnector implements PlatformConnector
 {
+    private final Logger logger = LoggerFactory.getLogger(StandalonePlatformConnector.class);
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
 
     @Override
     public void stop()
     {
-        API.getLogger().info("Standalone platform application will shutdown in 5 seconds...");
+        this.logger.info("Standalone platform application will shutdown in 5 seconds...");
         this.executor.schedule(() ->
         {
             this.executor.shutdown();
@@ -25,7 +29,7 @@ public class StandalonePlatformConnector implements PlatformConnector
     @Override
     public void kickAll()
     {
-        API.getLogger().info("Received kick all request from network, but we doesn't do anything.");
+        this.logger.info("Received kick all request from network, but we doesn't do anything.");
     }
 
     @Override

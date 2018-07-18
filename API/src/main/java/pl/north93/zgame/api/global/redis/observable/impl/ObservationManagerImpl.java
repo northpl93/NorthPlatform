@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Logger;
 
 import com.lambdaworks.redis.api.sync.RedisCommands;
 
@@ -210,11 +209,6 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     /*default*/ ValueSubscriptionHandler getValueSubHandler()
     {
         return this.valueSubHandler;
-    }
-
-    /*default*/ Logger getMyLogger()
-    {
-        return this.getLogger();
     }
 
     @Override

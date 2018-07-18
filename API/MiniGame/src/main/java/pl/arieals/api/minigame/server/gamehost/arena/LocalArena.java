@@ -3,13 +3,13 @@ package pl.arieals.api.minigame.server.gamehost.arena;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.common.base.Preconditions;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.player.ArenaChatManager;
@@ -39,6 +39,7 @@ import pl.north93.zgame.api.global.metadata.MetaStore;
 public class LocalArena implements IArena
 {
     private static final int MAX_TIME_TO_DISCONNECT = 30 * 20; // czas po jakim serwer wyrzuci graczy ktorzy nie wylecieli z areny
+    private final Logger              logger;
     private final GameHostManager     gameHostManager;
     private final ArenaManager        arenaManager;
     private final RemoteArena         data;
@@ -59,6 +60,7 @@ public class LocalArena implements IArena
         this.gameHostManager = gameHostManager;
         this.arenaManager = arenaManager;
         this.data = data;
+        this.logger = LoggerFactory.getLogger(LocalArena.class);
         this.world = new ArenaWorld(gameHostManager, this);
         this.playersManager = new PlayersManager(gameHostManager, this);
         this.chatManager = new ArenaChatManager(gameHostManager, this);
@@ -123,9 +125,7 @@ public class LocalArena implements IArena
         
         //this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.getId(), this.getMiniGame(), mapName, gamePhase, this.data.getPlayers().size()));
 
-        final Logger logger = this.gameHostManager.getApiCore().getLogger();
-        logger.log(Level.INFO, "Switched {0} to game phase {1}", new Object[]{this.getId(), gamePhase});
-
+        this.logger.info("Switched {} to game phase {}", this.getId(), gamePhase);
         GamePhaseEventFactory.getInstance().callEvent(this);
         
         // upload remote data after changes made by listeners
@@ -285,9 +285,7 @@ public class LocalArena implements IArena
     {
         Preconditions.checkState(this.getGamePhase() == GamePhase.STARTED);
 
-        final Logger logger = this.gameHostManager.getApiCore().getLogger();
-        logger.log(Level.INFO, "Ending game on {0}", this.getId());
-
+        this.logger.info("Ending game on {}", this.getId());
         this.setGamePhase(GamePhase.POST_GAME);
     }
 
@@ -299,9 +297,7 @@ public class LocalArena implements IArena
     public void prepareNewCycle()
     {
         Preconditions.checkState(this.getGamePhase() == GamePhase.POST_GAME); // arena moze byc zresetowana tylko po grze
-
-        final Logger logger = this.gameHostManager.getApiCore().getLogger();
-        logger.log(Level.INFO, "Preparing {0} to new cycle", this.getId());
+        this.logger.info("Preparing {} to new cycle", this.getId());
 
         if (this.isDynamic())
         {
@@ -330,8 +326,7 @@ public class LocalArena implements IArena
     // uzywane do wyrzucenia graczy ktorzy zostali na arenie po probie teleportu do huba
     private void kickPendingPlayers()
     {
-        final Logger logger = this.gameHostManager.getApiCore().getLogger();
-        logger.log(Level.WARNING, "There are still connected players to {0}, kicking them...", this.getId());
+        this.logger.warn("There are still connected players to {}, kicking them...", this.getId());
 
         final Set<INorthPlayer> players = this.playersManager.getAllPlayers();
         players.forEach(player -> player.kickPlayer(""));
@@ -345,8 +340,7 @@ public class LocalArena implements IArena
      */
     public void delete()
     {
-        final Logger logger = this.gameHostManager.getApiCore().getLogger();
-        logger.log(Level.INFO, "Removing arena {0}", this.getId());
+        this.logger.info("Removing arena {}", this.getId());
 
         this.arenaManager.removeArena(this.getId());
 
@@ -357,7 +351,7 @@ public class LocalArena implements IArena
 
         if (! this.world.delete())
         {
-            logger.log(Level.WARNING, "Failed to unload world of arena {0}", this.getId());
+            this.logger.warn("Failed to unload world of arena {}", this.getId());
         }
     }
 

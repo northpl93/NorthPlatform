@@ -1,8 +1,5 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.destroystokyo.paper.Title;
 
 import org.bukkit.attribute.Attribute;
@@ -12,6 +9,8 @@ import org.bukkit.event.Listener;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.arieals.minigame.bedwars.event.PlayerEliminatedEvent;
 import pl.arieals.minigame.bedwars.hotbar.SpectatorHotbar;
@@ -21,17 +20,16 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class PlayerEliminationListener implements Listener
 {
+    private final Logger logger = LoggerFactory.getLogger(PlayerEliminationListener.class);
     @Inject @Messages("BedWars")
     private MessagesBox messages;
-    @Inject
-    private Logger      logger;
 
     @EventHandler
     public void onPlayerEliminated(final PlayerEliminatedEvent event)
     {
         final Player player = event.getPlayer();
 
-        this.logger.log(Level.INFO, "Player eliminated event called for {0} on arena {1}", new Object[]{player.getName(), event.getArena().getId()});
+        this.logger.info("Player eliminated event called for {0} on arena {1}", player.getName(), event.getArena().getId());
         if (event.getBedWarsPlayer().isOffline())
         {
             // gracz nie jest online gdy zostal wyeliminowany

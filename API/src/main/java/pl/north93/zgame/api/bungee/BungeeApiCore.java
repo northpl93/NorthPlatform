@@ -4,7 +4,6 @@ import static pl.north93.zgame.api.global.redis.RedisKeys.PROXY_INSTANCE;
 
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -33,16 +32,6 @@ public class BungeeApiCore extends ApiCore
     }
 
     @Override
-    public Logger getLogger()
-    {
-        if (this.bungeePlugin == null) // can be true in constructor
-        {
-            return null;
-        }
-        return this.bungeePlugin.getLogger();
-    }
-
-    @Override
     public String getId()
     {
         return PROXY_INSTANCE + this.config.getUniqueName();
@@ -65,7 +54,7 @@ public class BungeeApiCore extends ApiCore
     {
         if (! ProxyServer.getInstance().getConfig().isIpForward())
         {
-            this.getLogger().severe("Set ip_forward to true in bungee's config.yml");
+            this.getApiLogger().error("Set ip_forward to true in bungee's config.yml");
             ProxyServer.getInstance().stop();
         }
         this.connectionManager = new ConnectionManager();

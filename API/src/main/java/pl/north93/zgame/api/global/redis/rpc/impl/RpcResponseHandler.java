@@ -1,17 +1,18 @@
 package pl.north93.zgame.api.global.redis.rpc.impl;
 
 import java.lang.invoke.MethodHandle;
-import java.util.logging.Level;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcExceptionInfo;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcInvokeMessage;
 
 class RpcResponseHandler
 {
+    private final Logger logger = LoggerFactory.getLogger(RpcResponseHandler.class);
     private final RpcManagerImpl       rpcManager;
     private final RpcObjectDescription objectDescription;
     private final Object               implementation;
@@ -54,7 +55,7 @@ class RpcResponseHandler
             catch (final Throwable throwable)
             {
                 this.rpcManager.sendResponse(rpcInvokeMessage.getSender(), rpcInvokeMessage.getRequestId(), new RpcExceptionInfo(throwable));
-                API.getLogger().log(Level.SEVERE, "Something went wrong while executing RPC method. (this exception is also send to remote)", throwable);
+                this.logger.error("Something went wrong while executing RPC method. (this exception is also send to remote)", throwable);
             }
         }
         else
@@ -65,13 +66,13 @@ class RpcResponseHandler
             }
             catch (final Throwable throwable)
             {
-                API.getLogger().log(Level.SEVERE, "Something went wrong while executing RPC method. (response isn't sending so I log this here)", throwable);
+                this.logger.error("Something went wrong while executing RPC method. (response isn't sending so I log this here)", throwable);
             }
         }
         final long end = System.currentTimeMillis() - start;
         if (end > methodDescription.getTimeout())
         {
-            API.getLogger().warning("[RPC] Method " + methodDescription.getMethod().getName() + " took " + end + "ms to invoke. It means that timeout occurred.");
+            this.logger.warn("[RPC] Method {} took {}ms to invoke. It means that timeout occurred.", methodDescription.getMethod().getName(), end);
         }
     }
 

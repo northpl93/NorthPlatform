@@ -6,13 +6,13 @@ import static pl.north93.zgame.api.bukkit.player.impl.LanguageKeeper.updateLocal
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.player.IBukkitPlayers;
@@ -37,24 +37,25 @@ class PlayerDataLoadTask implements Runnable
     @Inject
     private IBukkitPlayers      bukkitPlayers;
 
-    private final Player              player;
+    private final Logger logger;
+    private final Player player;
 
     public PlayerDataLoadTask(final Player player)
     {
+        this.logger = LoggerFactory.getLogger(PlayerDataLoadTask.class);
         this.player = player;
     }
 
     @Override
     public void run()
     {
-        final Logger logger = this.apiCore.getLogger();
         final NorthPlayerImpl northPlayer = (NorthPlayerImpl) this.bukkitPlayers.getPlayer(this.player);
 
         // wymuszamy pobranie danych i dodatkowo weryfikujemy czy one rzeczywiscie tu sa
         final IOnlinePlayer iOnlinePlayer = northPlayer.getValue().get();
         if (iOnlinePlayer == null)
         {
-            logger.log(Level.SEVERE, "Player {0} ({1}) joined, but data is null in onJoin", new Object[]{northPlayer.getName(), northPlayer.getUniqueId()});
+            this.logger.error("Player {} ({}) joined, but data is null in onJoin", northPlayer.getName(), northPlayer.getUniqueId());
             return;
         }
 

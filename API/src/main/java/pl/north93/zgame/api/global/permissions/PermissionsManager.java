@@ -4,10 +4,11 @@ import javax.annotation.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -18,6 +19,7 @@ import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 
 public class PermissionsManager extends Component
 {
+    private final Logger logger = LoggerFactory.getLogger(PermissionsManager.class);
     @Inject @NetConfig(type = GroupsContainer.class, id = "groups")
     private IConfig<GroupsContainer> groups;
     private final Set<Group> cachedGroups = new HashSet<>();
@@ -67,10 +69,9 @@ public class PermissionsManager extends Component
      */
     private void synchronizeGroups(final @Nullable GroupsContainer groupsContainer)
     {
-        final Logger logger = this.getLogger();
         if (groupsContainer == null)
         {
-            logger.info("Skipped groups synchronization because config isn't loaded yet.");
+            this.logger.info("Skipped groups synchronization because config isn't loaded yet.");
             return;
         }
 
@@ -99,7 +100,7 @@ public class PermissionsManager extends Component
         }
 
         this.defaultGroup = this.getGroupByName(groupsContainer.defaultGroup);
-        logger.info("Loaded " + this.cachedGroups.size() + " groups!");
+        this.logger.info("Loaded {} groups!", this.cachedGroups.size());
     }
 
     @Override

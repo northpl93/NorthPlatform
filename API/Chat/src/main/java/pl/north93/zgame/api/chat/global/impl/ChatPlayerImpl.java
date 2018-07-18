@@ -4,10 +4,11 @@ import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.chat.global.ChatPlayer;
 import pl.north93.zgame.api.chat.global.ChatRoom;
@@ -20,6 +21,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
 /*default*/ class ChatPlayerImpl implements ChatPlayer
 {
+    private final Logger               logger = LoggerFactory.getLogger(ChatPlayerImpl.class);
     private final ChatManagerImpl      chatManager;
     private final Identity             identity;
     private final Value<IOnlinePlayer> player;
@@ -90,7 +92,6 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     @Override
     public void joinRoom(final ChatRoom room)
     {
-        final Logger logger = this.chatManager.getLogger();
         final ChatRoomImpl roomImpl = (ChatRoomImpl) room;
 
         try (final IPlayerTransaction t = this.chatManager.getPlayersManager().transaction(this.identity))
@@ -111,14 +112,13 @@ import pl.north93.zgame.api.global.redis.observable.Value;
                 return;
             }
 
-            logger.log(Level.INFO, "Player {0} joined chat room {1}", new Object[]{player.getLatestNick(), room.getId()});
+            this.logger.info("Player {} joined chat room {}", player.getLatestNick(), room.getId());
         }
     }
 
     @Override
     public void leaveRoom(final ChatRoom room, final boolean ignoreOffline)
     {
-        final Logger logger = this.chatManager.getLogger();
         final ChatRoomImpl roomImpl = (ChatRoomImpl) room;
 
         try (final IPlayerTransaction t = this.chatManager.getPlayersManager().transaction(this.identity))
@@ -138,7 +138,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
                 return;
             }
 
-            logger.log(Level.INFO, "Player {0} leaved chat room {1}", new Object[]{player.getLatestNick(), room.getId()});
+            this.logger.info("Player {} leaved chat room {}", player.getLatestNick(), room.getId());
             if (roomImpl.getId().equals(playerData.getMainRoomId()))
             {
                 playerData.setMainRoomId(null);

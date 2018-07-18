@@ -9,14 +9,14 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.MiniGameApi;
@@ -35,7 +35,6 @@ import pl.arieals.api.minigame.shared.api.cfg.MiniGameConfig;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.MetadataUtils;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 /**
  * Każda LocalArena ma swojego PlayersManagera
@@ -43,8 +42,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 public class PlayersManager
 {
     private static final long PLAYER_JOIN_TIMEOUT = TimeUnit.SECONDS.toMillis(30);
-    @Inject
-    private Logger                          logger;
+    private final Logger logger = LoggerFactory.getLogger(PlayersManager.class);
     private final GameHostManager           gameHostManager;
     private final ReconnectHandler          reconnectHandler;
     private final LocalArena                arena;
@@ -352,7 +350,7 @@ public class PlayersManager
                 continue;
             }
 
-            this.logger.log(Level.INFO, "Player {0} join timeout on arena {1}", new Object[]{joinInfo.getUuid(), this.arena.getId()});
+            this.logger.info("Player {} join timeout on arena {}", joinInfo.getUuid(), this.arena.getId());
             joinInfos.remove();
         }
     }

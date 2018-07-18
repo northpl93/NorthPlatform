@@ -1,13 +1,12 @@
 package pl.north93.zgame.daemon.servers;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -19,8 +18,7 @@ import pl.north93.zgame.daemon.event.ServerDeathEvent;
 
 public class ServerDeathHandler
 {
-    @Inject
-    private Logger        logger;
+    private final Logger logger = LoggerFactory.getLogger(ServerDeathHandler.class);
     @Inject
     private IEventManager eventManager;
 
@@ -36,7 +34,7 @@ public class ServerDeathHandler
         final ServerDto server = event.getServer();
         this.eventManager.callEvent(new ServerDeathNetEvent(server));
 
-        this.logger.log(Level.WARNING, "Server with ID {0} crashed! (process exited in other state than STOPPING)", server.getUuid());
+        this.logger.warn("Server with ID {} crashed! (process exited in other state than STOPPING)", server.getUuid());
     }
 
     @Override

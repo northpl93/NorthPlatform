@@ -11,7 +11,6 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,17 +18,21 @@ import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.diorite.commons.math.DioriteMathUtils;
 
 import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlEnchant;
-import pl.north93.zgame.api.global.API;
 
 @XmlRootElement(name = "item")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({XmlItemMeta.class, XmlSkullMeta.class, XmlPotionMeta.class})
 public class XmlItemStack
 {
+    private static final Logger logger = LoggerFactory.getLogger(XmlItemStack.class);
+
     @XmlAttribute(required = true)
     private String id = Material.STONE.name();
     @XmlAttribute
@@ -182,7 +185,7 @@ public class XmlItemStack
         if ( material == null )
         {
             // Print error stack trace without throw an exception
-            API.getLogger().log(Level.WARNING, "Couldn't create item", new IllegalArgumentException("Cannot recognize item by id: " + this.id));
+            logger.warn("Couldn't create item", new IllegalArgumentException("Cannot recognize item by id: " + this.id));
             return null;
         }
         

@@ -6,11 +6,11 @@ import static java.text.MessageFormat.format;
 import javax.annotation.Nonnull;
 
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -22,8 +22,7 @@ import pl.north93.zgame.controller.servers.scaler.value.IScalingValue;
 
 public class RulesProcessor
 {
-    @Inject
-    private Logger logger;
+    private final Logger logger = LoggerFactory.getLogger(RulesProcessor.class);
     @Inject
     private LocalGroupsManager localGroupsManager;
 
@@ -39,7 +38,7 @@ public class RulesProcessor
         if (scalerDecision != ScalerDecision.DO_NOTHING)
         {
             // nie spamimy konsoli jak nic nie robimy
-            this.logger.log(Level.INFO, "Applying decision {0} for group {1}", new Object[]{scalerDecision, serversGroup.getName()});
+            this.logger.info("Applying decision {} for group {}", scalerDecision, serversGroup.getName());
         }
 
         scalerDecision.apply(serversGroup);

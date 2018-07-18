@@ -1,13 +1,12 @@
 package pl.arieals.api.minigame.server.gamehost.listener;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.diorite.commons.math.DioriteRandomUtils;
 
@@ -25,12 +24,11 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ArenaInitListener implements AutoListener
 {
+    private final Logger logger = LoggerFactory.getLogger(ArenaInitListener.class);
     @Inject
     private MiniGameServer       server;
     @Inject
     private IBukkitServerManager bukkitServerManager;
-    @Inject
-    private Logger               logger;
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void beforeInit(final GameInitEvent event)
@@ -44,7 +42,7 @@ public class ArenaInitListener implements AutoListener
 
         if (this.bukkitServerManager.isShutdownScheduled())
         {
-            this.logger.log(Level.INFO, "Removing arena {0} because shutdown is scheduled.", arena.getId());
+            this.logger.info("Removing arena {} because shutdown is scheduled.", arena.getId());
             event.setCancelled(true);
             arena.delete();
         }

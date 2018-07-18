@@ -13,13 +13,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.logging.Level;
 
 import com.google.common.base.Preconditions;
 
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spigotmc.SneakyThrow;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
@@ -31,6 +32,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class TickableManagerImpl extends Component implements ITickableManager
 {
+    private final Logger logger = LoggerFactory.getLogger(TickableManagerImpl.class);
     private final Map<Class<? extends ITickable>, Method[]> registeredTickableClasses = new WeakHashMap<>();
     private final Set<Collection<? extends ITickable>> tickableObjectsCollection = Collections.newSetFromMap(new IdentityHashMap<>());
     private final Set<TickableWeakReference> tickableObjects = new HashSet<>();
@@ -82,7 +84,7 @@ public class TickableManagerImpl extends Component implements ITickableManager
                 
                 if ( method.getReturnType() != void.class && method.getParameterTypes().length != 0 )
                 {
-                    apiCore.getLogger().warning("TickHandler method " + method.getName() + " in class " + clazz.getName()
+                    this.logger.warn("TickHandler method " + method.getName() + " in class " + clazz.getName()
                             + " has invalid signature" + " (shold be 'void " + method.getName() + "()' )");
                     continue;
                 }
@@ -195,6 +197,6 @@ public class TickableManagerImpl extends Component implements ITickableManager
     private void reportTickHandlerException(ITickable tickable, InvocationTargetException e)
     {
         Throwable cause = e.getCause();
-        apiCore.getLogger().log(Level.SEVERE, "An exception was thrown when ticking (" + tickable.toString() + "):", cause);
+        this.logger.error("An exception was thrown when ticking (" + tickable.toString() + "):", cause);
     }
 }

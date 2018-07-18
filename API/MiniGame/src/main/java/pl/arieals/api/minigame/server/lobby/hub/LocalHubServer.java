@@ -5,13 +5,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.arieals.api.minigame.server.lobby.hub.event.PlayerPreSwitchHubEvent;
 import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
@@ -32,6 +33,7 @@ import pl.north93.zgame.api.global.config.NetConfig;
  */
 public class LocalHubServer implements IHubServer
 {
+    private final Logger logger = LoggerFactory.getLogger(LocalHubServer.class);
     @Inject
     private BukkitApiCore           apiCore;
     @Inject
@@ -114,8 +116,7 @@ public class LocalHubServer implements IHubServer
         final HubWorld newHub = this.getHubWorld(hubId);
         if (newHub == null)
         {
-            final Object[] params = {player.getName(), hubId};
-            this.apiCore.getLogger().log(Level.WARNING, "Tried teleport {0} to non-existing hub {1}", params);
+            this.logger.warn("Tried teleport {} to non-existing hub {}", player.getName(), hubId);
             return;
         }
 
@@ -153,7 +154,7 @@ public class LocalHubServer implements IHubServer
         final HubsConfig hubsConfig = this.hubsConfig.get();
         if (hubsConfig == null)
         {
-            this.apiCore.getLogger().log(Level.WARNING, "HubsConfig is null in LocalHubServer#refreshConfiguration()! Did controller is set up properly?");
+            this.logger.warn("HubsConfig is null in LocalHubServer#refreshConfiguration()! Did controller is set up properly?");
             return;
         }
 
@@ -177,7 +178,7 @@ public class LocalHubServer implements IHubServer
         final HubWorld hubWorld = this.hubWorldManager.createHubWorld(hubConfig, room);
 
         this.hubWorlds.put(hubConfig.getHubId(), hubWorld);
-        this.apiCore.getLogger().log(Level.INFO, "Created hub with ID {0}", hubConfig.getHubId());
+        this.logger.info("Created hub with ID {}", hubConfig.getHubId());
     }
 
     private ChatRoom getChatRoomFor(final HubConfig hubConfig)

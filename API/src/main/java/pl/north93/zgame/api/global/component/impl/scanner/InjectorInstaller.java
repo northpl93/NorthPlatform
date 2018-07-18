@@ -1,11 +1,11 @@
 package pl.north93.zgame.api.global.component.impl.scanner;
 
 import java.lang.reflect.Modifier;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javassist.CtClass;
 import javassist.CtConstructor;
@@ -17,6 +17,7 @@ import pl.north93.zgame.api.global.component.impl.injection.Injector;
 class InjectorInstaller
 {
     private static final String INJECTOR_NAME = Injector.class.getName();
+    private final Logger  logger = LoggerFactory.getLogger(InjectorInstaller.class);
     private final ApiCore apiCore;
 
     InjectorInstaller(final ApiCore apiCore)
@@ -36,11 +37,7 @@ class InjectorInstaller
                 }
                 catch (final Exception e)
                 {
-                    final LogRecord logRecord = new LogRecord(Level.SEVERE, "Failed to install injector in {0}");
-                    logRecord.setParameters(new Object[] {ctClass.getName()});
-                    logRecord.setThrown(e);
-
-                    this.apiCore.getLogger().log(logRecord);
+                    this.logger.error("Failed to install injector in {}", ctClass.getName(), e);
                 }
                 return;
             }
@@ -62,7 +59,7 @@ class InjectorInstaller
 
         this.apiCore.getInstrumentationClient().redefineClass(ctClass.getName(), ctClass.toBytecode());
 
-        this.apiCore.getLogger().log(Level.FINE, "Installed injector in {0}", ctClass.getName());
+        this.logger.debug("Installed injector in {0}", ctClass.getName());
     }
 
     @Override

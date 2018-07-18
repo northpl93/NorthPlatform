@@ -50,12 +50,6 @@ public class StandaloneApiCore extends ApiCore
     }
 
     @Override
-    public Logger getLogger()
-    {
-        return this.logger;
-    }
-
-    @Override
     public String getId()
     {
         return this.environmentCfg.getId();
@@ -73,7 +67,7 @@ public class StandaloneApiCore extends ApiCore
         this.logger.info("Initialising standalone application");
         final String fileLoc = System.getProperty("northplatform.environmentFile", "environment.xml");
         this.environmentCfg = ConfigUtils.loadConfig(EnvironmentCfg.class, this.getFile(fileLoc));
-        this.debug("Using environment file: " + fileLoc + " Loaded content: " + this.environmentCfg);
+        this.getApiLogger().debug("Using environment file: " + fileLoc + " Loaded content: " + this.environmentCfg);
     }
 
     @Override

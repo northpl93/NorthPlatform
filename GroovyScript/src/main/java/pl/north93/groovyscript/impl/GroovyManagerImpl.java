@@ -2,26 +2,24 @@ package pl.north93.groovyscript.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.common.base.Preconditions;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.codehaus.groovy.control.CompilerConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import groovy.lang.GroovyClassLoader;
 import pl.north93.groovyscript.api.IGroovyManager;
 import pl.north93.groovyscript.api.IScriptContext;
 import pl.north93.groovyscript.api.source.IScriptSource;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 /*default*/ class GroovyManagerImpl implements IGroovyManager
 {
-    @Inject
-    private Logger logger;
+    private final Logger logger = LoggerFactory.getLogger(GroovyManagerImpl.class);
     private final BossClassLoader bossClassLoader;
     private final Map<ClassLoader, IScriptContext> context;
 
@@ -46,7 +44,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
         scriptSource.setup(loader);
 
-        this.logger.log(Level.INFO, "Created new groovy ScriptContext");
+        this.logger.info("Created new groovy ScriptContext");
         return context;
     }
 
@@ -61,7 +59,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
         Preconditions.checkState(context.isDestroyed());
         this.context.remove(context.getClassLoader());
 
-        this.logger.log(Level.INFO, "Groovy script context removed");
+        this.logger.info("Groovy script context removed");
     }
 
     @Override

@@ -1,15 +1,12 @@
 package pl.north93.zgame.api.bukkit.gui.impl;
 
-import static java.text.MessageFormat.format;
-
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.uri.IUriManager;
@@ -18,8 +15,7 @@ import pl.north93.zgame.api.global.utils.Vars;
 public final class NorthUriUtils
 {
     private static NorthUriUtils instance;
-    @Inject
-    private Logger      logger;
+    private final Logger logger = LoggerFactory.getLogger(NorthUriUtils.class);
     @Inject
     private IUriManager uriManager;
 
@@ -50,7 +46,7 @@ public final class NorthUriUtils
         }
         catch (final URISyntaxException e)
         {
-            this.logger.log(Level.SEVERE, format("Failed to create a uri {0}", finalUri), e);
+            this.logger.error("Failed to create a uri {}", finalUri, e);
             return null;
         }
     }

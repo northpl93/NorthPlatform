@@ -1,10 +1,9 @@
 package pl.north93.zgame.controller.servers.scaler;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
@@ -17,8 +16,7 @@ import pl.north93.zgame.controller.servers.groups.LocalManagedServersGroup;
 
 public class ScalerWorker implements Runnable
 {
-    @Inject
-    private Logger             logger;
+    private final Logger logger = LoggerFactory.getLogger(ScalerWorker.class);
     @Inject
     private LocalGroupsManager localGroupsManager;
     @Inject
@@ -66,7 +64,7 @@ public class ScalerWorker implements Runnable
         }
         catch (final Exception e)
         {
-            this.logger.log(Level.SEVERE, "An exception has been throw while processing group " + group.getName(), e);
+            this.logger.error("An exception has been throw while processing group {}", group.getName(), e);
         }
     }
 

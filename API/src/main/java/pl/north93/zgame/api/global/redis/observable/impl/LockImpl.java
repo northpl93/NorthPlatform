@@ -4,16 +4,17 @@ import static java.lang.management.ManagementFactory.*;
 
 
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.global.redis.observable.Lock;
 
 class LockImpl implements Lock
 {
+    private final Logger logger = LoggerFactory.getLogger(LockImpl.class);
     private final ObservationManagerImpl observationManager;
     private final String                 name;
     private final Object                 waiter;
@@ -34,20 +35,19 @@ class LockImpl implements Lock
     @Override
     public LockImpl lock()
     {
-        final Logger logger = this.observationManager.getMyLogger();
         if (this.tryLock0())
         {
-            logger.log(Level.FINE, "[Lock] Successfully acquired lock {0}", this.name);
+            this.logger.debug("[Lock] Successfully acquired lock {}", this.name);
         }
         else
         {
             this.observationManager.addWaitingLock(this);
-            logger.log(Level.FINE, "[Lock] Lock {0} is waiting...", this.name);
+            this.logger.debug("[Lock] Lock {} is waiting...", this.name);
             while (! this.tryLock0())
             {
                 this.awaitUnlockOrTimeout();
             }
-            logger.log(Level.FINE, "[Lock] Successfully acquired lock {0}", this.name);
+            this.logger.debug("[Lock] Successfully acquired lock {}", this.name);
         }
         return this;
     }
@@ -55,10 +55,9 @@ class LockImpl implements Lock
     @Override
     public boolean tryLock()
     {
-        final Logger logger = this.observationManager.getMyLogger();
         if (this.tryLock0())
         {
-            logger.log(Level.FINE, "[Lock] Successfully acquired lock {0}", this.name);
+            this.logger.debug("[Lock] Successfully acquired lock {}", this.name);
             return true;
         }
         return false;
@@ -74,12 +73,11 @@ class LockImpl implements Lock
     @Override
     public void unlock()
     {
-        final Logger logger = this.observationManager.getMyLogger();
         if (! this.tryUnlock())
         {
             throw new RuntimeException("Failed to unlock " + this.name);
         }
-        logger.log(Level.FINE, "[Lock] Successfully unlocked {0}", this.name);
+        this.logger.debug("[Lock] Successfully unlocked {}", this.name);
     }
 
     private synchronized boolean tryUnlock()
@@ -101,10 +99,9 @@ class LockImpl implements Lock
 
     /*default*/ synchronized void remoteUnlock()
     {
-        final Logger logger = this.observationManager.getMyLogger();
         this.notifyAllLocalWaiters();
 
-        logger.log(Level.FINE, "[Lock] Remote unlock {0}", this.name);
+        this.logger.debug("[Lock] Remote unlock {0}", this.name);
     }
 
     private void notifyAllLocalWaiters()

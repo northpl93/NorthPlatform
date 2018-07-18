@@ -2,8 +2,6 @@ package pl.north93.zgame.daemon.servers.setup;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -11,6 +9,8 @@ import com.google.common.eventbus.Subscribe;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.diorite.commons.io.DioriteFileUtils;
 
@@ -25,8 +25,7 @@ import pl.north93.zgame.daemon.servers.FilesManager;
 
 public class WorkspaceSetup
 {
-    @Inject
-    private Logger       logger;
+    private final Logger logger = LoggerFactory.getLogger(WorkspaceSetup.class);
     @Inject
     private ApiCore      apiCore;
     @Inject
@@ -49,7 +48,7 @@ public class WorkspaceSetup
         }
         catch (final Exception e)
         {
-            this.logger.log(Level.SEVERE, "Exception while setting up workspace", e);
+            this.logger.error("Exception while setting up workspace", e);
         }
     }
 

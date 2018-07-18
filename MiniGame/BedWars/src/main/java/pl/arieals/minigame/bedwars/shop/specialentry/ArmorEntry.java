@@ -4,8 +4,6 @@ import static java.text.MessageFormat.format;
 
 
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,18 +14,20 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pl.arieals.minigame.bedwars.event.ItemPreBuyEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.utils.itemstack.ArmorMaterial;
 
 public class ArmorEntry implements IShopSpecialEntry, Listener
 {
-    private final Logger logger;
+    private final Logger logger = LoggerFactory.getLogger(ArmorEntry.class);
 
-    private ArmorEntry(final BukkitApiCore apiCore, final Logger logger) // aggregator wspiera SmartExecutora, wiec wstrzykiwanie dziala
+    private ArmorEntry(final BukkitApiCore apiCore) // aggregator wspiera SmartExecutora, wiec wstrzykiwanie dziala
     {
         apiCore.registerEvents(this);
-        this.logger = logger;
     }
 
     @Override
@@ -68,8 +68,8 @@ public class ArmorEntry implements IShopSpecialEntry, Listener
 
         if (buyingType.isBetterOrSame(hasType))
         {
-            this.logger.log(Level.INFO, "Canceled purchase because player already has this armor, arena {0}, player {1}, armor {2}",
-                    new Object[]{event.getArena().getId(), event.getPlayer().getName(), event.getShopEntry().getInternalName()});
+            this.logger.info("Canceled purchase because player already has this armor, arena {}, player {}, armor {}",
+                    event.getArena().getId(), event.getPlayer().getName(), event.getShopEntry().getInternalName());
             event.setBuyStatus(ItemPreBuyEvent.BuyStatus.ALREADY_HAVE);
         }
     }

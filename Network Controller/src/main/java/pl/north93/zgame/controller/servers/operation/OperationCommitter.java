@@ -2,18 +2,15 @@ package pl.north93.zgame.controller.servers.operation;
 
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OperationCommitter
 {
-    @Inject
-    private Logger logger;
+    private final Logger logger = LoggerFactory.getLogger(OperationCommitter.class);
     private final Set<AutoScalerOperation> operations;
 
     public OperationCommitter(final Set<AutoScalerOperation> operations)
@@ -34,7 +31,7 @@ public class OperationCommitter
             // i zwracamy true (chociaz tak na prawde commit nowej operacji nie nastapil)
             if (newOperation.isOpposite(alreadyStartedOperation) && alreadyStartedOperation.tryCancel())
             {
-                this.logger.log(Level.INFO, "Instead committing {0} I cancelled {1}", new Object[]{newOperation,alreadyStartedOperation});
+                this.logger.info("Instead committing {} I cancelled {}", newOperation,alreadyStartedOperation);
                 operationIterator.remove();
                 return true;
             }
@@ -46,13 +43,13 @@ public class OperationCommitter
     // probuje rozpoczac operacje i jak sie uda to dodaje do listy operacji
     private boolean addAndStart(final AutoScalerOperation operation)
     {
-        this.logger.log(Level.INFO, "Starting operation {0}", operation);
+        this.logger.info("Starting operation {}", operation);
         operation.start();
 
         // nie udalo sie uruchomic operacji wiec jej nawet nie dodajemy do listy
         if (operation.getCachedState() == ScalerOperationState.FAILED)
         {
-            this.logger.log(Level.WARNING, "Failed to start operation {0}", operation);
+            this.logger.warn("Failed to start operation {}", operation);
             return false;
         }
 

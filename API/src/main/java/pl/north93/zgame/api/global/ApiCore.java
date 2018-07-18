@@ -4,10 +4,10 @@ import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.diorite.commons.io.DioriteFileUtils;
 
@@ -20,17 +20,20 @@ import pl.north93.zgame.api.global.permissions.PermissionsManager;
 
 public abstract class ApiCore
 {
-    private final boolean            isDebug;
-    private final InstrumentationClient       instrumentationClient;
-    private final IComponentManager  componentManager;
-    private final Platform           platform;
-    private final PlatformConnector  connector;
-    private       ApiState           apiState;
+    private final Logger                logger;
+    private final boolean               isDebug;
+    private final InstrumentationClient instrumentationClient;
+    private final IComponentManager     componentManager;
+    private final Platform              platform;
+    private final PlatformConnector     connector;
+    private       ApiState              apiState;
 
     public ApiCore(final Platform platform, final PlatformConnector platformConnector)
     {
         this.platform = platform;
         this.connector = platformConnector;
+
+        this.logger = LoggerFactory.getLogger(ApiCore.class);
         this.isDebug = System.getProperties().containsKey("debug");
         this.instrumentationClient = new InstrumentationClient();
         this.componentManager = new ComponentManagerImpl(this);
@@ -51,7 +54,7 @@ public abstract class ApiCore
     public final void startCore()
     {
         Locale.setDefault(new Locale("pl", "PL"));
-        this.getLogger().info("Starting North API Core.");
+        this.logger.info("Starting North API Core.");
 
         try
         {
@@ -60,7 +63,7 @@ public abstract class ApiCore
         }
         catch (final Exception e)
         {
-            this.getLogger().log(Level.SEVERE, "Failed to initialise North API", e);
+            this.logger.error("Failed to initialise North API", e);
             return;
         }
 
@@ -88,8 +91,8 @@ public abstract class ApiCore
             return;
         }
         this.setApiState(ApiState.ENABLED);
-        this.getLogger().info("Client id is " + this.getId());
-        this.debug("Debug mode is enabled");
+        this.logger.info("Client id is " + this.getId());
+        this.logger.debug("If you see this message debug mode is enabled");
     }
 
     public final void stopCore()
@@ -104,7 +107,7 @@ public abstract class ApiCore
         }
         this.componentManager.disableAllComponents();
         this.setApiState(ApiState.DISABLED);
-        this.getLogger().info("North API Core stopped.");
+        this.logger.info("North API Core stopped.");
     }
 
     @ProvidesComponent
@@ -129,6 +132,7 @@ public abstract class ApiCore
         return this.componentManager;
     }
 
+    @Deprecated
     public void debug(final Object object)
     {
         if (! this.isDebug)
@@ -136,15 +140,7 @@ public abstract class ApiCore
             return;
         }
 
-        final Logger logger = this.getLogger();
-        if (logger == null)
-        {
-            System.out.println("[DEBUG] " + object);
-        }
-        else
-        {
-            logger.log(Level.INFO, "[DEBUG] " + object.toString());
-        }
+        this.logger.debug("[DEBUG] " + object);
     }
 
     /**
@@ -167,7 +163,7 @@ public abstract class ApiCore
     private void setApiState(final ApiState newState)
     {
         this.apiState = newState;
-        this.debug("Api forced into " + newState + " state.");
+        this.logger.debug("Api forced into " + newState + " state.");
     }
 
     public final ApiState getApiState()
@@ -175,7 +171,10 @@ public abstract class ApiCore
         return this.apiState;
     }
 
-    public abstract Logger getLogger();
+    protected final Logger getApiLogger()
+    {
+        return this.logger;
+    }
 
     public abstract String getId();
 

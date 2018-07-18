@@ -1,8 +1,5 @@
 package pl.arieals.api.minigame.server.gamehost.world.impl;
 
-import static java.text.MessageFormat.format;
-
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -10,7 +7,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import net.minecraft.server.v1_12_R1.ChunkProviderServer;
 import net.minecraft.server.v1_12_R1.RegionFile;
@@ -24,6 +20,8 @@ import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.diorite.commons.reflections.DioriteReflectionUtils;
 import org.diorite.commons.reflections.FieldAccessor;
@@ -37,17 +35,16 @@ class ChunkLoadingTask implements Runnable
 {
     private static final FieldAccessor chunkProvider = DioriteReflectionUtils.getField(net.minecraft.server.v1_12_R1.World.class, "chunkProvider");
     private static final int MIN_MEMORY = 15; // ponizej 15% przestajemy doczytywac chunki i czekamy na GC
+    private final Logger logger = LoggerFactory.getLogger(ChunkLoadingTask.class);
     private final Queue<QueuedLoadingTask> tasks = Queues.synchronizedQueue(new ArrayDeque<>());
     private QueuedLoadingTask          activeTask;
-    @Inject
-    private Logger                     logger;
     @Inject
     private WorldInitializationHandler initializationHandler;
 
     public void queueTask(final World world, final Set<XmlChunk> chunks, final LoadingProgressImpl progress)
     {
         this.tasks.add(new QueuedLoadingTask(world, Queues.newArrayDeque(chunks), progress, System.currentTimeMillis()));
-        this.logger.info(format("Queued loading {0} chunks of {1}", chunks.size(), world.getName()));
+        this.logger.info("Queued loading {} chunks of {}", chunks.size(), world.getName());
     }
 
     @Override
@@ -62,7 +59,7 @@ class ChunkLoadingTask implements Runnable
 
         if (! this.checkRamUsage())
         {
-            this.logger.warning("Low free memory (under " + MIN_MEMORY + "%). Skipped chunk loading to prevent server crash.");
+            this.logger.warn("Low free memory (under " + MIN_MEMORY + "%). Skipped chunk loading to prevent server crash.");
             System.gc(); // to tylko sugestia, ale probowac warto.
             return;
         }
@@ -86,11 +83,11 @@ class ChunkLoadingTask implements Runnable
     private void completeTask(final QueuedLoadingTask task)
     {
         final long totalTime = System.currentTimeMillis() - task.startTime;
-        this.logger.info(format("Completed loading of world {0} in {1}ms", task.world.getName(), totalTime));
+        this.logger.info("Completed loading of world {} in {}ms", task.world.getName(), totalTime);
 
         if (task.isEmpty)
         {
-            this.logger.warning(format("World {0} has empty list of chunks. Use WE wand and /mapaddchunks to add chunks. Blocking of new chunks disabled.", task.world.getName()));
+            this.logger.warn("World {} has empty list of chunks. Use WE wand and /mapaddchunks to add chunks. Blocking of new chunks disabled.", task.world.getName());
         }
         else
         {

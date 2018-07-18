@@ -6,14 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.chat.global.ChatFormatter;
 import pl.north93.zgame.api.chat.global.ChatManager;
 import pl.north93.zgame.api.chat.global.ChatRoom;
@@ -33,10 +32,9 @@ import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Lock;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
+@Slf4j
 public class ChatManagerImpl implements ChatManager
 {
-    @Inject
-    private Logger          logger;
     @Inject
     private IEventManager   eventManager;
     @Inject
@@ -70,11 +68,6 @@ public class ChatManagerImpl implements ChatManager
         return this.formatters.get(formatterId);
     }
 
-    public Logger getLogger()
-    {
-        return this.logger;
-    }
-
     public IPlayersManager getPlayersManager()
     {
         return this.networkManager.getPlayers();
@@ -104,7 +97,7 @@ public class ChatManagerImpl implements ChatManager
             value.set(new ChatRoomData(id, priority, formatterId));
         }
 
-        this.logger.log(Level.INFO, "Created room with ID {0} and formatter {1}", new Object[]{id, formatterId});
+        log.info("Created room with ID {} and formatter {}", id, formatterId);
         return new ChatRoomImpl(this, id, value);
     }
 
@@ -119,7 +112,7 @@ public class ChatManagerImpl implements ChatManager
             if (! value.isPreset())
             {
                 value.set(new ChatRoomData(id, priority, formatterId));
-                this.logger.log(Level.INFO, "Created room with ID {0} and formatter {1}", new Object[]{id, formatterId});
+                log.info("Created room with ID {} and formatter {}", id, formatterId);
             }
         }
 

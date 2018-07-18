@@ -8,13 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
@@ -32,10 +32,9 @@ import spark.Request;
 public class RequestHandler
 {
     private static final MetaKey ONE_TIME_LIST = MetaKey.get("itemShop_oneTimeList");
+    private final Logger                    logger   = LoggerFactory.getLogger(RequestHandler.class);
     private final Gson                      gson     = new Gson();
     private final Map<String, IDataHandler> handlers = new HashMap<>();
-    @Inject
-    private Logger          logger;
     @Inject
     private INetworkManager networkManager;
 
@@ -50,7 +49,7 @@ public class RequestHandler
             }
             catch (final Exception e)
             {
-                this.logger.log(Level.SEVERE, "Exception thrown while processing ItemShop request: " + request, e);
+                this.logger.error("Exception thrown while processing ItemShop request: {}", request, e);
                 return null;
             }
         });
@@ -73,13 +72,13 @@ public class RequestHandler
         for (final DataEntry entry : entries)
         {
             final Object[] params = new Object[] {entry, identity.getNick(), identity.getUuid()};
-            this.logger.log(Level.INFO, "Processing DataEntry: {0} for {1}/{2}", params);
+            this.logger.info("Processing DataEntry: {} for {}/{}", params);
 
             this.handle(identity, entry);
         }
 
         final Object[] params = {identity.getNick(), identity.getUuid()};
-        this.logger.log(Level.INFO, "Completed processing ItemShop request for {0}/{1}", params);
+        this.logger.info("Completed processing ItemShop request for {}/{}", params);
         return "ok";
     }
 
@@ -88,21 +87,21 @@ public class RequestHandler
         final IDataHandler handler = this.handlers.get(dataEntry.getType());
         if (handler == null)
         {
-            this.logger.log(Level.WARNING, "Not found dataHandler for dataEntry type: {0}", dataEntry.getType());
+            this.logger.warn("Not found dataHandler for dataEntry type: {}", dataEntry.getType());
             return;
         }
 
         final String oneTimeId = dataEntry.getOneTime();
         if (oneTimeId != null && this.markAsUsed(identity, oneTimeId))
         {
-            this.logger.log(Level.INFO, "Skipped dataEntry {0} because it is already used by player", dataEntry.getType());
+            this.logger.info("Skipped dataEntry {} because it is already used by player", dataEntry.getType());
             return;
         }
 
         if (! handler.process(identity, dataEntry.getData()))
         {
             final Object[] params = {handler.getId(), identity.getNick(), identity.getUuid()};
-            this.logger.log(Level.WARNING, "Handler {0} failed while processing dataEntry for player {1}/{2}", params);
+            this.logger.warn("Handler {} failed while processing dataEntry for player {}/{}", params);
         }
     }
 

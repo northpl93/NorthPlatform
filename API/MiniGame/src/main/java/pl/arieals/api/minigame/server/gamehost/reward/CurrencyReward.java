@@ -1,11 +1,11 @@
 package pl.arieals.api.minigame.server.gamehost.reward;
 
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.arieals.api.minigame.shared.api.booster.IBoosterManager;
 import pl.north93.zgame.api.economy.ICurrency;
@@ -18,12 +18,11 @@ import pl.north93.zgame.api.global.network.players.Identity;
 
 public class CurrencyReward implements IReward
 {
+    private final Logger logger = LoggerFactory.getLogger(CurrencyReward.class);
     @Inject
     private static IEconomyManager economyManager;
     @Inject
     private static IBoosterManager boosterManager;
-    @Inject
-    private static Logger          logger;
     private final String rewardId;
     private final String currencyId;
     private final double amount;
@@ -64,7 +63,7 @@ public class CurrencyReward implements IReward
         }
         catch (final Exception e)
         {
-            logger.log(Level.SEVERE, "CurrencyReward can't add money to user's account.", e);
+            this.logger.error("CurrencyReward can't add money to user's account.", e);
             return this;
         }
     }

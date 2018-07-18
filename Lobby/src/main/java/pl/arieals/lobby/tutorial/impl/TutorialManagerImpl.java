@@ -1,13 +1,12 @@
 package pl.arieals.lobby.tutorial.impl;
 
-import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
@@ -26,6 +25,7 @@ import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.uri.UriHandler;
 import pl.north93.zgame.api.global.uri.UriInvocationContext;
 
+@Slf4j
 /*default*/ class TutorialManagerImpl implements ITutorialManager
 {
     @Inject
@@ -156,7 +156,7 @@ import pl.north93.zgame.api.global.uri.UriInvocationContext;
         }
         catch (final Exception e)
         {
-            this.apiCore.getLogger().log(Level.SEVERE, "Failed to update tutorial status", e);
+            log.error("Failed to update tutorial status", e);
             return;
         }
 

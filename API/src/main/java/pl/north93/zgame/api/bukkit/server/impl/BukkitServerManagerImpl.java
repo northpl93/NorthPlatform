@@ -3,7 +3,6 @@ package pl.north93.zgame.api.bukkit.server.impl;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.logging.Level;
 
 import net.minecraft.server.v1_12_R1.MinecraftServer;
 
@@ -13,6 +12,8 @@ import org.bukkit.Bukkit;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
@@ -34,6 +35,7 @@ import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 public class BukkitServerManagerImpl extends Component implements IBukkitServerManager, IBukkitExecutor
 {
     private static final int TIME_TO_NEXT_TRY = 30 * 20; // 30 sekund
+    private final Logger logger = LoggerFactory.getLogger(BukkitServerManagerImpl.class);
     @Inject
     private BukkitApiCore    apiCore;
     @Inject
@@ -81,7 +83,7 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
         this.changeState(ServerState.STOPPING);
 
         final UUID serverId = this.apiCore.getServerId();
-        this.getLogger().log(Level.INFO, "Server {0} forced into STOPPING state by BukkitServerManagerImpl", serverId);
+        this.logger.info("Server {} forced into STOPPING state by BukkitServerManagerImpl", serverId);
     }
 
     @Override
@@ -116,7 +118,7 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
     {
         Preconditions.checkState(! this.isShutdownScheduled(), "Shutdown already scheduled");
 
-        this.getLogger().log(Level.INFO, "Scheduling server shutdown...");
+        this.logger.info("Scheduling server shutdown...");
         this.serverValue.update(server ->
         {
             server.setShutdownScheduled(true);
@@ -131,7 +133,7 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
         Preconditions.checkState(this.isShutdownScheduled(), "Shutdown isn't scheduled");
         Preconditions.checkState(this.isWorking(), "Server is already stopping");
 
-        this.getLogger().log(Level.INFO, "Server shutdown cancelled...");
+        this.logger.info("Server shutdown cancelled...");
         this.serverValue.update(server ->
         {
             server.setShutdownScheduled(false);
@@ -146,7 +148,7 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
         final ShutdownScheduledEvent event = this.apiCore.callEvent(new ShutdownScheduledEvent());
         if (! event.isCancelled())
         {
-            this.getLogger().log(Level.INFO, "Shutting down server because shutdown was scheduled and not deferred");
+            this.logger.info("Shutting down server because shutdown was scheduled and not deferred");
             Bukkit.shutdown();
             return;
         }

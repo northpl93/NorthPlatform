@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spigotmc.SneakyThrow;
 import org.spigotmc.SpigotConfig;
 
@@ -36,6 +38,7 @@ import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 
 public class GameHostManager implements IServerManager
 {
+    private final Logger logger = LoggerFactory.getLogger(GameHostManager.class);
     @Inject
     private BukkitApiCore       apiCore;
     @Inject
@@ -182,7 +185,7 @@ public class GameHostManager implements IServerManager
         {
             mapTemplateManager.setTemplatesDirectory(new File(miniGameConfig.getMapsDirectory()));
             mapTemplateManager.loadTemplatesFromDirectory();
-            apiCore.getLogger().info("Loaded " + mapTemplateManager.getAllTemplates().size() + " maps templates!");
+            logger.info("Loaded " + mapTemplateManager.getAllTemplates().size() + " maps templates!");
         }
         catch ( Throwable e )
         {

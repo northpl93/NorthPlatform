@@ -31,7 +31,7 @@ public class TestApiCore extends StandaloneApiCore
     @Override
     protected void init() throws Exception
     {
-        this.getLogger().info("Initialising testing environment");
+        this.getApiLogger().info("Initialising testing environment");
         this.environmentCfg = new EnvironmentCfg("testenv");
     }
 

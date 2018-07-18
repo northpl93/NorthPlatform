@@ -19,7 +19,6 @@ import com.mongodb.client.MongoDatabase;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.component.Component;
 
 public class StorageConnector extends Component
@@ -61,7 +60,7 @@ public class StorageConnector extends Component
 
     private void fixMongoLogger(final Logger logger)
     {
-        logger.setParent(API.getLogger());
+        //logger.setParent(API.getLogger()); // todo
     }
 
     @Override

@@ -4,9 +4,6 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
 
@@ -21,6 +18,9 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.arena.player.PlayersManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
@@ -28,12 +28,10 @@ import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.north93.zgame.api.bukkit.protocol.wrappers.WrapperPlayOutPlayerInfo;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class TabListHandler implements Listener
 {
-    @Inject
-    private Logger logger;
+    private final Logger logger = LoggerFactory.getLogger(TabListHandler.class);
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void prepareTabTeams(final GameStartEvent event)
@@ -66,7 +64,7 @@ public class TabListHandler implements Listener
             newTeam.setPrefix(team.getColor().toString());
             newTeam.setOption(Option.COLLISION_RULE, OptionStatus.FOR_OWN_TEAM);
 
-            this.logger.log(Level.FINE, "Created team {0} for arena {1}", new Object[]{teamName, arena.getId()});
+            this.logger.debug("Created team {} for arena {}", teamName, arena.getId());
 
             return newTeam;
         }

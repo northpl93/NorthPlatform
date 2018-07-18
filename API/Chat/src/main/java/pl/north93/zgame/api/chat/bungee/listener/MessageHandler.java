@@ -5,11 +5,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -31,8 +31,7 @@ import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
  */
 public class MessageHandler
 {
-    @Inject
-    private Logger          logger;
+    private final Logger logger = LoggerFactory.getLogger(MessageHandler.class);
     @Inject
     private INetworkManager networkManager;
     @Inject
@@ -109,7 +108,7 @@ public class MessageHandler
         final ChatRoom room = this.chatManager.getRoom(roomId);
         if (room == null)
         {
-            this.logger.log(Level.WARNING, "Received chat data with invalid roomId {0}", roomId);
+            this.logger.warn("Received chat data with invalid roomId {}", roomId);
             return Collections.emptyList();
         }
 

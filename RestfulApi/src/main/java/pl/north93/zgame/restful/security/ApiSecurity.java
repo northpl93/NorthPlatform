@@ -6,6 +6,8 @@ import static spark.Spark.halt;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -13,6 +15,7 @@ import pl.north93.zgame.api.global.utils.ConfigUtils;
 
 public class ApiSecurity
 {
+    private final Logger logger = LoggerFactory.getLogger(ApiSecurity.class);
     @Inject
     private ApiCore   api;
     private ApiConfig apiConfig;
@@ -26,7 +29,7 @@ public class ApiSecurity
     {
         if (! this.apiConfig.isSecurityEnabled())
         {
-            this.api.getLogger().warning("Restful API security is DISABLED! Anyone can access our API.");
+            this.logger.warn("Restful API security is DISABLED! Anyone can access our API.");
             return;
         }
 

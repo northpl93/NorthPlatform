@@ -1,19 +1,15 @@
 package pl.arieals.minigame.bedwars.arena;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PlayerReconnectTimedOut implements Runnable
 {
-    @Inject
-    private Logger logger;
+    private final Logger logger = LoggerFactory.getLogger(PlayerReconnectTimedOut.class);
     private final BedWarsPlayer player;
 
     public PlayerReconnectTimedOut(final BedWarsPlayer player)
@@ -34,7 +30,7 @@ public class PlayerReconnectTimedOut implements Runnable
         this.player.eliminate();
 
         final Player bukkitPlayer = this.player.getBukkitPlayer();
-        this.logger.log(Level.INFO, "Player {0} doesn't returned in time, marked as eliminated.", bukkitPlayer.getName());
+        this.logger.info("Player {} doesn't returned in time, marked as eliminated.", bukkitPlayer.getName());
 
         final Team team = this.player.getTeam();
         if (team.isAnyPlayerAlive())

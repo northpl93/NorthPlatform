@@ -2,8 +2,9 @@ package pl.north93.zgame.itemshop.controller.handlers;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
@@ -14,8 +15,7 @@ import pl.north93.zgame.itemshop.shared.IDataHandler;
 
 public class GroupDataHandler implements IDataHandler
 {
-    @Inject
-    private Logger             logger;
+    private final Logger logger = LoggerFactory.getLogger(GroupDataHandler.class);
     @Inject
     private INetworkManager    networkManager;
     @Inject
@@ -40,7 +40,7 @@ public class GroupDataHandler implements IDataHandler
             if (! this.canUpgradeToGroup(oldGroup, newGroup))
             {
                 final Object[] logParams = {playerObj.getLatestNick(), oldGroup.getName(), newGroup.getName()};
-                this.logger.log(Level.WARNING, "Ignored group upgrade for player {0}, old={1}, new={2}", logParams);
+                this.logger.warn("Ignored group upgrade for player {}, old={}, new={}", logParams);
                 return;
             }
 
@@ -60,7 +60,7 @@ public class GroupDataHandler implements IDataHandler
             }
 
             final Object[] logParams = {playerObj.getLatestNick(), newGroup.getName(), playerObj.getGroupExpireAt()};
-            this.logger.log(Level.INFO, "Group of {0} is now {1} and will expire at {2}", logParams);
+            this.logger.info("Group of {} is now {} and will expire at {}", logParams);
         });
     }
 

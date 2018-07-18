@@ -7,18 +7,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.base.Preconditions;
 
-import pl.north93.zgame.api.global.API;
-
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @XmlRootElement(name = "enchant")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlEnchant
 {
+    private static final Logger logger = LoggerFactory.getLogger(XmlEnchant.class);
+
     @XmlAttribute(required = true)
     private String enchantment;
     @XmlAttribute
@@ -64,7 +66,7 @@ public class XmlEnchant
     {
         if ( this.getEnchantment() == null )
         {
-            API.getLogger().warning("Couldn't find enchantment by name: '" + enchantment + "'");
+            logger.warn("Couldn't find enchantment by name: '{}'", enchantment);
         }
         
         itemStack.addUnsafeEnchantment(this.getEnchantment(), this.level);

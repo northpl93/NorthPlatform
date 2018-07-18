@@ -9,12 +9,12 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.chat.global.ChatFormatter;
 import pl.north93.zgame.api.chat.global.ChatPlayer;
@@ -25,6 +25,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
 /*default*/ class ChatRoomImpl extends AbstractChatRoom
 {
+    private final Logger logger = LoggerFactory.getLogger(ChatManagerImpl.class);
     private final Value<ChatRoomData> data;
 
     public ChatRoomImpl(final ChatManagerImpl chatManager, final String id, final Value<ChatRoomData> data)
@@ -134,13 +135,12 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     @Override
     public void setChatFormatter(final ChatFormatter chatFormatter)
     {
-        final Logger logger = this.chatManager.getLogger();
         final String formatterId = this.chatManager.getFormatterId(chatFormatter);
 
         this.update(roomData ->
         {
             roomData.setFormatterId(formatterId);
-            logger.log(Level.INFO, "Changed formatter of {0} to {1}", new Object[]{this.id, formatterId});
+            this.logger.info("Changed formatter of {} to {}", this.id, formatterId);
         });
     }
 
@@ -171,7 +171,6 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     // usuwa wartość z bazy danych i nic więcej nie robi.
     /*default*/ void kickAllAndDelete()
     {
-        final Logger logger = this.chatManager.getLogger();
         this.getParticipants().forEach(participant ->
         {
             try
@@ -182,7 +181,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
             catch (final Exception e)
             {
                 // logujemy informacje, ale kontynuujemy
-                logger.log(Level.WARNING, "Failed to kick user from room", e);
+                this.logger.warn("Failed to kick user from room", e);
             }
         });
 
@@ -192,7 +191,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
         // teoretycznie istnieje niebezpieczeństwo że ktoś dołączy do pokoju po usunięciu graczy,
         // ale na razie można to zignorować - i tak chyba nikt nie doda graczy do pokoju który umyślnie usuwa?
         this.data.delete();
-        logger.log(Level.INFO, "Deleted room with ID {0}", this.id);
+        this.logger.info("Deleted room with ID {0}", this.id);
     }
 
     @Override

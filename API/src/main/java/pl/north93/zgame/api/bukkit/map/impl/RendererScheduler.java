@@ -2,8 +2,6 @@ package pl.north93.zgame.api.bukkit.map.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.common.base.Preconditions;
 
@@ -11,6 +9,8 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.bukkit.map.IMapRenderer;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
@@ -19,8 +19,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 class RendererScheduler
 {
-    @Inject
-    private Logger                         logger;
+    private final Logger logger = LoggerFactory.getLogger(RendererScheduler.class);
     @Inject
     private IBukkitExecutor                executor;
     private final MapController            mapController;
@@ -54,7 +53,7 @@ class RendererScheduler
         }
         catch (final Exception e)
         {
-            this.logger.log(Level.SEVERE, "An exception has been throw in map renderer", e);
+            this.logger.error("An exception has been throw in map renderer", e);
         }
 
         synchronized (this)

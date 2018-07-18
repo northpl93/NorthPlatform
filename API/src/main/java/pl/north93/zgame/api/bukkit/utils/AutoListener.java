@@ -1,9 +1,9 @@
 package pl.north93.zgame.api.bukkit.utils;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.bukkit.event.Listener;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
@@ -32,15 +32,15 @@ public interface AutoListener extends Listener
     static void aggregate(final BukkitApiCore apiCore, final AutoListener instance)
     {
         final String className = instance.getClass().getName();
-        final Logger log = apiCore.getLogger();
+        final Logger log = LoggerFactory.getLogger(AutoListener.class);
 
         if (! instance.registrationCondition())
         {
-            log.log(Level.FINE, "[AutoListener] Skipped registration of class {0}.", className);
+            log.info("Skipped registration of class {} as AutoListener.", className);
             return;
         }
 
-        log.log(Level.FINE, "[AutoListener] Registering {0} as Bukkit listener.", className);
+        log.debug("Registering {} as Bukkit listener.", className);
         apiCore.registerEvents(instance);
     }
 }

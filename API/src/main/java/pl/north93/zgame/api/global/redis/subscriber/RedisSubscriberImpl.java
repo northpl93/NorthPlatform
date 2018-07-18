@@ -5,14 +5,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.lambdaworks.redis.pubsub.RedisPubSubAdapter;
 import com.lambdaworks.redis.pubsub.StatefulRedisPubSubConnection;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -22,10 +22,9 @@ import pl.north93.zgame.api.global.storage.StringByteRedisCodec;
 public class RedisSubscriberImpl extends Component implements RedisSubscriber
 {
     private final Map<String, SubscriptionHandler> handlerMap = new ConcurrentHashMap<>();
+    private final Logger logger = LoggerFactory.getLogger(RedisSubscriberImpl.class);
     private StatefulRedisPubSubConnection<String, byte[]> connection;
-    private ExecutorService                               executorService = Executors.newCachedThreadPool();
-    @Inject
-    private Logger                                        logger;
+    private ExecutorService executorService = Executors.newCachedThreadPool();
     @Inject
     private StorageConnector                              storageConnector;
 
@@ -48,7 +47,7 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
         }
         catch (final InterruptedException e)
         {
-            this.getLogger().log(Level.SEVERE, "Interrupted while waiting for executor termination", e);
+            this.logger.error("Interrupted while waiting for executor termination", e);
         }
         this.connection.close();
     }
@@ -107,7 +106,7 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
         {
             if (handler == null)
             {
-                RedisSubscriberImpl.this.logger.warning("Received message from unhandled channel: " + channel);
+                RedisSubscriberImpl.this.logger.warn("Received message from unhandled channel: {}", channel);
                 return;
             }
 

@@ -1,12 +1,11 @@
 package pl.arieals.api.minigame.server.gamehost;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.diorite.commons.math.DioriteRandomUtils;
 
@@ -26,8 +25,7 @@ import pl.north93.zgame.api.global.network.server.Server;
  */
 public class GameHostHubsManager
 {
-    @Inject
-    private Logger          logger;
+    private final Logger logger = LoggerFactory.getLogger(GameHostHubsManager.class);
     @Inject
     private INetworkManager networkManager;
     @Inject
@@ -46,7 +44,7 @@ public class GameHostHubsManager
         final RemoteHub hub = DioriteRandomUtils.getRandom(this.hubsManager.getAllHubs());
         if (hub == null)
         {
-            this.logger.log(Level.WARNING, "Can't tp players to hub; not found any hub");
+            this.logger.warn("Can't tp players to hub; not found any hub");
             return;
         }
 

@@ -6,22 +6,22 @@ import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternat
 
 
 import java.util.Collection;
-import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pl.north93.zgame.antycheat.analysis.FalsePositiveProbability;
 import pl.north93.zgame.antycheat.analysis.SingleAnalysisResult;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 /*default*/ class AnalysisLogger
 {
     private static final String  LOG_FORMAT    = "&cP: &e{0} &cV: &e{1} &cFPP: &e{2}\n&cD: &7{3}";
     private static final boolean DEBUG_TO_CHAT = false;
-    @Inject
-    private Logger logger;
+    private final Logger logger = LoggerFactory.getLogger(AnalysisLogger.class);
 
     @Bean
     private AnalysisLogger()

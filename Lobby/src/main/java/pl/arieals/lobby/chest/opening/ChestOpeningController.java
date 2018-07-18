@@ -5,7 +5,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
 
 import com.google.common.base.Preconditions;
 
@@ -16,6 +15,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
@@ -34,6 +34,7 @@ import pl.north93.zgame.api.bukkit.Main;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
+@Slf4j
 public class ChestOpeningController
 {
     @Inject
@@ -65,7 +66,7 @@ public class ChestOpeningController
         this.updateSession(player, openingSession);
         this.apiCore.callEvent(new OpenOpeningGuiEvent(openingSession));
 
-        this.apiCore.getLogger().log(Level.INFO, "[Lobby] Player {0} is now in opening gui on hub {1}", new Object[]{player.getName(), hubWorld.getHubId()});
+        log.info("[Lobby] Player {} is now in opening gui on hub {}", player.getName(), hubWorld.getHubId());
     }
 
     public void closeOpeningGui(final Player player)
@@ -81,7 +82,7 @@ public class ChestOpeningController
         // usuwamy sesje gracza
         this.updateSession(player, null);
 
-        this.apiCore.getLogger().log(Level.INFO, "[Lobby] Player {0} exited chest opening", player.getName());
+        log.info("[Lobby] Player {} exited chest opening", player.getName());
     }
 
     /**
@@ -133,7 +134,7 @@ public class ChestOpeningController
             return;
         }
 
-        this.apiCore.getLogger().log(Level.INFO, "[Lobby] Giving next chest to {0}", player.getName());
+        log.info("[Lobby] Giving next chest to {0}", player.getName());
     }
 
     /**
@@ -151,7 +152,7 @@ public class ChestOpeningController
             return false;
         }
 
-        this.apiCore.getLogger().log(Level.INFO, "[Lobby] Player {0} requested chest open", player.getName());
+        log.info("[Lobby] Player {} requested chest open", player.getName());
 
         final ChestType type = this.chestService.getType(session.getConfig().getChestType());
         session.setLastResults(this.lootService.openChest(player, type));
@@ -178,7 +179,7 @@ public class ChestOpeningController
         if (lastResults == null)
         {
             // wystapil blad podczas otwierania skrzynki (task sie nie zakobczyl?)
-            this.apiCore.getLogger().log(Level.WARNING, "lastResults is null in showOpeningResults. Player: {0}", player.getName());
+            log.warn("lastResults is null in showOpeningResults. Player: {}", player.getName());
 
             // restart jest dobry na wszystko, wywalamy gracza z otwierania skrzynek
             this.closeOpeningGui(player);

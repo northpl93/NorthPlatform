@@ -6,13 +6,14 @@ import static com.google.common.base.Preconditions.checkState;
 import javax.xml.bind.JAXB;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
@@ -33,14 +34,13 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class DeathMatch
 {
+    private final Logger logger = LoggerFactory.getLogger(DeathMatch.class);
     private final GameHostManager     manager;
     private final LocalArena          arena;
     private       DeathMatchState     state; // stan deathmatchu
     private       FightStartCountdown fightStart; // task startujacy walke
     @Inject
     private       BukkitApiCore       apiCore;
-    @Inject
-    private       Logger              logger;
 
     public DeathMatch(final GameHostManager manager, final LocalArena arena)
     {
@@ -151,7 +151,7 @@ public class DeathMatch
             this.apiCore.callEvent(new DeathMatchLoadedEvent(this.arena, oldWorld, progress.getWorld()));
             if (! worldManager.clearWorld(arenaWorld.getName()))
             {
-                this.logger.severe("Failed to remove regular world of arena " + this.arena.getId());
+                this.logger.error("Failed to remove regular world of arena {}", this.arena.getId());
             }
 
             this.fightStart = new FightStartCountdown(this.arena);
@@ -174,7 +174,7 @@ public class DeathMatch
             this.logger.info("Removing death match world for arena " + this.arena.getId());
             if (! this.manager.getWorldManager().clearWorld(this.getDeathMathWorldName()))
             {
-                this.logger.severe("Failed to remove death match world of arena " + this.arena.getId());
+                this.logger.error("Failed to remove death match world of arena {}", this.arena.getId());
             }
         }
         this.state = DeathMatchState.NOT_STARTED;

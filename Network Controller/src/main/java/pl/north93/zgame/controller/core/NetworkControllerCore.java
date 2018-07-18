@@ -2,6 +2,8 @@ package pl.north93.zgame.controller.core;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.component.Component;
@@ -15,6 +17,7 @@ import pl.north93.zgame.controller.configserver.source.XmlConfigSource;
 
 public class NetworkControllerCore extends Component
 {
+    private final Logger logger = LoggerFactory.getLogger(NetworkControllerCore.class);
     @Inject
     private IRpcManager   rpcManager;
     @Inject
@@ -23,7 +26,7 @@ public class NetworkControllerCore extends Component
     @Override
     protected void enableComponent()
     {
-        this.getApiCore().getLogger().info("Starting NetworkController...");
+        this.logger.info("Starting NetworkController...");
         if (this.getApiCore().getPlatform() == Platform.BUNGEE) // on standalone platform context will be added automatically from getId()
         {
             this.rpcManager.addListeningContext("controller");
@@ -40,7 +43,7 @@ public class NetworkControllerCore extends Component
     @Override
     protected void disableComponent()
     {
-        this.getApiCore().getLogger().info("Network Controller stopped!");
+        this.logger.info("Network Controller stopped!");
     }
 
     @Override

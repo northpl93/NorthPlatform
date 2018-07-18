@@ -8,12 +8,12 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.party.IParty;
@@ -43,8 +43,7 @@ public class PartyManagerImpl implements IPartyManager
 {
     private static final MetaKey PARTY_INVITE = MetaKey.get("currentPartyInvite", false);
     private static final MetaKey PARTY_META   = MetaKey.get("currentParty", false);
-    @Inject
-    private Logger              logger;
+    private final Logger logger = LoggerFactory.getLogger(PartyManagerImpl.class);
     @Inject
     private IObservationManager observer;
     @Inject
@@ -95,7 +94,7 @@ public class PartyManagerImpl implements IPartyManager
             // miejscu gracz bedzie mial juz przypisane party którego nie ma jeszcze w redisie...
             this.parties.put(party.getId().toString(), party);
 
-            this.logger.log(Level.INFO, "Created party with id {0}", party.getId());
+            this.logger.info("Created party with id {}", party.getId());
             return party;
         }
     }
@@ -120,7 +119,7 @@ public class PartyManagerImpl implements IPartyManager
             return partyData;
         });
 
-        this.logger.log(Level.FINE, "Party data with ID {0} has been updated (access)");
+        this.logger.debug("Party data with ID {} has been updated (access)");
         return wrapper.get();
     }
 
@@ -247,7 +246,7 @@ public class PartyManagerImpl implements IPartyManager
     private void deleteParty(final UUID partyId)
     {
         this.parties.delete(partyId.toString());
-        this.logger.log(Level.INFO, "Deleted party with ID {0}", partyId);
+        this.logger.info("Deleted party with ID {}", partyId);
     }
 
     @Override

@@ -2,13 +2,13 @@ package pl.arieals.api.minigame.server.lobby;
 
 import java.util.Collection;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.lobby.hub.LocalHubServer;
@@ -20,8 +20,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class LobbyManager implements IServerManager
 {
-    @Inject
-    private Logger           logger;
+    private final Logger logger = LoggerFactory.getLogger(LobbyManager.class);
     @Inject
     private LobbyHubsManager lobbyHubsManager;
     @Inject
@@ -30,7 +29,7 @@ public class LobbyManager implements IServerManager
     @Override
     public void start()
     {
-        this.logger.log(Level.INFO, "Hub component started successfully");
+        this.logger.info("Hub component started successfully");
     }
 
     @Override

@@ -5,15 +5,14 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.setPlayerStatu
 import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.fromLegacyText;
 
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.destroystokyo.paper.Title;
 
 import org.bukkit.Bukkit;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
@@ -26,10 +25,9 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class RevivePlayerCountdown extends AbstractCountdown
 {
+    private final Logger logger = LoggerFactory.getLogger(RevivePlayerCountdown.class);
     @Inject @Messages("BedWars")
     private MessagesBox messages;
-    @Inject
-    private Logger              logger;
     private final INorthPlayer  player;
     private final BedWarsPlayer bedWarsPlayer;
 
@@ -59,7 +57,7 @@ public class RevivePlayerCountdown extends AbstractCountdown
             return;
         }
 
-        this.logger.log(Level.INFO, "Player {0} from team {1} revived", new Object[]{this.player.getName(), this.bedWarsPlayer.getTeam().getName()});
+        this.logger.info("Player {} from team {} revived", this.player.getName(), this.bedWarsPlayer.getTeam().getName());
 
         this.player.teleport(this.bedWarsPlayer.getTeam().getSpawn());
         this.player.setFallDistance(0); // disable fall damage

@@ -1,13 +1,8 @@
 package pl.north93.zgame.api.bukkit.server.impl;
 
-import static java.text.MessageFormat.format;
-
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -17,6 +12,8 @@ import org.bukkit.event.world.WorldLoadEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.server.IWorldInitializer;
@@ -25,21 +22,20 @@ import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
 public class WorldInitializationHandler implements Listener
 {
-    private final Logger                  logger;
+    private final Logger                  logger = LoggerFactory.getLogger(WorldInitializationHandler.class);
     private final List<IWorldInitializer> initializers = new ArrayList<>();
 
     @Bean
-    private WorldInitializationHandler(final BukkitApiCore apiCore, final Logger logger)
+    private WorldInitializationHandler(final BukkitApiCore apiCore)
     {
         apiCore.registerEvents(this);
-        this.logger = logger;
     }
 
     @Aggregator(IWorldInitializer.class)
     public void addInitializer(final IWorldInitializer initializer)
     {
         final String initializerName = initializer.getClass().getSimpleName();
-        this.logger.log(Level.INFO, "Registering new world initializer {0}", initializerName);
+        this.logger.info("Registering new world initializer {}", initializerName);
 
         this.initializers.add(initializer);
         Bukkit.getWorlds().forEach(world -> this.callInitializer(initializer, world));
@@ -61,8 +57,7 @@ public class WorldInitializationHandler implements Listener
     {
         final String initializerName = initializer.getClass().getSimpleName();
 
-        final Object[] params = {initializerName, world.getName()};
-        this.logger.log(Level.INFO, "Calling initializer {0} for world {1}", params);
+        this.logger.info("Calling initializer {} for world {}", initializerName, world.getName());
 
         final File worldDir = new File(Bukkit.getWorldContainer(), world.getName());
         try
@@ -71,7 +66,7 @@ public class WorldInitializationHandler implements Listener
         }
         catch (final Exception e)
         {
-            this.logger.log(Level.SEVERE, format("Initializer {0} throw exception for world {1}", params), e);
+            this.logger.error("Initializer {} throw exception for world {1}", initializerName, world.getName(), e);
         }
     }
 

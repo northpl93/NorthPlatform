@@ -1,13 +1,10 @@
 package pl.arieals.api.minigame.server.gamehost.arena;
 
-import static java.text.MessageFormat.format;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 import com.google.common.base.Preconditions;
 
@@ -16,6 +13,8 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
@@ -36,10 +35,9 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class LocalArenaManager
 {
+    private final Logger logger = LoggerFactory.getLogger(LocalArenaManager.class);
     @Inject
     private BukkitApiCore  apiCore;
-    @Inject
-    private Logger         logger;
     @Inject
     private MiniGameServer miniGameServer;
     @Inject
@@ -66,8 +64,8 @@ public class LocalArenaManager
         GamePhaseEventFactory.getInstance().callEvent(localArena); // invoke GameInitEvent
         serverManager.publishArenaEvent(new ArenaCreatedNetEvent(arenaId, miniGame));
 
-        final String msg = "Added new local arena! GameID:{0}/{1}, ArenaID:{2}, ServerID:{3}, GamePhase:{4}";
-        this.logger.info(format(msg, miniGame.getGameId(), miniGame.getVariantId(), arenaId, serverId, arenaData.getGamePhase()));
+        final String msg = "Added new local arena! GameID:{}/{}, ArenaID:{}, ServerID:{}, GamePhase:{}";
+        this.logger.info(msg, miniGame.getGameId(), miniGame.getVariantId(), arenaId, serverId, arenaData.getGamePhase());
 
         return localArena;
     }

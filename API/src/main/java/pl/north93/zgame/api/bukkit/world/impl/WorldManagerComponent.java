@@ -2,6 +2,11 @@ package pl.north93.zgame.api.bukkit.world.impl;
 
 import java.util.Collection;
 
+import net.minecraft.server.v1_12_R1.Chunk;
+import net.minecraft.server.v1_12_R1.WorldServer;
+
+import com.google.common.base.Preconditions;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -11,10 +16,8 @@ import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 
-import com.google.common.base.Preconditions;
-
-import net.minecraft.server.v1_12_R1.Chunk;
-import net.minecraft.server.v1_12_R1.WorldServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.bukkit.utils.xml.XmlChunk;
 import pl.north93.zgame.api.bukkit.world.IWorldLoadCallback;
@@ -24,6 +27,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class WorldManagerComponent extends Component implements IWorldManager
 {
+    private final Logger logger = LoggerFactory.getLogger(WorldManagerComponent.class);
     @Inject
     private ChunkLoadManager chunkLoadManager;
     
@@ -51,7 +55,7 @@ public class WorldManagerComponent extends Component implements IWorldManager
         Bukkit.getPluginManager().callEvent(new WorldInitEvent(worldServer.getWorld()));
         NorthChunkProvider.inject(worldServer, keepEntireWorldLoaded, disableGenerateNewChunks);
         
-        getLogger().info("Initialized world " + name + " (keepWorldLoaded: " + keepEntireWorldLoaded + ", disableGenerateChunks: " + disableGenerateNewChunks);
+        this.logger.info("Initialized world " + name + " (keepWorldLoaded: " + keepEntireWorldLoaded + ", disableGenerateChunks: " + disableGenerateNewChunks);
         
         Bukkit.getPluginManager().callEvent(new WorldLoadEvent(worldServer.getWorld()));
         
@@ -91,7 +95,7 @@ public class WorldManagerComponent extends Component implements IWorldManager
         
         if ( result )
         {
-            getLogger().info("Unloaded world " + world.getName());
+            this.logger.info("Unloaded world " + world.getName());
         }
         
         return result;

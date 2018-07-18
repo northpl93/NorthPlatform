@@ -7,7 +7,6 @@ import java.io.File;
 import java.net.URLEncoder;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -44,16 +43,6 @@ public class BukkitApiCore extends ApiCore
     public final org.bukkit.Server getBukkit()
     {
         return this.pluginMain.getServer();
-    }
-
-    @Override
-    public Logger getLogger()
-    {
-        if (this.pluginMain == null) // can be true in constructor
-        {
-            return null;
-        }
-        return this.pluginMain.getLogger();
     }
 
     @Override

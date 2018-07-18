@@ -1,20 +1,20 @@
 package pl.arieals.lobby.tutorial.impl;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.arieals.lobby.tutorial.ITutorialManager;
 import pl.arieals.lobby.tutorial.TutorialStatus;
 import pl.arieals.lobby.tutorial.event.PlayerEnterTutorialEvent;
 import pl.arieals.lobby.tutorial.event.PlayerExitTutorialEvent;
 import pl.arieals.lobby.tutorial.event.TutorialStatusChangedEvent;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.economy.ICurrency;
 import pl.north93.zgame.api.economy.IEconomyManager;
@@ -25,10 +25,9 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class TutorialGamePlayListener implements AutoListener
 {
+    private final Logger logger = LoggerFactory.getLogger(TutorialGamePlayListener.class);
     @Inject @Messages("UserInterface")
     private MessagesBox      messages;
-    @Inject
-    private Logger           logger;
     @Inject
     private IEconomyManager  economyManager;
     @Inject
@@ -42,8 +41,7 @@ public class TutorialGamePlayListener implements AutoListener
             return;
         }
 
-        final Object[] params = {event.getTutorialId(), event.getIdentity()};
-        this.logger.log(Level.INFO, "Adding tutorial {0} complete reward to {1}", params);
+        this.logger.info("Adding tutorial {} complete reward to {}", event.getTutorialId(), event.getIdentity());
 
         final ICurrency currency = this.economyManager.getCurrency("minigame");
         try (final ITransaction t = this.economyManager.openTransaction(currency, event.getIdentity()))
@@ -52,7 +50,7 @@ public class TutorialGamePlayListener implements AutoListener
         }
         catch (final Exception e)
         {
-            this.logger.log(Level.SEVERE, "Failed to add reward for tutorial", e);
+            this.logger.error("Failed to add reward for tutorial", e);
         }
     }
 
@@ -64,8 +62,7 @@ public class TutorialGamePlayListener implements AutoListener
         player.setVisible(false);
         new TutorialHotbar().display(player);
 
-        final Object[] params = {player.getName(), event.getTutorialHub().getHubId()};
-        this.logger.log(Level.INFO, "Player {0} entered tutorial {1}", params);
+        this.logger.info("Player {} entered tutorial {}", player.getName(), event.getTutorialHub().getHubId());
     }
 
     @EventHandler
@@ -76,8 +73,7 @@ public class TutorialGamePlayListener implements AutoListener
         // hotbar powinien zostac ustawiony przez listener nowego huba
         player.setVisible(true);
 
-        final Object[] params = {player.getName(), event.getTutorialHub().getHubId()};
-        this.logger.log(Level.INFO, "Player {0} exited tutorial {1}", params);
+        this.logger.info("Player {} exited tutorial {}", player.getName(), event.getTutorialHub().getHubId());
     }
 
     @EventHandler
@@ -85,7 +81,8 @@ public class TutorialGamePlayListener implements AutoListener
     {
         if (this.tutorialManager.isInTutorial(event.getPlayer()))
         {
-            this.messages.sendMessage(event.getPlayer(), "tutorial.disallowed_in_tutorial");
+            final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
+            player.sendMessage(this.messages, "tutorial.disallowed_in_tutorial");
             event.setCancelled(true);
         }
     }

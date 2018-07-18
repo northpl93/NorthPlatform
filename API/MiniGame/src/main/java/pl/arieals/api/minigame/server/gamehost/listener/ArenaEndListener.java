@@ -5,13 +5,13 @@ import static org.bukkit.event.EventPriority.MONITOR;
 
 import java.time.Duration;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.bukkit.event.EventHandler;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
@@ -28,8 +28,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class ArenaEndListener implements AutoListener
 {
-    @Inject
-    private Logger          logger;
+    private final Logger logger = LoggerFactory.getLogger(ArenaEndListener.class);
     @Inject
     private IBukkitExecutor bukkitExecutor;
 
@@ -62,7 +61,7 @@ public class ArenaEndListener implements AutoListener
         }
 
         // jak arena byla w trakcie gry lub po grze to przelaczamy do ponownej inicjalizacji
-        this.logger.log(Level.INFO, "Arena {0} is empty, switching to INITIALISING...", arena.getId());
+        this.logger.info("Arena {} is empty, switching to INITIALISING...", arena.getId());
         this.bukkitExecutor.sync(() ->
         {
             if (gamePhase == GamePhase.STARTED)
@@ -83,7 +82,7 @@ public class ArenaEndListener implements AutoListener
         final IMatchAccess match = event.getArena().getMatch();
         if (match == null)
         {
-            this.logger.log(Level.WARNING, "Match is null on arena {0} when switched to post_game", event.getArena().getId());
+            this.logger.warn("Match is null on arena {} when switched to post_game", event.getArena().getId());
             return;
         }
 
@@ -109,7 +108,7 @@ public class ArenaEndListener implements AutoListener
             return;
         }
 
-        this.logger.log(Level.INFO, "Arena {0} has been switched to POST_GAME without players, switching to INITIALISING", arena.getId());
+        this.logger.info("Arena {} has been switched to POST_GAME without players, switching to INITIALISING", arena.getId());
         this.bukkitExecutor.sync(() ->
         {
             // kiedy cos przelaczylo pusta arene do POST_GAME to natychmiast przerzucamy do INITIALISING

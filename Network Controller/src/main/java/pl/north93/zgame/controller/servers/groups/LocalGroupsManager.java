@@ -8,11 +8,11 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
@@ -32,8 +32,7 @@ import pl.north93.zgame.controller.servers.scaler.value.IScalingValue;
 
 public class LocalGroupsManager
 {
-    @Inject
-    private Logger                          logger;
+    private final Logger logger = LoggerFactory.getLogger(LocalGroupsManager.class);
     @Inject
     private INetworkManager                 networkManager;
     @Inject @NetConfig(type = AutoScalingConfig.class, id = "autoscaler")
@@ -81,7 +80,7 @@ public class LocalGroupsManager
             return;
         }
 
-        this.logger.log(Level.INFO, "Triggered reload of autoscaler config...");
+        this.logger.info("Triggered reload of autoscaler config...");
         this.loadGroups();
     }
 
@@ -112,7 +111,7 @@ public class LocalGroupsManager
 
         localGroup.init();
 
-        this.logger.log(Level.INFO, "Created {0} group with name {1}", new Object[]{config.getType(), config.getName()});
+        this.logger.info("Created {} group with name {}", new Object[]{config.getType(), config.getName()});
     }
 
     private void mergeGroupConfig(final ILocalServersGroup localServersGroup, final ServersGroupConfig config)
@@ -130,7 +129,7 @@ public class LocalGroupsManager
             return new ServersGroupDto(old.getName(), old.getType(), config.getServersType(), config.getJoiningPolicy());
         });
 
-        this.logger.log(Level.INFO, "Updated config of group {0}", localServersGroup.getName());
+        this.logger.info("Updated config of group {}", localServersGroup.getName());
     }
 
     @Override

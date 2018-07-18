@@ -5,11 +5,11 @@ import static java.text.MessageFormat.format;
 
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.util.logging.Level;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
@@ -20,6 +20,7 @@ import pl.north93.zgame.api.global.uri.UriInvocationContext;
 import pl.north93.zgame.api.global.uri.impl.router.NonorderedRouter;
 import pl.north93.zgame.api.global.uri.impl.router.Routed;
 
+@Slf4j
 public class UriManagerImpl extends Component implements IUriManager
 {
     private final NonorderedRouter router = new NonorderedRouter();
@@ -27,7 +28,7 @@ public class UriManagerImpl extends Component implements IUriManager
     @Override
     public void register(final String pattern, final IUriCallHandler handler)
     {
-        this.getLogger().log(Level.INFO, "[UriManagerImpl] Registering new URI pattern. ({0})", pattern);
+        log.info("Registering new URI pattern. ({})", pattern);
         this.router.pattern(pattern, handler);
     }
 
@@ -64,7 +65,7 @@ public class UriManagerImpl extends Component implements IUriManager
         final Routed routed = this.router.route(calledUri);
         if (routed == null)
         {
-            this.getLogger().log(Level.WARNING, "[UriManagerImpl] Not found route for {0}", calledUri);
+            log.warn("Not found route for {}", calledUri);
             return null;
         }
 
@@ -90,7 +91,7 @@ public class UriManagerImpl extends Component implements IUriManager
             }
             catch (final Exception e)
             {
-                this.getLogger().log(Level.SEVERE, format("[UriManagerImpl] Cant execute {0} for uri {1}", method, handler.value()), e);
+                log.error("Cant execute {} for uri {}", method, handler.value(), e);
                 return null;
             }
         });

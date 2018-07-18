@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.globalshops.controller.cfg.ItemsGroupCfg;
 import pl.arieals.globalshops.server.IGlobalShops;
 import pl.arieals.globalshops.server.IPlayerContainer;
@@ -25,6 +26,7 @@ import pl.north93.zgame.api.global.config.NetConfig;
 import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 import pl.north93.zgame.api.global.utils.lang.CollectionUtils;
 
+@Slf4j
 public class GlobalShopsServer extends Component implements IGlobalShops
 {
     @Inject @NetConfig(type = ItemsDataContainer.class, id = "globalShops")
@@ -39,7 +41,7 @@ public class GlobalShopsServer extends Component implements IGlobalShops
         final ItemsDataContainer itemsDataContainer = this.config.get();
         if (itemsDataContainer == null)
         {
-            this.getLogger().warning("[GlobalShops] Couldn't fetch items data from network. Did the network controller is setup properly?");
+            log.warn("[GlobalShops] Couldn't fetch items data from network. Did the network controller is setup properly?");
             return;
         }
         this.updateGroups0(itemsDataContainer);
@@ -58,7 +60,7 @@ public class GlobalShopsServer extends Component implements IGlobalShops
             return;
         }
 
-        this.getLogger().info("[GlobalShops] Updating items config.");
+        log.info("[GlobalShops] Updating items config.");
         this.updateGroups0(this.config.get());
     }
 

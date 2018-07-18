@@ -3,17 +3,14 @@ package pl.north93.zgame.daemon.servers;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
-
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LocalServerConsole
 {
-    @Inject
-    private static Logger logger;
+    private final Logger logger = LoggerFactory.getLogger(LocalServerConsole.class);
     private final LocalServerInstance instance;
     private final Process process;
 
@@ -43,7 +40,7 @@ public class LocalServerConsole
         }
         catch (final IOException e)
         {
-            logger.log(Level.SEVERE, "Failed to execute server command: " + consoleCommand, e);
+            this.logger.error("Failed to execute server command: {}", consoleCommand, e);
         }
     }
 

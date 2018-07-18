@@ -4,10 +4,10 @@ import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.fromLegacyText;
 import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
 
 
-import java.util.logging.Logger;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ServerPing;
@@ -20,8 +20,7 @@ import pl.north93.zgame.api.global.network.NetworkMeta;
 
 public class PingListener implements Listener
 {
-    @Inject
-    private Logger logger;
+    private final Logger logger = LoggerFactory.getLogger(PingListener.class);
     @Inject
     private INetworkManager networkManager;
 
@@ -33,7 +32,7 @@ public class PingListener implements Listener
         if (networkMeta == null)
         {
             response.setDescriptionComponent(fromLegacyText(ChatColor.RED + "Problemy techniczne. (networkMeta==null in onPing)"));
-            this.logger.severe("networkMeta is null in onPing");
+            this.logger.error("networkMeta is null in onPing");
             return;
         }
 

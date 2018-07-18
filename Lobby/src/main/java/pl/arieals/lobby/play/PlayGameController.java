@@ -2,9 +2,11 @@ package pl.arieals.lobby.play;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
@@ -28,8 +30,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
  */
 public class PlayGameController
 {
-    @Inject
-    private Logger         logger;
+    private final Logger logger = LoggerFactory.getLogger(PlayGameController.class);
     @Inject
     private MiniGameServer miniGameServer;
     @Inject

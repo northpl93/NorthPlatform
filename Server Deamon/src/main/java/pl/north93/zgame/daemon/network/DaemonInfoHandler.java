@@ -1,12 +1,12 @@
 package pl.north93.zgame.daemon.network;
 
-import java.util.logging.Level;
-
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -24,6 +24,7 @@ import pl.north93.zgame.daemon.event.ServerExitedEvent;
 
 public class DaemonInfoHandler
 {
+    private final Logger logger = LoggerFactory.getLogger(DaemonInfoHandler.class);
     @Inject
     private StandaloneApiCore apiCore;
     @Inject
@@ -61,14 +62,14 @@ public class DaemonInfoHandler
     public void delete()
     {
         this.daemonInfo.delete();
-        this.apiCore.getLogger().info("Daemon info deleted from redis");
+        this.logger.info("Daemon info deleted from redis");
     }
 
     public void setAcceptingNewServers(final boolean acceptingNewServers)
     {
         this.daemonInfo.update(daemon ->
         {
-            this.apiCore.getLogger().log(Level.INFO, "Switched accepting new servers: " + acceptingNewServers);
+            this.logger.info("Switched accepting new servers: {}", acceptingNewServers);
             return new DaemonDto(daemon.getName(), daemon.getHostName(), daemon.getMaxRam(), daemon.getRamUsed(), daemon.getServerCount(), acceptingNewServers);
         });
     }

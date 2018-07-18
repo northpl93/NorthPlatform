@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import lombok.extern.slf4j.Slf4j;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
@@ -23,6 +23,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.players.Identity;
 
+@Slf4j
 public class ChatEngine
 {
     @Inject
@@ -48,8 +49,7 @@ public class ChatEngine
             return SendMessageResult.NO_ROOM;
         }
 
-        final Object[] logArgs = {mainRoom.getId(), player.getName(), rawMessage};
-        this.apiCore.getLogger().log(Level.INFO, "[{0}] {1}: {2}", logArgs);
+        log.info("[{0}] {1}: {2}", mainRoom.getId(), player.getName(), rawMessage);
 
         final BaseComponent message = mainRoom.getChatFormatter().format(northPlayer, rawMessage);
         if (this.processIfOnlyLocal(mainRoom, message))

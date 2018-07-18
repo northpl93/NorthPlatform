@@ -3,13 +3,14 @@ package pl.arieals.api.minigame.shared.impl.match;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.match.IMatch;
@@ -25,15 +26,14 @@ import pl.north93.zgame.api.global.storage.StorageConnector;
 
 public class MatchManagerImpl implements IMatchManager
 {
-    private final Logger                    logger;
+    private final Logger logger = LoggerFactory.getLogger(MatchManagerImpl.class);
     private final MongoCollection<Document> matchesCollection;
     @Inject
     private IStatisticsManager statisticsManager;
 
     @Bean
-    private MatchManagerImpl(final Logger logger, final StorageConnector storage)
+    private MatchManagerImpl(final StorageConnector storage)
     {
-        this.logger = logger;
         final MongoDatabase mainDatabase = storage.getMainDatabase();
         this.matchesCollection = mainDatabase.getCollection("matches", Document.class);
     }
@@ -48,6 +48,7 @@ public class MatchManagerImpl implements IMatchManager
         final Document document = data.toDocument();
         this.matchesCollection.insertOne(document);
 
+        this.logger.info("Creating new match with ID {}", data.getMatchId());
         return this.createMatchImpl(document);
     }
 

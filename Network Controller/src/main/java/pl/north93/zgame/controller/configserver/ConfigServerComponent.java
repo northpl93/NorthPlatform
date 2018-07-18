@@ -2,10 +2,11 @@ package pl.north93.zgame.controller.configserver;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -19,6 +20,7 @@ import pl.north93.zgame.controller.configserver.source.IConfigSource;
 
 public class ConfigServerComponent extends Component implements IConfigServer, IConfigServerRpc
 {
+    private final Logger logger = LoggerFactory.getLogger(ConfigServerComponent.class);
     @Inject
     private IRpcManager   rpcManager;
     @Inject
@@ -45,7 +47,7 @@ public class ConfigServerComponent extends Component implements IConfigServer, I
     {
         final ConfigImpl<T> configImpl = new ConfigImpl<>(this.observationManager, configId, loader);
         this.configs.put(configId, configImpl);
-        this.getLogger().log(Level.INFO, "Added new config with ID {0}", configId);
+        this.logger.info("Added new config with ID {}", configId);
 
         configImpl.reload();
         this.eventManager.callEvent(new ConfigUpdatedNetEvent(configId));
@@ -57,7 +59,7 @@ public class ConfigServerComponent extends Component implements IConfigServer, I
     {
         this.configs.get(configId).reload();
         this.eventManager.callEvent(new ConfigUpdatedNetEvent(configId));
-        this.getLogger().log(Level.INFO, "Successfully reloaded config {0}", configId);
+        this.logger.info("Successfully reloaded config {}", configId);
         return true;
     }
 
@@ -68,7 +70,7 @@ public class ConfigServerComponent extends Component implements IConfigServer, I
         final ConfigImpl<Object> config = (ConfigImpl<Object>) this.configs.get(configId);
         config.update(newValue);
         this.eventManager.callEvent(new ConfigUpdatedNetEvent(configId));
-        this.getLogger().log(Level.INFO, "Config with ID {0} has been updated programmatically", config);
+        this.logger.info("Config with ID {} has been updated programmatically", config);
         return true;
     }
 

@@ -1,19 +1,17 @@
 package pl.north93.zgame.api.bungee.proxy.impl.listener;
 
-import static java.text.MessageFormat.format;
-
 import static net.md_5.bungee.api.ChatColor.RED;
 
 
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.diorite.commons.reflections.DioriteReflectionUtils;
 import org.diorite.commons.reflections.FieldAccessor;
@@ -60,6 +58,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 public class PlayerNetworkListener implements Listener
 {
     private static final Pattern  NICK_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{3,16}$");
+    private final Logger logger = LoggerFactory.getLogger(PlayerNetworkListener.class);
     @Inject @Messages("Messages")
     private MessagesBox         apiMessages;
     @Inject
@@ -115,8 +114,6 @@ public class PlayerNetworkListener implements Listener
     @EventHandler(priority = EventPriority.NORMAL)
     public void onJoin(final LoginEvent event)
     {
-        final Logger logger = this.bungeeApiCore.getLogger();
-
         final PendingConnection conn = event.getConnection();
         this.runIntent(event, () ->
         {
@@ -138,7 +135,7 @@ public class PlayerNetworkListener implements Listener
             {
                 event.setCancelled(true);
                 event.setCancelReason(this.apiMessages.getMessage("pl-PL", "kick.generic_error", "failed to load player data: " + e));
-                logger.log(Level.SEVERE, "Failed to load player data", e);
+                this.logger.error("Failed to load player data", e);
                 return;
             }
 
@@ -149,7 +146,7 @@ public class PlayerNetworkListener implements Listener
                 player.delete(); // delete player data if event is cancelled.
                 event.setCancelled(true);
                 event.setCancelReason(joinEvent.getCancelReason());
-                logger.log(Level.INFO, "Cancelled user {0} login by server", conn.getName());
+                this.logger.info("Cancelled user {} login by server", conn.getName());
             }
         });
     }
@@ -163,26 +160,23 @@ public class PlayerNetworkListener implements Listener
         // wywolujemy sieciowy event dolaczenia gracza
         this.eventManager.callEvent(new PlayerJoinNetEvent((OnlinePlayerImpl) onlineValue.get()));
 
-        this.bungeeApiCore.getLogger().log(Level.INFO, "Successfully logged-in user {0}", event.getPlayer().getName());
+        this.logger.info("Successfully logged-in user {}", event.getPlayer().getName());
     }
 
     @EventHandler
     public void onLoginCancelled(final LoginAbortedEvent event)
     {
-        final Logger logger = this.bungeeApiCore.getLogger();
-
         final String name = event.getConnection().getName();
         final Value<IOnlinePlayer> onlineValue = this.networkManager.getPlayers().unsafe().getOnlineValue(name);
 
         onlineValue.delete();
-        logger.log(Level.INFO, "User {0} cancelled login before post-login", name);
+        this.logger.info("User {} cancelled login before post-login", name);
     }
 
     @EventHandler
     public void onLeave(final PlayerDisconnectEvent event)
     {
         final IPlayersManager players = this.networkManager.getPlayers();
-        final Logger logger = this.bungeeApiCore.getLogger();
         final ProxiedPlayer proxyPlayer = event.getPlayer();
 
         final Value<IOnlinePlayer> onlineValue = players.unsafe().getOnlineValue(proxyPlayer.getName());
@@ -197,7 +191,7 @@ public class PlayerNetworkListener implements Listener
             final IOnlinePlayer onlinePlayer = onlineValue.getWithoutCache();
             if (onlinePlayer == null)
             {
-                logger.severe("onlinePlayer==null in onLeave. " + event);
+                this.logger.error("onlinePlayer==null in onLeave. " + event);
                 return;
             }
 
@@ -207,21 +201,19 @@ public class PlayerNetworkListener implements Listener
         }
         catch (final Exception e)
         {
-            logger.log(Level.SEVERE, format("Failed to save player data for {0}/{1}", proxyPlayer.getName(), proxyPlayer.getUniqueId()), e);
+            this.logger.error("Failed to save player data for {}/{}", proxyPlayer.getName(), proxyPlayer.getUniqueId(), e);
         }
     }
     
     @EventHandler
     public void onServerChange(final ServerSwitchEvent event)
     {
-        final Logger logger = this.bungeeApiCore.getLogger();
-
         final IPlayersManager playersManager = this.networkManager.getPlayers();
         try (final IPlayerTransaction transaction = playersManager.transaction(Identity.of(event.getPlayer())))
         {
             if (transaction.isOffline())
             {
-                logger.log(Level.WARNING, "Player {0} is offline in onServerChange", transaction.getPlayer().getUuid());
+                this.logger.warn("Player {} is offline in onServerChange", transaction.getPlayer().getUuid());
                 return;
             }
 
@@ -231,7 +223,7 @@ public class PlayerNetworkListener implements Listener
         }
         catch (final Exception e)
         {
-            logger.log(Level.SEVERE, "Can't set player's serverId in onServerChange", e);
+            this.logger.error("Can't set player's serverId in onServerChange", e);
         }
     }
 
