@@ -1,7 +1,5 @@
 package pl.north93.zgame.datashare.sharedimpl;
 
-import static java.text.MessageFormat.format;
-
 import static pl.north93.zgame.api.global.utils.lang.StringUtils.toBytes;
 
 
@@ -17,6 +15,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.Document;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
@@ -30,6 +29,7 @@ import pl.north93.zgame.datashare.api.data.IDataUnit;
 import pl.north93.zgame.datashare.api.data.IDataUnitPersistence;
 import pl.north93.zgame.datashare.api.data.IDataUnitSerialization;
 
+@Slf4j
 public class DataShareManagerImpl implements IDataShareManager
 {
     @Inject
@@ -56,8 +56,8 @@ public class DataShareManagerImpl implements IDataShareManager
         //if (! player.isDataLoaded()) // todo
         if (true)
         {
-            final String message = "[PlayerDataShare] savePlayer({0},{1},{2}) has been called, but player data isn't loaded! Skipped saving...";
-            this.apiCore.getLogger().warning(format(message, group.getName(), player.getName(), redis));
+            final String message = "[PlayerDataShare] savePlayer({},{},{}) has been called, but player data isn't loaded! Skipped saving...";
+            log.warn(message, group.getName(), player.getName(), redis);
             return;
         }
         final HashMap<String, IDataUnit> dataUnitHashMap = new HashMap<>();
@@ -134,8 +134,8 @@ public class DataShareManagerImpl implements IDataShareManager
         }
         //player.setDataLoaded(true); // todo
 
-        final String message = "applyDataTo({0}, {1}, data container with size {2})";
-        this.apiCore.getLogger().fine(format(message, group.getName(), player.getName(), data.size()));
+        final String message = "applyDataTo({}, {}, data container with size {})";
+        log.debug(message, group.getName(), player.getName(), data.size());
     }
 
     @Override

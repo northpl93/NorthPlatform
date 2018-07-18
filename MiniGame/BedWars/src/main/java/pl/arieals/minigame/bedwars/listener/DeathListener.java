@@ -8,7 +8,6 @@ import static pl.north93.zgame.api.global.utils.lang.JavaUtils.instanceOf;
 
 
 import java.time.Duration;
-import java.util.logging.Level;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,6 +19,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
@@ -31,7 +31,6 @@ import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.shop.elimination.IEliminationEffect;
 import pl.arieals.minigame.bedwars.shop.stattrack.StatTrackManager;
 import pl.arieals.minigame.bedwars.shop.stattrack.TrackedStatistic;
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageContainer;
 import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageEntry;
@@ -41,10 +40,9 @@ import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.players.Identity;
 
+@Slf4j
 public class DeathListener implements Listener
 {
-    @Inject
-    private BukkitApiCore    apiCore;
     @Inject
     private StatTrackManager statTrackManager;
     @Inject @Messages("BedWars")
@@ -105,7 +103,7 @@ public class DeathListener implements Listener
             return;
         }
 
-        this.apiCore.getLogger().log(Level.INFO, "Player {0} death on arena {1}", new Object[]{player.getName(), arena.getId()});
+        log.info("Player {} death on arena {}", player.getName(), arena.getId());
 
         player.setHealth(player.getMaxHealth());
         setPlayerStatus(player, PlayerStatus.PLAYING_SPECTATOR);

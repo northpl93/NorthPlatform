@@ -5,7 +5,6 @@ import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.setPlayerData;
 
 
 import java.util.Comparator;
-import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -19,6 +18,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.arena.player.PlayersManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
@@ -33,7 +33,6 @@ import pl.arieals.minigame.bedwars.cfg.BwConfig;
 import pl.arieals.minigame.bedwars.scoreboard.GameScoreboard;
 import pl.arieals.minigame.bedwars.scoreboard.LobbyScoreboard;
 import pl.arieals.minigame.bedwars.shop.EliminationEffectManager;
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -41,10 +40,9 @@ import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
+@Slf4j
 public class PlayerTeamListener implements Listener
 {
-    @Inject
-    private BukkitApiCore            apiCore;
     @Inject
     private BwConfig                 config;
     @Inject
@@ -87,7 +85,7 @@ public class PlayerTeamListener implements Listener
 
             if (smallestTeam == null)
             {
-                this.apiCore.getLogger().log(Level.SEVERE, "smallestTeam is null in gameStart on arena {0} player {1}", new Object[] {arena.getId(), player.getName()});
+                log.error("smallestTeam is null in gameStart on arena {0} player {1}", arena.getId(), player.getName());
                 player.sendMessage(ChatColor.RED + "Blad krytyczny; brak wolnego teamu (niepoprawna konfiguracja areny?)");
                 return;
             }

@@ -3,6 +3,7 @@ package pl.north93.zgame.datashare.server;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -17,6 +18,7 @@ import pl.north93.zgame.datashare.server.listeners.PlayerDataListener;
 import pl.north93.zgame.datashare.server.listeners.PlayerJoinListener;
 import pl.north93.zgame.datashare.server.listeners.PlayerLeftListener;
 
+@Slf4j
 public class PlayerDataShareServer extends Component
 {
     private static final int DATA_PERSIST_TASK = 20 * 60 * 5;
@@ -36,7 +38,7 @@ public class PlayerDataShareServer extends Component
         this.sharingGroup = controller.getMyGroup(this.apiCore.getServerId());
         if (this.sharingGroup == null)
         {
-            this.apiCore.getLogger().warning("PlayerDataShare plugin is enabled, but sharing group is unknown.");
+            log.warn("PlayerDataShare plugin is enabled, but sharing group is unknown.");
             return;
         }
 

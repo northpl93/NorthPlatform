@@ -6,10 +6,12 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.datashare.sharedimpl.PlayerDataShareComponent;
 
+@Slf4j
 public class InventoryPersistTask implements Runnable
 {
     @Inject
@@ -22,7 +24,7 @@ public class InventoryPersistTask implements Runnable
     @Override
     public void run()
     {
-        this.apiCore.getLogger().info("[PlayerDataShare] Backing up players data...");
+        log.info("[PlayerDataShare] Backing up players data...");
         for (final Player player : Bukkit.getOnlinePlayers())
         {
             this.dataShareManager.getDataShareManager().savePlayer(this.dataShareServer.getMyGroup(), player, false);
