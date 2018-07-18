@@ -18,10 +18,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northspigot.event.entity.EntityTrackedPlayerEvent;
-import pl.north93.zgame.api.bukkit.packets.event.AsyncPacketOutEvent;
-import pl.north93.zgame.api.bukkit.packets.wrappers.WrapperPlayOutEntityMetadata;
+import pl.north93.zgame.api.bukkit.protocol.wrappers.WrapperPlayOutEntityMetadata;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
+import pl.north93.zgame.api.bukkit.protocol.PacketEvent;
+import pl.north93.zgame.api.bukkit.protocol.PacketHandler;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
+import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class MapListener implements AutoListener
@@ -30,6 +32,11 @@ public class MapListener implements AutoListener
     private MapManagerImpl mapManager;
     @Inject
     private MapController  mapController;
+
+    @Bean
+    private MapListener()
+    {
+    }
 
     @EventHandler
     public void handleMapUploadWhenTracked(final EntityTrackedPlayerEvent event)
@@ -114,18 +121,12 @@ public class MapListener implements AutoListener
         }
     }
 
-    @EventHandler
-    public void onMapMetadata(final AsyncPacketOutEvent event)
+    @PacketHandler
+    public void onAsyncMapMetadata(final PacketEvent<PacketPlayOutEntityMetadata> event)
     {
         // system map wysyla entity metadata w ByteBufie wiec ten listener
         // tego nie zlapie.
-        if (! event.isType(PacketPlayOutEntityMetadata.class))
-        {
-            return;
-        }
-
-        final PacketPlayOutEntityMetadata packet = (PacketPlayOutEntityMetadata) event.getPacket();
-        final WrapperPlayOutEntityMetadata wrapper = new WrapperPlayOutEntityMetadata(packet);
+        final WrapperPlayOutEntityMetadata wrapper = new WrapperPlayOutEntityMetadata(event.getPacket());
 
         // blokujemy wszystkie Entity Metadata dotyczace naszej ramki
         if (this.isEntityBelongsToAnyBoard(wrapper.getEntityId()))

@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.bukkit.packets.wrappers;
+package pl.north93.zgame.api.bukkit.protocol.wrappers;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;

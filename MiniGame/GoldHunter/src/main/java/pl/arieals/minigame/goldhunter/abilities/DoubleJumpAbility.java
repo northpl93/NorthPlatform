@@ -1,24 +1,22 @@
 package pl.arieals.minigame.goldhunter.abilities;
 
-import org.apache.logging.log4j.Logger;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
-import org.bukkit.event.EventHandler;
-
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.PacketPlayInAbilities;
 import net.minecraft.server.v1_12_R1.PacketPlayOutAbilities;
 import net.minecraft.server.v1_12_R1.PlayerAbilities;
 
+import org.apache.logging.log4j.Logger;
+
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.player.AbilityHandler;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.north93.zgame.api.bukkit.packets.event.AsyncPacketInEvent;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
-import pl.north93.zgame.api.bukkit.utils.AutoListener;
+import pl.north93.zgame.api.bukkit.protocol.PacketEvent;
+import pl.north93.zgame.api.bukkit.protocol.PacketHandler;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
-public class DoubleJumpAbility implements AbilityHandler, AutoListener
+public class DoubleJumpAbility implements AbilityHandler
 {
     @Inject
     private static GoldHunter goldHunter;
@@ -53,21 +51,16 @@ public class DoubleJumpAbility implements AbilityHandler, AutoListener
         player.setDoubleJumpActive(true);
     }
     
-    @EventHandler
-    public void onDoubleJumpAsync(AsyncPacketInEvent event)
+    @PacketHandler
+    public void onDoubleJumpAsync(PacketEvent<PacketPlayInAbilities> event)
     {
-        if ( !( event.getPacket() instanceof PacketPlayInAbilities ) )
-        {
-            return;
-        }
-        
         event.setCancelled(true);
         goldHunter.runTask(() -> onDoubleJumpSync(event));
     }
     
-    private void onDoubleJumpSync(AsyncPacketInEvent event)
+    private void onDoubleJumpSync(PacketEvent<PacketPlayInAbilities> event)
     {
-        PacketPlayInAbilities packet = (PacketPlayInAbilities) event.getPacket();
+        PacketPlayInAbilities packet = event.getPacket();
         GoldHunterPlayer player = goldHunter.getPlayer(event.getPlayer());
         
         if ( player == null || !player.isDoubleJumpActive() )

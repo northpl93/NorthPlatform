@@ -1,14 +1,15 @@
 package pl.north93.zgame.antycheat.event.source;
 
-import net.minecraft.server.v1_12_R1.Packet;
 import net.minecraft.server.v1_12_R1.PacketPlayInCustomPayload;
 import net.minecraft.server.v1_12_R1.PacketPlayInFlying;
+import net.minecraft.server.v1_12_R1.PacketPlayInFlying.PacketPlayInLook;
+import net.minecraft.server.v1_12_R1.PacketPlayInFlying.PacketPlayInPosition;
+import net.minecraft.server.v1_12_R1.PacketPlayInFlying.PacketPlayInPositionLook;
 import net.minecraft.server.v1_12_R1.PacketPlayInUseEntity;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 
 import io.netty.buffer.ByteBuf;
 import pl.north93.zgame.antycheat.event.impl.ClientMoveTimelineEvent;
@@ -19,50 +20,69 @@ import pl.north93.zgame.antycheat.timeline.Timeline;
 import pl.north93.zgame.antycheat.timeline.impl.TimelineManager;
 import pl.north93.zgame.antycheat.utils.handle.WorldHandle;
 import pl.north93.zgame.antycheat.utils.location.RichEntityLocation;
-import pl.north93.zgame.api.bukkit.packets.event.AsyncPacketInEvent;
-import pl.north93.zgame.api.bukkit.utils.AutoListener;
+import pl.north93.zgame.api.bukkit.protocol.PacketEvent;
+import pl.north93.zgame.api.bukkit.protocol.PacketHandler;
+import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
-public class AntyCheatPacketListener implements AutoListener
+public class AntyCheatPacketListener
 {
     @Inject
     private TimelineManager timelineManager;
 
-    @EventHandler
-    public void onAsyncPacketIn(final AsyncPacketInEvent event)
+    @Bean
+    private AntyCheatPacketListener()
+    {
+    }
+
+    @PacketHandler
+    public void onAsyncLookPacket(final PacketEvent<PacketPlayInLook> event)
     {
         final Player player = event.getPlayer();
-        if (player == null)
-        {
-            return;
-        }
 
-        final Packet packet = event.getPacket();
-        if (packet instanceof PacketPlayInFlying)
-        {
-            final PacketPlayInFlying packetPlayInFlying = (PacketPlayInFlying) packet;
+        final ClientMoveTimelineEvent moveTimelineEvent = this.createMoveTimelineEvent(player, event.getPacket());
+        this.timelineManager.pushEventForPlayer(player, moveTimelineEvent);
+    }
 
-            final ClientMoveTimelineEvent moveTimelineEvent = this.createMoveTimelineEvent(player, packetPlayInFlying);
-            this.timelineManager.pushEventForPlayer(player, moveTimelineEvent);
-        }
-        else if (packet instanceof PacketPlayInUseEntity)
-        {
-            final PacketPlayInUseEntity packetPlayInUseEntity = (PacketPlayInUseEntity) packet;
+    @PacketHandler
+    public void onAsyncPositionPacket(final PacketEvent<PacketPlayInPosition> event)
+    {
+        final Player player = event.getPlayer();
 
-            final WorldHandle worldHandle = WorldHandle.of(player.getWorld());
-            final Entity entity = worldHandle.getBukkitEntityById(packetPlayInUseEntity.getEntityId());
-            final EntityAction entityAction = EntityAction.values()[packetPlayInUseEntity.a().ordinal()];
+        final ClientMoveTimelineEvent moveTimelineEvent = this.createMoveTimelineEvent(player, event.getPacket());
+        this.timelineManager.pushEventForPlayer(player, moveTimelineEvent);
+    }
 
-            final InteractWithEntityTimelineEvent timelineEvent = new InteractWithEntityTimelineEvent(player, entity, entityAction);
-            this.timelineManager.pushEventForPlayer(player, timelineEvent);
-        }
-        else if (packet instanceof PacketPlayInCustomPayload)
-        {
-            final PacketPlayInCustomPayload customPayload = (PacketPlayInCustomPayload) packet;
+    @PacketHandler
+    public void onAsyncPositionLookPacket(final PacketEvent<PacketPlayInPositionLook> event)
+    {
+        final Player player = event.getPlayer();
 
-            final PluginMessageTimelineEvent timelineEvent = this.createPluginMessageTimelineEvent(player, customPayload);
-            this.timelineManager.pushEventForPlayer(player, timelineEvent);
-        }
+        final ClientMoveTimelineEvent moveTimelineEvent = this.createMoveTimelineEvent(player, event.getPacket());
+        this.timelineManager.pushEventForPlayer(player, moveTimelineEvent);
+    }
+
+    @PacketHandler
+    public void onAsyncUseEntityPacket(final PacketEvent<PacketPlayInUseEntity> event)
+    {
+        final Player player = event.getPlayer();
+        final PacketPlayInUseEntity packet = event.getPacket();
+
+        final WorldHandle worldHandle = WorldHandle.of(player.getWorld());
+        final Entity entity = worldHandle.getBukkitEntityById(packet.getEntityId());
+        final EntityAction entityAction = EntityAction.values()[packet.a().ordinal()];
+
+        final InteractWithEntityTimelineEvent timelineEvent = new InteractWithEntityTimelineEvent(player, entity, entityAction);
+        this.timelineManager.pushEventForPlayer(player, timelineEvent);
+    }
+
+    @PacketHandler
+    public void onAsyncCustomPayloadPacket(final PacketEvent<PacketPlayInCustomPayload> event)
+    {
+        final Player player = event.getPlayer();
+
+        final PluginMessageTimelineEvent timelineEvent = this.createPluginMessageTimelineEvent(player, event.getPacket());
+        this.timelineManager.pushEventForPlayer(player, timelineEvent);
     }
 
     // tworzy PlayerMoveTimelineEvent na podstawie obiektu gracza i pakietów od movementu

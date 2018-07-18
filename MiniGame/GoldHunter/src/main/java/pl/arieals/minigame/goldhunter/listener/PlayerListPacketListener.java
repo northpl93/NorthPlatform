@@ -13,8 +13,8 @@ import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoActio
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.player.GameTeam;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.north93.zgame.api.bukkit.packets.wrappers.WrapperPlayOutPlayerInfo;
-import pl.north93.zgame.api.bukkit.packets.wrappers.WrapperPlayOutPlayerInfo.PlayerInfoData;
+import pl.north93.zgame.api.bukkit.protocol.wrappers.WrapperPlayOutPlayerInfo;
+import pl.north93.zgame.api.bukkit.protocol.wrappers.WrapperPlayOutPlayerInfo.PlayerInfoData;
 import pl.north93.zgame.api.bukkit.protocol.ChannelWrapper;
 import pl.north93.zgame.api.bukkit.protocol.HandlerPriority;
 import pl.north93.zgame.api.bukkit.protocol.PacketEvent;

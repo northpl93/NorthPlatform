@@ -2,16 +2,15 @@ package pl.north93.zgame.api.bukkit.protocol.impl;
 
 import java.util.Optional;
 
-import org.bukkit.entity.Player;
-
-import io.netty.channel.Channel;
-
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.NetworkManager;
 import net.minecraft.server.v1_12_R1.Packet;
 import net.minecraft.server.v1_12_R1.PacketListener;
 import net.minecraft.server.v1_12_R1.PlayerConnection;
 
+import org.bukkit.entity.Player;
+
+import io.netty.channel.Channel;
 import pl.north93.zgame.api.bukkit.protocol.ChannelWrapper;
 
 public class ChannelWrapperImpl implements ChannelWrapper
@@ -62,7 +61,7 @@ public class ChannelWrapperImpl implements ChannelWrapper
     @Override
     public void writePacket(Packet<?> packet)
     {
-        channel.eventLoop().execute(() -> channel.pipeline().context(NorthLegacyEventHandler.class).write(packet));
+        channel.eventLoop().execute(() -> channel.pipeline().context(NorthChannelHandler.class).write(packet));
     }
 
     @Override

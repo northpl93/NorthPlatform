@@ -27,7 +27,7 @@ import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEv
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
-import pl.north93.zgame.api.bukkit.packets.wrappers.WrapperPlayOutPlayerInfo;
+import pl.north93.zgame.api.bukkit.protocol.wrappers.WrapperPlayOutPlayerInfo;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class TabListHandler implements Listener

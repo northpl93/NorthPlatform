@@ -4,19 +4,19 @@ import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.util.Collection;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
+import net.minecraft.server.v1_12_R1.PlayerConnection;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.spigotmc.SpigotConfig;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-
-import net.minecraft.server.v1_12_R1.MinecraftServer;
-import net.minecraft.server.v1_12_R1.PlayerConnection;
-
 import pl.north93.northspigot.event.ChannelInitializeEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
@@ -116,8 +116,7 @@ public class ProtocolManagerComponent extends Component implements ProtocolManag
     {
         Channel channel = event.getChannel();
         channel.pipeline().addBefore("packet_handler", "north_packet_handler", new NorthChannelHandler());
-        channel.pipeline().addBefore("north_packet_handler", "north_legacy_event_handler", new NorthLegacyEventHandler());
-        
+
         logger.debug("Injected own channel initializer for: " + channel);
     }
     
