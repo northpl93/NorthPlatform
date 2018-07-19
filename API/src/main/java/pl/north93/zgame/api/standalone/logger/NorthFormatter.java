@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.utils;
+package pl.north93.zgame.api.standalone.logger;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

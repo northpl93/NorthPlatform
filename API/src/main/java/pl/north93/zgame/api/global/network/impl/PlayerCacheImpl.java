@@ -26,6 +26,7 @@ import org.bson.Document;
 
 import org.diorite.commons.io.DioriteURLUtils;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.UsernameDetails;
@@ -34,6 +35,7 @@ import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.storage.StorageConnector;
 
+@Slf4j
 class PlayerCacheImpl implements IPlayersManager.IPlayerCache
 {
     private final JsonParser json = new JsonParser();
@@ -116,7 +118,7 @@ class PlayerCacheImpl implements IPlayersManager.IPlayerCache
         }
         catch (final IOException e)
         {
-            e.printStackTrace();
+            log.error("Failed to query Mojang API to check username {}", username, e);
             return Optional.empty();
         }
     }

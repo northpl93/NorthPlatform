@@ -3,6 +3,7 @@ package pl.arieals.globalshops.server.impl.price;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.globalshops.controller.cfg.ItemPriceCfg;
 import pl.arieals.globalshops.server.IPlayerContainer;
 import pl.arieals.globalshops.server.domain.IPrice;
@@ -13,6 +14,7 @@ import pl.north93.zgame.api.economy.IEconomyManager;
 import pl.north93.zgame.api.economy.ITransaction;
 import pl.north93.zgame.api.global.network.players.Identity;
 
+@Slf4j
 public final class MoneyPrice implements IPrice
 {
     private final IEconomyManager manager;
@@ -73,7 +75,7 @@ public final class MoneyPrice implements IPrice
         }
         catch (final Exception e)
         {
-            e.printStackTrace();
+            log.error("Transaction failed in processBuy", e);
             return false;
         }
     }

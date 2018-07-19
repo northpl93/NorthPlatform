@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.bukkit.gui.event.HotbarClickEvent;
 import pl.north93.zgame.api.bukkit.gui.impl.ClickHandlerManager;
 import pl.north93.zgame.api.bukkit.gui.impl.GuiTracker;
@@ -20,6 +21,7 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.utils.Vars;
 import pl.north93.zgame.api.global.utils.lang.ClassUtils;
 
+@Slf4j
 public class HotbarMenu implements IClickSource
 {
     @Inject
@@ -172,8 +174,7 @@ public class HotbarMenu implements IClickSource
         }
         catch ( Throwable e )
         {
-            System.err.println(method + "() in " + getClass().getName() + " throws an exception:");
-            e.printStackTrace();
+            log.error("{}() in {} throws an exception", method, getClass().getName(), e);
         }
     }
     

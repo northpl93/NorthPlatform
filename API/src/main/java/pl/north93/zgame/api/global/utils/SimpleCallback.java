@@ -2,6 +2,9 @@ package pl.north93.zgame.api.global.utils;
 
 import com.google.common.base.Preconditions;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SimpleCallback implements ICallback
 {
     private volatile boolean completed;
@@ -34,8 +37,7 @@ public class SimpleCallback implements ICallback
         }
         catch ( Throwable e )
         {
-            System.err.println("A task in callback throws an exception:");
-            e.printStackTrace();
+            log.error("A task in callback throws an exception", e);
         }
     }
     

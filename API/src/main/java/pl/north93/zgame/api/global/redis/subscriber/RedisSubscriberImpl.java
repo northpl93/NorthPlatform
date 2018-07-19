@@ -11,18 +11,17 @@ import com.lambdaworks.redis.pubsub.StatefulRedisPubSubConnection;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.storage.StorageConnector;
 import pl.north93.zgame.api.global.storage.StringByteRedisCodec;
 
+@Slf4j
 public class RedisSubscriberImpl extends Component implements RedisSubscriber
 {
     private final Map<String, SubscriptionHandler> handlerMap = new ConcurrentHashMap<>();
-    private final Logger logger = LoggerFactory.getLogger(RedisSubscriberImpl.class);
     private StatefulRedisPubSubConnection<String, byte[]> connection;
     private ExecutorService executorService = Executors.newCachedThreadPool();
     @Inject
@@ -47,7 +46,7 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
         }
         catch (final InterruptedException e)
         {
-            this.logger.error("Interrupted while waiting for executor termination", e);
+            log.error("Interrupted while waiting for executor termination", e);
         }
         this.connection.close();
     }
@@ -106,7 +105,7 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
         {
             if (handler == null)
             {
-                RedisSubscriberImpl.this.logger.warn("Received message from unhandled channel: {}", channel);
+                log.warn("Received message from unhandled channel: {}", channel);
                 return;
             }
 
@@ -119,7 +118,7 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
                 catch (final Throwable e)
                 {
                     // executor moze wygluszyc wyjatek, dlatego recznie zajmiemy sie jego wyprintowaniem
-                    e.printStackTrace();
+                    log.error("Exception thrown in redis channel {} handler", channel, e);
                 }
             });
         }

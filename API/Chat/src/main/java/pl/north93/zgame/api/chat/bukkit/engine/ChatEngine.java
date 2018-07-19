@@ -49,7 +49,7 @@ public class ChatEngine
             return SendMessageResult.NO_ROOM;
         }
 
-        log.info("[{0}] {1}: {2}", mainRoom.getId(), player.getName(), rawMessage);
+        log.info("[{}] {}: {}", mainRoom.getId(), player.getName(), rawMessage);
 
         final BaseComponent message = mainRoom.getChatFormatter().format(northPlayer, rawMessage);
         if (this.processIfOnlyLocal(mainRoom, message))

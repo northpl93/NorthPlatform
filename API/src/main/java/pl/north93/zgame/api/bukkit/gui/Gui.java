@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.StringUtils;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.bukkit.gui.element.GuiContent;
 import pl.north93.zgame.api.bukkit.gui.element.GuiElement;
 import pl.north93.zgame.api.bukkit.gui.event.GuiClickEvent;
@@ -21,6 +22,7 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.utils.Vars;
 import pl.north93.zgame.api.global.utils.lang.ClassUtils;
 
+@Slf4j
 public class Gui implements IClickSource
 {
     @Inject
@@ -135,8 +137,7 @@ public class Gui implements IClickSource
         }
         catch ( Throwable e )
         {
-            System.err.println(method + "() in " + getClass().getName() + " throws an exception:");
-            e.printStackTrace();
+            log.error("{}() in {} throws an exception", method, getClass().getName(), e);
         }
     }
 

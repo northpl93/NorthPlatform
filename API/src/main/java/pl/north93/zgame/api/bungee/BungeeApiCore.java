@@ -4,10 +4,14 @@ import static pl.north93.zgame.api.global.redis.RedisKeys.PROXY_INSTANCE;
 
 
 import java.io.File;
+import java.util.logging.Handler;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import biz.paluch.logging.gelf.jul.GelfLogHandler;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Event;
 import net.md_5.bungee.api.plugin.Listener;
@@ -29,6 +33,24 @@ public class BungeeApiCore extends ApiCore
     {
         super(Platform.BUNGEE, new BungeePlatformConnector(bungeePlugin));
         this.bungeePlugin = bungeePlugin;
+        this.setupLogger();
+    }
+
+    private void setupLogger()
+    {
+        final Logger bungeeLogger = ProxyServer.getInstance().getLogger();
+
+        final Logger rootLogger = LogManager.getLogManager().getLogger("");
+        rootLogger.setParent(bungeeLogger);
+        for (final Handler handler : rootLogger.getHandlers())
+        {
+            rootLogger.removeHandler(handler);
+        }
+        rootLogger.setUseParentHandlers(true);
+
+        final GelfLogHandler gelfHandler = new GelfLogHandler();
+        gelfHandler.setExtractStackTrace("true");
+        bungeeLogger.addHandler(gelfHandler);
     }
 
     @Override

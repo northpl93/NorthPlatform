@@ -1,8 +1,5 @@
 package pl.arieals.api.minigame.server.gamehost.world.impl;
 
-import static java.text.MessageFormat.format;
-
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,9 +23,8 @@ import org.bukkit.event.world.WorldInitEvent;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.gamehost.world.ILoadingProgress;
 import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
@@ -36,9 +32,9 @@ import pl.north93.zgame.api.bukkit.Main;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlChunk;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
+@Slf4j
 public class WorldManager implements IWorldManager, Listener
 {
-    private final Logger logger = LoggerFactory.getLogger(WorldManager.class);
     @Inject
     private BukkitApiCore    apiCore;
     private NmsWorldHelper   worldHelper;
@@ -58,7 +54,7 @@ public class WorldManager implements IWorldManager, Listener
         Bukkit.getWorlds().get(0).setAutoSave(false); // disable auto-saving in world 0
         if (MinecraftServer.getServer().autosavePeriod > 0)
         {
-            this.logger.error("Game host is configured to autosave worlds. This may affect performance. Set ticks-per.autosave in bukkit.yml to 0");
+            log.error("Game host is configured to autosave worlds. This may affect performance. Set ticks-per.autosave in bukkit.yml to 0");
         }
     }
 
@@ -89,7 +85,7 @@ public class WorldManager implements IWorldManager, Listener
             final File regionDir = new File(mapDir, "region");
             try
             {
-                this.apiCore.debug(format("Copying files of world {0}.", world.getName()));
+                log.debug("Copying files of world {}.", world.getName());
                 if (regionDir.exists() && regionDir.isDirectory())
                 {
                     FileUtils.cleanDirectory(regionDir);
@@ -141,7 +137,7 @@ public class WorldManager implements IWorldManager, Listener
         }
         catch (final IOException e)
         {
-            e.printStackTrace();
+            log.error("Failed to delete directory of world", e);
             return false;
         }
     }

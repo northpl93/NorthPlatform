@@ -10,18 +10,16 @@ import java.util.Collection;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.antycheat.analysis.FalsePositiveProbability;
 import pl.north93.zgame.antycheat.analysis.SingleAnalysisResult;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
+@Slf4j
 /*default*/ class AnalysisLogger
 {
     private static final String  LOG_FORMAT    = "&cP: &e{0} &cV: &e{1} &cFPP: &e{2}\n&cD: &7{3}";
     private static final boolean DEBUG_TO_CHAT = false;
-    private final Logger logger = LoggerFactory.getLogger(AnalysisLogger.class);
 
     @Bean
     private AnalysisLogger()
@@ -55,7 +53,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Bean;
         }
         else
         {
-            this.logger.info(coloured);
+            log.info(coloured);
         }
     }
 }

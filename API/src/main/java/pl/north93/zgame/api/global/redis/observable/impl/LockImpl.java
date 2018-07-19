@@ -1,20 +1,19 @@
 package pl.north93.zgame.api.global.redis.observable.impl;
 
-import static java.lang.management.ManagementFactory.*;
+import static java.lang.management.ManagementFactory.getRuntimeMXBean;
 
 
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.redis.observable.Lock;
 
+@Slf4j
 class LockImpl implements Lock
 {
-    private final Logger logger = LoggerFactory.getLogger(LockImpl.class);
     private final ObservationManagerImpl observationManager;
     private final String                 name;
     private final Object                 waiter;
@@ -37,17 +36,17 @@ class LockImpl implements Lock
     {
         if (this.tryLock0())
         {
-            this.logger.debug("[Lock] Successfully acquired lock {}", this.name);
+            log.debug("[Lock] Successfully acquired lock {}", this.name);
         }
         else
         {
             this.observationManager.addWaitingLock(this);
-            this.logger.debug("[Lock] Lock {} is waiting...", this.name);
+            log.debug("[Lock] Lock {} is waiting...", this.name);
             while (! this.tryLock0())
             {
                 this.awaitUnlockOrTimeout();
             }
-            this.logger.debug("[Lock] Successfully acquired lock {}", this.name);
+            log.debug("[Lock] Successfully acquired lock {}", this.name);
         }
         return this;
     }
@@ -57,7 +56,7 @@ class LockImpl implements Lock
     {
         if (this.tryLock0())
         {
-            this.logger.debug("[Lock] Successfully acquired lock {}", this.name);
+            log.debug("[Lock] Successfully acquired lock {}", this.name);
             return true;
         }
         return false;
@@ -77,7 +76,7 @@ class LockImpl implements Lock
         {
             throw new RuntimeException("Failed to unlock " + this.name);
         }
-        this.logger.debug("[Lock] Successfully unlocked {}", this.name);
+        log.debug("[Lock] Successfully unlocked {}", this.name);
     }
 
     private synchronized boolean tryUnlock()
@@ -101,7 +100,7 @@ class LockImpl implements Lock
     {
         this.notifyAllLocalWaiters();
 
-        this.logger.debug("[Lock] Remote unlock {0}", this.name);
+        log.debug("[Lock] Remote unlock {0}", this.name);
     }
 
     private void notifyAllLocalWaiters()
@@ -123,7 +122,7 @@ class LockImpl implements Lock
         }
         catch (final InterruptedException e)
         {
-            e.printStackTrace();
+            log.error("awaitUnloadOrTimeout interrupted", e);
         }
     }
 

@@ -5,9 +5,11 @@ import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
+@Slf4j
 public class SimpleCountdown
 {
     @Inject
@@ -159,8 +161,7 @@ public class SimpleCountdown
         }
         catch ( Throwable e )
         {
-            System.err.println("An exception was throw in simple callback:");
-            e.printStackTrace();
+            log.error("An exception was throw in simple callback", e);
         }
     }
 }

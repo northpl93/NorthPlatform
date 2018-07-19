@@ -20,22 +20,21 @@ import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.diorite.commons.reflections.DioriteReflectionUtils;
 import org.diorite.commons.reflections.FieldAccessor;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.gamehost.world.impl.blocker.WrappedChunkProviderServer;
 import pl.north93.zgame.api.bukkit.server.impl.WorldInitializationHandler;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlChunk;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
+@Slf4j
 class ChunkLoadingTask implements Runnable
 {
     private static final FieldAccessor chunkProvider = DioriteReflectionUtils.getField(net.minecraft.server.v1_12_R1.World.class, "chunkProvider");
     private static final int MIN_MEMORY = 15; // ponizej 15% przestajemy doczytywac chunki i czekamy na GC
-    private final Logger logger = LoggerFactory.getLogger(ChunkLoadingTask.class);
     private final Queue<QueuedLoadingTask> tasks = Queues.synchronizedQueue(new ArrayDeque<>());
     private QueuedLoadingTask          activeTask;
     @Inject
@@ -44,7 +43,7 @@ class ChunkLoadingTask implements Runnable
     public void queueTask(final World world, final Set<XmlChunk> chunks, final LoadingProgressImpl progress)
     {
         this.tasks.add(new QueuedLoadingTask(world, Queues.newArrayDeque(chunks), progress, System.currentTimeMillis()));
-        this.logger.info("Queued loading {} chunks of {}", chunks.size(), world.getName());
+        log.info("Queued loading {} chunks of {}", chunks.size(), world.getName());
     }
 
     @Override
@@ -59,7 +58,7 @@ class ChunkLoadingTask implements Runnable
 
         if (! this.checkRamUsage())
         {
-            this.logger.warn("Low free memory (under " + MIN_MEMORY + "%). Skipped chunk loading to prevent server crash.");
+            log.warn("Low free memory (under " + MIN_MEMORY + "%). Skipped chunk loading to prevent server crash.");
             System.gc(); // to tylko sugestia, ale probowac warto.
             return;
         }
@@ -83,11 +82,11 @@ class ChunkLoadingTask implements Runnable
     private void completeTask(final QueuedLoadingTask task)
     {
         final long totalTime = System.currentTimeMillis() - task.startTime;
-        this.logger.info("Completed loading of world {} in {}ms", task.world.getName(), totalTime);
+        log.info("Completed loading of world {} in {}ms", task.world.getName(), totalTime);
 
         if (task.isEmpty)
         {
-            this.logger.warn("World {} has empty list of chunks. Use WE wand and /mapaddchunks to add chunks. Blocking of new chunks disabled.", task.world.getName());
+            log.warn("World {} has empty list of chunks. Use WE wand and /mapaddchunks to add chunks. Blocking of new chunks disabled.", task.world.getName());
         }
         else
         {
@@ -111,7 +110,7 @@ class ChunkLoadingTask implements Runnable
 
     private void flushRegionCache()//pomyslec nad dodaniem tego.
     {
-        this.logger.info("Flushing region file cache because all chunk loading task are completed.");
+        log.info("Flushing region file cache because all chunk loading task are completed.");
         synchronized (RegionFileCache.class)
         {
             final Map<File, RegionFile> cache = RegionFileCache.a;
@@ -124,7 +123,7 @@ class ChunkLoadingTask implements Runnable
                 }
                 catch (final IOException e)
                 {
-                    e.printStackTrace();
+                    log.error("failed to flush region cache", e);
                     continue;
                 }
                 cacheIterator.remove();

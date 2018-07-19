@@ -16,6 +16,7 @@
         <excludedPackage>it</excludedPackage>
         <excludedPackage>io</excludedPackage>
         <excludedPackage>com</excludedPackage>
+        <excludedPackage>biz</excludedPackage>
     </excludedPackages>
 
     <!-- Lista komponentów dla platformy STANDALONE -->

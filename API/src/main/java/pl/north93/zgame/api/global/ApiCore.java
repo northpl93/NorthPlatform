@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import org.diorite.commons.io.DioriteFileUtils;
 
+import lombok.Getter;
 import pl.north93.zgame.api.global.agent.InstrumentationClient;
 import pl.north93.zgame.api.global.component.IComponentManager;
 import pl.north93.zgame.api.global.component.annotations.ProvidesComponent;
@@ -21,6 +22,7 @@ import pl.north93.zgame.api.global.permissions.PermissionsManager;
 public abstract class ApiCore
 {
     private final Logger                logger;
+    @Getter
     private final boolean               isDebug;
     private final InstrumentationClient instrumentationClient;
     private final IComponentManager     componentManager;
@@ -130,17 +132,6 @@ public abstract class ApiCore
     public IComponentManager getComponentManager()
     {
         return this.componentManager;
-    }
-
-    @Deprecated
-    public void debug(final Object object)
-    {
-        if (! this.isDebug)
-        {
-            return;
-        }
-
-        this.logger.debug("[DEBUG] " + object);
     }
 
     /**
