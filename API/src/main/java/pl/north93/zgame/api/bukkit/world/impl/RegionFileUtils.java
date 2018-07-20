@@ -4,12 +4,10 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.bukkit.World;
-
 import net.minecraft.server.v1_12_R1.RegionFile;
 import net.minecraft.server.v1_12_R1.RegionFileCache;
+
+import org.bukkit.World;
 
 import pl.north93.zgame.api.bukkit.utils.xml.XmlChunk;
 

@@ -12,9 +12,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import lombok.extern.slf4j.Slf4j;
 import pl.mcpiraci.world.properties.IWorldProperties;
 import pl.mcpiraci.world.properties.PropertiesConfig;
 import pl.mcpiraci.world.properties.Weather;
@@ -24,10 +22,9 @@ import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
+@Slf4j
 public class WorldPropertiesImpl implements IWorldProperties, ITickable
 {
-    private static final Logger logger = LogManager.getLogger();
-    
     @Inject
     private static PropertiesManagerImpl propertiesManager;
     
@@ -136,16 +133,16 @@ public class WorldPropertiesImpl implements IWorldProperties, ITickable
             }
             else
             {
-                logger.warn("world-properties.xml for world {} doesn't exist, using default properties", world.getName());
+                log.warn("world-properties.xml for world {} doesn't exist, using default properties", world.getName());
             }
             
             worldConfig.toString();
-            logger.info("Reloaded world-properties.xml for world {}", world.getName());
-            logger.debug("{} world-properties config: {}", world.getName(), worldConfig);
+            log.info("Reloaded world-properties.xml for world {}", world.getName());
+            log.debug("{} world-properties config: {}", world.getName(), worldConfig);
         }
         catch ( Throwable e )
         {
-            logger.error("An error occured while reloading world-properties.xml for world {}. Using default properties", world.getName(), e);
+            log.error("An error occured while reloading world-properties.xml for world {}. Using default properties", world.getName(), e);
         }
     }
     
@@ -180,8 +177,12 @@ public class WorldPropertiesImpl implements IWorldProperties, ITickable
         
         GamerulesUtils.resetGamerules(world);
         gamerules.entrySet().forEach(e -> world.setGameRuleValue(e.getKey(), e.getValue()));
-        
-        logger.debug("Gamerules for world {} updated! Current values {}", () -> world.getName(), () -> GamerulesUtils.getGameruleValues(world));
+
+        if (log.isDebugEnabled())
+        {
+            final Map<String, String> gameruleValues = GamerulesUtils.getGameruleValues(world);
+            log.debug("Gamerules for world {} updated! Current values {}", world.getName(), gameruleValues);
+        }
     }
     
     private void updateWorldWeather()
@@ -200,7 +201,7 @@ public class WorldPropertiesImpl implements IWorldProperties, ITickable
             world.setThundering(weather.hasThundering());
         }
         
-        logger.debug("Weather for world {} updated!", world.getName());
+        log.debug("Weather for world {} updated!", world.getName());
     }
     
     private void updateWorldTime()
@@ -217,7 +218,7 @@ public class WorldPropertiesImpl implements IWorldProperties, ITickable
             world.setTime(time);
         }
         
-        logger.debug("Time for world {} updated!");
+        log.debug("Time for world {} updated!");
     }
 
     private void updateSpawn()
@@ -230,6 +231,6 @@ public class WorldPropertiesImpl implements IWorldProperties, ITickable
         }
 
         world.setSpawnLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-        logger.debug("Spawn location for world {} updated!");
+        log.debug("Spawn location for world {} updated!");
     }
 }

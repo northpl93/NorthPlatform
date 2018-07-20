@@ -11,12 +11,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.spigotmc.SpigotConfig;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.northspigot.event.ChannelInitializeEvent;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
@@ -28,10 +27,9 @@ import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
 
+@Slf4j
 public class ProtocolManagerComponent extends Component implements ProtocolManager, Listener
 {
-    private static final Logger logger = LogManager.getLogger();
-    
     private final PacketEventDispatcher asyncDispatcher = new PacketEventDispatcher();
     //private final PacketEventDispatcher syncDispatcher = new PacketEventDispatcher();
     
@@ -55,7 +53,7 @@ public class ProtocolManagerComponent extends Component implements ProtocolManag
     @Aggregator(PacketHandler.class)
     public void aggregatePacketHandlers(PacketHandler packetHandlerAnnotation, @Named("Target") Method method, @Named("MethodOwner") Object instance)
     {
-        logger.debug("Called aggregator method for {} on method {} object {}", packetHandlerAnnotation, method.getName(), instance);
+        log.debug("Called aggregator method for {} on method {} object {}", packetHandlerAnnotation, method.getName(), instance);
         
         if ( packetHandlerAnnotation.sync() )
         {
@@ -117,7 +115,7 @@ public class ProtocolManagerComponent extends Component implements ProtocolManag
         Channel channel = event.getChannel();
         channel.pipeline().addBefore("packet_handler", "north_packet_handler", new NorthChannelHandler());
 
-        logger.debug("Injected own channel initializer for: " + channel);
+        log.debug("Injected own channel initializer for: " + channel);
     }
     
     @SuppressWarnings("deprecation")
@@ -129,7 +127,7 @@ public class ProtocolManagerComponent extends Component implements ProtocolManag
         // if lateBing is false there are already listening channels
         if ( !SpigotConfig.lateBind )
         {
-            logger.debug("SpigotConfig.lateBind is false - closing all listeners");
+            log.debug("SpigotConfig.lateBind is false - closing all listeners");
             MinecraftServer.getServer().an().b(); // should be - getServerConnection().closeAllListeners()
             
             // we set lateBing to true to server initialize listeners again after enabling all plugins

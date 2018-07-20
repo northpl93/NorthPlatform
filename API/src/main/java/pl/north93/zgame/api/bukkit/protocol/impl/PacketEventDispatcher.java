@@ -12,13 +12,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraft.server.v1_12_R1.Packet;
 
 import com.google.common.base.Preconditions;
 
-import net.minecraft.server.v1_12_R1.Packet;
-
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.bukkit.protocol.HandlerPriority;
 import pl.north93.zgame.api.bukkit.protocol.PacketEvent;
 import pl.north93.zgame.api.global.utils.lang.ListUtils;
@@ -97,10 +95,9 @@ public class PacketEventDispatcher
     }
 }
 
+@Slf4j
 class PacketEventHandler implements Comparable<PacketEventHandler>
 {
-    private static final Logger logger = LogManager.getLogger();
-    
     private final MethodHandle method;
     private final Object instance;
     private final HandlerPriority priority;
@@ -127,7 +124,7 @@ class PacketEventHandler implements Comparable<PacketEventHandler>
         }
         catch ( Throwable e )
         {
-            logger.error("An exception was thrown when executing packet handler:", e);
+            log.error("An exception was thrown when executing packet handler", e);
         }
     }
     

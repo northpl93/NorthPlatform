@@ -3,9 +3,6 @@ package pl.north93.zgame.api.bukkit.world.impl;
 import java.lang.invoke.MethodHandle;
 import java.util.Iterator;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.server.v1_12_R1.Chunk;
 import net.minecraft.server.v1_12_R1.ChunkCoordIntPair;
 import net.minecraft.server.v1_12_R1.ChunkProviderServer;
@@ -13,17 +10,17 @@ import net.minecraft.server.v1_12_R1.IChunkLoader;
 import net.minecraft.server.v1_12_R1.World;
 import net.minecraft.server.v1_12_R1.WorldServer;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.utils.lang.CatchException;
 import pl.north93.zgame.api.global.utils.lang.MethodHandlesUtils;
 import pl.north93.zgame.api.global.utils.lang.SneakyThrow;
 
+@Slf4j
 public class NorthChunkProvider extends ChunkProviderServer
 {
     private static final MethodHandle SET_CHUNK_PROVIDER = MethodHandlesUtils.unreflectSetter(World.class, "chunkProvider");
     private static final MethodHandle GET_CHUNK_LOADER = MethodHandlesUtils.unreflectGetter(ChunkProviderServer.class, "chunkLoader");
- 
-    private static final Logger logger = LogManager.getLogger();
-    
+
     private boolean generateNewChunksDisabled;
     private boolean keepingEntireWorldLoaded;
     
@@ -46,7 +43,7 @@ public class NorthChunkProvider extends ChunkProviderServer
         chunkProvider.setKeepingEntireWorldLoaded(keepingEntireWorldLoaded);
         
         CatchException.sneaky(() -> SET_CHUNK_PROVIDER.invoke(world, chunkProvider));
-        logger.debug("Injected NorthChunkProvider to world {}", world.getWorld()::getName);
+        log.debug("Injected NorthChunkProvider to world {}", world.getWorld().getName());
     }
 
     public boolean isGenerateNewChunksDisabled()
@@ -74,7 +71,7 @@ public class NorthChunkProvider extends ChunkProviderServer
     {
         if ( !generateNewChunksDisabled )
         {
-            logger.debug("call super#originalGetChunkAt");
+            log.debug("call super#originalGetChunkAt");
             return super.originalGetChunkAt(x, z);
         }
         
@@ -85,7 +82,7 @@ public class NorthChunkProvider extends ChunkProviderServer
         }
         
         
-        logger.debug("Attempted to load dummy chunk at {}, {}", x, z);
+        log.debug("Attempted to load dummy chunk at {}, {}", x, z);
         chunk = new DummyChunk(world, x, z);
         this.chunks.put(ChunkCoordIntPair.a(x, z), chunk);
         chunk.addEntities();
@@ -106,7 +103,7 @@ public class NorthChunkProvider extends ChunkProviderServer
             if ( chunks.get(chunkCoord) instanceof DummyChunk )
             {
                 Chunk chunk = chunks.remove(chunkCoord);
-                logger.debug("Removed dummy chunk {}, {}", () -> chunk.locX, () -> chunk.locZ);
+                log.debug("Removed dummy chunk {}, {}", chunk.locX, chunk.locZ);
             }
         }
         
@@ -118,7 +115,7 @@ public class NorthChunkProvider extends ChunkProviderServer
     {
         if ( chunk instanceof DummyChunk )
         {
-            logger.debug("Cancelled saving dummy chunk {}, {}", () -> chunk.locX, () -> chunk.locZ);
+            log.debug("Cancelled saving dummy chunk {}, {}", chunk.locX, chunk.locZ);
             return;
         }
         
@@ -130,7 +127,7 @@ public class NorthChunkProvider extends ChunkProviderServer
     {
         if ( chunk instanceof DummyChunk )
         {
-            logger.debug("Cancelled saving NOP dummy chunk {}, {}", () -> chunk.locX, () -> chunk.locZ);
+            log.debug("Cancelled saving NOP dummy chunk {}, {}", chunk.locX, chunk.locZ);
             return;
         }
         
@@ -140,7 +137,7 @@ public class NorthChunkProvider extends ChunkProviderServer
     @Override
     public boolean unloadChunk(Chunk chunk, boolean save)
     {
-        logger.trace("Loaded chunks {}", chunks.size());
+        log.trace("Loaded chunks {}", chunks.size());
         
         if ( !keepingEntireWorldLoaded )
         {

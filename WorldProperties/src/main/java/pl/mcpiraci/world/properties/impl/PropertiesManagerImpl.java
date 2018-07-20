@@ -17,9 +17,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import lombok.extern.slf4j.Slf4j;
 import pl.mcpiraci.world.properties.IPlayerProperties;
 import pl.mcpiraci.world.properties.IWorldProperties;
 import pl.mcpiraci.world.properties.IWorldPropertiesManager;
@@ -29,10 +27,9 @@ import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
+@Slf4j
 public class PropertiesManagerImpl implements IWorldPropertiesManager, Listener
 {
-    private static Logger logger = LogManager.getLogger();
-    
     private final PropertiesConfig serverConfig = new PropertiesConfig(null);
     private final Map<String, WorldPropertiesImpl> propertiesByWorld = new HashMap<>();
     private final Map<Player, IPlayerProperties> playerProperties = new HashMap<>();
@@ -114,15 +111,15 @@ public class PropertiesManagerImpl implements IWorldPropertiesManager, Listener
             }
             else
             {
-                logger.warn("world-properties.xml in server directory doesn't exist, using default properties");
+                log.warn("world-properties.xml in server directory doesn't exist, using default properties");
             }
             
-            logger.info("Reloaded server world-properties.xml");
-            logger.debug("server world-properties config: {}", serverConfig);
+            log.info("Reloaded server world-properties.xml");
+            log.debug("server world-properties config: {}", serverConfig);
         }
         catch ( Throwable e )
         {
-            logger.error("An error occured while reloading server world-properties.xml. Using default properties", e);
+            log.error("An error occured while reloading server world-properties.xml. Using default properties", e);
         }
     }
     
@@ -133,13 +130,13 @@ public class PropertiesManagerImpl implements IWorldPropertiesManager, Listener
         properties.updateWorld();
         
         propertiesByWorld.put(properties.getWorld().getName(), properties);
-        logger.debug("Added world properties for world {}", () -> properties.getWorld());
+        log.debug("Added world properties for world {}", properties.getWorld());
     }
     
     public void removeWorldPropertiesForWorld(World world)
     {
         propertiesByWorld.remove(world.getName());
-        logger.debug("Removed properties for world {}", () -> world.getName());
+        log.debug("Removed properties for world {}", world.getName());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

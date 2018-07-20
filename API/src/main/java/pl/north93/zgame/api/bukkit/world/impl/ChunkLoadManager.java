@@ -6,20 +6,17 @@ import java.util.Map;
 
 import org.bukkit.World;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
 import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
+@Slf4j
 public class ChunkLoadManager implements ITickable
 {
     private static final int MIN_MEMORY = 128 * 1024 * 1024;
-    
-    private static final Logger logger = LogManager.getLogger();
-    
+
     private final Map<String, ChunkLoadTask> tasks = new HashMap<>();
     
     private int skipTicks;
@@ -53,7 +50,7 @@ public class ChunkLoadManager implements ITickable
 
         if ( !serverHasEnoughMemory() )
         {
-            logger.warn("Server doesn't have enough memory - skipping chunk loading");
+            log.warn("Server doesn't have enough memory - skipping chunk loading");
             skipTicks = 20;
             System.gc();
             return;

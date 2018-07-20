@@ -6,18 +6,16 @@ import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.bukkit.Location;
-
 import net.minecraft.server.v1_12_R1.MinecraftServer;
 
+import org.bukkit.Location;
+
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlChunk;
 
+@Slf4j
 public class ChunkLoadTask
 {
-    private static final Logger logger = LogManager.getLogger();
-    
     private final WorldLoadCallback callback;
     private final Queue<XmlChunk> chunkQueue;
     private final int chunksSize;
@@ -45,7 +43,7 @@ public class ChunkLoadTask
     
     public void onStarted()
     {
-        logger.debug("Total chunks to load for world {} is {}", () -> callback.getWorld().getName(), () -> chunksSize);
+        log.debug("Total chunks to load for world {} is {}", callback.getWorld().getName(), chunksSize);
         
         startTick = MinecraftServer.currentTick;
     }
@@ -53,13 +51,13 @@ public class ChunkLoadTask
     public void onFinished()
     {
         int ticks = MinecraftServer.currentTick - startTick;
-        logger.info("Loaded {} chunks for world {} in {} ticks", () -> chunksSize, () -> callback.getWorld().getName(), () -> ticks);
+        log.info("Loaded {} chunks for world {} in {} ticks", chunksSize, callback.getWorld().getName(), ticks);
         callback.callComplete();
     }
     
     public void onCancelled()
     {
-        logger.debug("Cancelled loading chunks for world {}", () -> callback.getWorld().getName());
+        log.debug("Cancelled loading chunks for world {}", callback.getWorld().getName());
         // XXX: shall we call on complete? I suppose not
     }
     
@@ -87,7 +85,7 @@ public class ChunkLoadTask
         Set<XmlChunk> chunks = RegionFileUtils.getGeneratedChunks(callback.getWorld());
         
         long time = System.nanoTime() - start;
-        logger.debug("Preparing list of chunks for world {} took {} ms", () -> callback.getWorld().getName(), () -> time / 1_000_000);
+        log.debug("Preparing list of chunks for world {} took {} ms", callback.getWorld().getName(), time / 1_000_000);
         
         return new ChunkLoadTask(callback, chunks);
     }

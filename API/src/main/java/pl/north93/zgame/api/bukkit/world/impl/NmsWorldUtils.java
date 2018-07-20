@@ -8,19 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
-import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
-import org.bukkit.event.world.WorldUnloadEvent;
-import org.bukkit.generator.ChunkGenerator;
-import org.diorite.commons.io.DioriteFileUtils;
-
-import com.google.common.base.Preconditions;
-
 import net.minecraft.server.v1_12_R1.ChunkProviderServer;
 import net.minecraft.server.v1_12_R1.ChunkRegionLoader;
 import net.minecraft.server.v1_12_R1.EntityTracker;
@@ -37,17 +24,29 @@ import net.minecraft.server.v1_12_R1.WorldServer;
 import net.minecraft.server.v1_12_R1.WorldSettings;
 import net.minecraft.server.v1_12_R1.WorldType;
 
+import com.google.common.base.Preconditions;
+
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
+import org.bukkit.event.world.WorldUnloadEvent;
+import org.bukkit.generator.ChunkGenerator;
+
+import org.diorite.commons.io.DioriteFileUtils;
+
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.utils.lang.CatchException;
 import pl.north93.zgame.api.global.utils.lang.MethodHandlesUtils;
 import pl.north93.zgame.api.global.utils.lang.SneakyThrow;
 
+@Slf4j
 class NmsWorldUtils
 {
     private static final MethodHandle WORLDS_GETTER = MethodHandlesUtils.unreflectGetter(CraftServer.class, "worlds");
     private static final MethodHandle CHUNK_QUEUE_GETTER = MethodHandlesUtils.unreflectGetter(ChunkRegionLoader.class, "queue");
-    
-    private static final Logger logger = LogManager.getLogger();
-    
+
     static WorldServer getMinecraftWorld(World bukkitWorld)
     {
         return ((CraftWorld) bukkitWorld).getHandle();
@@ -202,7 +201,7 @@ class NmsWorldUtils
                 if ( DioriteFileUtils.contains(worldFolder, entry.getKey()) )
                 {
                     it.remove();
-                    CatchException.catchThrowable(() -> entry.getValue().c(), e -> logger.error("Couldn't clenup region file cache for world {}", world.getWorld().getName(), e));
+                    CatchException.catchThrowable(() -> entry.getValue().c(), e -> log.error("Couldn't clenup region file cache for world {}", world.getWorld().getName(), e));
                 }
             }
         }
@@ -218,7 +217,7 @@ class NmsWorldUtils
         // Syncronize to avoid race condition with ChunkRegionLoader#processSaveQueueEntry
         synchronized ( chunkLoader )
         {
-            logger.debug("Cancelled saving {} chunks", () -> queue.size());
+            log.debug("Cancelled saving {} chunks", queue.size());
             queue.clear();
         }
     }
@@ -229,7 +228,7 @@ class NmsWorldUtils
      */
     static void forceSave(World bukkitWorld)
     {
-        logger.debug("Saving chunks for world {}", () -> bukkitWorld.getName());
+        log.debug("Saving chunks for world {}", bukkitWorld.getName());
         
         WorldServer handle = getMinecraftWorld(bukkitWorld);
         
@@ -237,11 +236,11 @@ class NmsWorldUtils
         {
             handle.save(true, null);
             handle.saveLevel(); // name of this method should be "waitForLevelSaving"
-            logger.debug("Saved chunks for world {}", () -> bukkitWorld.getName());
+            log.debug("Saved chunks for world {}", bukkitWorld.getName());
         }
         catch ( Throwable e )
         {
-            logger.error("Couldn't save world {}", bukkitWorld.getName(), e);
+            log.error("Couldn't save world {}", bukkitWorld.getName(), e);
         }
     }
 }
