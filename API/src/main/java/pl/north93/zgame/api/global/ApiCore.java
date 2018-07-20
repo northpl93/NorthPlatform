@@ -7,11 +7,11 @@ import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.diorite.commons.io.DioriteFileUtils;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.agent.InstrumentationClient;
 import pl.north93.zgame.api.global.component.IComponentManager;
 import pl.north93.zgame.api.global.component.annotations.ProvidesComponent;
@@ -19,9 +19,9 @@ import pl.north93.zgame.api.global.component.impl.general.ComponentManagerImpl;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.permissions.PermissionsManager;
 
+@Slf4j
 public abstract class ApiCore
 {
-    private final Logger                logger;
     @Getter
     private final boolean               isDebug;
     private final InstrumentationClient instrumentationClient;
@@ -35,7 +35,6 @@ public abstract class ApiCore
         this.platform = platform;
         this.connector = platformConnector;
 
-        this.logger = LoggerFactory.getLogger(ApiCore.class);
         this.isDebug = System.getProperties().containsKey("debug");
         this.instrumentationClient = new InstrumentationClient();
         this.componentManager = new ComponentManagerImpl(this);
@@ -56,7 +55,7 @@ public abstract class ApiCore
     public final void startCore()
     {
         Locale.setDefault(new Locale("pl", "PL"));
-        this.logger.info("Starting North API Core.");
+        log.info("Starting North API Core.");
 
         try
         {
@@ -65,7 +64,7 @@ public abstract class ApiCore
         }
         catch (final Exception e)
         {
-            this.logger.error("Failed to initialise North API", e);
+            log.error("Failed to initialise North API", e);
             return;
         }
 
@@ -93,8 +92,8 @@ public abstract class ApiCore
             return;
         }
         this.setApiState(ApiState.ENABLED);
-        this.logger.info("Client id is " + this.getId());
-        this.logger.debug("If you see this message debug mode is enabled");
+        log.info("Client id is " + this.getId());
+        log.debug("If you see this message debug mode is enabled");
     }
 
     public final void stopCore()
@@ -109,7 +108,7 @@ public abstract class ApiCore
         }
         this.componentManager.disableAllComponents();
         this.setApiState(ApiState.DISABLED);
-        this.logger.info("North API Core stopped.");
+        log.info("North API Core stopped.");
     }
 
     @ProvidesComponent
@@ -154,7 +153,7 @@ public abstract class ApiCore
     private void setApiState(final ApiState newState)
     {
         this.apiState = newState;
-        this.logger.debug("Api forced into " + newState + " state.");
+        log.debug("Api forced into {} state.", newState);
     }
 
     public final ApiState getApiState()
@@ -164,7 +163,7 @@ public abstract class ApiCore
 
     protected final Logger getApiLogger()
     {
-        return this.logger;
+        return log;
     }
 
     public abstract String getId();

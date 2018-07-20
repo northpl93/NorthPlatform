@@ -10,13 +10,13 @@ import java.util.logging.StreamHandler;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import biz.paluch.logging.gelf.jul.GelfLogHandler;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.utils.ConfigUtils;
 import pl.north93.zgame.api.standalone.cfg.EnvironmentCfg;
 import pl.north93.zgame.api.standalone.logger.NorthConsoleHandler;
 import pl.north93.zgame.api.standalone.logger.NorthFormatter;
+import pl.north93.zgame.api.standalone.logger.NorthGelfHandler;
 
 public class StandaloneApiCore extends ApiCore
 {
@@ -58,9 +58,7 @@ public class StandaloneApiCore extends ApiCore
         consoleHandler.setLevel(this.isDebug() ? Level.FINE : Level.INFO);
         rootLogger.addHandler(consoleHandler);
 
-        final GelfLogHandler gelfHandler = new GelfLogHandler();
-        gelfHandler.setExtractStackTrace("true");
-        rootLogger.addHandler(gelfHandler);
+        NorthGelfHandler.setupHandler(rootLogger);
     }
 
     @Override

@@ -1,9 +1,8 @@
 package pl.north93.zgame.api.global.utils.lang;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.function.Consumer;
+
+import org.slf4j.Logger;
 
 public final class CatchException
 {
@@ -27,54 +26,33 @@ public final class CatchException
     
     public static void printStackTrace(final ExceptionRunnable runnable, final String message)
     {
-        catchThrowable(runnable, t -> printStackTrace(t, message));
-    }
-    
-    private static void printStackTrace(Throwable throwable, String message)
-    {
-        try ( StringWriter sw = new StringWriter(); PrintWriter out = new PrintWriter(sw) )
-        {
-            if ( message != null )
-            {
-                out.println(message);
-            }
-            
-            throwable.printStackTrace(out);
-            System.err.println(sw.getBuffer().toString());
-        }
-        catch ( IOException e )
-        {
-            SneakyThrow.sneaky(e);
-        }
+        final Logger logger = ClassUtils.getCallingLogger();
+        catchThrowable(runnable, t -> printStackTrace(logger, t, message));
     }
     
     public static void printStackTrace(final ExceptionRunnable runnable)
     {
-        catchThrowable(runnable, t -> printStackTrace(t, null));
+        final Logger logger = ClassUtils.getCallingLogger();
+        catchThrowable(runnable, t -> printStackTrace(logger, t, null));
     }
     
-    public static void log(ExceptionRunnable runnable, java.util.logging.Logger logger, String message)
+    public static void log(ExceptionRunnable runnable, Logger logger, String message)
     {
-        catchThrowable(runnable, e -> logger.log(java.util.logging.Level.SEVERE, message, e));
+        catchThrowable(runnable, e -> logger.error(message, e));
     }
     
-    public static void log(ExceptionRunnable runnable, java.util.logging.Logger logger)
+    public static void log(ExceptionRunnable runnable, Logger logger)
     {
-        catchThrowable(runnable, e -> logger.log(java.util.logging.Level.SEVERE, "", e));
-    }
-    
-    public static void log(ExceptionRunnable runnable, org.apache.logging.log4j.Logger logger, String message)
-    {
-        catchThrowable(runnable, e -> logger.log(org.apache.logging.log4j.Level.ERROR, message, e));
-    }
-    
-    public static void log(ExceptionRunnable runnable, org.apache.logging.log4j.Logger logger)
-    {
-        catchThrowable(runnable, e -> logger.log(org.apache.logging.log4j.Level.ERROR, e));
+        catchThrowable(runnable, e -> logger.error("Exception thrown", e));
     }
     
     public static void sneaky(final ExceptionRunnable runnable)
     {
         catchThrowable(runnable, t -> SneakyThrow.sneaky(t));
+    }
+
+    private static void printStackTrace(Logger logger, Throwable throwable, String message)
+    {
+        logger.error(message, throwable);
     }
 }

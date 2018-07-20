@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import biz.paluch.logging.gelf.jul.GelfLogHandler;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Event;
 import net.md_5.bungee.api.plugin.Listener;
@@ -22,6 +21,7 @@ import pl.north93.zgame.api.bungee.connection.NorthReconnectHandler;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.utils.ConfigUtils;
+import pl.north93.zgame.api.standalone.logger.NorthGelfHandler;
 
 public class BungeeApiCore extends ApiCore
 {
@@ -48,9 +48,7 @@ public class BungeeApiCore extends ApiCore
         }
         rootLogger.setUseParentHandlers(true);
 
-        final GelfLogHandler gelfHandler = new GelfLogHandler();
-        gelfHandler.setExtractStackTrace("true");
-        bungeeLogger.addHandler(gelfHandler);
+        NorthGelfHandler.setupHandler(bungeeLogger);
     }
 
     @Override

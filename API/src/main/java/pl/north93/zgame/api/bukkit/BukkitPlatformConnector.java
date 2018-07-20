@@ -1,11 +1,8 @@
 package pl.north93.zgame.api.bukkit;
 
-import java.util.ResourceBundle;
-
 import org.bukkit.Bukkit;
 
 import pl.north93.zgame.api.global.PlatformConnector;
-import pl.north93.zgame.api.global.messages.UTF8Control;
 
 public class BukkitPlatformConnector implements PlatformConnector
 {
@@ -20,13 +17,6 @@ public class BukkitPlatformConnector implements PlatformConnector
     public void stop()
     {
         Bukkit.shutdown();
-    }
-
-    @Override
-    public void kickAll()
-    {
-        final ResourceBundle messages = ResourceBundle.getBundle("Messages", new UTF8Control());
-        Bukkit.getScheduler().runTask(this.bukkitPlugin, () -> Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(messages.getString("kick.all"))));
     }
 
     @Override

@@ -4,32 +4,24 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.PlatformConnector;
 
+@Slf4j
 public class StandalonePlatformConnector implements PlatformConnector
 {
-    private final Logger logger = LoggerFactory.getLogger(StandalonePlatformConnector.class);
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
 
     @Override
     public void stop()
     {
-        this.logger.info("Standalone platform application will shutdown in 5 seconds...");
+        log.info("Standalone platform application will shutdown in 5 seconds...");
         this.executor.schedule(() ->
         {
             this.executor.shutdown();
             API.getApiCore().stopCore();
         }, 5, TimeUnit.SECONDS);
-    }
-
-    @Override
-    public void kickAll()
-    {
-        this.logger.info("Received kick all request from network, but we doesn't do anything.");
     }
 
     @Override
@@ -55,7 +47,7 @@ public class StandalonePlatformConnector implements PlatformConnector
             }
             catch (final Exception e)
             {
-                e.printStackTrace();
+                log.error("Exception thrown in runnable", e);
             }
         };
     }
