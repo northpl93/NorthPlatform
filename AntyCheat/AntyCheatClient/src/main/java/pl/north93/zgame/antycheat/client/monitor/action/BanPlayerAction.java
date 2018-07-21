@@ -1,13 +1,11 @@
 package pl.north93.zgame.antycheat.client.monitor.action;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.zgame.antycheat.analysis.Violation;
 import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
@@ -16,10 +14,9 @@ import pl.north93.zgame.features.bukkit.chat.admin.AdminChatService;
 import pl.north93.zgame.features.global.punishment.BanService;
 import pl.north93.zgame.features.global.punishment.cfg.PredefinedBanCfg;
 
+@Slf4j
 public class BanPlayerAction implements IAntyCheatAction
 {
-    @Inject
-    private Logger           logger;
     @Inject
     private AdminChatService adminChatService;
     @Inject
@@ -28,8 +25,7 @@ public class BanPlayerAction implements IAntyCheatAction
     @Override
     public void handle(final Player player, final Violation violation)
     {
-        final Object[] params = {player.getName(), violation.name()};
-        this.logger.log(Level.INFO, "[AutoBan] Player: {0}, Violation:{1} banned for cheats!", params);
+        log.info("[AutoBan] Player: {}, Violation:{} banned for cheats!", player.getName(), violation.name());
 
         final BaseComponent component = ChatUtils.parseLegacyText("&c[PAC] &7{0} &c&l&m-&c&l> &4&lban automatyczny", player.getName());
         this.adminChatService.broadcast(component);
