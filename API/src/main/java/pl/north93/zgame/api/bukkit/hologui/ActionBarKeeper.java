@@ -36,7 +36,7 @@ public class ActionBarKeeper
         if (this.actionBars.remove(player) != null)
         {
             // jesli gracz istnial to wysylamy mu pusty action bar
-            this.setActionBar(player, TranslatableString.empty());
+            this.sendTo(player, TranslatableString.empty());
         }
     }
 

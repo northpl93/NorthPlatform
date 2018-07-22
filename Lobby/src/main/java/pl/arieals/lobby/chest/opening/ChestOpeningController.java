@@ -134,7 +134,7 @@ public class ChestOpeningController
             return;
         }
 
-        log.info("[Lobby] Giving next chest to {0}", player.getName());
+        log.info("[Lobby] Giving next chest to {}", player.getName());
     }
 
     /**
