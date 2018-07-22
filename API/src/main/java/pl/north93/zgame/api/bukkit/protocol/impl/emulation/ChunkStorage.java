@@ -21,9 +21,19 @@ import org.bukkit.block.Block;
         this.blocks = new HashMap<>();
     }
 
+    public BlockEmulator getEmulator(final BlockLocation location)
+    {
+        return this.blocks.get(location);
+    }
+
     public void addEmulator(final BlockLocation location, final BlockEmulator emulator)
     {
         this.blocks.put(location, emulator);
+    }
+
+    public void removeEmulator(final BlockLocation location)
+    {
+        this.blocks.remove(location);
     }
 
     public Chunk getChunk()

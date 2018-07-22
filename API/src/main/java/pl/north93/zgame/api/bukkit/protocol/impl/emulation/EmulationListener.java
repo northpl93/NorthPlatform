@@ -5,17 +5,17 @@ import static org.diorite.commons.reflections.DioriteReflectionUtils.getField;
 
 import java.util.List;
 
-import net.minecraft.server.v1_12_R1.Chunk;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import net.minecraft.server.v1_12_R1.PacketPlayOutMapChunk;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 
 import org.diorite.commons.reflections.FieldAccessor;
@@ -63,7 +63,7 @@ public class EmulationListener implements Listener
     @EventHandler
     public void processEmulatorsOnChunkLoad(final ChunkLoadEvent event)
     {
-        this.scanChunk(event.getChunk());
+        this.manager.scanChunk(event.getChunk());
     }
 
     @EventHandler
@@ -72,35 +72,21 @@ public class EmulationListener implements Listener
         this.performInitialScan();
     }
 
-    void scanChunk(final org.bukkit.Chunk chunk)
+    @EventHandler
+    public void registerEmulatorOnBlockPlace(final BlockPlaceEvent event)
     {
-        log.debug("Scanning chunk {}, {} for blocks needing 1.12->1.13 emulation", chunk.getX(), chunk.getZ());
-
-        final CraftChunk craftChunk = (CraftChunk) chunk;
-        final ChunkStorage storage = this.manager.getStorage(craftChunk);
-
-        final Chunk nmsChunk = craftChunk.getHandle();
-        final int[] heightMap = nmsChunk.heightMap;
-
-        for (int x = 0; x < 16; x++)
+        final Block block = event.getBlock();
+        if (this.manager.tryAddEmulatorTo(block))
         {
-            for (int z = 0; z < 16; z++)
-            {
-                for (int y = heightMap[z << 4 | x]; y > 0; y--)
-                {
-                    final Block block = craftChunk.getBlock(craftChunk.getX() * 16 + x, y, craftChunk.getZ() * 16 + z);
-
-                    final BlockEmulator emulatorForType = this.manager.getEmulatorForType(block.getType());
-                    if (emulatorForType == null || ! emulatorForType.isApplicable(block))
-                    {
-                        continue;
-                    }
-
-                    log.debug("Adding block emulator to {}", block);
-                    storage.addEmulator(new BlockLocation(block.getX(), block.getY(), block.getZ()), emulatorForType);
-                }
-            }
+            this.manager.updateDataNow(block);
         }
+    }
+
+    @EventHandler
+    public void removeEmulatorOnBlockDestroy(final BlockBreakEvent event)
+    {
+        final Block block = event.getBlock();
+        this.manager.removeEmulator(block);
     }
 
     private void performInitialScan()
@@ -109,7 +95,7 @@ public class EmulationListener implements Listener
         {
             for (final org.bukkit.Chunk chunk : world.getLoadedChunks())
             {
-                this.scanChunk(chunk);
+                this.manager.scanChunk(chunk);
             }
         }
     }
@@ -118,7 +104,7 @@ public class EmulationListener implements Listener
 class TestCmd extends NorthCommand // todo remove
 {
     @Inject
-    EmulationListener listener;
+    EmulationManager manager;
 
     public TestCmd()
     {
@@ -133,6 +119,6 @@ class TestCmd extends NorthCommand // todo remove
         final org.bukkit.Chunk chunk = player.getLocation().getChunk();
 
         sender.sendMessage("Scanning {0}, {1}", chunk.getX(), chunk.getZ());
-        this.listener.scanChunk(chunk);
+        this.manager.scanChunk(chunk);
     }
 }

@@ -7,14 +7,17 @@ import net.minecraft.server.v1_12_R1.NBTTagCompound;
 
 import org.bukkit.block.Block;
 
+import lombok.Getter;
 import lombok.ToString;
 
+@Getter
 @ToString
 public class BlockData
 {
     private final int x;
     private final int y;
     private final int z;
+    private final int oldId;
     private final String fixedId;
 
     public BlockData(final Block block, final String minecraftId, final TreeMap<String, String> properties)
@@ -22,6 +25,9 @@ public class BlockData
         this.x = block.getX();
         this.y = block.getY();
         this.z = block.getZ();
+
+        // generujemy stare, zdeprecjonowane ID bloku na potrzeby ViaVersion
+        this.oldId = block.getTypeId() << 4 | block.getData() & 0xF;
 
         final StringBuilder builder = new StringBuilder();
         builder.append(minecraftId);
@@ -45,6 +51,7 @@ public class BlockData
         nbt.setInt("x", this.x);
         nbt.setInt("y", this.y);
         nbt.setInt("z", this.z);
+        nbt.setInt("oldId", this.oldId);
         nbt.setString("fixedId", this.fixedId);
     }
 }

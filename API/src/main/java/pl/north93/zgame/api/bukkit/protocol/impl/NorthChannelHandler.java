@@ -120,7 +120,7 @@ public class NorthChannelHandler extends ChannelDuplexHandler
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception
     {
-        log.error("Exception caught when processing channel pipeline", cause);
+        log.warn("Exception caught when processing channel pipeline", cause);
         super.exceptionCaught(ctx, cause);
     }
 }
