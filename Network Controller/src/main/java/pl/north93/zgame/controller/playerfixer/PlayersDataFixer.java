@@ -7,9 +7,8 @@ import com.lambdaworks.redis.api.sync.RedisCommands;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
@@ -22,9 +21,9 @@ import pl.north93.zgame.api.global.storage.StorageConnector;
  * (czyli naprawiać zbugowanych)
  * Przydatne gdy bungee się zcrashuje, utraci kontankt z bazą itp.
  */
+@Slf4j
 public class PlayersDataFixer extends Component implements Runnable
 {
-    private final Logger logger = LoggerFactory.getLogger(PlayersDataFixer.class);
     @Inject
     private StorageConnector storage;
     @Inject
@@ -69,14 +68,14 @@ public class PlayersDataFixer extends Component implements Runnable
         }
         catch (final Exception exception) // RpcException
         {
-            this.logger.warn("[PlayersDataFixer] Exception occurred while checking player {0}", nick, exception);
+            log.warn("[PlayersDataFixer] Exception occurred while checking player {}", nick, exception);
             return;
         }
 
         this.networkManager.getPlayers().getInternalData().savePlayer(cache);
         player.delete();
 
-        this.logger.info("[PlayersDataFixer] Flushed data of player {0} because he isn't online in bungee", nick);
+        log.info("[PlayersDataFixer] Flushed data of player {} because he isn't online in bungee", nick);
     }
 
     @Override
