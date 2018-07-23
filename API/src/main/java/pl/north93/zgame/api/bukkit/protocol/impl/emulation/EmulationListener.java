@@ -9,6 +9,7 @@ import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import net.minecraft.server.v1_12_R1.PacketPlayOutMapChunk;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -47,16 +48,24 @@ public class EmulationListener implements Listener
         apiCore.registerEvents(this);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @PacketHandler
     public void chunkPacketInterceptor(final PacketEvent<PacketPlayOutMapChunk> event)
     {
         final PacketPlayOutMapChunk packet = event.getPacket();
 
-        final Integer chunkX = xField.get(packet);
-        final Integer chunkZ = zField.get(packet);
+        final int chunkX = xField.get(packet);
+        final int chunkZ = zField.get(packet);
         final List<NBTTagCompound> tileEntities = tileEntitiesField.get(packet);
 
-        final org.bukkit.Chunk chunk = event.getPlayer().getWorld().getChunkAt(chunkX, chunkZ);
+        final World world = event.getPlayer().getWorld();
+        if (! world.isChunkLoaded(chunkX, chunkZ))
+        {
+            log.warn("Chunk isn't loaded when sending to player {}, {}", chunkX, chunkZ);
+            return;
+        }
+
+        final Chunk chunk = world.getChunkAt(chunkX, chunkZ);
         this.manager.getStorage(chunk).addCustomTileEntities(tileEntities);
     }
 
@@ -93,7 +102,7 @@ public class EmulationListener implements Listener
     {
         for (final World world : Bukkit.getWorlds())
         {
-            for (final org.bukkit.Chunk chunk : world.getLoadedChunks())
+            for (final Chunk chunk : world.getLoadedChunks())
             {
                 this.manager.scanChunk(chunk);
             }
@@ -116,7 +125,7 @@ class TestCmd extends NorthCommand // todo remove
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
         final Player player = (Player) sender.unwrapped();
-        final org.bukkit.Chunk chunk = player.getLocation().getChunk();
+        final Chunk chunk = player.getLocation().getChunk();
 
         sender.sendMessage("Scanning {0}, {1}", chunk.getX(), chunk.getZ());
         this.manager.scanChunk(chunk);
