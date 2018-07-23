@@ -11,19 +11,20 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
-import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
 import pl.arieals.api.minigame.server.lobby.hub.SelectHubServerJoinAction;
+import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
 import pl.arieals.api.minigame.server.utils.party.PartyClient;
-import pl.arieals.api.minigame.shared.api.status.InHubStatus;
-import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.arieals.api.minigame.shared.api.party.event.LocationChangePartyNetEvent;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
+import pl.arieals.api.minigame.shared.api.status.InHubStatus;
 import pl.north93.zgame.api.bukkit.player.IBukkitPlayers;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
+import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 
@@ -73,9 +74,9 @@ public class PartyHubListener implements AutoListener
         final LobbyManager lobbyManager = this.miniGameServer.getServerManager();
 
         final IParty party = event.getParty();
-        for (final UUID playerId : party.getPlayers())
+        for (final Identity identity : party.getPlayers())
         {
-            final INorthPlayer localPlayer = this.bukkitPlayers.getPlayer(playerId);
+            final INorthPlayer localPlayer = this.bukkitPlayers.getPlayer(identity.getUuid());
             if (localPlayer == null)
             {
                 // jak nie mamy takiego gracza lokalnie online to nic nie robimy

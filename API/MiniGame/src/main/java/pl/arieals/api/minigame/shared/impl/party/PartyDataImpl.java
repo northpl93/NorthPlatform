@@ -6,10 +6,11 @@ import java.util.Set;
 import java.util.UUID;
 
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
-import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.arieals.api.minigame.shared.api.party.PartyInvite;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.network.players.Identity;
 
 public class PartyDataImpl implements IParty
 {
@@ -17,22 +18,22 @@ public class PartyDataImpl implements IParty
     private static PartyManagerImpl partyManager;
 
     private UUID             uuid;
-    private UUID             ownerUuid;
+    private Identity         owner;
     private Set<PartyInvite> invites;
-    private Set<UUID>        players;
+    private Set<Identity>    players;
     private IPlayerStatus    location;
 
     public PartyDataImpl()
     {
     }
 
-    public PartyDataImpl(final UUID ownerUuid, final IPlayerStatus location)
+    public PartyDataImpl(final Identity owner, final IPlayerStatus location)
     {
         this.uuid = UUID.randomUUID();
-        this.ownerUuid = ownerUuid;
+        this.owner = owner;
         this.invites = new HashSet<>(4);
         this.players = new HashSet<>(4);
-        this.players.add(ownerUuid);
+        this.players.add(owner);
         this.location = location;
     }
 
@@ -43,14 +44,14 @@ public class PartyDataImpl implements IParty
     }
 
     @Override
-    public UUID getOwnerId()
+    public Identity getOwner()
     {
-        return this.ownerUuid;
+        return this.owner;
     }
 
-    public void setOwnerUuid(final UUID ownerUuid)
+    public void setOwner(final Identity owner)
     {
-        this.ownerUuid = ownerUuid;
+        this.owner = owner;
     }
 
     @Override
@@ -89,7 +90,7 @@ public class PartyDataImpl implements IParty
     }
 
     @Override
-    public Set<UUID> getPlayers()
+    public Set<Identity> getPlayers()
     {
         return Collections.unmodifiableSet(this.players);
     }
@@ -103,16 +104,16 @@ public class PartyDataImpl implements IParty
     @Override
     public boolean isAddedOrInvited(final UUID playerId)
     {
-        return this.players.contains(playerId) || this.isInvited(playerId);
+        return this.isAdded(playerId) || this.isInvited(playerId);
     }
 
-    public void addPlayer(final UUID player)
+    public void addPlayer(final Identity player)
     {
         this.players.add(player);
-        this.removeInviteOfPlayer(player);
+        this.removeInviteOfPlayer(player.getUuid());
     }
 
-    public void removePlayer(final UUID player)
+    public void removePlayer(final Identity player)
     {
         this.players.remove(player);
     }
@@ -120,7 +121,15 @@ public class PartyDataImpl implements IParty
     @Override
     public boolean isAdded(final UUID playerId)
     {
-        return this.players.contains(playerId);
+        for (final Identity identity : this.players)
+        {
+            if (identity.getUuid().equals(playerId))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

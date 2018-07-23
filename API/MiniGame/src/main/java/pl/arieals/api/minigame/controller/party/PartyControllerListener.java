@@ -2,7 +2,6 @@ package pl.arieals.api.minigame.controller.party;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -48,7 +47,7 @@ public class PartyControllerListener
         {
             if (partyAccess.isOwner(player.getUuid()))
             {
-                final Set<UUID> players = partyAccess.getPlayers();
+                final Set<Identity> players = partyAccess.getPlayers();
                 if (players.size() == 1)
                 {
                     // usuwamy tego gracza z party
@@ -59,11 +58,11 @@ public class PartyControllerListener
                 }
                 else
                 {
-                    final HashSet<UUID> remainderPlayers = new HashSet<>(players);
-                    remainderPlayers.remove(player.getUuid());
+                    final HashSet<Identity> remainderPlayers = new HashSet<>(players);
+                    remainderPlayers.remove(player.getIdentity());
 
-                    final Identity newOwner = Identity.create(DioriteRandomUtils.getRandom(remainderPlayers), null);
-                    partyAccess.changeOwner(newOwner);
+                    // zmieniamy ownera party na losowego pozostalego gracza
+                    partyAccess.changeOwner(DioriteRandomUtils.getRandom(remainderPlayers));
 
                     // usuwamy gracza z party który juz nie jest wlascicielem
                     partyAccess.removePlayer(player.getIdentity(), LeavePartyReason.NETWORK_DISCONNECT);

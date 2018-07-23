@@ -1,9 +1,6 @@
 package pl.arieals.api.minigame.server.lobby.party.cmd;
 
 import java.util.Locale;
-import java.util.UUID;
-
-import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -11,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.server.utils.party.ClientResponse;
 import pl.arieals.api.minigame.server.utils.party.PartyClient;
 import pl.arieals.api.minigame.shared.api.party.IParty;
+import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
@@ -19,6 +17,8 @@ import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
+import pl.north93.zgame.api.global.network.players.IPlayer;
+import pl.north93.zgame.api.global.network.players.Identity;
 
 /**
  * Komenda do obsługi party w komponencie lobby
@@ -41,7 +41,7 @@ public class PartyCmd extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        final Player player = (Player) sender.unwrapped();
+        final INorthPlayer player = INorthPlayer.wrap(sender);
 
         if (args.isEmpty())
         {
@@ -94,17 +94,17 @@ public class PartyCmd extends NorthCommand
         }
     }
 
-    private void accept(final Player player)
+    private void accept(final INorthPlayer player)
     {
         final ClientResponse response = this.partyClient.accept(player);
         switch (response)
         {
             case NO_INVITE:
-                this.messages.sendMessage(player, "join.failed.no_invite");
+                player.sendMessage(this.messages, "join.failed.no_invite");
                 break;
 
             case ALREADY_IN_PARTY:
-                this.messages.sendMessage(player, "join.failed.in_other");
+                player.sendMessage(this.messages, "join.failed.in_other");
                 break;
 
             case OK:
@@ -113,65 +113,65 @@ public class PartyCmd extends NorthCommand
         }
     }
 
-    private void leave(final Player player)
+    private void leave(final INorthPlayer player)
     {
         final ClientResponse response = this.partyClient.leave(player);
         switch (response)
         {
             case NO_PARTY:
-                this.messages.sendMessage(player, "error.no_party");
+                player.sendMessage(this.messages, "error.no_party");
                 break;
 
             case OK:
-                this.messages.sendMessage(player, "leave.success");
+                player.sendMessage(this.messages, "leave.success");
                 break;
         }
     }
 
-    private void list(final Player player)
+    private void list(final INorthPlayer player)
     {
         final IParty party = this.partyClient.getPlayerParty(player);
         if (party == null)
         {
             // nie ma party
-            this.messages.sendMessage(player, "error.no_party");
+            player.sendMessage(this.messages, "error.no_party");
             return;
         }
 
-        this.messages.sendMessage(player, "separator");
-        this.messages.sendMessage(player, "header", MessageLayout.CENTER);
+        player.sendMessage(this.messages, "separator");
+        player.sendMessage(this.messages, "header", MessageLayout.CENTER);
         player.sendMessage();
 
-        for (final UUID playerId : party.getPlayers())
+        for (final Identity playerId : party.getPlayers())
         {
-            final String messageKey = party.isOwner(playerId) ? "list.leader" : "list.player";
-            this.messages.sendMessage(player, messageKey, MessageLayout.CENTER, this.uuidToNick(playerId));
+            final String messageKey = party.isOwner(playerId.getUuid()) ? "list.leader" : "list.player";
+            player.sendMessage(this.messages, messageKey, MessageLayout.CENTER, this.identityToNick(playerId));
         }
 
-        this.messages.sendMessage(player, "list.leave", MessageLayout.SEPARATED_CENTER);
-        this.messages.sendMessage(player, "separator");
+        player.sendMessage(this.messages, "list.leave", MessageLayout.SEPARATED_CENTER);
+        player.sendMessage(this.messages, "separator");
     }
 
-    private void invite(final Player player, final String nick)
+    private void invite(final INorthPlayer player, final String nick)
     {
         final ClientResponse response = this.partyClient.invite(player, nick);
         switch (response)
         {
             case NO_OWNER:
-                this.messages.sendMessage(player, "error.no_owner");
+                player.sendMessage(this.messages, "error.no_owner");
                 break;
             case NO_PLAYER:
-                this.messages.sendMessage(player, "error.no_player");
+                player.sendMessage(this.messages, "error.no_player");
                 break;
             case ALREADY_IN_PARTY:
                 break;
             case OK:
-                this.messages.sendMessage(player, "invite.send_success");
+                player.sendMessage(this.messages, "invite.send_success");
                 break;
         }
     }
 
-    private void kick(final Player player, final String nick)
+    private void kick(final INorthPlayer player, final String nick)
     {
         if (nick.equalsIgnoreCase(player.getName()))
         {
@@ -182,13 +182,13 @@ public class PartyCmd extends NorthCommand
         switch (response)
         {
             case NO_PARTY:
-                this.messages.sendMessage(player, "error.no_party");
+                player.sendMessage(this.messages, "error.no_party");
                 break;
             case NO_OWNER:
-                this.messages.sendMessage(player, "error.no_owner");
+                player.sendMessage(this.messages, "error.no_owner");
                 break;
             case NO_PLAYER:
-                this.messages.sendMessage(player, "error.no_player");
+                player.sendMessage(this.messages, "error.no_player");
                 break;
             case ERROR:
                 break;
@@ -197,17 +197,17 @@ public class PartyCmd extends NorthCommand
         }
     }
 
-    private void help(final Player player)
+    private void help(final INorthPlayer player)
     {
-        this.messages.sendMessage(player, "separator");
-        this.messages.sendMessage(player, "help.header", MessageLayout.CENTER);
-        this.messages.sendMessage(player, "help.content");
-        this.messages.sendMessage(player, "separator");
+        player.sendMessage(this.messages, "separator");
+        player.sendMessage(this.messages, "help.header", MessageLayout.CENTER);
+        player.sendMessage(this.messages, "help.content");
+        player.sendMessage(this.messages, "separator");
     }
 
-    private String uuidToNick(final UUID uuid)
+    private String identityToNick(final Identity identity)
     {
-        return this.networkManager.getPlayers().getNickFromUuid(uuid).orElse(uuid.toString());
+        return this.networkManager.getPlayers().unsafe().get(identity).map(IPlayer::getDisplayName).orElse(identity.getNick());
     }
 
     @Override

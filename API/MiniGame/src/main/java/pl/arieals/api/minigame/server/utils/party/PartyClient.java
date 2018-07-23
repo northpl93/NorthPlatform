@@ -2,7 +2,6 @@ package pl.arieals.api.minigame.server.utils.party;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
@@ -12,12 +11,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.diorite.commons.math.DioriteRandomUtils;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
-import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.arieals.api.minigame.shared.api.party.IPartyManager;
 import pl.arieals.api.minigame.shared.api.party.PartyInvite;
 import pl.arieals.api.minigame.shared.api.party.PlayerAlreadyHasPartyException;
 import pl.arieals.api.minigame.shared.api.party.event.LeavePartyNetEvent.LeavePartyReason;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
@@ -119,7 +118,7 @@ public class PartyClient
         {
             if (partyAccess.isOwner(player.getUniqueId()))
             {
-                final Set<UUID> players = party.getPlayers();
+                final Set<Identity> players = party.getPlayers();
                 if (players.size() == 1)
                 {
                     partyAccess.removePlayer(identity, LeavePartyReason.SELF);
@@ -127,11 +126,10 @@ public class PartyClient
                 }
                 else
                 {
-                    final Set<UUID> newPlayers = new HashSet<>(players);
-                    newPlayers.remove(player.getUniqueId());
+                    final Set<Identity> newPlayers = new HashSet<>(players);
+                    newPlayers.remove(identity);
 
-                    final Identity newOwner = Identity.create(DioriteRandomUtils.getRandom(newPlayers), null);
-                    partyAccess.changeOwner(newOwner);
+                    partyAccess.changeOwner(DioriteRandomUtils.getRandom(newPlayers));
                     partyAccess.removePlayer(identity, LeavePartyReason.SELF);
                 }
             }

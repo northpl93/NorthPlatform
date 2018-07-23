@@ -12,9 +12,8 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.arieals.api.minigame.shared.api.party.IPartyAccess;
@@ -39,11 +38,11 @@ import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.utils.Wrapper;
 
+@Slf4j
 public class PartyManagerImpl implements IPartyManager
 {
     private static final MetaKey PARTY_INVITE = MetaKey.get("currentPartyInvite", false);
     private static final MetaKey PARTY_META   = MetaKey.get("currentParty", false);
-    private final Logger logger = LoggerFactory.getLogger(PartyManagerImpl.class);
     @Inject
     private IObservationManager observer;
     @Inject
@@ -87,14 +86,14 @@ public class PartyManagerImpl implements IPartyManager
                 throw new PlayerAlreadyHasPartyException();
             }
 
-            final PartyDataImpl party = new PartyDataImpl(player.getUuid(), location);
+            final PartyDataImpl party = new PartyDataImpl(player.getIdentity(), location);
             this.setPartyId(player, party.getId());
 
             // dodajemy party do redisa przed zamknieciem transakcji zeby zmniejszyc ryzyko ze w innym
             // miejscu gracz bedzie mial juz przypisane party którego nie ma jeszcze w redisie...
             this.parties.put(party.getId().toString(), party);
 
-            this.logger.info("Created party with id {}", party.getId());
+            log.info("Created party with id {} and owner {}", party.getId(), party.getOwner());
             return party;
         }
     }
@@ -119,7 +118,7 @@ public class PartyManagerImpl implements IPartyManager
             return partyData;
         });
 
-        this.logger.debug("Party data with ID {} has been updated (access)");
+        log.debug("Party data with ID {} has been updated (access)");
         return wrapper.get();
     }
 
@@ -231,22 +230,21 @@ public class PartyManagerImpl implements IPartyManager
         metaStore.set(PARTY_INVITE, invite);
     }
 
-    /*default*/ Set<PlayerJoinInfo> getJoinInfos(final Set<UUID> players)
+    /*default*/ Set<PlayerJoinInfo> getJoinInfos(final Set<Identity> players)
     {
-        return players.stream().map(uuid ->
+        return players.stream().map(identity ->
         {
-            final Identity identity = Identity.create(uuid, null);
             final IPlayer player = this.networkManager.getPlayers().unsafe().getNullable(identity);
 
             final boolean isVip = player.getGroup().hasPermission("gamejoin.vip");
-            return new PlayerJoinInfo(uuid, isVip, false);
+            return new PlayerJoinInfo(player.getUuid(), isVip, false);
         }).collect(Collectors.toSet());
     }
 
     private void deleteParty(final UUID partyId)
     {
         this.parties.delete(partyId.toString());
-        this.logger.info("Deleted party with ID {}", partyId);
+        log.info("Deleted party with ID {}", partyId);
     }
 
     @Override

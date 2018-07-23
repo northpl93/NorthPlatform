@@ -1,7 +1,5 @@
 package pl.arieals.api.minigame.bungee.party;
 
-import java.util.UUID;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -23,6 +21,8 @@ import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.INetworkManager;
+import pl.north93.zgame.api.global.network.players.IPlayer;
+import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerType;
 import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
@@ -67,7 +67,7 @@ public class PartyMessagesBroadcaster implements Listener
         this.partyMessages.sendMessage(proxiedPlayer, "separator");
         this.partyMessages.sendMessage(proxiedPlayer, "header", MessageLayout.CENTER);
         proxiedPlayer.sendMessage();
-        this.partyMessages.sendMessage(proxiedPlayer, "invite.info", MessageLayout.CENTER, this.uuidToNick(party.getOwnerId()));
+        this.partyMessages.sendMessage(proxiedPlayer, "invite.info", MessageLayout.CENTER, this.identityToNick(party.getOwner()));
 
         final String cmdClickMessage = this.partyMessages.getMessage(proxiedPlayer.getLocale(), "invite.cmd");
         final BaseComponent[] cmdClickComponents = ChatUtils.builderFromLegacyText(cmdClickMessage).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party accept")).create();
@@ -94,10 +94,10 @@ public class PartyMessagesBroadcaster implements Listener
         proxiedPlayer.sendMessage();
         this.partyMessages.sendMessage(proxiedPlayer, "join.success", MessageLayout.CENTER);
 
-        for (final UUID uuid : party.getPlayers())
+        for (final Identity identity : party.getPlayers())
         {
-            final String messageKey = party.isOwner(uuid) ? "list.leader" : "list.player";
-            this.partyMessages.sendMessage(proxiedPlayer, messageKey, MessageLayout.CENTER, this.uuidToNick(uuid));
+            final String messageKey = party.isOwner(identity.getUuid()) ? "list.leader" : "list.player";
+            this.partyMessages.sendMessage(proxiedPlayer, messageKey, MessageLayout.CENTER, this.identityToNick(identity));
         }
 
         proxiedPlayer.sendMessage();
@@ -107,23 +107,23 @@ public class PartyMessagesBroadcaster implements Listener
     // rozsyła członkom party info o wejściu gracza
     private void announceJoinToParty(final IParty party, final ProxiedPlayer joiningProxiedPlayer)
     {
-        for (final UUID uuid : party.getPlayers())
+        for (final Identity identity : party.getPlayers())
         {
-            if (uuid.equals(joiningProxiedPlayer.getUniqueId()))
+            if (identity.getUuid().equals(joiningProxiedPlayer.getUniqueId()))
             {
                 continue;
             }
 
-            this.networkManager.getPlayers().ifOnline(uuid, onlinePlayer ->
+            this.networkManager.getPlayers().ifOnline(identity.getNick(), onlinePlayer ->
             {
-                this.partyMessages.sendMessage(onlinePlayer, "join.broadcast", joiningProxiedPlayer.getDisplayName());
+                onlinePlayer.sendMessage(this.partyMessages, "join.broadcast", joiningProxiedPlayer.getDisplayName());
             });
         }
     }
 
-    private String uuidToNick(final UUID uuid)
+    private String identityToNick(final Identity identity)
     {
-        return this.networkManager.getPlayers().getNickFromUuid(uuid).orElse(uuid.toString());
+        return this.networkManager.getPlayers().unsafe().get(identity).map(IPlayer::getDisplayName).orElse(identity.getNick());
     }
 
     @Override

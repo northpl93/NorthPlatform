@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
+import pl.north93.zgame.api.global.network.players.Identity;
 
 /**
  * Interfejs udostępiniający dane Party w trybie tylko do odczytu.
@@ -14,18 +15,18 @@ public interface IParty
 {
     UUID getId();
 
-    UUID getOwnerId();
+    Identity getOwner();
 
     default boolean isOwner(final UUID playerId)
     {
-        return this.getOwnerId().equals(playerId);
+        return this.getOwner().getUuid().equals(playerId);
     }
 
     Set<PartyInvite> getInvites();
 
     boolean isInvited(UUID playerId);
 
-    Set<UUID> getPlayers();
+    Set<Identity> getPlayers();
 
     /**
      * Pomocnicza metoda konwertująca wszystkich graczy w party na

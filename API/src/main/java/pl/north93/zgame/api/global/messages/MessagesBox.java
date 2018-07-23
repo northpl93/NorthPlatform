@@ -207,18 +207,6 @@ public class MessagesBox
 
     // = = = WYSYLANIE WIADOMOSCI = = = //
 
-    @Deprecated
-    public void sendMessage(final Messageable messageable, final String key, final MessageLayout layout, final Object... params)
-    {
-        messageable.sendMessage(this, key, layout, params);
-    }
-
-    @Deprecated
-    public void sendMessage(final Messageable messageable, final String key, final Object... params)
-    {
-        this.sendMessage(messageable, key, MessageLayout.DEFAULT, params);
-    }
-
     // nie powinno jebnac na innych platformach niz Bukkit o ile nie wykonamy tej metody
     @Deprecated
     public void sendMessage(final org.bukkit.entity.Player player, final String key, final MessageLayout layout, final Object... params)

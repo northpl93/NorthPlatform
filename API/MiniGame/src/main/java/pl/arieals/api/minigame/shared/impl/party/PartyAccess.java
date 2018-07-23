@@ -58,7 +58,7 @@ import pl.north93.zgame.api.global.network.players.PlayerOfflineException;
 
             if (this.isAdded(player.getUuid()))
             {
-                this.partyData.setOwnerUuid(player.getUuid());
+                this.partyData.setOwner(player.getIdentity());
                 return true;
             }
 
@@ -147,7 +147,7 @@ import pl.north93.zgame.api.global.network.players.PlayerOfflineException;
             this.partyManager.setPartyInvite(player, null);
             this.partyManager.setPartyId(player, this.getId());
 
-            this.partyData.addPlayer(player.getUuid());
+            this.partyData.addPlayer(player.getIdentity());
             this.partyManager.callNetEvent(new JoinPartyNetEvent(this.partyData, player.getUuid()));
         }
     }
@@ -163,7 +163,7 @@ import pl.north93.zgame.api.global.network.players.PlayerOfflineException;
 
             if (this.isAdded(player.getUuid()))
             {
-                this.partyData.removePlayer(player.getUuid());
+                this.partyData.removePlayer(player.getIdentity());
                 this.partyManager.callNetEvent(new LeavePartyNetEvent(this.partyData, player.getUuid(), reason));
             }
             else
@@ -181,9 +181,9 @@ import pl.north93.zgame.api.global.network.players.PlayerOfflineException;
     {
         Preconditions.checkState(this.isNotDeleted(), "Party is deleted");
 
-        for (final UUID player : this.getPlayers())
+        for (final Identity player : this.getPlayers())
         {
-            this.removePlayer(Identity.create(player, null), LeavePartyReason.KICK);
+            this.removePlayer(player, LeavePartyReason.KICK);
         }
 
         this.deleted = true;
@@ -206,9 +206,9 @@ import pl.north93.zgame.api.global.network.players.PlayerOfflineException;
     }
 
     @Override
-    public UUID getOwnerId()
+    public Identity getOwner()
     {
-        return this.partyData.getOwnerId();
+        return this.partyData.getOwner();
     }
 
     @Override
@@ -224,7 +224,7 @@ import pl.north93.zgame.api.global.network.players.PlayerOfflineException;
     }
 
     @Override
-    public Set<UUID> getPlayers()
+    public Set<Identity> getPlayers()
     {
         return this.partyData.getPlayers();
     }
