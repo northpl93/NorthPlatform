@@ -1,6 +1,7 @@
 package pl.arieals.api.minigame.server.lobby.arenas.cmd;
 
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -116,6 +117,18 @@ class TeleportAdminToPlayer implements IServerJoinAction
     }
 
     @Override
+    public void playerPreSpawn(final INorthPlayer player, final Location spawn)
+    {
+        final INorthPlayer target = INorthPlayer.getExact(this.playerName);
+        if (target != null)
+        {
+            // ustawiamy poprawna lokacje przed spawnem, aby przyspieszyc teleportacje
+            // (unikamy ewentualnej dwukrotnej zmiany swaiata u klienta)
+            target.getLocation(spawn);
+        }
+    }
+
+    @Override
     public void playerJoined(final INorthPlayer player)
     {
         player.setGameMode(GameMode.CREATIVE);
@@ -124,6 +137,7 @@ class TeleportAdminToPlayer implements IServerJoinAction
         final INorthPlayer target = INorthPlayer.getExact(this.playerName);
         if (target != null)
         {
+            // dla formalnosci wykonujemy teleportacje, aby wykonal sie event
             player.teleport(target, PlayerTeleportEvent.TeleportCause.PLUGIN);
         }
     }

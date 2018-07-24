@@ -3,6 +3,7 @@ package pl.north93.zgame.features.bukkit.tp;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
@@ -25,6 +26,11 @@ public class TeleportToPlayer implements IServerJoinAction
     {
         this.playerId = playerId;
         this.byCommand = byCommand;
+    }
+
+    @Override
+    public void playerPreSpawn(final INorthPlayer player, final Location spawn)
+    {
     }
 
     @Override

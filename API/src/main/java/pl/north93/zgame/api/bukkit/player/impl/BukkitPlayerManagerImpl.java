@@ -35,7 +35,7 @@ public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
     @Override
     protected void enableComponent()
     {
-        this.bukkitApiCore.registerEvents(new JoinLeftListener(), new ChatListener(), new LanguageKeeper());
+        this.bukkitApiCore.registerEvents(new NetworkPlayerDataListener(), new ChatListener(), new LanguageKeeper());
     }
 
     @Override

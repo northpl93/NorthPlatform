@@ -2,6 +2,8 @@ package pl.arieals.api.minigame.server.lobby.hub;
 
 import java.util.Collections;
 
+import org.bukkit.Location;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -26,6 +28,19 @@ public class SelectHubServerJoinAction implements IServerJoinAction
     public SelectHubServerJoinAction(final String hubId)
     {
         this.hubId = hubId;
+    }
+
+    @Override
+    public void playerPreSpawn(final INorthPlayer player, final Location spawn)
+    {
+        final LobbyManager lobbyManager = this.miniGameServer.getServerManager();
+        final HubWorld hubWorld = lobbyManager.getLocalHub().getHubWorld(this.hubId);
+
+        final Location hubSpawn = hubWorld.getSpawn();
+        spawn.setWorld(hubSpawn.getWorld());
+        spawn.setX(hubSpawn.getX());
+        spawn.setY(hubSpawn.getY());
+        spawn.setZ(hubSpawn.getZ());
     }
 
     @Override

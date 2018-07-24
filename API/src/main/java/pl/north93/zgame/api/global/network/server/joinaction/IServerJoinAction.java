@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.global.network.server.joinaction;
 
+import org.bukkit.Location;
+
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 
 /**
@@ -7,5 +9,7 @@ import pl.north93.zgame.api.bukkit.player.INorthPlayer;
  */
 public interface IServerJoinAction
 {
+    void playerPreSpawn(INorthPlayer player, Location spawn);
+
     void playerJoined(INorthPlayer player);
 }
