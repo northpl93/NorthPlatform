@@ -41,7 +41,7 @@ import org.bukkit.block.Block;
         return this.chunk.get();
     }
 
-    public void addCustomTileEntities(final List<NBTTagCompound> nbtList)
+    public void addCustomTileEntities(final List<NBTTagCompound> nbtList, final int bitmask)
     {
         final Chunk chunk = this.getChunk();
         for (final Map.Entry<BlockLocation, BlockEmulator> entry : this.blocks.entrySet())
@@ -50,11 +50,21 @@ import org.bukkit.block.Block;
             final Block block = chunk.getBlock(location.getX(), location.getY(), location.getZ());
 
             final BlockData data = entry.getValue().getData(block);
+            if (data == null || this.isChunkSectionAbsent(bitmask, data))
+            {
+                // dana sekcja chunka nie jest zawarta w pakiecie wiec nie wysylamy tu tile entities
+                continue;
+            }
 
             final NBTTagCompound compound = new NBTTagCompound();
             //System.out.println("Writing to chunk NBT " + data);
             data.writeToNbt(compound);
             nbtList.add(compound);
         }
+    }
+
+    private boolean isChunkSectionAbsent(final int bitmask, final BlockData data)
+    {
+        return (bitmask & (1 << (data.getY() >> 4))) == 0;
     }
 }

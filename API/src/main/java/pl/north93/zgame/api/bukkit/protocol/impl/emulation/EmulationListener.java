@@ -37,6 +37,7 @@ public class EmulationListener implements Listener
 {
     private static final FieldAccessor<Integer> xField = getField(PacketPlayOutMapChunk.class, "a");
     private static final FieldAccessor<Integer> zField = getField(PacketPlayOutMapChunk.class, "b");
+    private static final FieldAccessor<Integer> bitMaskField = getField(PacketPlayOutMapChunk.class, "c");
     private static final FieldAccessor<List<NBTTagCompound>> tileEntitiesField = getField(PacketPlayOutMapChunk.class, "e");
 
     @Inject
@@ -56,6 +57,7 @@ public class EmulationListener implements Listener
 
         final int chunkX = xField.get(packet);
         final int chunkZ = zField.get(packet);
+        final int bitmask = bitMaskField.get(packet); // bitmaska zawierajaca informacje o wysylanych sekcjach chunka
         final List<NBTTagCompound> tileEntities = tileEntitiesField.get(packet);
 
         final World world = event.getPlayer().getWorld();
@@ -66,7 +68,7 @@ public class EmulationListener implements Listener
         }
 
         final Chunk chunk = world.getChunkAt(chunkX, chunkZ);
-        this.manager.getStorage(chunk).addCustomTileEntities(tileEntities);
+        this.manager.getStorage(chunk).addCustomTileEntities(tileEntities, bitmask);
     }
 
     @EventHandler
