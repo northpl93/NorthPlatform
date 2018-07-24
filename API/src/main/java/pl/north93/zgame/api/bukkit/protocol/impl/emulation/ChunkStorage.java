@@ -49,7 +49,15 @@ import org.bukkit.block.Block;
             final BlockLocation location = entry.getKey();
             final Block block = chunk.getBlock(location.getX(), location.getY(), location.getZ());
 
-            final BlockData data = entry.getValue().getData(block);
+            final BlockEmulator emulator = entry.getValue();
+            if (! emulator.isApplicable(block))
+            {
+                // todo emulator moze sie zdezaktualizowac; na bedwarsach po usunieciu lobby powoduje to dodanie
+                // todo powietrza do whitelisty w ViaVersion (BlockStorage) i natychmiastowy crash bungee
+                continue;
+            }
+
+            final BlockData data = emulator.getData(block);
             if (data == null || this.isChunkSectionAbsent(bitmask, data))
             {
                 // dana sekcja chunka nie jest zawarta w pakiecie wiec nie wysylamy tu tile entities

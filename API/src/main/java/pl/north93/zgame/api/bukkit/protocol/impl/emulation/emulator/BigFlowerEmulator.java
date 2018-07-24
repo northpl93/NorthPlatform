@@ -20,6 +20,11 @@ public class BigFlowerEmulator implements BlockEmulator
     @Override
     public boolean isApplicable(final Block block)
     {
+        if (block.getType() != Material.DOUBLE_PLANT)
+        {
+            return false;
+        }
+
         final Block upperFlower = block.getRelative(BlockFace.UP);
         if (upperFlower.getType() != Material.DOUBLE_PLANT)
         {
