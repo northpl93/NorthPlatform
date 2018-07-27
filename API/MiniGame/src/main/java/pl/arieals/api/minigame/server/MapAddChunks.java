@@ -1,8 +1,5 @@
 package pl.arieals.api.minigame.server;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
-
-
 import javax.xml.bind.JAXB;
 
 import java.io.File;
@@ -18,8 +15,6 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.api.minigame.shared.api.cfg.GameMapConfig;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlChunk;
@@ -30,6 +25,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
+@Deprecated
 public class MapAddChunks extends NorthCommand
 {
     @Inject @Messages("MiniGameApi")

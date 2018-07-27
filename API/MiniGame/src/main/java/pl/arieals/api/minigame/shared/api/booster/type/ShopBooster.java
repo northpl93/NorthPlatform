@@ -16,21 +16,32 @@ public class ShopBooster implements IBooster
     }
 
     @Override
-    public double getMultiplier(final IPlayer player)
+    public long getExpiration(final IPlayer player)
     {
-        return isBoosterValid(player) ? 0.5 : 0;
+        return getBoosterExpiration(player);
     }
 
-    public static boolean isBoosterValid(final IPlayer player)
+    @Override
+    public double getMultiplier(final IPlayer player)
+    {
+        return this.isBoosterValid(player) ? 0.5 : 0;
+    }
+
+    @Override
+    public boolean isBoosterValid(final IPlayer player)
+    {
+        return getBoosterExpiration(player) > System.currentTimeMillis();
+    }
+
+    public static long getBoosterExpiration(final IPlayer player)
     {
         final MetaStore metaStore = player.getMetaStore();
         if (! metaStore.contains(SHOP_BOOSTER_EXPIRATION))
         {
-            return false;
+            return -1;
         }
 
-        final long expiration = metaStore.get(SHOP_BOOSTER_EXPIRATION);
-        return expiration > System.currentTimeMillis();
+        return metaStore.get(SHOP_BOOSTER_EXPIRATION);
     }
 
     public static void extendBoost(final IPlayer player, final long millis)

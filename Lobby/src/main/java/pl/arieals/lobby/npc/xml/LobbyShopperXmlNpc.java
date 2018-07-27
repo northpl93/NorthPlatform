@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
-import pl.arieals.api.minigame.server.utils.citizens.TranslatedNameTrait;
+import pl.arieals.api.minigame.server.shared.citizens.TranslatedNameTrait;
 import pl.arieals.lobby.npc.ShopperTrait;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;

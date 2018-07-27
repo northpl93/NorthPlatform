@@ -5,8 +5,8 @@ import java.util.Locale;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.utils.party.ClientResponse;
-import pl.arieals.api.minigame.server.utils.party.PartyClient;
+import pl.arieals.api.minigame.server.shared.party.ClientResponse;
+import pl.arieals.api.minigame.server.shared.party.PartyClient;
 import pl.arieals.api.minigame.shared.api.party.IParty;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.commands.Arguments;

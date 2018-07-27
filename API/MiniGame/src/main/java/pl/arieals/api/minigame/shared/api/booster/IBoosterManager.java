@@ -12,5 +12,7 @@ public interface IBoosterManager
 
     boolean isBoosterEnabled(IBooster booster);
 
+    Collection<IBooster> getValidBoosters(IPlayer player);
+
     double calculateFinalMultiplier(IPlayer player);
 }

@@ -9,7 +9,7 @@ import org.bukkit.entity.EntityType;
 
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
-import pl.arieals.api.minigame.server.utils.citizens.SkinTrait;
+import pl.arieals.api.minigame.server.shared.citizens.SkinTrait;
 import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
 
 @XmlAccessorType(XmlAccessType.FIELD)

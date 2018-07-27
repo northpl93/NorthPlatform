@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.server.utils.party;
+package pl.arieals.api.minigame.server.shared.party;
 
 public enum ClientResponse
 {

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -65,6 +66,13 @@ import pl.north93.zgame.api.global.network.players.IPlayer;
         return config.getEnabled();
     }
 
+    @Override
+    public Collection<IBooster> getValidBoosters(final IPlayer player)
+    {
+        final Predicate<IBooster> predicate = booster -> booster.isBoosterValid(player);
+        return this.boosters.stream().filter(this::isBoosterEnabled).filter(predicate).collect(Collectors.toList());
+    }
+
     @Nullable
     private BoosterEntryCfg getConfig(final IBooster booster)
     {
@@ -75,7 +83,7 @@ import pl.north93.zgame.api.global.network.players.IPlayer;
     @Override
     public double calculateFinalMultiplier(final IPlayer player)
     {
-        final Collection<IBooster> boosters = this.getEnabledBoosters();
+        final Collection<IBooster> boosters = this.getValidBoosters(player);
         return boosters.stream().mapToDouble(booster -> booster.getMultiplier(player)).sum();
     }
 

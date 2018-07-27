@@ -13,6 +13,25 @@ public class VipBooster implements IBooster
     }
 
     @Override
+    public long getExpiration(final IPlayer player)
+    {
+        final long groupExpireAt = player.getGroupExpireAt();
+        if (groupExpireAt > 0)
+        {
+            return groupExpireAt;
+        }
+
+        return -1;
+    }
+
+    @Override
+    public boolean isBoosterValid(final IPlayer player)
+    {
+        final Group group = player.getGroup();
+        return group.hasPermission("booster.vip") || group.hasPermission("booster.svip");
+    }
+
+    @Override
     public double getMultiplier(final IPlayer player)
     {
         final Group group = player.getGroup();

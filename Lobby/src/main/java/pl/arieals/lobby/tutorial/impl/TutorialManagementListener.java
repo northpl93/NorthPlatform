@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler;
 import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
 import pl.arieals.api.minigame.server.lobby.hub.event.PlayerPreSwitchHubEvent;
 import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
-import pl.arieals.api.minigame.server.utils.party.PartyClient;
+import pl.arieals.api.minigame.server.shared.party.PartyClient;
 import pl.arieals.lobby.tutorial.ITutorialManager;
 import pl.arieals.lobby.tutorial.TutorialStatus;
 import pl.arieals.lobby.tutorial.event.PlayerEnterTutorialEvent;

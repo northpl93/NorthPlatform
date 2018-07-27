@@ -1,4 +1,4 @@
-package pl.arieals.api.minigame.server.utils.citizens;
+package pl.arieals.api.minigame.server.shared.citizens;
 
 import java.util.Map;
 import java.util.Properties;

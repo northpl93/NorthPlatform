@@ -6,7 +6,7 @@ import net.citizensnpcs.api.npc.NPCRegistry;
 import pl.arieals.api.minigame.server.lobby.arenas.ArenaQuery;
 import pl.arieals.api.minigame.server.lobby.arenas.IArenaClient;
 import pl.arieals.api.minigame.server.lobby.arenas.IArenaObserver;
-import pl.arieals.api.minigame.server.utils.citizens.TranslatedNameTrait;
+import pl.arieals.api.minigame.server.shared.citizens.TranslatedNameTrait;
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
 import pl.arieals.api.minigame.shared.api.arena.StandardArenaMetaData;

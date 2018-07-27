@@ -13,7 +13,7 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
 
 import pl.arieals.api.minigame.server.lobby.arenas.IArenaClient;
-import pl.arieals.api.minigame.server.utils.citizens.TranslatedNameTrait;
+import pl.arieals.api.minigame.server.shared.citizens.TranslatedNameTrait;
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.lobby.npc.PlayGameTrait;
 import pl.arieals.lobby.npc.PlayNpcNameHandler;

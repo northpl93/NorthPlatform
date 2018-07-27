@@ -21,7 +21,7 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.trait.VillagerProfession;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
-import pl.arieals.api.minigame.server.utils.citizens.SkinTrait;
+import pl.arieals.api.minigame.server.shared.citizens.SkinTrait;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.globalshops.server.IGlobalShops;
 import pl.arieals.globalshops.server.domain.ItemsGroup;
