@@ -32,6 +32,12 @@ class ProxyRpcImpl implements IProxyRpc
     public void sendJsonMessage(final String nick, final String json)
     {
         final ProxiedPlayer player = this.proxy.getPlayer(nick);
+        if (player == null)
+        {
+            // gracz mogl sie juz rozlaczyc zanim otrzymal ta wiadomosc
+            return;
+        }
+
         player.unsafe().sendPacket(new Chat(json));
     }
 
@@ -39,6 +45,11 @@ class ProxyRpcImpl implements IProxyRpc
     public void kick(final String nick, final String json)
     {
         final ProxiedPlayer player = this.proxy.getPlayer(nick);
+        if (player == null)
+        {
+            // gracz mogl juz sie rozlaczyc
+            return;
+        }
 
         player.unsafe().sendPacket(new Kick(json));
         //this.proxy.getPlayer(nick).disconnect(ChatUtils.fromLegacyText(kickMessage));
@@ -46,14 +57,28 @@ class ProxyRpcImpl implements IProxyRpc
 
     @Override
     public void connectPlayer(final String nick, final String serverName, final JoinActionsContainer actions)
-    {   
-        this.apiCore.getConnectionManager().connectPlayerToServer(this.proxy.getPlayer(nick), serverName, actions);
+    {
+        final ProxiedPlayer player = this.proxy.getPlayer(nick);
+        if (player == null)
+        {
+            // gracz mogl juz sie rozlaczyc
+            return;
+        }
+
+        this.apiCore.getConnectionManager().connectPlayerToServer(player, serverName, actions);
     }
 
     @Override
     public void connectPlayerToServersGroup(final String nick, final String serversGroup, final JoinActionsContainer actions)
     {
-        this.apiCore.getConnectionManager().connectPlayerToServersGroup(this.proxy.getPlayer(nick), serversGroup, actions);
+        final ProxiedPlayer player = this.proxy.getPlayer(nick);
+        if (player == null)
+        {
+            // gracz mogl juz sie rozlaczyc
+            return;
+        }
+
+        this.apiCore.getConnectionManager().connectPlayerToServersGroup(player, serversGroup, actions);
     }
 
     @Override
