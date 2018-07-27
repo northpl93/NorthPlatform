@@ -4,9 +4,8 @@ import java.util.function.Function;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.shared.api.booster.IBoosterManager;
 import pl.north93.zgame.api.economy.ICurrency;
 import pl.north93.zgame.api.economy.IEconomyManager;
@@ -16,9 +15,9 @@ import pl.north93.zgame.api.global.messages.MessageLayout;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.Identity;
 
+@Slf4j
 public class CurrencyReward implements IReward
 {
-    private final Logger logger = LoggerFactory.getLogger(CurrencyReward.class);
     @Inject
     private static IEconomyManager economyManager;
     @Inject
@@ -57,13 +56,13 @@ public class CurrencyReward implements IReward
         try (final ITransaction t = economyManager.openTransaction(currency, identity))
         {
             final double amount = this.calculateFinalAmount(t.getAssociatedPlayer());
-            t.add(this.amount);
+            t.add(amount);
 
             return new CurrencyReward(this.rewardId, this.currencyId, amount);
         }
         catch (final Exception e)
         {
-            this.logger.error("CurrencyReward can't add money to user's account.", e);
+            log.error("CurrencyReward can't add money to user's account.", e);
             return this;
         }
     }
@@ -82,7 +81,7 @@ public class CurrencyReward implements IReward
             final int totalAmount = (int) allRewardsOfType.stream().map(mapper).mapToDouble(CurrencyReward::getAmount).sum();
             final String msgKey = "rewards." + this.rewardId;
 
-            return MessageLayout.CENTER.processMessage(messagesBox.getMessage(locale, msgKey, totalAmount));
+            return MessageLayout.CENTER.processMessage(messagesBox.getComponent(locale, msgKey, totalAmount));
         };
     }
 
