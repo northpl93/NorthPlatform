@@ -6,7 +6,9 @@ import static org.bukkit.FireworkEffect.builder;
 import static org.diorite.commons.math.DioriteRandomUtils.getRandomInt;
 
 
+import net.minecraft.server.v1_12_R1.Blocks;
 import net.minecraft.server.v1_12_R1.EntityFireworks;
+import net.minecraft.server.v1_12_R1.ItemStack;
 
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -36,7 +38,7 @@ public class FireworkEffect implements IEliminationEffect
 
         for (int i = 0; i < 3; i++)
         {
-            final EntityFireworks entityFireworks = new EntityFireworks(craftWorld.getHandle(), location.getX(), location.getY(), location.getZ(), null);
+            final EntityFireworks entityFireworks = new EntityFireworks(craftWorld.getHandle(), location.getX(), location.getY(), location.getZ(), new ItemStack(Blocks.AIR));
             final Firework firework = (Firework) entityFireworks.getBukkitEntity();
 
             final FireworkMeta fireworkMeta = firework.getFireworkMeta();
