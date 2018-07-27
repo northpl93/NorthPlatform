@@ -18,6 +18,7 @@ import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.zgame.api.global.metadata.MetaStore;
 
 /**
  * Jesli chcesz uzyc tej komendy:
@@ -63,7 +64,7 @@ public class SingleServerJoin extends NorthCommand
 
         for (final LocalArena localArena : serverManager.getArenaManager().getArenas())
         {
-            final boolean addSuccess = localArena.getPlayersManager().tryAddPlayers(players, false);
+            final boolean addSuccess = localArena.getPlayersManager().tryAddPlayers(players, new MetaStore());
             if (! addSuccess)
             {
                 continue;

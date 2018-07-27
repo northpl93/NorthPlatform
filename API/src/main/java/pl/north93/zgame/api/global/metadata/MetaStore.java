@@ -85,6 +85,11 @@ public final class MetaStore
         return this.metadata.remove(metaKey);
     }
 
+    public void addAll(final MetaStore store)
+    {
+        this.metadata.putAll(store.metadata);
+    }
+
     public Map<MetaKey, Object> getInternalMap()
     {
         return this.metadata;

@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.arena.reconnect.ReconnectTicket;
+import pl.north93.zgame.api.global.metadata.MetaStore;
 
 /**
  * Interfejs zdalnego wywoływania procedur do gadania z serwerem hostującym areny.
@@ -20,14 +21,23 @@ public interface IGameHostRpc
 
     /**
      * Próbuje dodać graczy(a) do areny o podanym ID.
-     * Umożliwia także dodawanie obserwatorów gry.
+     * Jeśli się uda, metadata areny zostanie zaktualizowana.
      *
      * @param players lista graczy którzy mają zastać dodani
-     * @param arenaId identyfikator areny
-     * @param spectator czy dodajemy spectatorów
+     * @param arenaId identyfikator aren.
+     * @param metadata Matadata która zostanie ustawiona po poprawnym dodaniu graczy.
      * @return czy serwer zezwolił na dołączenie (czy nie przekraczamy ilości graczy itp) i dodał graczy
      */
-    Boolean tryConnectPlayers(List<PlayerJoinInfo> players, UUID arenaId, Boolean spectator);
+    Boolean tryConnectPlayers(List<PlayerJoinInfo> players, UUID arenaId, MetaStore metadata);
+
+    /**
+     * Próbuje dodać graczy(a) do areny o podanym ID jako spectator.
+     *
+     * @param players lista graczy którzy mają zastać dodani
+     * @param arenaId identyfikator aren.
+     * @return czy serwer zezwolił na dołączenie (czy nie przekraczamy ilości graczy itp) i dodał graczy
+     */
+    Boolean tryConnectSpectators(List<PlayerJoinInfo> players, UUID arenaId);
 
     /**
      * Próbuje ponownie dodać gracza do areny wskazanej w {@link ReconnectTicket}.

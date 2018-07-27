@@ -28,6 +28,7 @@ import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDeletedNetEvent;
 import pl.arieals.api.minigame.shared.impl.arena.ArenaManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.server.Server;
@@ -133,7 +134,17 @@ public class ArenaClientImpl implements IArenaClient
 
         try
         {
-            if (! rpcProxy.tryConnectPlayers(new ArrayList<>(players), arena.getId(), spectator))
+            final boolean result;
+            if (spectator)
+            {
+                result = rpcProxy.tryConnectSpectators(new ArrayList<>(players), arena.getId());
+            }
+            else
+            {
+                result = rpcProxy.tryConnectPlayers(new ArrayList<>(players), arena.getId(), new MetaStore());
+            }
+
+            if (! result)
             {
                 return false;
             }

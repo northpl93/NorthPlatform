@@ -12,6 +12,7 @@ import pl.arieals.api.minigame.shared.api.IGameHostRpc;
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.arena.reconnect.ReconnectTicket;
+import pl.north93.zgame.api.global.metadata.MetaStore;
 
 public class GameHostRpcImpl implements IGameHostRpc
 {
@@ -31,7 +32,7 @@ public class GameHostRpcImpl implements IGameHostRpc
     }
 
     @Override
-    public Boolean tryConnectPlayers(final List<PlayerJoinInfo> players, final UUID arenaId, final Boolean spectator)
+    public Boolean tryConnectPlayers(final List<PlayerJoinInfo> players, final UUID arenaId, final MetaStore metadata)
     {
         final LocalArena arena = this.manager.getArenaManager().getArena(arenaId);
         if (arena == null)
@@ -40,7 +41,20 @@ public class GameHostRpcImpl implements IGameHostRpc
             return false;
         }
 
-        return arena.getPlayersManager().tryAddPlayers(players, spectator);
+        return arena.getPlayersManager().tryAddPlayers(players, metadata);
+    }
+
+    @Override
+    public Boolean tryConnectSpectators(final List<PlayerJoinInfo> players, final UUID arenaId)
+    {
+        final LocalArena arena = this.manager.getArenaManager().getArena(arenaId);
+        if (arena == null)
+        {
+            this.logger.warn("arena is null in tryConnectSpectators()");
+            return false;
+        }
+
+        return arena.getPlayersManager().tryAddSpectators(players);
     }
 
     @Override

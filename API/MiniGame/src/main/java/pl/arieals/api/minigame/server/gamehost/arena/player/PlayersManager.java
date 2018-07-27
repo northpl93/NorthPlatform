@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 
@@ -35,6 +34,7 @@ import pl.arieals.api.minigame.shared.api.cfg.MiniGameConfig;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.MetadataUtils;
+import pl.north93.zgame.api.global.metadata.MetaStore;
 
 /**
  * Każda LocalArena ma swojego PlayersManagera
@@ -156,20 +156,15 @@ public class PlayersManager
      * Zsynchronizowana na this zeby moglo byc przetwarzane tylko jedno zadanie.
      *
      * @param players lista graczy do dodania
-     * @param spectator czy tryb spectatora.
+     * @param metadata Metadata do dodania, jeśli udało się dodać graczy.
      * @return czy udalo sie dodac graczy.
      */
-    public synchronized boolean tryAddPlayers(final List<PlayerJoinInfo> players, final boolean spectator)
+    public synchronized boolean tryAddPlayers(final List<PlayerJoinInfo> players, final MetaStore metadata)
     {
         if (this.arena.getGamePhase() == GamePhase.INITIALISING)
         {
             // jesli gra uzywa lobby zintegrowanego z mapa to mapa musi byc gotowa/zaladowana
             return false;
-        }
-        if (spectator)
-        {
-            // jesli dodajemy spectatorow uzywamy specjalnej logiki.
-            return this.tryAddSpectators(players);
         }
         if (! this.gameHostManager.getMiniGameConfig().isDynamic() && this.arena.getGamePhase() != GamePhase.LOBBY)
         {
@@ -182,11 +177,27 @@ public class PlayersManager
         }
         players.forEach(playerJoinInfo -> this.joinInfos.put(playerJoinInfo.getUuid(), playerJoinInfo));
 
-        final List<UUID> playerIds = players.stream().map(PlayerJoinInfo::getUuid).collect(Collectors.toList());
         final RemoteArena remoteArena = this.arena.getAsRemoteArena();
-        remoteArena.getPlayers().addAll(playerIds);
+        for (final PlayerJoinInfo player : players)
+        {
+            remoteArena.getPlayers().add(player.getUuid());
+        }
+        remoteArena.getMetadata().addAll(metadata);
         this.arena.uploadRemoteData();
 
+        return true;
+    }
+
+    public boolean tryAddSpectators(final List<PlayerJoinInfo> players)
+    {
+        final GamePhase gamePhase = this.arena.getGamePhase();
+        if (gamePhase == GamePhase.INITIALISING || gamePhase == GamePhase.POST_GAME)
+        {
+            // INITIALISING - jesli gra uzywa lobby zintegrowanego z mapa to mapa musi byc gotowa/zaladowana
+            // POST_GAME - nie ma sensu tu wpuszczac spectatorow
+            return false;
+        }
+        players.forEach(playerJoinInfo -> this.joinInfos.put(playerJoinInfo.getUuid(), playerJoinInfo));
         return true;
     }
 
@@ -214,17 +225,6 @@ public class PlayersManager
         }
 
         return normals + vips - miniGame.getVipSlots() <= normalSlots;
-    }
-
-    private boolean tryAddSpectators(final List<PlayerJoinInfo> players)
-    {
-        if (this.arena.getGamePhase() == GamePhase.POST_GAME)
-        {
-            // nie ma sensu tu wpuszczac spectatorow
-            return false;
-        }
-        players.forEach(playerJoinInfo -> this.joinInfos.put(playerJoinInfo.getUuid(), playerJoinInfo));
-        return true;
     }
 
     /**
