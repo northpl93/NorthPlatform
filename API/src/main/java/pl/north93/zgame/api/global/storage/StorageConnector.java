@@ -18,6 +18,8 @@ import com.mongodb.client.MongoDatabase;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Morphia;
 
 import pl.north93.zgame.api.global.component.Component;
 
@@ -28,6 +30,8 @@ public class StorageConnector extends Component
     private StatefulRedisConnection<String, byte[]> atomicallyConnection;
     private MongoClient                             mongoClient;
     private MongoDatabase                           mainDatabase;
+    private Morphia                                 morphia;
+    private Datastore                               datastore;
 
     @Override
     protected void enableComponent()
@@ -56,6 +60,9 @@ public class StorageConnector extends Component
         this.mongoClient = new MongoClient(new MongoClientURI(config.getMongoDbConnect(), builder));
 
         this.mainDatabase = this.mongoClient.getDatabase(config.getMongoMainDatabase());
+
+        this.morphia = new Morphia();
+        this.datastore = this.morphia.createDatastore(this.mongoClient, config.getMongoMainDatabase());
     }
 
     private void fixMongoLogger(final Logger logger)
@@ -107,6 +114,11 @@ public class StorageConnector extends Component
     public MongoDatabase getMainDatabase()
     {
         return this.mainDatabase;
+    }
+
+    public Datastore getDatastore()
+    {
+        return this.datastore;
     }
 
     @Override

@@ -2,9 +2,8 @@ package pl.north93.zgame.api.global.network.impl;
 
 import java.util.UUID;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
@@ -20,6 +19,8 @@ import pl.north93.zgame.api.global.redis.rpc.Targets;
  * Obiekt przechowujacy dane o serwerze uruchomionym w sieci.
  * Sluzy do przekazywania danych przez redisa.
  */
+@ToString
+@NoArgsConstructor // for serialization
 public class ServerDto implements Server, ServerProxyData
 {
     private UUID          serverId;
@@ -33,10 +34,6 @@ public class ServerDto implements Server, ServerProxyData
     private JoiningPolicy joiningPolicy;
     @MsgPackCustomTemplate(ServersGroupInStringTemplate.class)
     private IServersGroup serversGroup;
-
-    public ServerDto() // for serialization
-    {
-    }
 
     public ServerDto(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy, final String connectIp, final Integer connectPort, final IServersGroup serversGroup)
     {
@@ -152,11 +149,5 @@ public class ServerDto implements Server, ServerProxyData
     public void setConnectPort(final Integer connectPort)
     {
         this.connectPort = connectPort;
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("serverId", this.serverId).append("isLaunchedViaDaemon", this.isLaunchedViaDaemon).append("serverType", this.serverType).append("serverState", this.serverState).toString();
     }
 }

@@ -6,6 +6,7 @@ import static java.util.regex.Pattern.compile;
 
 import javax.annotation.Nonnull;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -28,6 +29,7 @@ import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
+import pl.north93.zgame.api.global.network.players.LoginHistoryEntry;
 import pl.north93.zgame.api.global.network.players.NameSizeMistakeException;
 import pl.north93.zgame.api.global.network.players.UsernameDetails;
 import pl.north93.zgame.api.global.permissions.Group;
@@ -77,14 +79,8 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
     @Override
     public void logPlayerJoin(final UUID uuid, final String nick, final boolean premium, final String ip, final String bungee)
     {
-        final MongoCollection<Document> history = this.storageConnector.getMainDatabase().getCollection("join_history");
-        final Document doc = new Document("uuid", uuid);
-        doc.put("nick", nick);
-        doc.put("premium", premium);
-        doc.put("ip", ip);
-        doc.put("bungee", bungee);
-        doc.put("at", System.currentTimeMillis());
-        history.insertOne(doc);
+        final LoginHistoryEntry historyEntry = new LoginHistoryEntry(nick, premium, ip, bungee, Instant.now());
+        this.storageConnector.getDatastore().save(historyEntry);
     }
 
     @Override
@@ -262,7 +258,7 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
         if (usernameDetails.isPresent())
         {
             final UsernameDetails details = usernameDetails.get();
-            if (details.isPremium())
+            if (details.getIsPremium())
             {
                 return details.getUuid();
             }

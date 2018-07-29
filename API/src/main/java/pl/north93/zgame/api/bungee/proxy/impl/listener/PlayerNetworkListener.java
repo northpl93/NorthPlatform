@@ -93,7 +93,7 @@ public class PlayerNetworkListener implements Listener
             }
 
             final UsernameDetails usernameDetails = details.get();
-            if (usernameDetails.isPremium() && !usernameDetails.getValidSpelling().equals(nick))
+            if (usernameDetails.getIsPremium() && !usernameDetails.getValidSpelling().equals(nick))
             {
                 event.setCancelled(true);
                 event.setCancelReason(RED + this.apiMessages.getMessage("join.premium.name_size_mistake"));
@@ -107,7 +107,7 @@ public class PlayerNetworkListener implements Listener
                 return;
             }
 
-            connection.setOnlineMode(usernameDetails.isPremium());
+            connection.setOnlineMode(usernameDetails.getIsPremium());
         });
     }
 

@@ -1,12 +1,7 @@
 package pl.north93.zgame.api.global.network.impl;
 
-import static java.util.regex.Pattern.CASE_INSENSITIVE;
-import static java.util.regex.Pattern.compile;
-
-
-import java.io.IOException;
 import java.net.URL;
-import java.util.Date;
+import java.time.Instant;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,14 +10,13 @@ import java.util.regex.Pattern;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.UpdateOptions;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.bson.Document;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.query.Query;
 
 import org.diorite.commons.io.DioriteURLUtils;
 
@@ -31,6 +25,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.UsernameDetails;
 import pl.north93.zgame.api.global.redis.observable.Cache;
+import pl.north93.zgame.api.global.redis.observable.ICacheBuilder;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.storage.StorageConnector;
@@ -38,23 +33,22 @@ import pl.north93.zgame.api.global.storage.StorageConnector;
 @Slf4j
 class PlayerCacheImpl implements IPlayersManager.IPlayerCache
 {
+    private static final Pattern UUID_PATTERN = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
     private final JsonParser json = new JsonParser();
     @Inject
     private StorageConnector               storage;
     @Inject
     private IObservationManager            observationManager;
     private Cache<String, UsernameDetails> localCache;
-    private MongoCollection<Document>      mongoCache;
 
     public PlayerCacheImpl()
     {
-        this.mongoCache = this.storage.getMainDatabase().getCollection("username_cache");
-        this.localCache = this.observationManager.cacheBuilder(String.class, UsernameDetails.class)
-                                                 .name("mojangapicache:")
-                                                 .keyMapper(ObjectKey::new)
-                                                 .provider(this::fillCache)
-                                                 .expire((int) TimeUnit.DAYS.toSeconds(1))
-                                                 .build();
+        final ICacheBuilder<String, UsernameDetails> builder = this.observationManager.cacheBuilder(String.class, UsernameDetails.class);
+        this.localCache = builder.name("mojangapicache:")
+                                 .keyMapper(ObjectKey::new)
+                                 .provider(this::fillCache)
+                                 .expire((int) TimeUnit.DAYS.toSeconds(1))
+                                 .build();
     }
 
     @Override
@@ -65,32 +59,23 @@ class PlayerCacheImpl implements IPlayersManager.IPlayerCache
 
     private UsernameDetails fillCache(final String username)
     {
-        final Pattern usernamePattern = compile('^' + Pattern.quote(username) + '$', CASE_INSENSITIVE);
-        final Document results = this.mongoCache.find(new Document("validSpelling", usernamePattern)).first();
-        if (results != null)
+        final Datastore datastore = this.storage.getDatastore();
+        final Query<UsernameDetails> query = datastore.createQuery(UsernameDetails.class)
+                                                      .field("validSpelling").equalIgnoreCase(username);
+
+        final UsernameDetails details = query.get();
+        if (details != null)
         {
-            final boolean isPremium = results.getBoolean("isPremium");
-            final Date fetchTime = results.getDate("fetchTime");
-            if (isPremium)
-            {
-                return new UsernameDetails(results.getString("validSpelling"), results.get("uuid", UUID.class), true, fetchTime);
-            }
-            return new UsernameDetails(username, fetchTime);
+            return details;
         }
 
         final Optional<UsernameDetails> usernameDetails = this.queryMojangForProfileByUsername(username);
         if (usernameDetails.isPresent())
         {
             final UsernameDetails fromMojang = usernameDetails.get();
-            final Document document = new Document();
-            document.put("validSpelling", fromMojang.getValidSpelling());
-            if (fromMojang.isPremium())
-            {
-                document.put("uuid", fromMojang.getUuid());
-            }
-            document.put("isPremium", fromMojang.isPremium());
-            document.put("fetchTime", fromMojang.getFetchTime());
-            this.mongoCache.updateOne(new Document("validSpelling", usernamePattern), new Document("$set", document), new UpdateOptions().upsert(true));
+            datastore.updateFirst(query, fromMojang, true);
+
+            log.info("Updating nick cache for {}", username);
             return fromMojang;
         }
 
@@ -105,18 +90,20 @@ class PlayerCacheImpl implements IPlayersManager.IPlayerCache
             final String response = IOUtils.toString(new URL(url));
             if (StringUtils.isEmpty(response))
             {
-                return Optional.of(new UsernameDetails(username, new Date()));
+                return Optional.of(new UsernameDetails(username, Instant.now()));
             }
             final JsonObject jsonObject = this.json.parse(response).getAsJsonObject();
 
-            final String validUsername = jsonObject.getAsJsonPrimitive("name").getAsString();
-            final String uuidString = jsonObject.getAsJsonPrimitive("id").getAsString().replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5");
+            final String uuidString = UUID_PATTERN.matcher(jsonObject.getAsJsonPrimitive("id").getAsString())
+                                                  .replaceAll("$1-$2-$3-$4-$5");
             final UUID uuid = UUID.fromString(uuidString);
+
+            final String validUsername = jsonObject.getAsJsonPrimitive("name").getAsString();
             final boolean premium = ! (jsonObject.has("demo") && jsonObject.getAsJsonPrimitive("demo").getAsBoolean());
 
-            return Optional.of(new UsernameDetails(validUsername, uuid, premium, new Date()));
+            return Optional.of(new UsernameDetails(validUsername, uuid, premium, Instant.now()));
         }
-        catch (final IOException e)
+        catch (final Exception e)
         {
             log.error("Failed to query Mojang API to check username {}", username, e);
             return Optional.empty();
