@@ -8,26 +8,26 @@ import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.codehaus.groovy.control.CompilerConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import groovy.lang.GroovyClassLoader;
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.groovyscript.api.IGroovyManager;
 import pl.north93.groovyscript.api.IScriptContext;
 import pl.north93.groovyscript.api.source.IScriptSource;
+import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
+@Slf4j
 /*default*/ class GroovyManagerImpl implements IGroovyManager
 {
-    private final Logger logger = LoggerFactory.getLogger(GroovyManagerImpl.class);
-    private final BossClassLoader bossClassLoader;
+    private final ApiCore apiCore;
     private final Map<ClassLoader, IScriptContext> context;
 
     @Bean
-    private GroovyManagerImpl()
+    private GroovyManagerImpl(final ApiCore apiCore)
     {
+        this.apiCore = apiCore;
         this.context = new HashMap<>();
-        this.bossClassLoader = new BossClassLoader();
     }
 
     @Override
@@ -37,14 +37,15 @@ import pl.north93.zgame.api.global.component.annotations.bean.Bean;
         config.setTargetBytecode(CompilerConfiguration.JDK8);
         config.getOptimizationOptions().put("indy", true); // enable invokedynamic
 
-        final GroovyClassLoader loader = new GroovyClassLoader(this.bossClassLoader);
+        final ClassLoader bossClassLoader = this.apiCore.getComponentManager().getBossClassLoader();
+        final GroovyClassLoader loader = new GroovyClassLoader(bossClassLoader);
 
         final ScriptContextImpl context = new ScriptContextImpl(this, loader);
         this.context.put(loader, context);
 
         scriptSource.setup(loader);
 
-        this.logger.info("Created new groovy ScriptContext");
+        log.info("Created new groovy ScriptContext");
         return context;
     }
 
@@ -59,7 +60,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Bean;
         Preconditions.checkState(context.isDestroyed());
         this.context.remove(context.getClassLoader());
 
-        this.logger.info("Groovy script context removed");
+        log.info("Groovy script context removed");
     }
 
     @Override

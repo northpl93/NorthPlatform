@@ -23,11 +23,10 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.reflections.Reflections;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javassist.ClassPool;
 import javassist.LoaderClassPath;
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
@@ -43,14 +42,15 @@ import pl.north93.zgame.api.global.component.impl.context.RootBeanContext;
 import pl.north93.zgame.api.global.component.impl.profile.ProfileManagerImpl;
 import pl.north93.zgame.api.global.component.impl.scanner.ClassloaderScanningTask;
 
+@Slf4j
 public class ComponentManagerImpl implements IComponentManager
 {
     public static ComponentManagerImpl instance;
-    private final Logger                logger;
     private final ApiCore               apiCore;
     private final List<ComponentBundle> components;
     private final ClassPool             rootClassPool;
     private final ClassResolver         classResolver;
+    private final BossClassLoader       bossClassLoader;
     private final RootBeanContext       rootBeanCtx;
     private final ProfileManagerImpl    profileManager;
     private final AggregationManager    aggregationManager;
@@ -61,7 +61,6 @@ public class ComponentManagerImpl implements IComponentManager
     public ComponentManagerImpl(final ApiCore apiCore)
     {
         instance = this;
-        this.logger = LoggerFactory.getLogger(ComponentManagerImpl.class);
         this.apiCore = apiCore;
         this.components = new ArrayList<>();
 
@@ -69,6 +68,7 @@ public class ComponentManagerImpl implements IComponentManager
         this.rootClassPool.appendClassPath(new LoaderClassPath(this.getClass().getClassLoader()));
 
         this.classResolver = new ClassResolver(this);
+        this.bossClassLoader = new BossClassLoader(this);
         this.rootBeanCtx = new RootBeanContext();
         this.profileManager = new ProfileManagerImpl(this);
         this.aggregationManager = new AggregationManager();
@@ -96,7 +96,7 @@ public class ComponentManagerImpl implements IComponentManager
         {
             return; // skip loading of component
         }
-        this.logger.info("Loading component {}", componentDescription.getName());
+        log.info("Loading component {}", componentDescription.getName());
 
         final AbstractBeanContext componentBeanContext;
         if (classLoader instanceof JarComponentLoader)
@@ -272,7 +272,7 @@ public class ComponentManagerImpl implements IComponentManager
 
     private void loadComponentsFromFile(final File file)
     {
-        this.logger.debug("Loading components from file {}", file.getAbsolutePath());
+        log.debug("Loading components from file {}", file.getAbsolutePath());
 
         final JarComponentLoader loader;
         try
@@ -281,7 +281,7 @@ public class ComponentManagerImpl implements IComponentManager
         }
         catch (final MalformedURLException e)
         {
-            this.logger.error("Failed to load components from file", e);
+            log.error("Failed to load components from file", e);
             return;
         }
 
@@ -309,7 +309,7 @@ public class ComponentManagerImpl implements IComponentManager
             }
             else
             {
-                this.logger.warn("Can't resolve dependencies for {}", component.getName());
+                log.warn("Can't resolve dependencies for {}", component.getName());
             }
         }
     }
@@ -362,6 +362,12 @@ public class ComponentManagerImpl implements IComponentManager
     public Class<?> findClass(final String name)
     {
         return this.classResolver.findClass(name);
+    }
+
+    @Override
+    public ClassLoader getBossClassLoader()
+    {
+        return this.bossClassLoader;
     }
 
     @Override

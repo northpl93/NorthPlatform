@@ -1,25 +1,26 @@
-package pl.north93.groovyscript.impl;
+package pl.north93.zgame.api.global.component.impl.general;
 
 import java.net.URL;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.IComponentBundle;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.component.impl.general.JarComponentLoader;
 import pl.north93.zgame.api.global.utils.lang.JavaUtils;
 
 /*default*/ class BossClassLoader extends ClassLoader
 {
-    @Inject
-    private ApiCore apiCore;
+    private final ComponentManagerImpl componentManager;
+
+    public BossClassLoader(final ComponentManagerImpl componentManager)
+    {
+        this.componentManager = componentManager;
+    }
 
     @Override
     public URL getResource(final String name)
     {
-        for (final IComponentBundle bundle : this.apiCore.getComponentManager().getComponents())
+        for (final IComponentBundle bundle : this.componentManager.getComponents())
         {
             final JarComponentLoader loader = JavaUtils.instanceOf(bundle.getClassLoader(), JarComponentLoader.class);
             if (loader == null)
@@ -42,7 +43,7 @@ import pl.north93.zgame.api.global.utils.lang.JavaUtils;
     @Override
     protected Class<?> findClass(final String name) throws ClassNotFoundException
     {
-        for (final IComponentBundle bundle : this.apiCore.getComponentManager().getComponents())
+        for (final IComponentBundle bundle : this.componentManager.getComponents())
         {
             final JarComponentLoader loader = JavaUtils.instanceOf(bundle.getClassLoader(), JarComponentLoader.class);
             if (loader == null)

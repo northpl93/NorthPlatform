@@ -31,6 +31,13 @@ public interface IComponentManager
 
     Class<?> findClass(String name);
 
+    /**
+     * Zwraca ClassLoader któey przeszukuje klasy wszystkich zaladowanych komponentów.
+     *
+     * @return classloader szukający klas w wszystkich komponentach.
+     */
+    ClassLoader getBossClassLoader();
+
     <T extends Component> T getComponent(String name);
 
     Collection<? extends IComponentBundle> getComponents();

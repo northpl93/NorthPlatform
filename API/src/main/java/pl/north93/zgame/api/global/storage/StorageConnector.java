@@ -20,7 +20,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
+import org.mongodb.morphia.mapping.DefaultCreator;
 
+import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.Component;
 
 public class StorageConnector extends Component
@@ -62,6 +64,16 @@ public class StorageConnector extends Component
         this.mainDatabase = this.mongoClient.getDatabase(config.getMongoMainDatabase());
 
         this.morphia = new Morphia();
+        this.morphia.getMapper().getOptions().setObjectFactory(new DefaultCreator()
+        {
+            @Override
+            protected ClassLoader getClassLoaderForClass()
+            {
+                final ApiCore apiCore = StorageConnector.this.getApiCore();
+                return apiCore.getComponentManager().getBossClassLoader();
+            }
+        });
+
         this.datastore = this.morphia.createDatastore(this.mongoClient, config.getMongoMainDatabase());
     }
 
