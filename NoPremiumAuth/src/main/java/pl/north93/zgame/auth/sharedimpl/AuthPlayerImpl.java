@@ -7,20 +7,20 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.mindrot.jbcrypt.BCrypt;
 
 import pl.north93.zgame.api.global.metadata.MetaStore;
-import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
+import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.auth.api.IAuthPlayer;
 
 class AuthPlayerImpl implements IAuthPlayer
 {
-    private final INetworkManager networkManager;
+    private final IPlayersManager playersManager;
     private final Identity        playerIdentity;
 
-    public AuthPlayerImpl(final INetworkManager networkManager, final Identity playerIdentity)
+    public AuthPlayerImpl(final IPlayersManager playersManager, final Identity playerIdentity)
     {
-        this.networkManager = networkManager;
+        this.playersManager = playersManager;
         this.playerIdentity = playerIdentity;
     }
 
@@ -49,7 +49,7 @@ class AuthPlayerImpl implements IAuthPlayer
     @Override
     public void unregister()
     {
-        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(this.playerIdentity))
+        try (final IPlayerTransaction t = this.playersManager.transaction(this.playerIdentity))
         {
             final IPlayer player = t.getPlayer();
             player.getMetaStore().remove(PLAYER_PASSWORD);
@@ -59,7 +59,7 @@ class AuthPlayerImpl implements IAuthPlayer
     @Override
     public void setPassword(final String newPassword)
     {
-        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(this.playerIdentity))
+        try (final IPlayerTransaction t = this.playersManager.transaction(this.playerIdentity))
         {
             final String newHash = BCrypt.hashpw(newPassword, BCrypt.gensalt());
 
@@ -86,7 +86,7 @@ class AuthPlayerImpl implements IAuthPlayer
 
     private Optional<IPlayer> getUnsafe()
     {
-        return this.networkManager.getPlayers().unsafe().get(this.playerIdentity);
+        return this.playersManager.unsafe().get(this.playerIdentity);
     }
 
     @Override

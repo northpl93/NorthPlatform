@@ -1,5 +1,8 @@
 package pl.arieals.api.minigame.shared.impl.party;
 
+import static java.util.Optional.ofNullable;
+
+
 import javax.annotation.Nullable;
 
 import java.util.Collection;
@@ -26,7 +29,6 @@ import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.metadata.MetaStore;
-import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
@@ -46,7 +48,7 @@ public class PartyManagerImpl implements IPartyManager
     @Inject
     private IObservationManager observer;
     @Inject
-    private INetworkManager     networkManager;
+    private IPlayersManager     playersManager;
     @Inject
     private IEventManager       eventManager;
     private Hash<PartyDataImpl> parties;
@@ -60,12 +62,9 @@ public class PartyManagerImpl implements IPartyManager
     @Override
     public IParty getPartyByPlayer(final Identity identity) throws PlayerNotFoundException
     {
-        final IPlayersManager players = this.networkManager.getPlayers();
+        final IPlayer player = this.playersManager.unsafe().getNullable(identity);
 
-        final UUID playerUuid = players.completeIdentity(identity).getUuid();
-        return players.unsafe().getOnlineValue(playerUuid)
-                      .flatMap(Value::getOptional)
-                      .map(this::getPartyFromPlayer).orElse(null);
+        return ofNullable(player).map(this::getPartyFromPlayer).orElse(null);
     }
 
     @Override
@@ -77,7 +76,7 @@ public class PartyManagerImpl implements IPartyManager
     @Override
     public IParty createParty(final Identity ownerIdentity, final IPlayerStatus location) throws PlayerNotFoundException, PlayerAlreadyHasPartyException
     {
-        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(ownerIdentity))
+        try (final IPlayerTransaction t = this.playersManager.transaction(ownerIdentity))
         {
             final IPlayer player = t.getPlayer();
 
@@ -159,13 +158,13 @@ public class PartyManagerImpl implements IPartyManager
     @Override
     public PartyInvite getLatestInvite(final Identity playerIdentity) throws PlayerNotFoundException
     {
-        final IPlayer unsafePlayer = this.networkManager.getPlayers().unsafe().get(playerIdentity).orElseThrow(() -> new PlayerNotFoundException(playerIdentity));
+        final IPlayer unsafePlayer = this.playersManager.unsafe().get(playerIdentity).orElseThrow(() -> new PlayerNotFoundException(playerIdentity));
         return this.getLatestInviteFromPlayer(unsafePlayer);
     }
 
     /*default*/ IPlayerTransaction openTransaction(final Identity ownerIdentity)
     {
-        return this.networkManager.getPlayers().transaction(ownerIdentity);
+        return this.playersManager.transaction(ownerIdentity);
     }
 
     /*default*/ void callNetEvent(final PartyNetEvent partyNetEvent)
@@ -234,7 +233,7 @@ public class PartyManagerImpl implements IPartyManager
     {
         return players.stream().map(identity ->
         {
-            final IPlayer player = this.networkManager.getPlayers().unsafe().getNullable(identity);
+            final IPlayer player = this.playersManager.unsafe().getNullable(identity);
 
             final boolean isVip = player.getGroup().hasPermission("gamejoin.vip");
             return new PlayerJoinInfo(player.getUuid(), isVip, false);

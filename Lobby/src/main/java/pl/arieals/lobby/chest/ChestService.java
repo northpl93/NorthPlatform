@@ -23,9 +23,9 @@ import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
+import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.Identity;
 
 /**
@@ -36,7 +36,7 @@ public class ChestService
 {
     private final Logger logger = LoggerFactory.getLogger(ChestService.class);
     @Inject
-    private INetworkManager networkManager;
+    private IPlayersManager playersManager;
     private ChestTypeConfig typeConfig;
 
     @Bean
@@ -79,7 +79,7 @@ public class ChestService
      */
     public int getChests(final Player player, final ChestType type)
     {
-        final IPlayer cachedPlayer = this.networkManager.getPlayers().unsafe().getNullable(Identity.of(player));
+        final IPlayer cachedPlayer = this.playersManager.unsafe().getNullable(Identity.of(player));
         final ChestData chestData = new ChestData(cachedPlayer);
 
         return chestData.getChests(type);
@@ -125,7 +125,7 @@ public class ChestService
 
     private boolean updateChests(final Player player, final Consumer<ChestData> updateFunction)
     {
-        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(Identity.of(player)))
+        try (final IPlayerTransaction t = this.playersManager.transaction(Identity.of(player)))
         {
             final ChestData chestData = new ChestData(t.getPlayer());
             updateFunction.accept(chestData);

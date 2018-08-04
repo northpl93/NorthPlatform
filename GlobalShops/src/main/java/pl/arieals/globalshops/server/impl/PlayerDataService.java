@@ -7,25 +7,25 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.tuple.Pair;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
-import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
+import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
 class PlayerDataService
 {
-    private final INetworkManager networkManager;
+    private final IPlayersManager playersManager;
 
     @Bean
-    private PlayerDataService(final INetworkManager networkManager)
+    private PlayerDataService(final IPlayersManager playersManager)
     {
-        this.networkManager = networkManager;
+        this.playersManager = playersManager;
     }
 
     public PlayerData getData(final Player player)
     {
-        final Value<IOnlinePlayer> value = this.networkManager.getPlayers().unsafe().getOnlineValue(player.getName());
+        final Value<IOnlinePlayer> value = this.playersManager.unsafe().getOnlineValue(player.getName());
 
         final IOnlinePlayer onlinePlayer = value.get();
         if (onlinePlayer == null)
@@ -38,7 +38,7 @@ class PlayerDataService
 
     public boolean addItem(final Player player, final String groupId, final String itemId, final Integer itemLevel)
     {
-        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(Identity.of(player)))
+        try (final IPlayerTransaction t = this.playersManager.transaction(Identity.of(player)))
         {
             final PlayerData playerData = new PlayerData(t.getPlayer().getMetaStore());
             final String itemInternalId = groupId + "$" + itemId;
@@ -62,7 +62,7 @@ class PlayerDataService
 
     public PlayerData setActiveItem(final Player player, final String groupId, final String itemId)
     {
-        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(Identity.of(player)))
+        try (final IPlayerTransaction t = this.playersManager.transaction(Identity.of(player)))
         {
             final PlayerData playerData = new PlayerData(t.getPlayer().getMetaStore());
 
@@ -78,7 +78,7 @@ class PlayerDataService
 
     public PlayerData resetActiveItem(final Player player, final String groupId)
     {
-        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(Identity.of(player)))
+        try (final IPlayerTransaction t = this.playersManager.transaction(Identity.of(player)))
         {
             final PlayerData playerData = new PlayerData(t.getPlayer().getMetaStore());
 
@@ -94,7 +94,7 @@ class PlayerDataService
 
     public Pair<PlayerData, Integer> addShards(final Player player, final String groupId, final String itemId, final int shards)
     {
-        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(Identity.of(player)))
+        try (final IPlayerTransaction t = this.playersManager.transaction(Identity.of(player)))
         {
             final PlayerData playerData = new PlayerData(t.getPlayer().getMetaStore());
             final String itemInternalId = groupId + "$" + itemId;
@@ -116,7 +116,7 @@ class PlayerDataService
 
     public PlayerData setShards(final Player player, final String groupId, final String itemId, final int shards)
     {
-        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(Identity.of(player)))
+        try (final IPlayerTransaction t = this.playersManager.transaction(Identity.of(player)))
         {
             final PlayerData playerData = new PlayerData(t.getPlayer().getMetaStore());
             final String itemInternalId = groupId + "$" + itemId;

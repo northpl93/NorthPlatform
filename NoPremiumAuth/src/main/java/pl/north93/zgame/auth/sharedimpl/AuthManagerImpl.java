@@ -6,9 +6,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.metadata.MetaStore;
-import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
+import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.auth.api.IAuthManager;
 import pl.north93.zgame.auth.api.IAuthPlayer;
@@ -16,7 +16,7 @@ import pl.north93.zgame.auth.api.IAuthPlayer;
 /*default*/ class AuthManagerImpl implements IAuthManager
 {
     @Inject
-    private INetworkManager networkManager;
+    private IPlayersManager playersManager;
 
     @Bean
     private AuthManagerImpl()
@@ -26,13 +26,13 @@ import pl.north93.zgame.auth.api.IAuthPlayer;
     @Override
     public IAuthPlayer getPlayer(final Identity identity)
     {
-        return new AuthPlayerImpl(this.networkManager, identity);
+        return new AuthPlayerImpl(this.playersManager, identity);
     }
 
     @Override
     public boolean isLoggedIn(final String name)
     {
-        final IOnlinePlayer player = this.networkManager.getPlayers().unsafe().getOnlineValue(name).get();
+        final IOnlinePlayer player = this.playersManager.unsafe().getOnlineValue(name).get();
         if (player == null)
         {
             return false;
@@ -54,7 +54,7 @@ import pl.north93.zgame.auth.api.IAuthPlayer;
     @Override
     public void setLoggedInStatus(final Identity identity, final boolean status)
     {
-        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(identity))
+        try (final IPlayerTransaction t = this.playersManager.transaction(identity))
         {
             if (t.isOffline())
             {
@@ -69,7 +69,7 @@ import pl.north93.zgame.auth.api.IAuthPlayer;
     @Override
     public void deleteStatus(final Identity identity)
     {
-        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(identity))
+        try (final IPlayerTransaction t = this.playersManager.transaction(identity))
         {
             if (t.isOffline())
             {

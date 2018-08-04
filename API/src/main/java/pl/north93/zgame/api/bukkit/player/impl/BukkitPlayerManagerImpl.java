@@ -30,6 +30,8 @@ public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
     @Inject
     private BukkitApiCore   bukkitApiCore;
     @Inject
+    private IPlayersManager playersManager;
+    @Inject
     private INetworkManager networkManager;
 
     @Override
@@ -46,14 +48,14 @@ public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
     @Override
     public OfflinePlayer getBukkitOfflinePlayer(final UUID uuid)
     {
-        final IPlayersManager.Unsafe unsafe = this.networkManager.getPlayers().unsafe();
+        final IPlayersManager.Unsafe unsafe = this.playersManager.unsafe();
         return unsafe.getOffline(uuid).map(NorthOfflinePlayer::new).orElse(null);
     }
 
     @Override
     public OfflinePlayer getBukkitOfflinePlayer(final String nick)
     {
-        final IPlayersManager.Unsafe unsafe = this.networkManager.getPlayers().unsafe();
+        final IPlayersManager.Unsafe unsafe = this.playersManager.unsafe();
         return unsafe.getOffline(nick).map(NorthOfflinePlayer::new).orElse(null);
     }
 
@@ -117,7 +119,7 @@ public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
             return (INorthPlayer) player;
         }
 
-        final Value<IOnlinePlayer> playerData = this.networkManager.getPlayers().unsafe().getOnlineValue(player.getName());
+        final Value<IOnlinePlayer> playerData = this.playersManager.unsafe().getOnlineValue(player.getName());
         return new NorthPlayerImpl(this.networkManager, player, playerData);
     }
 

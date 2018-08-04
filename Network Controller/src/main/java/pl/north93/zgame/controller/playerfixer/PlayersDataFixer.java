@@ -11,8 +11,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
+import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.storage.StorageConnector;
 
@@ -27,7 +27,7 @@ public class PlayersDataFixer extends Component implements Runnable
     @Inject
     private StorageConnector storage;
     @Inject
-    private INetworkManager  networkManager;
+    private IPlayersManager  playersManager;
 
     @Override
     protected void enableComponent()
@@ -52,7 +52,7 @@ public class PlayersDataFixer extends Component implements Runnable
 
     private void checkPlayer(final String nick)
     {
-        final Value<IOnlinePlayer> player = this.networkManager.getPlayers().unsafe().getOnlineValue(nick);
+        final Value<IOnlinePlayer> player = this.playersManager.unsafe().getOnlineValue(nick);
         final IOnlinePlayer cache = player.get();
         if (cache == null)
         {
@@ -72,7 +72,7 @@ public class PlayersDataFixer extends Component implements Runnable
             return;
         }
 
-        this.networkManager.getPlayers().getInternalData().savePlayer(cache);
+        this.playersManager.getInternalData().savePlayer(cache);
         player.delete();
 
         log.info("[PlayersDataFixer] Flushed data of player {} because he isn't online in bungee", nick);
