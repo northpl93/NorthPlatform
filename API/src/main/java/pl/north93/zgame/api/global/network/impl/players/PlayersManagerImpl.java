@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.network.impl;
+package pl.north93.zgame.api.global.network.impl.players;
 
 import static pl.north93.zgame.api.global.redis.RedisKeys.PLAYERS;
 
@@ -18,13 +18,14 @@ import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
+import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.Identity;
+import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.proxy.IProxyRpc;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Lock;
@@ -36,18 +37,17 @@ import pl.north93.zgame.api.global.redis.rpc.Targets;
 class PlayersManagerImpl implements IPlayersManager
 {
     /*default*/ static PlayersManagerImpl INSTANCE;
-    private final PlayerCacheImpl     playerCache;
-    private final PlayersDataManager  playersDataManager;
     private final IObservationManager observer;
     private final IRpcManager         rpcManager;
+    private final PlayersDataManager  playersDataManager;
     private final Unsafe              unsafe;
 
-    public PlayersManagerImpl(final IRpcManager rpcManager, final IObservationManager observer)
+    @Bean
+    private PlayersManagerImpl(final IObservationManager observer, final IRpcManager rpcManager)
     {
         INSTANCE = this;
         this.observer = observer;
         this.rpcManager = rpcManager;
-        this.playerCache = new PlayerCacheImpl();
         this.playersDataManager = new PlayersDataManager(this);
         this.unsafe = new PlayersManagerUnsafeImpl();
     }
@@ -164,12 +164,6 @@ class PlayersManagerImpl implements IPlayersManager
     public void ifOnline(final UUID uuid, final Consumer<IOnlinePlayer> onlineAction)
     {
         this.getNickFromUuid(uuid).ifPresent(nick -> this.ifOnline(nick, onlineAction));
-    }
-
-    @Override
-    public IPlayerCache getCache()
-    {
-        return this.playerCache;
     }
 
     @Override

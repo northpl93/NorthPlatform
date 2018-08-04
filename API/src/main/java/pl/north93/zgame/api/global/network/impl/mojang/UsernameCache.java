@@ -1,29 +1,29 @@
-package pl.north93.zgame.api.global.network.impl;
+package pl.north93.zgame.api.global.network.impl.mojang;
+
+import static pl.north93.zgame.api.global.network.impl.mojang.MojangCacheImpl.JSON_PARSER;
+import static pl.north93.zgame.api.global.network.impl.mojang.MojangCacheImpl.UUID_PATTERN;
+
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 
 import org.diorite.commons.io.DioriteURLUtils;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.network.players.IPlayersManager;
-import pl.north93.zgame.api.global.network.players.UsernameDetails;
+import pl.north93.zgame.api.global.component.annotations.bean.Bean;
+import pl.north93.zgame.api.global.network.mojang.UsernameDetails;
 import pl.north93.zgame.api.global.redis.observable.Cache;
 import pl.north93.zgame.api.global.redis.observable.ICacheBuilder;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
@@ -31,37 +31,39 @@ import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.storage.StorageConnector;
 
 @Slf4j
-class PlayerCacheImpl implements IPlayersManager.IPlayerCache
+class UsernameCache
 {
-    private static final Pattern UUID_PATTERN = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
-    private final JsonParser json = new JsonParser();
-    @Inject
-    private StorageConnector               storage;
-    @Inject
-    private IObservationManager            observationManager;
-    private Cache<String, UsernameDetails> localCache;
+    private final Datastore                      datastore;
+    private final Cache<String, UsernameDetails> localCache;
 
-    public PlayerCacheImpl()
+    @Bean
+    private UsernameCache(final StorageConnector connector, final IObservationManager observationManager)
     {
-        final ICacheBuilder<String, UsernameDetails> builder = this.observationManager.cacheBuilder(String.class, UsernameDetails.class);
-        this.localCache = builder.name("mojangapicache:")
-                                 .keyMapper(ObjectKey::new)
-                                 .provider(this::fillCache)
-                                 .expire((int) TimeUnit.DAYS.toSeconds(1))
-                                 .build();
+        this.datastore = connector.getDatastore();
+        this.localCache = this.setupUsernameCache(observationManager);
     }
 
-    @Override
-    public Optional<UsernameDetails> getNickDetails(final String username)
+    public Optional<UsernameDetails> getUsernameDetails(final String username)
     {
-        return this.localCache.get(username.toLowerCase(Locale.ROOT));
+        return this.localCache.get(username).map(details -> this.fillCrackedUuid(details, username));
+    }
+
+    // poprawia wpis o zcrackowanym graczu dodajac poprawny nick o który pytalismy i wyliczone crackowane UUID.
+    private UsernameDetails fillCrackedUuid(final UsernameDetails details, final String username)
+    {
+        if (details.getUuid() == null)
+        {
+            final UUID crackedUuid = this.getCrackedUuidFromName(username);
+            return new UsernameDetails(username, crackedUuid, false, details.getFetchTime());
+        }
+
+        return details;
     }
 
     private UsernameDetails fillCache(final String username)
     {
-        final Datastore datastore = this.storage.getDatastore();
-        final Query<UsernameDetails> query = datastore.createQuery(UsernameDetails.class)
-                                                      .field("validSpelling").equalIgnoreCase(username);
+        final Query<UsernameDetails> query = this.datastore.createQuery(UsernameDetails.class)
+                                                           .field("username").equalIgnoreCase(username);
 
         final UsernameDetails details = query.get();
         if (details != null)
@@ -73,7 +75,7 @@ class PlayerCacheImpl implements IPlayersManager.IPlayerCache
         if (usernameDetails.isPresent())
         {
             final UsernameDetails fromMojang = usernameDetails.get();
-            datastore.updateFirst(query, fromMojang, true);
+            this.datastore.updateFirst(query, fromMojang, true);
 
             log.info("Updating nick cache for {}", username);
             return fromMojang;
@@ -88,11 +90,14 @@ class PlayerCacheImpl implements IPlayersManager.IPlayerCache
         {
             final String url = "https://api.mojang.com/users/profiles/minecraft/" + DioriteURLUtils.encodeUTF8(username);
             final String response = IOUtils.toString(new URL(url));
+
             if (StringUtils.isEmpty(response))
             {
+                // taki nick nie istnieje u mojangu - pirat
                 return Optional.of(new UsernameDetails(username, Instant.now()));
             }
-            final JsonObject jsonObject = this.json.parse(response).getAsJsonObject();
+
+            final JsonObject jsonObject = JSON_PARSER.parse(response).getAsJsonObject();
 
             final String uuidString = UUID_PATTERN.matcher(jsonObject.getAsJsonPrimitive("id").getAsString())
                                                   .replaceAll("$1-$2-$3-$4-$5");
@@ -110,9 +115,18 @@ class PlayerCacheImpl implements IPlayersManager.IPlayerCache
         }
     }
 
-    @Override
-    public String toString()
+    private Cache<String, UsernameDetails> setupUsernameCache(final IObservationManager observationManager)
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
+        final ICacheBuilder<String, UsernameDetails> builder = observationManager.cacheBuilder(String.class, UsernameDetails.class);
+        builder.name("mojangapicache:");
+        builder.keyMapper(username -> new ObjectKey(username.toLowerCase(Locale.ROOT)));
+        builder.provider(this::fillCache);
+        builder.expire((int) TimeUnit.DAYS.toSeconds(1));
+        return builder.build();
+    }
+
+    private UUID getCrackedUuidFromName(final String username)
+    {
+        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + username).getBytes(StandardCharsets.UTF_8));
     }
 }

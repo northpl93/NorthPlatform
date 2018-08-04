@@ -74,13 +74,18 @@ class CacheImpl<K, V> implements Cache<K, V>
     @Nonnull
     public Value<V> getValue(final K key)
     {
-        final ObjectKey objectKey = this.keyMapper.apply(key);
-        final Value<V> vValue = this.observationManager.get(this.valueClass, new ObjectKey(this.prefix, objectKey));
-        if (this.provider != null && ! vValue.isAvailable())
+        final Value<V> value = this.getValue0(key);
+        if (this.provider != null && ! value.isPreset())
         {
-            vValue.set(this.provider.apply(key));
+            value.set(this.provider.apply(key));
         }
-        return vValue;
+        return value;
+    }
+
+    private Value<V> getValue0(final K key)
+    {
+        final ObjectKey objectKey = this.keyMapper.apply(key);
+        return this.observationManager.get(this.valueClass, new ObjectKey(this.prefix, objectKey));
     }
 
     @Override
@@ -92,13 +97,13 @@ class CacheImpl<K, V> implements Cache<K, V>
     @Override
     public boolean contains(final K key)
     {
-        return this.getValue(key).isAvailable();
+        return this.getValue0(key).isPreset();
     }
 
     @Override
     public void remove(final K key)
     {
-        this.getValue(key).delete();
+        this.getValue0(key).delete();
     }
 
     @Override

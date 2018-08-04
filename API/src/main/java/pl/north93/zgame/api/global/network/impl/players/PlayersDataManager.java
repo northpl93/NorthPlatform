@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.network.impl;
+package pl.north93.zgame.api.global.network.impl.players;
 
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
@@ -25,13 +25,14 @@ import org.bson.Document;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.metadata.MetaStore;
+import pl.north93.zgame.api.global.network.mojang.IMojangCache;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.LoginHistoryEntry;
 import pl.north93.zgame.api.global.network.players.NameSizeMistakeException;
-import pl.north93.zgame.api.global.network.players.UsernameDetails;
+import pl.north93.zgame.api.global.network.mojang.UsernameDetails;
 import pl.north93.zgame.api.global.permissions.Group;
 import pl.north93.zgame.api.global.permissions.PermissionsManager;
 import pl.north93.zgame.api.global.redis.observable.Cache;
@@ -49,6 +50,8 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
     private PermissionsManager          permissionsManager;
     @Inject
     private IObservationManager         observationManager;
+    @Inject
+    private IMojangCache                mojangCache;
     // // // // // // // // // // // // // // //
     private Cache<UUID, String>         uuid2nick;
     private Cache<String, UUID>         nick2uuid;
@@ -254,7 +257,7 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
 
     private UUID findUuidFromNick(final String nick)
     {
-        final Optional<UsernameDetails> usernameDetails = this.playersManager.getCache().getNickDetails(nick);
+        final Optional<UsernameDetails> usernameDetails = this.mojangCache.getUsernameDetails(nick);
         if (usernameDetails.isPresent())
         {
             final UsernameDetails details = usernameDetails.get();

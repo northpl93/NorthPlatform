@@ -3,7 +3,7 @@ package pl.north93.zgame.api.global.network.event;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.network.impl.OnlinePlayerImpl;
+import pl.north93.zgame.api.global.network.impl.players.OnlinePlayerImpl;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.redis.event.INetEvent;

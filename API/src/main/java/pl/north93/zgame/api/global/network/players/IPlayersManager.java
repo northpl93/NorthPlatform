@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import pl.north93.zgame.api.global.network.impl.OnlinePlayerImpl;
+import pl.north93.zgame.api.global.network.impl.players.OnlinePlayerImpl;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
 /**
@@ -81,25 +81,6 @@ public interface IPlayersManager
     void ifOnline(String nick, Consumer<IOnlinePlayer> onlineAction);
 
     void ifOnline(UUID uuid, Consumer<IOnlinePlayer> onlineAction);
-
-    IPlayerCache getCache();
-
-    /**
-     * Przedstawia subsystem cachujacy dane pobierane z Mojangu.
-     */
-    interface IPlayerCache
-    {
-        /**
-         * Pobiera informacje o profilu powiazanym z danym nickiem.
-         * W pierwszej kolejnosci odpytana zostanie lokalna baza danych serwera (redis&mongo).
-         *
-         * @param nick Nick ktory sprawdzamy.
-         *             Wielkosc znakow nie ma znaczenia (poniewaz tak samo dziala API Mojang).
-         * @return Opcjonalnie informacje o danym nicku. W wypadku braku moze to oznaczac
-         *         problem z komunikacja z serwerami Mojangu.
-         */
-        Optional<UsernameDetails> getNickDetails(String nick);
-    }
 
     Unsafe unsafe();
 

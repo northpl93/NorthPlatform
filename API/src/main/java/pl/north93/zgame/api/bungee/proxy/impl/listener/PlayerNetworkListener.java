@@ -10,12 +10,11 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.diorite.commons.reflections.DioriteReflectionUtils;
 import org.diorite.commons.reflections.FieldAccessor;
 
+import lombok.extern.slf4j.Slf4j;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.AsyncEvent;
@@ -35,10 +34,11 @@ import pl.north93.zgame.api.bungee.proxy.event.HandlePlayerProxyQuitEvent;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.event.PlayerJoinNetEvent;
 import pl.north93.zgame.api.global.network.event.PlayerQuitNetEvent;
-import pl.north93.zgame.api.global.network.impl.OnlinePlayerImpl;
+import pl.north93.zgame.api.global.network.impl.players.OnlinePlayerImpl;
+import pl.north93.zgame.api.global.network.mojang.IMojangCache;
+import pl.north93.zgame.api.global.network.mojang.UsernameDetails;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
@@ -46,7 +46,6 @@ import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.IPlayersManager.IPlayersDataManager;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.players.NameSizeMistakeException;
-import pl.north93.zgame.api.global.network.players.UsernameDetails;
 import pl.north93.zgame.api.global.redis.event.IEventManager;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Lock;
@@ -55,10 +54,10 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 /**
  * Zarządza ładowaniem danych gracza i usuwaniem ich z Redisa.
  */
+@Slf4j
 public class PlayerNetworkListener implements Listener
 {
     private static final Pattern  NICK_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{3,16}$");
-    private final Logger logger = LoggerFactory.getLogger(PlayerNetworkListener.class);
     @Inject @Messages("Messages")
     private MessagesBox         apiMessages;
     @Inject
@@ -66,9 +65,11 @@ public class PlayerNetworkListener implements Listener
     @Inject
     private IObservationManager observer;
     @Inject
-    private INetworkManager     networkManager;
-    @Inject
     private IEventManager       eventManager;
+    @Inject
+    private IMojangCache        mojangCache;
+    @Inject
+    private IPlayersManager     playersManager;
 
     @EventHandler
     public void onLogin(final PreLoginEvent event)
@@ -84,7 +85,7 @@ public class PlayerNetworkListener implements Listener
                 return;
             }
 
-            final Optional<UsernameDetails> details = this.networkManager.getPlayers().getCache().getNickDetails(nick);
+            final Optional<UsernameDetails> details = this.mojangCache.getUsernameDetails(nick);
             if (! details.isPresent())
             {
                 event.setCancelled(true);
@@ -93,14 +94,14 @@ public class PlayerNetworkListener implements Listener
             }
 
             final UsernameDetails usernameDetails = details.get();
-            if (usernameDetails.getIsPremium() && !usernameDetails.getValidSpelling().equals(nick))
+            if (usernameDetails.getIsPremium() && !usernameDetails.getUsername().equals(nick))
             {
                 event.setCancelled(true);
                 event.setCancelReason(RED + this.apiMessages.getMessage("join.premium.name_size_mistake"));
                 return;
             }
 
-            if (this.networkManager.getPlayers().isOnline(nick)) // sprawdzanie czy taki gracz juz jest w sieci
+            if (this.playersManager.isOnline(nick)) // sprawdzanie czy taki gracz juz jest w sieci
             {
                 event.setCancelled(true);
                 event.setCancelReason(RED + this.apiMessages.getMessage("join.already_online"));
@@ -120,7 +121,7 @@ public class PlayerNetworkListener implements Listener
             final Value<OnlinePlayerImpl> player;
             try
             {
-                final IPlayersDataManager dataManager = this.networkManager.getPlayers().getInternalData();
+                final IPlayersDataManager dataManager = this.playersManager.getInternalData();
                 final String proxyName = this.bungeeApiCore.getProxyConfig().getUniqueName();
 
                 player = dataManager.loadPlayer(conn.getUniqueId(), conn.getName(), conn.isOnlineMode(), proxyName);
@@ -135,7 +136,7 @@ public class PlayerNetworkListener implements Listener
             {
                 event.setCancelled(true);
                 event.setCancelReason(this.apiMessages.getMessage("pl-PL", "kick.generic_error", "failed to load player data: " + e));
-                this.logger.error("Failed to load player data", e);
+                log.error("Failed to load player data", e);
                 return;
             }
 
@@ -146,7 +147,7 @@ public class PlayerNetworkListener implements Listener
                 player.delete(); // delete player data if event is cancelled.
                 event.setCancelled(true);
                 event.setCancelReason(joinEvent.getCancelReason());
-                this.logger.info("Cancelled user {} login by server", conn.getName());
+                log.info("Cancelled user {} login by server", conn.getName());
             }
         });
     }
@@ -154,29 +155,29 @@ public class PlayerNetworkListener implements Listener
     @EventHandler
     public void postJoin(final PostLoginEvent event)
     {
-        final IPlayersManager.Unsafe unsafe = this.networkManager.getPlayers().unsafe();
+        final IPlayersManager.Unsafe unsafe = this.playersManager.unsafe();
         final Value<IOnlinePlayer> onlineValue = unsafe.getOnlineValue(event.getPlayer().getName());
 
         // wywolujemy sieciowy event dolaczenia gracza
         this.eventManager.callEvent(new PlayerJoinNetEvent((OnlinePlayerImpl) onlineValue.get()));
 
-        this.logger.info("Successfully logged-in user {}", event.getPlayer().getName());
+        log.info("Successfully logged-in user {}", event.getPlayer().getName());
     }
 
     @EventHandler
     public void onLoginCancelled(final LoginAbortedEvent event)
     {
         final String name = event.getConnection().getName();
-        final Value<IOnlinePlayer> onlineValue = this.networkManager.getPlayers().unsafe().getOnlineValue(name);
+        final Value<IOnlinePlayer> onlineValue = this.playersManager.unsafe().getOnlineValue(name);
 
         onlineValue.delete();
-        this.logger.info("User {} cancelled login before post-login", name);
+        log.info("User {} cancelled login before post-login", name);
     }
 
     @EventHandler
     public void onLeave(final PlayerDisconnectEvent event)
     {
-        final IPlayersManager players = this.networkManager.getPlayers();
+        final IPlayersManager players = this.playersManager;
         final ProxiedPlayer proxyPlayer = event.getPlayer();
 
         final Value<IOnlinePlayer> onlineValue = players.unsafe().getOnlineValue(proxyPlayer.getName());
@@ -191,7 +192,7 @@ public class PlayerNetworkListener implements Listener
             final IOnlinePlayer onlinePlayer = onlineValue.getWithoutCache();
             if (onlinePlayer == null)
             {
-                this.logger.error("onlinePlayer==null in onLeave. " + event);
+                log.error("onlinePlayer==null in onLeave. " + event);
                 return;
             }
 
@@ -201,19 +202,18 @@ public class PlayerNetworkListener implements Listener
         }
         catch (final Exception e)
         {
-            this.logger.error("Failed to save player data for {}/{}", proxyPlayer.getName(), proxyPlayer.getUniqueId(), e);
+            log.error("Failed to save player data for {}/{}", proxyPlayer.getName(), proxyPlayer.getUniqueId(), e);
         }
     }
     
     @EventHandler
     public void onServerChange(final ServerSwitchEvent event)
     {
-        final IPlayersManager playersManager = this.networkManager.getPlayers();
-        try (final IPlayerTransaction transaction = playersManager.transaction(Identity.of(event.getPlayer())))
+        try (final IPlayerTransaction transaction = this.playersManager.transaction(Identity.of(event.getPlayer())))
         {
             if (transaction.isOffline())
             {
-                this.logger.warn("Player {} is offline in onServerChange", transaction.getPlayer().getUuid());
+                log.warn("Player {} is offline in onServerChange", transaction.getPlayer().getUuid());
                 return;
             }
 
@@ -223,7 +223,7 @@ public class PlayerNetworkListener implements Listener
         }
         catch (final Exception e)
         {
-            this.logger.error("Can't set player's serverId in onServerChange", e);
+            log.error("Can't set player's serverId in onServerChange", e);
         }
     }
 
