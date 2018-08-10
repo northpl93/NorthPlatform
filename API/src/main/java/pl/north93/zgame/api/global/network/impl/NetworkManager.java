@@ -11,6 +11,7 @@ import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
 import pl.north93.zgame.api.global.network.NetworkMeta;
 import pl.north93.zgame.api.global.network.event.NetworkShutdownNetEvent;
+import pl.north93.zgame.api.global.network.mojang.IMojangCache;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
@@ -19,14 +20,17 @@ import pl.north93.zgame.api.global.redis.rpc.Targets;
 
 class NetworkManager extends Component implements INetworkManager
 {
+    @Inject @NetConfig(type = NetworkMeta.class, id = "networkMeta")
+    private IConfig<NetworkMeta> networkConfig;
     @Inject
     private IObservationManager  observationManager;
     @Inject
     private IRpcManager          rpcManager;
     @Inject
+    private IMojangCache         mojangCache;
+    @Inject
     private IPlayersManager      playersManager;
-    @Inject @NetConfig(type = NetworkMeta.class, id = "networkMeta")
-    private IConfig<NetworkMeta> networkConfig;
+
     private ProxiesManagerImpl   proxiesManager;
     private DaemonsManagerImpl   daemonsManager;
     private ServersManagerImpl   serversManager;
@@ -59,6 +63,12 @@ class NetworkManager extends Component implements INetworkManager
     public NetworkControllerRpc getNetworkController()
     {
         return this.rpcManager.createRpcProxy(NetworkControllerRpc.class, Targets.networkController());
+    }
+
+    @Override
+    public IMojangCache getMojang()
+    {
+        return this.mojangCache;
     }
 
     @Override

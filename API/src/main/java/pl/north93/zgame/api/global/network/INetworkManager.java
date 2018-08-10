@@ -2,6 +2,7 @@ package pl.north93.zgame.api.global.network;
 
 import pl.north93.zgame.api.global.config.IConfig;
 import pl.north93.zgame.api.global.network.daemon.IDaemonsManager;
+import pl.north93.zgame.api.global.network.mojang.IMojangCache;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.proxy.IProxiesManager;
 import pl.north93.zgame.api.global.network.server.IServersManager;
@@ -22,6 +23,13 @@ public interface INetworkManager
      * @return Interfejs RPC do wywolywania metod na kontrolerze.
      */
     NetworkControllerRpc getNetworkController();
+
+    /**
+     * Zwraca interfejs sluzacy do zarzadzania cache API mojangu.
+     *
+     * @return Interfejs do zarzadzania cache API Mojang.
+     */
+    IMojangCache getMojang();
 
     /**
      * Zwraca interfejs sluzacy do zarzadzania instancjami proxy w sieci.

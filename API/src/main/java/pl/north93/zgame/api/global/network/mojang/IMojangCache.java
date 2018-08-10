@@ -1,6 +1,7 @@
 package pl.north93.zgame.api.global.network.mojang;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public interface IMojangCache
 {
@@ -16,4 +17,20 @@ public interface IMojangCache
      *         problem z komunikacja z serwerami Mojangu.
      */
     Optional<UsernameDetails> getUsernameDetails(String username);
+
+    /**
+     * Pobiera informacje o profilu Mojang/Minecraft o podanym UUID.
+     * W pierwszej kolejności zostanie odpytana lokalna baza danych serwera (mongo).
+     *
+     * @param profileId Identyfikator profilu.
+     * @return Opcjonalnie informacje o profilu Mojang/Minecraft.
+     */
+    Optional<CachedProfile> getProfile(UUID profileId);
+
+    /**
+     * Aktualizuje cache profilu w bazie danych serwera.
+     *
+     * @param profile Nowa wersja profilu do wprowadzenia.
+     */
+    void updateProfile(CachedProfile profile);
 }
