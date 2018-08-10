@@ -48,7 +48,7 @@ class PlayersManagerImpl implements IPlayersManager
         INSTANCE = this;
         this.observer = observer;
         this.rpcManager = rpcManager;
-        this.playersDataManager = new PlayersDataManager(this);
+        this.playersDataManager = new PlayersDataManager();
         this.unsafe = new PlayersManagerUnsafeImpl();
     }
 

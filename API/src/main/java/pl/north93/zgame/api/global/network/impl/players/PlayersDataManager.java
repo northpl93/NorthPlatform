@@ -7,32 +7,31 @@ import static java.util.regex.Pattern.compile;
 import javax.annotation.Nonnull;
 
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.UpdateOptions;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.Document;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.query.Query;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.mojang.IMojangCache;
+import pl.north93.zgame.api.global.network.mojang.UsernameDetails;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.LoginHistoryEntry;
 import pl.north93.zgame.api.global.network.players.NameSizeMistakeException;
-import pl.north93.zgame.api.global.network.mojang.UsernameDetails;
 import pl.north93.zgame.api.global.permissions.Group;
 import pl.north93.zgame.api.global.permissions.PermissionsManager;
 import pl.north93.zgame.api.global.redis.observable.Cache;
@@ -41,9 +40,8 @@ import pl.north93.zgame.api.global.redis.observable.ObjectKey;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.storage.StorageConnector;
 
-class PlayersDataManager implements IPlayersManager.IPlayersDataManager
+/*default*/ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
 {
-    private PlayersManagerImpl          playersManager;
     @Inject
     private StorageConnector            storageConnector;
     @Inject
@@ -57,9 +55,8 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
     private Cache<String, UUID>         nick2uuid;
     private Cache<UUID, IOfflinePlayer> offlinePlayersData;
 
-    public PlayersDataManager(final PlayersManagerImpl playersManager)
+    public PlayersDataManager()
     {
-        this.playersManager = playersManager;
         this.uuid2nick = this.observationManager.cacheBuilder(UUID.class, String.class)
                                                 .name("uuid2nick:")
                                                 .keyMapper(uuid -> new ObjectKey(uuid.toString()))
@@ -165,84 +162,51 @@ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
 
     private IOfflinePlayer loadOfflinePlayer(final UUID uuid) // used by online mode
     {
-        final MongoCollection<Document> playersData = this.storageConnector.getMainDatabase().getCollection("players");
-        final Document result = playersData.find(new Document("uuid", uuid)).limit(1).first();
-        return this.readOfflinePlayer(result);
+        final Datastore datastore = this.storageConnector.getDatastore();
+
+        final Query<PersistedPlayer> query = datastore.createQuery(PersistedPlayer.class)
+                                                      .field("uuid").equal(uuid);
+        return this.readOfflinePlayer(query.get());
     }
 
-    private OfflinePlayerImpl readOfflinePlayer(final Document result)
+    @SuppressWarnings("unchecked")
+    private OfflinePlayerImpl readOfflinePlayer(final PersistedPlayer player)
     {
-        if (result == null)
+        if (player == null)
         {
             return null;
         }
 
-        final String latestKnownUsername = result.getString("latestKnownUsername");
-        final boolean premium = result.getBoolean("premium", true);
-        final String displayName = result.getString("displayName");
-        final Group group = this.permissionsManager.getGroupByName(result.getString("group"));
-        final long groupExpireAt = result.getLong("groupExpireAt");
-
-        final MetaStore store = new MetaStore();
-        final Map<MetaKey, Object> playerMeta = store.getInternalMap();
-        final Document metadata = (Document) result.getOrDefault("metadata", new Document());
-        for (final Map.Entry<String, Object> entry : metadata.entrySet())
+        final MetaStore metaStore = new MetaStore();
+        player.getMetadata().forEach((key, value) ->
         {
-            final Object value;
-            if (entry.getValue() instanceof Document)
-            {
-                value = new HashMap<>((Document) entry.getValue());
-            }
-            else
-            {
-                value = entry.getValue();
-            }
-            playerMeta.put(MetaKey.get(entry.getKey()), value);
-        }
+            metaStore.set(MetaKey.get(key.toString()), value);
+        });
 
-        return new OfflinePlayerImpl(result.get("uuid", UUID.class), premium, latestKnownUsername, displayName, group, groupExpireAt, store);
+        final Group group = this.permissionsManager.getGroupByName(player.getGroup());
+        final long groupExpireAt = player.getGroupExpireAt().toEpochMilli();
+        return new OfflinePlayerImpl(player.getUuid(), player.isPremium(), player.getLatestKnownUsername(), player.getDisplayName(), group, groupExpireAt, metaStore);
     }
 
     @Override
     public void savePlayer(final IPlayer player)
     {
-        final Document playerData = new Document();
+        final PersistedPlayer persistedPlayer = PersistedPlayer.create(player);
+        final Datastore datastore = this.storageConnector.getDatastore();
 
-        playerData.put("savedAt", System.currentTimeMillis());
-        playerData.put("uuid", player.getUuid());
-        playerData.put("premium", player.isPremium());
-        playerData.put("group", player.getGroup().getName());
-        playerData.put("groupExpireAt", player.getGroupExpireAt());
-        playerData.put("displayName", player.hasDisplayName() ? player.getDisplayName() : null);
-
-        final Document metadata = new Document();
-        for (final Map.Entry<MetaKey, Object> entry : player.getMetaStore().getInternalMap().entrySet())
-        {
-            final MetaKey metaKey = entry.getKey();
-            if (metaKey.isPersist())
-            {
-                // save to database only when key is marked as persist.
-                metadata.put(metaKey.getKey(), entry.getValue());
-            }
-        }
-        playerData.put("metadata", metadata);
+        final Query<PersistedPlayer> query = datastore.createQuery(PersistedPlayer.class)
+                                                      .field("uuid").equal(player.getUuid());
+        datastore.updateFirst(query, persistedPlayer, true);
 
         if (player instanceof IOnlinePlayer)
         {
             final IOnlinePlayer onlinePlayer = (IOnlinePlayer) player;
-            playerData.put("latestKnownUsername", onlinePlayer.getNick());
-            playerData.put("isSavedWhileOnline", true);
-
             this.offlinePlayersData.put(player.getUuid(), new OfflinePlayerImpl(onlinePlayer));
         }
-        else if (player instanceof IOfflinePlayer)
+        else
         {
-            playerData.put("isSavedWhileOnline", false);
             this.offlinePlayersData.put(player.getUuid(), (IOfflinePlayer) player);
         }
-
-        final MongoCollection<Document> database = this.storageConnector.getMainDatabase().getCollection("players");
-        database.updateOne(new Document("uuid", player.getUuid()), new Document("$set", playerData), new UpdateOptions().upsert(true));
     }
 
     public Optional<UUID> usernameToUuid(final String username)
