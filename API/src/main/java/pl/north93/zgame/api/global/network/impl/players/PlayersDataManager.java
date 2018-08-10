@@ -7,12 +7,15 @@ import static java.util.regex.Pattern.compile;
 import javax.annotation.Nonnull;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -180,7 +183,14 @@ import pl.north93.zgame.api.global.storage.StorageConnector;
         final MetaStore metaStore = new MetaStore();
         player.getMetadata().forEach((key, value) ->
         {
-            metaStore.set(MetaKey.get(key.toString()), value);
+            if (value instanceof BasicDBObject)
+            {
+                metaStore.set(MetaKey.get(key.toString()), new HashMap((Map) value));
+            }
+            else
+            {
+                metaStore.set(MetaKey.get(key.toString()), value);
+            }
         });
 
         final Group group = this.permissionsManager.getGroupByName(player.getGroup());

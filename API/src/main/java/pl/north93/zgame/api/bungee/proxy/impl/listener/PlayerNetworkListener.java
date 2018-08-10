@@ -1,8 +1,5 @@
 package pl.north93.zgame.api.bungee.proxy.impl.listener;
 
-import static net.md_5.bungee.api.ChatColor.RED;
-
-
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
@@ -81,7 +78,7 @@ public class PlayerNetworkListener implements Listener
             if (! NICK_PATTERN.matcher(nick).matches())
             {
                 event.setCancelled(true);
-                event.setCancelReason(RED + this.apiMessages.getMessage("join.invalid_nick"));
+                event.setCancelReason(this.apiMessages.getComponent("pl-PL", "join.invalid_nick"));
                 return;
             }
 
@@ -89,7 +86,7 @@ public class PlayerNetworkListener implements Listener
             if (! details.isPresent())
             {
                 event.setCancelled(true);
-                event.setCancelReason(RED + this.apiMessages.getMessage("join.premium.check_failed"));
+                event.setCancelReason(this.apiMessages.getComponent("pl-PL", "join.premium.check_failed"));
                 return;
             }
 
@@ -97,14 +94,14 @@ public class PlayerNetworkListener implements Listener
             if (usernameDetails.getIsPremium() && !usernameDetails.getUsername().equals(nick))
             {
                 event.setCancelled(true);
-                event.setCancelReason(RED + this.apiMessages.getMessage("join.premium.name_size_mistake"));
+                event.setCancelReason(this.apiMessages.getComponent("pl-PL", "join.premium.name_size_mistake"));
                 return;
             }
 
             if (this.playersManager.isOnline(nick)) // sprawdzanie czy taki gracz juz jest w sieci
             {
                 event.setCancelled(true);
-                event.setCancelReason(RED + this.apiMessages.getMessage("join.already_online"));
+                event.setCancelReason(this.apiMessages.getComponent("pl-PL", "join.already_online"));
                 return;
             }
 
@@ -129,13 +126,13 @@ public class PlayerNetworkListener implements Listener
             catch (final NameSizeMistakeException e)
             {
                 event.setCancelled(true);
-                event.setCancelReason(this.apiMessages.getMessage("pl-PL", "join.name_size_mistake", e.getNick(), conn.getName()));
+                event.setCancelReason(this.apiMessages.getComponent("pl-PL", "join.name_size_mistake", e.getNick(), conn.getName()));
                 return;
             }
-            catch (final Throwable e)
+            catch (final Exception e)
             {
                 event.setCancelled(true);
-                event.setCancelReason(this.apiMessages.getMessage("pl-PL", "kick.generic_error", "failed to load player data: " + e));
+                event.setCancelReason(this.apiMessages.getComponent("pl-PL", "kick.generic_error", "failed to load player data: " + e));
                 log.error("Failed to load player data", e);
                 return;
             }
@@ -237,6 +234,10 @@ public class PlayerNetworkListener implements Listener
             try
             {
                 task.run();
+            }
+            catch (final Exception e)
+            {
+                log.error("An exception has been thrown while handling asynchronous login task", e);
             }
             finally
             {

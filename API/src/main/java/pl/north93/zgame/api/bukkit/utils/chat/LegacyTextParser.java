@@ -52,7 +52,8 @@ public final class LegacyTextParser
             return packToTextComponent((BaseComponent) object);
         }
 
-        return packToTextComponent(parseLegacyText(String.valueOf(object)));
+        // uzywamy convertera zamiast parsera zeby przpadkowe klamry nie wywalily wyjatku
+        return new TextComponent(LegacyTextConverter.fromLegacyText(String.valueOf(object)));
     }
 
     private static BaseComponent[] fromLegacyText(final String message, final Object[] params)

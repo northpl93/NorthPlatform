@@ -173,12 +173,6 @@ public class MessagesBox
         return this.getMessage(Locale.forLanguageTag(locale), key);
     }
 
-    @Deprecated // uniemozliwia tlumaczenie wiadomosci per-gracz
-    public String getMessage(final String key)
-    {
-        return this.getMessage(Locale.forLanguageTag("pl-PL"), key);
-    }
-
     // = = = POBIERANIE WIADOMOSCI Z PARAMETRAMI = = = //
 
     @Deprecated
