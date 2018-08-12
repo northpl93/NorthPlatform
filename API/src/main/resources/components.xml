@@ -43,6 +43,12 @@
         </component>
 
         <component>
+            <name>API.Serializer</name>
+            <mainClass>pl.north93.zgame.api.global.serializer.SerializerComponent</mainClass>
+            <description>Provides serialization platform and MsgPack/Mongo implementations.</description>
+        </component>
+
+        <component>
             <name>API.Database.StorageConnector</name>
             <mainClass>pl.north93.zgame.api.global.storage.StorageConnector</mainClass>
             <description>Provides connection with Redis and MongoDB databases.</description>
