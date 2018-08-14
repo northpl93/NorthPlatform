@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.arena.netevent.ArenaDeletedNetEvent;
 import pl.arieals.api.minigame.shared.impl.arena.ArenaManager;
@@ -19,6 +20,7 @@ import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
  * System obsługujący usuwanie aren z listy które znajdowały się
  * na serwerach które uległy awarii.
  */
+@Slf4j
 public class DeathArenasRemover
 {
     @Inject
@@ -50,6 +52,7 @@ public class DeathArenasRemover
 
             this.arenaManager.removeArena(arena.getId());
             this.eventManager.callEvent(new ArenaDeletedNetEvent(arena.getId(), serverId, arena.getMiniGame()));
+            log.info("Removed arena with ID {} due to server {} crash", arena.getId(), serverId);
         }
     }
 
