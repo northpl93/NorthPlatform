@@ -77,6 +77,11 @@ import pl.north93.zgame.api.global.network.players.IPlayer;
     private BoosterEntryCfg getConfig(final IBooster booster)
     {
         final BoostersCfg boostersCfg = this.boostersCfg.get();
+        if ( boostersCfg == null )
+        {
+            return null;
+        }
+        
         return findInCollection(boostersCfg.getBoosters(), BoosterEntryCfg::getId, booster.getId());
     }
 
