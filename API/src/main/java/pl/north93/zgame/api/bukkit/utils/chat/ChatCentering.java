@@ -1,13 +1,13 @@
 package pl.north93.zgame.api.bukkit.utils.chat;
 
-import javax.annotation.Nonnull;
-
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+
+import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -146,7 +146,24 @@ public final class ChatCentering
         {
             if (component instanceof TextComponent)
             {
-                components.add((TextComponent) component);
+                TextComponent textComponent = (TextComponent) component;
+                
+                String text = textComponent.getText();
+                int newLineIndex = text.indexOf('\n');
+                
+                if ( newLineIndex != -1 && newLineIndex + 1 < text.length() )
+                {
+                    String text1 = text.substring(0, newLineIndex + 1);
+                    String text2 = text.substring(newLineIndex + 1);
+                    
+                    textComponent.setText(text1);
+                    TextComponent textComponent2 = (TextComponent) textComponent.duplicate();
+                    textComponent2.setText(text2);
+                    
+                    insertExtraAtBegin(textComponent, textComponent2);
+                }
+
+                components.add(textComponent);
             }
 
             final List<BaseComponent> extra = component.getExtra();
@@ -158,6 +175,18 @@ public final class ChatCentering
             for (final BaseComponent child : extra)
             {
                 this.buildQueue(child, components);
+            }
+        }
+        
+        private void insertExtraAtBegin(BaseComponent component, BaseComponent extra)
+        {
+            if ( component.getExtra() == null )
+            {
+                component.addExtra(extra);
+            }
+            else
+            {
+                component.getExtra().add(0, extra);
             }
         }
 
