@@ -4,84 +4,48 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import pl.arieals.minigame.goldhunter.classes.xml.XmlClassEquipmentInfo;
 import pl.arieals.minigame.goldhunter.classes.xml.XmlInventoryRefilRule;
 import pl.arieals.minigame.goldhunter.classes.xml.XmlPotionEffect;
+import pl.arieals.minigame.goldhunter.classes.xml.XmlRewardsInfo;
 import pl.arieals.minigame.goldhunter.classes.xml.XmlSpecialAbilityInfo;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.arieals.minigame.goldhunter.player.PlayerRank;
 import pl.north93.zgame.api.bukkit.utils.xml.itemstack.XmlItemStack;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
+@RequiredArgsConstructor
 public class CharacterClass
 {
+    @Getter
     private final @Nullable PlayerRank rank;
+    @Getter
     private final @Nullable String shopItem;
+    @Getter
     private final XmlItemStack icon;
-    
+    @Getter
     private final TranslatableString displayName;
+    @Getter
     private final TranslatableString lore;
-    
+    @Getter
     private final XmlSpecialAbilityInfo specialAbilityInfo;
-    
+    @Getter
     private final XmlClassEquipmentInfo equipmentInfo;
-
+    @Getter
     private final List<XmlInventoryRefilRule> inventoryRefilRules;
-    
+    @Getter
     private final List<XmlPotionEffect> effects;
     
     private final boolean canBeHealedByPotion;
-    
-    // XXX: rewrite this
-    public CharacterClass(PlayerRank rank, String shopItem, XmlItemStack icon, TranslatableString displayName, TranslatableString lore, 
-            XmlSpecialAbilityInfo specialAbility, XmlClassEquipmentInfo equipmentInfo, List<XmlInventoryRefilRule> inventoryRefilRules, 
-            List<XmlPotionEffect> effects, boolean canBeHealedByPotion)
-    {
-        this.rank = rank;
-        this.shopItem = shopItem;
-        this.icon = icon;
-        this.displayName = displayName;
-        this.lore = lore;
-        this.specialAbilityInfo = specialAbility;
-        this.equipmentInfo = equipmentInfo;
-        this.inventoryRefilRules = inventoryRefilRules;
-        this.effects = effects;
-        this.canBeHealedByPotion = canBeHealedByPotion;
-    }
-    
-    public PlayerRank getRank()
-    {
-        return rank;
-    }
-    
-    public String getShopItem()
-    {
-        return shopItem;
-    }
-    
-    public XmlItemStack getIcon()
-    {
-        return icon;
-    }
-    
-    public TranslatableString getDisplayName()
-    {
-        return displayName;
-    }
-    
-    public TranslatableString getLore()
-    {
-        return lore;
-    }
+    @Getter
+    private final XmlRewardsInfo rewardsInfo;
     
     public boolean canBeHealedByPotion()
     {
         return canBeHealedByPotion;
-    }
-    
-    public XmlSpecialAbilityInfo getSpecialAbilityInfo()
-    {
-        return specialAbilityInfo;
     }
 
     public SpecialAbilityType getSpecialAbility()
@@ -94,11 +58,6 @@ public class CharacterClass
         return specialAbilityInfo.getLoadingTime(player) * 20;
     }
     
-    public XmlClassEquipmentInfo getEquipmentInfo()
-    {
-        return equipmentInfo;
-    }
-    
     public void applyEffects(GoldHunterPlayer player)
     {
         player.getPlayer().getActivePotionEffects().forEach(effect -> player.getPlayer().removePotionEffect(effect.getType()));
@@ -108,11 +67,6 @@ public class CharacterClass
     public void applyEquipment(GoldHunterPlayer player)
     {
         equipmentInfo.applyToPlayer(player);
-    }
-    
-    public List<XmlInventoryRefilRule> getInventoryRefilRules()
-    {
-        return inventoryRefilRules;
     }
     
     public boolean hasEnoughRank(GoldHunterPlayer player)

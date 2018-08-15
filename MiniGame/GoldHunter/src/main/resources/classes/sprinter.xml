@@ -7,6 +7,12 @@
 	
 	<!-- <shopItem>sprinter.access</shopItem> -->
 	
+	<rewards>
+		<kill>1.5</kill>
+		<assist>2.5</assist>
+		<chestDestroy>60</chestDestroy>
+	</rewards>
+	
 	<specialAbility type="DOUBLE_JUMP">
 		<loading ifbuyed="sprinter.loadingtime:5" seconds="15" />
 		<loading ifbuyed="sprinter.loadingtime:4" seconds="17" />

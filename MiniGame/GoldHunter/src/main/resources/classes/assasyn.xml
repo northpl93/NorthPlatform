@@ -7,6 +7,12 @@
 	
 	<rank>VIP</rank>
 	
+	<rewards>
+		<kill>3</kill>
+		<assist>1</assist>
+		<chestDestroy>60</chestDestroy>
+	</rewards>
+	
 	<specialAbility type="SHADOW">
 		<loading ifbuyed="assasin.loadingtime:3" seconds="21" />
 		<loading ifbuyed="assasin.loadingtime:2" seconds="24" />

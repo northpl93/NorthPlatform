@@ -11,6 +11,12 @@
             	
     <!-- <shopItem>archer_bomb.access</shopItem> -->
     
+    <rewards>
+		<kill>2.5</kill>
+		<assist>2.5</assist>
+		<chestDestroy>30</chestDestroy>
+	</rewards>
+    
 	<specialAbility type="BOMB_ARROW">
 		<loading ifbuyed="archer_bomb.loadingtime:3" seconds="30" />
 		<loading ifbuyed="archer_bomb.loadingtime:2" seconds="35" />

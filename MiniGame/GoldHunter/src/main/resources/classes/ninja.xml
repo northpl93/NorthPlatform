@@ -11,6 +11,12 @@
 	
 	<rank>SVIP</rank>
 	
+	<rewards>
+		<kill>2.5</kill>
+		<assist>2.5</assist>
+		<chestDestroy>30</chestDestroy>
+	</rewards>
+	
 	<specialAbility type="DEATH_ARROW">
 		<loading ifbuyed="ninja.loadingtime:3" seconds="36" />
 		<loading ifbuyed="ninja.loadingtime:2" seconds="40" />

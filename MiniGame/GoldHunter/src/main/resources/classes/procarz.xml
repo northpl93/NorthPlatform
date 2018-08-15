@@ -5,6 +5,13 @@
 	
 	<icon id="minecraft:snowball" />
 	
+	<rewards>
+		<kill>2</kill>
+		<assist>2</assist>
+		<specialAbility>0.5</specialAbility>
+		<chestDestroy>25</chestDestroy>
+	</rewards>
+	
 	<specialAbility type="DAZZLE">
 		<loading ifbuyed="slinger.loadingtime:3" seconds="18" />
 		<loading ifbuyed="slinger.loadingtime:2" seconds="21" />

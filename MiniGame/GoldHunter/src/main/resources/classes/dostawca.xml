@@ -7,6 +7,13 @@
 	
 	<!-- <shopItem>supplier.access</shopItem> -->
 
+	<rewards>
+		<kill>2</kill>
+		<assist>3.5</assist>
+		<chestDestroy>50</chestDestroy>
+		<specialAbility>2</specialAbility>
+	</rewards>
+	
 	<specialAbility type="SUPPLIER">
 		<loading ifbuyed="suplier.loadingtime:3" seconds="30" />
 		<loading ifbuyed="suplier.loadingtime:2" seconds="35" />

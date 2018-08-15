@@ -8,6 +8,12 @@
 	
 	<!-- <shopItem>class.paladin</shopItem> -->
 	
+	<rewards>
+		<kill>2</kill>
+		<assist>2.5</assist>
+		<chestDestroy>30</chestDestroy>
+	</rewards>
+	
 	<specialAbility type="DIVINE_SHIELD">
 		<loading ifbuyed="paladin.loadingtime:5" seconds="32" />
 		<loading ifbuyed="paladin.loadingtime:4" seconds="34" />

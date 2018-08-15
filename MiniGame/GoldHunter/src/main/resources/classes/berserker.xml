@@ -5,6 +5,12 @@
 	
 	<icon id="minecraft:diamond_sword" />
 	
+	<rewards>
+		<kill>2</kill>
+		<assist>3</assist>
+		<chestDestroy>25</chestDestroy>
+	</rewards>
+	
 	<specialAbility type="CALL_OF_BLOOD">
 		<loading ifbuyed="berserker.loadingtime:3" seconds="21" />
 		<loading ifbuyed="berserker.loadingtime:2" seconds="24" />

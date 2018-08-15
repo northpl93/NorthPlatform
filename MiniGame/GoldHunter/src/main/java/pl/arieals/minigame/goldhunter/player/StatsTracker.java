@@ -120,7 +120,7 @@ public class StatsTracker implements ITickable
     {
         logger.debug("{} StatTracker#onChestDestroy()", player);
         
-        player.addReward("chests", 25);
+        player.addReward("chests", player.getCurrentClass().getRewardsInfo().getChestDestroyReward());
         IStatisticHolder statisticHolder = statisticsManager.getPlayerHolder(player.getPlayer().getUniqueId());
         statisticHolder.increment(new HigherNumberBetterStatistic("goldhunter/chestsDestroyed"), new NumberUnit(1L));
     }
@@ -128,7 +128,7 @@ public class StatsTracker implements ITickable
     private void incrementKills()
     {
         kills++;
-        player.addReward("kills", 2);
+        player.addReward("kills", player.getCurrentClass().getRewardsInfo().getKillReward());
         updateScoreboardAndDisplayName();
 
         final IStatisticHolder holder = statisticsManager.getPlayerHolder(player.getPlayer().getUniqueId());
@@ -144,7 +144,7 @@ public class StatsTracker implements ITickable
     private void incrementAssists()
     {
         assists++;
-        player.addReward("assists", 1.5);
+        player.addReward("assists", player.getCurrentClass().getRewardsInfo().getAssistReward());
         updateScoreboardAndDisplayName();
 
         final IStatisticHolder holder = statisticsManager.getPlayerHolder(player.getPlayer().getUniqueId());

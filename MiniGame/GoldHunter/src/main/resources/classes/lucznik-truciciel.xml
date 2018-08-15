@@ -9,6 +9,12 @@
 		</potionMeta>
 	</icon>
 	
+	<rewards>
+		<kill>2.5</kill>
+		<assist>2.5</assist>
+		<chestDestroy>30</chestDestroy>
+	</rewards>
+	
 	<specialAbility type="POISON_ARROW">
 		<loading ifbuyed="archer_poison.loadingtime:5" seconds="25" />
 		<loading ifbuyed="archer_poison.loadingtime:4" seconds="28" />

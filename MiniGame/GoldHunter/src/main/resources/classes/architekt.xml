@@ -5,6 +5,12 @@
 	
 	<icon id="minecraft:armor_stand" />
 	
+	<rewards>
+		<kill>2</kill>
+		<assist>3.5</assist>
+		<chestDestroy>40</chestDestroy>
+	</rewards>
+	
 	<specialAbility type="BRIDGE">
 		<loading ifbuyed="architect.loadingtime:5" seconds="25" />
 		<loading ifbuyed="architect.loadingtime:4" seconds="28" />

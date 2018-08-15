@@ -5,6 +5,13 @@
 	
 	<icon id="minecraft:magma_cream" />
 	
+	<rewards>
+		<kill>2</kill>
+		<assist>2</assist>
+		<specialAbility>1.5</specialAbility>
+		<chestDestroy>40</chestDestroy>
+	</rewards>
+	
 	<specialAbility type="BATTLE_SCREAM">
 		<loading ifbuyed="shaman.loadingtime:5" seconds="30" />
 		<loading ifbuyed="shaman.loadingtime:4" seconds="33" />

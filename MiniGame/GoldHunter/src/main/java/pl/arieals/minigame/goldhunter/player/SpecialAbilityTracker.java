@@ -116,6 +116,7 @@ public class SpecialAbilityTracker implements ITickable
         if ( success )
         {
             SoundEffect.ABILITY_USE.play(player);
+            player.addReward("ability", player.getCurrentClass().getRewardsInfo().getSpecialAbilityReward());
         }
         
         if ( success && !suspended )

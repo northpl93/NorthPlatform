@@ -41,6 +41,8 @@ public class XmlClassDesc
     @XmlElement(name = "effect")
     private List<XmlPotionEffect> effects = new ArrayList<>();
     
+    private XmlRewardsInfo rewards;
+    
     public String getDisplayName()
     {
         return displayName;
@@ -72,6 +74,7 @@ public class XmlClassDesc
                 equipment,
                 ImmutableList.copyOf(invRefilRules),
                 effects,
-                canBeHealedByPotion);
+                canBeHealedByPotion,
+                rewards);
     }
 }
