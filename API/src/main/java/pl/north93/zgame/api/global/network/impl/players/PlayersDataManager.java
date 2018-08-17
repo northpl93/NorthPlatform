@@ -199,7 +199,7 @@ import pl.north93.zgame.api.global.storage.StorageConnector;
 
         final Group group = this.permissionsManager.getGroupByName(player.getGroup());
         final long groupExpireAt = player.getGroupExpireAt().toEpochMilli();
-        return new OfflinePlayerImpl(player.getUuid(), player.isPremium(), player.getLatestKnownUsername(), player.getDisplayName(), group, groupExpireAt, metaStore);
+        return new OfflinePlayerImpl(player.getUuid(), player.getPremium(), player.getLatestKnownUsername(), player.getDisplayName(), group, groupExpireAt, metaStore);
     }
 
     @Override

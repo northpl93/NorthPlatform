@@ -51,16 +51,18 @@ import pl.north93.zgame.api.global.serializer.platform.template.TemplateEngine;
                 continue;
             }
 
+            final ReflectionFieldInfo fieldInfo = new ReflectionFieldInfo(field);
+
             final NorthCustomTemplate northCustomTemplate = field.getAnnotation(NorthCustomTemplate.class);
             if (northCustomTemplate != null)
             {
                 final Template template = templateEngine.instantiateClass(northCustomTemplate.value());
-                elements.add(this.templateElementFactory.getTemplateElement(clazz, field, template));
+                elements.add(this.templateElementFactory.getTemplateElement(field, fieldInfo, template));
                 continue;
             }
 
-            final Template<Object, SerializationContext, DeserializationContext> template = templateEngine.getTemplate(field.getGenericType());
-            elements.add(this.templateElementFactory.getTemplateElement(clazz, field, template));
+            final Template<Object, SerializationContext, DeserializationContext> template = templateEngine.getTemplate(fieldInfo.getType());
+            elements.add(this.templateElementFactory.getTemplateElement(field, fieldInfo, template));
         }
 
         return new TemplateImpl<>(templateEngine.getInstanceCreator(clazz), elements);

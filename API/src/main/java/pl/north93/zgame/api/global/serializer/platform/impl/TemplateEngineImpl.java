@@ -11,6 +11,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import pl.north93.zgame.api.global.serializer.platform.ClassResolver;
 import pl.north93.zgame.api.global.serializer.platform.InstanceCreator;
@@ -39,6 +42,7 @@ import pl.north93.zgame.api.global.serializer.platform.template.builtin.StringTe
 {
     private final ClassResolver classResolver;
     private final InstantiationManager instantiationManager = new InstantiationManager();
+    private final ReadWriteLock templatesLock = new ReentrantReadWriteLock();
     private final TemplateFactory templateFactory = new TemplateFactoryImpl();
     private final Map<TemplateFilter, Template<?, ?, ?>> templates = new TreeMap<>();
 
@@ -139,21 +143,40 @@ import pl.north93.zgame.api.global.serializer.platform.template.builtin.StringTe
     @Override
     public void register(final TemplateFilter filter, final Template<?, ?, ?> template)
     {
-        // TreeMap zapewnie od razu poprawne sortowanie po priorytecie
-        this.templates.put(filter, template);
+        final Lock writeLock = this.templatesLock.writeLock();
+        try
+        {
+            writeLock.lock();
+
+            // TreeMap zapewnie od razu poprawne sortowanie po priorytecie
+            this.templates.put(filter, template);
+        }
+        finally
+        {
+            writeLock.unlock();
+        }
     }
 
     @Override
     public Template<Object, SerializationContext, DeserializationContext> getTemplate(final Type type)
     {
         // iterujemy od najwyzszego priorytetu do najnizszego - TreeMap
-        for (final Map.Entry<TemplateFilter, Template<?, ?, ?>> entry : this.templates.entrySet())
+        final Lock readLock = this.templatesLock.readLock();
+        try
         {
-            final TemplateFilter filter = entry.getKey();
-            if (filter.isApplicableTo(this, type))
+            readLock.lock();
+            for (final Map.Entry<TemplateFilter, Template<?, ?, ?>> entry : this.templates.entrySet())
             {
-                return this.genericCast(entry.getValue());
+                final TemplateFilter filter = entry.getKey();
+                if (filter.isApplicableTo(this, type))
+                {
+                    return this.genericCast(entry.getValue());
+                }
             }
+        }
+        finally
+        {
+            readLock.unlock();
         }
 
         if (type instanceof Class)

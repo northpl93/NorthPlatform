@@ -23,9 +23,8 @@ class MethodHandleTemplateElement implements ITemplateElement
     private final        MethodHandle setter;
     private final        Template     template;
 
-    public MethodHandleTemplateElement(final Field field, final Template template)
+    public MethodHandleTemplateElement(final Field field, final FieldInfo fieldInfo, final Template template)
     {
-        this.field = new ReflectionFieldInfo(field);
         try
         {
             this.getter = LOOKUP.unreflectGetter(field).asType(GETTER_TYPE);
@@ -35,6 +34,7 @@ class MethodHandleTemplateElement implements ITemplateElement
         {
             throw new RuntimeException("Failed to unreflect getter or setter.", e);
         }
+        this.field = fieldInfo;
         this.template = template;
     }
 

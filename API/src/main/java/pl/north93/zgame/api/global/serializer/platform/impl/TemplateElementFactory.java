@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.serializer.platform.FieldInfo;
 import pl.north93.zgame.api.global.serializer.platform.template.ITemplateElement;
 import pl.north93.zgame.api.global.serializer.platform.template.Template;
 
@@ -17,7 +18,7 @@ import pl.north93.zgame.api.global.serializer.platform.template.Template;
         this.useCompiledElements = useCompiledElements;
     }
 
-    public ITemplateElement getTemplateElement(final Class<?> clazz, final Field field, final Template template)
+    public ITemplateElement getTemplateElement(final Field field, final FieldInfo fieldInfo, final Template template)
     {
         if (this.useCompiledElements)
         {
@@ -26,7 +27,7 @@ import pl.north93.zgame.api.global.serializer.platform.template.Template;
         }
         else
         {
-            return new MethodHandleTemplateElement(field, template);
+            return new MethodHandleTemplateElement(field, fieldInfo, template);
         }
     }
 

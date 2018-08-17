@@ -27,7 +27,7 @@ import pl.north93.zgame.api.global.serializer.platform.annotations.NorthField;
 /*default*/ class PersistedPlayer
 {
     private UUID    uuid;
-    private boolean premium;
+    private Boolean premium;
     private String  latestKnownUsername;
     private String  displayName;
     private String  group;
