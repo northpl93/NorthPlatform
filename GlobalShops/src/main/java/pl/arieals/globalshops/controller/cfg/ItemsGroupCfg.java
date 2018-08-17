@@ -12,8 +12,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.globalshops.shared.GroupType;
-import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
-import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
 
 @XmlRootElement(name = "itemGroup")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -25,7 +23,7 @@ public final class ItemsGroupCfg
     private GroupType     groupType;
     @XmlElementWrapper(name = "items")
     @XmlElement(name = "item")
-    @MsgPackCustomTemplate(ArrayListTemplate.class)
+    //@MsgPackCustomTemplate(ArrayListTemplate.class)
     private List<ItemCfg> items;
 
     public String getId()

@@ -4,9 +4,7 @@ import org.msgpack.core.MessageBufferPacker;
 import org.msgpack.core.MessagePack;
 
 import pl.north93.zgame.api.global.serializer.platform.FieldInfo;
-import pl.north93.zgame.api.global.serializer.platform.context.DeserializationContext;
 import pl.north93.zgame.api.global.serializer.platform.context.SerializationContext;
-import pl.north93.zgame.api.global.serializer.platform.template.Template;
 import pl.north93.zgame.api.global.serializer.platform.template.TemplateEngine;
 
 public class MsgPackSerializationContext extends SerializationContext
@@ -47,16 +45,6 @@ public class MsgPackSerializationContext extends SerializationContext
     }
 
     @Override
-    public void writeDynamicTypedField(final FieldInfo field, final Object object) throws Exception
-    {
-        final Class<?> objectClass = object.getClass();
-        this.packer.packString(objectClass.getName());
-
-        final Template<Object, SerializationContext, DeserializationContext> template = this.getTemplateEngine().getTemplate(objectClass);
-        template.serialise(this, field, object);
-    }
-
-    @Override
     public void writeString(final FieldInfo field, final String string) throws Exception
     {
         this.packer.packString(string);
@@ -93,9 +81,9 @@ public class MsgPackSerializationContext extends SerializationContext
     }
 
     @Override
-    public void writeDouble(final FieldInfo field, final Double doubleNumber) throws Exception
+    public void writeDouble(final FieldInfo field, final Double aDouble) throws Exception
     {
-        this.packer.packDouble(doubleNumber);
+        this.packer.packDouble(aDouble);
     }
 
     @Override

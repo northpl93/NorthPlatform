@@ -8,6 +8,7 @@ import pl.north93.zgame.api.global.serializer.platform.context.SerializationCont
 import pl.north93.zgame.api.global.serializer.platform.template.Template;
 import pl.north93.zgame.api.global.serializer.platform.template.TemplateEngine;
 import pl.north93.zgame.api.global.serializer.platform.template.TemplateFilter;
+import pl.north93.zgame.api.global.serializer.platform.template.TemplatePriority;
 
 public class EnumTemplate implements Template<Enum<?>, SerializationContext, DeserializationContext>
 {
@@ -16,27 +17,23 @@ public class EnumTemplate implements Template<Enum<?>, SerializationContext, Des
         @Override
         public int getPriority()
         {
-            return 10;
+            return TemplatePriority.HIGHEST;
         }
 
         @Override
         public boolean isApplicableTo(final TemplateEngine templateEngine, final Type type)
         {
-            if (type instanceof Class)
+            final Class<?> clazz = templateEngine.getRawClassFromType(type);
+            if (clazz.isEnum())
             {
-                final Class clazz = (Class) type;
-                if (clazz.isEnum())
-                {
-                    return true;
-                }
-                else if (clazz.getSuperclass() != null)
-                {
-                    // jesli implementujemy w enumie metody to wtedy powstaje klaa rozszerzajaca enum
-                    return clazz.getSuperclass().isEnum();
-                }
-
-                return false;
+                return true;
             }
+            else if (clazz.getSuperclass() != null)
+            {
+                // jesli implementujemy w enumie metody to wtedy powstaje klaa rozszerzajaca enum
+                return clazz.getSuperclass().isEnum();
+            }
+
             return false;
         }
     }
@@ -53,18 +50,8 @@ public class EnumTemplate implements Template<Enum<?>, SerializationContext, Des
     {
         final String enumName = context.readString(field);
 
-        final Class<Enum> enumClass = (Class<Enum>) this.getClassOfType(field.getType());
+        final Class<Enum> enumClass = (Class<Enum>) context.getTemplateEngine().getRawClassFromType(field.getType());
         return this.getEnumValue(enumClass, enumName);
-    }
-
-    private Class<?> getClassOfType(final Type type)
-    {
-        if (type instanceof Class)
-        {
-            return (Class<?>) type;
-        }
-
-        throw new IllegalArgumentException(type.getTypeName());
     }
 
     @SuppressWarnings("unchecked")

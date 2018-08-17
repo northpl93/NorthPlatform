@@ -13,6 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import pl.north93.zgame.api.global.serializer.platform.TemplateFactory;
+import pl.north93.zgame.api.global.serializer.platform.annotations.NorthCustomTemplate;
 import pl.north93.zgame.api.global.serializer.platform.annotations.NorthTransient;
 import pl.north93.zgame.api.global.serializer.platform.context.DeserializationContext;
 import pl.north93.zgame.api.global.serializer.platform.context.SerializationContext;
@@ -35,6 +36,14 @@ import pl.north93.zgame.api.global.serializer.platform.template.TemplateEngine;
             field.setAccessible(true);
             if (this.shouldSkipField(field))
             {
+                continue;
+            }
+
+            final NorthCustomTemplate northCustomTemplate = field.getAnnotation(NorthCustomTemplate.class);
+            if (northCustomTemplate != null)
+            {
+                final Template template = templateEngine.instantiateClass(northCustomTemplate.value());
+                elements.add(this.templateElementFactory.getTemplateElement(clazz, field, template));
                 continue;
             }
 
@@ -71,7 +80,7 @@ import pl.north93.zgame.api.global.serializer.platform.template.TemplateEngine;
             elements.add(this.templateElementFactory.getTemplateElement(clazz, field, template));
         }
 
-        return new TemplateImpl<>(clazz, elements);
+        return new TemplateImpl<>(templateEngine.getInstanceCreator(clazz), elements);
     }
 
     private boolean shouldSkipField(final Field field)
@@ -81,22 +90,6 @@ import pl.north93.zgame.api.global.serializer.platform.template.TemplateEngine;
         final int modifiers = field.getModifiers();
         return field.isAnnotationPresent(NorthTransient.class) || isTransient(modifiers) || isStatic(modifiers);
     }
-
-    /*@SuppressWarnings("unchecked")
-    private <T> Template<T> handleEnum(final Class<T> clazz)
-    {
-        final Class<?> enumClass;
-        if (clazz.getSuperclass() == Enum.class)
-        {
-            enumClass = clazz;
-        }
-        else
-        {
-            enumClass = clazz.getSuperclass();
-        }
-
-        return (Template<T>) new EnumTemplate(enumClass);
-    }*/
 
     @Override
     public String toString()

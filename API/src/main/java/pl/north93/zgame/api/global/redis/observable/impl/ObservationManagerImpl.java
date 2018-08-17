@@ -14,7 +14,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.PlatformConnector;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.observable.Hash;
 import pl.north93.zgame.api.global.redis.observable.ICacheBuilder;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
@@ -24,6 +23,7 @@ import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
 import pl.north93.zgame.api.global.redis.observable.SortedSet;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
+import pl.north93.zgame.api.global.serializer.platform.NorthSerializer;
 import pl.north93.zgame.api.global.storage.StorageConnector;
 import pl.north93.zgame.api.global.utils.ReferenceHashMap;
 
@@ -35,7 +35,7 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     @Inject
     private       StorageConnector         storageConnector;
     @Inject
-    private       TemplateManager          msgPack;
+    private       NorthSerializer<byte[]>  msgPack;
     @Inject
     private       RedisSubscriber          redisSubscriber;
 
@@ -196,7 +196,7 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         return this.storageConnector;
     }
 
-    /*default*/ TemplateManager getMsgPack()
+    /*default*/ NorthSerializer<byte[]> getMsgPack()
     {
         return this.msgPack;
     }

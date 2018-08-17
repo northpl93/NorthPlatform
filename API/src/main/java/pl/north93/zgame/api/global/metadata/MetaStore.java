@@ -9,10 +9,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
-import pl.north93.zgame.api.global.redis.messaging.templates.extra.MetaStoreTemplate;
-
-@MsgPackCustomTemplate(MetaStoreTemplate.class)
+//@MsgPackCustomTemplate(MetaStoreTemplate.class)
 public final class MetaStore
 {
     private final Map<MetaKey, Object> metadata = new IdentityHashMap<>();

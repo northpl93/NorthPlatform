@@ -13,7 +13,7 @@ public interface NorthSerializer<OUTPUT>
         return this.serialize(object.getClass(), object);
     }
 
-    Object deserialize(Type type, OUTPUT serialized);
+    <T> T deserialize(Type type, OUTPUT serialized);
 
     SerializationFormat<OUTPUT> getSerializationFormat();
 

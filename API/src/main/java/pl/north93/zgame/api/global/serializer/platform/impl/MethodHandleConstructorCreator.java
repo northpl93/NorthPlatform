@@ -8,6 +8,8 @@ import java.lang.invoke.MethodType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.serializer.platform.InstanceCreator;
+
 /*default*/ class MethodHandleConstructorCreator<T> implements InstanceCreator<T>
 {
     private static final Lookup       LOOKUP      = MethodHandles.lookup();

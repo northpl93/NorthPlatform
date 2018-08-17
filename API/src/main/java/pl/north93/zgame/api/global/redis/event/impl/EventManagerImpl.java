@@ -19,17 +19,17 @@ import pl.north93.zgame.api.global.component.annotations.bean.Named;
 import pl.north93.zgame.api.global.redis.event.IEventManager;
 import pl.north93.zgame.api.global.redis.event.INetEvent;
 import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
-import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
+import pl.north93.zgame.api.global.serializer.platform.NorthSerializer;
 
 public class EventManagerImpl extends Component implements IEventManager
 {
     @Inject
-    private ApiCore         apiCore;
+    private ApiCore                 apiCore;
     @Inject
-    private TemplateManager msgPack;
+    private RedisSubscriber         subscriber;
     @Inject
-    private RedisSubscriber subscriber;
+    private NorthSerializer<byte[]> msgPack;
     private final Set<String> subscribedClasses = new HashSet<>();
     private final Multimap<Class<?>, IEventInvocationHandler> handlers = ArrayListMultimap.create();
 
@@ -79,7 +79,7 @@ public class EventManagerImpl extends Component implements IEventManager
         try
         {
             final Class<? extends INetEvent> clazz = (Class) this.apiCore.getComponentManager().findClass(className);
-            event = this.msgPack.deserialize(clazz, bytes);
+            event = (INetEvent) this.msgPack.deserialize(clazz, bytes);
         }
         catch (final RuntimeException e)
         {

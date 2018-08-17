@@ -22,7 +22,9 @@ import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.zgame.api.global.network.server.joinaction.JoinActionsContainer;
 import pl.north93.zgame.api.global.permissions.Group;
+import pl.north93.zgame.api.global.permissions.GroupInStringTemplate;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
+import pl.north93.zgame.api.global.serializer.platform.annotations.NorthCustomTemplate;
 
 /**
  * Reprezentuje gracza będącego online w sieci
@@ -36,6 +38,7 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     private UUID      serverId;
     private String    proxyId;
     private Boolean   premium;
+    @NorthCustomTemplate(GroupInStringTemplate.class)
     private Group     group;
     private Long      groupExpireAt;
     private MetaStore meta = new MetaStore();

@@ -11,13 +11,14 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import com.google.gson.JsonObject;
+import com.mongodb.client.MongoCollection;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.query.Query;
+import org.bson.Document;
 
 import org.diorite.commons.io.DioriteURLUtils;
 
@@ -33,13 +34,13 @@ import pl.north93.zgame.api.global.storage.StorageConnector;
 @Slf4j
 class UsernameCache
 {
-    private final Datastore                      datastore;
-    private final Cache<String, UsernameDetails> localCache;
+    private final MongoCollection<UsernameDetails> collection;
+    private final Cache<String, UsernameDetails>   localCache;
 
     @Bean
     private UsernameCache(final StorageConnector connector, final IObservationManager observationManager)
     {
-        this.datastore = connector.getDatastore();
+        this.collection = connector.getMainDatabase().getCollection("username_cache").withDocumentClass(UsernameDetails.class);
         this.localCache = this.setupUsernameCache(observationManager);
     }
 
@@ -62,10 +63,10 @@ class UsernameCache
 
     private UsernameDetails fillCache(final String username)
     {
-        final Query<UsernameDetails> query = this.datastore.createQuery(UsernameDetails.class)
-                                                           .field("username").equalIgnoreCase(username);
+        final Pattern usernamePattern = Pattern.compile(Pattern.quote(username), Pattern.CASE_INSENSITIVE);
+        final Document query = new Document("username", usernamePattern);
 
-        final UsernameDetails details = query.get();
+        final UsernameDetails details = this.collection.find(query).first();
         if (details != null)
         {
             return details;
@@ -75,7 +76,7 @@ class UsernameCache
         if (usernameDetails.isPresent())
         {
             final UsernameDetails fromMojang = usernameDetails.get();
-            this.datastore.updateFirst(query, fromMojang, true);
+            this.collection.insertOne(fromMojang);
 
             log.info("Updating nick cache for {}", username);
             return fromMojang;

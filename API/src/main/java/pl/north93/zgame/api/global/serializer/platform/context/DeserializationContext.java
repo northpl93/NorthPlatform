@@ -12,8 +12,6 @@ public abstract class DeserializationContext extends Context
 
     public abstract boolean trySkipNull(FieldInfo field) throws Exception;
 
-    public abstract Object readDynamicTypedField(FieldInfo field) throws Exception;
-
     // SIMPLE TYPES //
 
     public abstract String readString(FieldInfo field) throws Exception;

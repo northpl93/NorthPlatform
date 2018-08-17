@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcTarget;
 import pl.north93.zgame.api.global.redis.rpc.exceptions.RpcUnimplementedException;
@@ -22,16 +21,17 @@ import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcExceptionInfo;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcInvokeMessage;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcResponseMessage;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
+import pl.north93.zgame.api.global.serializer.platform.NorthSerializer;
 import pl.north93.zgame.api.global.storage.StorageConnector;
 
 public class RpcManagerImpl extends Component implements IRpcManager
 {
     @Inject
-    private StorageConnector storageConnector;
+    private StorageConnector        storageConnector;
     @Inject
-    private RedisSubscriber  redisSubscriber;
+    private RedisSubscriber         redisSubscriber;
     @Inject
-    private TemplateManager  msgPack;
+    private NorthSerializer<byte[]> msgPack;
     private final Logger                              logger            = LoggerFactory.getLogger(RpcManagerImpl.class);
     private final RpcProxyCache                       rpcProxyCache      = new RpcProxyCache(this);
     private final IntObjectMap<RpcResponseHandler>    responseHandlerMap = new IntObjectHashMap<>();
@@ -117,7 +117,7 @@ public class RpcManagerImpl extends Component implements IRpcManager
         return this.storageConnector.getRedis();
     }
 
-    /*default*/ TemplateManager getMsgPack()
+    /*default*/ NorthSerializer<byte[]> getMsgPack()
     {
         return this.msgPack;
     };

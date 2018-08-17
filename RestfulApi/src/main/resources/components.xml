@@ -13,7 +13,6 @@
             <description>Provides REST API for network management.</description>
             <dependencies>
                 <dependency>API.Database.StorageConnector</dependency>
-                <dependency>API.Database.Redis.MessagePackSerializer</dependency>
                 <dependency>API.Database.Redis.RPC</dependency>
                 <dependency>API.Database.Redis.Subscriber</dependency>
             </dependencies>

@@ -6,15 +6,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.globalshops.controller.cfg.ItemsGroupCfg;
-import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
-import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
 
 /**
  * Klasa uzywana do wymieniania danych przez system configow.
  */
 public class ItemsDataContainer
 {
-    @MsgPackCustomTemplate(ArrayListTemplate.class)
+    //@MsgPackCustomTemplate(ArrayListTemplate.class)
     private List<ItemsGroupCfg> groups;
 
     public ItemsDataContainer()

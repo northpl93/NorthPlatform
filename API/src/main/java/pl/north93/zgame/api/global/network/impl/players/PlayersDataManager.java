@@ -17,12 +17,12 @@ import java.util.regex.Pattern;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.ReplaceOptions;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.Document;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.query.Query;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.metadata.MetaKey;
@@ -83,7 +83,11 @@ import pl.north93.zgame.api.global.storage.StorageConnector;
     public void logPlayerJoin(final UUID uuid, final String nick, final boolean premium, final String ip, final String bungee)
     {
         final LoginHistoryEntry historyEntry = new LoginHistoryEntry(nick, premium, ip, bungee, Instant.now());
-        this.storageConnector.getDatastore().save(historyEntry);
+
+        final MongoDatabase mainDatabase = this.storageConnector.getMainDatabase();
+        final MongoCollection<LoginHistoryEntry> joinHistory = mainDatabase.getCollection("join_history").withDocumentClass(LoginHistoryEntry.class);
+
+        joinHistory.insertOne(historyEntry);
     }
 
     @Override
@@ -165,11 +169,11 @@ import pl.north93.zgame.api.global.storage.StorageConnector;
 
     private IOfflinePlayer loadOfflinePlayer(final UUID uuid) // used by online mode
     {
-        final Datastore datastore = this.storageConnector.getDatastore();
+        final MongoDatabase mainDatabase = this.storageConnector.getMainDatabase();
+        final MongoCollection<PersistedPlayer> players = mainDatabase.getCollection("players").withDocumentClass(PersistedPlayer.class);
 
-        final Query<PersistedPlayer> query = datastore.createQuery(PersistedPlayer.class)
-                                                      .field("uuid").equal(uuid);
-        return this.readOfflinePlayer(query.get());
+        final PersistedPlayer persistedPlayer = players.find(new Document("uuid", uuid)).first();
+        return this.readOfflinePlayer(persistedPlayer);
     }
 
     @SuppressWarnings("unchecked")
@@ -202,11 +206,11 @@ import pl.north93.zgame.api.global.storage.StorageConnector;
     public void savePlayer(final IPlayer player)
     {
         final PersistedPlayer persistedPlayer = PersistedPlayer.create(player);
-        final Datastore datastore = this.storageConnector.getDatastore();
 
-        final Query<PersistedPlayer> query = datastore.createQuery(PersistedPlayer.class)
-                                                      .field("uuid").equal(player.getUuid());
-        datastore.updateFirst(query, persistedPlayer, true);
+        final MongoDatabase mainDatabase = this.storageConnector.getMainDatabase();
+        final MongoCollection<PersistedPlayer> players = mainDatabase.getCollection("players").withDocumentClass(PersistedPlayer.class);
+
+        players.replaceOne(new Document("uuid", player.getUuid()), persistedPlayer, new ReplaceOptions().upsert(true));
 
         if (player instanceof IOnlinePlayer)
         {

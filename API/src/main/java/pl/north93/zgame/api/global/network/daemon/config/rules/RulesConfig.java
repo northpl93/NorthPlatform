@@ -12,9 +12,6 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
-import pl.north93.zgame.api.global.redis.messaging.templates.LinkedListTemplate;
-
 @XmlRootElement(name = "rules")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RulesConfig
@@ -24,7 +21,7 @@ public class RulesConfig
     @XmlAttribute(name = "max")
     private Integer               maxServers = Integer.MAX_VALUE;
     @XmlElement(name = "value")
-    @MsgPackCustomTemplate(LinkedListTemplate.class)
+    //@MsgPackCustomTemplate(LinkedListTemplate.class)
     private List<RuleEntryConfig> rules = new LinkedList<>();
 
     public int getMinServers()

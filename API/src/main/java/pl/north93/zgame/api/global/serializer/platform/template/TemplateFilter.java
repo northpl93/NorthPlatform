@@ -13,7 +13,7 @@ public interface TemplateFilter extends Comparable<TemplateFilter>
     @Override
     default int compareTo(final @Nonnull TemplateFilter other)
     {
-        final int result = this.getPriority() - other.getPriority();
+        final int result = other.getPriority() - this.getPriority();
         if (result == 0)
         {
             return -1;

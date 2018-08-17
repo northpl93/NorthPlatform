@@ -52,12 +52,9 @@
             <name>API.Database.StorageConnector</name>
             <mainClass>pl.north93.zgame.api.global.storage.StorageConnector</mainClass>
             <description>Provides connection with Redis and MongoDB databases.</description>
-        </component>
-
-        <component>
-            <name>API.Database.Redis.MessagePackSerializer</name>
-            <mainClass>pl.north93.zgame.api.global.redis.messaging.impl.TemplateManagerImpl</mainClass>
-            <description>Provides serialization to Message Pack format.</description>
+            <dependencies>
+                <dependency>API.Serializer</dependency>
+            </dependencies>
         </component>
 
         <component>
@@ -75,7 +72,6 @@
             <description>Provides value observation API for redis database.</description>
             <dependencies>
                 <dependency>API.Database.StorageConnector</dependency>
-                <dependency>API.Database.Redis.MessagePackSerializer</dependency>
                 <dependency>API.Database.Redis.Subscriber</dependency>
             </dependencies>
         </component>
@@ -86,7 +82,6 @@
             <description>Provides remote procedure call infrastructure.</description>
             <dependencies>
                 <dependency>API.Database.StorageConnector</dependency>
-                <dependency>API.Database.Redis.MessagePackSerializer</dependency>
                 <dependency>API.Database.Redis.Subscriber</dependency>
             </dependencies>
         </component>
@@ -97,7 +92,6 @@
             <description>Simple redis-driven events framework.</description>
             <dependencies>
                 <dependency>API.Database.StorageConnector</dependency>
-                <dependency>API.Database.Redis.MessagePackSerializer</dependency>
                 <dependency>API.Database.Redis.Subscriber</dependency>
             </dependencies>
         </component>

@@ -6,12 +6,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.diorite.commons.arrays.DioriteArrayUtils;
 
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
+import pl.north93.zgame.api.global.serializer.platform.NorthSerializer;
 
 public final class JoinActionsContainer
 {
     @Inject
-    private static TemplateManager templateManager;
+    private static NorthSerializer<byte[]> templateManager;
     private byte[] serverJoinActions; // reading from byte[] is optimised
 
     public JoinActionsContainer()

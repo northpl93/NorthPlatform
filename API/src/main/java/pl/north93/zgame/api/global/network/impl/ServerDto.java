@@ -10,8 +10,6 @@ import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.network.server.ServerType;
 import pl.north93.zgame.api.global.network.server.group.IServersGroup;
-import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
-import pl.north93.zgame.api.global.redis.messaging.templates.extra.ServersGroupInStringTemplate;
 import pl.north93.zgame.api.global.redis.rpc.IRpcTarget;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 
@@ -32,7 +30,7 @@ public class ServerDto implements Server, ServerProxyData
     private ServerState   serverState;
     private Boolean       shutdown;
     private JoiningPolicy joiningPolicy;
-    @MsgPackCustomTemplate(ServersGroupInStringTemplate.class)
+    //@MsgPackCustomTemplate(ServersGroupInStringTemplate.class)
     private IServersGroup serversGroup;
 
     public ServerDto(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy, final String connectIp, final Integer connectPort, final IServersGroup serversGroup)

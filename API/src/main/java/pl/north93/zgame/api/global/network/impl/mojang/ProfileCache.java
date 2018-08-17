@@ -14,11 +14,11 @@ import java.util.UUID;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mongodb.client.MongoCollection;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.query.Query;
+import org.bson.Document;
 
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
@@ -29,25 +29,23 @@ import pl.north93.zgame.api.global.storage.StorageConnector;
 @Slf4j
 /*default*/ class ProfileCache
 {
-    private final Datastore datastore;
+    private final MongoCollection<CachedProfile> collection;
 
     @Bean
     private ProfileCache(final StorageConnector connector)
     {
-        this.datastore = connector.getDatastore();
+        final MongoCollection<Document> collection = connector.getMainDatabase().getCollection("profile_cache");
+        this.collection = collection.withDocumentClass(CachedProfile.class);
     }
 
     public void updateProfile(final CachedProfile profile)
     {
-        this.datastore.save(profile);
+        this.collection.insertOne(profile);
     }
 
     public Optional<CachedProfile> getProfile(final UUID profileId)
     {
-        final Query<CachedProfile> query = this.datastore.createQuery(CachedProfile.class)
-                                                         .field("uuid").equal(profileId);
-
-        final CachedProfile cachedProfile = query.get();
+        final CachedProfile cachedProfile = this.collection.find(new Document("uuid", profileId)).first();
         if (cachedProfile == null)
         {
             return this.queryMojangAndFillCache(profileId);
@@ -76,7 +74,7 @@ import pl.north93.zgame.api.global.storage.StorageConnector;
             final List<CachedProfileProperty> properties = this.buildPropertiesList(jsonProperties);
 
             final CachedProfile cachedProfile = new CachedProfile(uuid, name, properties);
-            this.datastore.save(cachedProfile);
+            this.collection.insertOne(cachedProfile);
 
             log.info("Fetched profile from Mojang {}", cachedProfile);
             return Optional.of(cachedProfile);

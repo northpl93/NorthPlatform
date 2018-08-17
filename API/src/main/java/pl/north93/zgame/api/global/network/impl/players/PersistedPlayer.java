@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.mongodb.morphia.annotations.Entity;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +23,6 @@ import pl.north93.zgame.api.global.network.players.IPlayer;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity("players")
 /*default*/ class PersistedPlayer
 {
     private UUID    uuid;

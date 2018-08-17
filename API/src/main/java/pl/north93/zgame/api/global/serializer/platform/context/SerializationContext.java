@@ -20,8 +20,6 @@ public abstract class SerializationContext extends Context
 
     public abstract void writeNull(FieldInfo field) throws Exception;
 
-    public abstract void writeDynamicTypedField(FieldInfo field, Object object) throws Exception;
-
     public abstract void writeString(FieldInfo field, String string) throws Exception;
 
     public abstract void writeBoolean(FieldInfo field, Boolean aBoolean) throws Exception;

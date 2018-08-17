@@ -8,9 +8,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import java.util.List;
 
-import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
-import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
-
 /**
  * Reprezentuje wzór według którego tworzone będą instancje serwerów.
  */
@@ -26,7 +23,7 @@ public class ServerPatternConfig
     private Integer      maxMemory;
     @XmlElement
     private Integer      startMemory;
-    @MsgPackCustomTemplate(ArrayListTemplate.class)
+    //@MsgPackCustomTemplate(ArrayListTemplate.class)
     @XmlElementWrapper(name = "components")
     @XmlElement(name = "component")
     private List<String> components;

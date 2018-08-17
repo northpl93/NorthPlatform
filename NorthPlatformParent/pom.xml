@@ -9,7 +9,7 @@
 
         <bungee-api.version>1.12-mcpiraci</bungee-api.version>
 
-        <mongodb.version>3.6.3</mongodb.version>
+        <mongodb.version>3.8.0</mongodb.version>
 
         <spark.version>2.7.1</spark.version>
 

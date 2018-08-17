@@ -3,7 +3,7 @@ package pl.north93.zgame.api.global.redis.observable.impl;
 import com.lambdaworks.redis.ScriptOutputType;
 import com.lambdaworks.redis.api.sync.RedisCommands;
 
-import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
+import pl.north93.zgame.api.global.serializer.platform.NorthSerializer;
 
 /*default*/ final class LockScripts
 {
@@ -41,7 +41,7 @@ import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
     public static boolean lock(final ObservationManagerImpl observationManager, final String name, final long threadId)
     {
         final RedisCommands<String, byte[]> redis = observationManager.getRedis();
-        final TemplateManager msgPack = observationManager.getMsgPack();
+        final NorthSerializer<byte[]> msgPack = observationManager.getMsgPack();
 
         final byte[] arg = msgPack.serialize(Long.class, threadId);
         return redis.eval(LockScripts.LOCK_SCRIPT, ScriptOutputType.BOOLEAN, new String[]{name}, arg);
@@ -50,7 +50,7 @@ import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
     public static int unlock(final ObservationManagerImpl observationManager, final String name, final long threadId)
     {
         final RedisCommands<String, byte[]> redis = observationManager.getRedis();
-        final TemplateManager msgPack = observationManager.getMsgPack();
+        final NorthSerializer<byte[]> msgPack = observationManager.getMsgPack();
 
         final byte[] arg = msgPack.serialize(Long.class, threadId);
         final Long eval = redis.eval(LockScripts.UNLOCK_SCRIPT, ScriptOutputType.INTEGER, new String[]{name}, arg);

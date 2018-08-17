@@ -13,18 +13,25 @@ import com.lambdaworks.redis.api.sync.RedisCommands;
 import com.mongodb.Function;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
-import org.mongodb.morphia.mapping.DefaultCreator;
+import org.bson.BsonReader;
+import org.bson.codecs.Codec;
+import org.bson.codecs.configuration.CodecConfigurationException;
+import org.bson.codecs.configuration.CodecRegistry;
 
-import pl.north93.zgame.api.global.ApiCore;
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.Component;
+import pl.north93.zgame.api.global.serializer.mongodb.MongoDbCodec;
+import pl.north93.zgame.api.global.serializer.mongodb.MongoDbSerializationFormat;
+import pl.north93.zgame.api.global.serializer.platform.NorthSerializer;
+import pl.north93.zgame.api.global.serializer.platform.impl.NorthSerializerImpl;
 
+@Slf4j
 public class StorageConnector extends Component
 {
     private RedisClient                             redisClient;
@@ -32,8 +39,6 @@ public class StorageConnector extends Component
     private StatefulRedisConnection<String, byte[]> atomicallyConnection;
     private MongoClient                             mongoClient;
     private MongoDatabase                           mainDatabase;
-    private Morphia                                 morphia;
-    private Datastore                               datastore;
 
     @Override
     protected void enableComponent()
@@ -57,24 +62,50 @@ public class StorageConnector extends Component
         this.fixMongoLogger(Logger.getLogger("org.mongodb.driver.protocol.update"));
 
         final MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
+
+        final NorthSerializerImpl<BsonReader> serializer = new NorthSerializerImpl<>(new MongoDbSerializationFormat());
+        builder.codecRegistry(this.configureMongoCodecRegistry(serializer));
+
         builder.connectionsPerHost(10); // maksymalnie 10 polaczen. Default 100
         builder.minConnectionsPerHost(1); // minimum utrzymywane jedno polaczenie. Default 0
         this.mongoClient = new MongoClient(new MongoClientURI(config.getMongoDbConnect(), builder));
 
         this.mainDatabase = this.mongoClient.getDatabase(config.getMongoMainDatabase());
+    }
 
-        this.morphia = new Morphia();
-        this.morphia.getMapper().getOptions().setObjectFactory(new DefaultCreator()
+    private CodecRegistry configureMongoCodecRegistry(final NorthSerializer<BsonReader> northSerializer)
+    {
+        /*return fromProviders(asList(new ValueCodecProvider(),
+                new BsonValueCodecProvider(),
+                new DBRefCodecProvider(),
+                new DBObjectCodecProvider(),
+                new DocumentCodecProvider(new DocumentToDBRefTransformer()),
+                new IterableCodecProvider(new DocumentToDBRefTransformer()),
+                new MapCodecProvider(new DocumentToDBRefTransformer()),
+                new GeoJsonCodecProvider(),
+                new GridFSFileCodecProvider(),
+                new Jsr310CodecProvider(),
+                PojoCodecProvider.builder().automatic(true).build()));*/
+
+
+        return new CodecRegistry()
         {
             @Override
-            protected ClassLoader getClassLoaderForClass()
+            public <T> Codec<T> get(final Class<T> clazz)
             {
-                final ApiCore apiCore = StorageConnector.this.getApiCore();
-                return apiCore.getComponentManager().getBossClassLoader();
+                try
+                {
+                    return MongoClientSettings.getDefaultCodecRegistry().get(clazz);
+                }
+                catch (final CodecConfigurationException e)
+                {
+                    return new MongoDbCodec<>(northSerializer, clazz);
+                }
+                //return null;
             }
-        });
+        };
 
-        this.datastore = this.morphia.createDatastore(this.mongoClient, config.getMongoMainDatabase());
+        //return fromProviders(Collections.singletonList(new MongoDbCodecProvider(northSerializer)));
     }
 
     private void fixMongoLogger(final Logger logger)
@@ -126,11 +157,6 @@ public class StorageConnector extends Component
     public MongoDatabase getMainDatabase()
     {
         return this.mainDatabase;
-    }
-
-    public Datastore getDatastore()
-    {
-        return this.datastore;
     }
 
     @Override

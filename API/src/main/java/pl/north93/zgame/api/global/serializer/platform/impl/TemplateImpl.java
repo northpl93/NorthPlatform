@@ -4,6 +4,7 @@ import java.util.List;
 
 import lombok.ToString;
 import pl.north93.zgame.api.global.serializer.platform.FieldInfo;
+import pl.north93.zgame.api.global.serializer.platform.InstanceCreator;
 import pl.north93.zgame.api.global.serializer.platform.template.ITemplateElement;
 import pl.north93.zgame.api.global.serializer.platform.context.DeserializationContext;
 import pl.north93.zgame.api.global.serializer.platform.context.SerializationContext;
@@ -16,23 +17,10 @@ import pl.north93.zgame.api.global.serializer.platform.template.Template;
     private final InstanceCreator<T>     instanceCreator;
     private final List<ITemplateElement> structure;
 
-    public TemplateImpl(final Class<T> clazz, final List<ITemplateElement> structure)
+    public TemplateImpl(final InstanceCreator<T> instanceCreator, final List<ITemplateElement> structure)
     {
-        this.instanceCreator = setUpCreator(clazz);
+        this.instanceCreator = instanceCreator;
         this.structure = structure;
-    }
-
-    private static <T> InstanceCreator<T> setUpCreator(final Class<T> templateClass)
-    {
-        try
-        {
-            templateClass.getConstructor(); // probujemy uzyskac konstruktor bez argumentów
-            return new MethodHandleConstructorCreator<>(templateClass);
-        }
-        catch (final Exception e)
-        {
-            return new UnsafeCreator<>(templateClass);
-        }
     }
 
     @Override

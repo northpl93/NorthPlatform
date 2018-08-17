@@ -3,8 +3,6 @@ package pl.north93.zgame.api.global.network.mojang;
 import java.time.Instant;
 import java.util.UUID;
 
-import org.mongodb.morphia.annotations.Entity;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +16,6 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity("username_cache")
 public final class UsernameDetails
 {
     private String  username;

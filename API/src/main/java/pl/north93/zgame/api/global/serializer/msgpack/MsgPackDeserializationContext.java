@@ -3,11 +3,8 @@ package pl.north93.zgame.api.global.serializer.msgpack;
 import org.msgpack.core.MessagePack;
 import org.msgpack.core.MessageUnpacker;
 
-import pl.north93.zgame.api.global.serializer.platform.CustomFieldInfo;
 import pl.north93.zgame.api.global.serializer.platform.FieldInfo;
 import pl.north93.zgame.api.global.serializer.platform.context.DeserializationContext;
-import pl.north93.zgame.api.global.serializer.platform.context.SerializationContext;
-import pl.north93.zgame.api.global.serializer.platform.template.Template;
 import pl.north93.zgame.api.global.serializer.platform.template.TemplateEngine;
 
 public class MsgPackDeserializationContext extends DeserializationContext
@@ -39,20 +36,6 @@ public class MsgPackDeserializationContext extends DeserializationContext
     public boolean trySkipNull(final FieldInfo field) throws Exception
     {
         return this.unpacker.tryUnpackNil();
-    }
-
-    @Override
-    public Object readDynamicTypedField(final FieldInfo field) throws Exception
-    {
-        final TemplateEngine templateEngine = this.getTemplateEngine();
-
-        final String className = this.unpacker.unpackString();
-        final Class<?> templateClass = templateEngine.findClass(className);
-
-        final Template<Object, SerializationContext, DeserializationContext> template = templateEngine.getTemplate(templateClass);
-        final CustomFieldInfo fixedField = new CustomFieldInfo(field.getName(), templateClass); // poprawiony typ pola
-
-        return template.deserialize(this, fixedField);
     }
 
     @Override

@@ -9,17 +9,16 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.bukkit.map.IMapRenderer;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
+@Slf4j
 class RendererScheduler
 {
-    private final Logger logger = LoggerFactory.getLogger(RendererScheduler.class);
     @Inject
     private IBukkitExecutor                executor;
     private final MapController            mapController;
@@ -53,7 +52,7 @@ class RendererScheduler
         }
         catch (final Exception e)
         {
-            this.logger.error("An exception has been throw in map renderer", e);
+            log.error("An exception has been throw in map renderer", e);
         }
 
         synchronized (this)

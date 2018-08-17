@@ -12,11 +12,11 @@ import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
-import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackIgnore;
+import pl.north93.zgame.api.global.serializer.platform.annotations.NorthTransient;
 
 public class SelectHubServerJoinAction implements IServerJoinAction
 {
-    @MsgPackIgnore
+    @NorthTransient
     @Inject
     private MiniGameServer miniGameServer;
     private String hubId;

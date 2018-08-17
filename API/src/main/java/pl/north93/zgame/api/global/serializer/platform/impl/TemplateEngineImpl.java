@@ -7,11 +7,13 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
 import pl.north93.zgame.api.global.serializer.platform.ClassResolver;
+import pl.north93.zgame.api.global.serializer.platform.InstanceCreator;
 import pl.north93.zgame.api.global.serializer.platform.TemplateFactory;
 import pl.north93.zgame.api.global.serializer.platform.context.DeserializationContext;
 import pl.north93.zgame.api.global.serializer.platform.context.SerializationContext;
@@ -36,6 +38,7 @@ import pl.north93.zgame.api.global.serializer.platform.template.builtin.StringTe
 /*default*/ class TemplateEngineImpl implements TemplateEngine
 {
     private final ClassResolver classResolver;
+    private final InstantiationManager instantiationManager = new InstantiationManager();
     private final TemplateFactory templateFactory = new TemplateFactoryImpl();
     private final Map<TemplateFilter, Template<?, ?, ?>> templates = new TreeMap<>();
 
@@ -70,6 +73,41 @@ import pl.north93.zgame.api.global.serializer.platform.template.builtin.StringTe
     }
 
     @Override
+    public Class<?> getRawClassFromType(final Type type)
+    {
+        if (type instanceof Class)
+        {
+            return (Class<?>) type;
+        }
+        else if (type instanceof ParameterizedType)
+        {
+            final ParameterizedType parameterizedType = (ParameterizedType) type;
+            return (Class<?>) parameterizedType.getRawType();
+        }
+
+        throw new IllegalArgumentException(type.getTypeName());
+    }
+
+    @Override
+    public Type[] getTypeParameters(final Type type)
+    {
+        if (type instanceof Class)
+        {
+            final Class clazz = (Class) type;
+            final Type[] types = new Type[clazz.getTypeParameters().length];
+            Arrays.fill(types, Object.class);
+            return types;
+        }
+        else if (type instanceof ParameterizedType)
+        {
+            final ParameterizedType parameterizedType = (ParameterizedType) type;
+            return parameterizedType.getActualTypeArguments();
+        }
+
+        throw new IllegalArgumentException(type.getTypeName());
+    }
+
+    @Override
     public boolean isNeedsDynamicResolution(final Type type)
     {
         if (type instanceof Class)
@@ -85,6 +123,12 @@ import pl.north93.zgame.api.global.serializer.platform.template.builtin.StringTe
         }
 
         throw new IllegalArgumentException(type.getTypeName());
+    }
+
+    @Override
+    public <T> InstanceCreator<T> getInstanceCreator(final Class<T> clazz)
+    {
+        return this.instantiationManager.getInstanceCreator(clazz);
     }
 
     private boolean isNeedsDynamicResolution(final Class<?> clazz)
@@ -125,11 +169,6 @@ import pl.north93.zgame.api.global.serializer.platform.template.builtin.StringTe
         }
 
         throw new RuntimeException(type.getTypeName());
-    }
-
-    private void generateTemplate(final Type type)
-    {
-
     }
 
     @SuppressWarnings("unchecked")

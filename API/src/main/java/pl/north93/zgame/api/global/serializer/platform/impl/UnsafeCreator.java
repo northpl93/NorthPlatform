@@ -3,6 +3,7 @@ package pl.north93.zgame.api.global.serializer.platform.impl;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.serializer.platform.InstanceCreator;
 import rx.internal.util.unsafe.UnsafeAccess;
 
 /*default*/ class UnsafeCreator<T> implements InstanceCreator<T>

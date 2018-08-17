@@ -47,15 +47,16 @@ public class NorthSerializerImpl<OUTPUT> implements NorthSerializer<OUTPUT>
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Object deserialize(final Type type, final OUTPUT serialized)
+    public <T> T deserialize(final Type type, final OUTPUT serialized)
     {
         final DeserializationContext context = this.serializationFormat.createDeserializationContext(this.templateEngine, serialized);
         final Template<?, SerializationContext, DeserializationContext> template = this.templateEngine.getTemplate(type);
 
         try
         {
-            return template.deserialize(context, this.createRootField(type));
+            return (T) template.deserialize(context, this.createRootField(type));
         }
         catch (final Exception e)
         {
@@ -78,6 +79,6 @@ public class NorthSerializerImpl<OUTPUT> implements NorthSerializer<OUTPUT>
     // reprezentuje glówne pole przy wejsciu do pierwszej templatki
     private FieldInfo createRootField(final Type type)
     {
-        return new CustomFieldInfo("value", type);
+        return new CustomFieldInfo(null, type);
     }
 }

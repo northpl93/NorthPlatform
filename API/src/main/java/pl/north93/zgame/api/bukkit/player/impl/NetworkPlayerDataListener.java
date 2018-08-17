@@ -14,6 +14,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -45,6 +46,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 @Slf4j
 public class NetworkPlayerDataListener implements Listener
 {
+    private static final String PLAYER_DATA_NOT_LOADED = ChatColor.RED + "Player data isn't loaded";
     @Inject
     private BukkitApiCore       apiCore;
     @Inject
@@ -82,6 +84,12 @@ public class NetworkPlayerDataListener implements Listener
     public void earlyHandleLoadedData(final PlayerInitialSpawnEvent event)
     {
         final NorthPlayerImpl player = (NorthPlayerImpl) INorthPlayer.wrap(event.getPlayer());
+        if (this.abortLoginIfNoPlayerData(player))
+        {
+            // brak danych gracza; zapobiegamy dalszym wyjatkom
+            return;
+        }
+
         updateLocale(player, player.getMyLocale()); // now getMyLocale will have 0 latency, because player data is precached
 
         // injectujemy nasz szystem uprawnien
@@ -109,9 +117,14 @@ public class NetworkPlayerDataListener implements Listener
     public void lateHandleLoadedData(final PlayerJoinEvent event)
     {
         final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
-        final Group group = player.getGroup();
+        if (this.abortLoginIfNoPlayerData(player))
+        {
+            // brak danych gracza; zapobiegamy dalszym wyjatkom
+            return;
+        }
 
         event.setJoinMessage(null); // hide bukkit's join message
+        final Group group = player.getGroup();
         if (! StringUtils.isEmpty(group.getJoinMessage())) // send our message
         {
             Bukkit.broadcastMessage(MessageFormat.format(group.getJoinMessage(), player.getName()));
@@ -163,6 +176,19 @@ public class NetworkPlayerDataListener implements Listener
             return Collections.emptyList();
         }
         return Arrays.asList(joinActionsContainer.getServerJoinActions());
+    }
+
+    private boolean abortLoginIfNoPlayerData(final INorthPlayer player)
+    {
+        final NorthPlayerImpl impl = (NorthPlayerImpl) player;
+        if (impl.getValue().isPreset())
+        {
+            return false;
+        }
+
+        log.error("Player {} ({}) data is null in abortLoginIfNoPlayerData, cancelling join", player.getName(), player.getUniqueId());
+        player.kickPlayer(PLAYER_DATA_NOT_LOADED);
+        return true;
     }
 
     @Override
