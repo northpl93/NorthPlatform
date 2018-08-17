@@ -17,7 +17,7 @@ import pl.north93.zgame.api.global.serializer.platform.template.TemplateEngine;
 import pl.north93.zgame.api.global.serializer.platform.template.TemplateFilter;
 import pl.north93.zgame.api.global.serializer.platform.template.TemplatePriority;
 
-public class MsgPackArrayTemplate implements Template<Object[], MsgPackSerializationContext, MsgPackDeserializationContext>
+public class MsgPackArrayTemplate implements Template<Object, MsgPackSerializationContext, MsgPackDeserializationContext>
 {
     public static final class ArrayTemplateFilter implements TemplateFilter
     {
@@ -36,23 +36,24 @@ public class MsgPackArrayTemplate implements Template<Object[], MsgPackSerializa
     }
 
     @Override
-    public void serialise(final MsgPackSerializationContext context, final FieldInfo field, final Object[] object) throws Exception
+    public void serialise(final MsgPackSerializationContext context, final FieldInfo field, final Object object) throws Exception
     {
         final MessageBufferPacker packer = context.getPacker();
 
         final Type elementType = this.getArrayElementType(context.getTemplateEngine(), field.getType());
         final Template<Object, SerializationContext, DeserializationContext> template = context.getTemplateEngine().getTemplate(elementType);
 
-        packer.packArrayHeader(object.length);
-        for (final Object element : object)
+        final int length = Array.getLength(object);
+        packer.packArrayHeader(length);
+        for (int i = 0; i < length; i++)
         {
             final CustomFieldInfo arrayField = new CustomFieldInfo(null, elementType);
-            template.serialise(context, arrayField, element);
+            template.serialise(context, arrayField, Array.get(object, i));
         }
     }
 
     @Override
-    public Object[] deserialize(final MsgPackDeserializationContext context, final FieldInfo field) throws Exception
+    public Object deserialize(final MsgPackDeserializationContext context, final FieldInfo field) throws Exception
     {
         final MessageUnpacker unPacker = context.getUnPacker();
 
@@ -70,7 +71,7 @@ public class MsgPackArrayTemplate implements Template<Object[], MsgPackSerializa
             Array.set(array, i, element);
         }
 
-        return (Object[]) array;
+        return array;
     }
 
     private Class<?> getArrayElementType(final TemplateEngine templateEngine, final Type type)
