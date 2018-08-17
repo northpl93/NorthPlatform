@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.network.players.Identity;
+import pl.north93.zgame.api.global.serializer.platform.annotations.NorthField;
 
 /**
  * Obiekt przechowujący informacje o pokoju czatu.
@@ -19,7 +20,7 @@ public class ChatRoomData
     private Set<String>   children;
     private Integer       priority;
     private String        formatterId;
-    //@MsgPackCustomTemplate(HashSetTemplate.class)
+    @NorthField(type = HashSet.class)
     private Set<Identity> participants;
 
     // domyślny konstruktor dla serializacji

@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import pl.north93.zgame.api.chat.global.ChatPlayer;
 import pl.north93.zgame.api.chat.global.ChatRoom;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
-import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.players.PlayerOfflineException;
@@ -96,11 +95,12 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
         try (final IPlayerTransaction t = this.chatManager.getPlayersManager().transaction(this.identity))
         {
-            final IPlayer player = t.getPlayer();
             if (t.isOffline())
             {
-                throw new PlayerOfflineException(player);
+                throw new PlayerOfflineException(t.getPlayer());
             }
+
+            final IOnlinePlayer player = t.getPlayer();
 
             // aktualizujemy pokój i dodajemy do niego gracza
             roomImpl.update(data -> data.getParticipants().add(player.getIdentity()));
@@ -123,13 +123,18 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 
         try (final IPlayerTransaction t = this.chatManager.getPlayersManager().transaction(this.identity))
         {
-            final IPlayer player = t.getPlayer();
             if (! ignoreOffline && t.isOffline())
             {
-                throw new PlayerOfflineException(player);
+                throw new PlayerOfflineException(t.getPlayer());
             }
 
-            roomImpl.update(data -> data.getParticipants().remove(player.getIdentity()));
+            roomImpl.update(data -> data.getParticipants().remove(t.getPlayer().getIdentity()));
+            if (t.isOffline())
+            {
+                return;
+            }
+
+            final IOnlinePlayer player = t.getPlayer();
 
             // w metodzie update wyżej może zostać rzucony wyjątek o nieistniejącym pokoju
             final ChatPlayerData playerData = ChatPlayerData.get(player);

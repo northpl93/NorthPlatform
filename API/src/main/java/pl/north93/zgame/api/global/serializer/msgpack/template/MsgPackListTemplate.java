@@ -20,7 +20,6 @@ public class MsgPackListTemplate implements Template<List<Object>, MsgPackSerial
     @Override
     public void serialise(final MsgPackSerializationContext context, final FieldInfo field, final List object) throws Exception
     {
-        System.out.println("SERIALIZING LIST FROM FIELD " + field);
         final MessageBufferPacker packer = context.getPacker();
 
         final Type genericType = this.getGenericType(context.getTemplateEngine(), field.getType());
@@ -31,7 +30,6 @@ public class MsgPackListTemplate implements Template<List<Object>, MsgPackSerial
         packer.packArrayHeader(object.size());
         for (final Object entry : object)
         {
-            System.out.println("writing field of list as " + objectSerializer);
             objectSerializer.serialise(context, listFieldInfo, entry);
         }
     }
@@ -39,7 +37,6 @@ public class MsgPackListTemplate implements Template<List<Object>, MsgPackSerial
     @Override
     public List<Object> deserialize(final MsgPackDeserializationContext context, final FieldInfo field) throws Exception
     {
-        System.out.println("DESERIALIZING LIST FROM FIELD " + field);
         final MessageUnpacker unPacker = context.getUnPacker();
 
         final Type genericType = this.getGenericType(context.getTemplateEngine(), field.getType());
@@ -51,7 +48,6 @@ public class MsgPackListTemplate implements Template<List<Object>, MsgPackSerial
         final int amount = unPacker.unpackArrayHeader();
         for (int i = 0; i < amount; i++)
         {
-            System.out.println("reading field of list as " + objectSerializer);
             objects.add(i, objectSerializer.deserialize(context, listFieldInfo));
         }
 

@@ -13,6 +13,7 @@ import pl.north93.zgame.api.global.network.NetworkMeta;
 import pl.north93.zgame.api.global.network.event.NetworkShutdownNetEvent;
 import pl.north93.zgame.api.global.network.mojang.IMojangCache;
 import pl.north93.zgame.api.global.network.players.IPlayersManager;
+import pl.north93.zgame.api.global.network.server.IServersManager;
 import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
@@ -30,17 +31,17 @@ class NetworkManager extends Component implements INetworkManager
     private IMojangCache         mojangCache;
     @Inject
     private IPlayersManager      playersManager;
+    @Inject
+    private IServersManager      serversManager;
 
-    private ProxiesManagerImpl   proxiesManager;
-    private DaemonsManagerImpl   daemonsManager;
-    private ServersManagerImpl   serversManager;
+    private ProxiesManagerImpl proxiesManager;
+    private DaemonsManagerImpl daemonsManager;
 
     @Override
     protected void enableComponent()
     {
         this.proxiesManager = new ProxiesManagerImpl(this.rpcManager, this.observationManager);
         this.daemonsManager = new DaemonsManagerImpl(this.rpcManager, this.observationManager);
-        this.serversManager = new ServersManagerImpl(this.rpcManager, this.observationManager);
     }
 
     @Override
@@ -90,7 +91,7 @@ class NetworkManager extends Component implements INetworkManager
     }
 
     @Override
-    public ServersManagerImpl getServers()
+    public IServersManager getServers()
     {
         return this.serversManager;
     }

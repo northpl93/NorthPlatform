@@ -1,18 +1,20 @@
 package pl.arieals.globalshops.shared;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.globalshops.controller.cfg.ItemsGroupCfg;
+import pl.north93.zgame.api.global.serializer.platform.annotations.NorthField;
 
 /**
  * Klasa uzywana do wymieniania danych przez system configow.
  */
 public class ItemsDataContainer
 {
-    //@MsgPackCustomTemplate(ArrayListTemplate.class)
+    @NorthField(type = ArrayList.class)
     private List<ItemsGroupCfg> groups;
 
     public ItemsDataContainer()

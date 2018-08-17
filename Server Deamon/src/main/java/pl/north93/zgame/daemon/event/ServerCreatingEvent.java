@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.network.daemon.config.ServerPatternConfig;
-import pl.north93.zgame.api.global.network.impl.ServerDto;
+import pl.north93.zgame.api.global.network.impl.servers.ServerDto;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.utils.JavaArguments;
 

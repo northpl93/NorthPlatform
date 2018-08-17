@@ -17,8 +17,6 @@ public class MongoDbListTemplate implements Template<List<Object>, MongoDbSerial
     @Override
     public void serialise(final MongoDbSerializationContext context, final FieldInfo field, final List object) throws Exception
     {
-        System.out.println("SERIALIZING LIST FROM FIELD " + field);
-
         final Type genericType = this.getGenericType(context.getTemplateEngine(), field.getType());
         final Template<Object, SerializationContext, DeserializationContext> objectSerializer = context.getTemplateEngine().getTemplate(genericType);
 
@@ -27,7 +25,6 @@ public class MongoDbListTemplate implements Template<List<Object>, MongoDbSerial
         context.writeStartArray(field);
         for (final Object entry : object)
         {
-            System.out.println("writing field of arraylist as " + objectSerializer);
             objectSerializer.serialise(context, listFieldInfo, entry);
         }
         context.getWriter().writeEndArray();
@@ -36,7 +33,6 @@ public class MongoDbListTemplate implements Template<List<Object>, MongoDbSerial
     @Override
     public List<Object> deserialize(final MongoDbDeserializationContext context, final FieldInfo field) throws Exception
     {
-        System.out.println("DESERIALIZING LIST FROM FIELD " + field);
         final Type genericType = this.getGenericType(context.getTemplateEngine(), field.getType());
         final Template<Object, SerializationContext, DeserializationContext> objectSerializer = context.getTemplateEngine().getTemplate(genericType);
 
@@ -47,7 +43,6 @@ public class MongoDbListTemplate implements Template<List<Object>, MongoDbSerial
         final List<Object> objects = this.instantiateList(context.getTemplateEngine(), field.getType());
         while (context.hasMore())
         {
-            System.out.println("reading field of list as " + objectSerializer);
             objects.add(objectSerializer.deserialize(context, listFieldInfo));
         }
 

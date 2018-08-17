@@ -43,8 +43,8 @@ import pl.north93.zgame.api.global.utils.Wrapper;
 @Slf4j
 public class PartyManagerImpl implements IPartyManager
 {
-    private static final MetaKey PARTY_INVITE = MetaKey.get("currentPartyInvite", false);
-    private static final MetaKey PARTY_META   = MetaKey.get("currentParty", false);
+    private static final MetaKey PARTY_INVITE = MetaKey.get("currentPartyInvite");
+    private static final MetaKey PARTY_META   = MetaKey.get("currentParty");
     @Inject
     private IObservationManager observer;
     @Inject
@@ -175,7 +175,7 @@ public class PartyManagerImpl implements IPartyManager
     @Nullable
     /*default*/ IParty getPartyFromPlayer(final IPlayer player)
     {
-        final UUID partyId = player.getMetaStore().get(PARTY_META);
+        final UUID partyId = player.getOnlineMetaStore().get(PARTY_META);
         if (partyId == null)
         {
             return null;
@@ -192,12 +192,12 @@ public class PartyManagerImpl implements IPartyManager
 
     /*default*/ boolean playerHasParty(final IPlayer player)
     {
-        return player.getMetaStore().contains(PARTY_META);
+        return player.getOnlineMetaStore().contains(PARTY_META);
     }
 
     /*default*/ void setPartyId(final IPlayer player, final UUID partyId)
     {
-        final MetaStore metaStore = player.getMetaStore();
+        final MetaStore metaStore = player.getOnlineMetaStore();
         if (partyId == null)
         {
             metaStore.remove(PARTY_META);
@@ -209,7 +209,7 @@ public class PartyManagerImpl implements IPartyManager
     @Nullable
     /*default*/ PartyInvite getLatestInviteFromPlayer(final IPlayer player)
     {
-        final PartyInvite invite = player.getMetaStore().get(PARTY_INVITE);
+        final PartyInvite invite = player.getOnlineMetaStore().get(PARTY_INVITE);
         if (invite == null || invite.isExpired())
         {
             return null;
@@ -220,7 +220,7 @@ public class PartyManagerImpl implements IPartyManager
 
     /*default*/ void setPartyInvite(final IPlayer player, final PartyInvite invite)
     {
-        final MetaStore metaStore = player.getMetaStore();
+        final MetaStore metaStore = player.getOnlineMetaStore();
         if (invite == null)
         {
             metaStore.remove(PARTY_INVITE);

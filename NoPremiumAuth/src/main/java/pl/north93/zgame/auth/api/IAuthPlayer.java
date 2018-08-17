@@ -5,7 +5,7 @@ import pl.north93.zgame.api.global.metadata.MetaKey;
 public interface IAuthPlayer
 {
     MetaKey PLAYER_PASSWORD = MetaKey.get("password");
-    MetaKey LOGGED_IN       = MetaKey.get("loggedIn", false);
+    MetaKey LOGGED_IN       = MetaKey.get("loggedIn");
 
     boolean isPremium();
 

@@ -12,7 +12,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
 import pl.north93.zgame.api.global.network.event.ServerDeathNetEvent;
-import pl.north93.zgame.api.global.network.impl.ServerDto;
+import pl.north93.zgame.api.global.network.impl.servers.ServerDto;
 import pl.north93.zgame.api.global.redis.event.IEventManager;
 import pl.north93.zgame.daemon.event.ServerDeathEvent;
 

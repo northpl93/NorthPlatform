@@ -2,9 +2,11 @@ package pl.north93.zgame.api.global.serializer.platform.impl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 import lombok.ToString;
 import pl.north93.zgame.api.global.serializer.platform.FieldInfo;
+import pl.north93.zgame.api.global.serializer.platform.annotations.NorthField;
 
 @ToString
 /*default*/ final class ReflectionFieldInfo implements FieldInfo
@@ -14,8 +16,10 @@ import pl.north93.zgame.api.global.serializer.platform.FieldInfo;
 
     public ReflectionFieldInfo(final Field field)
     {
-        this.name = field.getName();
-        this.type = field.getGenericType();
+        final Optional<NorthField> customizations = Optional.ofNullable(field.getAnnotation(NorthField.class));
+
+        this.name = computeName(field, customizations);
+        this.type = computeType(field, customizations);
     }
 
     @Override
@@ -28,5 +32,33 @@ import pl.north93.zgame.api.global.serializer.platform.FieldInfo;
     public Type getType()
     {
         return this.type;
+    }
+
+    private static String computeName(final Field field, final Optional<NorthField> customizations)
+    {
+        return customizations.map(_customizations ->
+        {
+            final String customName = _customizations.name();
+            if (customName.equals(NorthField.Default.DEFAULT_STRING))
+            {
+                return field.getName();
+            }
+
+            return customName;
+        }).orElseGet(field::getName);
+    }
+
+    private static Type computeType(final Field field, final Optional<NorthField> customizations)
+    {
+        return customizations.map(_customizations ->
+        {
+            final Class<?> customType = _customizations.type();
+            if (customType.equals(NorthField.Default.class))
+            {
+                return field.getGenericType();
+            }
+
+            return customType;
+        }).orElseGet(field::getGenericType);
     }
 }

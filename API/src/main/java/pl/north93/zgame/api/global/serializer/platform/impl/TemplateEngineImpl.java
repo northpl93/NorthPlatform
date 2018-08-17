@@ -146,7 +146,6 @@ import pl.north93.zgame.api.global.serializer.platform.template.builtin.StringTe
     @Override
     public Template<Object, SerializationContext, DeserializationContext> getTemplate(final Type type)
     {
-        System.out.println("getTemplate :: " + type.getTypeName());
         // iterujemy od najwyzszego priorytetu do najnizszego - TreeMap
         for (final Map.Entry<TemplateFilter, Template<?, ?, ?>> entry : this.templates.entrySet())
         {
@@ -164,7 +163,6 @@ import pl.north93.zgame.api.global.serializer.platform.template.builtin.StringTe
             final Template<?, ?, ?> template = this.templateFactory.createTemplate(this, clazz);
             this.register(new ExactTypeIgnoreGenericFilter(clazz), template);
 
-            System.out.println("generating for class " + clazz);
             return this.genericCast(template);
         }
 

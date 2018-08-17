@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.network.impl;
+package pl.north93.zgame.api.global.network.impl.servers;
 
 import static pl.north93.zgame.api.global.utils.lang.CollectionUtils.findInCollection;
 
@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.network.server.IServerRpc;
 import pl.north93.zgame.api.global.network.server.IServersManager;
 import pl.north93.zgame.api.global.network.server.Server;
@@ -21,14 +22,15 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 
-class ServersManagerImpl implements IServersManager
+/*default*/ class ServersManagerImpl implements IServersManager
 {
     private final Unsafe          unsafe = new ServersManagerUnsafe();
     private final IRpcManager     rpcManager;
     private Hash<ServerDto>       servers;
     private Hash<ServersGroupDto> serversGroups;
 
-    public ServersManagerImpl(final IRpcManager rpcManager, final IObservationManager observationManager)
+    @Bean
+    private ServersManagerImpl(final IRpcManager rpcManager, final IObservationManager observationManager)
     {
         this.rpcManager = rpcManager;
         this.servers = observationManager.getHash(ServerDto.class, "servers");

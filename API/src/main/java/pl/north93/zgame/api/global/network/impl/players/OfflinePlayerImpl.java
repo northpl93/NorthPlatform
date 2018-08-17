@@ -46,7 +46,7 @@ public class OfflinePlayerImpl implements IOfflinePlayer
         }
         this.group = onlinePlayer.getGroup();
         this.groupExpireAt = onlinePlayer.getGroupExpireAt();
-        this.meta = onlinePlayer.getMetaStore().prepareForPersist();
+        this.meta = onlinePlayer.getMetaStore();
     }
 
     @Override
@@ -127,6 +127,12 @@ public class OfflinePlayerImpl implements IOfflinePlayer
     public boolean isOnline()
     {
         return false;
+    }
+
+    @Override
+    public MetaStore getOnlineMetaStore()
+    {
+        return new MetaStore();
     }
 
     @Override

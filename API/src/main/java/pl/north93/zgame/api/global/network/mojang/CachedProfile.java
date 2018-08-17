@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import pl.north93.zgame.api.global.serializer.platform.annotations.NorthField;
 
 @Getter
 @ToString
@@ -14,7 +15,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public final class CachedProfile
 {
-    //@Id
+    @NorthField(name = "_id") // uzywamy jako klucza w mongo
     private UUID uuid;
     private String name;
     private List<CachedProfileProperty> properties;

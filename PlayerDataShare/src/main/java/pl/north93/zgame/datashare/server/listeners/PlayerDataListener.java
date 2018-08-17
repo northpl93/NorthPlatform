@@ -9,8 +9,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.subscriber.SubscriptionHandler;
+import pl.north93.zgame.api.global.serializer.platform.NorthSerializer;
 import pl.north93.zgame.datashare.server.PlayerDataShareServer;
 import pl.north93.zgame.datashare.sharedimpl.DataContainer;
 import pl.north93.zgame.datashare.sharedimpl.PlayerDataShareComponent;
@@ -25,7 +25,7 @@ public class PlayerDataListener implements SubscriptionHandler
     @Inject
     private PlayerDataShareComponent playerDataShare;
     @Inject
-    private TemplateManager          msgPack;
+    private NorthSerializer<byte[]>  msgPack;
 
     @Override
     public void handle(final String channel, final byte[] message)

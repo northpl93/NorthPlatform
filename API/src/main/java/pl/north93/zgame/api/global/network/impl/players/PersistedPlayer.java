@@ -14,6 +14,7 @@ import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayer;
+import pl.north93.zgame.api.global.serializer.platform.annotations.NorthField;
 
 /**
  * Reprezentuje encje gracza zapisaną w bazie danych MongoDB.
@@ -31,8 +32,9 @@ import pl.north93.zgame.api.global.network.players.IPlayer;
     private String  displayName;
     private String  group;
     private Instant groupExpireAt;
-    private boolean isSavedWhileOnline;
+    private Boolean isSavedWhileOnline;
     private Instant savedAt;
+    @NorthField(type = HashMap.class)
     private Map     metadata;
 
     public static PersistedPlayer create(final IPlayer player)
@@ -62,11 +64,7 @@ import pl.north93.zgame.api.global.network.players.IPlayer;
         for (final Map.Entry<MetaKey, Object> entry : player.getMetaStore().getInternalMap().entrySet())
         {
             final MetaKey metaKey = entry.getKey();
-            if (metaKey.isPersist())
-            {
-                // save to database only when key is marked as persist.
-                metadata.put(metaKey.getKey(), entry.getValue());
-            }
+            metadata.put(metaKey.getKey(), entry.getValue());
         }
         builder.metadata(metadata);
 

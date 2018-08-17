@@ -10,7 +10,7 @@ import pl.arieals.api.minigame.shared.api.hub.RemoteHub;
 import pl.arieals.api.minigame.shared.impl.HubsManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.event.ServerDeathNetEvent;
-import pl.north93.zgame.api.global.network.impl.ServerDto;
+import pl.north93.zgame.api.global.network.impl.servers.ServerDto;
 import pl.north93.zgame.api.global.network.server.ServerType;
 import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 

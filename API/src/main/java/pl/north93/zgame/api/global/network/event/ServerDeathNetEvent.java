@@ -3,7 +3,7 @@ package pl.north93.zgame.api.global.network.event;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.network.impl.ServerDto;
+import pl.north93.zgame.api.global.network.impl.servers.ServerDto;
 import pl.north93.zgame.api.global.redis.event.INetEvent;
 
 /**

@@ -5,11 +5,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import pl.north93.zgame.api.global.serializer.platform.template.Template;
-
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.TYPE})
-public @interface NorthCustomTemplate
+@Target({ElementType.FIELD})
+public @interface NorthField
 {
-    Class<? extends Template> value();
+    String name() default Default.DEFAULT_STRING;
+
+    Class<?> type() default Default.class;
+
+    final class Default
+    {
+        public static final String DEFAULT_STRING = "$DEFAULT";
+    }
 }

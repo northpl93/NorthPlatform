@@ -20,7 +20,6 @@ public class MsgPackSetTemplate implements Template<Set<Object>, MsgPackSerializ
     @Override
     public void serialise(final MsgPackSerializationContext context, final FieldInfo field, final Set object) throws Exception
     {
-        System.out.println("SERIALIZING LIST FROM FIELD " + field);
         final MessageBufferPacker packer = context.getPacker();
 
         final Type genericType = this.getGenericType(context.getTemplateEngine(), field.getType());
@@ -31,7 +30,6 @@ public class MsgPackSetTemplate implements Template<Set<Object>, MsgPackSerializ
         packer.packArrayHeader(object.size());
         for (final Object entry : object)
         {
-            System.out.println("writing field of set as " + objectSerializer);
             objectSerializer.serialise(context, listFieldInfo, entry);
         }
     }
@@ -39,7 +37,6 @@ public class MsgPackSetTemplate implements Template<Set<Object>, MsgPackSerializ
     @Override
     public Set<Object> deserialize(final MsgPackDeserializationContext context, final FieldInfo field) throws Exception
     {
-        System.out.println("DESERIALIZING LIST FROM FIELD " + field);
         final MessageUnpacker unPacker = context.getUnPacker();
 
         final Type genericType = this.getGenericType(context.getTemplateEngine(), field.getType());
@@ -51,7 +48,6 @@ public class MsgPackSetTemplate implements Template<Set<Object>, MsgPackSerializ
         final int amount = unPacker.unpackArrayHeader();
         for (int i = 0; i < amount; i++)
         {
-            System.out.println("reading field of set as " + objectSerializer);
             objects.add(objectSerializer.deserialize(context, listFieldInfo));
         }
 

@@ -45,7 +45,7 @@ import pl.north93.zgame.api.global.storage.StorageConnector;
 
     public Optional<CachedProfile> getProfile(final UUID profileId)
     {
-        final CachedProfile cachedProfile = this.collection.find(new Document("uuid", profileId)).first();
+        final CachedProfile cachedProfile = this.collection.find(new Document("_id", profileId)).first();
         if (cachedProfile == null)
         {
             return this.queryMojangAndFillCache(profileId);

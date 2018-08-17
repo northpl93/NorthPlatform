@@ -1,7 +1,5 @@
 package pl.arieals.api.minigame.shared.impl.status;
 
-import java.util.Optional;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,13 +11,13 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.INetworkManager;
-import pl.north93.zgame.api.global.network.players.IPlayer;
+import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.Identity;
 
 /*default*/ class PlayerStatusManagerImpl implements IPlayerStatusManager
 {
-    private static final MetaKey PLAYER_STATUS_KEY = MetaKey.get("playerNetworkStatus", false);
+    private static final MetaKey PLAYER_STATUS_KEY = MetaKey.get("playerNetworkStatus");
     @Inject
     private INetworkManager networkManager;
 
@@ -31,19 +29,21 @@ import pl.north93.zgame.api.global.network.players.Identity;
     @Override
     public IPlayerStatus getPlayerStatus(final Identity identity)
     {
-        final Optional<IPlayer> player = this.networkManager.getPlayers().unsafe().get(identity);
-        if (! player.isPresent())
+        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(identity))
         {
+            if (t.isOffline())
+            {
+                return OfflineStatus.INSTANCE;
+            }
+
+            final MetaStore metaStore = t.<IOnlinePlayer>getPlayer().getOnlineMetaStore();
+            if (metaStore.contains(PLAYER_STATUS_KEY))
+            {
+                return metaStore.get(PLAYER_STATUS_KEY);
+            }
+
             return OfflineStatus.INSTANCE;
         }
-
-        final MetaStore metaStore = player.get().getMetaStore();
-        if (metaStore.contains(PLAYER_STATUS_KEY))
-        {
-            return metaStore.get(PLAYER_STATUS_KEY);
-        }
-
-        return OfflineStatus.INSTANCE;
     }
 
     @Override
@@ -56,7 +56,8 @@ import pl.north93.zgame.api.global.network.players.Identity;
                 return;
             }
 
-            t.getPlayer().getMetaStore().set(PLAYER_STATUS_KEY, newStatus);
+            final IOnlinePlayer onlinePlayer = t.getPlayer();
+            onlinePlayer.getOnlineMetaStore().set(PLAYER_STATUS_KEY, newStatus);
         }
     }
 

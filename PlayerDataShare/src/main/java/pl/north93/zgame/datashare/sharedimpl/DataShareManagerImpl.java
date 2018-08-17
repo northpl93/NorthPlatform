@@ -19,10 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
-import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
+import pl.north93.zgame.api.global.serializer.platform.NorthSerializer;
 import pl.north93.zgame.datashare.api.DataSharingGroup;
 import pl.north93.zgame.datashare.api.IDataShareManager;
 import pl.north93.zgame.datashare.api.data.IDataUnit;
@@ -33,13 +33,13 @@ import pl.north93.zgame.datashare.api.data.IDataUnitSerialization;
 public class DataShareManagerImpl implements IDataShareManager
 {
     @Inject
-    private ApiCore             apiCore;
+    private ApiCore                 apiCore;
     @Inject
-    private RedisSubscriber     subscriber;
+    private RedisSubscriber         subscriber;
     @Inject
-    private TemplateManager     msgPack;
+    private NorthSerializer<byte[]> msgPack;
     @Inject
-    private IObservationManager observer;
+    private IObservationManager     observer;
     private final ShareDataDao                    dataDao   = new ShareDataDao();
     private final Map<String, RegisteredDataUnit> dataUnits = new HashMap<>();
 

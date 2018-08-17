@@ -12,6 +12,8 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.zgame.api.global.serializer.platform.annotations.NorthField;
+
 @XmlRootElement(name = "rules")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RulesConfig
@@ -21,7 +23,7 @@ public class RulesConfig
     @XmlAttribute(name = "max")
     private Integer               maxServers = Integer.MAX_VALUE;
     @XmlElement(name = "value")
-    //@MsgPackCustomTemplate(LinkedListTemplate.class)
+    @NorthField(type = LinkedList.class)
     private List<RuleEntryConfig> rules = new LinkedList<>();
 
     public int getMinServers()

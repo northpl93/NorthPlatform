@@ -95,4 +95,13 @@ public interface IPlayer extends Metadatable
     {
         this.getMetaStore().set(MetaKey.get("lang"), locale.toLanguageTag());
     }
+
+    /**
+     * Zwraca MetaStore przechowujący dane tylko podczas gdy gracz jest online.
+     * Przy wyjściu dane są tracone razem z instancją IOnlinePlayer.
+     * Instancja IOfflinePlayer nie zapisuje ustawianych tu wartości.
+     *
+     * @return Instancja MetaStore przechowująca dane tylko gdy gracz jest online.
+     */
+    MetaStore getOnlineMetaStore();
 }

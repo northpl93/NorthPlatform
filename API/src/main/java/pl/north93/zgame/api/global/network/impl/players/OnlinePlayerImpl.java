@@ -42,6 +42,7 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     private Group     group;
     private Long      groupExpireAt;
     private MetaStore meta = new MetaStore();
+    private MetaStore onlineMeta = new MetaStore();
 
     @Override
     public ObjectKey getKey()
@@ -190,6 +191,12 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     public MetaStore getMetaStore()
     {
         return this.meta;
+    }
+
+    @Override
+    public MetaStore getOnlineMetaStore()
+    {
+        return this.onlineMeta;
     }
 
     @Override

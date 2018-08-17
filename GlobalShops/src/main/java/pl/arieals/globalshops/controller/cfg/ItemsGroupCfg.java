@@ -6,12 +6,14 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.globalshops.shared.GroupType;
+import pl.north93.zgame.api.global.serializer.platform.annotations.NorthField;
 
 @XmlRootElement(name = "itemGroup")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -23,7 +25,7 @@ public final class ItemsGroupCfg
     private GroupType     groupType;
     @XmlElementWrapper(name = "items")
     @XmlElement(name = "item")
-    //@MsgPackCustomTemplate(ArrayListTemplate.class)
+    @NorthField(type = ArrayList.class)
     private List<ItemCfg> items;
 
     public String getId()

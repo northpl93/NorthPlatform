@@ -6,7 +6,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import pl.north93.zgame.api.global.serializer.platform.annotations.NorthField;
 
 /**
  * Reprezentuje wzór według którego tworzone będą instancje serwerów.
@@ -23,9 +26,9 @@ public class ServerPatternConfig
     private Integer      maxMemory;
     @XmlElement
     private Integer      startMemory;
-    //@MsgPackCustomTemplate(ArrayListTemplate.class)
     @XmlElementWrapper(name = "components")
     @XmlElement(name = "component")
+    @NorthField(type = ArrayList.class)
     private List<String> components;
 
     public String getPatternName()

@@ -28,6 +28,18 @@ import pl.north93.zgame.api.global.serializer.platform.template.TemplateEngine;
     @Override
     public <T> Template<T, SerializationContext, DeserializationContext> createTemplate(final TemplateEngine templateEngine, final Class<T> clazz)
     {
+        final NorthCustomTemplate customTemplate = clazz.getAnnotation(NorthCustomTemplate.class);
+        if (customTemplate != null)
+        {
+            //noinspection unchecked
+            return templateEngine.instantiateClass(customTemplate.value());
+        }
+
+        return this.generateTemplate(templateEngine, clazz);
+    }
+
+    private <T> Template<T, SerializationContext, DeserializationContext> generateTemplate(final TemplateEngine templateEngine, final Class<T> clazz)
+    {
         final List<ITemplateElement> elements = new LinkedList<>();
         final Field[] fields = FieldUtils.getAllFields(clazz);
 
@@ -46,35 +58,6 @@ import pl.north93.zgame.api.global.serializer.platform.template.TemplateEngine;
                 elements.add(this.templateElementFactory.getTemplateElement(clazz, field, template));
                 continue;
             }
-
-            /*final Class<?> fieldType = field.getType();
-            final Type genericType = field.getGenericType();
-            final Template<?> template;
-
-            if (fieldType.isPrimitive()) // we doesn't support primitives
-            {
-                throw new RuntimeException("Primitive values are unsupported. (" + fieldType + ")");
-            }
-            else if (fieldType.isArray()) // support arrays
-            {
-                if (byte[].class == fieldType)
-                {
-                    template = new ByteArrayTemplate(); // support byte[] fields for performance
-                }
-                else
-                {
-                    final Class<?> typeNoArray = fieldType.getComponentType();
-                    template = new ArrayTemplate(typeNoArray, templateManager.getTemplate(typeNoArray));
-                }
-            }
-            else if (genericType instanceof ParameterizedType) // Get template with generic type
-            {
-                template = templateManager.getTemplate(fieldType, (ParameterizedType) genericType);
-            }
-            else
-            {
-                template = templateManager.getTemplate(fieldType);
-            }*/
 
             final Template<Object, SerializationContext, DeserializationContext> template = templateEngine.getTemplate(field.getGenericType());
             elements.add(this.templateElementFactory.getTemplateElement(clazz, field, template));

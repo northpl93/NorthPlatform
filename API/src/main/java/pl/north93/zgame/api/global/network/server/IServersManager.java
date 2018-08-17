@@ -3,7 +3,7 @@ package pl.north93.zgame.api.global.network.server;
 import java.util.Set;
 import java.util.UUID;
 
-import pl.north93.zgame.api.global.network.impl.ServerDto;
+import pl.north93.zgame.api.global.network.impl.servers.ServerDto;
 import pl.north93.zgame.api.global.network.server.group.IServersGroup;
 import pl.north93.zgame.api.global.network.server.group.ServersGroupDto;
 import pl.north93.zgame.api.global.redis.observable.Hash;

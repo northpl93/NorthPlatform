@@ -10,14 +10,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.metadata.MetaKey;
 import pl.north93.zgame.api.global.metadata.MetaStore;
-import pl.north93.zgame.api.global.network.players.IPlayer;
+import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 
 /**
  * Przechowuje informacje dotyczące pokojów czatu danego gracza.
  */
 /*default*/ class ChatPlayerData
 {
-    private static final MetaKey CHAT_DATA = MetaKey.get("chatData", false);
+    private static final MetaKey CHAT_DATA = MetaKey.get("chatData");
     private String      mainRoomId;
     private Set<String> rooms;
 
@@ -48,9 +48,9 @@ import pl.north93.zgame.api.global.network.players.IPlayer;
      * @param player Gracz z którego pobieramy instancję.
      * @return Instancja tej klasy powiązana z graczem.
      */
-    public static ChatPlayerData get(final IPlayer player)
+    public static ChatPlayerData get(final IOnlinePlayer player)
     {
-        final MetaStore metaStore = player.getMetaStore();
+        final MetaStore metaStore = player.getOnlineMetaStore();
         return (ChatPlayerData) metaStore.getInternalMap().computeIfAbsent(CHAT_DATA, key -> new ChatPlayerData());
     }
 

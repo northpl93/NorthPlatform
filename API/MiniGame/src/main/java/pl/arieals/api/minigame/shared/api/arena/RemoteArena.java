@@ -1,5 +1,6 @@
 package pl.arieals.api.minigame.shared.api.arena;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.north93.zgame.api.global.metadata.MetaStore;
+import pl.north93.zgame.api.global.serializer.platform.annotations.NorthField;
 
 /**
  * Obiekt przedstawia arenę znajdującą się *gdzieś* w sieci.
@@ -22,7 +24,7 @@ public class RemoteArena implements IArena
     private Boolean      isDynamic;
     private GamePhase    gamePhase;
     private Integer      maxPlayers;
-    //@MsgPackCustomTemplate(HashSetTemplate.class)
+    @NorthField(type = HashSet.class)
     private Set<UUID>    players;
     private MetaStore    metadata;
 

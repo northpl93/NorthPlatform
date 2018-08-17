@@ -28,8 +28,8 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
-import pl.north93.zgame.api.global.redis.messaging.TemplateManager;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
+import pl.north93.zgame.api.global.serializer.platform.NorthSerializer;
 import pl.north93.zgame.datashare.api.DataSharingGroup;
 import pl.north93.zgame.datashare.api.chat.ChatMessage;
 import pl.north93.zgame.datashare.sharedimpl.PlayerDataShareComponent;
@@ -42,7 +42,7 @@ public class ChatSharingManager implements Listener
     @Inject
     private RedisSubscriber          redisSubscriber;
     @Inject
-    private TemplateManager          msgPack;
+    private NorthSerializer<byte[]>  msgPack;
     @Inject
     private PlayerDataShareComponent shareComponent;
     @Inject @Messages("PlayerDataShare")

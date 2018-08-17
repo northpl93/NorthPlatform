@@ -1,6 +1,6 @@
 package pl.north93.zgame.api.global.metadata.test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 
 import org.junit.Test;
@@ -15,7 +15,7 @@ public class MetaKeysTest
         final MetaKey test1 = MetaKey.get("keytest1");
         final MetaKey test2 = MetaKey.get("keytest1");
 
-        assertEquals(true, test1 == test2);
+        assertSame(test1, test2);
     }
 
     @Test
@@ -24,13 +24,6 @@ public class MetaKeysTest
         final MetaKey test1 = MetaKey.get("keytest2");
         final MetaKey test2 = MetaKey.get("keYTEst2");
 
-        assertEquals(true, test1 == test2);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void persistMismatchTest()
-    {
-        MetaKey.get("test3", true);
-        MetaKey.get("test3", false);
+        assertSame(test1, test2);
     }
 }

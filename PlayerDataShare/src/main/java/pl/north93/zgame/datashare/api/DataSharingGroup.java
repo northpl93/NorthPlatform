@@ -1,13 +1,13 @@
 package pl.north93.zgame.datashare.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.component.annotations.SkipInjections;
-import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
-import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
+import pl.north93.zgame.api.global.serializer.platform.annotations.NorthField;
 import pl.north93.zgame.datashare.api.cfg.AnnouncerConfig;
 import pl.north93.zgame.datashare.api.cfg.DataSharingGroupConfig;
 
@@ -17,7 +17,7 @@ public final class DataSharingGroup
     private String          name;
     private Boolean         shareChat;
     private AnnouncerConfig announcer;
-    @MsgPackCustomTemplate(ArrayListTemplate.class)
+    @NorthField(type = ArrayList.class)
     private List<String>    dataUnits;
 
     public DataSharingGroup()

@@ -5,13 +5,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.global.redis.messaging.annotations.MsgPackCustomTemplate;
-import pl.north93.zgame.api.global.redis.messaging.templates.ArrayListTemplate;
+import pl.north93.zgame.api.global.serializer.platform.annotations.NorthField;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AnnouncerConfig
@@ -22,7 +22,7 @@ public class AnnouncerConfig
     private Integer      time; // Czas w sekundach pomiedzy wiadomosciami
     @XmlElementWrapper(name = "messages")
     @XmlElement(name = "message")
-    @MsgPackCustomTemplate(ArrayListTemplate.class)
+    @NorthField(type = ArrayList.class)
     private List<String> messages; // Lista wiadomosci
 
     public AnnouncerConfig()

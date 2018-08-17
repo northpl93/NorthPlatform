@@ -3,10 +3,10 @@ package pl.north93.zgame.api.global.network.players;
 import java.util.UUID;
 
 import net.md_5.bungee.api.chat.BaseComponent;
+import pl.north93.zgame.api.global.messages.Messageable;
 import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.zgame.api.global.redis.observable.ProvidingRedisKey;
-import pl.north93.zgame.api.global.messages.Messageable;
 
 public interface IOnlinePlayer extends IPlayer, ProvidingRedisKey, Messageable
 {

@@ -42,7 +42,7 @@ import pl.north93.zgame.auth.api.IAuthPlayer;
             return true;
         }
 
-        final MetaStore metaStore = player.getMetaStore();
+        final MetaStore metaStore = player.getOnlineMetaStore();
         if (metaStore.contains(IAuthPlayer.LOGGED_IN))
         {
             return metaStore.get(IAuthPlayer.LOGGED_IN);
@@ -61,7 +61,7 @@ import pl.north93.zgame.auth.api.IAuthPlayer;
                 return;
             }
 
-            final MetaStore metaStore = t.getPlayer().getMetaStore();
+            final MetaStore metaStore = t.<IOnlinePlayer>getPlayer().getOnlineMetaStore();
             metaStore.set(IAuthPlayer.LOGGED_IN, status);
         }
     }
@@ -76,7 +76,7 @@ import pl.north93.zgame.auth.api.IAuthPlayer;
                 return;
             }
 
-            final MetaStore metaStore = t.getPlayer().getMetaStore();
+            final MetaStore metaStore = t.<IOnlinePlayer>getPlayer().getOnlineMetaStore();
             metaStore.remove(IAuthPlayer.LOGGED_IN);
         }
     }

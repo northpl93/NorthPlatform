@@ -47,8 +47,6 @@ public class MongoDbMapTemplate implements Template<Map<String, Object>, MongoDb
             final Map<String, Object> map = this.instantiateMap(context.getTemplateEngine(), field.getType());
             for (final String name : context.getKeys()) // zwraca liste kluczy w danym obiekcie, czyli naszej mapie
             {
-                System.out.println("reading entry of map as " + valueSerializer);
-
                 final FieldInfo keyField = new CustomFieldInfo(name, genericType);
                 map.put(name, valueSerializer.deserialize(context, keyField));
             }

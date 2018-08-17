@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.network.impl;
+package pl.north93.zgame.api.global.network.impl.servers;
 
 import java.util.UUID;
 
@@ -12,6 +12,7 @@ import pl.north93.zgame.api.global.network.server.ServerType;
 import pl.north93.zgame.api.global.network.server.group.IServersGroup;
 import pl.north93.zgame.api.global.redis.rpc.IRpcTarget;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
+import pl.north93.zgame.api.global.serializer.platform.annotations.NorthCustomTemplate;
 
 /**
  * Obiekt przechowujacy dane o serwerze uruchomionym w sieci.
@@ -30,7 +31,7 @@ public class ServerDto implements Server, ServerProxyData
     private ServerState   serverState;
     private Boolean       shutdown;
     private JoiningPolicy joiningPolicy;
-    //@MsgPackCustomTemplate(ServersGroupInStringTemplate.class)
+    @NorthCustomTemplate(ServersGroupInStringTemplate.class)
     private IServersGroup serversGroup;
 
     public ServerDto(final UUID serverId, final Boolean isLaunchedViaDaemon, final ServerType serverType, final ServerState serverState, final JoiningPolicy joiningPolicy, final String connectIp, final Integer connectPort, final IServersGroup serversGroup)

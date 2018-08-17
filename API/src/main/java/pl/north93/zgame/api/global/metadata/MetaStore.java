@@ -9,9 +9,11 @@ import java.util.Optional;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-//@MsgPackCustomTemplate(MetaStoreTemplate.class)
+import pl.north93.zgame.api.global.serializer.platform.annotations.NorthField;
+
 public final class MetaStore
 {
+    @NorthField(type = IdentityHashMap.class)
     private final Map<MetaKey, Object> metadata = new IdentityHashMap<>();
 
     /**
@@ -90,29 +92,6 @@ public final class MetaStore
     public Map<MetaKey, Object> getInternalMap()
     {
         return this.metadata;
-    }
-
-    /**
-     * Tworzy nowy MetaStore z usuniętymi wsystkimi kluczami które nie są trwałe.
-     *
-     * @see MetaKey#isPersist()
-     * @return Nowa instancja MetaStore z samymi trwałymi kluczami.
-     */
-    public MetaStore prepareForPersist()
-    {
-        final MetaStore newMetaStore = new MetaStore();
-        for (final Map.Entry<MetaKey, Object> entry : this.metadata.entrySet())
-        {
-            final MetaKey key = entry.getKey();
-            if (! key.isPersist())
-            {
-                continue;
-            }
-
-            newMetaStore.set(key, entry.getValue());
-        }
-
-        return newMetaStore;
     }
 
     @Override
