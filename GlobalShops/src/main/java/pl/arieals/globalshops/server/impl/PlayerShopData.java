@@ -16,7 +16,7 @@ import lombok.ToString;
  */
 @ToString
 @NoArgsConstructor
-public final class PlayerShopData implements Serializable
+/*default*/ final class PlayerShopData implements Serializable
 {
     private final ArrayList<PlayerItemInfo> items       = new ArrayList<>();
     private final HashMap<String, String>   activeItems = new HashMap<>();

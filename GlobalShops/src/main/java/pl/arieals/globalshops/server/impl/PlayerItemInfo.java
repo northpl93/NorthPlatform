@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"groupId", "itemId"})
-public class PlayerItemInfo
+/*default*/ class PlayerItemInfo
 {
     private String  groupId;
     private String  itemId;
