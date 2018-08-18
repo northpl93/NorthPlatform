@@ -27,12 +27,12 @@ import pl.north93.zgame.api.global.serializer.platform.annotations.NorthField;
 /*default*/ class PersistedPlayer
 {
     private UUID    uuid;
-    private Boolean premium;
+    private boolean premium;
     private String  latestKnownUsername;
     private String  displayName;
     private String  group;
     private Instant groupExpireAt;
-    private Boolean isSavedWhileOnline;
+    private boolean isSavedWhileOnline;
     private Instant savedAt;
     @NorthField(type = HashMap.class)
     private Map     metadata;
