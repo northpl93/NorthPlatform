@@ -28,11 +28,11 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 class PlayerContainerImpl implements IPlayerContainer
 {
     @Inject
-    private       PlayerDataService service;
+    private       PlayerShopDataService service;
     @Inject
-    private       GlobalShopsServer shopsServer;
-    private       PlayerDataHolder  playerData;
-    private final INorthPlayer      player;
+    private       GlobalShopsServer     shopsServer;
+    private       PlayerDataHolder      playerData;
+    private final INorthPlayer          player;
 
     public PlayerContainerImpl(final INorthPlayer player)
     {
@@ -49,25 +49,29 @@ class PlayerContainerImpl implements IPlayerContainer
     @Override
     public Collection<Item> getBoughtItems(final ItemsGroup group)
     {
-        final PlayerData data = this.getData();
-        return data.getBoughtItems().keySet().stream()
-                   .filter(id -> StringUtils.startsWith(id, group.getId()))
-                   .map(id -> this.getItemFromInternalId(group, id))
+        final PlayerShopData data = this.getData();
+        return data.getItems().stream()
+                   .filter(itemInfo -> itemInfo.isBought() && itemInfo.getGroupId().equals(group.getId()))
+                   .map(itemInfo -> this.getItemFromId(group, itemInfo.getItemId()))
                    .collect(Collectors.toList());
     }
     
     @Override
     public Map<Item, Integer> getBoughtItemsLevel(final ItemsGroup group)
     {
-        final PlayerData data = this.getData();
-        return data.getBoughtItems().entrySet().stream().collect(Collectors.toMap(entry -> this.getItemFromInternalId(group, entry.getKey()), Map.Entry::getValue));
+        final PlayerShopData data = this.getData();
+        return data.getItems().stream().collect(Collectors.toMap(item -> this.getItemFromId(group, item.getItemId()), PlayerItemInfo::getBoughtLevel));
     }
 
     @Override
     public boolean hasBoughtItem(final Item item)
     {
-        final PlayerData data = this.getData();
-        return data.getBoughtItems().containsKey(this.itemToInternalId(item));
+        final PlayerShopData data = this.getData();
+
+        final String groupId = item.getGroup().getId();
+        return data.getOptionalItemInfo(groupId, item.getId())
+                   .map(PlayerItemInfo::isBought)
+                   .orElse(false);
     }
     
     @Override
@@ -79,8 +83,12 @@ class PlayerContainerImpl implements IPlayerContainer
     @Override
     public int getBoughtItemLevel(final Item item)
     {
-        final PlayerData data = this.getData();
-        return data.getBoughtItems().getOrDefault(this.itemToInternalId(item), 0);
+        final PlayerShopData data = this.getData();
+
+        final String groupId = item.getGroup().getId();
+        return data.getOptionalItemInfo(groupId, item.getId())
+                   .map(PlayerItemInfo::getBoughtLevel)
+                   .orElse(0);
     }
 
     @Override
@@ -97,7 +105,7 @@ class PlayerContainerImpl implements IPlayerContainer
             throw new IllegalArgumentException();
         }
 
-        final PlayerData data = this.getData();
+        final PlayerShopData data = this.getData();
         final String activeItemId = data.getActiveItems().get(group.getId());
         if (activeItemId == null)
         {
@@ -138,12 +146,12 @@ class PlayerContainerImpl implements IPlayerContainer
         Preconditions.checkArgument(amount > 0);
         Preconditions.checkArgument(amount <= 100);
 
-        final Pair<PlayerData, Integer> result = this.service.addShards(this.player, item.getGroup().getId(), item.getId(), amount);
+        final Pair<PlayerShopData, Integer> result = this.service.addShards(this.player, item.getGroup().getId(), item.getId(), amount);
 
         final int newShards = result.getValue();
         if (newShards >= 100)
         {
-            final PlayerData newData;
+            final PlayerShopData newData;
             if (this.bumpItemLevel(item))
             {
                 if (this.hasMaxLevel(item))
@@ -174,9 +182,12 @@ class PlayerContainerImpl implements IPlayerContainer
     @Override
     public int getShards(final Item item)
     {
-        final PlayerData playerData = this.getData();
+        final PlayerShopData playerData = this.getData();
 
-        return playerData.getShards().getOrDefault(this.itemToInternalId(item), 0);
+        final String groupId = item.getGroup().getId();
+        return playerData.getOptionalItemInfo(groupId, item.getId())
+                         .map(PlayerItemInfo::getShards)
+                         .orElse(0);
     }
 
     @Override
@@ -195,7 +206,7 @@ class PlayerContainerImpl implements IPlayerContainer
             throw new IllegalStateException(format("Item {0} isn't bought.", item.getId()));
         }
 
-        final PlayerData updatedData = this.service.setActiveItem(this.player, group.getId(), item.getId());
+        final PlayerShopData updatedData = this.service.setActiveItem(this.player, group.getId(), item.getId());
         this.playerData.update(updatedData);
 
         this.player.getServer().getPluginManager().callEvent(new ItemMarkedActiveEvent(this.player, this, group, item));
@@ -211,23 +222,28 @@ class PlayerContainerImpl implements IPlayerContainer
             throw new IllegalArgumentException();
         }
 
-        final PlayerData updatedData = this.service.resetActiveItem(this.player, group.getId());
+        final PlayerShopData updatedData = this.service.resetActiveItem(this.player, group.getId());
         this.playerData.update(updatedData);
 
         this.player.getServer().getPluginManager().callEvent(new ItemMarkedActiveEvent(this.player, this, group, null));
     }
 
     @Nonnull
-    private PlayerData getData()
+    private PlayerShopData getData()
     {
         //noinspection ConstantConditions Tu nigdy nie bedzie nulla
         return this.playerData.get();
     }
 
+    private Item getItemFromId(final ItemsGroup group, final String id)
+    {
+        return this.shopsServer.getItem(group, id);
+    }
+
     private Item getItemFromInternalId(final ItemsGroup group, final String id)
     {
         final String properId = StringUtils.split(id, '$')[1];
-        return this.shopsServer.getItem(group, properId);
+        return this.getItemFromId(group, properId);
     }
 
     private String itemToInternalId(final Item item)
@@ -236,14 +252,14 @@ class PlayerContainerImpl implements IPlayerContainer
     }
 }
 
-class PlayerDataHolder extends LazyValue<PlayerData>
+class PlayerDataHolder extends LazyValue<PlayerShopData>
 {
-    public PlayerDataHolder(final Supplier<PlayerData> supplier)
+    public PlayerDataHolder(final Supplier<PlayerShopData> supplier)
     {
         super(supplier);
     }
 
-    public void update(final PlayerData playerData)
+    public void update(final PlayerShopData playerData)
     {
         this.cached = playerData;
         this.isCached = true;

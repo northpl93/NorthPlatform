@@ -24,7 +24,7 @@ import pl.north93.zgame.api.global.serializer.platform.annotations.NorthField;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-/*default*/ class PersistedPlayer
+public/*default*/ class PersistedPlayer
 {
     private UUID    uuid;
     private boolean premium;

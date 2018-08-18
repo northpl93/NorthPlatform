@@ -2,9 +2,7 @@ package pl.arieals.globalshops.server.impl;
 
 import com.google.common.base.Preconditions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.globalshops.server.IPlayerContainer;
 import pl.arieals.globalshops.server.IPlayerExperienceService;
 import pl.arieals.globalshops.server.domain.BuyResult;
@@ -18,9 +16,9 @@ import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
+@Slf4j
 class PlayerExperienceServiceImpl implements IPlayerExperienceService
 {
-    private final Logger logger = LoggerFactory.getLogger(PlayerExperienceServiceImpl.class);
     @Inject
     private BukkitApiCore apiCore;
 
@@ -36,7 +34,7 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
 
         if ( level > item.getMaxLevel() )
         {
-        	logger.warn("Player attempt to buy item {} at level: {} where max level is {}", item, level, item.getMaxLevel());
+        	log.warn("Player attempt to buy item {} at level: {} where max level is {}", item, level, item.getMaxLevel());
         	// XXX: should we do something with this?
         }
         
@@ -104,7 +102,7 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
         playerContainer.markAsActive(item);
 
         final String playerName = playerContainer.getBukkitPlayer().getName();
-        this.logger.info("Player {} marked {} as active in group {}", playerName, item.getId(), item.getGroup().getId());
+        log.info("Player {} marked {} as active in group {}", playerName, item.getId(), item.getGroup().getId());
     }
 
     // obsluguje sytuacje gdy gracz moze ulepszac item
@@ -125,7 +123,7 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
         final BuyResult buyResult = this.checkCanBuy(playerContainer, item, level);
         if (buyResult != BuyResult.CAN_BUY)
         {
-            this.logger.info("Upgrade cancelled with reason {} for player {} item {} level {}", buyResult, player.getName(), item.getId(), level);
+            log.info("Upgrade cancelled with reason {} for player {} item {} level {}", buyResult, player.getName(), item.getId(), level);
             return;
         }
 
@@ -136,7 +134,7 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
             if (buyResult2 != BuyResult.CAN_BUY)
             {
             	// TODO: send message
-                this.logger.info("Upgrade cancelled with reason {} for player {} item {} level {}", buyResult2, player.getName(), item.getId(), level);
+                log.info("Upgrade cancelled with reason {} for player {} item {} level {}", buyResult2, player.getName(), item.getId(), level);
                 return;
             }
             
@@ -152,15 +150,15 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
                 // nie udalo sie pobrac kasy. Nie powinno byc mozliwe
                 return;
             }
-	
+
 	        final boolean success = playerContainer.addItem(item, level);
 	        if (! success)
 	        {
-	            this.logger.warn("Player {} failed to buy {} level {} (success false)", player.getName(), item.getId(), level);
+	            log.warn("Player {} failed to buy {} level {} (success false)", player.getName(), item.getId(), level);
 	            return;
 	        }
 	
-	        this.logger.info("Player {} bought {} level {}", player.getName(), item.getId(), level);
+	        log.info("Player {} bought {} level {}", player.getName(), item.getId(), level);
 	        
 	        if ( item.getGroup().getGroupType() == GroupType.SINGLE_PICK )
 	        {

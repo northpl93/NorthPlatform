@@ -63,7 +63,7 @@ public class StorageConnector extends Component
 
         final MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
 
-        final NorthSerializerImpl<BsonReader> serializer = new NorthSerializerImpl<>(new MongoDbSerializationFormat());
+        final NorthSerializerImpl<BsonReader> serializer = new NorthSerializerImpl<>(new MongoDbSerializationFormat(), new NorthPlatformClassResolver());
         builder.codecRegistry(this.configureMongoCodecRegistry(serializer));
 
         builder.connectionsPerHost(10); // maksymalnie 10 polaczen. Default 100

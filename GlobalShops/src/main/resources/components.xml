@@ -34,5 +34,18 @@
                 <platform>BUKKIT</platform>
             </platforms>
         </component>
+
+        <component>
+            <name>GlobalShops.Bungee</name>
+            <mainClass>pl.arieals.globalshops.bungee.GlobalShopsBungee</mainClass>
+            <description>Dummy component needed to expose classes for serialization.</description>
+            <packages>
+                <package>pl.arieals.globalshops.shared</package>
+                <package>pl.arieals.globalshops.bungee</package>
+            </packages>
+            <platforms>
+                <platform>BUNGEE</platform>
+            </platforms>
+        </component>
     </components>
 </bundle>
