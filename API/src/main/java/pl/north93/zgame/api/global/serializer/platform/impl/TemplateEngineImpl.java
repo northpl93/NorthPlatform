@@ -18,6 +18,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import pl.north93.zgame.api.global.serializer.platform.ClassResolver;
 import pl.north93.zgame.api.global.serializer.platform.InstanceCreator;
 import pl.north93.zgame.api.global.serializer.platform.TemplateFactory;
+import pl.north93.zgame.api.global.serializer.platform.TypePredictor;
 import pl.north93.zgame.api.global.serializer.platform.context.DeserializationContext;
 import pl.north93.zgame.api.global.serializer.platform.context.SerializationContext;
 import pl.north93.zgame.api.global.serializer.platform.template.ExactTypeIgnoreGenericFilter;
@@ -41,14 +42,17 @@ import pl.north93.zgame.api.global.serializer.platform.template.builtin.StringTe
 /*default*/ class TemplateEngineImpl implements TemplateEngine
 {
     private final ClassResolver classResolver;
+    private final TypePredictor<SerializationContext, DeserializationContext> typePredictor;
     private final InstantiationManager instantiationManager = new InstantiationManager();
     private final ReadWriteLock templatesLock = new ReentrantReadWriteLock();
     private final TemplateFactory templateFactory = new TemplateFactoryImpl();
     private final Map<TemplateFilter, Template<?, ?, ?>> templates = new TreeMap<>();
 
-    public TemplateEngineImpl(final ClassResolver classResolver)
+    @SuppressWarnings("unchecked")
+    public TemplateEngineImpl(final ClassResolver classResolver, final TypePredictor<?, ?> typePredictor)
     {
         this.classResolver = classResolver;
+        this.typePredictor = (TypePredictor<SerializationContext, DeserializationContext>) typePredictor;
 
         // special default types
         this.register(new DynamicTemplate.DynamicTemplateFilter(), new DynamicTemplate());
@@ -127,6 +131,18 @@ import pl.north93.zgame.api.global.serializer.platform.template.builtin.StringTe
         }
 
         throw new IllegalArgumentException(type.getTypeName());
+    }
+
+    @Override
+    public boolean isTypePredictingSupported()
+    {
+        return this.typePredictor != null;
+    }
+
+    @Override
+    public TypePredictor<SerializationContext, DeserializationContext> getTypePredictor()
+    {
+        return this.typePredictor;
     }
 
     @Override

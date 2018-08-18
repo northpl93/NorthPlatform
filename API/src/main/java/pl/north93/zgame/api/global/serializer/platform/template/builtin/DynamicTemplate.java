@@ -36,15 +36,39 @@ public class DynamicTemplate implements Template<Object, SerializationContext, D
     @Override
     public void serialise(final SerializationContext context, final FieldInfo field, final Object object) throws Exception
     {
+        final TemplateEngine templateEngine = context.getTemplateEngine();
+
+        final Type fixedType = this.fixType(templateEngine, field.getType(), object.getClass());
+        if (this.shouldUseTypePredicting(templateEngine, fixedType))
+        {
+            this.serializeWithTypePredicting(context, field, fixedType, object);
+        }
+        else
+        {
+            this.serializeWithoutTypePredicting(context, field, fixedType, object);
+        }
+    }
+
+    // typ moze byc przewidziany przez protokól; serializujemy bez nazwy klasy
+    private void serializeWithTypePredicting(final SerializationContext context, final FieldInfo field, final Type fixedType, final Object object) throws Exception
+    {
+        final TemplateEngine templateEngine = context.getTemplateEngine();
+        final Template<Object, SerializationContext, DeserializationContext> template = templateEngine.getTemplate(fixedType);
+
+        template.serialise(context, field, object);
+    }
+
+    // typ nie moze byc przewidziany przez protokól; serializujemy z nazwa klasy
+    private void serializeWithoutTypePredicting(final SerializationContext context, final FieldInfo field, final Type fixedType, final Object object) throws Exception
+    {
+        final TemplateEngine templateEngine = context.getTemplateEngine();
+
         context.enterObject(field);
         try
         {
-            final Class<?> objectClass = object.getClass();
-            context.writeString(FIELD_TYPE, objectClass.getName());
+            final Template<Object, SerializationContext, DeserializationContext> template = templateEngine.getTemplate(fixedType);
 
-            final Type fixedType = this.fixType(context.getTemplateEngine(), field.getType(), objectClass);
-
-            final Template<Object, SerializationContext, DeserializationContext> template = context.getTemplateEngine().getTemplate(fixedType);
+            context.writeString(FIELD_TYPE, object.getClass().getName());
             template.serialise(context, this.getValueField(fixedType), object);
         }
         finally
@@ -57,6 +81,20 @@ public class DynamicTemplate implements Template<Object, SerializationContext, D
     public Object deserialize(final DeserializationContext context, final FieldInfo field) throws Exception
     {
         final TemplateEngine templateEngine = context.getTemplateEngine();
+        if (templateEngine.isTypePredictingSupported())
+        {
+            final Template<Object, SerializationContext, DeserializationContext> predictedType = templateEngine.getTypePredictor().predictType(context, field);
+            if (predictedType != null)
+            {
+                return predictedType.deserialize(context, field);
+            }
+        }
+
+        return this.deserializeWithoutTypePredicting(context, templateEngine, field);
+    }
+
+    private Object deserializeWithoutTypePredicting(final DeserializationContext context, final TemplateEngine templateEngine, final FieldInfo field) throws Exception
+    {
         context.enterObject(field);
         try
         {
@@ -72,6 +110,11 @@ public class DynamicTemplate implements Template<Object, SerializationContext, D
         {
             context.exitObject(field);
         }
+    }
+
+    private boolean shouldUseTypePredicting(final TemplateEngine templateEngine, final Type type)
+    {
+        return templateEngine.isTypePredictingSupported() && templateEngine.getTypePredictor().isTypePredictable(templateEngine, type);
     }
 
     // jesli posiadamy informacje o generycznym typie to go dodajemy;

@@ -15,16 +15,16 @@ import pl.north93.zgame.api.global.serializer.platform.template.TemplateEngine;
 public class NorthSerializerImpl<OUTPUT> implements NorthSerializer<OUTPUT>
 {
     private final TemplateEngine templateEngine;
-    private final SerializationFormat<OUTPUT> serializationFormat;
+    private final SerializationFormat<OUTPUT, ?, ?> serializationFormat;
 
-    public NorthSerializerImpl(final SerializationFormat<OUTPUT> serializationFormat, final ClassResolver classResolver)
+    public NorthSerializerImpl(final SerializationFormat<OUTPUT, ?, ?> serializationFormat, final ClassResolver classResolver)
     {
-        this.templateEngine = new TemplateEngineImpl(classResolver);
+        this.templateEngine = new TemplateEngineImpl(classResolver, serializationFormat.getTypePredictor());
         this.serializationFormat = serializationFormat;
         this.serializationFormat.configure(this.templateEngine);
     }
 
-    public NorthSerializerImpl(final SerializationFormat<OUTPUT> serializationFormat)
+    public NorthSerializerImpl(final SerializationFormat<OUTPUT, ?, ?> serializationFormat)
     {
         this(serializationFormat, new DefaultClassResolver());
     }
@@ -65,7 +65,7 @@ public class NorthSerializerImpl<OUTPUT> implements NorthSerializer<OUTPUT>
     }
 
     @Override
-    public SerializationFormat<OUTPUT> getSerializationFormat()
+    public SerializationFormat<OUTPUT, ?, ?> getSerializationFormat()
     {
         return this.serializationFormat;
     }

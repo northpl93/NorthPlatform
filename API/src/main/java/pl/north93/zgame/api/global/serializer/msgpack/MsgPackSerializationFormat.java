@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.global.serializer.msgpack;
 
+import javax.annotation.Nullable;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -11,13 +13,12 @@ import pl.north93.zgame.api.global.serializer.msgpack.template.MsgPackMapTemplat
 import pl.north93.zgame.api.global.serializer.msgpack.template.MsgPackSetTemplate;
 import pl.north93.zgame.api.global.serializer.msgpack.template.MsgPackUuidTemplate;
 import pl.north93.zgame.api.global.serializer.platform.SerializationFormat;
-import pl.north93.zgame.api.global.serializer.platform.context.DeserializationContext;
-import pl.north93.zgame.api.global.serializer.platform.context.SerializationContext;
+import pl.north93.zgame.api.global.serializer.platform.TypePredictor;
 import pl.north93.zgame.api.global.serializer.platform.template.AnyInheritedTypeFilter;
 import pl.north93.zgame.api.global.serializer.platform.template.ExactTypeIgnoreGenericFilter;
 import pl.north93.zgame.api.global.serializer.platform.template.TemplateEngine;
 
-public class MsgPackSerializationFormat implements SerializationFormat<byte[]>
+public class MsgPackSerializationFormat implements SerializationFormat<byte[], MsgPackSerializationContext, MsgPackDeserializationContext>
 {
     @Override
     public void configure(final TemplateEngine templateEngine)
@@ -36,14 +37,21 @@ public class MsgPackSerializationFormat implements SerializationFormat<byte[]>
     }
 
     @Override
-    public SerializationContext createSerializationContext(final TemplateEngine templateEngine)
+    public MsgPackSerializationContext createSerializationContext(final TemplateEngine templateEngine)
     {
         return new MsgPackSerializationContext(templateEngine);
     }
 
     @Override
-    public DeserializationContext createDeserializationContext(final TemplateEngine templateEngine, final byte[] serializedData)
+    public MsgPackDeserializationContext createDeserializationContext(final TemplateEngine templateEngine, final byte[] serializedData)
     {
         return new MsgPackDeserializationContext(templateEngine, serializedData);
+    }
+
+    @Nullable
+    @Override
+    public TypePredictor<MsgPackSerializationContext, MsgPackDeserializationContext> getTypePredictor()
+    {
+        return null;
     }
 }

@@ -20,7 +20,7 @@ public class NorthBsonReader implements ITypesReader
 
     public void enterObject(final String name)
     {
-        if (name == null && this.contextStack.size() == 1)
+        if (this.isRootObject(name))
         {
             return; // root object
         }
@@ -65,6 +65,11 @@ public class NorthBsonReader implements ITypesReader
     @Override
     public BsonType readType(final String name)
     {
+        if (this.isRootObject(name))
+        {
+            return BsonType.DOCUMENT;
+        }
+
         return this.getCurrentContext().readType(name);
     }
 
@@ -113,5 +118,10 @@ public class NorthBsonReader implements ITypesReader
     private NorthReadingContext getCurrentContext()
     {
         return this.contextStack.getLast();
+    }
+
+    private boolean isRootObject(final String name)
+    {
+        return name == null && this.contextStack.size() == 1;
     }
 }

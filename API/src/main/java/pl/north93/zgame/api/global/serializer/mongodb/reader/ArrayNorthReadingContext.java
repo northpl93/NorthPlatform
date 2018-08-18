@@ -1,7 +1,7 @@
 package pl.north93.zgame.api.global.serializer.mongodb.reader;
 
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.ListIterator;
 
 import org.bson.BsonArray;
 import org.bson.BsonBinary;
@@ -11,11 +11,11 @@ import org.bson.BsonValue;
 
 /*default*/ class ArrayNorthReadingContext extends NorthReadingContext
 {
-    private final Iterator<BsonValue> iterator;
+    private final ListIterator<BsonValue> iterator;
 
     public ArrayNorthReadingContext(final BsonArray array)
     {
-        this.iterator = array.iterator();
+        this.iterator = array.listIterator();
     }
 
     @Override
@@ -58,7 +58,15 @@ import org.bson.BsonValue;
     @Override
     public BsonType readType(final String name)
     {
-        throw new UnsupportedOperationException("Trzeba to kiedys zaimplementowac...");
+        try
+        {
+            final BsonValue next = this.iterator.next();
+            return next.getBsonType();
+        }
+        finally
+        {
+            this.iterator.previous();
+        }
     }
 
     @Override

@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.global.serializer.mongodb;
 
+import javax.annotation.Nullable;
+
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -17,14 +19,13 @@ import pl.north93.zgame.api.global.serializer.mongodb.template.MongoDbObjectIdTe
 import pl.north93.zgame.api.global.serializer.mongodb.template.MongoDbPatternTemplate;
 import pl.north93.zgame.api.global.serializer.mongodb.template.MongoDbUuidTemplate;
 import pl.north93.zgame.api.global.serializer.platform.SerializationFormat;
-import pl.north93.zgame.api.global.serializer.platform.context.DeserializationContext;
-import pl.north93.zgame.api.global.serializer.platform.context.SerializationContext;
+import pl.north93.zgame.api.global.serializer.platform.TypePredictor;
 import pl.north93.zgame.api.global.serializer.platform.template.AnyInheritedTypeFilter;
 import pl.north93.zgame.api.global.serializer.platform.template.ExactTypeIgnoreGenericFilter;
 import pl.north93.zgame.api.global.serializer.platform.template.TemplateEngine;
 import pl.north93.zgame.api.global.serializer.platform.template.TemplatePriority;
 
-public class MongoDbSerializationFormat implements SerializationFormat<BsonReader>
+public class MongoDbSerializationFormat implements SerializationFormat<BsonReader, MongoDbSerializationContext, MongoDbDeserializationContext>
 {
     @Override
     public void configure(final TemplateEngine templateEngine)
@@ -41,15 +42,22 @@ public class MongoDbSerializationFormat implements SerializationFormat<BsonReade
     }
 
     @Override
-    public SerializationContext createSerializationContext(final TemplateEngine templateEngine)
+    public MongoDbSerializationContext createSerializationContext(final TemplateEngine templateEngine)
     {
         final BsonWriter writer = MongoDbCodec.writer.get();
         return new MongoDbSerializationContext(templateEngine, writer);
     }
 
     @Override
-    public DeserializationContext createDeserializationContext(final TemplateEngine templateEngine, final BsonReader serializedData)
+    public MongoDbDeserializationContext createDeserializationContext(final TemplateEngine templateEngine, final BsonReader serializedData)
     {
         return new MongoDbDeserializationContext(templateEngine, serializedData);
+    }
+
+    @Nullable
+    @Override
+    public TypePredictor<MongoDbSerializationContext, MongoDbDeserializationContext> getTypePredictor()
+    {
+        return new MongoDbTypePredictor();
     }
 }

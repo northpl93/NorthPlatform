@@ -3,6 +3,7 @@ package pl.north93.zgame.api.global.serializer.platform.template;
 import java.lang.reflect.Type;
 
 import pl.north93.zgame.api.global.serializer.platform.InstanceCreator;
+import pl.north93.zgame.api.global.serializer.platform.TypePredictor;
 import pl.north93.zgame.api.global.serializer.platform.context.DeserializationContext;
 import pl.north93.zgame.api.global.serializer.platform.context.SerializationContext;
 
@@ -28,6 +29,10 @@ public interface TemplateEngine
     Type[] getTypeParameters(Type type);
 
     boolean isNeedsDynamicResolution(Type type);
+
+    boolean isTypePredictingSupported();
+
+    TypePredictor<SerializationContext, DeserializationContext> getTypePredictor();
 
     <T> InstanceCreator<T> getInstanceCreator(Class<T> clazz);
 

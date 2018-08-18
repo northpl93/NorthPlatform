@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.bson.BsonBinary;
 import org.bson.BsonDocument;
 import org.bson.BsonReader;
+import org.bson.BsonType;
 import org.bson.codecs.BsonDocumentCodec;
 
 import lombok.ToString;
@@ -116,5 +117,10 @@ public class MongoDbDeserializationContext extends DeserializationContext
     public BsonBinary readBinary(final FieldInfo field)
     {
         return this.reader.readBinary(field.getName());
+    }
+
+    public BsonType readType(final FieldInfo field)
+    {
+        return this.reader.readType(field.getName());
     }
 }
