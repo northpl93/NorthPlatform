@@ -87,6 +87,10 @@ public class MongoDbConverter extends NorthCommand
 
                 newMap.put("shopData", playerShopData);
             }
+            
+            newMap.remove("globalShops_bought");
+            newMap.remove("globalShops_shards");
+            newMap.remove("globalShops_active");
 
             final PersistedPlayer.PersistedPlayerBuilder builder = PersistedPlayer.builder();
             builder.uuid(document.get("uuid", UUID.class));
