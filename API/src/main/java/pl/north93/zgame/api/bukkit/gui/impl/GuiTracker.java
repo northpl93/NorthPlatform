@@ -23,6 +23,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -231,6 +232,18 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
 
     @EventHandler
     public void disallowDropItemByQWhenHotBarIsOpened(final PlayerPressQEvent event)
+    {
+        GuiTrackerEntry entry = getEntry(event.getPlayer());
+        if ( entry.getCurrentHotbarMenu() == null )
+        {
+            return;
+        }
+
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void disallowHandSwapWhenHotBarIsOpened(final PlayerSwapHandItemsEvent event)
     {
         GuiTrackerEntry entry = getEntry(event.getPlayer());
         if ( entry.getCurrentHotbarMenu() == null )
