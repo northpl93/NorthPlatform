@@ -12,12 +12,14 @@ import com.google.common.base.Preconditions;
 
 import org.reflections.Reflections;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlGuiLayout;
 import pl.north93.zgame.api.bukkit.gui.impl.xml.XmlHotbarLayout;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.utils.lang.CatchException;
 
+@Slf4j
 public class XmlLayoutRegistry
 {
     @Inject
@@ -65,7 +67,7 @@ public class XmlLayoutRegistry
         String name = path.substring("gui/".length(), path.length() - ".xml".length());
         XmlGuiLayout layout = JAXB.unmarshal(cl.getResourceAsStream(path), XmlGuiLayout.class);
         loadedGuiLayouts.putIfAbsent(name, layout);
-        System.out.println("Loaded gui layout with name " + name);
+        log.info("Loaded gui layout with name {}", name);
     }
     
     private static void loadHotbarLayout(ClassLoader cl, String path)
@@ -73,6 +75,6 @@ public class XmlLayoutRegistry
         String name = path.substring("hotbar/".length(), path.length() - ".xml".length());
         XmlHotbarLayout layout = JAXB.unmarshal(cl.getResourceAsStream(path), XmlHotbarLayout.class);
         loadedHotbarLayouts.putIfAbsent(name, layout);
-        System.out.println("Loaded hotbar layout with name " + name);
+        log.info("Loaded hotbar layout with name {}", name);
     }
 }

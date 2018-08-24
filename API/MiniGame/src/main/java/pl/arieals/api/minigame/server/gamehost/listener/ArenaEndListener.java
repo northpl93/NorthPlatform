@@ -10,9 +10,8 @@ import org.bukkit.event.EventHandler;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
@@ -26,9 +25,9 @@ import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
+@Slf4j
 public class ArenaEndListener implements AutoListener
 {
-    private final Logger logger = LoggerFactory.getLogger(ArenaEndListener.class);
     @Inject
     private IBukkitExecutor bukkitExecutor;
 
@@ -61,7 +60,7 @@ public class ArenaEndListener implements AutoListener
         }
 
         // jak arena byla w trakcie gry lub po grze to przelaczamy do ponownej inicjalizacji
-        this.logger.info("Arena {} is empty, switching to INITIALISING...", arena.getId());
+        log.info("Arena {} is empty, switching to INITIALISING...", arena.getId());
         this.bukkitExecutor.sync(() ->
         {
             if (gamePhase == GamePhase.STARTED)
@@ -82,7 +81,7 @@ public class ArenaEndListener implements AutoListener
         final IMatchAccess match = event.getArena().getMatch();
         if (match == null)
         {
-            this.logger.warn("Match is null on arena {} when switched to post_game", event.getArena().getId());
+            log.warn("Match is null on arena {} when switched to post_game", event.getArena().getId());
             return;
         }
 
@@ -95,7 +94,7 @@ public class ArenaEndListener implements AutoListener
             final Duration matchDuration = Duration.between(match.getStartedAt(), match.getEndedAt());
             match.getStatistics().record(StandardMatchStatistics.MATCH_DURATION, new DurationUnit(matchDuration));
 
-            System.out.println("Match duration: " + matchDuration);
+            log.info("Match {} on arena {} finished with duration {}", match.getMatchId(), match.getArenaId(), matchDuration);
         });
     }
 
@@ -108,7 +107,7 @@ public class ArenaEndListener implements AutoListener
             return;
         }
 
-        this.logger.info("Arena {} has been switched to POST_GAME without players, switching to INITIALISING", arena.getId());
+        log.info("Arena {} has been switched to POST_GAME without players, switching to INITIALISING", arena.getId());
         this.bukkitExecutor.sync(() ->
         {
             // kiedy cos przelaczylo pusta arene do POST_GAME to natychmiast przerzucamy do INITIALISING

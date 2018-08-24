@@ -1,6 +1,7 @@
 package pl.north93.zgame.features.bukkit.server;
 
 import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -11,7 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
-import pl.north93.zgame.api.bukkit.utils.xml.XmlChunk;
+import pl.north93.zgame.api.bukkit.world.ChunkLocation;
 import pl.north93.zgame.api.bukkit.world.IWorldManager;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
@@ -56,12 +57,13 @@ public class WorldTrim extends NorthCommand
         	sender.sendMessage(messages, "worldtrim.select_area_first");
         	return;
         }
-        
+
         World world = selection.getWorld();
         Cuboid cuboid = new Cuboid(selection.getMinimumPoint(), selection.getMaximumPoint());
-        
-        HashSet<XmlChunk> chunks = cuboid.getChunksCoordinates().stream().map(xz -> new XmlChunk(xz.getKey(), xz.getValue()))
-        		.collect(Collectors.toCollection(HashSet::new));
+
+        Set<ChunkLocation> chunks = cuboid.getChunksCoordinates().stream()
+                                          .map(xz -> new ChunkLocation(xz.getKey(), xz.getValue()))
+                                          .collect(Collectors.toCollection(HashSet::new));
         
         sender.sendMessage(messages, "worldtrim.start_trimming");
         worldManager.trimWorld(world, args.asString(0), chunks);

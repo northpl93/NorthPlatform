@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
@@ -26,6 +27,7 @@ import pl.north93.zgame.api.bukkit.utils.nms.FastBlockOp;
 import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
+@Slf4j
 public class ArenaStartListener implements Listener
 {
     @Inject
@@ -82,7 +84,7 @@ public class ArenaStartListener implements Listener
             }
             FastBlockOp.setType(block, Material.AIR, (byte) 0);
         }
-        System.out.println("BedWars lobby destroyed in: " + (System.currentTimeMillis() - l));
+        log.info("BedWars lobby destroyed in: {}", System.currentTimeMillis() - l);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

@@ -61,7 +61,6 @@ public class AnalysisManager
     {
         this.eventAnalysers.add(new RegisteredEventAnalyser(analyser));
         Collections.sort(this.eventAnalysers);
-        System.out.println(this.eventAnalysers);
     }
 
     @Aggregator(TimelineAnalyser.class) // automatyczna agregacja
