@@ -7,7 +7,7 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.generator.ChunkGenerator;
 
-public class EmptyChunkGenerator extends ChunkGenerator
+/*default*/ class EmptyChunkGenerator extends ChunkGenerator
 {
     private static EmptyChunkGenerator instance;
     

@@ -1,5 +1,7 @@
 package pl.north93.zgame.api.bukkit.world.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 
 import net.minecraft.server.v1_12_R1.Chunk;
@@ -16,18 +18,18 @@ import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.io.FileUtils;
 
-import pl.north93.zgame.api.bukkit.utils.xml.XmlChunk;
+import lombok.extern.slf4j.Slf4j;
+import pl.north93.zgame.api.bukkit.world.ChunkLocation;
 import pl.north93.zgame.api.bukkit.world.IWorldLoadCallback;
 import pl.north93.zgame.api.bukkit.world.IWorldManager;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
-public class WorldManagerComponent extends Component implements IWorldManager
+@Slf4j
+/*default*/ class WorldManagerComponent extends Component implements IWorldManager
 {
-    private final Logger logger = LoggerFactory.getLogger(WorldManagerComponent.class);
     @Inject
     private ChunkLoadManager chunkLoadManager;
     
@@ -43,6 +45,22 @@ public class WorldManagerComponent extends Component implements IWorldManager
     }
 
     @Override
+    public boolean copyWorld(final String name, final File template)
+    {
+        final File newWorldDirectory = new File(Bukkit.getWorldContainer(), name);
+        try
+        {
+            FileUtils.copyDirectory(template, newWorldDirectory);
+            return true;
+        }
+        catch (final IOException e)
+        {
+            log.error("Failed to copy world {} from {}", name, template, e);
+            return false;
+        }
+    }
+
+    @Override
     public IWorldLoadCallback loadWorld(String name, WorldCreator creator, boolean keepEntireWorldLoaded, boolean disableGenerateNewChunks)
     {
         WorldServer worldServer = NmsWorldUtils.createWorldInstance(name, null);
@@ -54,9 +72,9 @@ public class WorldManagerComponent extends Component implements IWorldManager
         
         Bukkit.getPluginManager().callEvent(new WorldInitEvent(worldServer.getWorld()));
         NorthChunkProvider.inject(worldServer, keepEntireWorldLoaded, disableGenerateNewChunks);
-        
-        this.logger.info("Initialized world " + name + " (keepWorldLoaded: " + keepEntireWorldLoaded + ", disableGenerateChunks: " + disableGenerateNewChunks);
-        
+
+        log.info("Initialized world {} (keepWorldLoaded: {}, disableGenerateChunks: {})", name, keepEntireWorldLoaded, disableGenerateNewChunks);
+
         Bukkit.getPluginManager().callEvent(new WorldLoadEvent(worldServer.getWorld()));
         
         WorldLoadCallback callback = new WorldLoadCallback(worldServer.getWorld());
@@ -89,13 +107,37 @@ public class WorldManagerComponent extends Component implements IWorldManager
         Preconditions.checkState(unloadWorld0(world, true));
     }
 
+    @Override
+    public void unloadAndDeleteWorld(final World world)
+    {
+        this.unloadWorld0(world, true);
+        try
+        {
+            FileUtils.deleteDirectory(world.getWorldFolder());
+        }
+        catch (final IOException e)
+        {
+            log.error("Failed to delete world {} directory", world.getName(), e);
+        }
+    }
+
+    @Override
+    public void unloadAndDeleteWorld(final String worldName)
+    {
+        final World world = Bukkit.getWorld(worldName);
+        if (world != null)
+        {
+            this.unloadAndDeleteWorld(world);
+        }
+    }
+
     private boolean unloadWorld0(World world, boolean force)
     {
         boolean result = NmsWorldUtils.unloadWorld(world, force);
         
         if ( result )
         {
-            this.logger.info("Unloaded world " + world.getName());
+            log.info("Unloaded world " + world.getName());
         }
         
         return result;
@@ -108,7 +150,7 @@ public class WorldManagerComponent extends Component implements IWorldManager
     }
     
     @Override
-    public void trimWorld(World source, String targetName, Collection<? extends XmlChunk> chunks)
+    public void trimWorld(World source, String targetName, Collection<? extends ChunkLocation> chunks)
     {
         final WorldCreator creator = new WorldCreator(targetName);
         creator.generateStructures(false);
@@ -123,7 +165,7 @@ public class WorldManagerComponent extends Component implements IWorldManager
         Location spawn = source.getSpawnLocation();
         target.setSpawnLocation(spawn.getBlockX(), spawn.getBlockY(), spawn.getBlockZ());
         
-        for (final XmlChunk xmlChunk : chunks)
+        for (final ChunkLocation xmlChunk : chunks)
         {
             final Chunk sourceChunk = ((CraftChunk) source.getChunkAt(xmlChunk.getX(), xmlChunk.getZ())).getHandle();
             final Chunk targetChunk = ((CraftChunk) target.getChunkAt(xmlChunk.getX(), xmlChunk.getZ())).getHandle();

@@ -21,17 +21,16 @@ import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.MapSwitchedEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.MapSwitchedEvent.MapSwitchReason;
-import pl.arieals.api.minigame.server.gamehost.world.ILoadingProgress;
-import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
-import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
 import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.arena.StandardArenaMetaData;
 import pl.arieals.api.minigame.shared.api.cfg.GameMapConfig;
 import pl.north93.zgame.api.bukkit.utils.ISyncCallback;
 import pl.north93.zgame.api.bukkit.utils.SimpleSyncCallback;
+import pl.north93.zgame.api.bukkit.world.IWorldLoadCallback;
+import pl.north93.zgame.api.bukkit.world.IWorldManager;
 
 public class ArenaWorld
 {
@@ -39,7 +38,6 @@ public class ArenaWorld
     private final LocalArena      arena;
     private MapTemplate           currentMapTemplate;
     private World                 currentWorld;
-    private ILoadingProgress      progress;
 
     public ArenaWorld(final GameHostManager gameHostManager, final LocalArena arena)
     {
@@ -100,7 +98,7 @@ public class ArenaWorld
      */
     public boolean isReady()
     {
-        return this.currentWorld != null && this.progress != null && this.progress.isComplete();
+        return this.currentWorld != null;
     }
 
     /**
@@ -122,15 +120,17 @@ public class ArenaWorld
             checkGamePhase(this.arena.getGamePhase(), GamePhase.INITIALISING);
         }
 
+        this.delete(); // delete previous world
         final IWorldManager worldManager = this.gameHostManager.getWorldManager();
 
         final File templateDir = template.getMapDirectory();
-        final ILoadingProgress progress = worldManager.regenWorld(this.getName(), templateDir, template.getMapConfig().getChunks());
+        worldManager.copyWorld(this.getName(), templateDir);
 
-        this.switchMap(template, progress.getWorld(), progress);
+        final IWorldLoadCallback worldLoadCallback = worldManager.loadWorld(this.getName(), true, true);
+        this.switchMap(template, worldLoadCallback.getWorld());
 
         final SimpleSyncCallback callback = new SimpleSyncCallback();
-        progress.onComplete(() ->
+        worldLoadCallback.onComplete(world ->
         {
             this.arena.uploadRemoteData(); // wywola sieciowy event aktualizacji danych areny
             Bukkit.getPluginManager().callEvent(new MapSwitchedEvent(this.arena, MapSwitchReason.ARENA_INITIALISE));
@@ -140,11 +140,10 @@ public class ArenaWorld
         return callback;
     }
 
-    /*default*/ void switchMap(final MapTemplate newMapTemplate, final World newWorld, final ILoadingProgress progress)
+    /*default*/ void switchMap(final MapTemplate newMapTemplate, final World newWorld)
     {
         this.currentMapTemplate = newMapTemplate;
         this.currentWorld = newWorld;
-        this.progress = progress;
 
         final RemoteArena remoteArena = this.arena.getAsRemoteArena(); // upload nastąpi w onComplete
         remoteArena.getMetadata().set(StandardArenaMetaData.WORLD_ID, newMapTemplate.getName());
@@ -156,22 +155,23 @@ public class ArenaWorld
         }
     }
 
-    public boolean delete()
+    public void delete()
     {
+        if (this.currentWorld == null)
+        {
+            return;
+        }
+
         final IWorldManager worldManager = this.gameHostManager.getWorldManager();
-        if (this.arena.getDeathMatch().getState() == DeathMatchState.STARTED)
-        {
-            return worldManager.clearWorld(this.arena.getDeathMatch().getDeathMathWorldName());
-        }
-        else
-        {
-            return worldManager.clearWorld(this.getName());
-        }
+        worldManager.unloadAndDeleteWorld(this.currentWorld);
+
+        this.currentMapTemplate = null;
+        this.currentWorld = null;
     }
 
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("world", this.currentWorld).append("progress", this.progress).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("world", this.currentWorld).toString();
     }
 }

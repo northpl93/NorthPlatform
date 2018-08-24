@@ -19,9 +19,7 @@ import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.arieals.api.minigame.server.gamehost.region.impl.RegionManagerImpl;
 import pl.arieals.api.minigame.server.gamehost.world.IMapTemplateManager;
-import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
 import pl.arieals.api.minigame.server.gamehost.world.impl.MapTemplateManager;
-import pl.arieals.api.minigame.server.gamehost.world.impl.WorldManager;
 import pl.arieals.api.minigame.shared.api.IGameHostRpc;
 import pl.arieals.api.minigame.shared.api.LobbyMode;
 import pl.arieals.api.minigame.shared.api.arena.IArena;
@@ -31,6 +29,7 @@ import pl.arieals.api.minigame.shared.api.hub.IHubServer;
 import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
 import pl.arieals.api.minigame.shared.api.status.InGameStatus;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.world.IWorldManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.exceptions.ConfigurationException;
 import pl.north93.zgame.api.global.redis.event.IEventManager;
@@ -45,9 +44,10 @@ public class GameHostManager implements IServerManager
     private IRpcManager         rpcManager;
     @Inject
     private IEventManager       eventManager;
+    @Inject
+    private IWorldManager       worldManager;
     private GameHostHubsManager gameHostHubsManager = new GameHostHubsManager();
     private LocalArenaManager   arenaManager = new LocalArenaManager();
-    private WorldManager        worldManager = new WorldManager();
     private RegionManagerImpl   regionManager = new RegionManagerImpl();
     private MapTemplateManager  mapTemplateManager = new MapTemplateManager();
     private MiniGameConfig      miniGameConfig;

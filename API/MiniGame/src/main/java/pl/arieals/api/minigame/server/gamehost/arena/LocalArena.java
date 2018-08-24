@@ -349,10 +349,7 @@ public class LocalArena implements IArena
 
         this.gameHostManager.getArenaManager().getArenas().remove(this);
 
-        if (! this.world.delete())
-        {
-            this.logger.warn("Failed to unload world of arena {}", this.getId());
-        }
+        this.world.delete();
     }
 
     public void startVoting()

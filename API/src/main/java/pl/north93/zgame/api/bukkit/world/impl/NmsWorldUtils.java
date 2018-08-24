@@ -117,7 +117,7 @@ class NmsWorldUtils
         
         String nameLc = name.toLowerCase(Locale.ENGLISH);
         
-        if ( !Bukkit.getWorlds().stream().map(World::getName).anyMatch(nameLc::equalsIgnoreCase) )
+        if (Bukkit.getWorlds().stream().map(World::getName).noneMatch(nameLc::equalsIgnoreCase))
         {
             return null;
         }

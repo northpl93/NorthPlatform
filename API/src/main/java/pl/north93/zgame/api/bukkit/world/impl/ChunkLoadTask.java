@@ -11,20 +11,20 @@ import net.minecraft.server.v1_12_R1.MinecraftServer;
 import org.bukkit.Location;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.zgame.api.bukkit.utils.xml.XmlChunk;
+import pl.north93.zgame.api.bukkit.world.ChunkLocation;
 
 @Slf4j
-public class ChunkLoadTask
+/*default*/ class ChunkLoadTask
 {
-    private final WorldLoadCallback callback;
-    private final Queue<XmlChunk> chunkQueue;
-    private final int chunksSize;
+    private final WorldLoadCallback    callback;
+    private final Queue<ChunkLocation> chunkQueue;
+    private final int                  chunksSize;
     
     private boolean completed;
     
     private int startTick;
     
-    ChunkLoadTask(WorldLoadCallback callback, Collection<XmlChunk> chunksToLoad)
+    ChunkLoadTask(WorldLoadCallback callback, Collection<ChunkLocation> chunksToLoad)
     {
         this.callback = callback;
         this.chunkQueue = new ArrayDeque<>(chunksToLoad);
@@ -71,8 +71,8 @@ public class ChunkLoadTask
                 completed = true;
                 return;
             }
-            
-            XmlChunk chunk = chunkQueue.poll();
+
+            ChunkLocation chunk = chunkQueue.poll();
             
             callback.getWorld().loadChunk(chunk.getX(), chunk.getZ(), false);
         } while ( System.nanoTime() < stop );
@@ -82,7 +82,7 @@ public class ChunkLoadTask
     {
         long start = System.nanoTime();
         
-        Set<XmlChunk> chunks = RegionFileUtils.getGeneratedChunks(callback.getWorld());
+        Set<ChunkLocation> chunks = RegionFileUtils.getGeneratedChunks(callback.getWorld());
         
         long time = System.nanoTime() - start;
         log.debug("Preparing list of chunks for world {} took {} ms", callback.getWorld().getName(), time / 1_000_000);
@@ -92,7 +92,7 @@ public class ChunkLoadTask
     
     public static ChunkLoadTask loadSpawn(WorldLoadCallback callback)
     {
-        Set<XmlChunk> result = new HashSet<>();
+        Set<ChunkLocation> result = new HashSet<>();
         
         Location spawn = callback.getWorld().getSpawnLocation();
         int range = NmsWorldUtils.getMinecraftWorld(callback.getWorld()).paperConfig.keepLoadedRange;
@@ -101,7 +101,7 @@ public class ChunkLoadTask
         {
             for ( int j = -range; j < range; j += 16 )
             {
-                result.add(new XmlChunk((spawn.getBlockX() + i ) << 4, (spawn.getBlockZ() + j ) << 4));
+                result.add(new ChunkLocation((spawn.getBlockX() + i ) << 4, (spawn.getBlockZ() + j ) << 4));
             }
         }
         

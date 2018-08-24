@@ -1,14 +1,15 @@
 package pl.north93.zgame.api.bukkit.world;
 
+import java.io.File;
 import java.util.Collection;
 
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 
-import pl.north93.zgame.api.bukkit.utils.xml.XmlChunk;
-
 public interface IWorldManager
 {
+    boolean copyWorld(String name, File template);
+
     /**
      * Try to load world with a given name, return null when loading world haven't been posible.
      * Note that this will distribute chunk loading into several ticks to balance server load.
@@ -53,6 +54,14 @@ public interface IWorldManager
      * Note that this method won't save chunks.
      */
     void unloadWorld(World world);
+
+    /**
+     * Forces to unload world, even if there are players or plugin cancelled event.
+     * Then deletes world directory.
+     */
+    void unloadAndDeleteWorld(World world);
+
+    void unloadAndDeleteWorld(String worldName);
     
     /**
      * Forces given world to save chunks
@@ -65,5 +74,5 @@ public interface IWorldManager
     /**
      * Trim world to contains only given chunk and save it to new directory.
      */
-    void trimWorld(World world, String target, Collection<? extends XmlChunk> chunks);
+    void trimWorld(World world, String target, Collection<? extends ChunkLocation> chunks);
 }

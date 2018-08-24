@@ -12,29 +12,28 @@ import org.bukkit.World;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.deathmatch.FightStartCountdown;
 import pl.arieals.api.minigame.server.gamehost.deathmatch.IFightManager;
-import pl.arieals.api.minigame.server.gamehost.event.arena.deathmatch.DeathMatchLoadedEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.MapSwitchedEvent;
+import pl.arieals.api.minigame.server.gamehost.event.arena.deathmatch.DeathMatchLoadedEvent;
 import pl.arieals.api.minigame.server.gamehost.event.arena.deathmatch.DeathMatchPrepareEvent;
-import pl.arieals.api.minigame.server.gamehost.world.ILoadingProgress;
-import pl.arieals.api.minigame.server.gamehost.world.IWorldManager;
 import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.api.minigame.shared.api.MapTemplate;
 import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
 import pl.arieals.api.minigame.shared.api.cfg.DeathMatchConfig;
 import pl.arieals.api.minigame.shared.api.cfg.GameMapConfig;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.zgame.api.bukkit.world.IWorldLoadCallback;
+import pl.north93.zgame.api.bukkit.world.IWorldManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
+@Slf4j
 public class DeathMatch
 {
-    private final Logger logger = LoggerFactory.getLogger(DeathMatch.class);
     private final GameHostManager     manager;
     private final LocalArena          arena;
     private       DeathMatchState     state; // stan deathmatchu
@@ -127,32 +126,32 @@ public class DeathMatch
         final ArenaWorld arenaWorld = this.arena.getWorld();
         final IWorldManager worldManager = this.manager.getWorldManager();
 
-        this.logger.info("Switching arena " + this.arena.getId() + " to death match mode!");
+        log.info("Switching arena " + this.arena.getId() + " to death match mode!");
 
         final File templateDir = template.getMapDirectory();
-        final ILoadingProgress progress = worldManager.loadWorld(this.getDeathMathWorldName(), templateDir, template.getMapConfig().getChunks());
+        worldManager.copyWorld(this.getDeathMathWorldName(), templateDir);
+        final IWorldLoadCallback loadCallback = worldManager.loadWorld(this.getDeathMathWorldName(), true, true);
 
-        progress.onComplete(() ->
+        loadCallback.onComplete(world ->
         {
             if (this.arena.getGamePhase() != GamePhase.STARTED || this.state != DeathMatchState.LOADING)
             {
-                this.logger.info("Death match arena loaded, but arena is in gamephase " + this.arena.getGamePhase() + "! Unloading that world...");
-                worldManager.clearWorld(this.getDeathMathWorldName());
+                log.info("Death match arena loaded, but arena is in gamephase " + this.arena.getGamePhase() + "! Unloading that world...");
+                worldManager.unloadAndDeleteWorld(this.getDeathMathWorldName());
                 return;
             }
 
             final World oldWorld = arenaWorld.getCurrentWorld();
 
-            this.logger.info("Death match arena loaded successfully");
+            log.info("Death match arena loaded successfully");
             this.state = DeathMatchState.STARTED;
 
-            arenaWorld.switchMap(template, progress.getWorld(), progress);
+            arenaWorld.switchMap(template, world);
             this.apiCore.callEvent(new MapSwitchedEvent(this.arena, MapSwitchedEvent.MapSwitchReason.DEATH_MATCH));
-            this.apiCore.callEvent(new DeathMatchLoadedEvent(this.arena, oldWorld, progress.getWorld()));
-            if (! worldManager.clearWorld(arenaWorld.getName()))
-            {
-                this.logger.error("Failed to remove regular world of arena {}", this.arena.getId());
-            }
+            this.apiCore.callEvent(new DeathMatchLoadedEvent(this.arena, oldWorld, world));
+
+            // usuwamy poprzedni-normalny swiat areny
+            worldManager.unloadAndDeleteWorld(arenaWorld.getName());
 
             this.fightStart = new FightStartCountdown(this.arena);
             // task zostanie automatycznie anulowany/usuniety gdy arena sie skonczy
@@ -167,15 +166,12 @@ public class DeathMatch
     {
         if (this.state == DeathMatchState.LOADING)
         {
-            this.logger.info("Reset state called while death match arena is loading. Loading will be canceled later.");
+            log.info("Reset state called while death match arena is loading. Loading will be canceled later.");
         }
         else if (this.state == DeathMatchState.STARTED)
         {
-            this.logger.info("Removing death match world for arena " + this.arena.getId());
-            if (! this.manager.getWorldManager().clearWorld(this.getDeathMathWorldName()))
-            {
-                this.logger.error("Failed to remove death match world of arena {}", this.arena.getId());
-            }
+            log.info("Removing death match world for arena " + this.arena.getId());
+            this.manager.getWorldManager().unloadAndDeleteWorld(this.getDeathMathWorldName());
         }
         this.state = DeathMatchState.NOT_STARTED;
         this.fightStart = null;

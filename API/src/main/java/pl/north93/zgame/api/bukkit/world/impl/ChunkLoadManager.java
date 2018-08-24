@@ -13,7 +13,7 @@ import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
 @Slf4j
-public class ChunkLoadManager implements ITickable
+/*default*/ class ChunkLoadManager implements ITickable
 {
     private static final int MIN_MEMORY = 128 * 1024 * 1024;
 

@@ -16,7 +16,7 @@ import pl.north93.zgame.api.global.utils.lang.MethodHandlesUtils;
 import pl.north93.zgame.api.global.utils.lang.SneakyThrow;
 
 @Slf4j
-public class NorthChunkProvider extends ChunkProviderServer
+/*default*/ class NorthChunkProvider extends ChunkProviderServer
 {
     private static final MethodHandle SET_CHUNK_PROVIDER = MethodHandlesUtils.unreflectSetter(World.class, "chunkProvider");
     private static final MethodHandle GET_CHUNK_LOADER = MethodHandlesUtils.unreflectGetter(ChunkProviderServer.class, "chunkLoader");

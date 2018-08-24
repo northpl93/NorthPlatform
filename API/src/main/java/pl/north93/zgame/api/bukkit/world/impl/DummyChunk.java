@@ -8,7 +8,7 @@ import net.minecraft.server.v1_12_R1.Chunk;
 import net.minecraft.server.v1_12_R1.IBlockData;
 import net.minecraft.server.v1_12_R1.World;
 
-public class DummyChunk extends Chunk
+/*default*/ class DummyChunk extends Chunk
 {
     public DummyChunk(final World world, final int i, final int j)
     {
