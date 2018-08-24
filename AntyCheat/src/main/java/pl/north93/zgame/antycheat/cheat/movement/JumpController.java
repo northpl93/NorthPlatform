@@ -14,8 +14,8 @@ import pl.north93.zgame.antycheat.event.impl.ClientMoveTimelineEvent;
 import pl.north93.zgame.antycheat.event.impl.VelocityAppliedTimelineEvent;
 import pl.north93.zgame.antycheat.timeline.DataKey;
 import pl.north93.zgame.antycheat.timeline.PlayerData;
-import pl.north93.zgame.antycheat.timeline.PlayerProperties;
 import pl.north93.zgame.antycheat.timeline.PlayerTickInfo;
+import pl.north93.zgame.antycheat.timeline.virtual.VirtualPlayer;
 import pl.north93.zgame.antycheat.utils.DistanceUtils;
 import pl.north93.zgame.antycheat.utils.EntityUtils;
 import pl.north93.zgame.antycheat.utils.PlayerUtils;
@@ -59,7 +59,7 @@ public class JumpController
     /** Informacje o ticku w którym zaczęto wznoszenie lub upadek */
     private PlayerTickInfo startTickInfo;
 
-    /** Startowe velocity ustawiane przez zewnętrzne źródło; może być nullem! */
+    /** Startowe velocity, moze byc ustawione przez zewnetrzne zrodlo lub obliczone w #getStartVelocity() */
     private Vector startVelocity;
 
     // konstruktor
@@ -255,10 +255,13 @@ public class JumpController
     private void verifyPlayerRisingStage(final ClientMoveTimelineEvent event, final SingleAnalysisResult result)
     {
         final RichEntityLocation to = event.getTo();
-        final Vector startVector = this.deduceStartVelocity(event.getOwner());
+        final Vector startVector = this.getStartVelocity(event.getOwner(), event.getTo());
 
         final double jumpHeight = to.getY() - this.startLocation.getY();
         final double maxHeight = EntityUtils.maxHeightByStartVelocity(startVector.getY());
+
+        //Bukkit.broadcastMessage("startVector.getY:" + startVector.getY());
+        //Bukkit.broadcastMessage("jumpHeight: " + jumpHeight + " maxHeight: " + maxHeight);
 
         // sprawdzamy czy i o ile gracz przekroczył maksymalną wysokość
         final double maxHeightExceeded = jumpHeight - maxHeight;
@@ -293,18 +296,14 @@ public class JumpController
             result.addViolation(MovementViolation.SURVIVAL_FLY, HORIZONTAL_RISING_EXCEEDED, FalsePositiveProbability.HIGH);
         }
 
-        if (horizontalExceeded > 0.25)
-        {
-            // todo debug
-            System.out.println("horizontalDistanceFromStart=" + horizontalDistanceFromStart + " expectedHorizontalDistance=" + expectedHorizontalDistance);
-        }
-
         // porównujemy wektor ruchu w tym evencie do początkowego wektora ruchu
         final Vector currentMovementVector = event.getFrom().vectorToOther(to);
-        final double cosineSimilarity = cosineSimilarity(startVector.clone().normalize(), currentMovementVector.normalize());
-        if (to.getDistanceToGround() >= 0.1 && maxHeightExceeded < - 0.15)
+        if (currentMovementVector.length() > 0.5 && to.getDistanceToGround() >= 0.5)
         {
-            if (cosineSimilarity <= 0.1 && to.getDistanceToGround() >= 0.5 && maxHeightExceeded < - 0.5)
+            final double cosineSimilarity = cosineSimilarity(startVector.clone().normalize(), currentMovementVector.normalize());
+            //Bukkit.broadcastMessage(format("currentMovementVector={0}", currentMovementVector));
+            //Bukkit.broadcastMessage(format("startVector={0}", startVector));
+            if (cosineSimilarity <= 0.1 && maxHeightExceeded > 0.5)
             {
                 // dodatkowo zwiekszamy wymagania zeby uniknac bolesnych false-positives
                 result.addViolation(MovementViolation.SURVIVAL_FLY, INCONSISTENCY_START_VECTOR, FalsePositiveProbability.MEDIUM);
@@ -322,7 +321,7 @@ public class JumpController
     private void verifyPlayerFallingStage(final ClientMoveTimelineEvent event, final SingleAnalysisResult result)
     {
         final RichEntityLocation to = event.getTo();
-        final Vector startVector = this.deduceStartVelocity(event.getOwner());
+        final Vector startVector = this.getStartVelocity(event.getOwner(), to);
 
         final double fallenDistance = this.startLocation.getY() - to.getY();
 
@@ -348,7 +347,7 @@ public class JumpController
     }
 
     // staramy sie obliczyc wektor z jakim wystartował gracz
-    private Vector deduceStartVelocity(final Player player)
+    private Vector getStartVelocity(final Player player, final RichEntityLocation targetLocation)
     {
         // uznajemy że gracz zawsze może osiągnąć wysokość normalnego skoku.
         // Bez tego czasami łapiemy dziwne false-positives przy intensywnym skakaniu z piruetami.
@@ -360,9 +359,11 @@ public class JumpController
         }
         else
         {
-            final Vector velocityFromTick = this.startTickInfo.getProperties().getVelocity();
-            final double newY = Math.max(normalJumpVelocity, velocityFromTick.getY());
-            return new Vector(velocityFromTick.getX(), newY, velocityFromTick.getZ());
+            final double vectorMultiplier = 0.25;
+            final Vector vector = this.startLocation.vectorToOther(targetLocation);
+
+            // obliczamy wektor startowy z poczatkowego ruchu gracza i go zapisujemy
+            return this.startVelocity = new Vector(vector.getX() * vectorMultiplier, normalJumpVelocity, vector.getZ() * vectorMultiplier);
         }
     }
 
@@ -382,23 +383,21 @@ public class JumpController
     {
         final double heightBonus = maxHeight / (maxHeight + 1);
         final double normalJump = this.getBaseJumpDistance() + heightBonus; // policzone z dupy
-        //Bukkit.broadcastMessage("heightDist: " + heightBonus);
-        //Bukkit.broadcastMessage("baseDist:" + this.getBaseJumpDistance() + " totalDist:" + normalJump);
 
-        final double maxDistanceX = EntityUtils.maxHeightByStartVelocity(Math.abs(startVelocity.getX()));
-        final double maxDistanceZ = EntityUtils.maxHeightByStartVelocity(Math.abs(startVelocity.getZ()));
+        final double maxDistanceX = EntityUtils.maxDistanceByStartVelocity(Math.abs(startVelocity.getX()));
+        final double maxDistanceZ = EntityUtils.maxDistanceByStartVelocity(Math.abs(startVelocity.getZ()));
 
-        final double vectorCrossProductXZ = Math.sqrt(maxDistanceX * maxDistanceX + maxDistanceZ * maxDistanceZ);
-        final double distanceFromVelocity = vectorCrossProductXZ + maxHeight * 0.01;
+        final double distanceFromVelocity = Math.sqrt(maxDistanceX * maxDistanceX + maxDistanceZ * maxDistanceZ);
+        final double adjustedFromVelocity = distanceFromVelocity * 0.75;
 
-        return Math.max(normalJump, distanceFromVelocity);
+        return Math.max(normalJump, adjustedFromVelocity);
     }
 
     private double calculateMaxFallingHorizontalDistance(final Vector startVelocity, final double fallDistance)
     {
         final Vector lookingDirection = this.startLocation.getDirection().multiply(0.1);
-        final double velX = Math.max(lookingDirection.getX(), Math.abs(startVelocity.getX()));
-        final double velZ = Math.max(lookingDirection.getZ(), Math.abs(startVelocity.getZ()));
+        final double velX = Math.max(Math.abs(lookingDirection.getX()), Math.abs(startVelocity.getX()));
+        final double velZ = Math.max(Math.abs(lookingDirection.getZ()), Math.abs(startVelocity.getZ()));
 
         final double maxDistanceX = EntityUtils.maxDistanceByStartVelocity(velX);
         final double maxDistanceZ = EntityUtils.maxDistanceByStartVelocity(velZ);
@@ -409,40 +408,12 @@ public class JumpController
 
     private double getBaseJumpDistance()
     {
-        final PlayerProperties properties = this.startTickInfo.getProperties();
-        final PlayerProperties previousProperties = this.getPreviousPlayerProperties();
+        final VirtualPlayer virtualPlayer = VirtualPlayer.get(this.playerData);
 
-        // bierzemy bardziej korzystne dla gracza warunki,
-        // próba naprawienia losowego buga z przekroczeniem dystansu wznoszenia
-        final boolean sprintingWhileStarted = properties.isSprinting() || previousProperties.isSprinting();
-        final double walkSpeed = Math.max(properties.getMovementSpeed(), previousProperties.getMovementSpeed());
+        final boolean sprintingWhileStarted = virtualPlayer.isSprinting();
+        final double walkSpeed = this.startTickInfo.getMovementSpeed();
         //Bukkit.broadcastMessage("movSpeed: " + properties.getMovementSpeed());
 
         return sprintingWhileStarted ? walkSpeed * 15.5 : walkSpeed * 10;
     }
-
-    private PlayerProperties getPreviousPlayerProperties()
-    {
-        final PlayerTickInfo previousPlayerTickInfo = this.playerData.getPreviousPlayerTickInfo(this.startTickInfo.getTick(), 1);
-        if (previousPlayerTickInfo == null)
-        {
-            return this.startTickInfo.getProperties();
-        }
-
-        return previousPlayerTickInfo.getProperties();
-    }
-
-    // pobiera z linii czasu ostatnie ustawione dla gracza velocity
-    /*private Vector computeVelocityFromTimeline()
-    {
-        final TimelineWalker walkerForScope = this.playerData.getTimeline().createWalkerForScope(TimelineAnalyserConfig.Scope.SECOND);
-        final VelocityAppliedTimelineEvent velocityAppliedTimelineEvent = walkerForScope.previous(VelocityAppliedTimelineEvent.class);
-        if (velocityAppliedTimelineEvent != null)
-        {
-            //Bukkit.broadcastMessage("odczytano velocity z timeline: " + velocityAppliedTimelineEvent.getVelocity().getY());
-            return velocityAppliedTimelineEvent.getVelocity();
-        }
-
-        return null;
-    }*/
 }

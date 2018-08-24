@@ -4,7 +4,6 @@ import pl.north93.zgame.antycheat.analysis.SingleAnalysisResult;
 import pl.north93.zgame.antycheat.analysis.event.EventAnalyser;
 import pl.north93.zgame.antycheat.analysis.event.EventAnalyserConfig;
 import pl.north93.zgame.antycheat.cheat.movement.JumpController;
-import pl.north93.zgame.antycheat.event.impl.ClientMoveTimelineEvent;
 import pl.north93.zgame.antycheat.event.impl.VelocityAppliedTimelineEvent;
 import pl.north93.zgame.antycheat.timeline.PlayerData;
 import pl.north93.zgame.antycheat.timeline.PlayerTickInfo;
@@ -17,8 +16,8 @@ public class VelocityChangeCheck implements EventAnalyser<VelocityAppliedTimelin
     @Override
     public void configure(final EventAnalyserConfig config)
     {
+        config.order(-10);
         config.whitelistEvent(VelocityAppliedTimelineEvent.class);
-        config.fireBefore(ClientMoveTimelineEvent.class);
     }
 
     @Override

@@ -61,6 +61,7 @@ public class AnalysisManager
     {
         this.eventAnalysers.add(new RegisteredEventAnalyser(analyser));
         Collections.sort(this.eventAnalysers);
+        System.out.println(this.eventAnalysers);
     }
 
     @Aggregator(TimelineAnalyser.class) // automatyczna agregacja
@@ -93,9 +94,9 @@ public class AnalysisManager
         final PlayerTickInfo tickInfo = timeline.getPlayerTickInfo(currentTick);
         final Collection<TimelineEvent> events = timeline.getEvents(currentTick);
 
-        for (final RegisteredEventAnalyser eventAnalyser : this.eventAnalysers)
+        for (final TimelineEvent event : events)
         {
-            for (final TimelineEvent event : events)
+            for (final RegisteredEventAnalyser eventAnalyser : this.eventAnalysers)
             {
                 final SingleAnalysisResult analysisResult = eventAnalyser.tryFire(data, tickInfo, event);
                 this.handleAnalysisResult(data.getPlayer(), currentTick, analysisResult);

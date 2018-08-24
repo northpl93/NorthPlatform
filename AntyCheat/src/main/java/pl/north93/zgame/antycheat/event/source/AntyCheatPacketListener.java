@@ -1,6 +1,7 @@
 package pl.north93.zgame.antycheat.event.source;
 
 import net.minecraft.server.v1_12_R1.PacketPlayInCustomPayload;
+import net.minecraft.server.v1_12_R1.PacketPlayInEntityAction;
 import net.minecraft.server.v1_12_R1.PacketPlayInFlying;
 import net.minecraft.server.v1_12_R1.PacketPlayInFlying.PacketPlayInLook;
 import net.minecraft.server.v1_12_R1.PacketPlayInFlying.PacketPlayInPosition;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Player;
 
 import io.netty.buffer.ByteBuf;
 import pl.north93.zgame.antycheat.event.impl.ClientMoveTimelineEvent;
+import pl.north93.zgame.antycheat.event.impl.EntityActionTimelineEvent;
 import pl.north93.zgame.antycheat.event.impl.InteractWithEntityTimelineEvent;
 import pl.north93.zgame.antycheat.event.impl.InteractWithEntityTimelineEvent.EntityAction;
 import pl.north93.zgame.antycheat.event.impl.PluginMessageTimelineEvent;
@@ -60,6 +62,16 @@ public class AntyCheatPacketListener
 
         final ClientMoveTimelineEvent moveTimelineEvent = this.createMoveTimelineEvent(player, event.getPacket());
         this.timelineManager.pushEventForPlayer(player, moveTimelineEvent);
+    }
+
+    @PacketHandler
+    public void onAsyncEntityActionPacket(final PacketEvent<PacketPlayInEntityAction> event)
+    {
+        final Player player = event.getPlayer();
+        final PacketPlayInEntityAction packet = event.getPacket();
+
+        final EntityActionTimelineEvent actionTimelineEvent = new EntityActionTimelineEvent(player, packet.b());
+        this.timelineManager.pushEventForPlayer(player, actionTimelineEvent);
     }
 
     @PacketHandler

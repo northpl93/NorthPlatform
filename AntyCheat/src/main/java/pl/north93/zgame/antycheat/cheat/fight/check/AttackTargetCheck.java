@@ -27,7 +27,6 @@ import pl.north93.zgame.antycheat.event.impl.ClientMoveTimelineEvent;
 import pl.north93.zgame.antycheat.event.impl.InteractWithEntityTimelineEvent;
 import pl.north93.zgame.antycheat.timeline.PlayerData;
 import pl.north93.zgame.antycheat.timeline.PlayerTickInfo;
-import pl.north93.zgame.antycheat.timeline.Timeline;
 import pl.north93.zgame.antycheat.timeline.TimelineWalker;
 import pl.north93.zgame.antycheat.utils.AABB;
 import pl.north93.zgame.antycheat.utils.EntityUtils;
@@ -35,6 +34,7 @@ import pl.north93.zgame.antycheat.utils.RayTrace;
 import pl.north93.zgame.antycheat.utils.block.BlockUtils;
 import pl.north93.zgame.antycheat.utils.location.IPosition;
 import pl.north93.zgame.antycheat.utils.location.RichEntityLocation;
+import pl.north93.zgame.antycheat.timeline.virtual.VirtualPlayer;
 
 public class AttackTargetCheck implements EventAnalyser<InteractWithEntityTimelineEvent>
 {
@@ -66,7 +66,7 @@ public class AttackTargetCheck implements EventAnalyser<InteractWithEntityTimeli
         final IPosition targetPosition = IPosition.fromBukkit(targetEntity.getLocation());
         final AABB targetAABB = EntityUtils.getAABBOfEntityInLocation(targetEntity, targetPosition).grow(0.1, 0.1, 0.1);
 
-        final RichEntityLocation attackerLocation = this.findLocationBeforeHit(data, tickInfo, event);
+        final RichEntityLocation attackerLocation = this.findLocationBeforeHit(data);
         final RayTrace rayTrace = this.createRayTrace(attackerLocation, tickInfo);
 
         final IntersectionResult intersection = this.intersectionWithAabbWithoutBlocks(targetEntity.getWorld(), rayTrace, targetAABB);
@@ -217,21 +217,9 @@ public class AttackTargetCheck implements EventAnalyser<InteractWithEntityTimeli
         return new Vector(location.getX(), location.getY() + tickInfo.getOwner().getEyeHeight(), location.getZ());
     }
 
-    private RichEntityLocation findLocationBeforeHit(final PlayerData playerData, final PlayerTickInfo tickInfo, final InteractWithEntityTimelineEvent event)
+    private RichEntityLocation findLocationBeforeHit(final PlayerData playerData)
     {
-        final Timeline timeline = playerData.getTimeline();
-
-        final TimelineWalker walker = timeline.createWalkerForScope(TimelineAnalyserConfig.Scope.ALL);
-        if (walker.find(event))
-        {
-            final ClientMoveTimelineEvent moveEvent = walker.previous(ClientMoveTimelineEvent.class);
-            if (moveEvent != null)
-            {
-                return moveEvent.getTo();
-            }
-        }
-
-        return tickInfo.getProperties().getLocation();
+        return VirtualPlayer.get(playerData).getLocation();
     }
 
     private IntersectionResult intersectionWithAabbWithoutBlocks(final World world, final RayTrace rayTrace, final AABB entityAabb)

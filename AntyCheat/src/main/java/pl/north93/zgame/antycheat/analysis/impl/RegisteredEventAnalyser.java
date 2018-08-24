@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 import java.util.Set;
 
 import co.aikar.timings.Timing;
+import lombok.ToString;
 import pl.north93.zgame.antycheat.analysis.SingleAnalysisResult;
 import pl.north93.zgame.antycheat.analysis.event.EventAnalyser;
 import pl.north93.zgame.antycheat.analysis.event.EventAnalyserConfig;
@@ -15,6 +16,7 @@ import pl.north93.zgame.antycheat.timeline.PlayerData;
 import pl.north93.zgame.antycheat.timeline.PlayerTickInfo;
 import pl.north93.zgame.antycheat.timeline.TimelineEvent;
 
+@ToString
 /*default*/ class RegisteredEventAnalyser implements Comparable<RegisteredEventAnalyser>
 {
     private final String                       name;
@@ -77,16 +79,6 @@ import pl.north93.zgame.antycheat.timeline.TimelineEvent;
     @Override
     public int compareTo(@Nonnull final RegisteredEventAnalyser o)
     {
-        if (this.config.getFireBefore().contains(o.getAnalyserClass()))
-        {
-            return -1;
-        }
-
-        if (o.config.getFireBefore().contains(this.getAnalyserClass()))
-        {
-            return 1;
-        }
-
-        return 0;
+        return this.config.getOrder() - o.config.getOrder();
     }
 }

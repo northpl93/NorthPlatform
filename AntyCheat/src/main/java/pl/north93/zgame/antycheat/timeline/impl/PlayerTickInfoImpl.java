@@ -1,31 +1,33 @@
 package pl.north93.zgame.antycheat.timeline.impl;
 
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.north93.zgame.antycheat.timeline.PlayerProperties;
+import lombok.ToString;
 import pl.north93.zgame.antycheat.timeline.PlayerTickInfo;
 import pl.north93.zgame.antycheat.timeline.Tick;
 
+@ToString
 /*default*/ class PlayerTickInfoImpl implements PlayerTickInfo
 {
-    private final Player           player;
-    private final Tick             tick;
-    private final PlayerProperties properties;
-    private final boolean          afterSpawn;
-    private final boolean          afterTeleport;
-    private final boolean          reliable;
+    private final Player  player;
+    private final Tick    tick;
+    private final boolean afterSpawn;
+    private final boolean afterTeleport;
+    private final boolean reliable;
+    private final boolean gliding;
+    private final double  movementSpeed;
 
-    public PlayerTickInfoImpl(final Player player, final Tick tick, final PlayerProperties properties, final boolean afterSpawn, final boolean afterTeleport, final boolean reliable)
+    public PlayerTickInfoImpl(final Player player, final Tick tick, final boolean afterSpawn, final boolean afterTeleport, final boolean reliable)
     {
         this.player = player;
         this.tick = tick;
-        this.properties = properties;
         this.afterSpawn = afterSpawn;
         this.afterTeleport = afterTeleport;
         this.reliable = reliable;
+
+        this.gliding = player.isGliding();
+        this.movementSpeed = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue();
     }
 
     @Override
@@ -38,12 +40,6 @@ import pl.north93.zgame.antycheat.timeline.Tick;
     public Tick getTick()
     {
         return this.tick;
-    }
-
-    @Override
-    public PlayerProperties getProperties()
-    {
-        return this.properties;
     }
 
     @Override
@@ -65,8 +61,14 @@ import pl.north93.zgame.antycheat.timeline.Tick;
     }
 
     @Override
-    public String toString()
+    public boolean isGliding()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("player", this.player).append("tick", this.tick).append("reliable", this.reliable).toString();
+        return this.gliding;
+    }
+
+    @Override
+    public double getMovementSpeed()
+    {
+        return this.movementSpeed;
     }
 }

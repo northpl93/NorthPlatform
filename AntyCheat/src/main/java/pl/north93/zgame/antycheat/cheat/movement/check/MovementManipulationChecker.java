@@ -43,7 +43,7 @@ public class MovementManipulationChecker implements EventAnalyser<ClientMoveTime
         final long flags = event.getTo().getFlags();
         //this.debugFlags(flags);
 
-        if (tickInfo.getProperties().isGliding())
+        if (tickInfo.isGliding())
         {
             // lot na elytrze
             jumpController.forceReset();

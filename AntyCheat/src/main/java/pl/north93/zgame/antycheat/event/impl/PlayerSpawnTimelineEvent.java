@@ -2,11 +2,12 @@ package pl.north93.zgame.antycheat.event.impl;
 
 import org.bukkit.entity.Player;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.Getter;
+import lombok.ToString;
 import pl.north93.zgame.antycheat.event.AbstractTimelineEvent;
 
+@Getter
+@ToString
 public class PlayerSpawnTimelineEvent extends AbstractTimelineEvent
 {
     private final SpawnReason spawnReason;
@@ -15,11 +16,6 @@ public class PlayerSpawnTimelineEvent extends AbstractTimelineEvent
     {
         super(player);
         this.spawnReason = spawnReason;
-    }
-
-    public SpawnReason getSpawnReason()
-    {
-        return this.spawnReason;
     }
 
     public boolean isInitial()
@@ -32,11 +28,5 @@ public class PlayerSpawnTimelineEvent extends AbstractTimelineEvent
         SERVER_JOIN,
         RESPAWN_SCREEN,
         BED
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("spawnReason", this.spawnReason).toString();
     }
 }

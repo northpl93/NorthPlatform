@@ -2,9 +2,13 @@ package pl.north93.zgame.antycheat.event.impl;
 
 import org.bukkit.entity.Player;
 
+import lombok.Getter;
+import lombok.ToString;
 import pl.north93.zgame.antycheat.event.AbstractTimelineEvent;
 import pl.north93.zgame.antycheat.utils.location.RichEntityLocation;
 
+@Getter
+@ToString
 public class TeleportTimelineEvent extends AbstractTimelineEvent
 {
     private final RichEntityLocation from;
@@ -15,15 +19,5 @@ public class TeleportTimelineEvent extends AbstractTimelineEvent
         super(player);
         this.from = from;
         this.to = to;
-    }
-
-    public RichEntityLocation getFrom()
-    {
-        return this.from;
-    }
-
-    public RichEntityLocation getTo()
-    {
-        return this.to;
     }
 }

@@ -115,12 +115,12 @@ public final class EntityUtils
 
     public static double maxDistanceByStartVelocity(double vel)
     {
-        double height = 0;
+        double distance = 0;
         while (Math.abs(vel) > 0.003D) // EntityLivingBase onLivingUpdate w MCP1.10
         {
-            height += vel;
+            distance += vel;
             vel *= 0.91; // moveEntityWithHeading this.motionX *= (double)f6; gdzie f6 to śliskość bloki, powietrze 0.91
         }
-        return height;
+        return distance;
     }
 }

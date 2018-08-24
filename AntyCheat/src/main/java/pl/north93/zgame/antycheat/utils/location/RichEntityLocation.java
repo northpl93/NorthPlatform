@@ -19,7 +19,6 @@ public final class RichEntityLocation implements IPosition
     private final Entity   entity;
     private final Location location;
     private final AABB     aabb;
-    private final Vector   velocity;
 
     /** Określa dystans dzielący entity i twardy grunt */
     private final DoubleLazyValue  distanceToGround;
@@ -40,7 +39,6 @@ public final class RichEntityLocation implements IPosition
     {
         this.entity = entity;
         this.location = location;
-        this.velocity = entity.getVelocity();
         this.aabb = EntityUtils.getAABBOfEntityInLocation(entity, this); // mozna przekazac bezpiecznie this bo location jest juz ustawione
 
         this.distanceToGround = new DoubleLazyValue(this::computeDistanceToGround);
@@ -68,16 +66,6 @@ public final class RichEntityLocation implements IPosition
     public boolean isStands()
     {
         return this.isStandsOnGround() || this.isStandsOnEntity();
-    }
-
-    /**
-     * Pobiera velocity które miało nadane entity w momencie utworzenia instancji RichEntityLocation.
-     *
-     * @return Velocity entity w momencie utworzenia instancji tej klasy.
-     */
-    public Vector getVelocity()
-    {
-        return this.velocity;
     }
 
     /**

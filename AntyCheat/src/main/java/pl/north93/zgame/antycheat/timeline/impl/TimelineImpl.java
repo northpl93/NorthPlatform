@@ -16,7 +16,6 @@ import pl.north93.zgame.antycheat.analysis.impl.ViolationsStorage;
 import pl.north93.zgame.antycheat.analysis.timeline.TimelineAnalyserConfig;
 import pl.north93.zgame.antycheat.event.impl.PlayerSpawnTimelineEvent;
 import pl.north93.zgame.antycheat.event.impl.TeleportTimelineEvent;
-import pl.north93.zgame.antycheat.timeline.PlayerProperties;
 import pl.north93.zgame.antycheat.timeline.PlayerTickInfo;
 import pl.north93.zgame.antycheat.timeline.Tick;
 import pl.north93.zgame.antycheat.timeline.Timeline;
@@ -178,7 +177,6 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
     public synchronized void endTick()
     {
         final Player player = this.getOwner();
-        final PlayerProperties playerProperties = new PlayerProperties(player);
 
         final Tick currentTick = this.getCurrentTick();
         this.flushOldData(currentTick);
@@ -191,7 +189,7 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
 
         final boolean anyEventsInTick = this.events.hasEventsInTick(currentTick);
 
-        final PlayerTickInfoImpl playerTickInfo = new PlayerTickInfoImpl(player, currentTick, playerProperties, afterSpawn, afterTeleport, anyEventsInTick);
+        final PlayerTickInfoImpl playerTickInfo = new PlayerTickInfoImpl(player, currentTick, afterSpawn, afterTeleport, anyEventsInTick);
         this.tickInfo.put(currentTick, playerTickInfo);
     }
 

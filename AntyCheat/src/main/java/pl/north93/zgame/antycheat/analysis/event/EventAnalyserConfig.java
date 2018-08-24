@@ -3,22 +3,22 @@ package pl.north93.zgame.antycheat.analysis.event;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import lombok.ToString;
 
+@ToString
 public final class EventAnalyserConfig
 {
     private final Set<Class<?>> eventWhitelist = new HashSet<>();
-    private final Set<Class<?>> fireBefore     = new HashSet<>();
+    private int order = 0;
 
     public void whitelistEvent(final Class<?> event)
     {
         this.eventWhitelist.add(event);
     }
 
-    public void fireBefore(final Class<?> event)
+    public void order(final int order)
     {
-        this.fireBefore.add(event);
+        this.order = order;
     }
 
     public Set<Class<?>> getEventWhitelist()
@@ -26,14 +26,8 @@ public final class EventAnalyserConfig
         return this.eventWhitelist;
     }
 
-    public Set<Class<?>> getFireBefore()
+    public int getOrder()
     {
-        return this.fireBefore;
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("eventWhitelist", this.eventWhitelist).toString();
+        return this.order;
     }
 }

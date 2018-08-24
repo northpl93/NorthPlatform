@@ -19,7 +19,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 /*default*/ class AnalysisLogger
 {
     private static final String  LOG_FORMAT    = "&cP: &e{0} &cV: &e{1} &cFPP: &e{2}\n&cD: &7{3}";
-    private static final boolean DEBUG_TO_CHAT = false;
+    private static final boolean DEBUG_TO_CHAT = true;
 
     @Bean
     private AnalysisLogger()
