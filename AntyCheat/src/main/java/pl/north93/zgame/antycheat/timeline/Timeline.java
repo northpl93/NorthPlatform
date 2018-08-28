@@ -17,15 +17,17 @@ public interface Timeline
 
     int getTrackedTicks();
 
-    TimelineWalker createWalkerForTick(Tick tick);
-
-    TimelineWalker createWalkerForScope(TimelineAnalyserConfig.Scope scope);
-
     PlayerTickInfo getCurrentPlayerTickInfo();
 
     PlayerTickInfo getPlayerTickInfo(Tick tick);
 
     PlayerTickInfo getPreviousPlayerTickInfo(Tick tick, int previous);
+
+    Collection<PlayerTickInfo> getAllTicks();
+
+    TimelineWalker createWalkerForTick(Tick tick);
+
+    TimelineWalker createWalkerForScope(TimelineAnalyserConfig.Scope scope);
 
     Collection<TimelineEvent> getEvents();
 

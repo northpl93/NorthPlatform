@@ -15,6 +15,7 @@ import pl.north93.zgame.antycheat.timeline.Tick;
     private final boolean afterSpawn;
     private final boolean afterTeleport;
     private final boolean reliable;
+    private final int     ping;
     private final boolean gliding;
     private final double  movementSpeed;
 
@@ -26,6 +27,7 @@ import pl.north93.zgame.antycheat.timeline.Tick;
         this.afterTeleport = afterTeleport;
         this.reliable = reliable;
 
+        this.ping = player.spigot().getPing();
         this.gliding = player.isGliding();
         this.movementSpeed = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue();
     }
@@ -40,6 +42,12 @@ import pl.north93.zgame.antycheat.timeline.Tick;
     public Tick getTick()
     {
         return this.tick;
+    }
+
+    @Override
+    public int getPing()
+    {
+        return this.ping;
     }
 
     @Override

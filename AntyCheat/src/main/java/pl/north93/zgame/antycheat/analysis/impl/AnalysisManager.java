@@ -170,9 +170,9 @@ public class AnalysisManager
 
     private void handleAnalysisResult(final Player player, final Tick tick, final SingleAnalysisResult result)
     {
-        if (result == null)
+        if (result == null || result.isEmpty())
         {
-            // ignorujemy nullowe wartości które mogą zwrócić analysery
+            // ignorujemy nullowe i puste wartości które mogą zwrócić analysery
             return;
         }
 

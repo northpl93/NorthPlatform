@@ -8,6 +8,7 @@
             <dependencies>
                 <dependency>API.BukkitFeatures</dependency>
                 <dependency>AntyCheat</dependency>
+                <dependency>MiniGameApi.Server</dependency>
             </dependencies>
             <platforms>
                 <platform>BUKKIT</platform>

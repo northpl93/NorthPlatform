@@ -8,6 +8,8 @@ public interface PlayerTickInfo
 
     Tick getTick();
 
+    int getPing();
+
     boolean isShortAfterSpawn();
 
     boolean isShortAfterTeleport();

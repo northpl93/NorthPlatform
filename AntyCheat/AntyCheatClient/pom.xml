@@ -38,5 +38,11 @@
             <artifactId>features</artifactId>
             <version>1.0-INDEV</version>
         </dependency>
+
+        <dependency>
+            <groupId>pl.north93.zgame.api</groupId>
+            <artifactId>minigame</artifactId>
+            <version>1.0-INDEV</version>
+        </dependency>
     </dependencies>
 </project>

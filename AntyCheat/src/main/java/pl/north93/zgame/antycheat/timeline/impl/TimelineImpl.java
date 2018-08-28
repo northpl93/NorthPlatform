@@ -1,6 +1,7 @@
 package pl.north93.zgame.antycheat.timeline.impl;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,6 +64,31 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
     }
 
     @Override
+    public PlayerTickInfo getCurrentPlayerTickInfo()
+    {
+        return this.getPlayerTickInfo(this.getCurrentTick());
+    }
+
+    @Override
+    public PlayerTickInfo getPlayerTickInfo(final Tick tick)
+    {
+        return this.tickInfo.get(tick);
+    }
+
+    @Override
+    public PlayerTickInfo getPreviousPlayerTickInfo(final Tick tick, final int previous)
+    {
+        final TickImpl previousTick = this.timelineManager.getPreviousTick(tick, previous);
+        return this.getPlayerTickInfo(previousTick);
+    }
+
+    @Override
+    public Collection<PlayerTickInfo> getAllTicks()
+    {
+        return Collections.unmodifiableCollection(this.tickInfo.values());
+    }
+
+    @Override
     public TimelineWalker createWalkerForTick(final Tick tick)
     {
         return this.events.createWalkerInTickRangeWithCursorAtEnd(tick, tick);
@@ -90,25 +116,6 @@ import pl.north93.zgame.antycheat.timeline.TimelineWalker;
     {
         final TickImpl firstTick = this.timelineManager.getPreviousTick(lastTick, Math.min(ticks - 1, this.getTrackedTicks()));
         return this.events.createWalkerInTickRangeWithCursorAtEnd(firstTick, lastTick);
-    }
-
-    @Override
-    public PlayerTickInfo getCurrentPlayerTickInfo()
-    {
-        return this.getPlayerTickInfo(this.getCurrentTick());
-    }
-
-    @Override
-    public PlayerTickInfo getPlayerTickInfo(final Tick tick)
-    {
-        return this.tickInfo.get(tick);
-    }
-
-    @Override
-    public PlayerTickInfo getPreviousPlayerTickInfo(final Tick tick, final int previous)
-    {
-        final TickImpl previousTick = this.timelineManager.getPreviousTick(tick, previous);
-        return this.getPlayerTickInfo(previousTick);
     }
 
     @Override

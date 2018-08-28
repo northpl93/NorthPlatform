@@ -7,9 +7,9 @@ import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
 
-public class PushMeCmd extends NorthCommand
+public class PushMeCommand extends NorthCommand
 {
-    public PushMeCmd()
+    public PushMeCommand()
     {
         super("pushme");
         this.setPermission("dev");

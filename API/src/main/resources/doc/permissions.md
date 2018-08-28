@@ -10,6 +10,7 @@ Standard definiowania uprawnień
 
 | Komponenty                             | Prefix          |
 |----------------------------------------|-----------------|
+| AntyCheat.Core                         | antycheat       |
 | API.BaseFeatures (wszystkie platformy) | basefeatures    |
 | API.Chat (wszystkie platformy)         | chat            |
 | API.Economy (wszystkie platformy)      | economy         |
