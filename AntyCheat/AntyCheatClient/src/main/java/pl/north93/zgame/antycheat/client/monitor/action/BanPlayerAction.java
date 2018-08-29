@@ -25,6 +25,11 @@ public class BanPlayerAction implements IAntyCheatAction
     @Override
     public void handle(final Player player, final Violation violation)
     {
+        if (player.hasPermission("antycheat.ignore.ban"))
+        {
+            return;
+        }
+
         log.info("[AutoBan] Player: {}, Violation:{} banned for cheats!", player.getName(), violation.name());
 
         final BaseComponent component = ChatUtils.parseLegacyText("&c[PAC] &7{0} &c&l&m-&c&l> &4&lban automatyczny", player.getName());

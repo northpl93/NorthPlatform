@@ -27,6 +27,11 @@ public class AlertAdminAction implements IAntyCheatAction
     @Override
     public void handle(final Player player, final Violation violation)
     {
+        if (player.hasPermission("antycheat.ignore.alert"))
+        {
+            return;
+        }
+
         final BaseComponent message = this.level.composeMessage(player, this.cheatName);
         this.adminChatService.broadcast(message);
     }

@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
@@ -21,10 +22,11 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
+@Slf4j
 public class HighPingChecker implements Runnable
 {
     private static final int CHECK_INTERVAL = 20;
-    private static final int MAX_PING       = 500;
+    private static final int MAX_PING       = 375; // 3/8 sekundy, 1/2 sekundy to troche za duzo
     @Inject
     private TimelineManager timelineManager;
     @Inject
@@ -66,6 +68,8 @@ public class HighPingChecker implements Runnable
 
     private void doKickPlayer(final Player player)
     {
+        log.info("Kicking {} due too big ping", player.getName());
+
         final IServerManager serverManager = this.miniGameServer.getServerManager();
         if (serverManager instanceof GameHostManager)
         {
