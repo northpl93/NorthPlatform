@@ -82,14 +82,17 @@ public class SpecialAbilityTracker implements ITickable
     public void resetAbilityLoading()
     {
         logger.debug("reset {} ability ready", player);
-        
-        if ( currentAbilityType == null )
+
+        if ( currentAbilityType == null || player.getCurrentClass() == null )
         {
-            return;
+            loadingTicks = -1;
+            loadingTicksLeft = -1;
         }
-        
-        loadingTicks = player.getCurrentClass().getAbilityLoadingTicks(player);
-        loadingTicksLeft = loadingTicks;
+        else
+        {
+            loadingTicks = player.getCurrentClass().getAbilityLoadingTicks(player);
+            loadingTicksLeft = loadingTicks;
+        }
         
         suspended = false;
     }
