@@ -5,6 +5,9 @@ import static java.text.MessageFormat.format;
 import static pl.north93.zgame.api.global.network.impl.mojang.MojangCacheImpl.JSON_PARSER;
 
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +63,7 @@ import pl.north93.zgame.api.global.storage.StorageConnector;
 
         try
         {
-            final String response = IOUtils.toString(new URL(url));
+            final String response = this.doQueryMojang(new URL(url));
             if (StringUtils.isEmpty(response))
             {
                 return Optional.empty();
@@ -83,6 +86,17 @@ import pl.north93.zgame.api.global.storage.StorageConnector;
         {
             log.error("Failed to fetch {} profile", uuid, exception);
             return Optional.empty();
+        }
+    }
+
+    private String doQueryMojang(final URL url) throws IOException
+    {
+        final HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+        final boolean isOk = urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK;
+        try (final InputStream stream = isOk ? urlConnection.getInputStream() : urlConnection.getErrorStream())
+        {
+            return IOUtils.toString(stream);
         }
     }
 
