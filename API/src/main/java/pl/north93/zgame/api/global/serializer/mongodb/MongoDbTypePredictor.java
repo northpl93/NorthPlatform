@@ -3,8 +3,10 @@ package pl.north93.zgame.api.global.serializer.mongodb;
 import java.lang.reflect.Type;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.bson.BsonType;
+import org.bson.types.ObjectId;
 
 import pl.north93.zgame.api.global.serializer.platform.FieldInfo;
 import pl.north93.zgame.api.global.serializer.platform.TypePredictor;
@@ -20,6 +22,8 @@ public class MongoDbTypePredictor implements TypePredictor<MongoDbSerializationC
         this.mappings.put(BsonType.STRING, String.class);
         this.mappings.put(BsonType.BOOLEAN, Boolean.class);
         this.mappings.put(BsonType.INT64, Long.class);
+        this.mappings.put(BsonType.OBJECT_ID, ObjectId.class);
+        this.mappings.put(BsonType.REGULAR_EXPRESSION, Pattern.class);
     }
 
     @Override

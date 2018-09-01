@@ -8,6 +8,7 @@ import org.bson.BsonBinary;
 import org.bson.BsonDocument;
 import org.bson.BsonRegularExpression;
 import org.bson.BsonType;
+import org.bson.types.ObjectId;
 
 public class NorthBsonReader implements ITypesReader
 {
@@ -101,6 +102,12 @@ public class NorthBsonReader implements ITypesReader
     public long readInt64(final String name)
     {
         return this.getCurrentContext().readInt64(name);
+    }
+
+    @Override
+    public ObjectId readObjectId(final String name)
+    {
+        return this.getCurrentContext().readObjectId(name);
     }
 
     @Override

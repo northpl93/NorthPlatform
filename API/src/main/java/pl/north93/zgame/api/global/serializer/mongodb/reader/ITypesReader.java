@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.bson.BsonBinary;
 import org.bson.BsonRegularExpression;
 import org.bson.BsonType;
+import org.bson.types.ObjectId;
 
 public interface ITypesReader
 {
@@ -23,6 +24,8 @@ public interface ITypesReader
     double readDouble(String name);
 
     long readInt64(String name);
+
+    ObjectId readObjectId(String name);
 
     BsonBinary readBinary(String name);
 

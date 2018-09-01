@@ -19,8 +19,6 @@ public class MongoDbObjectIdTemplate implements Template<ObjectId, MongoDbSerial
     @Override
     public ObjectId deserialize(final MongoDbDeserializationContext context, final FieldInfo field) throws Exception
     {
-        //context.readNameIfNeeded(field);
-        //return context.getReader().readObjectId();
-        return null;
+        return context.readObjectId(field);
     }
 }

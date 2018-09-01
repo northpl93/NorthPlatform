@@ -8,6 +8,7 @@ import org.bson.BsonBinary;
 import org.bson.BsonRegularExpression;
 import org.bson.BsonType;
 import org.bson.BsonValue;
+import org.bson.types.ObjectId;
 
 /*default*/ class ArrayNorthReadingContext extends NorthReadingContext
 {
@@ -102,6 +103,13 @@ import org.bson.BsonValue;
     {
         final BsonValue value = this.iterator.next();
         return value.asInt64().getValue();
+    }
+
+    @Override
+    public ObjectId readObjectId(final String name)
+    {
+        final BsonValue value = this.iterator.next();
+        return value.asObjectId().getValue();
     }
 
     @Override

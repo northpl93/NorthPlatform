@@ -7,6 +7,7 @@ import org.bson.BsonBinary;
 import org.bson.BsonDocument;
 import org.bson.BsonRegularExpression;
 import org.bson.BsonType;
+import org.bson.types.ObjectId;
 
 /*default*/ class DocumentNorthReadingContext extends NorthReadingContext
 {
@@ -20,8 +21,6 @@ import org.bson.BsonType;
     @Override
     public NorthReadingContext enterObject(final String name)
     {
-
-
         final BsonDocument document = this.document.getDocument(name);
         return new DocumentNorthReadingContext(document);
     }
@@ -85,6 +84,12 @@ import org.bson.BsonType;
     public long readInt64(final String name)
     {
         return this.document.getInt64(name).getValue();
+    }
+
+    @Override
+    public ObjectId readObjectId(final String name)
+    {
+        return this.document.getObjectId(name).getValue();
     }
 
     @Override

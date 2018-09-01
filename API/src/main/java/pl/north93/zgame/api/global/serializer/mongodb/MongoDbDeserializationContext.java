@@ -5,8 +5,10 @@ import java.util.Collection;
 import org.bson.BsonBinary;
 import org.bson.BsonDocument;
 import org.bson.BsonReader;
+import org.bson.BsonRegularExpression;
 import org.bson.BsonType;
 import org.bson.codecs.BsonDocumentCodec;
+import org.bson.types.ObjectId;
 
 import lombok.ToString;
 import pl.north93.zgame.api.global.serializer.mongodb.reader.NorthBsonReader;
@@ -112,6 +114,16 @@ public class MongoDbDeserializationContext extends DeserializationContext
     public Long readLong(final FieldInfo field) throws Exception
     {
         return this.reader.readInt64(field.getName());
+    }
+
+    public ObjectId readObjectId(final FieldInfo field)
+    {
+        return this.reader.readObjectId(field.getName());
+    }
+
+    public BsonRegularExpression readRegularExpression(final FieldInfo field)
+    {
+        return this.reader.readRegularExpression(field.getName());
     }
 
     public BsonBinary readBinary(final FieldInfo field)
