@@ -20,7 +20,7 @@ import com.google.gson.JsonObject;
 import com.mongodb.client.MongoCollection;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 
 import lombok.extern.slf4j.Slf4j;
@@ -93,8 +93,8 @@ import pl.north93.zgame.api.global.storage.StorageConnector;
     {
         final HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-        final boolean isOk = urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK;
-        try (final InputStream stream = isOk ? urlConnection.getInputStream() : urlConnection.getErrorStream())
+        final boolean isError = urlConnection.getResponseCode() >= HttpURLConnection.HTTP_INTERNAL_ERROR;
+        try (final InputStream stream = isError ? urlConnection.getErrorStream() : urlConnection.getInputStream())
         {
             return IOUtils.toString(stream);
         }

@@ -34,8 +34,8 @@ import pl.north93.zgame.api.bukkit.permissions.PermissionsInjector;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.player.event.PlayerDataLoadedEvent;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
+import pl.north93.zgame.api.global.network.players.IPlayersManager;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.zgame.api.global.network.server.joinaction.JoinActionsContainer;
@@ -52,7 +52,7 @@ public class NetworkPlayerDataListener implements Listener
     @Inject
     private IObservationManager observation;
     @Inject
-    private INetworkManager     networkManager;
+    private IPlayersManager     playersManager;
 
     private final Multimap<UUID, IServerJoinAction> cachedJoinActions = HashMultimap.create();
 
@@ -68,8 +68,8 @@ public class NetworkPlayerDataListener implements Listener
         final Identity identity = Identity.create(event.getUniqueId(), event.getName());
 
         // wymuszamy pobranie danych i dodatkowo weryfikujemy czy one rzeczywiscie tu sa
-        final IOnlinePlayer iOnlinePlayer = this.networkManager.getPlayers().unsafe().getOnlineValue(identity.getNick()).get();
-        if (iOnlinePlayer == null)
+        final IOnlinePlayer onlinePlayer = this.playersManager.unsafe().getOnlineValue(identity.getNick()).get();
+        if (onlinePlayer == null)
         {
             log.error("Player {} ({}) data is null in asyncPlayerDataPreCache, cancelling login", identity.getNick(), identity.getUuid());
             event.setLoginResult(Result.KICK_OTHER);
