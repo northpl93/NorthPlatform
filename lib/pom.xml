@@ -8,7 +8,7 @@
         <groupId>pl.north93.zgame</groupId>
         <artifactId>platform</artifactId>
         <version>1.0-INDEV</version>
-        <relativePath>../</relativePath>
+        <relativePath>../NorthPlatformParent</relativePath>
     </parent>
 
     <!--
@@ -94,7 +94,7 @@
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <file>../../lib/FastAsyncWorldEdit.jar</file>
+                            <file>../lib/FastAsyncWorldEdit.jar</file>
                             <groupId>com.boydti.fawe</groupId>
                             <artifactId>FastAsyncWorldEdit</artifactId>
                             <version>local</version>
@@ -109,7 +109,7 @@
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <file>../../${spigot.location}</file>
+                            <file>../${spigot.location}</file>
                             <groupId>pl.north93</groupId>
                             <artifactId>northspigot</artifactId>
                             <version>1.12-4</version>
@@ -123,7 +123,7 @@
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <file>../../lib/AgentUtils-1.0.jar</file>
+                            <file>../lib/AgentUtils-1.0.jar</file>
                             <groupId>pl.rafsze.utils</groupId>
 							<artifactId>AgentUtils</artifactId>
 							<version>1.0</version>

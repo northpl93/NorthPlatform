@@ -19,7 +19,7 @@
     </properties>
 
     <modules>
-	    <module>./install-deps</module>
+	    <module>../lib</module>
         <module>../API</module>
         <module>../API/BaseFeatures</module>
         <module>../API/Economy</module>
