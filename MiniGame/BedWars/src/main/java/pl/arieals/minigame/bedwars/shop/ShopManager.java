@@ -1,12 +1,11 @@
 package pl.arieals.minigame.bedwars.shop;
 
 import static java.text.MessageFormat.format;
-
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.north93.zgame.api.bukkit.utils.nms.ItemStackHelper.ensureCraftItemStack;
+import static pl.north93.zgame.api.bukkit.utils.nms.ItemStackHelper.getOrCreatePersistentStorage;
 import static pl.north93.zgame.api.bukkit.utils.nms.ItemStackHelper.getPersistentStorage;
 import static pl.north93.zgame.api.global.utils.lang.CollectionUtils.findInCollection;
-
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,12 +13,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import net.minecraft.server.v1_12_R1.NBTTagCompound;
-
-import org.bukkit.inventory.ItemStack;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.bukkit.inventory.ItemStack;
+
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.cfg.BwShopConfig;
@@ -75,7 +73,7 @@ public class ShopManager
      */
     public boolean isItemPermanent(final ItemStack itemStack)
     {
-        final NBTTagCompound itemNbt = getPersistentStorage(ensureCraftItemStack(itemStack), "bedWars", false);
+        final NBTTagCompound itemNbt = getPersistentStorage(ensureCraftItemStack(itemStack), "bedWars");
         return itemNbt != null && itemNbt.getBoolean("permanent");
     }
 
@@ -91,7 +89,7 @@ public class ShopManager
     public ItemStack markAsPermanent(final ItemStack itemStack)
     {
         final ItemStack craftItemStack = ensureCraftItemStack(itemStack);
-        final NBTTagCompound itemNbt = getPersistentStorage(craftItemStack, "bedWars", true);
+        final NBTTagCompound itemNbt = getOrCreatePersistentStorage(craftItemStack, "bedWars");
         itemNbt.setBoolean("permanent", true);
         itemNbt.setString("northpl93", "kto pozwolil ci sie tu patrzec?");
 
