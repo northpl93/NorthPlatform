@@ -68,15 +68,23 @@
 		
 	</equipment>
 	
-	<invRefilRule maxCount="2" period="100" id="minecraft:splash_potion" >
+	<invRefilRule maxCount="2" period="300" id="minecraft:splash_potion" >
 		<potionMeta>
-			<potionData type="INSTANT_DAMAGE" />
+			<potionData type="SLOW" />
 		</potionMeta>
+		<metadataStorage name="goldhunter:potion">
+			<metadata key="type" value="SlownessPotion" />
+			<metadata key="duration" value="300" />
+		</metadataStorage>
 	</invRefilRule>
 	
-	<invRefilRule maxCount="2" period="100" id="minecraft:splash_potion" >
+	<invRefilRule maxCount="1" period="240" id="minecraft:splash_potion" >
 		<potionMeta>
 			<potionData type="POISON" />
 		</potionMeta>
+		<metadataStorage name="goldhunter:potion">
+			<metadata key="type" value="PoisonPotion" />
+			<metadata key="duration" value="240" />
+		</metadataStorage>
 	</invRefilRule>
 </class>
