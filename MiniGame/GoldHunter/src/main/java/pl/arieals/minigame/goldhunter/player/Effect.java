@@ -169,7 +169,6 @@ public abstract class Effect implements ITickable
         TranslatableString effectName = TranslatableString.of(messages, "@effect." + getClass().getSimpleName());
         
         String title = tracker.getPlayer().getMessage("effects.bartitle", barColor.nameColor + "§l", effectName, barColor.timeColor + "§l", time);
-        System.out.println(title.replace('§', '&'));
         bossbar.setTitle(title);
     }
     
