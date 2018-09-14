@@ -46,7 +46,7 @@ public class SirenTearsEffect extends RadiusEffect
     {
         if ( getPlayer().getTeam() == player.getTeam() )
         {
-            player.getEffectTracker().addEffectOrSetDuration(HealingEffect.class, 60, HealingEffect::new);
+            player.getEffectTracker().addEffectOrSetDuration(RegenerationEffect.class, 60, () -> new RegenerationEffect(2));
     
         }
     }

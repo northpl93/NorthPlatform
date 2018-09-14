@@ -213,6 +213,14 @@ public class GoldHunterPlayer implements ITickable
         this.buildBridgeActive = buildBrigdeActive;
     }
     
+    public void heal(double amount)
+    {
+        double currentHealth = getPlayer().getPlayer().getHealth();
+        double maxHealth = getPlayer().getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+        
+        getPlayer().setHealth(Math.min(maxHealth, currentHealth + amount));
+    }
+    
     public int getNoFallDamageTicks()
     {
         return noFallDamageTicks;
@@ -521,12 +529,12 @@ public class GoldHunterPlayer implements ITickable
     
     public String getMessage(String msgKey, Object... args)
     {
-        return messages.getMessage(player.getLocale(), msgKey, args); 
+        return messages.getString(player.getLocale(), msgKey, args);
     }
     
     public String[] getMessageLines(String msgKey, Object... args)
     {
-        return messages.getMessage(player.getLocale(), msgKey, args).split("\n");
+        return messages.getString(player.getLocale(), msgKey, args).split("\n");
     }
     
     public void sendSeparatedMessage(String msgKey, Object... args)

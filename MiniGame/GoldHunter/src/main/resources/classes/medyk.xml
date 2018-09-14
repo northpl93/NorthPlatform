@@ -61,16 +61,25 @@
 		</inv>
 	</equipment>
 	
-	<invRefilRule maxCount="2" period="100" id="minecraft:splash_potion" >
+	<invRefilRule maxCount="2" period="200" id="minecraft:splash_potion" >
 		<potionMeta>
 			<potionData type="INSTANT_HEAL" upgraded="true" />
 		</potionMeta>
+		<metadataStorage name="goldhunter:potion">
+			<metadata key="type" value="InstantHealPotion" />
+			<metadata key="amount" value="6" />
+		</metadataStorage>
 	</invRefilRule>
 	
-	<invRefilRule maxCount="2" period="100" id="minecraft:splash_potion" >
+	<invRefilRule maxCount="1" period="400" id="minecraft:splash_potion" >
 		<potionMeta>
 			<potionData type="REGEN" />
 		</potionMeta>
+		<metadataStorage name="goldhunter:potion">
+			<metadata key="type" value="RegenerationPotion" />
+			<metadata key="duration" value="400" />
+			<metadata key="value" value="1" />
+		</metadataStorage>
 	</invRefilRule>
 	
 </class>

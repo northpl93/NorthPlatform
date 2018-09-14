@@ -1,32 +1,30 @@
 package pl.arieals.minigame.goldhunter.listener;
 
-import java.util.Collection;
-
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftArrow;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
-import com.google.common.collect.Iterables;
 
 import net.minecraft.server.v1_12_R1.EntityArrow;
 
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
+import pl.arieals.minigame.goldhunter.player.PotionManager;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class PlayerListener implements AutoListener
 {
     // TODO: refactor this listener
+    
     @Inject
     private GoldHunter goldHunter;
+    @Inject
+    private PotionManager potionManager;
     
     @EventHandler
     public void onFoodLevelChange(FoodLevelChangeEvent event)
@@ -47,6 +45,17 @@ public class PlayerListener implements AutoListener
         arrow.getHandle().fromPlayer = EntityArrow.PickupStatus.DISALLOWED;
     }
     
+    @EventHandler(priority = EventPriority.LOW)
+    public void disableMinecraftSplashPotion(PotionSplashEvent event)
+    {
+        if ( !goldHunter.isGameWorld(event.getPotion().getWorld()) )
+        {
+            return;
+        }
+        
+        event.getAffectedEntities().forEach(entity -> event.setIntensity(entity, 0));
+    }
+    
     @EventHandler
     public void potionSplashEvent(PotionSplashEvent event)
     {
@@ -61,44 +70,6 @@ public class PlayerListener implements AutoListener
             return;
         }
         
-        for ( LivingEntity entity : event.getAffectedEntities() )
-        {
-            GoldHunterPlayer affectedPlayer = goldHunter.getPlayer(entity);
-            if ( affectedPlayer != null && canAffect(player, affectedPlayer, event.getPotion().getEffects()) )
-            {
-                event.setIntensity(entity, 1);
-            }
-            else
-            {
-                event.setIntensity(entity, 0);
-            }
-        }
-    }
-        
-    private boolean canAffect(GoldHunterPlayer shooter, GoldHunterPlayer target, Collection<PotionEffect> effects)
-    {
-        PotionEffect effect = Iterables.getFirst(effects, null);
-        
-        if ( effect == null )
-        {
-            return true;
-        }
-        
-        boolean isTeammate = shooter.getTeam() == target.getTeam();
-        if ( effect.getType().equals(PotionEffectType.HEAL) || effect.getType().equals(PotionEffectType.REGENERATION) )
-        {
-            if ( !target.getCurrentClass().canBeHealedByPotion() )
-            {
-                return false;
-            }
-            
-            return isTeammate;
-        }
-        else if ( effect.getType().equals(PotionEffectType.HARM) || effect.getType().equals(PotionEffectType.POISON) )
-        {
-            return !isTeammate;
-        }
-        
-        return false;
+        potionManager.splashPotion(player, event.getPotion());
     }
 }

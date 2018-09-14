@@ -44,18 +44,7 @@ public final class ItemStackUtils
     
     public static boolean isAssasinDagger(ItemStack is)
     {
-        if ( !( is instanceof CraftItemStack ) )
-        {
-            return false;
-        }
-        
-        net.minecraft.server.v1_12_R1.ItemStack nms = (net.minecraft.server.v1_12_R1.ItemStack) SneakyThrow.sneaky(() -> HANDLE_GETTER.invoke(is));
-        if ( nms == null )
-        {
-            return false;
-        }
-        
-        NBTTagCompound ghmetadata = nms.d("goldhunter");
+        NBTTagCompound ghmetadata = getGoldHunterMetadata(is);
         return ghmetadata != null && ghmetadata.hasKey("assasinDagger");
     }
     
@@ -95,5 +84,32 @@ public final class ItemStackUtils
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         
         is.setItemMeta(meta);
+    }
+    
+    public static NBTTagCompound getGoldHunterMetadata(ItemStack is)
+    {
+        if ( !( is instanceof CraftItemStack ) )
+        {
+            return null;
+        }
+        
+        net.minecraft.server.v1_12_R1.ItemStack nms = (net.minecraft.server.v1_12_R1.ItemStack) SneakyThrow.sneaky(() -> HANDLE_GETTER.invoke(is));
+        if ( nms == null )
+        {
+            return null;
+        }
+        
+        return nms.d("goldhunter");
+    }
+    
+    public static NBTTagCompound getGoldHunterMetadataSection(ItemStack is, String key)
+    {
+        NBTTagCompound metadata = getGoldHunterMetadata(is);
+        if ( metadata == null )
+        {
+            return null;
+        }
+        
+        return metadata.hasKeyOfType(key, 10) ? metadata.getCompound(key) : null;
     }
 }
