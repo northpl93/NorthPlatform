@@ -13,6 +13,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
@@ -27,6 +28,7 @@ import pl.north93.zgame.webauth.IWebAuthManager;
 import spark.Request;
 import spark.Response;
 
+@Slf4j
 public class WebAuthManagerImpl implements IWebAuthManager
 {
     private static final Gson gson = new Gson();
@@ -68,7 +70,7 @@ public class WebAuthManagerImpl implements IWebAuthManager
         }
         catch (final Exception e)
         {
-            e.printStackTrace();
+            log.error("Exception thrown while building player model in WebAuthManagerImpl", e);
             halt(500);
         }
 

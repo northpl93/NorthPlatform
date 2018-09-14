@@ -5,6 +5,9 @@ import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public abstract class AutoScalerOperation
 {
     private ScalerOperationState state = ScalerOperationState.NOT_STARTED;
@@ -24,7 +27,7 @@ public abstract class AutoScalerOperation
         catch (final Exception e)
         {
             // cos nieprzewidzianego podczas startowania zadania; logujemy i oznaczamy jako FAILED
-            e.printStackTrace();
+            log.error("Failed to start auto scaler operation", e);
             this.state = ScalerOperationState.FAILED;
         }
     }

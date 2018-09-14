@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.lobby.arenas.ArenaQuery;
 import pl.arieals.api.minigame.server.lobby.arenas.IArenaClient;
 import pl.arieals.api.minigame.server.lobby.arenas.IArenaObserver;
@@ -37,6 +38,7 @@ import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 import pl.north93.zgame.api.global.redis.rpc.exceptions.RpcException;
 
+@Slf4j
 public class ArenaClientImpl implements IArenaClient
 {
     private Map<UUID, IArena>               arenas;
@@ -93,7 +95,7 @@ public class ArenaClientImpl implements IArenaClient
     @Override
     public Collection<IArena> getAll()
     {
-        return new ArrayList<>(arenas.values());
+        return new ArrayList<>(this.arenas.values());
     }
 
     @Override
@@ -151,7 +153,7 @@ public class ArenaClientImpl implements IArenaClient
         }
         catch (final RpcException exception)
         {
-            exception.printStackTrace();
+            log.error("Exception thrown while connecting players to arena", exception);
             return false;
         }
 

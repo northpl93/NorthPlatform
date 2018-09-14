@@ -13,9 +13,11 @@ import org.bukkit.map.MapPalette;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.bukkit.map.IMapCanvas;
 import pl.north93.zgame.api.bukkit.map.MapColor;
 
+@Slf4j
 final class MapCanvasImpl implements IMapCanvas
 {
     private static final int SINGLE_MAP_SIDE = 128;
@@ -144,7 +146,7 @@ final class MapCanvasImpl implements IMapCanvas
         }
         catch (final IOException e)
         {
-            e.printStackTrace();
+            log.error("Failed to write debug image", e);
         }
     }
 

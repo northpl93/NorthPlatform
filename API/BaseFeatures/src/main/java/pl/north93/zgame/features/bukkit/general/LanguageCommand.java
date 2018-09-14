@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.bukkit.player.impl.LanguageKeeper;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
@@ -18,6 +19,7 @@ import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.Identity;
 
+@Slf4j
 public class LanguageCommand extends NorthCommand
 {
     @Inject @Messages("BaseFeatures")
@@ -62,7 +64,8 @@ public class LanguageCommand extends NorthCommand
         }
         catch (final Exception e)
         {
-            e.printStackTrace();
+            log.error("Failed to update language for player {}", player.getName(), e);
+            return;
         }
         LanguageKeeper.updateLocale(player, locale);
         sender.sendMessage(this.messages, "command.language.changed");

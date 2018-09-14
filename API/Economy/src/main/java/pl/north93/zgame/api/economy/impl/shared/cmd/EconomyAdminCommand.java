@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.economy.IAccountAccessor;
 import pl.north93.zgame.api.economy.ICurrency;
 import pl.north93.zgame.api.economy.IEconomyManager;
@@ -16,6 +17,7 @@ import pl.north93.zgame.api.global.commands.NorthCommandSender;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.players.Identity;
 
+@Slf4j
 public class EconomyAdminCommand extends NorthCommand
 {
     @Inject
@@ -108,7 +110,7 @@ public class EconomyAdminCommand extends NorthCommand
         }
         catch (final Exception e)
         {
-            e.printStackTrace();
+            log.error("Exception while setting currency amount", e);
         }
     }
 
@@ -137,7 +139,7 @@ public class EconomyAdminCommand extends NorthCommand
         catch (final Exception e)
         {
             sender.sendMessage("&cWystapil blad podczas wykonywania");
-            e.printStackTrace();
+            log.error("Exception while adding currency amount", e);
         }
     }
 

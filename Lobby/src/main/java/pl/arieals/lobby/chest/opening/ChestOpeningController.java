@@ -178,7 +178,7 @@ public class ChestOpeningController
         final CompletableFuture<LootResult> lastResults = session.getLastResults();
         if (lastResults == null)
         {
-            // wystapil blad podczas otwierania skrzynki (task sie nie zakobczyl?)
+            // wystapil blad podczas otwierania skrzynki (task sie nie zakonczyl?)
             log.warn("lastResults is null in showOpeningResults. Player: {}", player.getName());
 
             // restart jest dobry na wszystko, wywalamy gracza z otwierania skrzynek
@@ -192,7 +192,7 @@ public class ChestOpeningController
         }
         catch (final InterruptedException | ExecutionException e)
         {
-            e.printStackTrace();
+            log.error("Exception while calling PresentOpeningResultsEvent");
             this.closeOpeningGui(player); // jak cos sie zepsulo to wywalamy gracza z openingu
         }
     }
@@ -211,8 +211,7 @@ public class ChestOpeningController
         }
     }
 
-    public @Nullable
-    OpeningSessionImpl getSession(final Player player)
+    public @Nullable OpeningSessionImpl getSession(final Player player)
     {
         final List<MetadataValue> metadata = player.getMetadata("lobby/chestOpeningSession");
         if (metadata.isEmpty())

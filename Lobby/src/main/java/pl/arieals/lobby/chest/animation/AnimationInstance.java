@@ -6,8 +6,10 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.bukkit.hologui.IIcon;
 
+@Slf4j
 public final class AnimationInstance
 {
     private final Player owner;
@@ -49,7 +51,7 @@ public final class AnimationInstance
         }
         catch (final Exception e)
         {
-            e.printStackTrace();
+            log.error("Exception thrown in chest AnimationInstance", e);
         }
     }
 
