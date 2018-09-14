@@ -2,6 +2,7 @@ package pl.north93.zgame.api.bukkit.protocol.impl.emulation;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ import org.bukkit.block.Block;
 /*default*/ class ChunkStorage
 {
     private final WeakReference<Chunk> chunk;
-    private final Map<BlockLocation, BlockEmulator> blocks;
+    private final Map<BlockLocation, BlockData> blocks;
 
     public ChunkStorage(final Chunk chunk)
     {
@@ -21,19 +22,20 @@ import org.bukkit.block.Block;
         this.blocks = new HashMap<>();
     }
 
-    public BlockEmulator getEmulator(final BlockLocation location)
+    public void addData(final BlockData data)
     {
-        return this.blocks.get(location);
+        final BlockLocation location = new BlockLocation(data.getX(), data.getY(), data.getZ());
+        this.blocks.put(location, data);
     }
 
-    public void addEmulator(final BlockLocation location, final BlockEmulator emulator)
-    {
-        this.blocks.put(location, emulator);
-    }
-
-    public void removeEmulator(final BlockLocation location)
+    public void removeData(final BlockLocation location)
     {
         this.blocks.remove(location);
+    }
+
+    public BlockData getData(final BlockLocation location)
+    {
+        return this.blocks.get(location);
     }
 
     public Chunk getChunk()
@@ -44,23 +46,26 @@ import org.bukkit.block.Block;
     public void addCustomTileEntities(final List<NBTTagCompound> nbtList, final int bitmask)
     {
         final Chunk chunk = this.getChunk();
-        for (final Map.Entry<BlockLocation, BlockEmulator> entry : this.blocks.entrySet())
-        {
-            final BlockLocation location = entry.getKey();
-            final Block block = chunk.getBlock(location.getX(), location.getY(), location.getZ());
 
-            final BlockEmulator emulator = entry.getValue();
-            if (! emulator.isApplicable(block))
+        final Iterator<Map.Entry<BlockLocation, BlockData>> iterator = this.blocks.entrySet().iterator();
+        while (iterator.hasNext())
+        {
+            final Map.Entry<BlockLocation, BlockData> entry = iterator.next();
+            final BlockLocation location = entry.getKey();
+
+            final BlockData data = entry.getValue();
+            if (this.isChunkSectionAbsent(bitmask, data))
             {
-                // todo emulator moze sie zdezaktualizowac; na bedwarsach po usunieciu lobby powoduje to dodanie
-                // todo powietrza do whitelisty w ViaVersion (BlockStorage) i natychmiastowy crash bungee
+                // dana sekcja chunka nie jest zawarta w pakiecie wiec nie wysylamy tu tile entities
                 continue;
             }
 
-            final BlockData data = emulator.getData(block);
-            if (data == null || this.isChunkSectionAbsent(bitmask, data))
+            final Block block = chunk.getBlock(location.getX(), location.getY(), location.getZ());
+            if (! data.isStillValid(block))
             {
-                // dana sekcja chunka nie jest zawarta w pakiecie wiec nie wysylamy tu tile entities
+                // usuwamy niepoprawne bloki, aby nie spowodowac bledu w ViaVersion
+                // który moze zapchac cala pamiec bungeecorda
+                iterator.remove();
                 continue;
             }
 

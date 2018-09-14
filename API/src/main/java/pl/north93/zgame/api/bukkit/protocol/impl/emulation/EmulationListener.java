@@ -87,10 +87,7 @@ public class EmulationListener implements Listener
     public void registerEmulatorOnBlockPlace(final BlockPlaceEvent event)
     {
         final Block block = event.getBlock();
-        if (this.manager.tryAddEmulatorTo(block))
-        {
-            this.manager.updateDataNow(block);
-        }
+        this.manager.generateDataFor(block);
     }
 
     @EventHandler

@@ -1,7 +1,8 @@
 package pl.north93.zgame.api.bukkit.protocol.impl.emulation;
 
+import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 
@@ -27,22 +28,9 @@ public class BlockData
         this.z = block.getZ();
 
         // generujemy stare, zdeprecjonowane ID bloku na potrzeby ViaVersion
-        this.oldId = block.getTypeId() << 4 | block.getData() & 0xF;
+        this.oldId = this.generateOldId(block);
 
-        final StringBuilder builder = new StringBuilder();
-        builder.append(minecraftId);
-        if (properties.isEmpty())
-        {
-            this.fixedId = builder.toString();
-            return;
-        }
-
-        builder.append("[");
-        final String serialisedProperties = properties.entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue()).collect(Collectors.joining(","));
-        builder.append(serialisedProperties);
-        builder.append("]");
-
-        this.fixedId = builder.toString();
+        this.fixedId = this.generateFixedId(minecraftId, properties);
     }
 
     public void writeToNbt(final NBTTagCompound nbt)
@@ -53,5 +41,44 @@ public class BlockData
         nbt.setInt("z", this.z);
         nbt.setInt("oldId", this.oldId);
         nbt.setString("fixedId", this.fixedId);
+    }
+
+    public boolean isStillValid(final Block block)
+    {
+        return this.generateOldId(block) == this.oldId;
+    }
+
+    private int generateOldId(final Block block)
+    {
+        return block.getTypeId() << 4 | block.getData() & 0xF;
+    }
+
+    private String generateFixedId(final String minecraftId, final TreeMap<String, String> properties)
+    {
+        if (properties.isEmpty())
+        {
+            return minecraftId;
+        }
+
+        final StringBuilder builder = new StringBuilder(minecraftId);
+        builder.append('[');
+
+        final Iterator<Map.Entry<String, String>> iterator = properties.entrySet().iterator();
+        while (iterator.hasNext())
+        {
+            final Map.Entry<String, String> entry = iterator.next();
+
+            builder.append(entry.getKey());
+            builder.append('=');
+            builder.append(entry.getValue());
+
+            if (iterator.hasNext())
+            {
+                builder.append(',');
+            }
+        }
+
+        builder.append(']');
+        return builder.toString();
     }
 }

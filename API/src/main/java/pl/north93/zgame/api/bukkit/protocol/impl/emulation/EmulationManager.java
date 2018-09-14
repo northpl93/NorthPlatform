@@ -16,6 +16,7 @@ import net.minecraft.server.v1_12_R1.WorldServer;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
 
 import lombok.extern.slf4j.Slf4j;
@@ -40,60 +41,44 @@ import pl.north93.zgame.api.global.component.annotations.bean.Bean;
         this.emulators.put(emulator.getType(), emulator);
     }
 
-    // wymusza wywolanie emulatora tego bloku i rozgloszenie nowego tile entity
-    public void updateDataNow(final Block block)
+    @Nullable
+    public BlockEmulator getEmulatorForType(final Material material)
     {
-        final CraftChunk chunk = (CraftChunk) block.getChunk();
-        final ChunkStorage storage = this.getStorage(chunk);
-
-        final BlockEmulator emulator = storage.getEmulator(new BlockLocation(block.getX(), block.getY(), block.getZ()));
-        if (emulator == null)
-        {
-            return;
-        }
-
-        final WorldServer worldServer = (WorldServer) chunk.getHandle().world;
-        final PlayerChunk playerChunk = worldServer.getPlayerChunkMap().getChunk(chunk.getX(), chunk.getZ());
-        if (playerChunk == null)
-        {
-            return;
-        }
-
-        final BlockData data = emulator.getData(block);
-
-        final NBTTagCompound compound = new NBTTagCompound();
-        data.writeToNbt(compound);
-
-        final PacketPlayOutTileEntityData packet = new PacketPlayOutTileEntityData(new BlockPosition(data.getX(), data.getY(), data.getZ()), 0, compound);
-        for (final EntityPlayer entityPlayer : playerChunk.c) // players viewing this chunk
-        {
-            entityPlayer.playerConnection.sendPacket(packet);
-        }
+        return this.emulators.get(material);
     }
 
-    // próbuje dodac emulator do podanego bloku
-    public boolean tryAddEmulatorTo(final Block block)
+    public ChunkStorage getStorage(final Chunk chunk)
     {
-        final BlockEmulator emulatorForType = this.getEmulatorForType(block.getType());
-        if (emulatorForType == null || ! emulatorForType.isApplicable(block))
+        return this.chunks.computeIfAbsent(chunk, ChunkStorage::new);
+    }
+
+    // generuje dane dla danego bloku i pobliskich bloków
+    public void generateDataFor(final Block block)
+    {
+        final BlockData blockData = this.generateDataFor0(block);
+        if (blockData == null)
         {
-            return false;
+            return;
         }
 
-        log.debug("Adding block emulator to {}", block);
-        final ChunkStorage storage = this.getStorage(block.getChunk());
-        storage.addEmulator(new BlockLocation(block.getX(), block.getY(), block.getZ()), emulatorForType);
-        return true;
+        // NORTH, EAST, SOUTH, WEST, UP, DOWN
+        for (int i = 0; i < 6; i++)
+        {
+            final BlockFace blockFace = BlockFace.values()[i];
+            this.generateDataFor0(block.getRelative(blockFace));
+        }
+
+        this.updateDataNow(block.getChunk(), blockData);
     }
 
     // usuwa emulator z podanego bloku
     public void removeEmulator(final Block block)
     {
         final ChunkStorage storage = this.getStorage(block.getChunk());
-        storage.removeEmulator(new BlockLocation(block.getX(), block.getY(), block.getZ()));
+        storage.removeData(new BlockLocation(block.getX(), block.getY(), block.getZ()));
     }
 
-    // skanuje podany chunk i automatycznie rejestruje emulatory
+    // skanuje podany chunk i automatycznie generuje dane bloków
     public void scanChunk(final org.bukkit.Chunk chunk)
     {
         log.debug("Scanning chunk {}, {} for blocks needing 1.12->1.13 emulation", chunk.getX(), chunk.getZ());
@@ -109,20 +94,48 @@ import pl.north93.zgame.api.global.component.annotations.bean.Bean;
                 for (int y = heightMap[z << 4 | x]; y > 0; y--)
                 {
                     final Block block = craftChunk.getBlock(craftChunk.getX() * 16 + x, y, craftChunk.getZ() * 16 + z);
-                    this.tryAddEmulatorTo(block);
+                    this.generateDataFor0(block);
                 }
             }
         }
     }
 
-    @Nullable
-    public BlockEmulator getEmulatorForType(final Material material)
+    // próbuje wygenerowac i dodac BlockData dla danego bloku
+    private BlockData generateDataFor0(final Block block)
     {
-        return this.emulators.get(material);
+        final BlockEmulator emulatorForType = this.getEmulatorForType(block.getType());
+        if (emulatorForType == null || ! emulatorForType.isApplicable(block))
+        {
+            return null;
+        }
+
+        log.debug("Generating emulated data for block {}", block);
+        final ChunkStorage storage = this.getStorage(block.getChunk());
+
+        final BlockData data = emulatorForType.getData(block);
+        storage.addData(data);
+        return data;
     }
 
-    public ChunkStorage getStorage(final Chunk chunk)
+    // wymusza rozgloszenie nowego tile entity na podstawie BlockData
+    private void updateDataNow(final Chunk chunk, final BlockData data)
     {
-        return this.chunks.computeIfAbsent(chunk, ChunkStorage::new);
+        final CraftChunk craftChunk = (CraftChunk) chunk;
+
+        final WorldServer worldServer = (WorldServer) craftChunk.getHandle().world;
+        final PlayerChunk playerChunk = worldServer.getPlayerChunkMap().getChunk(chunk.getX(), chunk.getZ());
+        if (playerChunk == null)
+        {
+            return;
+        }
+
+        final NBTTagCompound compound = new NBTTagCompound();
+        data.writeToNbt(compound);
+
+        final PacketPlayOutTileEntityData packet = new PacketPlayOutTileEntityData(new BlockPosition(data.getX(), data.getY(), data.getZ()), 0, compound);
+        for (final EntityPlayer entityPlayer : playerChunk.c) // players viewing this chunk
+        {
+            entityPlayer.playerConnection.sendPacket(packet);
+        }
     }
 }
