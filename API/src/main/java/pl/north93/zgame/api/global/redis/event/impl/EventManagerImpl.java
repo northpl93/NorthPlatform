@@ -11,6 +11,7 @@ import com.google.common.collect.Multimap;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
@@ -22,6 +23,7 @@ import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 import pl.north93.zgame.api.global.serializer.platform.NorthSerializer;
 
+@Slf4j
 public class EventManagerImpl extends Component implements IEventManager
 {
     @Inject
@@ -79,7 +81,7 @@ public class EventManagerImpl extends Component implements IEventManager
         try
         {
             final Class<? extends INetEvent> clazz = (Class) this.apiCore.getComponentManager().findClass(className);
-            event = (INetEvent) this.msgPack.deserialize(clazz, bytes);
+            event = this.msgPack.deserialize(clazz, bytes);
         }
         catch (final RuntimeException e)
         {
@@ -92,8 +94,21 @@ public class EventManagerImpl extends Component implements IEventManager
             final Collection<IEventInvocationHandler> handlers = this.handlers.get(event.getClass());
             for (final IEventInvocationHandler handler : handlers)
             {
-                handler.invoke(event);
+                this.callInvocationHandler(handler, event);
             }
+        }
+    }
+
+    private void callInvocationHandler(final IEventInvocationHandler eventInvocationHandler, final INetEvent event)
+    {
+        try
+        {
+            eventInvocationHandler.invoke(event);
+        }
+        catch (final Exception e)
+        {
+            final String eventName = event.getClass().getName();
+            log.error("Exception thrown while executing event handler of {}", eventName, e);
         }
     }
 

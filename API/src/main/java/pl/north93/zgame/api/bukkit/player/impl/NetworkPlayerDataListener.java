@@ -61,7 +61,7 @@ public class NetworkPlayerDataListener implements Listener
     {
         if (event.getLoginResult() != Result.ALLOWED)
         {
-            log.info("Skipped loading data of {}, because login is cancelled.");
+            log.info("Skipped loading data of {}, because login is cancelled.", event.getName());
             return;
         }
 

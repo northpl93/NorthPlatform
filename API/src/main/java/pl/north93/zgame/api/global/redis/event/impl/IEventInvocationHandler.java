@@ -4,5 +4,5 @@ import pl.north93.zgame.api.global.redis.event.INetEvent;
 
 public interface IEventInvocationHandler
 {
-    void invoke(INetEvent event);
+    void invoke(INetEvent event) throws Exception;
 }
