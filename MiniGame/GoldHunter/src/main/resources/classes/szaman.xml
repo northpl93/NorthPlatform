@@ -70,7 +70,7 @@
 	
 	<invRefilRule maxCount="2" period="300" id="minecraft:splash_potion" >
 		<potionMeta>
-			<potionData type="SLOW" />
+			<potionData type="SLOWNESS" />
 		</potionMeta>
 		<metadataStorage name="goldhunter:potion">
 			<metadata key="type" value="SlownessPotion" />
