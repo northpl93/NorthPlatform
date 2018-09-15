@@ -8,12 +8,12 @@ import net.minecraft.server.v1_12_R1.NBTTagCompound;
 
 import com.mojang.authlib.GameProfile;
 
-import lombok.NonNull;
-
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import org.diorite.commons.reflections.FieldAccessor;
+
+import lombok.NonNull;
 
 public final class ItemStackHelper
 {
@@ -56,14 +56,26 @@ public final class ItemStackHelper
         return craftItemStack_handle.get(bukkitStack);
     }
 
-    public static NBTTagCompound getPersistentStorage(@NonNull org.bukkit.inventory.ItemStack bukkitStack, @NonNull String storageName)
+    public static NBTTagCompound getPersistentStorage(final @NonNull org.bukkit.inventory.ItemStack bukkitStack, final @NonNull String storageName)
     {
-        return getHandle(bukkitStack).d(storageName); // ItemStakc#d() should be getPersistentStorageIfExists()
+        final ItemStack handle = getHandle(bukkitStack);
+        if (handle == null)
+        {
+            return null;
+        }
+
+        return handle.d(storageName); // ItemStakc#d() should be getPersistentStorageIfExists()
     }
     
     public static NBTTagCompound getOrCreatePersistentStorage(@NonNull org.bukkit.inventory.ItemStack bukkitStack,  @NonNull String storageName)
     {
-        return getHandle(bukkitStack).c(storageName); // ItemStack#c() should be getOrCreatePersistentStorage()
+        final ItemStack handle = getHandle(bukkitStack);
+        if (handle == null)
+        {
+            return null;
+        }
+
+        return handle.c(storageName); // ItemStack#c() should be getOrCreatePersistentStorage()
     }
 
     /**

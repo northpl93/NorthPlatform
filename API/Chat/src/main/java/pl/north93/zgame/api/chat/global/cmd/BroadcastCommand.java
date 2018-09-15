@@ -34,7 +34,7 @@ public class BroadcastCommand extends NorthCommand
     {
         if (args.isEmpty())
         {
-            sender.sendMessage("&cPodaj tresc wiadomosci. Wiadomosc nie posiada zadnego domyslnego formatowania.");
+            sender.sendMessage("&cPodaj tresc wiadomosci. Wiadomosc zawiera tylko prefix, domyslnie jest biala.");
             return;
         }
 

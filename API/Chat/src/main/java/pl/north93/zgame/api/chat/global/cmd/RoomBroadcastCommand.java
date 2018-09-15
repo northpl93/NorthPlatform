@@ -55,6 +55,8 @@ public class RoomBroadcastCommand extends NorthCommand
 
         final BaseComponent message = this.messages.getComponent(locale, "broadcast.prefix", text);
         room.broadcast(MessageLayout.SEPARATED.processMessage(message));
+
+        sender.sendMessage("&aWyslano ogloszenie do pokoju {0}", room.getId());
     }
 
     @Override
