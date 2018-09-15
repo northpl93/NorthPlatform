@@ -103,9 +103,7 @@ class OpeningResultHoloGui extends BaseOpeningHoloGui
     @Override
     public void iconClicked(final IHoloContext context, final IIcon icon)
     {
-        final Player player = context.getPlayer();
-        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1); // volume,pitch
-
+        super.iconClicked(context, icon);
         if (icon == this.closeIcon)
         {
             // probujemy dac graczowi kolejna skrzynke, a przy okazji resetujemy gui

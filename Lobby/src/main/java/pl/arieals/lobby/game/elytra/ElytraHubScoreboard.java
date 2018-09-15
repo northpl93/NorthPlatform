@@ -67,6 +67,9 @@ public class ElytraHubScoreboard extends HubScoreboardLayout
         builder.translated("scoreboard.wins", this.parseNumber(context.getCompletableFuture("wins")));
         builder.add("");
 
+        //builder.translated("scoreboard.chests", this.getPlayerChests(context.getPlayer(), "elytra"));
+        //builder.add(""); // todo dodac to gdy wlaczymy skrzynki elytra i znajdziemy miejsce na SB
+
         builder.translated("scoreboard.money", this.getPlayerCurrency(context.getPlayer()));
         builder.add("");
 

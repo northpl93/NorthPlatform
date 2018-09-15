@@ -1,8 +1,5 @@
 package pl.arieals.lobby.game;
 
-import static org.diorite.commons.arrays.DioriteArrayUtils.EMPTY_OBJECT;
-
-
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
+import pl.arieals.lobby.chest.opening.event.BeginChestOpeningEvent;
 import pl.arieals.lobby.tutorial.ITutorialManager;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
@@ -39,8 +37,8 @@ public class GlobalHubListener implements AutoListener
     {
         final Player player = event.getPlayer();
 
-        final BaseComponent header = this.messages.getMessage(player.getLocale(), "tablist.header", EMPTY_OBJECT);
-        final BaseComponent footer = this.messages.getMessage(player.getLocale(), "tablist.footer", EMPTY_OBJECT);
+        final BaseComponent header = this.messages.getComponent(player.getLocale(), "tablist.header");
+        final BaseComponent footer = this.messages.getComponent(player.getLocale(), "tablist.footer");
 
         player.setPlayerListHeaderFooter(header, footer);
     }
@@ -48,14 +46,26 @@ public class GlobalHubListener implements AutoListener
     @EventHandler
     public void updateScoreboardOnCurrencyChange(final PlayerCurrencyChangedEvent event)
     {
-        final IScoreboardContext context = this.scoreboardManager.getContext(event.getPlayer());
+        // scoreboardy zwykle mają w sobie zapisany stan waluty
+        this.updateScoreboardContext(event.getPlayer());
+    }
+
+    @EventHandler
+    public void updateScoreboardOnChestOpening(final BeginChestOpeningEvent event)
+    {
+        // scoreboardy zwykle mają w sobie zapisana ilosc skrzynek
+        this.updateScoreboardContext(event.getPlayer());
+    }
+
+    private void updateScoreboardContext(final Player player)
+    {
+        final IScoreboardContext context = this.scoreboardManager.getContext(player);
         if (context == null)
         {
             // gracz nie zawsze musi mieć otwarty scoreboard
             return;
         }
 
-        // scoreboardy zwykle mają w sobie zapisany stan waluty
         context.update();
     }
 

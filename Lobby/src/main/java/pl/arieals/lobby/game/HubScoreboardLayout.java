@@ -12,6 +12,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.api.minigame.shared.api.booster.IBoosterManager;
 import pl.arieals.api.minigame.shared.api.statistics.IRecord;
 import pl.arieals.api.minigame.shared.api.statistics.unit.NumberUnit;
+import pl.arieals.lobby.chest.ChestService;
+import pl.arieals.lobby.chest.ChestType;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardLayout;
 import pl.north93.zgame.api.economy.IAccountAccessor;
@@ -33,6 +35,8 @@ public abstract class HubScoreboardLayout implements IScoreboardLayout
     protected INetworkManager networkManager;
     @Inject
     protected IEconomyManager economyManager;
+    @Inject
+    protected ChestService    chestService;
     @Inject
     protected IBoosterManager boosterManager;
 
@@ -66,6 +70,12 @@ public abstract class HubScoreboardLayout implements IScoreboardLayout
 
         final double multiplier = this.boosterManager.calculateFinalMultiplier(value.get());
         return "x" + multiplier;
+    }
+
+    protected final String getPlayerChests(final Player player, final String chestType)
+    {
+        final ChestType type = this.chestService.getType(chestType);
+        return String.valueOf(this.chestService.getChests(player, type));
     }
 
     @Override

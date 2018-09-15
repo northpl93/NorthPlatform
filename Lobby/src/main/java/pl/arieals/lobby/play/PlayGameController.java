@@ -5,9 +5,7 @@ import java.util.Collections;
 
 import org.bukkit.entity.Player;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.api.minigame.server.lobby.arenas.ArenaQuery;
@@ -28,9 +26,9 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
  * Kontroler obsługujący całą logikę dołączenia gracza do gry.
  * Tutaj trafiają rządania prosto od gracza (np z kliknięcia w gui).
  */
+@Slf4j
 public class PlayGameController
 {
-    private final Logger logger = LoggerFactory.getLogger(PlayGameController.class);
     @Inject
     private MiniGameServer miniGameServer;
     @Inject
@@ -48,6 +46,7 @@ public class PlayGameController
         if (this.partyClient.cantDecideAboutHimself(player))
         {
             // gracz jest w grupie i nie jest liderem więc nie może decydować gdzie gra
+            log.info("Player {} cant switch hub type because he isnt a party owner", player.getName());
             return;
         }
 
@@ -60,6 +59,7 @@ public class PlayGameController
         if (this.partyClient.cantDecideAboutHimself(player))
         {
             // gracz jest w grupie i nie jest liderem więc nie może decydować gdzie gra
+            log.info("Player {} cant switch hub instance because he isnt a party owner", player.getName());
             return;
         }
 
@@ -89,7 +89,11 @@ public class PlayGameController
         }
 
         final Collection<PlayerJoinInfo> players = this.getPlayerTeamJoinInfos(player);
-        this.arenaClient.connect(arena, players);
+        if (! this.arenaClient.connect(arena, players))
+        {
+            final GameIdentity miniGame = arena.getMiniGame();
+            log.info("Player {} cant play game {} because arena client denied join request", player.getName(), miniGame);
+        }
     }
 
     public void playGame(final Player player, final GameIdentity gameIdentity, final boolean allowInProgress, final String worldId)
@@ -97,6 +101,7 @@ public class PlayGameController
         if (this.partyClient.cantDecideAboutHimself(player))
         {
             // gracz jest w grupie i nie jest liderem więc nie może decydować gdzie gra
+            log.info("Player {} cant play game {} because he isnt a party owner", player.getName(), gameIdentity);
             return;
         }
 
@@ -107,7 +112,10 @@ public class PlayGameController
         }
 
         final Collection<PlayerJoinInfo> players = this.getPlayerTeamJoinInfos(player);
-        this.arenaClient.connect(query, players);
+        if (! this.arenaClient.connect(query, players))
+        {
+            log.info("Player {} cant play game {} because arena client denied join request", player.getName(), gameIdentity);
+        }
     }
 
     private Collection<PlayerJoinInfo> getPlayerTeamJoinInfos(final Player player)

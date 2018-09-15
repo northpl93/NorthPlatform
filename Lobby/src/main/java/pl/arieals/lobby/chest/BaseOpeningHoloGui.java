@@ -1,11 +1,15 @@
 package pl.arieals.lobby.chest;
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
 import pl.arieals.lobby.chest.opening.ChestOpeningController;
 import pl.north93.zgame.api.bukkit.hologui.IHoloContext;
 import pl.north93.zgame.api.bukkit.hologui.IHoloGui;
@@ -32,7 +36,7 @@ public abstract class BaseOpeningHoloGui implements IHoloGui
         this.shopIcon = context.createIcon();
         this.shopIcon.setType(new ItemStack(Material.NETHER_STAR));
         this.shopIcon.setNameLocation(IconNameLocation.ABOVE);
-        this.shopIcon.setDisplayName(TranslatableString.of(this.messages, "@shop"));
+        this.shopIcon.setDisplayName(TranslatableString.of(this.messages, "@shop.item"));
 
         this.closeIcon = context.createIcon();
         this.closeIcon.setType(new ItemStack(Material.BARRIER));
@@ -46,6 +50,21 @@ public abstract class BaseOpeningHoloGui implements IHoloGui
     }
 
     protected abstract void openGui0(final IHoloContext context);
+
+    @Override
+    public void iconClicked(final IHoloContext context, final IIcon icon)
+    {
+        final Player player = context.getPlayer();
+        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1); // volume,pitch
+
+        if (icon == this.shopIcon)
+        {
+            final BaseComponent shopMessage = this.messages.getComponent(player.getLocale(), "shop.click");
+            shopMessage.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://mcpiraci.pl/shop"));
+
+            player.sendMessage(shopMessage);
+        }
+    }
 
     @Override
     public void closeGui(final IHoloContext context)

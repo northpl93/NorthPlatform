@@ -55,6 +55,9 @@ public class BedWarsHubScoreboard extends HubScoreboardLayout
         builder.translated("scoreboard.wins", this.parseNumber(context.getCompletableFuture("wins")));
         builder.add("");
 
+        builder.translated("scoreboard.chests", this.getPlayerChests(context.getPlayer(), "bedwars"));
+        builder.add("");
+
         builder.translated("scoreboard.money", this.getPlayerCurrency(context.getPlayer()));
         builder.add("");
 

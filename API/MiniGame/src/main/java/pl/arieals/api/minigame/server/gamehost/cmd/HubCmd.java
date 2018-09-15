@@ -26,7 +26,7 @@ public class HubCmd extends NorthCommand
 
     public HubCmd()
     {
-        super("hub", "lobby");
+        super("hub", "lobby", "wyjdz", "wroc");
     }
 
     @Override

@@ -31,6 +31,7 @@
             </button>
             <button pos="4,4">
                 <icon id="GOLD_INGOT" name="@gamegui.itemshop.name" lore="@gamegui.itemshop.lore"/>
+                <onClick>openWebShop</onClick>
             </button>
             <button pos="5,4">
                 <icon id="IRON_DOOR" name="@gamegui.back"/>
