@@ -9,9 +9,8 @@ import com.lambdaworks.redis.api.sync.RedisCommands;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
@@ -24,6 +23,7 @@ import pl.north93.zgame.api.global.redis.subscriber.RedisSubscriber;
 import pl.north93.zgame.api.global.serializer.platform.NorthSerializer;
 import pl.north93.zgame.api.global.storage.StorageConnector;
 
+@Slf4j
 public class RpcManagerImpl extends Component implements IRpcManager
 {
     @Inject
@@ -32,7 +32,6 @@ public class RpcManagerImpl extends Component implements IRpcManager
     private RedisSubscriber         redisSubscriber;
     @Inject
     private NorthSerializer<byte[]> msgPack;
-    private final Logger                              logger            = LoggerFactory.getLogger(RpcManagerImpl.class);
     private final RpcProxyCache                       rpcProxyCache      = new RpcProxyCache(this);
     private final IntObjectMap<RpcResponseHandler>    responseHandlerMap = new IntObjectHashMap<>();
     private final IntObjectMap<RpcResponseLock>       locks              = new IntObjectHashMap<>();
@@ -54,7 +53,7 @@ public class RpcManagerImpl extends Component implements IRpcManager
     {
         if (this.getStatus().isDisabled())
         {
-            this.logger.warn("Tried to register listeningContext while RpcManager is disabled");
+            log.warn("Tried to register listeningContext while RpcManager is disabled");
             return;
         }
         this.addListeningContext0(id);
@@ -62,7 +61,7 @@ public class RpcManagerImpl extends Component implements IRpcManager
 
     private synchronized void addListeningContext0(final String id)
     {
-        this.logger.debug("addListeningContext0({})", id);
+        log.debug("addListeningContext0({})", id);
         this.redisSubscriber.subscribe("rpc:" + id + ":invoke", this::handleMethodInvocation);
         this.redisSubscriber.subscribe("rpc:" + id + ":response", this::handleResponse);
     }
@@ -70,7 +69,7 @@ public class RpcManagerImpl extends Component implements IRpcManager
     @Override
     public synchronized void addRpcImplementation(final Class<?> classInterface, final Object implementation)
     {
-        this.logger.debug("addRpcImplementation({}, {})", classInterface, implementation.getClass().getName());
+        log.debug("addRpcImplementation({}, {})", classInterface, implementation.getClass().getName());
         this.responseHandlerMap.put(classInterface.getName().hashCode(), new RpcResponseHandler(this, classInterface, implementation));
     }
 
@@ -150,7 +149,7 @@ public class RpcManagerImpl extends Component implements IRpcManager
         }
         if (lock == null)
         {
-            this.logger.warn("Received RPC response but lock was null. Response: {}", responseMessage);
+            log.warn("Received RPC response but lock was null. Response: {}", responseMessage);
             return; // Moze się wydarzyć, gdy nastąpi timeout i lock zostanie usunięty. W takim wypadku ignorujemy odpowiedź.
         }
         lock.provideResponse(responseMessage.getResponse());

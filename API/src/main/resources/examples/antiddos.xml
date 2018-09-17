@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!-- Konfiguracja systemu Anty DDoS dla serwerów proxy -->
+<antiddos>
+    <!-- Tryb pracy: ON, OFF, AUTO -->
+    <mode>AUTO</mode>
+
+    <!-- Maksymalna ilosc polaczen na sekunde dla trybu AUTO -->
+    <connectionsThreshold>7</connectionsThreshold>
+
+    <!-- Czas przez który anty ddos bedzie wlaczony w trybie AUTO -->
+    <duration>150</duration>
+
+    <!-- Akcje do podjęcia podczas włączania anty ddosu -->
+    <onEnable>
+        <execute>bash ddos-scripts/enable.sh</execute>
+    </onEnable>
+
+    <!-- Akcje do podjęcia podczas wyłączania anty ddosu -->
+    <onDisable>
+        <execute>bash ddos-scripts/disable.sh</execute>
+    </onDisable>
+</antiddos>

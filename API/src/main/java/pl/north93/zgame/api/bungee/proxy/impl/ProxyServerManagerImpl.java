@@ -24,7 +24,6 @@ import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 
 class ProxyServerManagerImpl extends Component implements IProxyServerManager
 {
-    private static final int UPDATE_PROXY_DATA_EVERY = 20;
     @Inject
     private BungeeApiCore       apiCore;
     @Inject
@@ -43,9 +42,6 @@ class ProxyServerManagerImpl extends Component implements IProxyServerManager
 
         // rejestrujemy nasze listenery
         this.apiCore.registerListeners(new PingListener(), new PlayerNetworkListener(), new PermissionsListener(), new JoinPermissionsChecker());
-
-        this.uploadInfo();
-        this.getApiCore().getPlatformConnector().runTaskAsynchronously(this::uploadInfo, UPDATE_PROXY_DATA_EVERY);
     }
 
     @Override
@@ -68,25 +64,6 @@ class ProxyServerManagerImpl extends Component implements IProxyServerManager
     public IProxyServerList getServerList()
     {
         return this.proxyServerList;
-    }
-
-    private void uploadInfo()
-    {
-        final Hash<ProxyDto> hash = this.networkManager.getProxies().unsafe().getHash();
-        hash.put(this.getApiCore().getId(), this.generateInfo());
-    }
-
-    private ProxyDto generateInfo()
-    {
-        final ProxyDto proxyInstanceInfo = new ProxyDto();
-
-        final BungeeApiCore apiCore = (BungeeApiCore) this.getApiCore();
-
-        proxyInstanceInfo.setId(apiCore.getProxyConfig().getUniqueName());
-        proxyInstanceInfo.setHostname(apiCore.getHostName());
-        proxyInstanceInfo.setOnlinePlayers(ProxyServer.getInstance().getOnlineCount());
-
-        return proxyInstanceInfo;
     }
 
     @Override

@@ -2,22 +2,21 @@ package pl.north93.zgame.controller.core;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import pl.north93.zgame.api.global.Platform;
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
 import pl.north93.zgame.api.global.network.NetworkMeta;
+import pl.north93.zgame.api.global.network.proxy.AntiDdosConfig;
 import pl.north93.zgame.api.global.permissions.GroupsContainer;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.controller.configserver.IConfigServer;
 import pl.north93.zgame.controller.configserver.source.XmlConfigSource;
 
+@Slf4j
 public class NetworkControllerCore extends Component
 {
-    private final Logger logger = LoggerFactory.getLogger(NetworkControllerCore.class);
     @Inject
     private IRpcManager   rpcManager;
     @Inject
@@ -26,11 +25,7 @@ public class NetworkControllerCore extends Component
     @Override
     protected void enableComponent()
     {
-        this.logger.info("Starting NetworkController...");
-        if (this.getApiCore().getPlatform() == Platform.BUNGEE) // on standalone platform context will be added automatically from getId()
-        {
-            this.rpcManager.addListeningContext("controller");
-        }
+        log.info("Starting NetworkController...");
         this.rpcManager.addRpcImplementation(NetworkControllerRpc.class, new NetworkControllerRpcImpl());
 
         // rejestrujemy glowny config sieci.
@@ -38,12 +33,15 @@ public class NetworkControllerCore extends Component
 
         // rejestrujemy config z uprawnieniami
         this.configServer.addConfig("groups", new XmlConfigSource<>(GroupsContainer.class, this.getApiCore().getFile("permissions.xml")));
+
+        // rejestrujemy config z konfiguracja Anty DDoS dla serwerów proxy
+        this.configServer.addConfig("antiddos", new XmlConfigSource<>(AntiDdosConfig.class, this.getApiCore().getFile("antiddos.xml")));
     }
 
     @Override
     protected void disableComponent()
     {
-        this.logger.info("Network Controller stopped!");
+        log.info("Network Controller stopped!");
     }
 
     @Override
