@@ -9,8 +9,7 @@ public class BattlecryAbility implements AbilityHandler
     @Override
     public boolean onUse(GoldHunterPlayer player)
     {
-        player.getAbilityTracker().suspendAbilityLoading();
-        player.getEffectTracker().addEffect(new BattlecryEffect(10), 100 + 20 * player.getShopItemLevel("shaman.abilityduration")).onComplete(player.getAbilityTracker()::resetAbilityLoading);
+        player.getEffectTracker().addEffect(new BattlecryEffect(10), 100 + 20 * player.getShopItemLevel("shaman.abilityduration"));
         return true;
     }
 }

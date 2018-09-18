@@ -12,9 +12,8 @@ public class BrigdeAbility implements AbilityHandler
     @Override
     public boolean onUse(GoldHunterPlayer player)
     {
-        player.getAbilityTracker().suspendAbilityLoading();
         int duration = BASE_DURATION + player.getShopItemLevel("architect.abilityduration") * PER_LEVEL;
-        player.getEffectTracker().addEffect(new BridgeEffect(), duration).onComplete(player.getAbilityTracker()::resetAbilityLoading);
+        player.getEffectTracker().addEffect(new BridgeEffect(), duration);
         return true;
     }
 }

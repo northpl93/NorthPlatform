@@ -12,9 +12,8 @@ public class SirenTearsAbility implements AbilityHandler
     @Override
     public boolean onUse(GoldHunterPlayer player)
     {
-        player.getAbilityTracker().suspendAbilityLoading();
         int duration = BASE_DURATION + player.getShopItemLevel("medic.abilityduration") * PER_LEVEL;
-        player.getEffectTracker().addEffect(new SirenTearsEffect(10), duration).onComplete(player.getAbilityTracker()::resetAbilityLoading);
+        player.getEffectTracker().addEffect(new SirenTearsEffect(10), duration);
         return true;
     }
 }

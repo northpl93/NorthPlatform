@@ -25,8 +25,7 @@ public class DeathArrowAbility implements AbilityHandler
     @Override
     public boolean onUse(GoldHunterPlayer player)
     {
-        player.getAbilityTracker().suspendAbilityLoading();
-        player.getEffectTracker().addEffect(new DeathArrowEffect()).onComplete(player.getAbilityTracker()::resetAbilityLoading);
+        player.getEffectTracker().addEffect(new DeathArrowEffect());
         return true;
     }
     

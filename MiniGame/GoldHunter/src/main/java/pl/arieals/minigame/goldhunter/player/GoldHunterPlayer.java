@@ -12,7 +12,6 @@ import org.bukkit.Particle;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -289,6 +288,7 @@ public class GoldHunterPlayer implements ITickable
         currentClass.applyEffects(this);
         currentClass.applyEquipment(this);
         abilityTracker.setNewAbilityType(currentClass.getSpecialAbility());
+        effectTracker.clearEffects();
         
         addLeatherHatToInventory();
         setLeatherArmorColor();

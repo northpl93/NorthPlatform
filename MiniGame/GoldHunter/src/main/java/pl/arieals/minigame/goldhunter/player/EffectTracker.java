@@ -4,16 +4,15 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import org.bukkit.Bukkit;
 
 import com.google.common.base.Preconditions;
 
+import lombok.NonNull;
+
 import pl.arieals.minigame.goldhunter.event.EffectAttachEvent;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
-import pl.north93.zgame.api.bukkit.utils.ISyncCallback;
-import pl.north93.zgame.api.bukkit.utils.SimpleSyncCallback;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
 public class EffectTracker
@@ -35,14 +34,13 @@ public class EffectTracker
         return player;
     }
     
-    public ISyncCallback addEffect(Effect effect)
+    public void addEffect(Effect effect)
     {
-        return addEffect(effect, -1);
+        addEffect(effect, -1);
     }
     
-    public ISyncCallback addEffect(Effect effect, int duration)
+    public void addEffect(@NonNull Effect effect, int duration)
     {
-        Preconditions.checkNotNull(effect);
         Preconditions.checkArgument(duration >= -1);
         
         EffectAttachEvent event = new EffectAttachEvent(player, effect, duration);
@@ -50,32 +48,30 @@ public class EffectTracker
         
         if ( event.isCancelled() || event.getEffect() == null )
         {
-            SimpleSyncCallback callback = new SimpleSyncCallback();
-            callback.callComplete();
-            return callback;
+            return;
         }
         
         effect = event.getEffect();
+        duration = event.getDuration();
+        
+        Effect currentEffect = getEffect(effect.getClass());
+        if ( effect.equals(currentEffect) ) // effect is the same so we set to current effect greater duration
+        {
+            currentEffect.setDuration(currentEffect.isInfinite() || duration == -1 ? -1 : Math.max(duration, currentEffect.getDuration()));
+        }
+        else if ( currentEffect == null || effect.compareTo(currentEffect) >= 0 ) // new effect is better than current one so we add new effect
+        {
+            addEffect0(effect, duration);
+        }
+    }
+
+    private void addEffect0(Effect effect, int duration)
+    {
         removeEffect(effect.getClass());
         
-        effect.attach(this, event.getDuration());
+        effect.attach(this, duration);
         tickableManager.addTickableObject(effect);
         activeEffects.put(effect.getClass(), effect);
-        
-        return effect.getCallback();
-    }
-    
-    public <E extends Effect> ISyncCallback addEffectOrSetDuration(Class<E> effectType, int duration, Supplier<E> supplier)
-    {
-        E effect = getEffect(effectType);
-        
-        if ( effect == null )
-        {
-            return addEffect(supplier.get(), duration);
-        }
-        
-        effect.setDuration(duration);
-        return effect.getCallback();
     }
     
     public boolean removeEffect(Class<? extends Effect> effectType)

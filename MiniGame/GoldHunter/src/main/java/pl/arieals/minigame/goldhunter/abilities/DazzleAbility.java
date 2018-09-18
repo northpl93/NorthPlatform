@@ -20,8 +20,7 @@ public class DazzleAbility implements AbilityHandler
     @Override
     public boolean onUse(GoldHunterPlayer player)
     {
-        player.getAbilityTracker().suspendAbilityLoading();
-        player.getEffectTracker().addEffect(new DazzleAbilityEffect()).onComplete(player.getAbilityTracker()::resetAbilityLoading);
+        player.getEffectTracker().addEffect(new DazzleAbilityEffect());
         return false;
     }
     

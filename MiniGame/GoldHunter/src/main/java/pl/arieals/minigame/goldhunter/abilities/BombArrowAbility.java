@@ -20,8 +20,7 @@ public class BombArrowAbility implements AbilityHandler
     @Override
     public boolean onUse(GoldHunterPlayer player)
     {
-        player.getAbilityTracker().suspendAbilityLoading();
-        player.getEffectTracker().addEffect(new BombArrowEffect()).onComplete(player.getAbilityTracker()::resetAbilityLoading);
+        player.getEffectTracker().addEffect(new BombArrowEffect());
         return true;
     }
     

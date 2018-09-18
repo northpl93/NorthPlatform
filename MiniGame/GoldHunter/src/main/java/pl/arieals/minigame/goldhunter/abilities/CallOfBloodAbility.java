@@ -21,9 +21,8 @@ public class CallOfBloodAbility implements AbilityHandler
     @Override
     public boolean onUse(GoldHunterPlayer player)
     {
-        player.getAbilityTracker().suspendAbilityLoading();
         int duration = BASE_DURATION + player.getShopItemLevel("berserker.abilityduration") * PER_LEVEL;
-        player.getEffectTracker().addEffect(new CallOfBloodEffect(), duration).onComplete(player.getAbilityTracker()::resetAbilityLoading);
+        player.getEffectTracker().addEffect(new CallOfBloodEffect(), duration);
         player.getPlayer().damage(BLOOD_TRIBUTE);
         return true;
     }

@@ -20,7 +20,7 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 import pl.north93.zgame.api.global.utils.lang.CatchException;
 
-public abstract class Effect implements ITickable
+public abstract class Effect implements ITickable, Comparable<Effect>
 {
     @Inject
     @GoldHunterLogger
@@ -178,6 +178,12 @@ public abstract class Effect implements ITickable
     
     protected void onEnd()
     {
+    }
+    
+    @Override
+    public int compareTo(Effect other)
+    {
+        return 0;
     }
     
     public enum EffectBarColor

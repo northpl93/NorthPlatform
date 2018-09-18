@@ -20,6 +20,7 @@ public class BattlecryEffect extends RadiusEffect
     @Override
     protected void onStart()
     {
+        getPlayer().getAbilityTracker().suspendAbilityLoading();
         setRedBanner();
     }
     
@@ -39,6 +40,7 @@ public class BattlecryEffect extends RadiusEffect
     {
         getPlayer().addLeatherHatToInventory();
         getPlayer().setLeatherArmorColor();
+        getPlayer().getAbilityTracker().resetAbilityLoading();
     }
     
     @Override
@@ -46,7 +48,7 @@ public class BattlecryEffect extends RadiusEffect
     {
         if ( getPlayer().getTeam() == player.getTeam() )
         {
-            player.getEffectTracker().addEffectOrSetDuration(StrengthEffect.class, 60, StrengthEffect::new);
+            player.getEffectTracker().addEffect(new StrengthEffect(), 60);
         }
     }
 }

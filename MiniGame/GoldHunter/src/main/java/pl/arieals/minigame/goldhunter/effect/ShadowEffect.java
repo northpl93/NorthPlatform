@@ -1,8 +1,6 @@
 package pl.arieals.minigame.goldhunter.effect;
 
-import pl.arieals.minigame.goldhunter.player.Effect;
-
-public class ShadowEffect extends Effect
+public class ShadowEffect extends AbilityEffect
 {
     {
         setBarColor(EffectBarColor.GREEN);

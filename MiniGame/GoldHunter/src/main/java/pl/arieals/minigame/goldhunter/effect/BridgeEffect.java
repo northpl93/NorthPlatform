@@ -3,9 +3,7 @@ package pl.arieals.minigame.goldhunter.effect;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import pl.arieals.minigame.goldhunter.player.Effect;
-
-public class BridgeEffect extends Effect
+public class BridgeEffect extends AbilityEffect
 {
     {
         setBarColor(EffectBarColor.GREEN);
@@ -14,6 +12,8 @@ public class BridgeEffect extends Effect
     @Override
     protected void onStart()
     {
+        super.onStart();
+        
         getPlayer().setBuildBridgeActive(true);
         getPlayer().getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 128));
     }
@@ -21,6 +21,8 @@ public class BridgeEffect extends Effect
     @Override
     protected void onEnd()
     {
+        super.onEnd();
+        
         getPlayer().setBuildBridgeActive(false);
         getPlayer().getPlayer().removePotionEffect(PotionEffectType.JUMP);
     }

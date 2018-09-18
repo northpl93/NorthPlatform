@@ -16,8 +16,7 @@ public class PoisonArrowAbility implements AbilityHandler
     @Override
     public boolean onUse(GoldHunterPlayer player, Location targetBlock)
     {
-        player.getAbilityTracker().suspendAbilityLoading();
-        player.getEffectTracker().addEffect(new PoisonArrowEffect()).onComplete(player.getAbilityTracker()::resetAbilityLoading);
+        player.getEffectTracker().addEffect(new PoisonArrowEffect());
         return true;
     }
 }

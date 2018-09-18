@@ -20,6 +20,7 @@ public class SirenTearsEffect extends RadiusEffect
     @Override
     protected void onStart()
     {
+        getPlayer().getAbilityTracker().suspendAbilityLoading();
         setGreenBanner();
     }
     
@@ -37,6 +38,7 @@ public class SirenTearsEffect extends RadiusEffect
     @Override
     protected void onEnd()
     {
+        getPlayer().getAbilityTracker().resetAbilityLoading();
         getPlayer().addLeatherHatToInventory();
         getPlayer().setLeatherArmorColor();
     }
@@ -46,8 +48,7 @@ public class SirenTearsEffect extends RadiusEffect
     {
         if ( getPlayer().getTeam() == player.getTeam() )
         {
-            player.getEffectTracker().addEffectOrSetDuration(RegenerationEffect.class, 60, () -> new RegenerationEffect(2));
-    
+            player.getEffectTracker().addEffect(new RegenerationEffect(2), 60);
         }
     }
 }
