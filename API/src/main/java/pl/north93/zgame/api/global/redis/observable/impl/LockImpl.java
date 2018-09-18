@@ -100,7 +100,7 @@ class LockImpl implements Lock
     {
         this.notifyAllLocalWaiters();
 
-        log.debug("[Lock] Remote unlock {0}", this.name);
+        log.debug("[Lock] Remote unlock {}", this.name);
     }
 
     private void notifyAllLocalWaiters()

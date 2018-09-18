@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.material.Bed;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.cfg.BwTeamConfig;
@@ -182,10 +183,26 @@ public class Team
 
         this.setBedAlive(false);
         final Block bedBlock = this.getBedLocation().getBlock();
-        bedBlock.setType(Material.AIR); // usuwamy klasyczna, wolna metoda zeby znikly obydwie czesci lozka.
+        this.doBedBlockDestroy(bedBlock);
 
         final BukkitApiCore apiCore = this.arena.getGameHostManager().getApiCore();
         apiCore.callEvent(new BedDestroyedEvent(this.arena, null, bedBlock, this, silent));
+    }
+
+    // usuwamy klasyczna, wolna metoda zeby znikly obydwie czesci lozka.
+    // zawsze musimy usuac glówna (head) czesc lozka, zeby itemek nie wydropil
+    private void doBedBlockDestroy(final Block bedBlock)
+    {
+        final Bed bed = (Bed) bedBlock.getState().getData();
+        if (bed.isHeadOfBed())
+        {
+            bedBlock.setType(Material.AIR);
+        }
+        else
+        {
+            final Block relative = bedBlock.getRelative(bed.getFacing());
+            relative.setType(Material.AIR);
+        }
     }
 
     /**

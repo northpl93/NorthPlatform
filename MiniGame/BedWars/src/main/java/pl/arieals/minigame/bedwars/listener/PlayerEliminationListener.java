@@ -9,18 +9,18 @@ import org.bukkit.event.Listener;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
+import net.md_5.bungee.api.chat.BaseComponent;
 import pl.arieals.minigame.bedwars.event.PlayerEliminatedEvent;
 import pl.arieals.minigame.bedwars.hotbar.SpectatorHotbar;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
+@Slf4j
 public class PlayerEliminationListener implements Listener
 {
-    private final Logger logger = LoggerFactory.getLogger(PlayerEliminationListener.class);
     @Inject @Messages("BedWars")
     private MessagesBox messages;
 
@@ -29,7 +29,7 @@ public class PlayerEliminationListener implements Listener
     {
         final Player player = event.getPlayer();
 
-        this.logger.info("Player eliminated event called for {0} on arena {1}", player.getName(), event.getArena().getId());
+        log.info("Player eliminated event called for {} on arena {}", player.getName(), event.getArena().getId());
         if (event.getBedWarsPlayer().isOffline())
         {
             // gracz nie jest online gdy zostal wyeliminowany
@@ -42,8 +42,8 @@ public class PlayerEliminationListener implements Listener
         player.getInventory().clear();
 
         final String locale = player.getLocale();
-        final String title = this.messages.getMessage(locale, "die.norespawn.title");
-        final String subtitle = this.messages.getMessage(locale, "die.norespawn.subtitle");
+        final BaseComponent title = this.messages.getComponent(locale, "die.norespawn.title");
+        final BaseComponent subtitle = this.messages.getComponent(locale, "die.norespawn.subtitle");
         player.sendTitle(new Title(title, subtitle, 20, 20, 20));
 
         final SpectatorHotbar spectatorHotbar = new SpectatorHotbar();
