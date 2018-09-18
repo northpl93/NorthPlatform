@@ -3,6 +3,7 @@ package pl.arieals.api.minigame.server.shared.citizens;
 import java.util.Optional;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -38,10 +39,10 @@ public class TranslatedNameTrait extends Trait
         this.nameLines = nameLines;
     }
     
-    public void setNameLines(TranslatableString... nameLines)
+    public void setNameLines(final TranslatableString... nameLines)
     {
         this.nameLines = nameLines;
-        updateHologram();
+        this.updateHologram();
     }
     
     @Override
@@ -78,16 +79,18 @@ public class TranslatedNameTrait extends Trait
             return;
         }
 
-        final Entity entity = this.getNPC().getEntity();
-        entity.setCustomNameVisible(false);
+        final NPC npc = this.getNPC();
+        npc.data().set(NPC.NAMEPLATE_VISIBLE_METADATA, false);
 
+        final Entity entity = npc.getEntity();
         this.hologram = HologramFactory.create(entity.getLocation().add(0, entity.getHeight(), 0));
-        updateHologram();
+
+        this.updateHologram();
     }
     
     private void updateHologram()
     {
-        if ( hologram == null )
+        if ( this.hologram == null )
         {
             return;
         }
@@ -108,9 +111,12 @@ public class TranslatedNameTrait extends Trait
 
     private void handleEntityBeingTracked(final Player player)
     {
-        final Scoreboard scoreboard = player.getScoreboard();
+        if (this.isNonPlayerNpc())
+        {
+            return;
+        }
 
-        final Team hideNameTeam = this.getOrCreateTeam(scoreboard);
+        final Team hideNameTeam = this.getOrCreateTeam(player.getScoreboard());
         if (hideNameTeam.hasEntry(this.npc.getName()))
         {
             return;
@@ -128,6 +134,12 @@ public class TranslatedNameTrait extends Trait
 
             return newTeam;
         });
+    }
+
+    // zwraca true jesli NPC nie jest graczem
+    private boolean isNonPlayerNpc()
+    {
+        return this.npc.getEntity().getType() != EntityType.PLAYER;
     }
 
     @Override

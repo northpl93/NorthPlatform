@@ -78,7 +78,7 @@ public class GameEndListener implements Listener
         final Predicate<Team> isEliminated = Team::isEliminated;
         if (arenaData.getTeams().stream().filter(isEliminated.negate()).count() <= 1)
         {
-            //arena.endGame();
+            arena.endGame();
         }
     }
 

@@ -1,12 +1,12 @@
 package pl.arieals.minigame.bedwars.npc;
 
 import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
+import static pl.north93.zgame.api.global.messages.TranslatableString.of;
 
 
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
-import java.util.UUID;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -22,27 +22,29 @@ import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.trait.VillagerProfession;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.api.minigame.server.shared.citizens.SkinTrait;
+import pl.arieals.api.minigame.server.shared.citizens.TranslatedNameTrait;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.globalshops.server.IGlobalShops;
 import pl.arieals.globalshops.server.domain.ItemsGroup;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.Team;
-import pl.arieals.minigame.bedwars.shop.ShopGuiManager;
 import pl.arieals.minigame.bedwars.shop.gui.ShopMain;
 import pl.arieals.minigame.bedwars.shop.gui.UpgradesGui;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
+import pl.north93.zgame.api.global.messages.Messages;
+import pl.north93.zgame.api.global.messages.MessagesBox;
 
 public class NpcCreator implements Listener
 {
+    @Inject @Messages("BedWars")
+    private MessagesBox     messages;
     @Inject
     private IBukkitExecutor executor;
     @Inject
     private IGlobalShops    globalShops;
-    @Inject
-    private ShopGuiManager  shopGuiManager;
     @Inject @Named("BedWarsNpcRegistry")
     private NPCRegistry     npcRegistry;
 
@@ -57,15 +59,15 @@ public class NpcCreator implements Listener
             this.executor.mixed(() -> this.getTeamNpc(shoppers, team), npc ->
             {
                 // NPC z sklepem
-                final NPC shopper = this.createNpc(npc.getKey());
+                final NPC shopper = this.createNpc(npc.getKey(), "bw_shopper");
                 shopper.addTrait(new ShopTrait(ShopTrait.NpcType.SHOP));
-                shopper.setName("Sklep");
+                shopper.addTrait(new TranslatedNameTrait(of(this.messages, "@npc.shopper")));
                 shopper.spawn(team.getConfig().getShopNpc().toBukkit(event.getArena().getWorld().getCurrentWorld()));
 
                 // NPC z ulepszeniami
-                final NPC upgrader = this.createNpc(npc.getValue());
+                final NPC upgrader = this.createNpc(npc.getValue(), "bw_upgrader");
                 upgrader.addTrait(new ShopTrait(ShopTrait.NpcType.UPGRADES));
-                upgrader.setName("Ulepszenia");
+                upgrader.addTrait(new TranslatedNameTrait(of(this.messages, "@npc.upgrader")));
                 upgrader.spawn(team.getConfig().getUpgradesNpc().toBukkit(event.getArena().getWorld().getCurrentWorld()));
             });
         }
@@ -122,14 +124,14 @@ public class NpcCreator implements Listener
         return Pair.of(first, second);
     }
 
-    private NPC createNpc(final NpcItem item)
+    private NPC createNpc(final NpcItem item, final String name)
     {
         if (item == null)
         {
-            return this.npcRegistry.createNPC(EntityType.VILLAGER, UUID.randomUUID().toString());
+            return this.npcRegistry.createNPC(EntityType.VILLAGER, name);
         }
 
-        final NPC npc = this.npcRegistry.createNPC(item.getEntityType(), UUID.randomUUID().toString());
+        final NPC npc = this.npcRegistry.createNPC(item.getEntityType(), name);
         if (item.getEntityType() == EntityType.PLAYER)
         {
             npc.addTrait(new SkinTrait(item.getProfileData(), item.getDataSign()));
