@@ -11,7 +11,9 @@ import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.api.minigame.server.lobby.hub.HubWorld;
 import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
-import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
+import pl.arieals.api.minigame.shared.api.status.IPlayerStatusManager;
+import pl.arieals.api.minigame.shared.api.status.InHubStatus;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.chat.global.ChatManager;
 import pl.north93.zgame.api.chat.global.ChatPlayer;
@@ -26,11 +28,11 @@ public class PlayerHubChatListener implements AutoListener
 {
     private static final int RACE_CONDITION_WAIT = 20;
     @Inject
-    private ChatManager     chatManager;
+    private ChatManager          chatManager;
     @Inject
-    private IBukkitExecutor bukkitExecutor;
+    private IPlayerStatusManager statusManager;
     @Inject
-    private MiniGameServer  miniGameServer;
+    private MiniGameServer       miniGameServer;
 
     @EventHandler
     public void switchChatRoomOnHubSwitch(final PlayerSwitchedHubEvent event)
@@ -45,45 +47,54 @@ public class PlayerHubChatListener implements AutoListener
             player.leaveRoom(oldChatRoom);
         }
 
-        final ChatRoom newChatRoom = newHub.getChatRoom();
-        if (player.isInRoom(newChatRoom))
-        {
-            // jesli gracz przechodzi z innej instancji huba to wystepuje race condition
-            // z racji tego jak dziala Bungee. Opozniamy ponowne dodanie gracza do pokoju.
-            this.delayRoomJoin(player, newChatRoom);
-        }
-        else
-        {
-            player.joinRoom(newChatRoom);
-        }
+        player.joinRoom(newHub.getChatRoom());
     }
 
     @EventHandler
     public void leaveRoomWhenPlayerQuitHubServer(final PlayerQuitEvent event)
     {
         final Player player = event.getPlayer();
-        final ChatPlayer chatPlayer = this.chatManager.getPlayer(Identity.of(player));
+        final Identity identity = Identity.of(player);
 
-        if (! chatPlayer.isOnline())
+        final IPlayerStatus status = this.statusManager.getPlayerStatus(identity);
+        if (status.getType() == IPlayerStatus.StatusType.OFFLINE)
         {
-            // gdy gracz wychodzi z sieci to tu będzie false
-            // unikamy wyjątku PlayerOfflineException
+            // gdy gracz wyszedl z sieci to nic nie musimy robic
             return;
         }
 
         final LobbyManager lobbyManager = this.miniGameServer.getServerManager();
         final HubWorld hubWorld = lobbyManager.getLocalHub().getHubWorld(player);
 
-        if (hubWorld == null)
+        if (hubWorld == null || this.isSameHub(status, hubWorld.getHubId()))
         {
-            // teoretycznie nigdy tak nie powinno się stać, ale warto dmuchać na zimne
+            // gracz nie byl na zadnym hubie lub dalej jest na tym samym (tylko na innym serwerze)
             return;
         }
+
+        final ChatPlayer chatPlayer = this.chatManager.getPlayer(identity);
+        /*if (! chatPlayer.isOnline()) // teoretycznie zbedne po ostatnich zmianach
+        {
+            // gdy gracz wychodzi z sieci to tu będzie false
+            // unikamy wyjątku PlayerOfflineException
+            return;
+        }*/
 
         chatPlayer.leaveRoom(hubWorld.getChatRoom(), true);
     }
 
-    private void delayRoomJoin(final ChatPlayer player, final ChatRoom room)
+    private boolean isSameHub(final IPlayerStatus status, final String hubId)
+    {
+        if (status.getType() != IPlayerStatus.StatusType.HUB)
+        {
+            return false;
+        }
+
+        final InHubStatus inHubStatus = (InHubStatus) status;
+        return hubId.equals(inHubStatus.getHubId());
+    }
+
+    /*private void delayRoomJoin(final ChatPlayer player, final ChatRoom room)
     {
         this.bukkitExecutor.asyncLater(RACE_CONDITION_WAIT, () ->
         {
@@ -92,7 +103,7 @@ public class PlayerHubChatListener implements AutoListener
                 player.joinRoom(room);
             }
         });
-    }
+    }*/
 
     @Override
     public String toString()
