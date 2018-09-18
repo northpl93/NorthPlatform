@@ -77,21 +77,19 @@ class ClassIconRenderer
         if ( !characterClass.hasEnoughRank(player) )
         {
             canSelect = false;
-            infoText = messages.getMessage(player.getPlayer().getLocale(), "select_class.require_rank." + characterClass.getRank().name().toLowerCase());
+            infoText = messages.getString(player.getPlayer().getLocale(), "select_class.require_rank." + characterClass.getRank().name().toLowerCase());
         }
         else if ( !characterClass.hasBought(player) )
         {
             canSelect = false;
-            infoText = messages.getMessage(player.getPlayer().getLocale(), "select_class.must_buy_first");
+            infoText = messages.getString(player.getPlayer().getLocale(), "select_class.must_buy_first");
         }
         else
         {
             canSelect = true;
-            infoText = messages.getMessage(player.getPlayer().getLocale(), "select_class.click_to_select");
+            infoText = messages.getString(player.getPlayer().getLocale(), "select_class.click_to_select");
         }
          
-        // String displayName = ( canSelect ? "§a§l" : "§c§l" ) + characterClass.getDisplayName().getValue(player.getPlayer()).toLegacyText();
-        
         BaseComponent displayName = characterClass.getDisplayName().getValue(player.getPlayer());
         displayName.setBold(true);
         displayName.setColor(canSelect ? ChatColor.GREEN : ChatColor.RED);

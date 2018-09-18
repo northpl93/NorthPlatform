@@ -539,11 +539,10 @@ public class GoldHunterPlayer implements ITickable
     
     public void sendSeparatedMessage(String msgKey, Object... args)
     {
-        messages.sendMessage(player, "separator");
-        //player.sendMessage("");
-        messages.sendMessage(player, msgKey, MessageLayout.CENTER, args);
-        //player.sendMessage("");
-        messages.sendMessage(player, "separator");
+        INorthPlayer player = INorthPlayer.wrap(this.player);
+        player.sendMessage(messages, "separator");
+        player.sendMessage(messages, msgKey, MessageLayout.CENTER, args);
+        player.sendMessage(messages, "separator");
     }
     
     public void sendMessage(String msgKey, Object... args)
@@ -553,12 +552,12 @@ public class GoldHunterPlayer implements ITickable
     
     public void sendCenteredMessage(String msgKey, Object... args)
     {
-        messages.sendMessage(player, msgKey, MessageLayout.CENTER, args);
+        INorthPlayer.wrap(player).sendMessage(messages, msgKey, MessageLayout.CENTER, args);
     }
     
     public void sendActionBar(String msgKey, Object... args)
     {
-        player.sendActionBar(messages.getLegacyMessage(player.getLocale(), msgKey, args));
+        player.sendActionBar(messages.getString(player.getLocale(), msgKey, args));
     }
     
     public void doubleJump()
