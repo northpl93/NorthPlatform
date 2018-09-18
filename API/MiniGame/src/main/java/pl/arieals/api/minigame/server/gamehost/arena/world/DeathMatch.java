@@ -171,7 +171,7 @@ public class DeathMatch
         else if (this.state == DeathMatchState.STARTED)
         {
             log.info("Removing death match world for arena " + this.arena.getId());
-            this.manager.getWorldManager().unloadAndDeleteWorld(this.getDeathMathWorldName());
+            this.arena.getWorld().delete();
         }
         this.state = DeathMatchState.NOT_STARTED;
         this.fightStart = null;
