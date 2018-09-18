@@ -7,7 +7,7 @@
     <properties>
         <spigot.location>lib/spigot-1.12.2.jar</spigot.location>
 
-        <bungee-api.version>1.12-mcpiraci</bungee-api.version>
+        <bungee-api.version>1.13-mcpiraci</bungee-api.version>
 
         <mongodb.version>3.8.0</mongodb.version>
 

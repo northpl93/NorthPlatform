@@ -20,7 +20,7 @@ public final class ChatUtils
      */
     public static BaseComponent fromLegacyText(final String legacyText)
     {
-        final BaseComponent[] components = LegacyTextConverter.fromLegacyText(translateAlternateColorCodes(legacyText));
+        final BaseComponent[] components = LegacyTextConverter.fromLegacyText(legacyText);
         if (components.length == 1)
         {
             return components[0];
@@ -37,7 +37,7 @@ public final class ChatUtils
      */
     public static ComponentBuilder builderFromLegacyText(final String legacyText)
     {
-        final BaseComponent[] components = LegacyTextConverter.fromLegacyText(translateAlternateColorCodes(legacyText));
+        final BaseComponent[] components = LegacyTextConverter.fromLegacyText(legacyText);
         return new ComponentBuilder("").append(components);
     }
 

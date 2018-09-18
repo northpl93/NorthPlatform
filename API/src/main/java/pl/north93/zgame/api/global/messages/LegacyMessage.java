@@ -24,8 +24,7 @@ public class LegacyMessage
 
     public LegacyMessage(final BaseComponent component)
     {
-        this.message = component.toLegacyText();
-        this.lines = this.message.split("\n");
+        this(component.toLegacyText());
     }
 
     public LegacyMessage(final String legacyText)

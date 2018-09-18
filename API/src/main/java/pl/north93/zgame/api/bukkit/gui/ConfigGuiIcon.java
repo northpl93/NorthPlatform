@@ -2,7 +2,9 @@ package pl.north93.zgame.api.bukkit.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -69,13 +71,30 @@ public class ConfigGuiIcon implements IGuiIcon
         }
 
         itemMeta.setDisplayName(name.asNonEmptyString());
-        itemMeta.setLore(lore.asList());
+        itemMeta.setLore(this.prepareLore(lore));
         itemMeta.addItemFlags(ItemFlag.values());
 
         final ItemStack newItemStack = this.preCreatedItemStack.clone();
         newItemStack.setItemMeta(itemMeta);
 
         return newItemStack;
+    }
+
+    private List<String> prepareLore(final LegacyMessage lore)
+    {
+        final List<String> list = lore.asList();
+        String lastColors = "";
+
+        final ListIterator<String> iterator = list.listIterator();
+        while (iterator.hasNext())
+        {
+            final String line = lastColors + iterator.next();
+            iterator.set(line);
+
+            lastColors = ChatColor.getLastColors(line);
+        }
+
+        return list;
     }
     
     public static Builder builder()

@@ -1,5 +1,8 @@
 package pl.north93.zgame.api.bukkit.utils.chat;
 
+import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
+
+
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,7 +22,7 @@ public final class LegacyTextConverter
 
     public static BaseComponent[] fromLegacyText(final String message)
     {
-        return fromLegacyText(message, ChatColor.WHITE);
+        return fromLegacyText(translateAlternateColorCodes(message), ChatColor.WHITE);
     }
 
     public static BaseComponent[] fromLegacyText(final String message, final ChatColor defaultColor)

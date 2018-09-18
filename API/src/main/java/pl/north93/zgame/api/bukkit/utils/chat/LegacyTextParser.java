@@ -47,13 +47,19 @@ public final class LegacyTextParser
     // daty/czasu itp.
     private static TextComponent getParameterAsBaseComponent(final Object object)
     {
-        if (object instanceof BaseComponent)
+        if (object instanceof TextComponent)
         {
             return packToTextComponent((BaseComponent) object);
         }
 
         // uzywamy convertera zamiast parsera zeby przpadkowe klamry nie wywalily wyjatku
-        return new TextComponent(LegacyTextConverter.fromLegacyText(String.valueOf(object)));
+        final BaseComponent[] components = LegacyTextConverter.fromLegacyText(String.valueOf(object));
+        if (components.length == 1)
+        {
+            return packToTextComponent(components[0]);
+        }
+
+        return new TextComponent(components);
     }
 
     private static BaseComponent[] fromLegacyText(final String message, final Object[] params)
