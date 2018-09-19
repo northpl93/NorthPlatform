@@ -1,8 +1,8 @@
 package pl.arieals.minigame.bedwars.shop.specialentry;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Locale;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,7 +13,6 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -50,8 +49,7 @@ public class WeaknessTippedArrow implements IShopSpecialEntry
     @UriHandler("/minigame/bedwars/shop/render/WeaknessTippedArrow/:name/:playerId")
     public ItemStack restRenderer(final UriInvocationContext context)
     {
-        // uzywamy Player zamiast INorthPlayer aby uniknac bledów w getValue(player ...)
-        final Player player = INorthPlayer.get(context.asUuid("playerId"));
+        final Locale locale = INorthPlayer.get(context.asUuid("playerId")).getMyLocale();
 
         final String nameColor = this.guiManager.getNameColor(context);
         final String lore = this.guiManager.getLore(context);
@@ -61,10 +59,10 @@ public class WeaknessTippedArrow implements IShopSpecialEntry
 
         itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ATTRIBUTES);
 
-        itemMeta.setDisplayName(TranslatableString.of(this.shopMessages, "@item.extras.exhaust_arrow.name$nameColor").getValue(player, Vars.of("nameColor", nameColor)).toLegacyText());
+        final TranslatableString translatableDisplayName = TranslatableString.of(this.shopMessages, "@item.extras.exhaust_arrow.name$nameColor");
+        itemMeta.setDisplayName(translatableDisplayName.getLegacy(locale, Vars.of("nameColor", nameColor)).asString());
 
-        final String loreText = TranslatableString.of(this.shopMessages, "@gui.lore_placeholder$lore").getValue(player, Vars.of("lore", lore)).toLegacyText();
-        itemMeta.setLore(Arrays.asList(StringUtils.split(loreText, "\n")));
+        itemMeta.setLore(TranslatableString.of(this.shopMessages, "@gui.lore_placeholder$lore").getLegacy(locale, Vars.of("lore", lore)).asList());
 
         itemStack.setItemMeta(itemMeta);
 
