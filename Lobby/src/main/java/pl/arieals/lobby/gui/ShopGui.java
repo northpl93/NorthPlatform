@@ -129,19 +129,20 @@ public abstract class ShopGui extends Gui
             final MoneyPrice moneyPrice = (MoneyPrice) price;
             final int amount = (int) moneyPrice.getAmount(container, item);
 
+            final DecimalFormat format = new DecimalFormat("#");
             if (moneyPrice.getDiscount(container, item) == 0)
             {
-                final Vars<Object> vars = Vars.of("amount", amount);
+                final Vars<Object> vars = Vars.of("amount", format.format(amount));
                 return TranslatableString.of(generalMessages, "@price.money.normal$amount").getLegacy(locale, vars);
             }
             else
             {
-                final DecimalFormat format = new DecimalFormat("#");
-                Vars<Object> vars = Vars.of("before", format.format(moneyPrice.getOriginalAmount()));
-                vars = vars.and("after", amount);
-                vars = vars.and("percent", format.format(moneyPrice.getDiscount(container, item) * 100));
+                final Vars.Builder<Object> builder = Vars.builder();
+                builder.and("before", format.format(moneyPrice.getOriginalAmount()));
+                builder.and("after", format.format(amount));
+                builder.and("percent", format.format(moneyPrice.getDiscount(container, item) * 100));
 
-                return TranslatableString.of(generalMessages, "@price.money.discounted$before,after,percent").getLegacy(locale, vars);
+                return TranslatableString.of(generalMessages, "@price.money.discounted$before,after,percent").getLegacy(locale, builder.build());
             }
         }
         else

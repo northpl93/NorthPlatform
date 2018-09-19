@@ -13,6 +13,7 @@ import lombok.ToString;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import pl.north93.zgame.api.bukkit.utils.chat.LegacyTextParser;
+import pl.north93.zgame.api.global.utils.Vars;
 
 @ToString(of = "fileName")
 @EqualsAndHashCode(callSuper = false)
@@ -52,7 +53,7 @@ public class MessagesBox
     
     public LegacyMessage getLegacy(Locale locale, String key, Object... args)
     {
-        ParametersEvaluator.evalStringParameters(locale, args);
+        ParametersEvaluator.evalStringParameters(locale, Vars.empty(), args);
         String message = getMessageForKey(locale, key);
         return LegacyMessage.fromString(MessageFormat.format(message, args));
     }
@@ -64,7 +65,7 @@ public class MessagesBox
     
     public BaseComponent getComponent(Locale locale, String key, Object... args)
     {
-        ParametersEvaluator.evalComponentParameters(locale, args);
+        ParametersEvaluator.evalComponentParameters(locale, Vars.empty(), args);
         String message = getMessageForKey(locale, key);
         return LegacyTextParser.parseLegacyText(message, args);
     }

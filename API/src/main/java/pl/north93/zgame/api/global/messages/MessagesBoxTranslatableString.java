@@ -30,7 +30,7 @@ class MessagesBoxTranslatableString extends TranslatableString
     {
         final Object[] args = Stream.of(this.messageArgs).map(params::getValue).toArray(Object[]::new);
 
-        ParametersEvaluator.evalComponentParameters(locale, args);
+        ParametersEvaluator.evalComponentParameters(locale, params, args);
         return messagesBox.getComponent(locale, messageKey, args);
     }
 
@@ -39,7 +39,7 @@ class MessagesBoxTranslatableString extends TranslatableString
     {
         final Object[] args = Stream.of(this.messageArgs).map(params::getValue).toArray(Object[]::new);
 
-        ParametersEvaluator.evalStringParameters(locale, args);
+        ParametersEvaluator.evalStringParameters(locale, params, args);
         return messagesBox.getString(locale, messageKey, args);
     }
 
