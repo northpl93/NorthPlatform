@@ -34,7 +34,7 @@ public abstract class TranslatableString
     
     public BaseComponent getValue(Messageable messageable, Vars<Object> params)
     {
-        return getValue(messageable.getMyLocale(), params);
+        return generateComponent(messageable.getMyLocale(), params);
     }
     
     public BaseComponent getValue(Player player)
@@ -54,32 +54,47 @@ public abstract class TranslatableString
     
     public BaseComponent getValue(String locale, Vars<Object> params)
     {
-        return getValue(Locale.forLanguageTag(locale), params);
+        return generateComponent(Locale.forLanguageTag(locale), params);
     }
         
     public BaseComponent getValue(Locale locale)
     {
-        return getValue(locale, Vars.empty());
+        return generateComponent(locale, Vars.empty());
+    }
+
+    public BaseComponent getValue(Locale locale, Vars<Object> params)
+    {
+        return generateComponent(locale, params);
     }
 
     // Pobieranie wartości jako wiadomość legacy //
 
     public LegacyMessage getLegacy(Messageable messageable)
     {
-        final BaseComponent component = getValue(messageable.getMyLocale(), Vars.empty());
-        return new LegacyMessage(component);
+        final String legacyString = generateString(messageable.getMyLocale(), Vars.empty());
+        return new LegacyMessage(legacyString);
     }
 
     public LegacyMessage getLegacy(String locale)
     {
-        final BaseComponent component = getValue(Locale.forLanguageTag(locale), Vars.empty());
-        return new LegacyMessage(component);
+        return getLegacy(Locale.forLanguageTag(locale));
+    }
+
+    public LegacyMessage getLegacy(Locale locale)
+    {
+        final String legacyString = generateString(locale, Vars.empty());
+        return new LegacyMessage(legacyString);
     }
 
     public LegacyMessage getLegacy(String locale, Vars<Object> params)
     {
-        final BaseComponent component = getValue(Locale.forLanguageTag(locale), params);
-        return new LegacyMessage(component);
+        return getLegacy(Locale.forLanguageTag(locale), params);
+    }
+
+    public LegacyMessage getLegacy(Locale locale, Vars<Object> params)
+    {
+        final String legacyString = generateString(locale, params);
+        return new LegacyMessage(legacyString);
     }
 
     // Wysyłanie wiadomości //
@@ -123,14 +138,16 @@ public abstract class TranslatableString
     public void sendMessage(Player player, MessageLayout messageLayout, Vars<Object> params)
     {
         final Locale locale = Locale.forLanguageTag(player.getLocale());
-        final BaseComponent message = this.getValue(locale, params);
+        final BaseComponent message = this.generateComponent(locale, params);
 
         player.sendMessage(messageLayout.processMessage(message));
     }
 
     // pozostałe metody //
 
-    public abstract BaseComponent getValue(Locale locale, Vars<Object> params);
+    protected abstract BaseComponent generateComponent(Locale locale, Vars<Object> params);
+
+    protected abstract String generateString(Locale locale, Vars<Object> params);
 
     public TranslatableString concat(final String string)
     {

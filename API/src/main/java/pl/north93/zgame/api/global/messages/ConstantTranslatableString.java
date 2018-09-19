@@ -1,12 +1,15 @@
 package pl.north93.zgame.api.global.messages;
 
 import java.util.Locale;
-import java.util.Objects;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.zgame.api.global.utils.Vars;
 
+@ToString
+@EqualsAndHashCode(callSuper = false) // BaseComponent nie ma equals/hashCode, wiec czy to ma sens?
 class ConstantTranslatableString extends TranslatableString
 {
     public static final TranslatableString EMPTY = new ConstantTranslatableString(""); // uzywane w TranslatableString#empty()
@@ -21,39 +24,16 @@ class ConstantTranslatableString extends TranslatableString
     {
         this.fixedValue = fixedValue;
     }
-    
+
     @Override
-    public BaseComponent getValue(Locale locale, Vars<Object> params)
+    protected BaseComponent generateComponent(final Locale locale, final Vars<Object> params)
     {
-        return fixedValue;
+        return this.fixedValue;
     }
 
     @Override
-    public int hashCode()
+    protected String generateString(final Locale locale, final Vars<Object> params)
     {
-        return fixedValue.hashCode(); // todo Przy zmianie na BaseComponent ta linijka stracila sens?
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if ( this == obj )
-        {
-            return true;
-        }
-        
-        if ( obj == null || obj.getClass() != this.getClass() )
-        {
-            return false;
-        }
-        
-        ConstantTranslatableString other = (ConstantTranslatableString) obj;
-        return Objects.equals(other.fixedValue, this.fixedValue);
-    }
-
-    @Override
-    public String toString()
-    {
-        return "ConstantTranslatableString [fixedValue=" + fixedValue + "]";
+        return this.fixedValue.toLegacyText();
     }
 }

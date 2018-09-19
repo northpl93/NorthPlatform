@@ -3,10 +3,14 @@ package pl.north93.zgame.api.global.messages;
 import java.util.Locale;
 import java.util.Map;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.zgame.api.global.utils.Vars;
 
+@ToString
+@EqualsAndHashCode(callSuper = false)
 class CustomTranslatableString extends TranslatableString
 {
     private final Map<Locale, String> values;
@@ -17,32 +21,15 @@ class CustomTranslatableString extends TranslatableString
     }
 
     @Override
-    public BaseComponent getValue(final Locale locale, final Vars<Object> params)
+    protected BaseComponent generateComponent(final Locale locale, final Vars<Object> params)
     {
         final String legacyText = this.values.getOrDefault(locale, locale.toLanguageTag());
         return ChatUtils.fromLegacyText(legacyText);
     }
 
     @Override
-    public boolean equals(final Object object)
+    protected String generateString(final Locale locale, final Vars<Object> params)
     {
-        if (object instanceof CustomTranslatableString)
-        {
-            final CustomTranslatableString other = (CustomTranslatableString) object;
-            return this.values.equals(other.values);
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return this.values.hashCode();
-    }
-
-    @Override
-    public String toString()
-    {
-        return this.values.toString();
+        return this.values.getOrDefault(locale, locale.toLanguageTag());
     }
 }

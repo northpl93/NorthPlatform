@@ -2,20 +2,20 @@ package pl.north93.zgame.api.global.messages;
 
 import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
 
+
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-
 import pl.north93.zgame.api.bukkit.utils.chat.LegacyTextParser;
 
+@ToString(of = "fileName")
+@EqualsAndHashCode(callSuper = false)
 public class MessagesBox
 {
     private static final UTF8Control CONTROL = new UTF8Control();
@@ -36,15 +36,8 @@ public class MessagesBox
         }
         catch (final MissingResourceException e)
         {
-            //e.printStackTrace();
-            //if (! locale.toLanguageTag().equals("pl-PL")) // zapobiegamy Stackoverflow gdy faktycznie takiego bundla nie ma
-            //{
-            //    return this.getBundle(Locale.forLanguageTag("pl-PL"));
-            //}
-            
             return null;
         }
-        //return null;
     }
     
     public String getString(Locale locale, String key, Object... args)
@@ -59,7 +52,7 @@ public class MessagesBox
     
     public LegacyMessage getLegacy(Locale locale, String key, Object... args)
     {
-        evalStringParameters(locale, args);
+        ParametersEvaluator.evalStringParameters(locale, args);
         String message = getMessageForKey(locale, key);
         return LegacyMessage.fromString(MessageFormat.format(message, args));
     }
@@ -71,7 +64,7 @@ public class MessagesBox
     
     public BaseComponent getComponent(Locale locale, String key, Object... args)
     {
-        evalComponentParameters(locale, args);
+        ParametersEvaluator.evalComponentParameters(locale, args);
         String message = getMessageForKey(locale, key);
         return LegacyTextParser.parseLegacyText(message, args);
     }
@@ -92,68 +85,6 @@ public class MessagesBox
         {
             return "[" + locale.getLanguage() + ": " + fileName + "#" + key + "]";
         }
-    }
-    
-    private void evalStringParameters(Locale locale, Object[] args)
-    {
-        for ( int i = 0; i < args.length; i++ )
-        {
-            if ( args[i] instanceof TranslatableString )
-            {
-                final TranslatableString translatableString = (TranslatableString) args[i];
-                args[i] = translatableString.getValue(locale).toLegacyText();
-            }
-            else if ( args[i] instanceof BaseComponent )
-            {
-                final BaseComponent component = (BaseComponent) args[i];
-                args[i] = component.toLegacyText();
-            }
-        }
-    }
-    
-    private void evalComponentParameters(Locale locale, Object[] args)
-    {
-        for ( int i = 0; i < args.length; i++ )
-        {
-            if ( args[i] instanceof TranslatableString )
-            {
-                final TranslatableString translatableString = (TranslatableString) args[i];
-                args[i] = translatableString.getValue(locale);
-            }
-            else if (! (args[i] instanceof BaseComponent))
-            {
-                final String possibleLegacyText = String.valueOf(args[i]);
-                args[i] = translateAlternateColorCodes(possibleLegacyText);
-            }
-        }
-    }
-    
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("fileName", this.fileName).toString();
-    }
-    
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(loader, fileName);
-    }
-    
-    @Override
-    public boolean equals(Object obj)
-    {
-         if ( this == obj )
-         {
-             return true;
-         }
-         if ( obj == null || obj.getClass() != this.getClass() )
-         {
-             return false;
-         }
-         
-         MessagesBox other = (MessagesBox) obj;
-         return Objects.equals(other.loader, this.loader) && Objects.equals(other.fileName, this.fileName);
     }
     
     // some legacy shit and deprecated methods

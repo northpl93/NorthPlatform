@@ -8,9 +8,9 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
+import pl.north93.zgame.api.global.messages.LegacyMessage;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
 public class ActionBarKeeper
@@ -66,8 +66,8 @@ public class ActionBarKeeper
 
     private void sendTo(final Player player, final TranslatableString translatableString)
     {
-        final BaseComponent value = translatableString.getValue(player);
-        player.sendActionBar(value.toLegacyText()); // todo serio nie da się tu wysłać BaseComponent?
+        final LegacyMessage value = translatableString.getLegacy(player.getLocale());
+        player.sendActionBar(value.asString());
     }
 
     @Override

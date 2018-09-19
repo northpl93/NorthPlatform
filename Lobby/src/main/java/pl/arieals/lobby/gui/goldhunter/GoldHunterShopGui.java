@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.md_5.bungee.api.chat.BaseComponent;
 import pl.arieals.globalshops.server.IGlobalShops;
 import pl.arieals.globalshops.server.IPlayerContainer;
 import pl.arieals.globalshops.server.IPlayerExperienceService;
@@ -25,6 +24,7 @@ import pl.north93.zgame.api.bukkit.gui.element.ButtonElement;
 import pl.north93.zgame.api.bukkit.gui.element.GuiElement;
 import pl.north93.zgame.api.bukkit.gui.event.GuiClickEvent;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.LegacyMessage;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 import pl.north93.zgame.api.global.utils.Vars;
@@ -84,7 +84,7 @@ public class GoldHunterShopGui extends Gui
 		}
 		
 		ItemState itemState = ItemState.getItemState(playerContainer, item);
-		BaseComponent price = ShopGui.getPrice(playerContainer, item.getLeft(), item.getRight());
+		LegacyMessage price = ShopGui.getPrice(playerContainer, item.getLeft(), item.getRight());
 		
 		element.addVariables(Vars.<Object>of("color", itemState.getMainColor())
 				.and("status", itemState.getBuyText())

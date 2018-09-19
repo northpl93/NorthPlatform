@@ -4,49 +4,26 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.ToString;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
-
 import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 
 /**
  * Reprezentuje wiadomość zapisaną w starym systemie kolorowania,
  * wciąż używanym w niektórych częściach minecrafta.
  */
+@ToString
 public class LegacyMessage
 {
     public static final LegacyMessage EMPTY = new LegacyMessage("");
     private final String   message;
     private final String[] lines;
 
-    public LegacyMessage(final BaseComponent component)
-    {
-        this(component.toLegacyText());
-    }
-
     public LegacyMessage(final String legacyText)
     {
         this.message = legacyText;
-        this.lines = prepareLines(legacyText);
-    }
-    
-    private String[] prepareLines(String message)
-    {
-        String[] lines = message.split("\n");
-        
-        String lastColors = "§f";
-        
-        for ( int i = 0; i < lines.length; i++ )
-        {
-            String line = lines[i];
-            lines[i] = lastColors + line;
-            lastColors = ChatColorUtils.getLastColors(lines[i]);
-        }
-        
-        return lines;
+        this.lines = this.message.split("\n");
     }
 
     /**
@@ -66,7 +43,7 @@ public class LegacyMessage
 
     public String asNonColoredString()
     {
-        return ChatColor.stripColor(message);
+        return ChatColor.stripColor(this.message);
     }
     
     public String asNonEmptyString()
@@ -91,14 +68,8 @@ public class LegacyMessage
      * Creates LegacyMessage from string
      * Note that this method translates alternate color codes.
      */
-    public static LegacyMessage fromString(String legacyString)
+    public static LegacyMessage fromString(final String legacyString)
     {
         return new LegacyMessage(ChatUtils.translateAlternateColorCodes(legacyString));
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("lines", this.lines).toString();
     }
 }

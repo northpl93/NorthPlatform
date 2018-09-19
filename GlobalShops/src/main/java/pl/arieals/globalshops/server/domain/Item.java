@@ -5,14 +5,14 @@ import java.util.Map;
 
 import com.carrotsearch.hppc.IntObjectMap;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.AllArgsConstructor;
+import lombok.ToString;
 import pl.arieals.globalshops.shared.Rarity;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 
+@ToString
+@AllArgsConstructor
 public final class Item
 {
     private final ItemsGroup           group;
@@ -22,17 +22,6 @@ public final class Item
     private final IntObjectMap<IPrice> price;
     private final Map<Locale, String>  name;
     private final Map<String, String>  data;
-
-    public Item(final ItemsGroup group, final String id, final int maxLevel, final Rarity rarity, final IntObjectMap<IPrice> price, final Map<Locale, String> name, final Map<String, String> data)
-    {
-        this.group = group;
-        this.id = id;
-        this.maxLevel = maxLevel;
-        this.rarity = rarity;
-        this.price = price;
-        this.name = name;
-        this.data = ImmutableMap.copyOf(data);
-    }
 
     public ItemsGroup getGroup()
     {
@@ -93,11 +82,5 @@ public final class Item
     public Map<String, String> getData()
     {
         return this.data;
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("group", this.group).append("id", this.id).append("maxLevel", this.maxLevel).append("rarity", this.rarity).append("name", this.name).append("data", this.data).toString();
     }
 }

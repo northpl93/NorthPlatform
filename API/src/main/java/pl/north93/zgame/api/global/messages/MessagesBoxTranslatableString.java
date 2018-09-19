@@ -1,16 +1,17 @@
 package pl.north93.zgame.api.global.messages;
 
-import java.util.Arrays;
 import java.util.Locale;
-import java.util.Objects;
-import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import com.google.common.base.Preconditions;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import net.md_5.bungee.api.chat.BaseComponent;
-import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.zgame.api.global.utils.Vars;
 
+@ToString
+@EqualsAndHashCode(callSuper = false)
 class MessagesBoxTranslatableString extends TranslatableString
 {
     private final MessagesBox messagesBox;
@@ -23,61 +24,23 @@ class MessagesBoxTranslatableString extends TranslatableString
         this.messageKey = messageKey;
         this.messageArgs = messageArgs;
     }
-    
+
     @Override
-    public BaseComponent getValue(Locale locale, Vars<Object> params)
+    protected BaseComponent generateComponent(final Locale locale, final Vars<Object> params)
     {
-        final Object[] args = new Object[messageArgs.length];
-        IntStream.range(0, args.length).forEach(i ->
-        {
-            final Object value = params.getValue(messageArgs[i]);
-            if (value instanceof TranslatableString)
-            {
-                final TranslatableString translatableString = (TranslatableString) value;
-                args[i] = translatableString.getValue(locale, params);
-            }
-            else if (value instanceof BaseComponent)
-            {
-                args[i] = value;
-            }
-            else
-            {
-                final String possibleLegacyText = String.valueOf(value);
-                args[i] = ChatUtils.parseLegacyText(possibleLegacyText);
-            }
-        });
-        return messagesBox.getMessage(locale, messageKey, args);
+        final Object[] args = Stream.of(this.messageArgs).map(params::getValue).toArray(Object[]::new);
+
+        ParametersEvaluator.evalComponentParameters(locale, args);
+        return messagesBox.getComponent(locale, messageKey, args);
     }
-    
+
     @Override
-    public int hashCode()
+    protected String generateString(final Locale locale, final Vars<Object> params)
     {
-        return Objects.hash(messagesBox, messageKey, Arrays.hashCode(messageArgs));
-    }
-    
-    @Override
-    public boolean equals(Object obj)
-    {
-        if ( this == obj )
-        {
-            return true;
-        }
-        if ( obj == null || obj.getClass() != this.getClass() )
-        {
-            return false;
-        }
-        
-        MessagesBoxTranslatableString other = (MessagesBoxTranslatableString) obj;
-        return Objects.equals(this.messagesBox, other.messagesBox) 
-                && Objects.equals(this.messageKey, other.messageKey)
-                && Arrays.equals(this.messageArgs, other.messageArgs);
-    }
-    
-    @Override
-    public String toString()
-    {
-        return "MessagesBoxTranslatableString [messagesBox=" + messagesBox + ", messageKey=" + messageKey + ", messageArgs="
-                + Arrays.toString(messageArgs) + "]";
+        final Object[] args = Stream.of(this.messageArgs).map(params::getValue).toArray(Object[]::new);
+
+        ParametersEvaluator.evalStringParameters(locale, args);
+        return messagesBox.getString(locale, messageKey, args);
     }
 
     static MessagesBoxTranslatableString parse(String string, MessagesBox messagesBox)

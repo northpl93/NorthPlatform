@@ -3,6 +3,7 @@ package pl.north93.zgame.api.global.messages;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import com.google.common.base.Preconditions;
 
@@ -23,18 +24,25 @@ class ComplexTranslatableString extends TranslatableString
         this.string1 = string1;
         this.string2 = string2;
     }
-    
+
     @Override
-    public BaseComponent getValue(Locale locale, Vars<Object> params)
+    protected BaseComponent generateComponent(final Locale locale, final Vars<Object> params)
     {
-        return inOrder().stream().map(translatableString -> translatableString.getValue(locale, params))
-                .reduce(new TextComponent(), (current, next) ->
-                {
-                    current.addExtra(next);
-                    return next;
-                });
+        return inOrder().stream().map(translatableString -> translatableString.generateComponent(locale, params))
+                        .reduce(new TextComponent(), (current, next) ->
+                        {
+                            current.addExtra(next);
+                            return next;
+                        });
     }
-    
+
+    @Override
+    protected String generateString(final Locale locale, final Vars<Object> params)
+    {
+        return inOrder().stream().map(translatableString -> translatableString.generateString(locale, params))
+                        .collect(Collectors.joining());
+    }
+
     private List<TranslatableString> inOrder()
     {
         List<TranslatableString> list = new ArrayList<>();
@@ -68,7 +76,7 @@ class ComplexTranslatableString extends TranslatableString
     {
         return inOrder().hashCode();
     }
-    
+
     @Override
     public boolean equals(Object object)
     {

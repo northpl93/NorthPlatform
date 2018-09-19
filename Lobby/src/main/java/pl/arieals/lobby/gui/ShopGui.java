@@ -1,6 +1,7 @@
 package pl.arieals.lobby.gui;
 
 import java.text.DecimalFormat;
+import java.util.Locale;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
@@ -9,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import net.md_5.bungee.api.chat.BaseComponent;
 import pl.arieals.globalshops.server.IGlobalShops;
 import pl.arieals.globalshops.server.IPlayerContainer;
 import pl.arieals.globalshops.server.domain.IPrice;
@@ -19,6 +19,7 @@ import pl.arieals.globalshops.server.impl.price.MoneyPrice;
 import pl.arieals.globalshops.shared.GroupType;
 import pl.north93.zgame.api.bukkit.gui.Gui;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.zgame.api.global.messages.LegacyMessage;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
@@ -63,7 +64,6 @@ public abstract class ShopGui extends Gui
 
         // nazwa przedmiotu
         builder.and("name", item.getName());
-        //vars = vars.and("name", TranslatableString.constant(item.getName(Locale.forLanguageTag(this.player.spigot().getLocale()))));
         builder.and("nameColor", ChatColor.GREEN);
 
         final Vars.Builder<Object> loreBuilder = Vars.builder();
@@ -74,24 +74,26 @@ public abstract class ShopGui extends Gui
         loreBuilder.and("price", getPrice(playerContainer, item));
         loreBuilder.and("shards", playerContainer.getShards(item));
 
+        final String locale = this.player.getLocale();
         final Vars<Object> loreVars = loreBuilder.build();
+
         if (group.getGroupType() == GroupType.SINGLE_PICK)
         {
             if (item.equals(playerContainer.getActiveItem(group)))
             {
                 // lore_selected
-                builder.and("lore", TranslatableString.of(generalMessages, "@item.lore_selected$rarity").getValue(this.player, loreVars));
+                builder.and("lore", TranslatableString.of(generalMessages, "@item.lore_selected$rarity").getLegacy(locale, loreVars));
             }
             else if (playerContainer.hasBoughtItem(item))
             {
                 // lore_select
-                builder.and("lore", TranslatableString.of(generalMessages, "@item.lore_select$rarity").getValue(this.player, loreVars));
+                builder.and("lore", TranslatableString.of(generalMessages, "@item.lore_select$rarity").getLegacy(locale, loreVars));
             }
             else
             {
                 // lore_buy
                 // todo sprawdzenie czy ma hajsy
-                builder.and("lore", TranslatableString.of(generalMessages, "@item.lore_buy$rarity,price,shards").getValue(this.player, loreVars));
+                builder.and("lore", TranslatableString.of(generalMessages, "@item.lore_buy$rarity,price,shards").getLegacy(locale, loreVars));
             }
         }
         else if (group.getGroupType() == GroupType.MULTI_BUY)
@@ -99,28 +101,28 @@ public abstract class ShopGui extends Gui
             if (playerContainer.hasMaxLevel(item))
             {
                 // lore_bought
-                builder.and("lore", TranslatableString.of(generalMessages, "@item.lore_bought$rarity").getValue(this.player, loreVars));
+                builder.and("lore", TranslatableString.of(generalMessages, "@item.lore_bought$rarity").getLegacy(locale, loreVars));
             }
             else
             {
                 // lore_upgrade
-                builder.and("lore", TranslatableString.of(generalMessages, "@item.lore_upgrade$rarity,price,shards").getValue(this.player, loreVars));
+                builder.and("lore", TranslatableString.of(generalMessages, "@item.lore_upgrade$rarity,price,shards").getLegacy(locale, loreVars));
             }
         }
 
         return builder.build();
     }
 
-    public static BaseComponent getPrice(final IPlayerContainer container, final Item item)
+    public static LegacyMessage getPrice(final IPlayerContainer container, final Item item)
     {
         final int level = Math.min(item.getMaxLevel(), container.getBoughtItemLevel(item) + 1);
         return getPrice(container, item, level);
     }
     
-    public static BaseComponent getPrice(final IPlayerContainer container, final Item item, final int level)
+    public static LegacyMessage getPrice(final IPlayerContainer container, final Item item, final int level)
     {
-        Player player = container.getBukkitPlayer();
-        
+        final Locale locale = container.getBukkitPlayer().getMyLocale();
+
         final IPrice price = item.getPrice(level);
         if (price instanceof MoneyPrice)
         {
@@ -130,7 +132,7 @@ public abstract class ShopGui extends Gui
             if (moneyPrice.getDiscount(container, item) == 0)
             {
                 final Vars<Object> vars = Vars.of("amount", amount);
-                return TranslatableString.of(generalMessages, "@price.money.normal$amount").getValue(player, vars);
+                return TranslatableString.of(generalMessages, "@price.money.normal$amount").getLegacy(locale, vars);
             }
             else
             {
@@ -139,12 +141,12 @@ public abstract class ShopGui extends Gui
                 vars = vars.and("after", amount);
                 vars = vars.and("percent", format.format(moneyPrice.getDiscount(container, item) * 100));
 
-                return TranslatableString.of(generalMessages, "@price.money.discounted$before,after,percent").getValue(player, vars);
+                return TranslatableString.of(generalMessages, "@price.money.discounted$before,after,percent").getLegacy(locale, vars);
             }
         }
         else
         {
-            return TranslatableString.of(generalMessages, "@price.free").getValue(player, Vars.empty());
+            return TranslatableString.of(generalMessages, "@price.free").getLegacy(locale, Vars.empty());
         }
     }
 
