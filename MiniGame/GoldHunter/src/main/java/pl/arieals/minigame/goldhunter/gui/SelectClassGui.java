@@ -1,7 +1,6 @@
 package pl.arieals.minigame.goldhunter.gui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 
@@ -94,7 +93,7 @@ class ClassIconRenderer
         displayName.setBold(true);
         displayName.setColor(canSelect ? ChatColor.GREEN : ChatColor.RED);
                 
-        ArrayList<String> lore = new ArrayList<>(Arrays.asList(characterClass.getLore().getValue(player.getPlayer()).toLegacyText().split("\n")));
+        ArrayList<String> lore = new ArrayList<>(characterClass.getLore().getLegacy(player.getPlayer().getLocale()).asList());
         lore.add("");
         lore.add(infoText);
         

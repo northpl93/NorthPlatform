@@ -16,6 +16,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.bukkit.utils.xml.XmlEnchant;
+import pl.north93.zgame.api.global.messages.LegacyMessage;
 
 public class ItemStackBuilder
 {
@@ -72,6 +73,16 @@ public class ItemStackBuilder
         return this;
     }
 
+    public ItemStackBuilder lore(final String lore)
+    {
+        return lore(LegacyMessage.fromString(lore));
+    }
+    
+    public ItemStackBuilder lore(final LegacyMessage lore)
+    {
+        return lore(lore.asList());
+    }
+    
     public ItemStackBuilder lore(final List<String> lore)
     {
         this.lore = lore;

@@ -30,7 +30,23 @@ public class LegacyMessage
     public LegacyMessage(final String legacyText)
     {
         this.message = legacyText;
-        this.lines = this.message.split("\n");
+        this.lines = prepareLines(legacyText);
+    }
+    
+    private String[] prepareLines(String message)
+    {
+        String[] lines = message.split("\n");
+        
+        String lastColors = "";
+        
+        for ( int i = 0; i < lines.length; i++ )
+        {
+            String line = lines[i];
+            lines[i] = lastColors + line;
+            lastColors = ChatColorUtils.getLastColors(lines[i]);
+        }
+        
+        return lines;
     }
 
     /**
