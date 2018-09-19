@@ -37,7 +37,7 @@ public class LegacyMessage
     {
         String[] lines = message.split("\n");
         
-        String lastColors = "";
+        String lastColors = "§f";
         
         for ( int i = 0; i < lines.length; i++ )
         {
