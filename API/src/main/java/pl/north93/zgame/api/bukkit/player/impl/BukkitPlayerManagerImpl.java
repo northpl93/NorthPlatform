@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.player.IBukkitPlayers;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
@@ -28,8 +27,6 @@ import pl.north93.zgame.api.global.redis.observable.Value;
 public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
 {
     @Inject
-    private BukkitApiCore   bukkitApiCore;
-    @Inject
     private IPlayersManager playersManager;
     @Inject
     private INetworkManager networkManager;
@@ -37,7 +34,6 @@ public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
     @Override
     protected void enableComponent()
     {
-        this.bukkitApiCore.registerEvents(new NetworkPlayerDataListener(), new ChatListener(), new LanguageKeeper());
     }
 
     @Override

@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import org.apache.commons.lang3.StringUtils;
+
 import lombok.extern.slf4j.Slf4j;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
@@ -49,9 +51,10 @@ public class ChatEngine
             return SendMessageResult.NO_ROOM;
         }
 
-        log.info("[{}] {}: {}", mainRoom.getId(), player.getName(), rawMessage);
+        final String processedRawMessage = this.processRawMessage(player, rawMessage);
+        log.info("[{}] {}: {}", mainRoom.getId(), player.getName(), processedRawMessage);
 
-        final BaseComponent message = mainRoom.getChatFormatter().format(northPlayer, rawMessage);
+        final BaseComponent message = mainRoom.getChatFormatter().format(northPlayer, processedRawMessage);
         if (this.processIfOnlyLocal(mainRoom, message))
         {
             // wszyscy gracze z pokoju byli online na lokalnym serwerze; wiec nie angazujemy
@@ -64,6 +67,17 @@ public class ChatEngine
             this.processRemote(mainRoom, identity, message);
             return SendMessageResult.OK;
         }
+    }
+
+    // wykonuje rozne operacja na surowym tekscie
+    private String processRawMessage(final Player player, final String rawMessage)
+    {
+        if (player.hasPermission("chat.colorize"))
+        {
+            return rawMessage;
+        }
+
+        return StringUtils.remove(rawMessage, '&');
     }
 
     // sprawdza czy na lokalnym serwerze sa wszyscy gracze w pokoju
