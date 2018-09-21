@@ -34,7 +34,6 @@
         <module>../RestfulApi</module>
         <module>../NoPremiumAuth</module>
         <module>../WebAuth</module>
-        <module>../TimeGroups</module>
         <!--<module>../SkyBlockShop</module>-->
         <module>../ItemShop</module>
         <!--<module>../SkyBlockPlayerExperience</module>-->
