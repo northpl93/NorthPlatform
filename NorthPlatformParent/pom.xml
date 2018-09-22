@@ -42,7 +42,6 @@
         <module>../MiniGame/GoldHunter</module>
         <module>../MiniGame/ElytraRace</module>
         <module>../MiniGame/BedWars</module>
-        <!--<module>../MiniGame/pvp</module>-->
         <module>../GlobalShops</module>
         <module>../AntyCheat</module>
 		<module>../AntyCheat/AntyCheatClient</module>
