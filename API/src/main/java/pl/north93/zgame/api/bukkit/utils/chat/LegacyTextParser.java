@@ -140,7 +140,8 @@ public final class LegacyTextParser
                 }
 
                 final TextComponent old = component;
-                component = getParameterAsBaseComponent(params[paramIndex]);
+                final boolean parameterExists = paramIndex <= params.length;
+                component = getParameterAsBaseComponent(parameterExists ? params[paramIndex] : "null");
                 components.add(component);
                 migrateFormatting(old, component); // zapewniamy że dalsze komponenty będą miały takie samo formatowanie jak argument
                 component = old;
