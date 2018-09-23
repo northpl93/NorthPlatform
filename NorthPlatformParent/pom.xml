@@ -19,33 +19,39 @@
     </properties>
 
     <modules>
+        <!-- General modules -->
 	    <module>../lib</module>
         <module>../API</module>
         <module>../API/BaseFeatures</module>
         <module>../API/Economy</module>
         <module>../API/Chat</module>
         <module>../GroovyScript</module>
-        <module>../Lobby</module>
         <module>../Network Controller</module>
-        <module>../Pets</module>
         <module>../Server Deamon</module>
-        <!--<module>../SkyBlock</module>-->
-        <module>../PlayerDataShare</module>
         <module>../RestfulApi</module>
+        <module>../ItemShop</module>
         <module>../NoPremiumAuth</module>
         <module>../WebAuth</module>
-        <!--<module>../SkyBlockShop</module>-->
-        <module>../ItemShop</module>
-        <!--<module>../SkyBlockPlayerExperience</module>-->
-        <!--<module>../SkyBlock.Quests</module>-->
+        <module>../WorldProperties</module>
+        <module>../Pets</module>
+
+        <!-- Anti Cheat -->
+        <module>../AntyCheat</module>
+        <module>../AntyCheat/AntyCheatClient</module>
+
+        <!-- MiniGames -->
+        <module>../Lobby</module>
+        <module>../GlobalShops</module>
         <module>../API/MiniGame</module>
+        <module>../MiniGame/BedWars</module>
         <module>../MiniGame/GoldHunter</module>
         <module>../MiniGame/ElytraRace</module>
-        <module>../MiniGame/BedWars</module>
-        <module>../GlobalShops</module>
-        <module>../AntyCheat</module>
-		<module>../AntyCheat/AntyCheatClient</module>
-		<module>../WorldProperties</module>
+
+        <!-- SkyBlock -->
+        <module>../PlayerDataShare</module>
+        <!--<module>../SkyBlock</module>-->
+        <!--<module>../SkyBlock/SkyBlockShop</module>-->
+        <!--<module>../SkyBlock/SkyBlockPlayerExperience</module>-->
     </modules>
 
     <repositories>

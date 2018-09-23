@@ -1,8 +1,0 @@
-components:
-  - name: SkyBlock.Quests.Controller
-    enabled: true
-    mainClass: "pl.arieals.skyblock.quests.controller.SkyQuestsController"
-    description: ""
-    dependencies: []
-    platforms:
-      - STANDALONE
