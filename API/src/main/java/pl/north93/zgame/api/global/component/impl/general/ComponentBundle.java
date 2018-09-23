@@ -10,9 +10,8 @@ import com.google.common.collect.Sets;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.ComponentDescription;
@@ -22,9 +21,9 @@ import pl.north93.zgame.api.global.component.impl.container.BeanFactory;
 import pl.north93.zgame.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.zgame.api.global.component.impl.injection.Injector;
 
+@Slf4j
 public class ComponentBundle implements IComponentBundle
 {
-    private final Logger               logger = LoggerFactory.getLogger(ComponentBundle.class);
     private final ComponentManagerImpl componentManager;
     private final ComponentDescription description;
     private final ClassLoader          classLoader;
@@ -82,7 +81,7 @@ public class ComponentBundle implements IComponentBundle
     public final void enable()
     {
         final String prettyPackages = this.getBasePackages().stream().collect(Collectors.joining(", "));
-        this.logger.info("Enabling component {} (packages used to scan: {})", this.getName(), prettyPackages);
+        log.info("Enabling component {} (packages used to scan: {})", this.getName(), prettyPackages);
         try
         {
             this.instantiateClass(); // tworzymy klase glowna
@@ -93,7 +92,7 @@ public class ComponentBundle implements IComponentBundle
         catch (final Exception e)
         {
             this.status = ComponentStatus.ERROR;
-            this.logger.error("An exception has been thrown while enabling component {}", this.getName(), e);
+            log.error("An exception has been thrown while enabling component {}", this.getName(), e);
             return;
         }
         this.status = ComponentStatus.ENABLED;
@@ -101,7 +100,7 @@ public class ComponentBundle implements IComponentBundle
 
     public final void disable()
     {
-        this.logger.info("Disabling component {}", this.getName());
+        log.info("Disabling component {}", this.getName());
         try
         {
             this.getComponent().callStartMethod(false);
@@ -109,7 +108,7 @@ public class ComponentBundle implements IComponentBundle
         catch (final Exception e)
         {
             this.status = ComponentStatus.ERROR;
-            this.logger.error("An exception has been thrown while disabling component {}", this.getName(), e);
+            log.error("An exception has been thrown while disabling component {}", this.getName(), e);
             return;
         }
         this.status = ComponentStatus.DISABLED;

@@ -6,9 +6,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.lobby.tutorial.ITutorialManager;
 import pl.arieals.lobby.tutorial.TutorialStatus;
 import pl.arieals.lobby.tutorial.event.PlayerEnterTutorialEvent;
@@ -23,9 +22,9 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
+@Slf4j
 public class TutorialGamePlayListener implements AutoListener
 {
-    private final Logger logger = LoggerFactory.getLogger(TutorialGamePlayListener.class);
     @Inject @Messages("UserInterface")
     private MessagesBox      messages;
     @Inject
@@ -41,7 +40,7 @@ public class TutorialGamePlayListener implements AutoListener
             return;
         }
 
-        this.logger.info("Adding tutorial {} complete reward to {}", event.getTutorialId(), event.getIdentity());
+        log.info("Adding tutorial {} complete reward to {}", event.getTutorialId(), event.getIdentity());
 
         final ICurrency currency = this.economyManager.getCurrency("minigame");
         try (final ITransaction t = this.economyManager.openTransaction(currency, event.getIdentity()))
@@ -50,7 +49,7 @@ public class TutorialGamePlayListener implements AutoListener
         }
         catch (final Exception e)
         {
-            this.logger.error("Failed to add reward for tutorial", e);
+            log.error("Failed to add reward for completing tutorial", e);
         }
     }
 
@@ -62,7 +61,7 @@ public class TutorialGamePlayListener implements AutoListener
         player.setVisible(false);
         new TutorialHotbar().display(player);
 
-        this.logger.info("Player {} entered tutorial {}", player.getName(), event.getTutorialHub().getHubId());
+        log.info("Player {} entered tutorial {}", player.getName(), event.getTutorialHub().getHubId());
     }
 
     @EventHandler
@@ -73,7 +72,7 @@ public class TutorialGamePlayListener implements AutoListener
         // hotbar powinien zostac ustawiony przez listener nowego huba
         player.setVisible(true);
 
-        this.logger.info("Player {} exited tutorial {}", player.getName(), event.getTutorialHub().getHubId());
+        log.info("Player {} exited tutorial {}", player.getName(), event.getTutorialHub().getHubId());
     }
 
     @EventHandler

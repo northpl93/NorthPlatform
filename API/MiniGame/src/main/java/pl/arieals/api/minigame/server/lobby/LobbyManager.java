@@ -7,20 +7,19 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.lobby.hub.LocalHubServer;
 import pl.arieals.api.minigame.shared.api.hub.IHubServer;
-import pl.arieals.api.minigame.shared.api.status.InHubStatus;
 import pl.arieals.api.minigame.shared.api.status.IPlayerStatus;
+import pl.arieals.api.minigame.shared.api.status.InHubStatus;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
+@Slf4j
 public class LobbyManager implements IServerManager
 {
-    private final Logger logger = LoggerFactory.getLogger(LobbyManager.class);
     @Inject
     private LobbyHubsManager lobbyHubsManager;
     @Inject
@@ -29,7 +28,7 @@ public class LobbyManager implements IServerManager
     @Override
     public void start()
     {
-        this.logger.info("Hub component started successfully");
+        log.info("Hub component started successfully");
     }
 
     @Override

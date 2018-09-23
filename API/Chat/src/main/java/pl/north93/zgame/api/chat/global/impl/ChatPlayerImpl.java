@@ -7,9 +7,7 @@ import java.util.Comparator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.chat.global.ChatPlayer;
 import pl.north93.zgame.api.chat.global.ChatRoom;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
@@ -18,9 +16,9 @@ import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.players.PlayerOfflineException;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
+@Slf4j
 /*default*/ class ChatPlayerImpl implements ChatPlayer
 {
-    private final Logger               logger = LoggerFactory.getLogger(ChatPlayerImpl.class);
     private final ChatManagerImpl      chatManager;
     private final Identity             identity;
     private final Value<IOnlinePlayer> player;
@@ -112,7 +110,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
                 return;
             }
 
-            this.logger.info("Player {} joined chat room {}", player.getLatestNick(), room.getId());
+            log.info("Player {} joined chat room {}", player.getLatestNick(), room.getId());
         }
     }
 
@@ -143,7 +141,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
                 return;
             }
 
-            this.logger.info("Player {} leaved chat room {}", player.getLatestNick(), room.getId());
+            log.info("Player {} leaved chat room {}", player.getLatestNick(), room.getId());
             if (roomImpl.getId().equals(playerData.getMainRoomId()))
             {
                 playerData.setMainRoomId(null);

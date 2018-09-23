@@ -10,11 +10,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spigotmc.SneakyThrow;
 import org.spigotmc.SpigotConfig;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.IServerManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.arieals.api.minigame.server.gamehost.region.impl.RegionManagerImpl;
@@ -35,9 +34,9 @@ import pl.north93.zgame.api.global.exceptions.ConfigurationException;
 import pl.north93.zgame.api.global.redis.event.IEventManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 
+@Slf4j
 public class GameHostManager implements IServerManager
 {
-    private final Logger logger = LoggerFactory.getLogger(GameHostManager.class);
     @Inject
     private BukkitApiCore       apiCore;
     @Inject
@@ -185,7 +184,7 @@ public class GameHostManager implements IServerManager
         {
             mapTemplateManager.setTemplatesDirectory(new File(miniGameConfig.getMapsDirectory()));
             mapTemplateManager.loadTemplatesFromDirectory();
-            logger.info("Loaded " + mapTemplateManager.getAllTemplates().size() + " maps templates!");
+            log.info("Loaded " + mapTemplateManager.getAllTemplates().size() + " maps templates!");
         }
         catch ( Throwable e )
         {

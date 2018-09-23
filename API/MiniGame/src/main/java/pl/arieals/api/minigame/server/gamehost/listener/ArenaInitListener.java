@@ -5,11 +5,10 @@ import org.bukkit.event.EventPriority;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.diorite.commons.math.DioriteRandomUtils;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
@@ -22,9 +21,9 @@ import pl.north93.zgame.api.bukkit.server.IBukkitServerManager;
 import pl.north93.zgame.api.bukkit.utils.AutoListener;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
+@Slf4j
 public class ArenaInitListener implements AutoListener
 {
-    private final Logger logger = LoggerFactory.getLogger(ArenaInitListener.class);
     @Inject
     private MiniGameServer       server;
     @Inject
@@ -42,7 +41,7 @@ public class ArenaInitListener implements AutoListener
 
         if (this.bukkitServerManager.isShutdownScheduled())
         {
-            this.logger.info("Removing arena {} because shutdown is scheduled.", arena.getId());
+            log.info("Removing arena {} because shutdown is scheduled.", arena.getId());
             event.setCancelled(true);
             arena.delete();
         }
@@ -54,7 +53,7 @@ public class ArenaInitListener implements AutoListener
         final GameHostManager hostManager = this.server.getServerManager();
         final LocalArena arena = event.getArena();
 
-        this.logger.info("Minigames API is initialising arena " + arena.getId());
+        log.info("Minigames API is initialising arena " + arena.getId());
 
         // resetujemy licznik, aby przy kazdej inicjalizacji wskazywal 0
         arena.getTimer().reset();

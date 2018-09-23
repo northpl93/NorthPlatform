@@ -11,9 +11,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -21,18 +20,18 @@ import pl.north93.zgame.api.global.config.ConfigUpdatedNetEvent;
 import pl.north93.zgame.api.global.config.IConfig;
 import pl.north93.zgame.api.global.config.NetConfig;
 import pl.north93.zgame.api.global.network.INetworkManager;
+import pl.north93.zgame.api.global.network.daemon.config.AutoScalingConfig;
 import pl.north93.zgame.api.global.network.daemon.config.ServerPatternConfig;
+import pl.north93.zgame.api.global.network.daemon.config.ServersGroupConfig;
 import pl.north93.zgame.api.global.network.server.group.ServersGroupDto;
 import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 import pl.north93.zgame.api.global.redis.observable.Hash;
-import pl.north93.zgame.api.global.network.daemon.config.AutoScalingConfig;
-import pl.north93.zgame.api.global.network.daemon.config.ServersGroupConfig;
 import pl.north93.zgame.api.global.redis.observable.Value;
 import pl.north93.zgame.controller.servers.scaler.value.IScalingValue;
 
+@Slf4j
 public class LocalGroupsManager
 {
-    private final Logger logger = LoggerFactory.getLogger(LocalGroupsManager.class);
     @Inject
     private INetworkManager                 networkManager;
     @Inject @NetConfig(type = AutoScalingConfig.class, id = "autoscaler")
@@ -80,7 +79,7 @@ public class LocalGroupsManager
             return;
         }
 
-        this.logger.info("Triggered reload of autoscaler config...");
+        log.info("Triggered reload of autoscaler config...");
         this.loadGroups();
     }
 
@@ -111,7 +110,7 @@ public class LocalGroupsManager
 
         localGroup.init();
 
-        this.logger.info("Created {} group with name {}", new Object[]{config.getType(), config.getName()});
+        log.info("Created {} group with name {}", config.getType(), config.getName());
     }
 
     private void mergeGroupConfig(final ILocalServersGroup localServersGroup, final ServersGroupConfig config)
@@ -129,7 +128,7 @@ public class LocalGroupsManager
             return new ServersGroupDto(old.getName(), old.getType(), config.getServersType(), config.getJoiningPolicy());
         });
 
-        this.logger.info("Updated config of group {}", localServersGroup.getName());
+        log.info("Updated config of group {}", localServersGroup.getName());
     }
 
     @Override

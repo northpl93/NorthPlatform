@@ -8,9 +8,8 @@ import com.google.common.base.Preconditions;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.arena.player.ArenaChatManager;
 import pl.arieals.api.minigame.server.gamehost.arena.player.PlayersManager;
@@ -36,10 +35,10 @@ import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.StaticTimer;
 import pl.north93.zgame.api.global.metadata.MetaStore;
 
+@Slf4j
 public class LocalArena implements IArena
 {
     private static final int MAX_TIME_TO_DISCONNECT = 30 * 20; // czas po jakim serwer wyrzuci graczy ktorzy nie wylecieli z areny
-    private final Logger              logger;
     private final GameHostManager     gameHostManager;
     private final ArenaManager        arenaManager;
     private final RemoteArena         data;
@@ -60,7 +59,6 @@ public class LocalArena implements IArena
         this.gameHostManager = gameHostManager;
         this.arenaManager = arenaManager;
         this.data = data;
-        this.logger = LoggerFactory.getLogger(LocalArena.class);
         this.world = new ArenaWorld(gameHostManager, this);
         this.playersManager = new PlayersManager(gameHostManager, this);
         this.chatManager = new ArenaChatManager(gameHostManager, this);
@@ -125,7 +123,7 @@ public class LocalArena implements IArena
         
         //this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.getId(), this.getMiniGame(), mapName, gamePhase, this.data.getPlayers().size()));
 
-        this.logger.info("Switched {} to game phase {}", this.getId(), gamePhase);
+        log.info("Switched {} to game phase {}", this.getId(), gamePhase);
         GamePhaseEventFactory.getInstance().callEvent(this);
         
         // upload remote data after changes made by listeners
@@ -285,7 +283,7 @@ public class LocalArena implements IArena
     {
         Preconditions.checkState(this.getGamePhase() == GamePhase.STARTED);
 
-        this.logger.info("Ending game on {}", this.getId());
+        log.info("Ending game on {}", this.getId());
         this.setGamePhase(GamePhase.POST_GAME);
     }
 
@@ -297,7 +295,7 @@ public class LocalArena implements IArena
     public void prepareNewCycle()
     {
         Preconditions.checkState(this.getGamePhase() == GamePhase.POST_GAME); // arena moze byc zresetowana tylko po grze
-        this.logger.info("Preparing {} to new cycle", this.getId());
+        log.info("Preparing {} to new cycle", this.getId());
 
         if (this.isDynamic())
         {
@@ -326,7 +324,7 @@ public class LocalArena implements IArena
     // uzywane do wyrzucenia graczy ktorzy zostali na arenie po probie teleportu do huba
     private void kickPendingPlayers()
     {
-        this.logger.warn("There are still connected players to {}, kicking them...", this.getId());
+        log.warn("There are still connected players to {}, kicking them...", this.getId());
 
         final Set<INorthPlayer> players = this.playersManager.getAllPlayers();
         players.forEach(player -> player.kickPlayer(""));
@@ -340,7 +338,7 @@ public class LocalArena implements IArena
      */
     public void delete()
     {
-        this.logger.info("Removing arena {}", this.getId());
+        log.info("Removing arena {}", this.getId());
 
         this.arenaManager.removeArena(this.getId());
 

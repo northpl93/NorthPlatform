@@ -9,16 +9,15 @@ import org.bukkit.Bukkit;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
+@Slf4j
 /*default*/ class TickController
 {
-    private final Logger logger = LoggerFactory.getLogger(TickController.class);
     private final List<TickHandler> handlers = new ArrayList<>();
     @Inject
     private BukkitApiCore bukkitApiCore;
@@ -59,7 +58,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
             }
             catch (final Exception e)
             {
-                this.logger.error("Exception occurred in post-tick code. Prevented server crash.", e);
+                log.error("Exception occurred in post-tick code. Prevented server crash.", e);
             }
         }
     }

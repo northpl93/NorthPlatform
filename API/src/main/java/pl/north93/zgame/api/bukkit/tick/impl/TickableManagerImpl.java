@@ -19,10 +19,9 @@ import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spigotmc.SneakyThrow;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
 import pl.north93.zgame.api.bukkit.tick.ITickableManager;
@@ -30,9 +29,9 @@ import pl.north93.zgame.api.bukkit.tick.Tick;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
+@Slf4j
 public class TickableManagerImpl extends Component implements ITickableManager
 {
-    private final Logger logger = LoggerFactory.getLogger(TickableManagerImpl.class);
     private final Map<Class<? extends ITickable>, Method[]> registeredTickableClasses = new WeakHashMap<>();
     private final Set<Collection<? extends ITickable>> tickableObjectsCollection = Collections.newSetFromMap(new IdentityHashMap<>());
     private final Set<TickableWeakReference> tickableObjects = new HashSet<>();
@@ -84,8 +83,8 @@ public class TickableManagerImpl extends Component implements ITickableManager
                 
                 if ( method.getReturnType() != void.class && method.getParameterTypes().length != 0 )
                 {
-                    this.logger.warn("TickHandler method " + method.getName() + " in class " + clazz.getName()
-                            + " has invalid signature" + " (shold be 'void " + method.getName() + "()' )");
+                    log.warn("TickHandler method {} in class {} has invalid signature (should be 'void {}()' )",
+                            method.getName(), clazz.getName(), method.getName());
                     continue;
                 }
                 
@@ -197,6 +196,6 @@ public class TickableManagerImpl extends Component implements ITickableManager
     private void reportTickHandlerException(ITickable tickable, InvocationTargetException e)
     {
         Throwable cause = e.getCause();
-        this.logger.error("An exception was thrown when ticking (" + tickable.toString() + "):", cause);
+        log.error("An exception was thrown when ticking ({})", tickable, cause);
     }
 }

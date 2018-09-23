@@ -13,9 +13,8 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.chat.global.ChatFormatter;
 import pl.north93.zgame.api.chat.global.ChatPlayer;
 import pl.north93.zgame.api.chat.global.ChatRoom;
@@ -23,9 +22,9 @@ import pl.north93.zgame.api.chat.global.ChatRoomNotFoundException;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.redis.observable.Value;
 
+@Slf4j
 /*default*/ class ChatRoomImpl extends AbstractChatRoom
 {
-    private final Logger logger = LoggerFactory.getLogger(ChatManagerImpl.class);
     private final Value<ChatRoomData> data;
 
     public ChatRoomImpl(final ChatManagerImpl chatManager, final String id, final Value<ChatRoomData> data)
@@ -140,7 +139,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
         this.update(roomData ->
         {
             roomData.setFormatterId(formatterId);
-            this.logger.info("Changed formatter of {} to {}", this.id, formatterId);
+            log.info("Changed formatter of {} to {}", this.id, formatterId);
         });
     }
 
@@ -181,7 +180,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
             catch (final Exception e)
             {
                 // logujemy informacje, ale kontynuujemy
-                this.logger.warn("Failed to kick user from room", e);
+                log.warn("Failed to kick user from room", e);
             }
         });
 
@@ -191,7 +190,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
         // teoretycznie istnieje niebezpieczeństwo że ktoś dołączy do pokoju po usunięciu graczy,
         // ale na razie można to zignorować - i tak chyba nikt nie doda graczy do pokoju który umyślnie usuwa?
         this.data.delete();
-        this.logger.info("Deleted room with ID {0}", this.id);
+        log.info("Deleted room with ID {}", this.id);
     }
 
     @Override

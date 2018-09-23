@@ -8,9 +8,8 @@ import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.packet.Chat;
@@ -29,9 +28,9 @@ import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 /**
  * Klasa odpowiedzialna za rozsyłanie wiadomości do graczy połączonych z daną instancją proxy.
  */
+@Slf4j
 public class MessageHandler
 {
-    private final Logger logger = LoggerFactory.getLogger(MessageHandler.class);
     @Inject
     private INetworkManager networkManager;
     @Inject
@@ -108,7 +107,7 @@ public class MessageHandler
         final ChatRoom room = this.chatManager.getRoom(roomId);
         if (room == null)
         {
-            this.logger.warn("Received chat data with invalid roomId {}", roomId);
+            log.warn("Received chat data with invalid roomId {}", roomId);
             return Collections.emptyList();
         }
 

@@ -2,17 +2,15 @@ package pl.north93.zgame.controller.core;
 
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.NetworkControllerRpc;
 import pl.north93.zgame.api.global.network.server.ServerState;
 
+@Slf4j
 public class NetworkControllerRpcImpl implements NetworkControllerRpc
 {
-    private final Logger logger = LoggerFactory.getLogger(NetworkControllerRpcImpl.class);
     @Inject
     private ApiCore apiCore;
 
@@ -24,7 +22,7 @@ public class NetworkControllerRpcImpl implements NetworkControllerRpc
     @Override
     public void stopController()
     {
-        this.logger.info("Received stop request from network.");
+        log.info("Received stop request from network.");
         this.apiCore.getPlatformConnector().stop();
     }
 

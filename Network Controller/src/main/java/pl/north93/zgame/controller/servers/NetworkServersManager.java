@@ -12,7 +12,7 @@ import pl.north93.zgame.controller.configserver.source.XmlConfigSource;
 import pl.north93.zgame.api.global.network.daemon.config.AutoScalingConfig;
 import pl.north93.zgame.controller.servers.groups.LocalGroupsManager;
 
-public class NetworkServersManager extends Component implements INetworkServersManager
+public class NetworkServersManager extends Component
 {
     @Inject
     private IConfigServer      configServer;

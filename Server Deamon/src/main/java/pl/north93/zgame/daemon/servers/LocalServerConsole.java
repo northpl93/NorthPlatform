@@ -5,12 +5,12 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class LocalServerConsole
 {
-    private final Logger logger = LoggerFactory.getLogger(LocalServerConsole.class);
     private final LocalServerInstance instance;
     private final Process process;
 
@@ -40,7 +40,7 @@ public class LocalServerConsole
         }
         catch (final IOException e)
         {
-            this.logger.error("Failed to execute server command: {}", consoleCommand, e);
+            log.error("Failed to execute server command: {}", consoleCommand, e);
         }
     }
 

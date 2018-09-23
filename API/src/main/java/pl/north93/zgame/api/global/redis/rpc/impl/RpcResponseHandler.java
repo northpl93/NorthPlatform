@@ -4,15 +4,14 @@ import java.lang.invoke.MethodHandle;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcExceptionInfo;
 import pl.north93.zgame.api.global.redis.rpc.impl.messaging.RpcInvokeMessage;
 
+@Slf4j
 class RpcResponseHandler
 {
-    private final Logger logger = LoggerFactory.getLogger(RpcResponseHandler.class);
     private final RpcManagerImpl       rpcManager;
     private final RpcObjectDescription objectDescription;
     private final Object               implementation;
@@ -55,7 +54,7 @@ class RpcResponseHandler
             catch (final Throwable throwable)
             {
                 this.rpcManager.sendResponse(rpcInvokeMessage.getSender(), rpcInvokeMessage.getRequestId(), new RpcExceptionInfo(throwable));
-                this.logger.error("Something went wrong while executing RPC method. (this exception is also send to remote)", throwable);
+                log.error("Something went wrong while executing RPC method. (this exception is also send to remote)", throwable);
             }
         }
         else
@@ -66,13 +65,13 @@ class RpcResponseHandler
             }
             catch (final Throwable throwable)
             {
-                this.logger.error("Something went wrong while executing RPC method. (response isn't sending so I log this here)", throwable);
+                log.error("Something went wrong while executing RPC method. (response isn't sending so I log this here)", throwable);
             }
         }
         final long end = System.currentTimeMillis() - start;
         if (end > methodDescription.getTimeout())
         {
-            this.logger.warn("[RPC] Method {} took {}ms to invoke. It means that timeout occurred.", methodDescription.getMethod().getName(), end);
+            log.warn("[RPC] Method {} took {}ms to invoke. It means that timeout occurred.", methodDescription.getMethod().getName(), end);
         }
     }
 

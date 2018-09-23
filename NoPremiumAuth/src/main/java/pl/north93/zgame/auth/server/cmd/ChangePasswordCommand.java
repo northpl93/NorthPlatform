@@ -1,15 +1,11 @@
 package pl.north93.zgame.auth.server.cmd;
 
-import static java.text.MessageFormat.format;
-
-
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
@@ -20,9 +16,9 @@ import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.auth.api.IAuthManager;
 import pl.north93.zgame.auth.api.IAuthPlayer;
 
+@Slf4j
 public class ChangePasswordCommand extends NorthCommand
 {
-    private final Logger logger = LoggerFactory.getLogger(ChangePasswordCommand.class);
     @Inject @Messages("NoPremiumAuth")
     private MessagesBox  messages;
     @Inject
@@ -54,13 +50,13 @@ public class ChangePasswordCommand extends NorthCommand
 
         if (! authPlayer.checkPassword(args.asString(0)))
         {
-            this.logger.info("User {} specified invalid old password (no-premium password)", player.getName());
+            log.info("User {} specified invalid old password (no-premium password)", player.getName());
             sender.sendMessage(this.messages, "cmd.changepassword.old_password_not_match");
             return;
         }
 
         authPlayer.setPassword(args.asString(1));
-        this.logger.info("User {} successfully changed password! (no-premium password)", player.getName());
+        log.info("User {} successfully changed password! (no-premium password)", player.getName());
         sender.sendMessage(this.messages, "cmd.changepassword.success");
     }
 

@@ -17,9 +17,8 @@ import org.bukkit.inventory.ItemStack;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
@@ -41,9 +40,9 @@ import pl.north93.zgame.api.global.messages.PluralForm;
 import pl.north93.zgame.api.global.uri.UriHandler;
 import pl.north93.zgame.api.global.uri.UriInvocationContext;
 
+@Slf4j
 public class UpgradeManager
 {
-    private final Logger logger = LoggerFactory.getLogger(UpgradeManager.class);
     @Inject
     private BukkitApiCore apiCore;
     @Inject
@@ -75,7 +74,7 @@ public class UpgradeManager
         final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
         if (playerData == null || playerData.getTeam() == null)
         {
-            this.logger.error("PlayerData or team is null in upgradeUri {} on arena {}", playerData, arena.getId());
+            log.error("PlayerData or team is null in upgradeUri {} on arena {}", playerData, arena.getId());
             return false;
         }
         final Team team = playerData.getTeam();
@@ -84,11 +83,11 @@ public class UpgradeManager
         final UpgradeInstallEvent event = this.apiCore.callEvent(new UpgradeInstallEvent(arena, team, player, upgrade, actualLevel + 1, true));
         if (event.isCancelled())
         {
-            this.logger.info("Upgrade {} installing cancelled for team {} on arena {}", upgrade.getName(), team.getName(), arena.getId());
+            log.info("Upgrade {} installing cancelled for team {} on arena {}", upgrade.getName(), team.getName(), arena.getId());
             return false;
         }
 
-        this.logger.info("Installing upgrade {} for team {} in arena {}", upgrade.getName(), team.getName(), arena.getId());
+        log.info("Installing upgrade {} for team {} in arena {}", upgrade.getName(), team.getName(), arena.getId());
         team.getUpgrades().installUpgrade(upgrade);
         this.refreshGui(player);
         return true;
@@ -104,7 +103,7 @@ public class UpgradeManager
         final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
         if (playerData == null || playerData.getTeam() == null)
         {
-            this.logger.error("PlayerData or team is null in getNameColor {} on arena {}", playerData, arena.getId());
+            log.error("PlayerData or team is null in getNameColor {} on arena {}", playerData, arena.getId());
             return ChatUtils.COLOR_CHAR + "c";
         }
         final Team team = playerData.getTeam();

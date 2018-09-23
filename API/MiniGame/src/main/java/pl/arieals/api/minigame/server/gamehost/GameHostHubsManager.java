@@ -4,11 +4,10 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.diorite.commons.math.DioriteRandomUtils;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.lobby.hub.SelectHubServerJoinAction;
 import pl.arieals.api.minigame.shared.api.hub.IHubServer;
 import pl.arieals.api.minigame.shared.api.hub.RemoteHub;
@@ -23,9 +22,9 @@ import pl.north93.zgame.api.global.network.server.Server;
  * Klasa pomocnicza do zadan zwiazanych z hubami (poczekalniami) minigier.
  * Znajdujaca sie po stronie gamehosta.
  */
+@Slf4j
 public class GameHostHubsManager
 {
-    private final Logger logger = LoggerFactory.getLogger(GameHostHubsManager.class);
     @Inject
     private INetworkManager networkManager;
     @Inject
@@ -44,7 +43,7 @@ public class GameHostHubsManager
         final RemoteHub hub = DioriteRandomUtils.getRandom(this.hubsManager.getAllHubs());
         if (hub == null)
         {
-            this.logger.warn("Can't tp players to hub; not found any hub");
+            log.warn("Can't tp players to hub; not found any hub");
             return;
         }
 

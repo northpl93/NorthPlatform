@@ -11,9 +11,8 @@ import org.bukkit.Bukkit;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.arieals.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.minigame.bedwars.event.PlayerRevivedEvent;
@@ -23,9 +22,9 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.messages.Messages;
 import pl.north93.zgame.api.global.messages.MessagesBox;
 
+@Slf4j
 public class RevivePlayerCountdown extends AbstractCountdown
 {
-    private final Logger logger = LoggerFactory.getLogger(RevivePlayerCountdown.class);
     @Inject @Messages("BedWars")
     private MessagesBox messages;
     private final INorthPlayer  player;
@@ -57,7 +56,7 @@ public class RevivePlayerCountdown extends AbstractCountdown
             return;
         }
 
-        this.logger.info("Player {} from team {} revived", this.player.getName(), this.bedWarsPlayer.getTeam().getName());
+        log.info("Player {} from team {} revived", this.player.getName(), this.bedWarsPlayer.getTeam().getName());
 
         this.player.teleport(this.bedWarsPlayer.getTeam().getSpawn());
         this.player.setFallDistance(0); // disable fall damage

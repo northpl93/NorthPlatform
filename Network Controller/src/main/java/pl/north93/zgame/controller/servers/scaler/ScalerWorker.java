@@ -2,9 +2,8 @@ package pl.north93.zgame.controller.servers.scaler;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -14,9 +13,9 @@ import pl.north93.zgame.controller.servers.groups.ILocalServersGroup;
 import pl.north93.zgame.controller.servers.groups.LocalGroupsManager;
 import pl.north93.zgame.controller.servers.groups.LocalManagedServersGroup;
 
+@Slf4j
 public class ScalerWorker implements Runnable
 {
-    private final Logger logger = LoggerFactory.getLogger(ScalerWorker.class);
     @Inject
     private LocalGroupsManager localGroupsManager;
     @Inject
@@ -64,14 +63,14 @@ public class ScalerWorker implements Runnable
         }
         catch (final Exception e)
         {
-            this.logger.error("An exception has been throw while processing group {}", group.getName(), e);
+            log.error("An exception has been throw while processing group {}", group.getName(), e);
         }
     }
 
     @NetEventSubscriber(NetworkShutdownNetEvent.class)
     public void onNetShutdownEvent(final NetworkShutdownNetEvent event) // nasluchuje na event wylaczenia sieci
     {
-        this.logger.info("ScalerWorker will no longer generate decisions in result of network shutdown.");
+        log.info("ScalerWorker will no longer generate decisions in result of network shutdown.");
         this.isStopping = true;
     }
 

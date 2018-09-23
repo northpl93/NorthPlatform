@@ -18,9 +18,8 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.players.IPlayer;
@@ -32,9 +31,9 @@ import pl.north93.zgame.api.global.network.players.Identity;
  * Klasa zarzadzajaca konfiguracja skrzynek i iloscia skrzynek
  * posiadanych przez graczy.
  */
+@Slf4j
 public class ChestService
 {
-    private final Logger logger = LoggerFactory.getLogger(ChestService.class);
     @Inject
     private IPlayersManager playersManager;
     private ChestTypeConfig typeConfig;
@@ -92,7 +91,7 @@ public class ChestService
 
     public boolean takeChest(final Player player, final ChestType type)
     {
-        this.logger.debug("Taking chest {} from {}", type.getName(), player.getName());
+        log.debug("Taking chest {} from {}", type.getName(), player.getName());
 
         return this.updateChests(player, chestData ->
         {
@@ -108,7 +107,7 @@ public class ChestService
     public boolean addChests(final Player player, final ChestType type, final int amount)
     {
         Preconditions.checkState(amount > 0, "Amount must be greater than 0");
-        this.logger.debug("Adding {} chests of type {} to {}", amount, type.getName(), player.getName());
+        log.debug("Adding {} chests of type {} to {}", amount, type.getName(), player.getName());
 
         return this.updateChests(player, chestData ->
         {
@@ -119,7 +118,7 @@ public class ChestService
 
     public boolean setChests(final Player player, final ChestType type, final int amount)
     {
-        this.logger.debug("Setting chests {} amount of {} to {}", type.getName(), player.getName(), amount);
+        log.debug("Setting chests {} amount of {} to {}", type.getName(), player.getName(), amount);
         return this.updateChests(player, chestData -> chestData.setChests(type, amount));
     }
 
@@ -134,7 +133,7 @@ public class ChestService
         }
         catch (final Exception e)
         {
-            this.logger.error("Failed to update chests amount for {}", player.getName(), e);
+            log.error("Failed to update chests amount for {}", player.getName(), e);
             return false;
         }
     }

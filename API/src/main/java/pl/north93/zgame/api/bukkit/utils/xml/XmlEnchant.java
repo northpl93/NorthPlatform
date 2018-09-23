@@ -12,15 +12,14 @@ import org.bukkit.inventory.ItemStack;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @XmlRootElement(name = "enchant")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlEnchant
 {
-    private static final Logger logger = LoggerFactory.getLogger(XmlEnchant.class);
-
     @XmlAttribute(required = true)
     private String enchantment;
     @XmlAttribute
@@ -66,7 +65,7 @@ public class XmlEnchant
     {
         if ( this.getEnchantment() == null )
         {
-            logger.warn("Couldn't find enchantment by name: '{}'", enchantment);
+            log.warn("Couldn't find enchantment by name: '{}'", enchantment);
         }
         
         itemStack.addUnsafeEnchantment(this.getEnchantment(), this.level);

@@ -3,9 +3,8 @@ package pl.north93.zgame.auth.sharedimpl.cmd;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
@@ -16,9 +15,9 @@ import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.auth.api.IAuthManager;
 import pl.north93.zgame.auth.api.IAuthPlayer;
 
+@Slf4j
 public class AdminChangePasswordCommand extends NorthCommand
 {
-    private final Logger logger = LoggerFactory.getLogger(AdminChangePasswordCommand.class);
     @Inject @Messages("NoPremiumAuth")
     private MessagesBox  messages;
     @Inject
@@ -44,13 +43,13 @@ public class AdminChangePasswordCommand extends NorthCommand
         final IAuthPlayer player = this.authManager.getPlayer(Identity.create(null, nick));
         if (player.isPremium())
         {
-            this.logger.info("Admin tried to change password of premium user {} (no-premium password)", nick);
+            log.info("Admin tried to change password of premium user {} (no-premium password)", nick);
             sender.sendMessage(this.messages, "cmd.adminchangepassword.premium", nick);
             return;
         }
 
         player.setPassword(args.asString(1));
-        this.logger.info("Admin successfully changed password for {} (no-premium password)", nick);
+        log.info("Admin successfully changed password for {} (no-premium password)", nick);
         sender.sendMessage(this.messages, "cmd.adminchangepassword.success", nick);
     }
 

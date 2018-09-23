@@ -9,9 +9,8 @@ import com.mongodb.client.MongoDatabase;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.shared.api.GameIdentity;
 import pl.arieals.api.minigame.shared.api.match.IMatch;
 import pl.arieals.api.minigame.shared.api.match.IMatchAccess;
@@ -24,9 +23,9 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.storage.StorageConnector;
 
+@Slf4j
 public class MatchManagerImpl implements IMatchManager
 {
-    private final Logger logger = LoggerFactory.getLogger(MatchManagerImpl.class);
     private final MongoCollection<Document> matchesCollection;
     @Inject
     private IStatisticsManager statisticsManager;
@@ -48,7 +47,7 @@ public class MatchManagerImpl implements IMatchManager
         final Document document = data.toDocument();
         this.matchesCollection.insertOne(document);
 
-        this.logger.info("Creating new match with ID {}", data.getMatchId());
+        log.info("Creating new match with ID {}", data.getMatchId());
         return this.createMatchImpl(document);
     }
 

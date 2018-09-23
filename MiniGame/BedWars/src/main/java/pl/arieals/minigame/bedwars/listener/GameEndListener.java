@@ -15,11 +15,10 @@ import org.bukkit.event.Listener;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import pl.arieals.api.minigame.server.gamehost.arena.player.ArenaChatManager;
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.arieals.api.minigame.server.gamehost.arena.player.ArenaChatManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
 import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
@@ -41,10 +40,10 @@ import pl.north93.zgame.api.global.messages.MessagesBox;
 import pl.north93.zgame.api.global.messages.TranslatableString;
 import pl.north93.zgame.api.global.network.players.Identity;
 
+@Slf4j
 public class GameEndListener implements Listener
 {
     private static final int RECONNECT_TIMEOUT = 60 * 20;
-    private final Logger logger = LoggerFactory.getLogger(GameEndListener.class);
     @Inject
     private IStatisticsManager statisticsManager;
     @Inject @Messages("BedWars")
@@ -61,7 +60,7 @@ public class GameEndListener implements Listener
             return;
         }
 
-        this.logger.info("Team {} eliminated on arena {}", event.getEliminatedTeam().getName(), arena.getId());
+        log.info("Team {} eliminated on arena {}", event.getEliminatedTeam().getName(), arena.getId());
 
         final Team team = event.getEliminatedTeam();
         for (final BedWarsPlayer playerData : team.getPlayers())
@@ -100,11 +99,11 @@ public class GameEndListener implements Listener
             // Po tym czasie juz nie wroci do gry
             // Nic wiecej nie trzeba robic, gracz albo wroci do gry albo ktos mu zniszczy lozko.
             event.getArena().getScheduler().runTaskLater(new PlayerReconnectTimedOut(playerData), RECONNECT_TIMEOUT);
-            this.logger.info("Player {} has 60 seconds to return to the game on arena {}.", playerLogData);
+            log.info("Player {} has 60 seconds to return to the game on arena {}.", playerLogData);
             return;
         }
 
-        this.logger.info("Player {} eliminated because he disconnected without bed on arena {}", playerLogData);
+        log.info("Player {} eliminated because he disconnected without bed on arena {}", playerLogData);
         playerData.eliminate();
         team.checkEliminated();
     }

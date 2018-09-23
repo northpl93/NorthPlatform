@@ -5,9 +5,8 @@ import com.google.common.eventbus.Subscribe;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
@@ -22,9 +21,9 @@ import pl.north93.zgame.daemon.cfg.DaemonConfig;
 import pl.north93.zgame.daemon.event.ServerCreatingEvent;
 import pl.north93.zgame.daemon.event.ServerExitedEvent;
 
+@Slf4j
 public class DaemonInfoHandler
 {
-    private final Logger logger = LoggerFactory.getLogger(DaemonInfoHandler.class);
     @Inject
     private StandaloneApiCore apiCore;
     @Inject
@@ -62,14 +61,14 @@ public class DaemonInfoHandler
     public void delete()
     {
         this.daemonInfo.delete();
-        this.logger.info("Daemon info deleted from redis");
+        log.info("Daemon info deleted from redis");
     }
 
     public void setAcceptingNewServers(final boolean acceptingNewServers)
     {
         this.daemonInfo.update(daemon ->
         {
-            this.logger.info("Switched accepting new servers: {}", acceptingNewServers);
+            log.info("Switched accepting new servers: {}", acceptingNewServers);
             return new DaemonDto(daemon.getName(), daemon.getHostName(), daemon.getMaxRam(), daemon.getRamUsed(), daemon.getServerCount(), acceptingNewServers);
         });
     }

@@ -5,9 +5,8 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.commands.Arguments;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 import pl.north93.zgame.api.global.commands.NorthCommandSender;
@@ -19,9 +18,9 @@ import pl.north93.zgame.auth.api.IAuthManager;
 import pl.north93.zgame.auth.api.IAuthPlayer;
 import pl.north93.zgame.auth.server.event.PlayerSuccessfullyAuthEvent;
 
+@Slf4j
 public class RegisterCommand extends NorthCommand
 {
-    private final Logger logger = LoggerFactory.getLogger(RegisterCommand.class);
     @Inject @Messages("NoPremiumAuth")
     private MessagesBox  messages;
     @Inject
@@ -58,7 +57,7 @@ public class RegisterCommand extends NorthCommand
 
         authPlayer.setPassword(args.asString(0));
         this.authManager.setLoggedInStatus(Identity.of(player), true);
-        this.logger.info("User {} successfully registered! (no-premium password)", player.getName());
+        log.info("User {} successfully registered! (no-premium password)", player.getName());
         sender.sendMessage(this.messages, "info.successfully_registered");
         Bukkit.getPluginManager().callEvent(new PlayerSuccessfullyAuthEvent(player)); // todo zrobić fasadę na Bukkitową część API
     }

@@ -5,9 +5,8 @@ import com.google.common.eventbus.Subscribe;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.component.annotations.bean.Named;
@@ -16,9 +15,9 @@ import pl.north93.zgame.api.global.network.impl.servers.ServerDto;
 import pl.north93.zgame.api.global.redis.event.IEventManager;
 import pl.north93.zgame.daemon.event.ServerDeathEvent;
 
+@Slf4j
 public class ServerDeathHandler
 {
-    private final Logger logger = LoggerFactory.getLogger(ServerDeathHandler.class);
     @Inject
     private IEventManager eventManager;
 
@@ -34,7 +33,7 @@ public class ServerDeathHandler
         final ServerDto server = event.getServer();
         this.eventManager.callEvent(new ServerDeathNetEvent(server));
 
-        this.logger.warn("Server with ID {} crashed! (process exited in other state than STOPPING)", server.getUuid());
+        log.warn("Server with ID {} crashed! (process exited in other state than STOPPING)", server.getUuid());
     }
 
     @Override

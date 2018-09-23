@@ -13,9 +13,8 @@ import com.google.gson.Gson;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -29,10 +28,10 @@ import pl.north93.zgame.itemshop.shared.DataModel;
 import pl.north93.zgame.itemshop.shared.IDataHandler;
 import spark.Request;
 
+@Slf4j
 public class RequestHandler
 {
     private static final MetaKey ONE_TIME_LIST = MetaKey.get("itemShop_oneTimeList");
-    private final Logger                    logger   = LoggerFactory.getLogger(RequestHandler.class);
     private final Gson                      gson     = new Gson();
     private final Map<String, IDataHandler> handlers = new HashMap<>();
     @Inject
@@ -49,7 +48,7 @@ public class RequestHandler
             }
             catch (final Exception e)
             {
-                this.logger.error("Exception thrown while processing ItemShop request: {}", request, e);
+                log.error("Exception thrown while processing ItemShop request: {}", request, e);
                 return null;
             }
         });
@@ -72,13 +71,12 @@ public class RequestHandler
         for (final DataEntry entry : entries)
         {
             final Object[] params = new Object[] {entry, identity.getNick(), identity.getUuid()};
-            this.logger.info("Processing DataEntry: {} for {}/{}", params);
+            log.info("Processing DataEntry: {} for {}/{}", params);
 
             this.handle(identity, entry);
         }
 
-        final Object[] params = {identity.getNick(), identity.getUuid()};
-        this.logger.info("Completed processing ItemShop request for {}/{}", params);
+        log.info("Completed processing ItemShop request for {}/{}", identity.getNick(), identity.getUuid());
         return "ok";
     }
 
@@ -87,21 +85,21 @@ public class RequestHandler
         final IDataHandler handler = this.handlers.get(dataEntry.getType());
         if (handler == null)
         {
-            this.logger.warn("Not found dataHandler for dataEntry type: {}", dataEntry.getType());
+            log.warn("Not found dataHandler for dataEntry type: {}", dataEntry.getType());
             return;
         }
 
         final String oneTimeId = dataEntry.getOneTime();
         if (oneTimeId != null && this.markAsUsed(identity, oneTimeId))
         {
-            this.logger.info("Skipped dataEntry {} because it is already used by player", dataEntry.getType());
+            log.info("Skipped dataEntry {} because it is already used by player", dataEntry.getType());
             return;
         }
 
         if (! handler.process(identity, dataEntry.getData()))
         {
             final Object[] params = {handler.getId(), identity.getNick(), identity.getUuid()};
-            this.logger.warn("Handler {} failed while processing dataEntry for player {}/{}", params);
+            log.warn("Handler {} failed while processing dataEntry for player {}/{}", params);
         }
     }
 

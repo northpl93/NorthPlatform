@@ -7,16 +7,14 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.API;
 import pl.north93.zgame.api.global.exceptions.ConfigurationException;
 
+@Slf4j
 public final class ConfigUtils
 {
-    private static final Logger logger = LoggerFactory.getLogger(ConfigUtils.class);
-
     public static <T> T loadConfig(final Class<T> configClass, final String configName)
     {
         //final ClassLoader classLoader = ClassUtils.getCallerClass().getClassLoader();
@@ -35,7 +33,7 @@ public final class ConfigUtils
     {
         if (configFile.exists())
         {
-            logger.info("Loading config from file {}", configFile);
+            log.info("Loading config from file {}", configFile);
             return JAXB.unmarshal(configFile, configClass);
         }
 
@@ -57,7 +55,7 @@ public final class ConfigUtils
             throw new ConfigurationException("Failed to copy default config " + configName, e);
         }
 
-        logger.info("Successfully copied default config {}!", configName);
+        log.info("Successfully copied default config {}!", configName);
         return JAXB.unmarshal(exampleConfig, configClass);
     }
 }

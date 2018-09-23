@@ -9,11 +9,10 @@ import com.google.common.eventbus.Subscribe;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.diorite.commons.io.DioriteFileUtils;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -23,9 +22,9 @@ import pl.north93.zgame.api.global.utils.JavaArguments;
 import pl.north93.zgame.daemon.event.ServerCreatingEvent;
 import pl.north93.zgame.daemon.servers.FilesManager;
 
+@Slf4j
 public class WorkspaceSetup
 {
-    private final Logger logger = LoggerFactory.getLogger(WorkspaceSetup.class);
     @Inject
     private ApiCore      apiCore;
     @Inject
@@ -48,7 +47,7 @@ public class WorkspaceSetup
         }
         catch (final Exception e)
         {
-            this.logger.error("Exception while setting up workspace", e);
+            log.error("Exception while setting up workspace", e);
         }
     }
 

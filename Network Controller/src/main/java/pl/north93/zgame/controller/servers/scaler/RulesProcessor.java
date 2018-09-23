@@ -9,9 +9,8 @@ import java.util.HashMap;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.daemon.config.rules.RuleEntryConfig;
@@ -20,9 +19,9 @@ import pl.north93.zgame.controller.servers.groups.LocalGroupsManager;
 import pl.north93.zgame.controller.servers.groups.LocalManagedServersGroup;
 import pl.north93.zgame.controller.servers.scaler.value.IScalingValue;
 
+@Slf4j
 public class RulesProcessor
 {
-    private final Logger logger = LoggerFactory.getLogger(RulesProcessor.class);
     @Inject
     private LocalGroupsManager localGroupsManager;
 
@@ -38,7 +37,7 @@ public class RulesProcessor
         if (scalerDecision != ScalerDecision.DO_NOTHING)
         {
             // nie spamimy konsoli jak nic nie robimy
-            this.logger.info("Applying decision {} for group {}", scalerDecision, serversGroup.getName());
+            log.info("Applying decision {} for group {}", scalerDecision, serversGroup.getName());
         }
 
         scalerDecision.apply(serversGroup);

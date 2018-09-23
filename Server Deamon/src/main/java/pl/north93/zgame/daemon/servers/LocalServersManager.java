@@ -17,9 +17,7 @@ import java.util.function.Consumer;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
@@ -41,9 +39,9 @@ import pl.north93.zgame.daemon.event.ServerExitedEvent;
 /**
  * Menadzer lokalnie uruchomionych serwerow.
  */
+@Slf4j
 public class LocalServersManager
 {
-    private final Logger logger = LoggerFactory.getLogger(LocalServersManager.class);
     @Inject
     private ApiCore                    apiCore;
     @Inject
@@ -97,13 +95,13 @@ public class LocalServersManager
      */
     public CompletableFuture<Server> scheduleServerDeployment(final UUID serverId, final String patternId)
     {
-        this.logger.info("Deploying server {} with pattern {}", serverId, patternId);
+        log.info("Deploying server {} with pattern {}", serverId, patternId);
 
         final CompletableFuture<Server> future = new CompletableFuture<>();
         this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
         {
             future.complete(this.deployServer(serverId, patternId));
-            this.logger.info("Deployment operation of {} completed.", serverId);
+            log.info("Deployment operation of {} completed.", serverId);
         });
 
         return future;
@@ -120,7 +118,7 @@ public class LocalServersManager
             this.eventBus.post(new ServerDeathEvent(server));
         }
 
-        this.logger.info("Server {} exited", server.getUuid());
+        log.info("Server {} exited", server.getUuid());
         synchronized (this.instances)
         {
             this.instances.remove(server.getUuid());

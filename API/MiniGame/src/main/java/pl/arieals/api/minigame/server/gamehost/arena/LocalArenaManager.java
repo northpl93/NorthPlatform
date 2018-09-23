@@ -13,9 +13,8 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
@@ -33,9 +32,9 @@ import pl.north93.zgame.api.chat.global.ChatRoomPriority;
 import pl.north93.zgame.api.chat.global.formatter.PermissionsBasedFormatter;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
+@Slf4j
 public class LocalArenaManager
 {
-    private final Logger logger = LoggerFactory.getLogger(LocalArenaManager.class);
     @Inject
     private BukkitApiCore  apiCore;
     @Inject
@@ -65,7 +64,7 @@ public class LocalArenaManager
         serverManager.publishArenaEvent(new ArenaCreatedNetEvent(arenaId, miniGame));
 
         final String msg = "Added new local arena! GameID:{}/{}, ArenaID:{}, ServerID:{}, GamePhase:{}";
-        this.logger.info(msg, miniGame.getGameId(), miniGame.getVariantId(), arenaId, serverId, arenaData.getGamePhase());
+        log.info(msg, miniGame.getGameId(), miniGame.getVariantId(), arenaId, serverId, arenaData.getGamePhase());
 
         return localArena;
     }

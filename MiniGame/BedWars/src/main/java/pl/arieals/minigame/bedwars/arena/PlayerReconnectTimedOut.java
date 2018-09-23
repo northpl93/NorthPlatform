@@ -4,12 +4,12 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class PlayerReconnectTimedOut implements Runnable
 {
-    private final Logger logger = LoggerFactory.getLogger(PlayerReconnectTimedOut.class);
     private final BedWarsPlayer player;
 
     public PlayerReconnectTimedOut(final BedWarsPlayer player)
@@ -30,7 +30,7 @@ public class PlayerReconnectTimedOut implements Runnable
         this.player.eliminate();
 
         final Player bukkitPlayer = this.player.getBukkitPlayer();
-        this.logger.info("Player {} doesn't returned in time, marked as eliminated.", bukkitPlayer.getName());
+        log.info("Player {} doesn't returned in time, marked as eliminated.", bukkitPlayer.getName());
 
         final Team team = this.player.getTeam();
         if (team.isAnyPlayerAlive())

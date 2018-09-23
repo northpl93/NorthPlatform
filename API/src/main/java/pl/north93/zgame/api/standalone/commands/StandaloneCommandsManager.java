@@ -2,15 +2,13 @@ package pl.north93.zgame.api.standalone.commands;
 
 import java.io.Console;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.commands.ICommandsManager;
 import pl.north93.zgame.api.global.commands.NorthCommand;
 
+@Slf4j
 public class StandaloneCommandsManager implements ICommandsManager
 {
-    private final Logger  logger = LoggerFactory.getLogger(StandaloneCommandsManager.class);
     private final Console console;
 
     public StandaloneCommandsManager()
@@ -18,7 +16,7 @@ public class StandaloneCommandsManager implements ICommandsManager
         this.console = System.console();
         if (this.console == null)
         {
-            this.logger.warn("Console is unavailable");
+            log.warn("Console is unavailable");
             return;
         }
         /*new Thread(() ->
@@ -34,8 +32,7 @@ public class StandaloneCommandsManager implements ICommandsManager
     @Override
     public void registerCommand(final NorthCommand northCommand)
     {
-
-        this.logger.warn("Somebody tried to register command, but northpl is lazy and he didn't implement the Command Manager");
+        log.warn("Somebody tried to register command, but northpl is lazy and he didn't implement the Command Manager");
     }
 
     @Override

@@ -8,23 +8,20 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffectType;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.deathmatch.DeathMatchLoadedEvent;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 
+@Slf4j
 public class BwDeathMatchStartListener implements Listener
 {
-    private final Logger logger = LoggerFactory.getLogger(BwDeathMatchStartListener.class);
-
     @EventHandler
     public void onDeathMatchStart(final DeathMatchLoadedEvent event)
     {
         final LocalArena arena = event.getArena();
-        this.logger.info("Bedwars is preparing deathmatch on {}", arena.getId());
+        log.info("Bedwars is preparing deathmatch on {}", arena.getId());
 
         final BedWarsArena arenaData = arena.getArenaData();
         arenaData.getGenerators().clear(); // usuwamy generatory by je wylaczyc

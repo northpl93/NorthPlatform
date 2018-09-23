@@ -14,9 +14,8 @@ import org.bukkit.Bukkit;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
 import pl.arieals.api.minigame.server.gamehost.MiniGameApi;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
@@ -39,10 +38,10 @@ import pl.north93.zgame.api.global.metadata.MetaStore;
 /**
  * Każda LocalArena ma swojego PlayersManagera
  */
+@Slf4j
 public class PlayersManager
 {
     private static final long PLAYER_JOIN_TIMEOUT = TimeUnit.SECONDS.toMillis(30);
-    private final Logger logger = LoggerFactory.getLogger(PlayersManager.class);
     private final GameHostManager           gameHostManager;
     private final ReconnectHandler          reconnectHandler;
     private final LocalArena                arena;
@@ -350,7 +349,7 @@ public class PlayersManager
                 continue;
             }
 
-            this.logger.info("Player {} join timeout on arena {}", joinInfo.getUuid(), this.arena.getId());
+            log.info("Player {} join timeout on arena {}", joinInfo.getUuid(), this.arena.getId());
             joinInfos.remove();
         }
     }

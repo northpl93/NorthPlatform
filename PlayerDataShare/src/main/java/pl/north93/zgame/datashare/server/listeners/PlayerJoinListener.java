@@ -7,9 +7,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.datashare.api.DataSharingGroup;
@@ -17,9 +16,9 @@ import pl.north93.zgame.datashare.api.IDataShareManager;
 import pl.north93.zgame.datashare.server.PlayerDataShareServer;
 import pl.north93.zgame.datashare.sharedimpl.PlayerDataShareComponent;
 
+@Slf4j
 public class PlayerJoinListener implements Listener
 {
-    private final Logger logger = LoggerFactory.getLogger(PlayerJoinListener.class);
     @Inject
     private IBukkitExecutor          executor;
     @Inject
@@ -43,7 +42,7 @@ public class PlayerJoinListener implements Listener
             }
             manager.applyDataTo(myGroup, player, dataContainer);
 
-            this.logger.info("Data of player {} is loaded by onJoin event. Server group: {}", player.getName(), myGroup.getName());
+            log.info("Data of player {} is loaded by onJoin event. Server group: {}", player.getName(), myGroup.getName());
         });
     }
 

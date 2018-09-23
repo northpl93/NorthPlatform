@@ -2,9 +2,8 @@ package pl.north93.zgame.api.global.config.client;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.config.IConfig;
@@ -13,9 +12,9 @@ import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.api.global.redis.rpc.Targets;
 
+@Slf4j
 public class ConfigClientImpl extends Component implements IConfigClient
 {
-    private final Logger logger = LoggerFactory.getLogger(ConfigClientImpl.class);
     @Inject
     private IObservationManager observationManager;
     @Inject
@@ -38,7 +37,7 @@ public class ConfigClientImpl extends Component implements IConfigClient
     {
         if (this.serverRpc.reloadConfig(id))
         {
-            this.logger.info("Received information about successfully reload of config {}", id);
+            log.info("Received information about successfully reload of config {}", id);
         }
     }
 
@@ -46,7 +45,7 @@ public class ConfigClientImpl extends Component implements IConfigClient
     {
         if (this.serverRpc.updateConfig(id, newValue))
         {
-            this.logger.info("Received information about successfully update of config {}", id);
+            log.info("Received information about successfully update of config {}", id);
         }
     }
 

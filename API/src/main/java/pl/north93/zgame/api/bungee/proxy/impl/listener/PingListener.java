@@ -6,9 +6,8 @@ import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternat
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.event.ProxyPingEvent;
@@ -18,9 +17,9 @@ import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.NetworkMeta;
 
+@Slf4j
 public class PingListener implements Listener
 {
-    private final Logger logger = LoggerFactory.getLogger(PingListener.class);
     @Inject
     private INetworkManager networkManager;
 
@@ -32,7 +31,7 @@ public class PingListener implements Listener
         if (networkMeta == null)
         {
             response.setDescriptionComponent(fromLegacyText(ChatColor.RED + "Problemy techniczne. (networkMeta==null in onPing)"));
-            this.logger.error("networkMeta is null in onPing");
+            log.error("networkMeta is null in onPing");
             return;
         }
 

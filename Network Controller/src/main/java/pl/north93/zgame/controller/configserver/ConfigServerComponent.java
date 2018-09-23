@@ -5,9 +5,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.config.ConfigUpdatedNetEvent;
@@ -18,9 +17,9 @@ import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 import pl.north93.zgame.controller.configserver.source.IConfigSource;
 
+@Slf4j
 public class ConfigServerComponent extends Component implements IConfigServer, IConfigServerRpc
 {
-    private final Logger logger = LoggerFactory.getLogger(ConfigServerComponent.class);
     @Inject
     private IRpcManager   rpcManager;
     @Inject
@@ -47,7 +46,7 @@ public class ConfigServerComponent extends Component implements IConfigServer, I
     {
         final ConfigImpl<T> configImpl = new ConfigImpl<>(this.observationManager, configId, loader);
         this.configs.put(configId, configImpl);
-        this.logger.info("Added new config with ID {}", configId);
+        log.info("Added new config with ID {}", configId);
 
         configImpl.reload();
         this.eventManager.callEvent(new ConfigUpdatedNetEvent(configId));
@@ -59,7 +58,7 @@ public class ConfigServerComponent extends Component implements IConfigServer, I
     {
         this.configs.get(configId).reload();
         this.eventManager.callEvent(new ConfigUpdatedNetEvent(configId));
-        this.logger.info("Successfully reloaded config {}", configId);
+        log.info("Successfully reloaded config {}", configId);
         return true;
     }
 
@@ -70,7 +69,7 @@ public class ConfigServerComponent extends Component implements IConfigServer, I
         final ConfigImpl<Object> config = (ConfigImpl<Object>) this.configs.get(configId);
         config.update(newValue);
         this.eventManager.callEvent(new ConfigUpdatedNetEvent(configId));
-        this.logger.info("Config with ID {} has been updated programmatically", config);
+        log.info("Config with ID {} has been updated programmatically", config);
         return true;
     }
 

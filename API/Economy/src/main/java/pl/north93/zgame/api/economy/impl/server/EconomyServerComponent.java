@@ -9,18 +9,17 @@ import org.bukkit.plugin.ServicePriority;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import net.milkbowl.vault.economy.Economy;
 import pl.north93.zgame.api.economy.IEconomyManager;
 import pl.north93.zgame.api.economy.impl.client.EconomyComponent;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 
+@Slf4j
 public class EconomyServerComponent extends Component
 {
-    private final Logger logger = LoggerFactory.getLogger(EconomyServerComponent.class);
     @Inject
     private EconomyComponent economy;
     private VaultConfig      config;
@@ -42,7 +41,7 @@ public class EconomyServerComponent extends Component
         final Plugin vault = pluginManager.getPlugin("Vault");
         if (vault == null)
         {
-            this.logger.warn("Vault integration is enabled but Vault is not present.");
+            log.warn("Vault integration is enabled but Vault is not present.");
             return;
         }
 

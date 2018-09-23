@@ -12,17 +12,16 @@ import org.bukkit.event.world.WorldLoadEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.server.IWorldInitializer;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
+@Slf4j
 public class WorldInitializationHandler implements Listener
 {
-    private final Logger                  logger = LoggerFactory.getLogger(WorldInitializationHandler.class);
     private final List<IWorldInitializer> initializers = new ArrayList<>();
 
     @Bean
@@ -35,7 +34,7 @@ public class WorldInitializationHandler implements Listener
     public void addInitializer(final IWorldInitializer initializer)
     {
         final String initializerName = initializer.getClass().getSimpleName();
-        this.logger.info("Registering new world initializer {}", initializerName);
+        log.info("Registering new world initializer {}", initializerName);
 
         this.initializers.add(initializer);
         Bukkit.getWorlds().forEach(world -> this.callInitializer(initializer, world));
@@ -57,7 +56,7 @@ public class WorldInitializationHandler implements Listener
     {
         final String initializerName = initializer.getClass().getSimpleName();
 
-        this.logger.info("Calling initializer {} for world {}", initializerName, world.getName());
+        log.info("Calling initializer {} for world {}", initializerName, world.getName());
 
         final File worldDir = new File(Bukkit.getWorldContainer(), world.getName());
         try
@@ -66,7 +65,7 @@ public class WorldInitializationHandler implements Listener
         }
         catch (final Exception e)
         {
-            this.logger.error("Initializer {} throw exception for world {1}", initializerName, world.getName(), e);
+            log.error("Initializer {} throw exception for world {}", initializerName, world.getName(), e);
         }
     }
 

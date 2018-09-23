@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.shared.api.IGameHostRpc;
 import pl.arieals.api.minigame.shared.api.PlayerJoinInfo;
@@ -14,9 +12,9 @@ import pl.arieals.api.minigame.shared.api.arena.RemoteArena;
 import pl.arieals.api.minigame.shared.api.arena.reconnect.ReconnectTicket;
 import pl.north93.zgame.api.global.metadata.MetaStore;
 
+@Slf4j
 public class GameHostRpcImpl implements IGameHostRpc
 {
-    private final Logger logger = LoggerFactory.getLogger(GameHostRpcImpl.class);
     private final GameHostManager manager;
 
     public GameHostRpcImpl(final GameHostManager manager)
@@ -37,7 +35,7 @@ public class GameHostRpcImpl implements IGameHostRpc
         final LocalArena arena = this.manager.getArenaManager().getArena(arenaId);
         if (arena == null)
         {
-            this.logger.warn("arena is null in tryConnectPlayers()");
+            log.warn("arena is null in tryConnectPlayers()");
             return false;
         }
 
@@ -50,7 +48,7 @@ public class GameHostRpcImpl implements IGameHostRpc
         final LocalArena arena = this.manager.getArenaManager().getArena(arenaId);
         if (arena == null)
         {
-            this.logger.warn("arena is null in tryConnectSpectators()");
+            log.warn("arena is null in tryConnectSpectators()");
             return false;
         }
 
@@ -63,7 +61,7 @@ public class GameHostRpcImpl implements IGameHostRpc
         final LocalArena arena = this.manager.getArenaManager().getArena(ticket.getArenaId());
         if (arena == null)
         {
-            this.logger.warn("arena is null in tryReconnect()");
+            log.warn("arena is null in tryReconnect()");
             return false;
         }
 

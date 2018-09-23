@@ -7,9 +7,8 @@ import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.component.Component;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.config.ConfigUpdatedNetEvent;
@@ -17,9 +16,9 @@ import pl.north93.zgame.api.global.config.IConfig;
 import pl.north93.zgame.api.global.config.NetConfig;
 import pl.north93.zgame.api.global.redis.event.NetEventSubscriber;
 
+@Slf4j
 public class PermissionsManager extends Component
 {
-    private final Logger logger = LoggerFactory.getLogger(PermissionsManager.class);
     @Inject @NetConfig(type = GroupsContainer.class, id = "groups")
     private IConfig<GroupsContainer> groups;
     private final Set<Group> cachedGroups = new HashSet<>();
@@ -71,7 +70,7 @@ public class PermissionsManager extends Component
     {
         if (groupsContainer == null)
         {
-            this.logger.info("Skipped groups synchronization because config isn't loaded yet.");
+            log.info("Skipped groups synchronization because config isn't loaded yet.");
             return;
         }
 
@@ -100,7 +99,7 @@ public class PermissionsManager extends Component
         }
 
         this.defaultGroup = this.getGroupByName(groupsContainer.defaultGroup);
-        this.logger.info("Loaded {} groups!", this.cachedGroups.size());
+        log.info("Loaded {} groups!", this.cachedGroups.size());
     }
 
     @Override

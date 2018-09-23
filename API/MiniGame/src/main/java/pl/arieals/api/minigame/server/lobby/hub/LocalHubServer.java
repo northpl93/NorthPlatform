@@ -11,9 +11,8 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.api.minigame.server.lobby.hub.event.PlayerPreSwitchHubEvent;
 import pl.arieals.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
 import pl.arieals.api.minigame.shared.api.cfg.HubConfig;
@@ -31,9 +30,9 @@ import pl.north93.zgame.api.global.config.NetConfig;
 /**
  * Reprezentuje lokalny serwer hostujący huby.
  */
+@Slf4j
 public class LocalHubServer implements IHubServer
 {
-    private final Logger logger = LoggerFactory.getLogger(LocalHubServer.class);
     @Inject
     private BukkitApiCore           apiCore;
     @Inject
@@ -116,7 +115,7 @@ public class LocalHubServer implements IHubServer
         final HubWorld newHub = this.getHubWorld(hubId);
         if (newHub == null)
         {
-            this.logger.warn("Tried teleport {} to non-existing hub {}", player.getName(), hubId);
+            log.warn("Tried teleport {} to non-existing hub {}", player.getName(), hubId);
             return;
         }
 
@@ -154,7 +153,7 @@ public class LocalHubServer implements IHubServer
         final HubsConfig hubsConfig = this.hubsConfig.get();
         if (hubsConfig == null)
         {
-            this.logger.warn("HubsConfig is null in LocalHubServer#refreshConfiguration()! Did controller is set up properly?");
+            log.warn("HubsConfig is null in LocalHubServer#refreshConfiguration()! Did controller is set up properly?");
             return;
         }
 
@@ -178,7 +177,7 @@ public class LocalHubServer implements IHubServer
         final HubWorld hubWorld = this.hubWorldManager.createHubWorld(hubConfig, room);
 
         this.hubWorlds.put(hubConfig.getHubId(), hubWorld);
-        this.logger.info("Created hub with ID {}", hubConfig.getHubId());
+        log.info("Created hub with ID {}", hubConfig.getHubId());
     }
 
     private ChatRoom getChatRoomFor(final HubConfig hubConfig)
