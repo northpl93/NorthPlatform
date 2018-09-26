@@ -77,7 +77,7 @@ public class ProfileManagerImpl implements IProfileManager
 
     public boolean isActive(final Class<?> clazz)
     {
-        if (! this.packageChecker.isPackageActive(clazz.getClassLoader(), clazz.getPackage().getName()))
+        if (this.packageChecker.isPackageInactive(clazz.getClassLoader(), clazz.getPackage().getName()))
         {
             // paczka do ktorej nalezy klasa jest nieaktywna
             return false;
@@ -102,7 +102,7 @@ public class ProfileManagerImpl implements IProfileManager
 
     public boolean isActive(final ClassLoader classLoader, final CtClass ctClass) throws ClassNotFoundException
     {
-        if (! this.packageChecker.isPackageActive(classLoader, ctClass.getPackageName()))
+        if (this.packageChecker.isPackageInactive(classLoader, ctClass.getPackageName()))
         {
             // paczka jest nieaktywna
             return false;

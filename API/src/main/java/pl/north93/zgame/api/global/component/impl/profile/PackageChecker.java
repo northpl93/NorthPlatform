@@ -32,23 +32,23 @@ class PackageChecker
      * @throws ProfileNotFoundException Gdy profil zdefiniowany w adnotacji nie istnieje.
      * @return Czy dana paczka jest aktywna.
      */
-    public boolean isPackageActive(final ClassLoader classLoader, final String pack)
+    public boolean isPackageInactive(final ClassLoader classLoader, final String pack)
     {
         if (pack == null)
         {
-            return true;
+            return false;
         }
 
-        final Boolean result = this.cache.computeIfAbsent(new PackageCacheKey(classLoader, pack), this::compute);
+        final Boolean result = this.cache.computeIfAbsent(new PackageCacheKey(classLoader, pack), this::computeIsPackageInactive);
         if (result == null)
         {
-            return true;
+            return false;
         }
 
         return result;
     }
 
-    private Boolean compute(final PackageCacheKey cacheKey)
+    private Boolean computeIsPackageInactive(final PackageCacheKey cacheKey)
     {
         final String packageName = cacheKey.getKey();
 
@@ -56,23 +56,30 @@ class PackageChecker
         if (lastDot != - 1)
         {
             final String parentPackage = packageName.substring(0, lastDot);
-            if (! this.isPackageActive(cacheKey.getClassLoader(), parentPackage))
+            if (this.isPackageInactive(cacheKey.getClassLoader(), parentPackage))
             {
                 // jesli paczka-rodzic jest nieaktywna to ta tez nie jest
-                return false;
+                return true;
             }
         }
 
         try
         {
             final Class<?> packageInfo = Class.forName(packageName + ".package-info", false, cacheKey.getClassLoader());
+
             final Profile profile = packageInfo.getAnnotation(Profile.class);
-            return this.profileManager.isProfileActive(profile.value());
+            if (profile == null)
+            {
+                // brak adnotacji w package-info; dana paczka jest aktywna
+                return false;
+            }
+
+            return ! this.profileManager.isProfileActive(profile.value());
         }
         catch (final ClassNotFoundException e)
         {
             // brak package-info; dana paczka jest aktywna
-            return true;
+            return false;
         }
     }
 
