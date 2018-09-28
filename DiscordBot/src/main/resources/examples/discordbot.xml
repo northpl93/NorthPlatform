@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!-- Konfiguracja bota Discorda -->
+<discordbot>
+    <!-- Token bota -->
+    <token>paste here</token>
+
+    <!-- Kanał na którym użytkownicy odbierają nagrody -->
+    <rewardsChannel>channel id for giving rewards</rewardsChannel>
+</discordbot>

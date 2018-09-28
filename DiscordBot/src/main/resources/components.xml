@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bundle>
+    <excludedPackages>
+        <excludedPackage>com</excludedPackage>
+        <excludedPackage>gnu</excludedPackage>
+        <excludedPackage>net</excludedPackage>
+        <excludedPackage>okhttp3</excludedPackage>
+        <excludedPackage>okio</excludedPackage>
+        <excludedPackage>org</excludedPackage>
+    </excludedPackages>
+
+    <components>
+        <component>
+            <name>DiscordBot</name>
+            <mainClass>pl.north93.minecraft.discord.DiscordBotComponent</mainClass>
+            <description>Discord Bot</description>
+            <packages>
+                <package>pl.north93.minecraft.discord</package>
+            </packages>
+            <dependencies>
+                <dependency>API.MinecraftNetwork.NetworkManager</dependency>
+                <dependency>API.Economy.Controller</dependency>
+            </dependencies>
+            <platforms>
+                <platform>STANDALONE</platform>
+            </platforms>
+        </component>
+    </components>
+</bundle>

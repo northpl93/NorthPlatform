@@ -33,6 +33,7 @@
         <module>../NoPremiumAuth</module>
         <module>../WebAuth</module>
         <module>../WorldProperties</module>
+        <module>../DiscordBot</module>
         <module>../Pets</module>
 
         <!-- Anti Cheat -->
@@ -56,9 +57,15 @@
 
     <repositories>
         <repository>
-            <id>bungeecord-repo</id>
+            <id>sonatype-oss</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
+        <repository>
+            <id>jcenter</id>
+            <name>jcenter-bintray</name>
+            <url>http://jcenter.bintray.com</url>
+        </repository>
+
         <repository>
             <id>sk89q</id>
             <url>https://maven.sk89q.com/repo</url>
