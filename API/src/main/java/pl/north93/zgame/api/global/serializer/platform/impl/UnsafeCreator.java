@@ -4,7 +4,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.zgame.api.global.serializer.platform.InstanceCreator;
-import rx.internal.util.unsafe.UnsafeAccess;
 
 /*default*/ class UnsafeCreator<T> implements InstanceCreator<T>
 {
@@ -21,8 +20,7 @@ import rx.internal.util.unsafe.UnsafeAccess;
     {
         try
         {
-            // todo jakis wlasny accessor do unsafe lub inna metoda alokacji instancji
-            return (T) UnsafeAccess.UNSAFE.allocateInstance(this.clazz);
+            return (T) UnsafeAccess.getUnsafe().allocateInstance(this.clazz);
         }
         catch (final InstantiationException e)
         {

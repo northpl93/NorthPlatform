@@ -38,7 +38,7 @@ public class DynamicTemplate implements Template<Object, SerializationContext, D
     {
         final TemplateEngine templateEngine = context.getTemplateEngine();
 
-        final Type fixedType = this.fixType(templateEngine, field.getType(), object.getClass());
+        final Type fixedType = this.addMissingGenericType(templateEngine, field.getType(), object.getClass());
         if (this.shouldUseTypePredicting(templateEngine, fixedType))
         {
             this.serializeWithTypePredicting(context, field, fixedType, object);
@@ -101,7 +101,7 @@ public class DynamicTemplate implements Template<Object, SerializationContext, D
             final String className = context.readString(FIELD_TYPE);
             final Class<?> templateClass = templateEngine.findClass(className);
 
-            final Type fixedType = this.fixType(templateEngine, field.getType(), templateClass);
+            final Type fixedType = this.addMissingGenericType(templateEngine, field.getType(), templateClass);
 
             final Template<Object, SerializationContext, DeserializationContext> template = templateEngine.getTemplate(fixedType);
             return template.deserialize(context, this.getValueField(fixedType));
@@ -119,7 +119,7 @@ public class DynamicTemplate implements Template<Object, SerializationContext, D
 
     // jesli posiadamy informacje o generycznym typie to go dodajemy;
     // w przeciwnym wypadku nie powodujemy bledu
-    private Type fixType(final TemplateEngine templateEngine, final Type fieldType, final Class templateClass)
+    private Type addMissingGenericType(final TemplateEngine templateEngine, final Type fieldType, final Class templateClass)
     {
         final Type[] typeParameters = templateEngine.getTypeParameters(fieldType); // generic type
         return typeParameters.length == 0 ? templateClass : make(templateClass, typeParameters, null);

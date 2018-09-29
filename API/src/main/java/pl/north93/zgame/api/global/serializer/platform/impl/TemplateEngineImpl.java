@@ -118,19 +118,8 @@ import pl.north93.zgame.api.global.serializer.platform.template.builtin.StringTe
     @Override
     public boolean isNeedsDynamicResolution(final Type type)
     {
-        if (type instanceof Class)
-        {
-            final Class clazz = (Class) type;
-            return this.isNeedsDynamicResolution(clazz);
-        }
-        else if (type instanceof ParameterizedType)
-        {
-            final ParameterizedType parameterizedType = (ParameterizedType) type;
-            final Class clazz = (Class) parameterizedType.getRawType();
-            return this.isNeedsDynamicResolution(clazz);
-        }
-
-        throw new IllegalArgumentException(type.getTypeName());
+        final Class<?> clazz = this.getRawClassFromType(type);
+        return clazz.isInterface() || isAbstract(clazz.getModifiers()) || clazz == Object.class;
     }
 
     @Override
@@ -149,11 +138,6 @@ import pl.north93.zgame.api.global.serializer.platform.template.builtin.StringTe
     public <T> InstanceCreator<T> getInstanceCreator(final Class<T> clazz)
     {
         return this.instantiationManager.getInstanceCreator(clazz);
-    }
-
-    private boolean isNeedsDynamicResolution(final Class<?> clazz)
-    {
-        return clazz.isInterface() || isAbstract(clazz.getModifiers()) || clazz == Object.class;
     }
 
     @Override

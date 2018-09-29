@@ -26,7 +26,12 @@ import pl.north93.zgame.api.global.serializer.platform.InstanceCreator;
         }
         catch (final Exception e)
         {
-            return new UnsafeCreator<>(clazz);
+            if (UnsafeAccess.isUnsafeSupported())
+            {
+                return new UnsafeCreator<>(clazz);
+            }
+
+            throw new UnsupportedOperationException("Unsafe is unsupported so class must have no-args constructor");
         }
     }
 }
