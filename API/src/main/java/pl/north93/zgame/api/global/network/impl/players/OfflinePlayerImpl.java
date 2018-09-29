@@ -2,6 +2,8 @@ package pl.north93.zgame.api.global.network.impl.players;
 
 import java.util.UUID;
 
+import com.google.common.base.Preconditions;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -114,6 +116,7 @@ public class OfflinePlayerImpl implements IOfflinePlayer
     @Override
     public void setGroup(final Group group)
     {
+        Preconditions.checkNotNull(group, "Group can't be null");
         this.group = group;
     }
 
