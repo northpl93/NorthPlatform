@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.bukkit.protocol.impl.emulation.emulator;
+package pl.north93.zgame.api.bukkit.emulation.emulator;
 
 import java.util.TreeMap;
 
@@ -6,8 +6,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-import pl.north93.zgame.api.bukkit.protocol.impl.emulation.BlockData;
-import pl.north93.zgame.api.bukkit.protocol.impl.emulation.BlockEmulator;
+import pl.north93.zgame.api.bukkit.emulation.BlockData;
+import pl.north93.zgame.api.bukkit.emulation.BlockEmulator;
 
 public class CobblestoneWallEmulator implements BlockEmulator
 {

@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.bukkit.protocol.impl.emulation;
+package pl.north93.zgame.api.bukkit.emulation;
 
 import static org.diorite.commons.reflections.DioriteReflectionUtils.getField;
 

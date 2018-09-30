@@ -118,6 +118,17 @@
                 <platform>BUKKIT</platform>
             </platforms>
         </component>
-        
+
+        <component>
+            <name>API.Emulation</name>
+            <mainClass>pl.north93.zgame.api.bukkit.emulation.EmulationComponent</mainClass>
+            <description>Provides support for server-side 1.13 blocks emulation. Requires custom ViaVersion build to work.</description>
+            <dependencies>
+                <dependency>API.ProtocolManager</dependency>
+            </dependencies>
+            <platforms>
+                <platform>BUKKIT</platform>
+            </platforms>
+        </component>
     </components>
 </bundle>

@@ -1,8 +1,8 @@
-package pl.north93.zgame.api.bukkit.protocol.impl.emulation.emulator.fence;
+package pl.north93.zgame.api.bukkit.emulation.emulator.fence;
 
 import org.bukkit.Material;
 
-import pl.north93.zgame.api.bukkit.protocol.impl.emulation.emulator.AbstractFenceEmulator;
+import pl.north93.zgame.api.bukkit.emulation.emulator.AbstractFenceEmulator;
 
 public class DarkOakFenceEmulator extends AbstractFenceEmulator
 {
