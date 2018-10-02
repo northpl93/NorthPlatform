@@ -9,7 +9,7 @@ import pl.north93.zgame.api.global.redis.rpc.IRpcTarget;
 /**
  * Klasa reprezenyująca serwer w sieci.
  */
-public interface Server extends ServerProxyData
+public interface Server
 {
     /**
      * Zwraca unikalny identyfikator tego serwera.
@@ -17,6 +17,16 @@ public interface Server extends ServerProxyData
      * @return UUID tego serwera.
      */
     UUID getUuid();
+
+    /**
+     * Metoda zwraca nazwę serwera używaną przez BungeeCorda.
+     *
+     * @return nazwa serwera w BungeeCordzie.
+     */
+    default String getProxyName()
+    {
+        return this.getUuid().toString();
+    }
 
     /**
      * Zwraca typ tego serwera.
@@ -70,6 +80,20 @@ public interface Server extends ServerProxyData
      * @return grupa serwerów do której należy ten serwer.
      */
     IServersGroup getServersGroup();
+
+    /**
+     * Zwraca nazwę domenową/ip potrzebną do połączenia się z tym serwerem.
+     *
+     * @return host do połączenia się z tym serwerem.
+     */
+    String getConnectHost();
+
+    /**
+     * Metoda zwracająca port na którym pracuje serwer.
+     *
+     * @return port na którym pracuje serwer.
+     */
+    int getConnectPort();
 
     /**
      * Zwraca obiekt IRpcTarget do wykorzystania w zdalnym wywoływaniu

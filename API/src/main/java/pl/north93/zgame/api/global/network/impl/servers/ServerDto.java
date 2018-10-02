@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import pl.north93.zgame.api.global.network.JoiningPolicy;
 import pl.north93.zgame.api.global.network.server.Server;
-import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.network.server.ServerType;
 import pl.north93.zgame.api.global.network.server.group.IServersGroup;
@@ -20,7 +19,7 @@ import pl.north93.zgame.api.global.serializer.platform.annotations.NorthCustomTe
  */
 @ToString
 @NoArgsConstructor // for serialization
-public class ServerDto implements Server, ServerProxyData
+public class ServerDto implements Server
 {
     private UUID          serverId;
     private String        connectIp;
@@ -100,12 +99,6 @@ public class ServerDto implements Server, ServerProxyData
     public IRpcTarget getRpcTarget()
     {
         return Targets.server(this.serverId);
-    }
-
-    @Override
-    public String getProxyName()
-    {
-        return String.valueOf(this.serverId);
     }
 
     @Override

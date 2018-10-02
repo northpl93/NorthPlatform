@@ -8,30 +8,33 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.packet.Chat;
 import net.md_5.bungee.protocol.packet.Kick;
 import pl.north93.zgame.api.bungee.BungeeApiCore;
+import pl.north93.zgame.api.bungee.proxy.IConnectionManager;
 import pl.north93.zgame.api.bungee.proxy.IProxyServerManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.proxy.IProxyRpc;
-import pl.north93.zgame.api.global.network.server.ServerProxyData;
+import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.joinaction.JoinActionsContainer;
 
 class ProxyRpcImpl implements IProxyRpc
 {
+    private static final ProxyServer         PROXY = ProxyServer.getInstance();
     @Inject
-    private BungeeApiCore apiCore;
+    private BungeeApiCore       apiCore;
     @Inject
     private IProxyServerManager proxyServerManager;
-    private final ProxyServer proxy = ProxyServer.getInstance();
+    @Inject
+    private IConnectionManager  IConnectionManager;
 
     @Override
     public Boolean isOnline(final String nick)
     {
-        return this.proxy.getPlayer(nick) != null;
+        return PROXY.getPlayer(nick) != null;
     }
 
     @Override
     public void sendJsonMessage(final String nick, final String json)
     {
-        final ProxiedPlayer player = this.proxy.getPlayer(nick);
+        final ProxiedPlayer player = PROXY.getPlayer(nick);
         if (player == null)
         {
             // gracz mogl sie juz rozlaczyc zanim otrzymal ta wiadomosc
@@ -44,7 +47,7 @@ class ProxyRpcImpl implements IProxyRpc
     @Override
     public void kick(final String nick, final String json)
     {
-        final ProxiedPlayer player = this.proxy.getPlayer(nick);
+        final ProxiedPlayer player = PROXY.getPlayer(nick);
         if (player == null)
         {
             // gracz mogl juz sie rozlaczyc
@@ -52,45 +55,32 @@ class ProxyRpcImpl implements IProxyRpc
         }
 
         player.unsafe().sendPacket(new Kick(json));
-        //this.proxy.getPlayer(nick).disconnect(ChatUtils.fromLegacyText(kickMessage));
+        //PROXY.getPlayer(nick).disconnect(ChatUtils.fromLegacyText(kickMessage));
     }
 
     @Override
     public void connectPlayer(final String nick, final String serverName, final JoinActionsContainer actions)
     {
-        final ProxiedPlayer player = this.proxy.getPlayer(nick);
+        final ProxiedPlayer player = PROXY.getPlayer(nick);
         if (player == null)
         {
             // gracz mogl juz sie rozlaczyc
             return;
         }
 
-        this.apiCore.getConnectionManager().connectPlayerToServer(player, serverName, actions);
+        this.IConnectionManager.connectPlayerToServer(player, serverName, actions);
     }
 
     @Override
-    public void connectPlayerToServersGroup(final String nick, final String serversGroup, final JoinActionsContainer actions)
+    public void addServer(final Server server)
     {
-        final ProxiedPlayer player = this.proxy.getPlayer(nick);
-        if (player == null)
-        {
-            // gracz mogl juz sie rozlaczyc
-            return;
-        }
-
-        this.apiCore.getConnectionManager().connectPlayerToServersGroup(player, serversGroup, actions);
+        this.proxyServerManager.getServerList().addServer(server);
     }
 
     @Override
-    public void addServer(final ServerProxyData proxyData)
+    public void removeServer(final Server server)
     {
-        this.proxyServerManager.getServerList().addServer(proxyData);
-    }
-
-    @Override
-    public void removeServer(final ServerProxyData proxyData)
-    {
-        this.proxyServerManager.getServerList().removeServer(proxyData);
+        this.proxyServerManager.getServerList().removeServer(server);
     }
 
     @Override

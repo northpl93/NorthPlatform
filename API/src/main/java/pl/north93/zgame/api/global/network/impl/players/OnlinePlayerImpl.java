@@ -20,9 +20,8 @@ import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.players.IOfflinePlayer;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.proxy.IProxyRpc;
-import pl.north93.zgame.api.global.network.server.ServerProxyData;
+import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
-import pl.north93.zgame.api.global.network.server.joinaction.JoinActionsContainer;
 import pl.north93.zgame.api.global.permissions.Group;
 import pl.north93.zgame.api.global.permissions.GroupInStringTemplate;
 import pl.north93.zgame.api.global.redis.observable.ObjectKey;
@@ -186,7 +185,7 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     @Override
     public boolean isOnline()
     {
-        final IProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
+        final IProxyRpc proxyRpc = PlayerHelper.INSTANCE.getProxyRpc(this);
         return proxyRpc.isOnline(this.nick);
     }
 
@@ -222,7 +221,7 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     {
         final BaseComponent component = layout.processMessage(ChatUtils.fromLegacyText(message));
 
-        final IProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
+        final IProxyRpc proxyRpc = PlayerHelper.INSTANCE.getProxyRpc(this);
         proxyRpc.sendJsonMessage(this.nick, ComponentSerializer.toString(component));
     }
 
@@ -231,7 +230,7 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     {
         final String serialized = ComponentSerializer.toString(layout.processMessage(component));
 
-        final IProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
+        final IProxyRpc proxyRpc = PlayerHelper.INSTANCE.getProxyRpc(this);
         proxyRpc.sendJsonMessage(this.nick, serialized);
     }
 
@@ -244,22 +243,20 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     {
         final String serialized = ComponentSerializer.toString(message);
 
-        final IProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
+        final IProxyRpc proxyRpc = PlayerHelper.INSTANCE.getProxyRpc(this);
         proxyRpc.kick(this.nick, serialized);
     }
 
     @Override
-    public void connectTo(final ServerProxyData server, final IServerJoinAction... actions)
+    public void connectTo(final Server server, final IServerJoinAction... actions)
     {
-        final IProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
-        proxyRpc.connectPlayer(this.nick, server.getProxyName(), new JoinActionsContainer(actions));
+        PlayerHelper.INSTANCE.connectTo(this, server, actions);
     }
 
     @Override
     public void connectTo(final String serversGroupName, final IServerJoinAction... actions)
     {
-        final IProxyRpc proxyRpc = PlayersManagerImpl.INSTANCE.getPlayerProxyRpc(this);
-        proxyRpc.connectPlayerToServersGroup(this.nick, serversGroupName, new JoinActionsContainer(actions));
+        PlayerHelper.INSTANCE.connectTo(this, serversGroupName, actions);
     }
 
     @Override

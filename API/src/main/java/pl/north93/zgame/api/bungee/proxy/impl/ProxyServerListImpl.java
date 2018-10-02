@@ -18,7 +18,6 @@ import pl.north93.zgame.api.bungee.proxy.IProxyServerList;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.server.Server;
-import pl.north93.zgame.api.global.network.server.ServerProxyData;
 
 @Slf4j
 class ProxyServerListImpl implements IProxyServerList
@@ -46,10 +45,10 @@ class ProxyServerListImpl implements IProxyServerList
     }
 
     @Override
-    public void addServer(final ServerProxyData proxyData)
+    public void addServer(final Server server)
     {
-        final String name = proxyData.getProxyName();
-        final InetSocketAddress address = new InetSocketAddress(proxyData.getConnectHost(), proxyData.getConnectPort());
+        final String name = server.getProxyName();
+        final InetSocketAddress address = new InetSocketAddress(server.getConnectHost(), server.getConnectPort());
 
         final ServerInfo serverInfo = this.proxyServer.constructServerInfo(name, address, name, false);
 
@@ -57,15 +56,15 @@ class ProxyServerListImpl implements IProxyServerList
     }
 
     @Override
-    public void removeServer(final ServerProxyData proxyData)
+    public void removeServer(final Server server)
     {
-        final String proxyName = proxyData.getProxyName();
+        final String proxyName = server.getProxyName();
 
         final ServerInfo serverInfo = this.servers.get(proxyName);
         if (serverInfo == null)
         {
             // z jakiegos powodu serwer juz nie istnieje, zabezpieczenie przed ewentualnym NPE
-            log.warn("Tried to removeServer({}), but server doesnt exist", proxyData.getProxyName());
+            log.warn("Tried to removeServer({}), but server doesnt exist", server.getProxyName());
             return;
         }
 

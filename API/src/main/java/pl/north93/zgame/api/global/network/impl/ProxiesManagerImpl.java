@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.zgame.api.global.network.proxy.IProxiesManager;
 import pl.north93.zgame.api.global.network.proxy.IProxyRpc;
 import pl.north93.zgame.api.global.network.proxy.ProxyDto;
-import pl.north93.zgame.api.global.network.server.ServerProxyData;
+import pl.north93.zgame.api.global.network.server.Server;
 import pl.north93.zgame.api.global.redis.observable.Hash;
 import pl.north93.zgame.api.global.redis.observable.IObservationManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
@@ -45,7 +45,7 @@ class ProxiesManagerImpl implements IProxiesManager
     }
 
     @Override
-    public void addServer(final ServerProxyData proxyData)
+    public void addServer(final Server proxyData)
     {
         for (final ProxyDto proxy : this.all())
         {
@@ -55,7 +55,7 @@ class ProxiesManagerImpl implements IProxiesManager
     }
 
     @Override
-    public void removeServer(final ServerProxyData proxyData)
+    public void removeServer(final Server proxyData)
     {
         for (final ProxyDto proxy : this.all())
         {

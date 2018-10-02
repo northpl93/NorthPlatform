@@ -34,6 +34,15 @@ public interface IServersManager
     }
 
     /**
+     * Zwraca najmniej obciążony serwer w tej grupie, zdolny
+     * do przyjmowania graczy.
+     *
+     * @param group Nazwa grupy serwerów.
+     * @return instancja serwera.
+     */
+    Server getLeastLoadedServerInGroup(String group);
+
+    /**
      * Zwraca interfejs zdalnego wywolywania procedur dla serwera
      * o podanym unikalnym identyfikatorze.
      * @param uuid uuid serwera ktorego zwrocic interfejs RPC.

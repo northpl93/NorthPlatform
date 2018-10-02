@@ -17,7 +17,6 @@ import pl.north93.zgame.api.global.metadata.Metadatable;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.Identity;
 import pl.north93.zgame.api.global.network.server.Server;
-import pl.north93.zgame.api.global.network.server.ServerProxyData;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.zgame.api.global.permissions.Group;
 
@@ -117,7 +116,7 @@ public interface INorthPlayer extends Player, Metadatable, Messageable
      * @param server serwer z ktorym chcemy polaczyc gracza.
      * @param actions obiekty akcji do wykonania po wejsciu na serwer.
      */
-    void connectTo(ServerProxyData server, IServerJoinAction... actions);
+    void connectTo(Server server, IServerJoinAction... actions);
 
     /**
      * Wrzuca gracza do danej grupy serwerow, bungee odpowiada za wybranie serwera.

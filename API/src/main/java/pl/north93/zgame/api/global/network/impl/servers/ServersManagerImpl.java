@@ -3,9 +3,11 @@ package pl.north93.zgame.api.global.network.impl.servers;
 import static pl.north93.zgame.api.global.utils.lang.CollectionUtils.findInCollection;
 
 
+import java.util.Comparator;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -14,6 +16,7 @@ import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.network.server.IServerRpc;
 import pl.north93.zgame.api.global.network.server.IServersManager;
 import pl.north93.zgame.api.global.network.server.Server;
+import pl.north93.zgame.api.global.network.server.ServerState;
 import pl.north93.zgame.api.global.network.server.group.IServersGroup;
 import pl.north93.zgame.api.global.network.server.group.ServersGroupDto;
 import pl.north93.zgame.api.global.redis.observable.Hash;
@@ -44,6 +47,24 @@ import pl.north93.zgame.api.global.redis.rpc.Targets;
     }
 
     @Override
+    public Server getLeastLoadedServerInGroup(final String group)
+    {
+        final Comparator<Server> playersComparator = Comparator.comparing(Server::getPlayersCount);
+
+        return this.inGroupStream(group)
+                   .filter(this::checkIsServerWorking)
+                   .min(playersComparator)
+                   .orElse(null);
+    }
+
+    private boolean checkIsServerWorking(final Server server)
+    {
+        // nie chcemy teleportowac graczy na serwery wlaczajace/wylaczajace sie i
+        // zaplanowane do wylaczenia
+        return server.getServerState() == ServerState.WORKING && ! server.isShutdownScheduled();
+    }
+
+    @Override
     public IServerRpc getServerRpc(final UUID uuid)
     {
         return this.rpcManager.createRpcProxy(IServerRpc.class, Targets.server(uuid));
@@ -58,7 +79,12 @@ import pl.north93.zgame.api.global.redis.rpc.Targets;
     @Override
     public Set<Server> inGroup(final String group)
     {
-        return this.all().stream().filter(server -> server.getServersGroup().getName().equals(group)).collect(Collectors.toSet());
+        return this.inGroupStream(group).collect(Collectors.toSet());
+    }
+
+    private Stream<? extends Server> inGroupStream(final String group)
+    {
+        return this.all().stream().filter(server -> server.getServersGroup().getName().equals(group));
     }
 
     @Override

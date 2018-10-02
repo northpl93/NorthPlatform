@@ -36,7 +36,6 @@ import pl.north93.zgame.api.global.redis.rpc.Targets;
 @ParametersAreNonnullByDefault
 class PlayersManagerImpl implements IPlayersManager
 {
-    /*default*/ static PlayersManagerImpl INSTANCE;
     private final IObservationManager observer;
     private final IRpcManager         rpcManager;
     private final PlayersDataManager  playersDataManager;
@@ -45,7 +44,6 @@ class PlayersManagerImpl implements IPlayersManager
     @Bean
     private PlayersManagerImpl(final IObservationManager observer, final IRpcManager rpcManager)
     {
-        INSTANCE = this;
         this.observer = observer;
         this.rpcManager = rpcManager;
         this.playersDataManager = new PlayersDataManager();

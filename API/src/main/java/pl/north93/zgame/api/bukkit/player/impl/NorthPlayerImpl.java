@@ -74,14 +74,13 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
 import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
-import pl.north93.zgame.api.global.metadata.MetaStore;
-import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
 import pl.north93.zgame.api.global.messages.MessageLayout;
+import pl.north93.zgame.api.global.metadata.MetaStore;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.players.IOnlinePlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.Identity;
-import pl.north93.zgame.api.global.network.server.ServerProxyData;
+import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
 import pl.north93.zgame.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.zgame.api.global.permissions.Group;
 import pl.north93.zgame.api.global.redis.observable.Value;
@@ -160,7 +159,7 @@ import pl.north93.zgame.api.global.redis.observable.Value;
     }
 
     @Override
-    public void connectTo(final ServerProxyData server, final IServerJoinAction... actions)
+    public void connectTo(final pl.north93.zgame.api.global.network.server.Server server, final IServerJoinAction... actions)
     {
         final IOnlinePlayer playerData = this.playerData.get();
         playerData.connectTo(server, actions);

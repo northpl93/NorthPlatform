@@ -170,11 +170,14 @@ public class NetworkPlayerDataListener implements AutoListener
     private Collection<IServerJoinAction> fetchActions(final Identity identity)
     {
         final Value<JoinActionsContainer> actions = this.observation.get(JoinActionsContainer.class, "serveractions:" + identity.getNick());
+
         final JoinActionsContainer joinActionsContainer = actions.getAndDelete();
-        if (joinActionsContainer == null)
+        if (joinActionsContainer == null || joinActionsContainer.isInvalidServer(this.apiCore.getServerId()))
         {
+            // jesli nie ma zadnych akcji lub UUID serwera sie nie zgadza to zwracamy pusta liste
             return Collections.emptyList();
         }
+
         return Arrays.asList(joinActionsContainer.getServerJoinActions());
     }
 

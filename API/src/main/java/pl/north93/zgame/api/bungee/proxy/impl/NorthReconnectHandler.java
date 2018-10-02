@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.bungee.connection;
+package pl.north93.zgame.api.bungee.proxy.impl;
 
 import static java.util.ResourceBundle.getBundle;
 
@@ -9,27 +9,29 @@ import java.util.ResourceBundle;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ReconnectHandler;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
-import pl.north93.zgame.api.bungee.BungeeApiCore;
+import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.messages.UTF8Control;
 import pl.north93.zgame.api.global.network.INetworkManager;
 import pl.north93.zgame.api.global.network.NetworkMeta;
 import pl.north93.zgame.api.global.network.server.Server;
 
-public class NorthReconnectHandler implements ReconnectHandler
+@Slf4j
+/*default*/ class NorthReconnectHandler implements ReconnectHandler
 {
-    private final BungeeApiCore   apiCore;
     private final INetworkManager networkManager;
     private final ResourceBundle  messages;
 
-    public NorthReconnectHandler(final BungeeApiCore apiCore)
+    @Bean
+    private NorthReconnectHandler(final INetworkManager networkManager)
     {
-        this.apiCore = apiCore;
-        this.networkManager = apiCore.getNetworkManager();
+        ProxyServer.getInstance().setReconnectHandler(this);
+        this.networkManager = networkManager;
         this.messages = getBundle("Messages", Locale.getDefault(), this.getClass().getClassLoader(), new UTF8Control());
     }
 
@@ -37,11 +39,19 @@ public class NorthReconnectHandler implements ReconnectHandler
     public ServerInfo getServer(final ProxiedPlayer proxiedPlayer)
     {
         final NetworkMeta meta = this.networkManager.getNetworkConfig().get();
-        final Server server = this.apiCore.getConnectionManager().getBestServerFromServersGroup(meta.defaultServersGroup);
+        if (meta == null)
+        {
+            log.error("Can't find best server for player {} because network meta is null", proxiedPlayer.getName());
+            return null;
+        }
+
+        final Server server = this.networkManager.getServers().getLeastLoadedServerInGroup(meta.defaultServersGroup);
         if (server == null)
         {
             final String message = this.messages.getString("join.no_servers");
             proxiedPlayer.disconnect(ChatUtils.fromLegacyText(message));
+
+            log.warn("Player {} disconnected because there is no good server to connect in group {}", proxiedPlayer.getName(), meta.defaultServersGroup);
             return null;
         }
 

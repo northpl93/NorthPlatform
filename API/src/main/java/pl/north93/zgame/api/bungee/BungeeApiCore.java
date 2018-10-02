@@ -16,8 +16,6 @@ import net.md_5.bungee.api.plugin.Event;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.PluginManager;
 import pl.north93.zgame.api.bungee.cfg.ProxyInstanceConfig;
-import pl.north93.zgame.api.bungee.connection.ConnectionManager;
-import pl.north93.zgame.api.bungee.connection.NorthReconnectHandler;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.utils.ConfigUtils;
@@ -26,7 +24,6 @@ import pl.north93.zgame.api.standalone.logger.NorthGelfHandler;
 public class BungeeApiCore extends ApiCore
 {
     private final Main          bungeePlugin;
-    private ConnectionManager   connectionManager;
     private ProxyInstanceConfig config;
 
     public BungeeApiCore(final Main bungeePlugin)
@@ -77,8 +74,6 @@ public class BungeeApiCore extends ApiCore
             this.getApiLogger().error("Set ip_forward to true in bungee's config.yml");
             ProxyServer.getInstance().stop();
         }
-        this.connectionManager = new ConnectionManager();
-        ProxyServer.getInstance().setReconnectHandler(new NorthReconnectHandler(this));
     }
 
     @Override
@@ -111,11 +106,6 @@ public class BungeeApiCore extends ApiCore
     public <T extends Event> T callEvent(final T event)
     {
         return this.bungeePlugin.getProxy().getPluginManager().callEvent(event);
-    }
-
-    public ConnectionManager getConnectionManager()
-    {
-        return this.connectionManager;
     }
 
     public ProxyInstanceConfig getProxyConfig()
