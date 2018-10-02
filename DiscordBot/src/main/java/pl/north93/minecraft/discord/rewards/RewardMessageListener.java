@@ -9,7 +9,7 @@ import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import pl.north93.minecraft.discord.DiscordBotConfig;
 import pl.north93.minecraft.discord.rewards.builtin.CurrencyDiscordReward;
-import pl.north93.minecraft.discord.rewards.builtin.VipDiscordReward;
+import pl.north93.minecraft.discord.rewards.builtin.SvipDiscordReward;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
 import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
@@ -78,8 +78,10 @@ import pl.north93.zgame.api.global.network.players.PlayerNotFoundException;
     {
         final DiscordRewardsList rewardsList = new DiscordRewardsList();
 
-        rewardsList.addReward(new CurrencyDiscordReward("minigame", 2000));
-        rewardsList.addReward(new VipDiscordReward());
+        //rewardsList.addReward(new CurrencyDiscordReward("minigame", 2000));
+        //rewardsList.addReward(new VipDiscordReward());
+        rewardsList.addReward(new CurrencyDiscordReward("minigame", 40_000));
+        rewardsList.addReward(new SvipDiscordReward());
 
         return rewardsList;
     }

@@ -6,9 +6,9 @@ import pl.north93.zgame.api.global.network.players.IPlayer;
 import pl.north93.zgame.api.global.network.players.IPlayerTransaction;
 import pl.north93.zgame.api.global.network.players.Identity;
 
-public class VipDiscordReward extends AbstractGroupReward
+public class SvipDiscordReward extends AbstractGroupReward
 {
-    private static final Duration VIP_TIME = Duration.ofHours(12);
+    private static final Duration SVIP_TIME = Duration.ofDays(7);
 
     @Override
     public void apply(final Identity identity)
@@ -20,13 +20,13 @@ public class VipDiscordReward extends AbstractGroupReward
             switch (player.getGroup().getName())
             {
                 case "default":
-                    this.giveTimedGroup(player, "vip", VIP_TIME);
+                    this.giveTimedGroup(player, "svip", SVIP_TIME);
                     break;
                 case "vip":
-                    this.extendGroupTime(player, VIP_TIME);
+                    this.giveTimedGroup(player, "svip", SVIP_TIME);
                     break;
                 case "svip":
-                    this.extendGroupTime(player, VIP_TIME);
+                    this.extendGroupTime(player, SVIP_TIME);
                     break;
             }
         }
