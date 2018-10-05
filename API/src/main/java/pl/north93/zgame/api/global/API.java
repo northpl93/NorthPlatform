@@ -1,6 +1,6 @@
 package pl.north93.zgame.api.global;
 
-import static pl.north93.zgame.api.global.exceptions.SingletonException.checkSingleton;
+import static pl.north93.zgame.api.global.utils.exceptions.SingletonException.checkSingleton;
 
 
 import pl.north93.zgame.api.global.component.annotations.ProvidesComponent;

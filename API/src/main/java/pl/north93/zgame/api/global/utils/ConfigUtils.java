@@ -10,7 +10,7 @@ import org.apache.commons.io.FileUtils;
 
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.zgame.api.global.API;
-import pl.north93.zgame.api.global.exceptions.ConfigurationException;
+import pl.north93.zgame.api.global.utils.exceptions.ConfigurationException;
 
 @Slf4j
 public final class ConfigUtils

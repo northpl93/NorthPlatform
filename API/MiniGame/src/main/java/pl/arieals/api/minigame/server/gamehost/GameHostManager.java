@@ -30,7 +30,7 @@ import pl.arieals.api.minigame.shared.api.status.InGameStatus;
 import pl.north93.zgame.api.bukkit.BukkitApiCore;
 import pl.north93.zgame.api.bukkit.world.IWorldManager;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.exceptions.ConfigurationException;
+import pl.north93.zgame.api.global.utils.exceptions.ConfigurationException;
 import pl.north93.zgame.api.global.redis.event.IEventManager;
 import pl.north93.zgame.api.global.redis.rpc.IRpcManager;
 

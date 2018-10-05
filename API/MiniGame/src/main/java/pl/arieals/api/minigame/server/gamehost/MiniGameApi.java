@@ -1,6 +1,6 @@
 package pl.arieals.api.minigame.server.gamehost;
 
-import static pl.north93.zgame.api.global.exceptions.SingletonException.checkSingleton;
+import static pl.north93.zgame.api.global.utils.exceptions.SingletonException.checkSingleton;
 
 
 import javax.annotation.Nonnull;

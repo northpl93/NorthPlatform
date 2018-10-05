@@ -21,7 +21,7 @@ import javassist.LoaderClassPath;
 import pl.north93.zgame.api.global.ApiCore;
 import pl.north93.zgame.api.global.Platform;
 import pl.north93.zgame.api.global.component.impl.general.ComponentManagerImpl;
-import pl.north93.zgame.api.global.exceptions.ConfigurationException;
+import pl.north93.zgame.api.global.utils.exceptions.ConfigurationException;
 import pl.north93.zgame.api.global.utils.lang.SneakyThrow;
 
 public class BukkitApiCore extends ApiCore

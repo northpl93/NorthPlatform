@@ -1,4 +1,4 @@
-package pl.north93.zgame.api.global.exceptions;
+package pl.north93.zgame.api.global.utils.exceptions;
 
 /**
  * Wyjątek rzucany gdy występuje jakiś problem w konfiguracji sieci
