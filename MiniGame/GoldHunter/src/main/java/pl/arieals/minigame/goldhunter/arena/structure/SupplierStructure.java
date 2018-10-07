@@ -1,14 +1,15 @@
 package pl.arieals.minigame.goldhunter.arena.structure;
 
-import org.apache.logging.log4j.Logger;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
+
+import com.google.common.base.Preconditions;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockVector;
 
-import com.google.common.base.Preconditions;
-
-import net.minecraft.server.v1_12_R1.MinecraftServer;
+import org.slf4j.Logger;
 
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;

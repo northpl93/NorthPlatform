@@ -1,13 +1,14 @@
 package pl.arieals.minigame.goldhunter.player;
 
-import org.apache.logging.log4j.Logger;
+import com.google.common.base.Preconditions;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 
-import com.google.common.base.Preconditions;
+import org.slf4j.Logger;
 
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.utils.TimeStringUtils;

@@ -1,15 +1,17 @@
 package pl.arieals.minigame.goldhunter.entity;
 
-import org.apache.logging.log4j.Logger;
-import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
-import org.bukkit.entity.LivingEntity;
-
 import net.minecraft.server.v1_12_R1.EntityLiving;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.EntityTippedArrow;
 import net.minecraft.server.v1_12_R1.ItemStack;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
+
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import org.bukkit.entity.LivingEntity;
+
+import org.slf4j.Logger;
 
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
@@ -69,10 +71,15 @@ public abstract class SpecialArrow extends EntityTippedArrow
         {
            return;
         }
-        
-        GoldHunterPlayer player = goldHunter.getPlayer(((EntityPlayer) entityLiving).getBukkitEntity());
-        
-        logger.debug("Special arrow {} hits player {}", () -> getClass().getSimpleName(), () -> player.getPlayer().getName());
+
+        final CraftPlayer bukkitPlayer = ((EntityPlayer) entityLiving).getBukkitEntity();
+        GoldHunterPlayer player = goldHunter.getPlayer(bukkitPlayer);
+
+        if ( logger.isDebugEnabled() )
+        {
+            // getSimpleName unexpectedly can be heavy operation...
+            logger.debug("Special arrow {} hits player {}", getClass().getSimpleName(), bukkitPlayer.getName());
+        }
         
         try
         {

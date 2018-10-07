@@ -4,7 +4,14 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.Logger;
+import net.minecraft.server.v1_12_R1.DamageSource;
+import net.minecraft.server.v1_12_R1.EntityPlayer;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
+import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
+import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
+
+import com.google.common.base.Preconditions;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,13 +27,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import com.google.common.base.Preconditions;
-
-import net.minecraft.server.v1_12_R1.DamageSource;
-import net.minecraft.server.v1_12_R1.EntityPlayer;
-import net.minecraft.server.v1_12_R1.MinecraftServer;
-import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
-import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
+import org.slf4j.Logger;
 
 import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
 import pl.arieals.globalshops.server.IGlobalShops;
@@ -74,7 +75,7 @@ public class GoldHunterPlayer implements ITickable
     @Messages("GoldHunter")
     private static MessagesBox messages;
     @Inject
-    @GoldHunterLogger
+    @GoldHunterLogger(useToString = true)
     private static Logger logger;
     @Inject
     private static IEconomyManager economyManager;

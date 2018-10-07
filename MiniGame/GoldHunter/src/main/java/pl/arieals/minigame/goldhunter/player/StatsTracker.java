@@ -12,7 +12,7 @@ import net.minecraft.server.v1_12_R1.MinecraftServer;
 
 import com.google.common.collect.ImmutableMap;
 
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
 import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;

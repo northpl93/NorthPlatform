@@ -2,13 +2,14 @@ package pl.arieals.minigame.goldhunter.abilities;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.apache.logging.log4j.Logger;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
+
+import org.slf4j.Logger;
 
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.arena.ArenaBuilder;

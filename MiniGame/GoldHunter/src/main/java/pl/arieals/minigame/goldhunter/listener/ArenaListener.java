@@ -1,8 +1,9 @@
 package pl.arieals.minigame.goldhunter.listener;
 
-import org.apache.logging.log4j.Logger;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+
+import org.slf4j.Logger;
 
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.api.minigame.server.gamehost.event.arena.ArenaStartCancelledEvent;

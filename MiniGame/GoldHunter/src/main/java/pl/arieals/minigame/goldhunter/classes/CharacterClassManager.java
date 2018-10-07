@@ -1,11 +1,11 @@
 package pl.arieals.minigame.goldhunter.classes;
 
+import javax.xml.bind.JAXB;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.xml.bind.JAXB;
-
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.classes.xml.XmlClassDesc;

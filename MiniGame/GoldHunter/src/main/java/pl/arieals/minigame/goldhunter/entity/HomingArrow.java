@@ -1,11 +1,12 @@
 package pl.arieals.minigame.goldhunter.entity;
 
-import org.apache.logging.log4j.Logger;
+import net.minecraft.server.v1_12_R1.EntityLiving;
+
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
-import net.minecraft.server.v1_12_R1.EntityLiving;
+import org.slf4j.Logger;
 
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.north93.zgame.api.global.component.annotations.bean.Inject;

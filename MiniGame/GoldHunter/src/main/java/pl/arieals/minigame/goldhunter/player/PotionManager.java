@@ -3,24 +3,23 @@ package pl.arieals.minigame.goldhunter.player;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.server.v1_12_R1.EntityPotion;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
+
+import com.google.common.base.Preconditions;
+
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftThrownPotion;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ThrownPotion;
 
-import com.google.common.base.Preconditions;
-
 import lombok.NonNull;
-import lombok.extern.log4j.Log4j2;
-
-import net.minecraft.server.v1_12_R1.EntityPotion;
-import net.minecraft.server.v1_12_R1.NBTTagCompound;
-
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.north93.zgame.api.bukkit.utils.nms.NbtTagType;
 import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
 import pl.north93.zgame.api.global.component.annotations.bean.Bean;
 
-@Log4j2
+@Slf4j
 public class PotionManager
 {
     private final Map<String, PotionHandler> potionsHandlers = new HashMap<>();
@@ -91,7 +90,7 @@ public class PotionManager
     @Aggregator(PotionHandler.class)
     public void agreggatePotionHandlers(PotionHandler handler)
     {
-        log.debug("Aggregate potion handler class: {}", () -> handler.getClass());
+        log.debug("Aggregate potion handler class: {}", handler.getClass());
         
         String handlerName = handler.getClass().getSimpleName();
         
@@ -99,7 +98,7 @@ public class PotionManager
         if ( current != null )
         {
             log.error("Cannot register potion handler class {}: name {} is already occupied by {}",
-                    () -> handler.getClass().getName(), () -> handlerName, () -> current.getClass().getName());
+                    handler.getClass().getName(), handlerName, current.getClass().getName());
             
             return;
         }

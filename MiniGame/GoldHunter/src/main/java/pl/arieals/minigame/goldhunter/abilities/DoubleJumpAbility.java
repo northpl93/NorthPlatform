@@ -5,7 +5,7 @@ import net.minecraft.server.v1_12_R1.PacketPlayInAbilities;
 import net.minecraft.server.v1_12_R1.PacketPlayOutAbilities;
 import net.minecraft.server.v1_12_R1.PlayerAbilities;
 
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;

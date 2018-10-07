@@ -1,11 +1,15 @@
 package pl.north93.zgame.api.global.network.players;
 
+import static lombok.AccessLevel.PRIVATE;
+
+
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
 import org.bson.Document;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -18,16 +22,11 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 @Getter
 @ToString
 @EqualsAndHashCode(of = "uuid")
+@AllArgsConstructor(access = PRIVATE)
 public final class Identity
 {
     private final UUID uuid;
     private final String nick;
-
-    private Identity(final UUID uuid, final String nick)
-    {
-        this.uuid = uuid;
-        this.nick = nick;
-    }
 
     public Identity(final Document document)
     {

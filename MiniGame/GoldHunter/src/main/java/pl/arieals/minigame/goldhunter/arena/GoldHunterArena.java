@@ -29,7 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import pl.arieals.api.minigame.server.gamehost.arena.IArenaData;
 import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
@@ -54,9 +54,9 @@ import pl.north93.zgame.api.global.utils.lang.ListUtils;
 public class GoldHunterArena implements IArenaData, ITickable
 {
     @Inject
-    @GoldHunterLogger
+    @GoldHunterLogger(useToString = true)
     private Logger logger;
-    
+
     @Inject
     private IGuiManager guiManager;
     
@@ -81,7 +81,7 @@ public class GoldHunterArena implements IArenaData, ITickable
     public GoldHunterArena(LocalArena localArena)
     {
         this.localArena = localArena;
-        
+
         setDefaultScoreboardProperties();
     }
     
@@ -91,11 +91,6 @@ public class GoldHunterArena implements IArenaData, ITickable
                 "signedCount", "0",
                 "maxPlayers", localArena.getPlayersManager().getMaxPlayers()
         );
-    }
-    
-    public Logger getLogger()
-    {
-        return logger;
     }
     
     public LocalArena getLocalArena()

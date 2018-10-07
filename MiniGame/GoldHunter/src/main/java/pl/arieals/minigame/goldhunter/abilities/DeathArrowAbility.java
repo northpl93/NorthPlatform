@@ -1,9 +1,10 @@
 package pl.arieals.minigame.goldhunter.abilities;
 
-import org.apache.logging.log4j.Logger;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityShootBowEvent;
+
+import org.slf4j.Logger;
 
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
@@ -40,11 +41,13 @@ public class DeathArrowAbility implements AbilityHandler
         GoldHunterPlayer player = goldHunter.getPlayer((Player) event.getEntity());
         if ( player != null && player.getEffectTracker().removeEffect(DeathArrowEffect.class) )
         {
-            DeathArrow arrow = new DeathArrow(player.getPlayer().getWorld(), player.getPlayer());
+            final Player bukkitPlayer = player.getPlayer();
+
+            DeathArrow arrow = new DeathArrow(bukkitPlayer.getWorld(), bukkitPlayer);
             arrow.shoot(event.getForce());
             event.setProjectile(arrow.getBukkitEntity());
-            
-            logger.debug("{} has shot death arrow", () -> player.getPlayer().getName());
+
+            logger.debug("{} has shot death arrow", bukkitPlayer.getName());
         }
     }
 }

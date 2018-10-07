@@ -1,11 +1,12 @@
 package pl.arieals.minigame.goldhunter.entity;
 
-import org.apache.logging.log4j.Logger;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
+
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 
-import net.minecraft.server.v1_12_R1.MinecraftServer;
+import org.slf4j.Logger;
 
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.effect.PoisonEffect;

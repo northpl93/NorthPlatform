@@ -5,10 +5,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@ToString
 @Getter
+@ToString
+@EqualsAndHashCode
+@AllArgsConstructor
 public class BlockLocation
 {
     private final int x;

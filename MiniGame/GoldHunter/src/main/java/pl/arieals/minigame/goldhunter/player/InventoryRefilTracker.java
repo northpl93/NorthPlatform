@@ -1,11 +1,12 @@
 package pl.arieals.minigame.goldhunter.player;
 
-import org.apache.logging.log4j.Logger;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
-import net.minecraft.server.v1_12_R1.MinecraftServer;
+import org.slf4j.Logger;
 
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.classes.xml.XmlInventoryRefilRule;

@@ -5,14 +5,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.arieals.api.minigame.server.MiniGameServer;
 import pl.arieals.api.minigame.server.gamehost.GameHostManager;
@@ -143,15 +144,22 @@ public class GoldHunter
     {
         if ( loggerAnnotation.useToString() )
         {
-            return LogManager.getLogger(instance.get().toString());
+            if ( instance.isPresent() )
+            {
+                final Object loggerHolder = instance.get();
+                return LoggerFactory.getLogger(loggerHolder.toString());
+            }
+
+            throw new IllegalStateException("GoldHunterLogger with useToString=true can be injected only into instance");
         }
-        
-        if ( !loggerAnnotation.value().isEmpty() )
+
+        final String customName = loggerAnnotation.value();
+        if ( ! customName.isEmpty() )
         {
-            return LogManager.getLogger(loggerAnnotation.value());
+            return LoggerFactory.getLogger(customName);
         }
         
-        return LogManager.getLogger(source);
+        return LoggerFactory.getLogger(source);
     }
     
 }

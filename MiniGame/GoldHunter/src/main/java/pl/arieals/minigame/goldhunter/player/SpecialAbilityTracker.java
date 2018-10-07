@@ -8,7 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import org.diorite.commons.math.DioriteMathUtils;
 

@@ -3,13 +3,14 @@ package pl.arieals.minigame.goldhunter.arena;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import com.google.common.base.Preconditions;
+
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
-import com.google.common.base.Preconditions;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.zgame.api.bukkit.tick.ITickable;
@@ -155,7 +156,7 @@ public abstract class Structure implements ITickable
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this).append("arena", manager.getArena().getLogger().getName()).build();
+        return new ToStringBuilder(this).append("arena", manager.getArena().getLocalArena().getId()).build();
     }
     
     public final class StructureBuilder
