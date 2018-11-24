@@ -1,0 +1,68 @@
+/**
+ * API build script
+ */
+
+dependencies {
+
+    // Add libraries from lib/ directory
+    compile ':AgentUtils-1.0'
+    shadow ':spigot-1.12.2'
+    shadow ':FastAsyncWorldEdit'
+
+    // Bungee libs
+    shadow 'net.md-5:bungeecord-api:1.13-mcpiraci'
+    compile 'net.md-5:bungeecord-chat:1.13-mcpiraci'
+
+    // WorldEdit
+    shadow 'com.sk89q.worldedit:worldedit-core:6.1.4-SNAPSHOT'
+    shadow 'com.sk89q.worldedit:worldedit-bukkit:6.1.4'
+
+    // APIS deprecated/removed in Java 9+
+    shadow 'javax.xml.bind:jaxb-api:2.3.1'
+    shadow 'com.sun.xml.bind:jaxb-impl:2.3.1'
+
+    // logging
+    compile 'org.slf4j:slf4j-jdk14:1.7.25'
+    compile 'biz.paluch.logging:logstash-gelf:1.11.2'
+
+    // 17 bo taka jest w spigocie
+    compile 'com.google.guava:guava:17.0'
+
+    // We doesn't have it in BungeeCord
+    compile 'org.apache.commons:commons-lang3:3.7'
+    compile 'commons-io:commons-io:2.6'
+
+    compile 'org.reflections:reflections:0.9.10'
+    compile 'com.carrotsearch:hppc:0.7.3'
+
+    // MongoDB stuff
+    compile 'org.mongodb:mongo-java-driver:3.8.0'
+    compile 'org.mongodb:bson:3.8.0'
+    compile 'io.netty:netty-transport-native-epoll:4.1.17.Final'
+
+    // Redis stuff
+    compile 'biz.paluch.redis:lettuce:4.4.3.Final'
+    compile 'org.msgpack:msgpack-core:0.8.15'
+
+    // Unit tests things
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.13.0'
+    testImplementation 'org.powermock:powermock-module-junit4:2.0.0-beta.5'
+    testImplementation 'org.powermock:powermock-api-mockito2:2.0.0-beta.5'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'pl.north93.zgame.api.standalone.StandaloneApiCore'
+    }
+}
+
+shadowJar {
+    dependencies {
+        exclude(dependency('com.google.code.findbugs:annotations'))
+    }
+}
+
+test {
+    workingDir "$projectDir/build/northplatform-test"
+}

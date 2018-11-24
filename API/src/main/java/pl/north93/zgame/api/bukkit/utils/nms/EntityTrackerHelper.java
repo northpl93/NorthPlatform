@@ -5,17 +5,13 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 
+import net.minecraft.server.v1_12_R1.Entity;
+import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
+
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.entity.Player;
 
-import net.minecraft.server.v1_12_R1.Entity;
-import net.minecraft.server.v1_12_R1.EntityPlayer;
-import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
-
 import pl.north93.zgame.api.bukkit.player.INorthPlayer;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableMap;
 
 public class EntityTrackerHelper
 {
@@ -34,6 +30,13 @@ public class EntityTrackerHelper
         }
     }
 
+    /**
+     * Konwertuje daną klasę Entity bukkitowego na Entity NMSowe.
+     * Uwzględnia to, że Player może być NorthPlayerem.
+     *
+     * @param bukkitEntity Obiekt Bukkita reprezentujący Entity.
+     * @return Obiekt NMS reprezentujący Entity.
+     */
     public static Entity toNmsEntity(final org.bukkit.entity.Entity bukkitEntity)
     {
         if ( bukkitEntity instanceof Player )
@@ -63,30 +66,5 @@ public class EntityTrackerHelper
         {
             throw new RuntimeException(throwable);
         }
-    }
-
-    /**
-     * Umozliwia proste sledzenia rozpoczecia i skonczenia trackowania
-     * danego entity przez gracza.
-     * Umozliwia to wykrywanie gdy gracz wchodzi w zasieg widzenia
-     * danego entity.
-     *
-     * @deprecated Powoduje wiele problemów przy unloadowaniu entities.
-     * @param entity entity z ktorego zrobic obserwowalna mape.
-     * @return Obserwowalna mapa z lista graczy trackujacych dane entity
-     */
-    @Deprecated
-    public static ObservableMap<EntityPlayer, Boolean> observeTracker(final Entity entity)
-    {
-        final EntityTrackerEntry trackerEntry = getTrackerEntry(entity);
-        if (trackerEntry.trackedPlayerMap instanceof ObservableMap)
-        {
-            return (ObservableMap<EntityPlayer, Boolean>) trackerEntry.trackedPlayerMap;
-        }
-
-        final ObservableMap<EntityPlayer, Boolean> observableMap = FXCollections.observableMap(trackerEntry.trackedPlayerMap);
-        trackerEntry.trackedPlayerMap = observableMap;
-
-        return observableMap;
     }
 }

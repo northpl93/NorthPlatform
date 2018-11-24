@@ -1,0 +1,9 @@
+/**
+ * Lobby build script
+ */
+
+dependencies {
+    shadow project(path: ':API', configuration: 'shadow')
+    shadow project(path: ':GlobalShops', configuration: 'shadow')
+    shadow project(path: ':NoPremiumAuth', configuration: 'shadow')
+}

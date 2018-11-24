@@ -1,0 +1,40 @@
+/**
+ * NorthPlatform's build settings
+ */
+
+
+rootProject.name = 'NorthPlatform'
+
+// Includes
+include 'API'
+include 'API:BaseFeatures'
+include 'API:Chat'
+include 'API:Economy'
+include 'API:MiniGame'
+
+include 'AntyCheat'
+include 'AntyCheat:AntyCheatClient'
+
+include 'DiscordBot'
+
+include 'GlobalShops'
+
+include 'GroovyScript'
+
+include 'ItemShop'
+
+include 'Lobby'
+
+include 'Network Controller'
+
+include 'NoPremiumAuth'
+
+include 'PlayerDataShare'
+
+include 'RestfulApi'
+
+include 'Server Deamon'
+
+include 'WebAuth'
+
+include 'WorldProperties'

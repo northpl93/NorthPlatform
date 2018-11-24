@@ -1,0 +1,7 @@
+/**
+ * NoPremiumAuth build script
+ */
+
+dependencies {
+    shadow project(path: ':API', configuration: 'shadow')
+}

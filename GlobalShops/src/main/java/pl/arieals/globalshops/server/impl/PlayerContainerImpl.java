@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Preconditions;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import org.diorite.commons.lazy.LazyValue;
@@ -111,7 +110,7 @@ class PlayerContainerImpl implements IPlayerContainer
         {
             return null;
         }
-        return this.shopsServer.getItem(group, activeItemId);
+        return this.getItemFromId(group, activeItemId);
     }
 
     @Override
@@ -238,17 +237,6 @@ class PlayerContainerImpl implements IPlayerContainer
     private Item getItemFromId(final ItemsGroup group, final String id)
     {
         return this.shopsServer.getItem(group, id);
-    }
-
-    private Item getItemFromInternalId(final ItemsGroup group, final String id)
-    {
-        final String properId = StringUtils.split(id, '$')[1];
-        return this.getItemFromId(group, properId);
-    }
-
-    private String itemToInternalId(final Item item)
-    {
-        return item.getGroup().getId() + "$" + item.getId();
     }
 }
 
