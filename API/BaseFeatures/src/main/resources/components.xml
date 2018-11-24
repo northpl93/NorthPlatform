@@ -3,7 +3,7 @@
     <components>
         <component>
             <name>API.BaseFeatures</name>
-            <mainClass>pl.north93.zgame.features.global.GlobalFeatures</mainClass>
+            <mainClass>pl.north93.northplatform.features.global.GlobalFeatures</mainClass>
             <description>Provides platform independent base features and commands.</description>
             <dependencies>
                 <dependency>API.Commands</dependency>
@@ -14,7 +14,7 @@
 
         <component>
             <name>API.ControllerFeatures</name>
-            <mainClass>pl.north93.zgame.features.controller.ControllerFeatures</mainClass>
+            <mainClass>pl.north93.northplatform.features.controller.ControllerFeatures</mainClass>
             <description>Provides base features for network controller.</description>
             <dependencies>
                 <dependency>API.BaseFeatures</dependency>
@@ -28,7 +28,7 @@
 
         <component>
             <name>API.BungeeFeatures</name>
-            <mainClass>pl.north93.zgame.features.bungee.BungeeFeatures</mainClass>
+            <mainClass>pl.north93.northplatform.features.bungee.BungeeFeatures</mainClass>
             <description>Provides base features for Bungee server.</description>
             <dependencies>
                 <dependency>API.BaseFeatures</dependency>
@@ -40,7 +40,7 @@
 
         <component>
             <name>API.BukkitFeatures</name>
-            <mainClass>pl.north93.zgame.features.bukkit.BukkitFeatures</mainClass>
+            <mainClass>pl.north93.northplatform.features.bukkit.BukkitFeatures</mainClass>
             <description>Provides base features for Bukkit server.</description>
             <dependencies>
                 <dependency>API.BaseFeatures</dependency>

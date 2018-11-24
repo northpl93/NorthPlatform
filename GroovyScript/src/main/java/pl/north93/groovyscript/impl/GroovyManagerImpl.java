@@ -14,8 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import pl.north93.groovyscript.api.IGroovyManager;
 import pl.north93.groovyscript.api.IScriptContext;
 import pl.north93.groovyscript.api.source.IScriptSource;
-import pl.north93.zgame.api.global.ApiCore;
-import pl.north93.zgame.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 
 @Slf4j
 /*default*/ class GroovyManagerImpl implements IGroovyManager

@@ -20,9 +20,9 @@ import org.diorite.commons.reflections.FieldAccessor;
 import pl.north93.groovyscript.api.IGroovyManager;
 import pl.north93.groovyscript.api.IScriptContext;
 import pl.north93.groovyscript.api.IScriptResource;
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.bukkit.Main;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.Main;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public final class ListenerProvider
 {

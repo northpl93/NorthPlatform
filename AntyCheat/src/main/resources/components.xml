@@ -3,7 +3,7 @@
     <components>
         <component>
             <name>AntyCheat</name>
-            <mainClass>pl.north93.zgame.antycheat.AntyCheatComponent</mainClass>
+            <mainClass>pl.north93.northplatform.antycheat.AntyCheatComponent</mainClass>
             <description>Anti Cheat module.</description>
             <platforms>
                 <platform>BUKKIT</platform>

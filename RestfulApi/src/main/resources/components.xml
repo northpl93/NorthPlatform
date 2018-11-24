@@ -9,7 +9,7 @@
     <components>
         <component>
             <name>RestfulApi</name>
-            <mainClass>pl.north93.zgame.restful.RestfulComponent</mainClass>
+            <mainClass>pl.north93.northplatform.restful.RestfulComponent</mainClass>
             <description>Provides REST API for network management.</description>
             <dependencies>
                 <dependency>API.Database.StorageConnector</dependency>

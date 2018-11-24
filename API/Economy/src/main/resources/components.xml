@@ -3,11 +3,11 @@
     <components>
         <component>
             <name>API.Economy</name>
-            <mainClass>pl.north93.zgame.api.economy.impl.client.EconomyComponent</mainClass>
+            <mainClass>pl.north93.northplatform.api.economy.impl.client.EconomyComponent</mainClass>
             <description>Provides API for accessing economy.</description>
             <packages>
-                <package>pl.north93.zgame.api.economy.impl.client</package>
-                <package>pl.north93.zgame.api.economy.impl.shared</package>
+                <package>pl.north93.northplatform.api.economy.impl.client</package>
+                <package>pl.north93.northplatform.api.economy.impl.shared</package>
             </packages>
             <dependencies>
                 <dependency>API.Database.Redis.Observer</dependency>
@@ -21,7 +21,7 @@
 
         <component>
             <name>API.Economy.VaultConnector</name>
-            <mainClass>pl.north93.zgame.api.economy.impl.server.EconomyServerComponent</mainClass>
+            <mainClass>pl.north93.northplatform.api.economy.impl.server.EconomyServerComponent</mainClass>
             <description>Connects economy API with Vault.</description>
             <dependencies>
                 <dependency>API.Economy</dependency>
@@ -33,11 +33,11 @@
 
         <component>
             <name>API.Economy.Controller</name>
-            <mainClass>pl.north93.zgame.api.economy.impl.netcontroller.EconomyControllerComponent</mainClass>
+            <mainClass>pl.north93.northplatform.api.economy.impl.netcontroller.EconomyControllerComponent</mainClass>
             <description>Exposes config in the network.</description>
             <packages>
-                <package>pl.north93.zgame.api.economy.impl.netcontroller</package>
-                <package>pl.north93.zgame.api.economy.impl.shared</package>
+                <package>pl.north93.northplatform.api.economy.impl.netcontroller</package>
+                <package>pl.north93.northplatform.api.economy.impl.shared</package>
             </packages>
             <dependencies>
                 <dependency>API.Database.Redis.Observer</dependency>

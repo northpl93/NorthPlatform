@@ -1,6 +1,6 @@
 package pl.north93.groovyscript;
 
-import pl.north93.zgame.api.global.component.Component;
+import pl.north93.northplatform.api.global.component.Component;
 
 public class GroovyScriptComponent extends Component
 {

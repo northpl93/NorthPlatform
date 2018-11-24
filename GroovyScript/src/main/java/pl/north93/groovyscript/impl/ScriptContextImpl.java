@@ -14,7 +14,7 @@ import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovySystem;
 import pl.north93.groovyscript.api.IScriptContext;
 import pl.north93.groovyscript.api.IScriptResource;
-import pl.north93.zgame.api.global.utils.lang.JavaUtils;
+import pl.north93.northplatform.api.global.utils.lang.JavaUtils;
 
 /*default*/ class ScriptContextImpl implements IScriptContext
 {

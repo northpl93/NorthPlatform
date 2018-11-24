@@ -53,7 +53,7 @@ dependencies {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'pl.north93.zgame.api.standalone.StandaloneApiCore'
+        attributes 'Main-Class': 'pl.north93.northplatform.api.standalone.StandaloneApiCore'
     }
 }
 

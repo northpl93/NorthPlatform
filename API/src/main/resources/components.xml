@@ -23,34 +23,34 @@
     <components>
         <component>
             <name>API.Finalizer</name>
-            <mainClass>pl.north93.zgame.api.global.finalizer.impl.FinalizerImpl</mainClass>
+            <mainClass>pl.north93.northplatform.api.global.finalizer.impl.FinalizerImpl</mainClass>
             <description>Provides a way to detect when object is garbage collected</description>
             <packages>
-                <package>pl.north93.zgame.api.global.finalizer</package>
+                <package>pl.north93.northplatform.api.global.finalizer</package>
             </packages>
         </component>
 
         <component>
             <name>API.Commands</name>
-            <mainClass>pl.north93.zgame.api.global.commands.impl.CommandsManagerDecorator</mainClass>
+            <mainClass>pl.north93.northplatform.api.global.commands.impl.CommandsManagerDecorator</mainClass>
             <description>Provides unified commands API.</description>
         </component>
 
         <component>
             <name>API.URI</name>
-            <mainClass>pl.north93.zgame.api.global.uri.impl.UriManagerImpl</mainClass>
+            <mainClass>pl.north93.northplatform.api.global.uri.impl.UriManagerImpl</mainClass>
             <description>Unified system for inter-component communication.</description>
         </component>
 
         <component>
             <name>API.Serializer</name>
-            <mainClass>pl.north93.zgame.api.global.serializer.SerializerComponent</mainClass>
+            <mainClass>pl.north93.northplatform.api.global.serializer.SerializerComponent</mainClass>
             <description>Provides serialization platform and MsgPack/Mongo implementations.</description>
         </component>
 
         <component>
             <name>API.Database.StorageConnector</name>
-            <mainClass>pl.north93.zgame.api.global.storage.StorageConnector</mainClass>
+            <mainClass>pl.north93.northplatform.api.global.storage.StorageConnector</mainClass>
             <description>Provides connection with Redis and MongoDB databases.</description>
             <dependencies>
                 <dependency>API.Serializer</dependency>
@@ -59,7 +59,7 @@
 
         <component>
             <name>API.Database.Redis.Subscriber</name>
-            <mainClass>pl.north93.zgame.api.global.redis.subscriber.RedisSubscriberImpl</mainClass>
+            <mainClass>pl.north93.northplatform.api.global.redis.subscriber.RedisSubscriberImpl</mainClass>
             <description>Provides subscription API for redis database.</description>
             <dependencies>
                 <dependency>API.Database.StorageConnector</dependency>
@@ -68,7 +68,7 @@
 
         <component>
             <name>API.Database.Redis.Observer</name>
-            <mainClass>pl.north93.zgame.api.global.redis.observable.impl.ObservationManagerImpl</mainClass>
+            <mainClass>pl.north93.northplatform.api.global.redis.observable.impl.ObservationManagerImpl</mainClass>
             <description>Provides value observation API for redis database.</description>
             <dependencies>
                 <dependency>API.Database.StorageConnector</dependency>
@@ -78,7 +78,7 @@
 
         <component>
             <name>API.Database.Redis.RPC</name>
-            <mainClass>pl.north93.zgame.api.global.redis.rpc.impl.RpcManagerImpl</mainClass>
+            <mainClass>pl.north93.northplatform.api.global.redis.rpc.impl.RpcManagerImpl</mainClass>
             <description>Provides remote procedure call infrastructure.</description>
             <dependencies>
                 <dependency>API.Database.StorageConnector</dependency>
@@ -88,7 +88,7 @@
 
         <component>
             <name>API.Database.Redis.Event</name>
-            <mainClass>pl.north93.zgame.api.global.redis.event.impl.EventManagerImpl</mainClass>
+            <mainClass>pl.north93.northplatform.api.global.redis.event.impl.EventManagerImpl</mainClass>
             <description>Simple redis-driven events framework.</description>
             <dependencies>
                 <dependency>API.Database.StorageConnector</dependency>
@@ -98,7 +98,7 @@
 
         <component>
             <name>API.Config.Client</name>
-            <mainClass>pl.north93.zgame.api.global.config.client.ConfigClientImpl</mainClass>
+            <mainClass>pl.north93.northplatform.api.global.config.client.ConfigClientImpl</mainClass>
             <description>Configuration system client.</description>
             <dependencies>
                 <dependency>API.Database.Redis.Observer</dependency>
@@ -108,7 +108,7 @@
 
         <component>
             <name>API.MinecraftNetwork.PermissionsManager</name>
-            <mainClass>pl.north93.zgame.api.global.permissions.PermissionsManager</mainClass>
+            <mainClass>pl.north93.northplatform.api.global.permissions.PermissionsManager</mainClass>
             <description>Manages player's permissions.</description>
             <dependencies>
                 <dependency>API.Config.Client</dependency>
@@ -117,10 +117,10 @@
 
         <component>
             <name>API.MinecraftNetwork.NetworkManager</name>
-            <mainClass>pl.north93.zgame.api.global.network.impl.NetworkManager</mainClass>
+            <mainClass>pl.north93.northplatform.api.global.network.impl.NetworkManager</mainClass>
             <description>Provides core functions to manage Minecraft's network.</description>
             <packages>
-                <package>pl.north93.zgame.api.global.network</package>
+                <package>pl.north93.northplatform.api.global.network</package>
             </packages>
             <dependencies>
                 <dependency>API.Database.Redis.Observer</dependency>

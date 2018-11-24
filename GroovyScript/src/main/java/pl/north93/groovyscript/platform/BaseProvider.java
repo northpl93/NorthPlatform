@@ -1,9 +1,9 @@
 package pl.north93.groovyscript.platform;
 
-import pl.north93.zgame.api.global.ApiCore;
-import pl.north93.zgame.api.global.component.IComponentBundle;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.component.exceptions.BeanNotFoundException;
+import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.global.component.IComponentBundle;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.component.exceptions.BeanNotFoundException;
 
 public final class BaseProvider
 {

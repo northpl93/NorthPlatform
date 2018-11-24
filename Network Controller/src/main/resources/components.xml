@@ -3,7 +3,7 @@
     <components>
         <component>
             <name>NetworkController.Core</name>
-            <mainClass>pl.north93.zgame.controller.core.NetworkControllerCore</mainClass>
+            <mainClass>pl.north93.northplatform.controller.core.NetworkControllerCore</mainClass>
             <description>Manages Minecraft network.</description>
             <dependencies>
                 <dependency>API.Database.StorageConnector</dependency>
@@ -13,7 +13,7 @@
 
         <component>
             <name>NetworkController.ConfigServer</name>
-            <mainClass>pl.north93.zgame.controller.configserver.ConfigServerComponent</mainClass>
+            <mainClass>pl.north93.northplatform.controller.configserver.ConfigServerComponent</mainClass>
             <description>Server side of API.Config</description>
             <dependencies>
                 <dependency>API.Database.Redis.RPC</dependency>
@@ -23,7 +23,7 @@
 
         <component>
             <name>NetworkController.ServersManager</name>
-            <mainClass>pl.north93.zgame.controller.servers.NetworkServersManager</mainClass>
+            <mainClass>pl.north93.northplatform.controller.servers.NetworkServersManager</mainClass>
             <description>Manages all servers in network.</description>
             <dependencies>
                 <dependency>API.Database.StorageConnector</dependency>
@@ -34,7 +34,7 @@
 
         <component>
             <name>NetworkController.PlayersDataFixer</name>
-            <mainClass>pl.north93.zgame.controller.playerfixer.PlayersDataFixer</mainClass>
+            <mainClass>pl.north93.northplatform.controller.playerfixer.PlayersDataFixer</mainClass>
             <description>Removes abandoned player's data.</description>
             <dependencies>
                 <dependency>API.Database.StorageConnector</dependency>

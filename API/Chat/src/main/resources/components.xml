@@ -3,7 +3,7 @@
     <components>
         <component>
             <name>API.Chat.Bukkit</name>
-            <mainClass>pl.north93.zgame.api.chat.bukkit.BukkitChatComponent</mainClass>
+            <mainClass>pl.north93.northplatform.api.chat.bukkit.BukkitChatComponent</mainClass>
             <description>Chat API.</description>
             <packages>
                 <package>pl.north93.zgame.api.chat.global</package>
@@ -19,7 +19,7 @@
 
         <component>
             <name>API.Chat.Bungee</name>
-            <mainClass>pl.north93.zgame.api.chat.bungee.BungeeChatComponent</mainClass>
+            <mainClass>pl.north93.northplatform.api.chat.bungee.BungeeChatComponent</mainClass>
             <description>Chat API.</description>
             <packages>
                 <package>pl.north93.zgame.api.chat.global</package>
@@ -35,7 +35,7 @@
 
         <component>
             <name>API.Chat.Controller</name>
-            <mainClass>pl.north93.zgame.api.chat.controller.ControllerChatComponent</mainClass>
+            <mainClass>pl.north93.northplatform.api.chat.controller.ControllerChatComponent</mainClass>
             <description>Chat API.</description>
             <packages>
                 <package>pl.north93.zgame.api.chat.global</package>

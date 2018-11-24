@@ -4,7 +4,7 @@
     <components>
         <component>
             <name>API.ProxyServerManager</name>
-            <mainClass>pl.north93.zgame.api.bungee.proxy.impl.ProxyServerManagerImpl</mainClass>
+            <mainClass>pl.north93.northplatform.api.bungee.proxy.impl.ProxyServerManagerImpl</mainClass>
             <description>Core component that manages the proxy instance.</description>
             <dependencies>
                 <dependency>API.Database.Redis.Observer</dependency>

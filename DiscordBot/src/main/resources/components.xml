@@ -12,7 +12,7 @@
     <components>
         <component>
             <name>DiscordBot</name>
-            <mainClass>pl.north93.minecraft.discord.DiscordBotComponent</mainClass>
+            <mainClass>pl.north93.northplatform.discord.DiscordBotComponent</mainClass>
             <description>Discord Bot</description>
             <packages>
                 <package>pl.north93.minecraft.discord</package>

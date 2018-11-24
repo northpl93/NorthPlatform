@@ -3,11 +3,11 @@
     <components>
         <component>
             <name>MiniGameApi.Server</name>
-            <mainClass>pl.arieals.api.minigame.server.MiniGameServer</mainClass>
+            <mainClass>pl.north93.northplatform.api.minigame.server.MiniGameServer</mainClass>
             <description>MiniGames API.</description>
             <packages>
-                <package>pl.arieals.api.minigame.server</package>
-                <package>pl.arieals.api.minigame.shared</package>
+                <package>pl.north93.northplatform.api.minigame.server</package>
+                <package>pl.north93.northplatform.api.minigame.shared</package>
             </packages>
             <dependencies>
                 <dependency>API.Database.Redis.RPC</dependency>
@@ -23,11 +23,11 @@
 
         <component>
             <name>MiniGameApi.Controller</name>
-            <mainClass>pl.arieals.api.minigame.controller.MiniGameController</mainClass>
+            <mainClass>pl.north93.northplatform.api.minigame.controller.MiniGameController</mainClass>
             <description>MiniGames API Controller.</description>
             <packages>
-                <package>pl.arieals.api.minigame.controller</package>
-                <package>pl.arieals.api.minigame.shared</package>
+                <package>pl.north93.northplatform.api.minigame.controller</package>
+                <package>pl.north93.northplatform.api.minigame.shared</package>
             </packages>
             <dependencies>
                 <dependency>API.Database.Redis.RPC</dependency>
@@ -42,11 +42,11 @@
 
         <component>
             <name>MiniGameApi.Bungee</name>
-            <mainClass>pl.arieals.api.minigame.bungee.MiniGameBungee</mainClass>
+            <mainClass>pl.north93.northplatform.api.minigame.bungee.MiniGameBungee</mainClass>
             <description>MiniGames API Bungee.</description>
             <packages>
-                <package>pl.arieals.api.minigame.bungee</package>
-                <package>pl.arieals.api.minigame.shared</package>
+                <package>pl.north93.northplatform.api.minigame.bungee</package>
+                <package>pl.north93.northplatform.api.minigame.shared</package>
             </packages>
             <platforms>
                 <platform>BUNGEE</platform>

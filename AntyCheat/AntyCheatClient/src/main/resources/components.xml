@@ -3,7 +3,7 @@
     <components>
         <component>
             <name>AntyCheat.Client</name>
-            <mainClass>pl.north93.zgame.antycheat.client.AntyCheatClientComponent</mainClass>
+            <mainClass>pl.north93.northplatform.antycheat.client.AntyCheatClientComponent</mainClass>
             <description>Anti Cheat module.</description>
             <dependencies>
                 <dependency>API.BukkitFeatures</dependency>

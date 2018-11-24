@@ -3,7 +3,7 @@
     <components>
         <component>
             <name>Lobby.Features</name>
-            <mainClass>pl.arieals.lobby.LobbyFeatures</mainClass>
+            <mainClass>pl.north93.northplatform.lobby.LobbyFeatures</mainClass>
             <description>Base features of lobby.</description>
             <dependencies>
                 <dependency>API.GuiManager</dependency>

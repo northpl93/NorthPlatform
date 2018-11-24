@@ -3,7 +3,7 @@
     <components>
         <component>
             <name>PlayerDataShare.SharedImpl</name>
-            <mainClass>pl.north93.zgame.datashare.sharedimpl.PlayerDataShareComponent</mainClass>
+            <mainClass>pl.north93.northplatform.datashare.sharedimpl.PlayerDataShareComponent</mainClass>
             <description>Shared things between STANDALONE/BUKKIT/BUNGEE</description>
             <dependencies>
                 <dependency>API.Database.Redis.RPC</dependency>
@@ -13,7 +13,7 @@
 
         <component>
             <name>PlayerDataShare.Bungee</name>
-            <mainClass>pl.north93.zgame.datashare.bungee.PlayerDataShareBungee</mainClass>
+            <mainClass>pl.north93.northplatform.datashare.bungee.PlayerDataShareBungee</mainClass>
             <description>Loads players data from database and broadcast it.</description>
             <dependencies>
                 <dependency>PlayerDataShare.SharedImpl</dependency>
@@ -25,7 +25,7 @@
 
         <component>
             <name>PlayerDataShare.Bukkit</name>
-            <mainClass>pl.north93.zgame.datashare.server.PlayerDataShareServer</mainClass>
+            <mainClass>pl.north93.northplatform.datashare.server.PlayerDataShareServer</mainClass>
             <description>Bukkit server implementation of PlayerDataShare</description>
             <dependencies>
                 <dependency>PlayerDataShare.SharedImpl</dependency>
@@ -37,7 +37,7 @@
 
         <component>
             <name>PlayerDataShare.Controller</name>
-            <mainClass>pl.north93.zgame.datashare.netcontroller.PlayerDataShareController</mainClass>
+            <mainClass>pl.north93.northplatform.datashare.netcontroller.PlayerDataShareController</mainClass>
             <description>Network controller implementation of PlayerDataShare</description>
             <dependencies>
                 <dependency>PlayerDataShare.SharedImpl</dependency>

@@ -3,11 +3,11 @@
     <components>
         <component>
             <name>NoPremiumAuth.Server</name>
-            <mainClass>pl.north93.zgame.auth.server.AuthServerComponent</mainClass>
+            <mainClass>pl.north93.northplatform.auth.server.AuthServerComponent</mainClass>
             <description>Manages no-premium authentication on server.</description>
             <packages>
-                <package>pl.north93.zgame.auth.server</package>
-                <package>pl.north93.zgame.auth.sharedimpl</package>
+                <package>pl.north93.northplatform.auth.server</package>
+                <package>pl.north93.northplatform.auth.sharedimpl</package>
             </packages>
             <dependencies>
                 <dependency>API.Database.Redis.Observer</dependency>
@@ -20,11 +20,11 @@
 
         <component>
             <name>NoPremiumAuth.Proxy</name>
-            <mainClass>pl.north93.zgame.auth.bungee.AuthProxyComponent</mainClass>
+            <mainClass>pl.north93.northplatform.auth.bungee.AuthProxyComponent</mainClass>
             <description>Manages no-premium authentication on proxy.</description>
             <packages>
-                <package>pl.north93.zgame.auth.bungee</package>
-                <package>pl.north93.zgame.auth.sharedimpl</package>
+                <package>pl.north93.northplatform.auth.bungee</package>
+                <package>pl.north93.northplatform.auth.sharedimpl</package>
             </packages>
             <dependencies>
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>

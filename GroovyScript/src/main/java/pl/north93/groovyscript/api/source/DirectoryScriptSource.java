@@ -12,7 +12,7 @@ import org.diorite.commons.reflections.MethodInvoker;
 
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyCodeSource;
-import pl.north93.zgame.api.global.utils.lang.SneakyThrow;
+import pl.north93.northplatform.api.global.utils.lang.SneakyThrow;
 
 public class DirectoryScriptSource implements IScriptSource
 {

@@ -3,11 +3,11 @@
     <components>
         <component>
             <name>ItemShop.Controller</name>
-            <mainClass>pl.north93.zgame.itemshop.controller.ItemShopController</mainClass>
+            <mainClass>pl.north93.northplatform.itemshop.controller.ItemShopController</mainClass>
             <description>ItemShop REST API.</description>
             <packages>
-                <package>pl.north93.zgame.itemshop.shared</package>
-                <package>pl.north93.zgame.itemshop.controller</package>
+                <package>pl.north93.northplatform.itemshop.shared</package>
+                <package>pl.north93.northplatform.itemshop.controller</package>
             </packages>
             <dependencies>
                 <dependency>RestfulApi</dependency>

@@ -3,7 +3,7 @@
     <components>
         <component>
             <name>WebAuth.Controller</name>
-            <mainClass>pl.north93.zgame.webauth.controller.WebAuthControllerComponent</mainClass>
+            <mainClass>pl.north93.northplatform.webauth.controller.WebAuthControllerComponent</mainClass>
             <description>Creates tokens and handles api calls.</description>
             <dependencies>
                 <dependency>API.Database.Redis.RPC</dependency>
@@ -18,7 +18,7 @@
 
         <component>
             <name>WebAuth.Server</name>
-            <mainClass>pl.north93.zgame.webauth.server.WebAuthServerComponent</mainClass>
+            <mainClass>pl.north93.northplatform.webauth.server.WebAuthServerComponent</mainClass>
             <description>Provides web authentication command.</description>
             <dependencies>
                 <dependency>API.Database.Redis.RPC</dependency>

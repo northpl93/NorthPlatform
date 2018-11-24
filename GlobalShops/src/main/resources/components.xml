@@ -3,11 +3,11 @@
     <components>
         <component>
             <name>GlobalShops.Controller</name>
-            <mainClass>pl.arieals.globalshops.controller.GlobalShopsController</mainClass>
+            <mainClass>pl.north93.northplatform.globalshops.controller.GlobalShopsController</mainClass>
             <description>Controller part of global shops system. Publishes data to redis.</description>
             <packages>
-                <package>pl.arieals.globalshops.shared</package>
-                <package>pl.arieals.globalshops.controller</package>
+                <package>pl.north93.northplatform.globalshops.shared</package>
+                <package>pl.north93.northplatform.globalshops.controller</package>
             </packages>
             <dependencies>
                 <dependency>NetworkController.ConfigServer</dependency>
@@ -20,11 +20,11 @@
 
         <component>
             <name>GlobalShops.Server</name>
-            <mainClass>pl.arieals.globalshops.server.impl.GlobalShopsServer</mainClass>
+            <mainClass>pl.north93.northplatform.globalshops.server.impl.GlobalShopsServer</mainClass>
             <description>Bukkit part of GlobalShops API.</description>
             <packages>
-                <package>pl.arieals.globalshops.shared</package>
-                <package>pl.arieals.globalshops.server</package>
+                <package>pl.north93.northplatform.globalshops.shared</package>
+                <package>pl.north93.northplatform.globalshops.server</package>
             </packages>
             <dependencies>
                 <dependency>API.Config.Client</dependency>
@@ -37,11 +37,11 @@
 
         <component>
             <name>GlobalShops.Bungee</name>
-            <mainClass>pl.arieals.globalshops.bungee.GlobalShopsBungee</mainClass>
+            <mainClass>pl.north93.northplatform.globalshops.bungee.GlobalShopsBungee</mainClass>
             <description>Dummy component needed to expose classes for serialization.</description>
             <packages>
-                <package>pl.arieals.globalshops.shared</package>
-                <package>pl.arieals.globalshops.bungee</package>
+                <package>pl.north93.northplatform.globalshops.shared</package>
+                <package>pl.north93.northplatform.globalshops.bungee</package>
             </packages>
             <platforms>
                 <platform>BUNGEE</platform>
