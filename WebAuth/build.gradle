@@ -1,8 +1,0 @@
-/**
- * WebAuth build script
- */
-
-dependencies {
-    shadow project(path: ':API', configuration: 'shadow')
-    shadow project(':RestfulApi')
-}

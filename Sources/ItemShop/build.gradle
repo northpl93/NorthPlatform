@@ -1,0 +1,10 @@
+/**
+ * ItemShop build script
+ */
+
+dependencies {
+    shadow project(path: ':Sources:API', configuration: 'shadow')
+    shadow project(path: ':Sources:API:MiniGame', configuration: 'shadow')
+    shadow project(':Sources:API:Economy')
+    shadow project(':Sources:RestfulApi')
+}

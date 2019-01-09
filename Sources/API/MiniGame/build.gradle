@@ -1,0 +1,13 @@
+/**
+ * API.MiniGame build script
+ */
+
+dependencies {
+    shadow project(path: ':Sources:API', configuration: 'shadow')
+    shadow project(':Sources:API:Chat')
+    shadow project(':Sources:API:Economy')
+    shadow project(':Sources:NetworkController')
+    shadow project(':Sources:WorldProperties')
+
+    shadow 'net.citizensnpcs:citizens:2.0.22-SNAPSHOT'
+}

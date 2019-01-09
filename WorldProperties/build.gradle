@@ -1,7 +1,0 @@
-/**
- * API.MiniGame build script
- */
-
-dependencies {
-    shadow project(path: ':API', configuration: 'shadow')
-}

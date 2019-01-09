@@ -6,35 +6,37 @@
 rootProject.name = 'NorthPlatform'
 
 // Includes
-include 'API'
-include 'API:BaseFeatures'
-include 'API:Chat'
-include 'API:Economy'
-include 'API:MiniGame'
+include ':Sources:API'
+include ':Sources:API:BaseFeatures'
+include ':Sources:API:Chat'
+include ':Sources:API:Economy'
+include ':Sources:API:MiniGame'
 
-include 'AntyCheat'
-include 'AntyCheat:AntyCheatClient'
+include 'Sources:AntyCheat'
+include 'Sources:AntyCheat:AntyCheatClient'
 
-include 'DiscordBot'
+include 'Sources:DiscordBot'
 
-include 'GlobalShops'
+include 'Sources:GlobalShops'
 
-include 'GroovyScript'
+include 'Sources:GroovyScript'
 
-include 'ItemShop'
+include 'Sources:ItemShop'
 
-include 'Lobby'
+include 'Sources:Lobby'
 
-include 'Network Controller'
+include 'Sources:NetworkController'
 
-include 'NoPremiumAuth'
+include 'Sources:NoPremiumAuth'
 
-include 'PlayerDataShare'
+include 'Sources:Pets'
 
-include 'RestfulApi'
+include 'Sources:PlayerDataShare'
 
-include 'Server Deamon'
+include 'Sources:RestfulApi'
 
-include 'WebAuth'
+include 'Sources:ServerDeamon'
 
-include 'WorldProperties'
+include 'Sources:WebAuth'
+
+include 'Sources:WorldProperties'

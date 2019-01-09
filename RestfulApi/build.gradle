@@ -1,8 +1,0 @@
-/**
- * RestfulApi build script
- */
-
-dependencies {
-    shadow project(path: ':API', configuration: 'shadow')
-    compile 'com.sparkjava:spark-core:2.7.1'
-}

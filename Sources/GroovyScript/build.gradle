@@ -1,0 +1,9 @@
+/**
+ * DiscordBot build script
+ */
+
+dependencies {
+    shadow project(path: ':Sources:API', configuration: 'shadow')
+
+    compile 'org.codehaus.groovy:groovy:2.5.0'
+}

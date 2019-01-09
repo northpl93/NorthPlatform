@@ -1,9 +1,0 @@
-/**
- * GlobalShops build script
- */
-
-dependencies {
-    shadow project(path: ':API', configuration: 'shadow')
-    shadow project(path: ':API:MiniGame', configuration: 'shadow')
-    shadow project(':Network Controller')
-}

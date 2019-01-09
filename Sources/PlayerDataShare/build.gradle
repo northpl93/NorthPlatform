@@ -1,0 +1,7 @@
+/**
+ * PlayerDataShare build script
+ */
+
+dependencies {
+    shadow project(path: ':Sources:API', configuration: 'shadow')
+}

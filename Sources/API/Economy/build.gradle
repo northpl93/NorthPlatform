@@ -1,0 +1,18 @@
+/**
+ * API.Economy build script
+ */
+
+repositories {
+    maven {
+        url 'http://nexus.hc.to/content/repositories/pub_releases'
+    }
+}
+
+dependencies {
+    shadow project(path: ':Sources:API', configuration: 'shadow')
+    shadow project(':Sources:RestfulApi')
+
+    shadow('net.milkbowl.vault:Vault:1.6.6') {
+        exclude group: 'org.bukkit', module: 'bukkit'
+    }
+}

@@ -1,11 +1,11 @@
 ### Test server / testing environment
 /test/
-/API/logs/
-/API/connection.yml
+/Sources/API/logs/
+/Sources/API/connection.yml
 
-### Java/Maven
+### Java/Maven/Gradle
 target/
-dependency-reduced-pom.xml
+build/
 *.class
 *.jar
 *.war
@@ -30,5 +30,8 @@ Desktop.ini
 $RECYCLE.BIN/
 *.lnk
 
-### Keep include libraries
-!lib/*
+### Keep included libraries
+!Libraries/*
+
+### Keep gradle wrapper
+!gradle/wrapper/*

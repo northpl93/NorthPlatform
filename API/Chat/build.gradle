@@ -1,7 +1,0 @@
-/**
- * API.Chat build script
- */
-
-dependencies {
-    shadow project(path: ':API', configuration: 'shadow')
-}

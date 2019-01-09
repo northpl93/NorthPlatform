@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gui height="5" title="@window_title">
+	<container pos="0,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+	<container pos="8,0" size="1,5">
+		<background id="STAINED_GLASS_PANE" data="14" />
+	</container>
+    <container pos="1,0" size="7,5">
+        <content>
+
+            <button pos="3,0">
+            	<icon id="minecraft:tipped_arrow" name="@title">
+            		<potionMeta>
+            			<potionData type="WEAKNESS" />
+            		</potionMeta>
+            	</icon>
+            </button>
+            
+            <button pos="1,2">
+            	<icon id="minecraft:clock" name="@loadingtime.name$color" lore="@loadingtime.lore$color,count,max"/>
+            	<metadata key="guiName" value="ninja_czas" />
+            	<metadata key="folder" value="true" />
+            	<metadata key="item1" value="ninja.loadingtime:1" />
+            	<metadata key="item2" value="ninja.loadingtime:2" />
+            	<metadata key="item3" value="ninja.loadingtime:3" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="2,2">
+            	<icon id="minecraft:chainmail_boots" name="@boots.name$color" lore="@boots.lore$color,status,price"/>
+            	<metadata key="item" value="ninja.boots" />
+            	<onClick>buy</onClick>
+            </button>
+            
+            <button pos="3,2">
+            	<icon id="minecraft:leather_chestplate" name="@chestplate1.name$color" lore="@chestplate1.lore$color,status,price"/>
+            	<metadata key="item" value="ninja.chestplate:1" />
+            	<onClick>buy</onClick>
+            </button>
+            
+            <button pos="4,2">
+            	<icon id="minecraft:chainmail_chestplate" name="@chestplate2.name$color" lore="@chestplate2.lore$color,status,price"/>
+            	<metadata key="item" value="ninja.chestplate:2" />
+            	<onClick>buy</onClick>
+            </button>
+            
+            <button pos="5,2">
+            	<icon id="minecraft:planks" name="@budulec.name$color" lore="@budulec.lore$color,count,max" />
+            	<metadata key="guiName" value="ninja_budulec" />
+            	<metadata key="folder" value="true" />
+            	<metadata key="item1" value="ninja.budulec:1" />
+            	<metadata key="item2" value="ninja.budulec:2" />
+            	<metadata key="item3" value="ninja.budulec:3" />
+            	<onClick>open</onClick>
+            </button>
+            
+            <button pos="6,4">
+            	<icon id="minecraft:iron_door" name="@return" />
+            	<metadata key="guiName" value="main" />
+            	<onClick>open</onClick>
+            </button>
+        </content>
+    </container>
+</gui>
