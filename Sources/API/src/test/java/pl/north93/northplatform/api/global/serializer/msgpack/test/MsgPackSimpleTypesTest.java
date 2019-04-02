@@ -1,7 +1,10 @@
 package pl.north93.northplatform.api.global.serializer.msgpack.test;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+
+import org.junit.jupiter.api.Test;
 
 import pl.north93.northplatform.api.global.serializer.msgpack.MsgPackSerializationFormat;
 import pl.north93.northplatform.api.global.serializer.platform.NorthSerializer;
@@ -18,8 +21,8 @@ public class MsgPackSimpleTypesTest
         final byte[] bytes = this.serializer.serialize(String.class, "test");
         final Object deserialized = this.serializer.deserialize(String.class, bytes);
 
-        Assert.assertSame(String.class, deserialized.getClass());
-        Assert.assertEquals("test", deserialized);
+        assertSame(String.class, deserialized.getClass());
+        assertEquals("test", deserialized);
     }
 
     @Test
@@ -28,8 +31,8 @@ public class MsgPackSimpleTypesTest
         final byte[] bytes = this.serializer.serialize(Boolean.class, true);
         final Object deserialized = this.serializer.deserialize(Boolean.class, bytes);
 
-        Assert.assertSame(Boolean.class, deserialized.getClass());
-        Assert.assertEquals(true, deserialized);
+        assertSame(Boolean.class, deserialized.getClass());
+        assertEquals(true, deserialized);
     }
 
     @Test
@@ -40,8 +43,8 @@ public class MsgPackSimpleTypesTest
         final byte[] bytes = this.serializer.serialize(Short.class, test);
         final Object deserialized = this.serializer.deserialize(Short.class, bytes);
 
-        Assert.assertSame(Short.class, deserialized.getClass());
-        Assert.assertEquals(test, deserialized);
+        assertSame(Short.class, deserialized.getClass());
+        assertEquals(test, deserialized);
     }
 
     @Test
@@ -50,8 +53,8 @@ public class MsgPackSimpleTypesTest
         final byte[] bytes = this.serializer.serialize(Integer.class, 42);
         final Object deserialized = this.serializer.deserialize(Integer.class, bytes);
 
-        Assert.assertSame(Integer.class, deserialized.getClass());
-        Assert.assertEquals(42, deserialized);
+        assertSame(Integer.class, deserialized.getClass());
+        assertEquals(42, deserialized);
     }
 
     @Test
@@ -62,8 +65,8 @@ public class MsgPackSimpleTypesTest
         final byte[] bytes = this.serializer.serialize(Float.class, PI);
         final Object deserialized = this.serializer.deserialize(Float.class, bytes);
 
-        Assert.assertSame(Float.class, deserialized.getClass());
-        Assert.assertEquals(PI, deserialized);
+        assertSame(Float.class, deserialized.getClass());
+        assertEquals(PI, deserialized);
     }
 
     @Test
@@ -74,8 +77,8 @@ public class MsgPackSimpleTypesTest
         final byte[] bytes = this.serializer.serialize(Double.class, PI);
         final Object deserialized = this.serializer.deserialize(Double.class, bytes);
 
-        Assert.assertSame(Double.class, deserialized.getClass());
-        Assert.assertEquals(PI, deserialized);
+        assertSame(Double.class, deserialized.getClass());
+        assertEquals(PI, deserialized);
     }
 
     @Test
@@ -84,7 +87,7 @@ public class MsgPackSimpleTypesTest
         final byte[] bytes = this.serializer.serialize(Long.class, 42L);
         final Object deserialized = this.serializer.deserialize(Long.class, bytes);
 
-        Assert.assertSame(Long.class, deserialized.getClass());
-        Assert.assertEquals(42L, deserialized);
+        assertSame(Long.class, deserialized.getClass());
+        assertEquals(42L, deserialized);
     }
 }

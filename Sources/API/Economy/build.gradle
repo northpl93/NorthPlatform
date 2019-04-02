@@ -9,9 +9,8 @@ repositories {
 }
 
 dependencies {
-    shadow project(path: ':Sources:API', configuration: 'shadow')
-    shadow project(':Sources:RestfulApi')
-
+    shadow project(path: ':API', configuration: 'shadow')
+    shadow project(':RestfulApi')
     shadow('net.milkbowl.vault:Vault:1.6.6') {
         exclude group: 'org.bukkit', module: 'bukkit'
     }

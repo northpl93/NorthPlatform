@@ -1,12 +1,15 @@
 package pl.north93.northplatform.api.global.serializer.mongodb.test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+
 import java.io.StringWriter;
 
 import org.bson.BsonReader;
 import org.bson.json.JsonReader;
 import org.bson.json.JsonWriter;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -43,8 +46,8 @@ public class MongoDbSimpleObjectsTest
         System.out.println(stringWriter);
         final Object deserialized = this.serializer.deserialize(SimpleObject.class, new JsonReader(stringWriter.toString()));
 
-        Assert.assertSame(SimpleObject.class, deserialized.getClass());
-        Assert.assertEquals(beforeSerialization, deserialized);
+        assertSame(SimpleObject.class, deserialized.getClass());
+        assertEquals(beforeSerialization, deserialized);
     }
 
     @Test
@@ -58,7 +61,7 @@ public class MongoDbSimpleObjectsTest
         System.out.println(stringWriter);
         final Object deserialized = this.serializer.deserialize(Object.class, new JsonReader(stringWriter.toString()));
 
-        Assert.assertSame(SimpleObject.class, deserialized.getClass());
-        Assert.assertEquals(beforeSerialization, deserialized);
+        assertSame(SimpleObject.class, deserialized.getClass());
+        assertEquals(beforeSerialization, deserialized);
     }
 }

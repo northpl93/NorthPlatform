@@ -3,6 +3,6 @@
  */
 
 dependencies {
-    shadow project(path: ':Sources:API', configuration: 'shadow')
-    shadow project(':Sources:RestfulApi')
+    shadow project(path: ':API', configuration: 'shadow')
+    shadow project(':RestfulApi')
 }

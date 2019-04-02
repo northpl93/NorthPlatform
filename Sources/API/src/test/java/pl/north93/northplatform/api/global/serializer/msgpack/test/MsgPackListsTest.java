@@ -1,12 +1,15 @@
 package pl.north93.northplatform.api.global.serializer.msgpack.test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import pl.north93.northplatform.api.global.serializer.msgpack.MsgPackSerializationFormat;
 import pl.north93.northplatform.api.global.serializer.platform.NorthSerializer;
@@ -22,10 +25,10 @@ public class MsgPackListsTest
         final byte[] bytes = this.serializer.serialize(ArrayList.class, new ArrayList<>());
         final Object deserialized = this.serializer.deserialize(ArrayList.class, bytes);
 
-        Assert.assertSame(ArrayList.class, deserialized.getClass());
+        assertSame(ArrayList.class, deserialized.getClass());
 
         final List deserializedList = (List) deserialized;
-        Assert.assertEquals(0, deserializedList.size());
+        assertEquals(0, deserializedList.size());
     }
 
     @Test
@@ -36,10 +39,10 @@ public class MsgPackListsTest
         final byte[] bytes = this.serializer.serialize(ArrayList.class, strings);
         final Object deserialized = this.serializer.deserialize(ArrayList.class, bytes);
 
-        Assert.assertSame(ArrayList.class, deserialized.getClass());
+        assertSame(ArrayList.class, deserialized.getClass());
 
         final List deserializedList = (List) deserialized;
-        Assert.assertEquals(strings, deserializedList);
+        assertEquals(strings, deserializedList);
     }
 
     @Test
@@ -50,10 +53,10 @@ public class MsgPackListsTest
         final byte[] bytes = this.serializer.serialize(ArrayList.class, strings);
         final Object deserialized = this.serializer.deserialize(ArrayList.class, bytes);
 
-        Assert.assertSame(ArrayList.class, deserialized.getClass());
+        assertSame(ArrayList.class, deserialized.getClass());
 
         final List deserializedList = (List) deserialized;
-        Assert.assertEquals(strings, deserializedList);
+        assertEquals(strings, deserializedList);
     }
 
     @Test
@@ -65,9 +68,9 @@ public class MsgPackListsTest
         final byte[] bytes = this.serializer.serialize(ArrayList.class, outerList);
         final Object deserialized = this.serializer.deserialize(ArrayList.class, bytes);
 
-        Assert.assertSame(ArrayList.class, deserialized.getClass());
+        assertSame(ArrayList.class, deserialized.getClass());
 
         final List deserializedList = (List) deserialized;
-        Assert.assertEquals(outerList, deserializedList);
+        assertEquals(outerList, deserializedList);
     }
 }

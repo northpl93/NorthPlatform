@@ -1,5 +1,6 @@
 /**
  * NorthPlatform's root build script
+ * Also look at Sources/build.gradle
  */
 
 plugins {
@@ -23,5 +24,39 @@ allprojects {
 }
 
 subprojects {
+    apply plugin: 'java'
+    apply plugin: 'io.franzbecker.gradle-lombok'
+    apply plugin: 'com.github.johnrengelman.shadow'
+
+    lombok {
+        // Manually set lombok version because default one doesnt't work on Java 11
+        version = "1.18.4"
+    }
+
+    jar {
+        // Add some attributes to every manifest
+        manifest {
+            attributes 'Name': project.name
+            attributes 'Implementation-Version': project.version
+        }
+    }
+
+    shadowJar {
+        archiveName "${project.name}.jar"
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    compileJava.options.encoding = "UTF-8"
+    compileTestJava.options.encoding = "UTF-8"
+
     version = grgit.head().abbreviatedId
+
+    // execute shadowJar when we run 'gradle build'
+    tasks.build.dependsOn tasks.shadowJar
 }

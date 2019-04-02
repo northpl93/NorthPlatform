@@ -3,6 +3,10 @@
  */
 
 dependencies {
-    shadow project(path: ':Sources:API', configuration: 'compile')
-    shadow project(path: ':Sources:API', configuration: 'shadow')
+    shadow project(path: ':API', configuration: 'shadow')
+    
+    // Unit tests things
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
+    testImplementation 'org.mockito:mockito-core:2.25.1'
+    testCompile project(path: ':API', configuration: 'shadow')
 }

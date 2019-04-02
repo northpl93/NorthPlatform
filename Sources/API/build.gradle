@@ -3,7 +3,6 @@
  */
 
 dependencies {
-
     // Add libraries from lib/ directory
     compile ':AgentUtils-1.0'
     shadow ':spigot-1.12.2'
@@ -14,11 +13,14 @@ dependencies {
     compile 'net.md-5:bungeecord-chat:1.13-mcpiraci'
 
     // WorldEdit
-    shadow 'com.sk89q.worldedit:worldedit-core:6.1.4-SNAPSHOT'
+    shadow ('com.sk89q.worldedit:worldedit-core:6.1.4-SNAPSHOT') {
+        exclude group: 'junit', module: 'junit' // we have newer version of junit
+    }
     shadow 'com.sk89q.worldedit:worldedit-bukkit:6.1.4'
 
     // APIS deprecated/removed in Java 9+
     shadow 'javax.xml.bind:jaxb-api:2.3.1'
+    shadow 'com.sun.xml.bind:jaxb-core:2.3.0.1'
     shadow 'com.sun.xml.bind:jaxb-impl:2.3.1'
 
     // logging
@@ -45,10 +47,9 @@ dependencies {
     compile 'org.msgpack:msgpack-core:0.8.15'
 
     // Unit tests things
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.13.0'
-    testImplementation 'org.powermock:powermock-module-junit4:2.0.0-beta.5'
-    testImplementation 'org.powermock:powermock-api-mockito2:2.0.0-beta.5'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
+    testImplementation 'org.mockito:mockito-core:2.25.1'
+    testImplementation project(path: ':API', configuration: 'shadow')
 }
 
 jar {
@@ -65,4 +66,10 @@ shadowJar {
 
 test {
     workingDir "$projectDir/build/northplatform-test"
+
+    systemProperty "jdk.attach.allowAttachSelf", "true"
+}
+
+tasks.test.doFirst {
+    mkdir "$projectDir/build/northplatform-test"
 }

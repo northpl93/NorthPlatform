@@ -3,9 +3,8 @@
  */
 
 dependencies {
-    shadow project(path: ':Sources:API', configuration: 'shadow')
-    shadow project(':Sources:API:Economy')
-
+    shadow project(path: ':API', configuration: 'shadow')
+    shadow project(':API:Economy')
     compile('net.dv8tion:JDA:3.8.0_427') {
         exclude group: 'club.minnced', module: 'opus-java'
     }

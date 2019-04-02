@@ -1,7 +1,10 @@
 package pl.north93.northplatform.api.global.serializer.msgpack.test;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+
+import org.junit.jupiter.api.Test;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -34,8 +37,8 @@ public class MsgPackSimpleObjectsTest
         final byte[] bytes = this.serializer.serialize(SimpleObject.class, beforeSerialization);
         final Object deserialized = this.serializer.deserialize(SimpleObject.class, bytes);
 
-        Assert.assertSame(SimpleObject.class, deserialized.getClass());
-        Assert.assertEquals(beforeSerialization, deserialized);
+        assertSame(SimpleObject.class, deserialized.getClass());
+        assertEquals(beforeSerialization, deserialized);
     }
 
     @Test
@@ -46,7 +49,7 @@ public class MsgPackSimpleObjectsTest
         final byte[] bytes = this.serializer.serialize(Object.class, beforeSerialization);
         final Object deserialized = this.serializer.deserialize(Object.class, bytes);
 
-        Assert.assertSame(SimpleObject.class, deserialized.getClass());
-        Assert.assertEquals(beforeSerialization, deserialized);
+        assertSame(SimpleObject.class, deserialized.getClass());
+        assertEquals(beforeSerialization, deserialized);
     }
 }

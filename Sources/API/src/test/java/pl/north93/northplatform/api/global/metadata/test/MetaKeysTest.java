@@ -1,9 +1,9 @@
 package pl.north93.northplatform.api.global.metadata.test;
 
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import pl.north93.northplatform.api.global.metadata.MetaKey;
 

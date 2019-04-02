@@ -3,8 +3,8 @@
  */
 
 dependencies {
-    shadow project(path: ':Sources:API', configuration: 'shadow')
-    shadow project(path: ':Sources:API:BaseFeatures', configuration: 'shadow')
-    shadow project(path: ':Sources:API:MiniGame', configuration: 'shadow')
-    shadow project(path: ':Sources:AntyCheat', configuration: 'shadow')
+    shadow project(path: ':API', configuration: 'shadow')
+    shadow project(path: ':API:BaseFeatures', configuration: 'shadow')
+    shadow project(path: ':API:MiniGame', configuration: 'shadow')
+    shadow project(path: ':AntyCheat', configuration: 'shadow')
 }

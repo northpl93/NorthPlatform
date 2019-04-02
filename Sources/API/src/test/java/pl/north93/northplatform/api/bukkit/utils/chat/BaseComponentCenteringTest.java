@@ -1,7 +1,9 @@
 package pl.north93.northplatform.api.bukkit.utils.chat;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+
+import org.junit.jupiter.api.Test;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -18,7 +20,7 @@ public class BaseComponentCenteringTest
         final BaseComponent centered = ChatCentering.centerMessage(component);
         final String plain = centered.toPlainText();
 
-        Assert.assertEquals("", plain);
+        assertEquals("", plain);
     }
 
     @Test
@@ -29,7 +31,7 @@ public class BaseComponentCenteringTest
         final BaseComponent centered = ChatCentering.centerMessage(component);
         final String plain = centered.toPlainText();
 
-        Assert.assertEquals("                                   a", plain);
+        assertEquals("                                   a", plain);
     }
 
     @Test
@@ -40,7 +42,7 @@ public class BaseComponentCenteringTest
         final BaseComponent centered = ChatCentering.centerMessage(component);
         final String plain = centered.toPlainText();
 
-        Assert.assertEquals("                                 test", plain);
+        assertEquals("                                 test", plain);
     }
 
     @Test
@@ -51,7 +53,7 @@ public class BaseComponentCenteringTest
         final BaseComponent centered = ChatCentering.centerMessage(component);
         final String plain = centered.toPlainText();
 
-        Assert.assertEquals("                         ABC def ghi jkl", plain);
+        assertEquals("                         ABC def ghi jkl", plain);
     }
 
     @Test
@@ -62,7 +64,7 @@ public class BaseComponentCenteringTest
         final BaseComponent centered = ChatCentering.centerMessage(component);
         final String plain = centered.toPlainText();
 
-        Assert.assertEquals("                                 line1\n                                 line2", plain);
+        assertEquals("                                 line1\n                                 line2", plain);
     }
 
     @Test
@@ -73,7 +75,7 @@ public class BaseComponentCenteringTest
         final BaseComponent centered = ChatCentering.centerMessage(component);
         final String plain = centered.toPlainText();
 
-        Assert.assertEquals("\n\n\n", plain);
+        assertEquals("\n\n\n", plain);
     }
 
     @Test
@@ -84,7 +86,7 @@ public class BaseComponentCenteringTest
         final BaseComponent centered = ChatCentering.centerMessage(component);
         final String plain = centered.toPlainText();
 
-        Assert.assertEquals("\n                                   A\n                                   B\n", plain);
+        assertEquals("\n                                   A\n                                   B\n", plain);
     }
 
     @Test
@@ -95,7 +97,7 @@ public class BaseComponentCenteringTest
         final BaseComponent centered = ChatCentering.centerMessage(component);
         final String plain = centered.toPlainText();
 
-        Assert.assertEquals("                           L NorthPL93", plain);
+        assertEquals("                           L NorthPL93", plain);
     }
 
     // 1. niepoprawnie uzyty builder nie zamienia znaków formatowania, ale klient to ogarnia
@@ -107,6 +109,6 @@ public class BaseComponentCenteringTest
         final BaseComponent[] cmdClickComponents = ChatUtils.builderFromLegacyText(cmdClickMessage).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party accept")).create();
 
         final BaseComponent centered = ChatCentering.centerMessage(new TextComponent(cmdClickComponents));
-        Assert.assertEquals("§a§f        §aWpisz §e§l/grupa akceptuj §alub kliknij §e§lTUTAJ", centered.toLegacyText());
+        assertEquals("§a§f        §aWpisz §e§l/grupa akceptuj §alub kliknij §e§lTUTAJ", centered.toLegacyText());
     }
 }

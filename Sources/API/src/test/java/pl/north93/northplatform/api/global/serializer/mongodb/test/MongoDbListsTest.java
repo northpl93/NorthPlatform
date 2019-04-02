@@ -1,5 +1,9 @@
 package pl.north93.northplatform.api.global.serializer.mongodb.test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,8 +12,7 @@ import java.util.Collections;
 import org.bson.BsonReader;
 import org.bson.json.JsonReader;
 import org.bson.json.JsonWriter;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -40,10 +43,10 @@ public class MongoDbListsTest
         System.out.println(stringWriter);
         final Object deserialized = this.serializer.deserialize(ArrayListHolder.class, new JsonReader(stringWriter.toString()));
 
-        Assert.assertSame(ArrayListHolder.class, deserialized.getClass());
+        assertSame(ArrayListHolder.class, deserialized.getClass());
 
         final ArrayListHolder deserializedHolder = (ArrayListHolder) deserialized;
-        Assert.assertEquals(0, deserializedHolder.list.size());
+        assertEquals(0, deserializedHolder.list.size());
     }
 
     @Test
@@ -57,10 +60,10 @@ public class MongoDbListsTest
         System.out.println(stringWriter);
         final Object deserialized = this.serializer.deserialize(ArrayListHolder.class, new JsonReader(stringWriter.toString()));
 
-        Assert.assertSame(ArrayListHolder.class, deserialized.getClass());
+        assertSame(ArrayListHolder.class, deserialized.getClass());
 
         final ArrayListHolder deserializedHolder = (ArrayListHolder) deserialized;
-        Assert.assertEquals(strings, deserializedHolder.list);
+        assertEquals(strings, deserializedHolder.list);
     }
 
     @Test
@@ -74,10 +77,10 @@ public class MongoDbListsTest
         System.out.println(stringWriter);
         final Object deserialized = this.serializer.deserialize(ArrayListHolder.class, new JsonReader(stringWriter.toString()));
 
-        Assert.assertSame(ArrayListHolder.class, deserialized.getClass());
+        assertSame(ArrayListHolder.class, deserialized.getClass());
 
         final ArrayListHolder deserializedHolder = (ArrayListHolder) deserialized;
-        Assert.assertEquals(strings, deserializedHolder.list);
+        assertEquals(strings, deserializedHolder.list);
     }
 
     @Test
@@ -92,9 +95,9 @@ public class MongoDbListsTest
         System.out.println(stringWriter);
         final Object deserialized = this.serializer.deserialize(ArrayListHolder.class, new JsonReader(stringWriter.toString()));
 
-        Assert.assertSame(ArrayListHolder.class, deserialized.getClass());
+        assertSame(ArrayListHolder.class, deserialized.getClass());
 
         final ArrayListHolder deserializedHolder = (ArrayListHolder) deserialized;
-        Assert.assertEquals(outerList, deserializedHolder.list);
+        assertEquals(outerList, deserializedHolder.list);
     }
 }

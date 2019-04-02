@@ -1,7 +1,10 @@
 package pl.north93.northplatform.api.global.serializer.msgpack.test;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+
+import org.junit.jupiter.api.Test;
 
 import pl.north93.northplatform.api.global.serializer.msgpack.MsgPackSerializationFormat;
 import pl.north93.northplatform.api.global.serializer.platform.NorthSerializer;
@@ -35,8 +38,8 @@ public class MsgPackEnumsTest
         final byte[] bytes = this.serializer.serialize(TestEnum.class, TestEnum.TEST_2);
         final Object deserialized = this.serializer.deserialize(TestEnum.class, bytes);
 
-        Assert.assertSame(TestEnum.class, deserialized.getClass());
-        Assert.assertEquals(TestEnum.TEST_2, deserialized);
+        assertSame(TestEnum.class, deserialized.getClass());
+        assertEquals(TestEnum.TEST_2, deserialized);
     }
 
     @Test
@@ -45,8 +48,8 @@ public class MsgPackEnumsTest
         final byte[] bytes = this.serializer.serialize(Object.class, TestEnum.TEST_2);
         final Object deserialized = this.serializer.deserialize(Object.class, bytes);
 
-        Assert.assertSame(TestEnum.class, deserialized.getClass());
-        Assert.assertEquals(TestEnum.TEST_2, deserialized);
+        assertSame(TestEnum.class, deserialized.getClass());
+        assertEquals(TestEnum.TEST_2, deserialized);
     }
 
     @Test
@@ -55,7 +58,7 @@ public class MsgPackEnumsTest
         final byte[] bytes = this.serializer.serialize(TestExtendedEnum.class, TestExtendedEnum.TEST_1);
         final Object deserialized = this.serializer.deserialize(TestExtendedEnum.class, bytes);
 
-        Assert.assertEquals(TestExtendedEnum.TEST_1, deserialized);
+        assertEquals(TestExtendedEnum.TEST_1, deserialized);
     }
 
     @Test
@@ -64,6 +67,6 @@ public class MsgPackEnumsTest
         final byte[] bytes = this.serializer.serialize(Object.class, TestExtendedEnum.TEST_1);
         final Object deserialized = this.serializer.deserialize(Object.class, bytes);
 
-        Assert.assertEquals(TestExtendedEnum.TEST_1, deserialized);
+        assertEquals(TestExtendedEnum.TEST_1, deserialized);
     }
 }

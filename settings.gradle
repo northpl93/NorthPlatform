@@ -5,38 +5,43 @@
 
 rootProject.name = 'NorthPlatform'
 
+def addModule(String name, String directory) {
+    include ":${name}"
+    project(":${name}").projectDir = file(directory)
+}
+
 // Includes
-include ':Sources:API'
-include ':Sources:API:BaseFeatures'
-include ':Sources:API:Chat'
-include ':Sources:API:Economy'
-include ':Sources:API:MiniGame'
+addModule("API", "Sources/API")
+addModule("API:BaseFeatures", "Sources/API/BaseFeatures")
+addModule("API:Chat", "Sources/API/Chat")
+addModule("API:Economy", "Sources/API/Economy")
+addModule("API:MiniGame", "Sources/API/MiniGame")
 
-include 'Sources:AntyCheat'
-include 'Sources:AntyCheat:AntyCheatClient'
+addModule("AntyCheat", "Sources/AntyCheat")
+addModule("AntyCheat:AntyCheatClient", "Sources/AntyCheat/AntyCheatClient")
 
-include 'Sources:DiscordBot'
+addModule("DiscordBot", "Sources/DiscordBot")
 
-include 'Sources:GlobalShops'
+addModule("GlobalShops", "Sources/GlobalShops")
 
-include 'Sources:GroovyScript'
+addModule("GroovyScript", "Sources/GroovyScript")
 
-include 'Sources:ItemShop'
+addModule("ItemShop", "Sources/ItemShop")
 
-include 'Sources:Lobby'
+addModule("Lobby", "Sources/Lobby")
 
-include 'Sources:NetworkController'
+addModule("NetworkController", "Sources/NetworkController")
 
-include 'Sources:NoPremiumAuth'
+addModule("NoPremiumAuth", "Sources/NoPremiumAuth")
 
-include 'Sources:Pets'
+addModule("Pets", "Sources/Pets")
 
-include 'Sources:PlayerDataShare'
+addModule("PlayerDataShare", "Sources/PlayerDataShare")
 
-include 'Sources:RestfulApi'
+addModule("RestfulApi", "Sources/RestfulApi")
 
-include 'Sources:ServerDeamon'
+addModule("ServerDeamon", "Sources/ServerDeamon")
 
-include 'Sources:WebAuth'
+addModule("WebAuth", "Sources/WebAuth")
 
-include 'Sources:WorldProperties'
+addModule("WorldProperties", "Sources/WorldProperties")

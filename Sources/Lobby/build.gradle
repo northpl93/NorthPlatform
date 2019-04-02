@@ -3,7 +3,7 @@
  */
 
 dependencies {
-    shadow project(path: ':Sources:API', configuration: 'shadow')
-    shadow project(path: ':Sources:GlobalShops', configuration: 'shadow')
-    shadow project(path: ':Sources:NoPremiumAuth', configuration: 'shadow')
+    shadow project(path: ':API', configuration: 'shadow')
+    shadow project(path: ':GlobalShops', configuration: 'shadow')
+    shadow project(path: ':NoPremiumAuth', configuration: 'shadow')
 }

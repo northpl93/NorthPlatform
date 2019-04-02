@@ -6,6 +6,7 @@
 ### Java/Maven/Gradle
 target/
 build/
+local.properties
 *.class
 *.jar
 *.war

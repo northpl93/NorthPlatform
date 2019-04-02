@@ -1,20 +1,20 @@
 package pl.north93.northplatform.api.global.uri.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.uri.IUriManager;
-import pl.north93.northplatform.api.test.NorthPlatformJunitRunner;
+import pl.north93.northplatform.api.test.NorthPlatformJunitExtension;
 
-@RunWith(NorthPlatformJunitRunner.class)
+@ExtendWith(NorthPlatformJunitExtension.class)
 public class UriManagerTest
 {
     @Inject

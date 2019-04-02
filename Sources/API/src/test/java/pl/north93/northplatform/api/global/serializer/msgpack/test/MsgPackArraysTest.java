@@ -1,7 +1,10 @@
 package pl.north93.northplatform.api.global.serializer.msgpack.test;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+
+import org.junit.jupiter.api.Test;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -31,8 +34,8 @@ public class MsgPackArraysTest
         final byte[] bytes = this.serializer.serialize(String[].class, beforeSerialization);
         final Object deserialized = this.serializer.deserialize(String[].class, bytes);
 
-        Assert.assertSame(String[].class, deserialized.getClass());
-        Assert.assertArrayEquals(beforeSerialization, (Object[]) deserialized);
+        assertSame(String[].class, deserialized.getClass());
+        assertArrayEquals(beforeSerialization, (Object[]) deserialized);
     }
 
     @Test
@@ -43,10 +46,10 @@ public class MsgPackArraysTest
         final byte[] bytes = this.serializer.serialize(ObjectWithArrays.class, before);
         final Object deserialized = this.serializer.deserialize(ObjectWithArrays.class, bytes);
 
-        Assert.assertSame(ObjectWithArrays.class, deserialized.getClass());
+        assertSame(ObjectWithArrays.class, deserialized.getClass());
 
         final ObjectWithArrays after = (ObjectWithArrays) deserialized;
-        Assert.assertArrayEquals(before.strings, after.strings);
-        Assert.assertArrayEquals(before.objects, after.objects);
+        assertArrayEquals(before.strings, after.strings);
+        assertArrayEquals(before.objects, after.objects);
     }
 }

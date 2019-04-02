@@ -23,7 +23,7 @@ public class TestApiCore extends StandaloneApiCore
             return (TestApiCore) API.getApiCore();
         }
 
-        System.out.println("North API is running testing environment");
+        System.out.println("North API is starting test environment");
         final TestApiCore testApiCore = new TestApiCore();
         testApiCore.startCore();
         return testApiCore;

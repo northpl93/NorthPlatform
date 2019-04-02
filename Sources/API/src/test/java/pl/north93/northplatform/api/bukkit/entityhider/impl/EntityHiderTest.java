@@ -1,14 +1,14 @@
 package pl.north93.northplatform.api.bukkit.entityhider.impl;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import pl.north93.northplatform.api.bukkit.entityhider.EntityVisibility;
@@ -17,7 +17,7 @@ public class EntityHiderTest
 {
     private GlobalVisibility globalVisibility;
 
-    @Before
+    @BeforeEach
     public void setup()
     {
         this.globalVisibility = new GlobalVisibility();

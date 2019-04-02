@@ -1,11 +1,14 @@
 package pl.north93.northplatform.api.bukkit.tick.test;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+
 import java.lang.reflect.Method;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import pl.north93.northplatform.api.bukkit.tick.ITickable;
 import pl.north93.northplatform.api.bukkit.tick.Tick;
@@ -16,14 +19,14 @@ public class TestTickableManager
     private TickableManagerImpl tickableManager;
     private boolean called;
     
-    @Before
+    @BeforeEach
     public void setupTickableManager()
     {
         tickableManager = new TickableManagerImpl();
         called = false;
     }
     
-    @After
+    @AfterEach
     public void cleanupTickableManger()
     {
         tickableManager = null;
@@ -38,7 +41,7 @@ public class TestTickableManager
             tick.invoke(tickableManager);
         } catch ( Throwable e ) {
             
-            Assert.fail();
+            fail();
         }
     }
     
@@ -50,7 +53,7 @@ public class TestTickableManager
             @Tick
             public void thisNeverShouldBeCalled()
             {
-                Assert.fail("This never should be called in this case");
+                fail("This never should be called in this case");
             }
         };
         
@@ -69,7 +72,7 @@ public class TestTickableManager
             {
                 if ( called )
                 {
-                    Assert.fail("Method is called multiple time in the same tick");
+                    fail("Method is called multiple time in the same tick");
                 }
                 else
                 {
@@ -81,11 +84,11 @@ public class TestTickableManager
         tickableManager.addTickableObject(tickable);
         callTick();
         
-        Assert.assertTrue(called);
+        assertTrue(called);
         called = false;
         
         callTick();
-        Assert.assertTrue(called);
+        assertTrue(called);
     }
     
     @Test
@@ -98,7 +101,7 @@ public class TestTickableManager
             {
                 if ( called )
                 {
-                    Assert.fail("Method is called multiple time in the same tick");
+                    fail("Method is called multiple time in the same tick");
                 }
                 else
                 {

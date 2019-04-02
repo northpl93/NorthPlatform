@@ -1,9 +1,12 @@
 package org.diorite.commons.io;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+
 import java.io.File;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class DioriteFileUtilsTest
 {
@@ -16,10 +19,10 @@ public class DioriteFileUtilsTest
         File f4 = new File("test/path/inner2/something");
         File f5 = new File("test");
         
-        Assert.assertFalse(DioriteFileUtils.contains(f1, f1));
-        Assert.assertFalse(DioriteFileUtils.contains(f1, f2));
-        Assert.assertTrue(DioriteFileUtils.contains(f1, f3));
-        Assert.assertTrue(DioriteFileUtils.contains(f1, f4));
-        Assert.assertFalse(DioriteFileUtils.contains(f1, f5));
+        assertFalse(DioriteFileUtils.contains(f1, f1));
+        assertFalse(DioriteFileUtils.contains(f1, f2));
+        assertTrue(DioriteFileUtils.contains(f1, f3));
+        assertTrue(DioriteFileUtils.contains(f1, f4));
+        assertFalse(DioriteFileUtils.contains(f1, f5));
     }
 }
