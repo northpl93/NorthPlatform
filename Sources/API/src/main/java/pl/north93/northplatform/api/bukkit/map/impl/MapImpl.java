@@ -1,6 +1,5 @@
 package pl.north93.northplatform.api.bukkit.map.impl;
 
-
 import javax.annotation.Nullable;
 
 import java.util.Collection;
@@ -18,13 +17,12 @@ import org.bukkit.craftbukkit.v1_12_R1.entity.CraftItemFrame;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper;
+import lombok.ToString;
 import pl.north93.northplatform.api.bukkit.map.IMap;
 import pl.north93.northplatform.api.bukkit.utils.MetadataUtils;
+import pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper;
 
+@ToString(of = {"frameId", "itemFrame"})
 class MapImpl implements IMap
 {
     private final BoardImpl board;
@@ -135,7 +133,7 @@ class MapImpl implements IMap
      */
     public void cleanup()
     {
-        MetadataUtils.removeEntityMetadata(this.frameId);
+        MetadataUtils.removeAllEntityMetadata(this.frameId);
 
         final CraftItemFrame itemFrame = (CraftItemFrame) this.itemFrame;
         if (itemFrame == null)
@@ -157,11 +155,5 @@ class MapImpl implements IMap
         }
 
         return itemFrame.getLocation();
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("itemFrame", this.itemFrame).toString();
     }
 }

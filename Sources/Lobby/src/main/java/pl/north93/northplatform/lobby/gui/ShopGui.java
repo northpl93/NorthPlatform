@@ -10,13 +10,6 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.globalshops.server.IGlobalShops;
-import pl.north93.northplatform.globalshops.server.IPlayerContainer;
-import pl.north93.northplatform.globalshops.server.domain.IPrice;
-import pl.north93.northplatform.globalshops.server.domain.Item;
-import pl.north93.northplatform.globalshops.server.domain.ItemsGroup;
-import pl.north93.northplatform.globalshops.server.impl.price.MoneyPrice;
-import pl.north93.northplatform.globalshops.shared.GroupType;
 import pl.north93.northplatform.api.bukkit.gui.Gui;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.LegacyMessage;
@@ -24,6 +17,13 @@ import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.global.messages.TranslatableString;
 import pl.north93.northplatform.api.global.utils.Vars;
+import pl.north93.northplatform.globalshops.server.IGlobalShops;
+import pl.north93.northplatform.globalshops.server.IPlayerContainer;
+import pl.north93.northplatform.globalshops.server.domain.IPrice;
+import pl.north93.northplatform.globalshops.server.domain.Item;
+import pl.north93.northplatform.globalshops.server.domain.ItemsGroup;
+import pl.north93.northplatform.globalshops.server.impl.price.MoneyPrice;
+import pl.north93.northplatform.globalshops.shared.GroupType;
 
 public abstract class ShopGui extends Gui
 {

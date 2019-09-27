@@ -307,7 +307,7 @@ public class PlayersManager
         else
         {
             // gracz i tak juz nie wroci na ten serwer, a pozostale dane moga powodowac memory-leak
-            MetadataUtils.removePlayerMetadata(player);
+            MetadataUtils.removeAllPlayerMetadata(player);
         }
 
         final RemoteArena remoteArena = this.arena.getAsRemoteArena();

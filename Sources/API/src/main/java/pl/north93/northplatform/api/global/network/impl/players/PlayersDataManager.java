@@ -24,24 +24,24 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.Document;
 
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.metadata.MetaKey;
 import pl.north93.northplatform.api.global.metadata.MetaStore;
+import pl.north93.northplatform.api.global.network.mojang.IMojangCache;
 import pl.north93.northplatform.api.global.network.mojang.UsernameDetails;
 import pl.north93.northplatform.api.global.network.players.IOfflinePlayer;
 import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
 import pl.north93.northplatform.api.global.network.players.IPlayer;
 import pl.north93.northplatform.api.global.network.players.IPlayersManager;
+import pl.north93.northplatform.api.global.network.players.LoginHistoryEntry;
 import pl.north93.northplatform.api.global.network.players.NameSizeMistakeException;
+import pl.north93.northplatform.api.global.permissions.Group;
+import pl.north93.northplatform.api.global.permissions.PermissionsManager;
 import pl.north93.northplatform.api.global.redis.observable.Cache;
 import pl.north93.northplatform.api.global.redis.observable.IObservationManager;
 import pl.north93.northplatform.api.global.redis.observable.ObjectKey;
 import pl.north93.northplatform.api.global.redis.observable.Value;
 import pl.north93.northplatform.api.global.storage.StorageConnector;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.mojang.IMojangCache;
-import pl.north93.northplatform.api.global.network.players.LoginHistoryEntry;
-import pl.north93.northplatform.api.global.permissions.Group;
-import pl.north93.northplatform.api.global.permissions.PermissionsManager;
 
 /*default*/ class PlayersDataManager implements IPlayersManager.IPlayersDataManager
 {

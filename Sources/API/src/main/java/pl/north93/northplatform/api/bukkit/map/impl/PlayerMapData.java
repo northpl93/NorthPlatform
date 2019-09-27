@@ -7,9 +7,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.ToString;
 import pl.north93.northplatform.api.bukkit.map.IMapCanvas;
 
 /**
@@ -19,6 +17,7 @@ import pl.north93.northplatform.api.bukkit.map.IMapCanvas;
  * recznego zwalniania identyfikatorow. Zapewnia to sensowne
  * cachowanie identyfikatorow.
  */
+@ToString
 class PlayerMapData
 {
     private final Player                     player;
@@ -109,14 +108,9 @@ class PlayerMapData
         this.mapping.put(map, container);
         return container;
     }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("player", this.player).append("mapping", this.mapping).append("latestId", this.latestId).toString();
-    }
 }
 
+@ToString
 final class MapContainer
 {
     private final int        id;
@@ -151,11 +145,5 @@ final class MapContainer
     public void setClientCanvas(final IMapCanvas clientCanvas)
     {
         this.clientCanvas = clientCanvas;
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("id", this.id).append("serverCanvas", this.serverCanvas).append("clientCanvas", this.clientCanvas).toString();
     }
 }

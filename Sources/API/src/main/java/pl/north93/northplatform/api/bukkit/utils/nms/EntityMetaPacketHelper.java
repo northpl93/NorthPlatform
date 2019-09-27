@@ -7,16 +7,15 @@ import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.UnpooledByteBufAllocator;
+import lombok.ToString;
 
 /**
  * Klasa pomocnicza sluzaca do recznego wysylania danych
  * zawartych w pakiecie PacketPlayOutEntityMetadata.
  */
+@ToString
 public class EntityMetaPacketHelper
 {
     private final ByteBuf              buffer;
@@ -117,11 +116,5 @@ public class EntityMetaPacketHelper
 
 
         abstract void write(PacketDataSerializer serializer, Object object);
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

@@ -12,17 +12,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import io.netty.channel.Channel;
-import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
-import pl.north93.northplatform.api.bukkit.utils.nms.EntityMetaPacketHelper;
+import lombok.ToString;
 import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
+import pl.north93.northplatform.api.bukkit.utils.nms.EntityMetaPacketHelper;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
+@ToString(onlyExplicitlyIncluded = true)
 class MapController implements Listener
 {
     @Inject
@@ -141,11 +140,5 @@ class MapController implements Listener
     /*default*/ void updateMapInEntity(final ItemFrame itemFrame, final MapImpl map)
     {
         itemFrame.setMetadata("map_mapImpl", new FixedMetadataValue(this.apiCore.getPluginMain(), map));
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

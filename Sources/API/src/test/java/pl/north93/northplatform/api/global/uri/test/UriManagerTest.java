@@ -1,7 +1,6 @@
 package pl.north93.northplatform.api.global.uri.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 import java.net.URI;
@@ -25,9 +24,9 @@ public class UriManagerTest
     {
         this.manager.register("/test1", context -> "test1");
 
-        assertTrue(this.manager.call("test1").equals("test1"));
-        assertTrue(this.manager.call("/test1").equals("test1"));
-        assertTrue(this.manager.call("/test1/").equals("test1"));
+        assertEquals("test1", this.manager.call("test1"));
+        assertEquals("test1", this.manager.call("/test1"));
+        assertEquals("test1", this.manager.call("/test1/"));
     }
 
     @Test
@@ -36,8 +35,8 @@ public class UriManagerTest
         this.manager.register("/test2/:testParam", context -> context.asString("testParam"));
         this.manager.register("/test3/:testParam1/:testParam2", context -> context.asString("testParam1") + context.asString("testParam2"));
 
-        assertTrue(this.manager.call("/test2/testingParams").equals("testingParams"));
-        assertTrue(this.manager.call("/test3/1/2").equals("12"));
+        assertEquals("testingParams", this.manager.call("/test2/testingParams"));
+        assertEquals("12", this.manager.call("/test3/1/2"));
     }
 
     @Test

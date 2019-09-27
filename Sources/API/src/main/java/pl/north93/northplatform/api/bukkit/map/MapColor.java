@@ -10,6 +10,8 @@ import gnu.trove.map.hash.TCharIntHashMap;
  * <p>
  * Skopiowane z:
  * /PluginUtils/src/main/java/pl/rafsze/utils/bukkit/gui/map
+ *
+ * @author Rafał Szewczyk
  */
 public class MapColor
 {

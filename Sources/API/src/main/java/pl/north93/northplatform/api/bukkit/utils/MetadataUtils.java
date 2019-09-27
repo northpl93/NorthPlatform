@@ -37,10 +37,10 @@ public final class MetadataUtils
      *
      * @param entityId UUID entity któremu usuwamy metadane.
      */
-    public static void removeEntityMetadata(final UUID entityId)
+    public static void removeAllEntityMetadata(final UUID entityId)
     {
         final String keyStart = entityId + ":";
-        removeMetadata(getEntityMetadata(), keyStart);
+        removeAllMetadataByPrefix(getEntityMetadata(), keyStart);
     }
 
     /**
@@ -48,10 +48,10 @@ public final class MetadataUtils
      *
      * @param player Gracz któremu kasujemy metadane.
      */
-    public static void removePlayerMetadata(final Player player)
+    public static void removeAllPlayerMetadata(final Player player)
     {
         final String keyStart = player.getName().toLowerCase(Locale.ROOT) + ":";
-        removeMetadata(getPlayerMetadata(), keyStart);
+        removeAllMetadataByPrefix(getPlayerMetadata(), keyStart);
     }
 
     private static EntityMetadataStore getEntityMetadata()
@@ -66,7 +66,7 @@ public final class MetadataUtils
         return server.getPlayerMetadata();
     }
 
-    private static void removeMetadata(final MetadataStoreBase<?> metadataStoreBase, final String keyStart)
+    private static void removeAllMetadataByPrefix(final MetadataStoreBase<?> metadataStoreBase, final String keyStart)
     {
         final Map<String, Map<Plugin, MetadataValue>> map = internalMap.get(metadataStoreBase);
         assert map != null;

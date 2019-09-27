@@ -115,17 +115,17 @@ public class BanService
         final BaseComponent expiration;
         if (ban.getDuration() == null)
         {
-            expiration = this.messages.getMessage(locale, "join.banned.never_expire", (Object) null);
+            expiration = this.messages.getComponent(locale, "join.banned.never_expire", (Object) null);
         }
         else
         {
             final Instant expireTime = ban.getGivenAt().plus(ban.getDuration());
             final String formattedTime = DateUtil.formatDateDiff(expireTime.toEpochMilli());
 
-            expiration = this.messages.getMessage(locale, "join.banned.expire_at", formattedTime);
+            expiration = this.messages.getComponent(locale, "join.banned.expire_at", formattedTime);
         }
 
-        return this.messages.getMessage(locale, "join.banned", reason, adminNick, expiration);
+        return this.messages.getComponent(locale, "join.banned", reason, adminNick, expiration);
     }
 
     @Nullable

@@ -13,9 +13,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.diorite.commons.math.DioriteRandomUtils;
 import org.diorite.commons.math.IWeightedRandomChoice;
 
-import pl.north93.northplatform.globalshops.server.IGlobalShops;
-import pl.north93.northplatform.globalshops.server.IPlayerContainer;
-import pl.north93.northplatform.globalshops.server.domain.Item;
 import pl.north93.northplatform.api.bukkit.hologui.IHoloContext;
 import pl.north93.northplatform.api.bukkit.hologui.IIcon;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -23,6 +20,9 @@ import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.global.messages.PluralForm;
 import pl.north93.northplatform.api.global.messages.TranslatableString;
+import pl.north93.northplatform.globalshops.server.IGlobalShops;
+import pl.north93.northplatform.globalshops.server.IPlayerContainer;
+import pl.north93.northplatform.globalshops.server.domain.Item;
 
 /**
  * Przedstawia loot w postaci odlamkow danego przedmiotu.

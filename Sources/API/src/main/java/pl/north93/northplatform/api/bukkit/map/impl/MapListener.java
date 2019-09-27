@@ -14,18 +14,17 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
-import pl.north93.northspigot.event.entity.EntityTrackedPlayerEvent;
-import pl.north93.northplatform.api.bukkit.protocol.wrappers.WrapperPlayOutEntityMetadata;
+import lombok.ToString;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.protocol.PacketEvent;
 import pl.north93.northplatform.api.bukkit.protocol.PacketHandler;
+import pl.north93.northplatform.api.bukkit.protocol.wrappers.WrapperPlayOutEntityMetadata;
+import pl.north93.northplatform.api.bukkit.utils.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northspigot.event.entity.EntityTrackedPlayerEvent;
 
+@ToString(onlyExplicitlyIncluded = true)
 public class MapListener implements AutoListener
 {
     @Inject
@@ -146,11 +145,5 @@ public class MapListener implements AutoListener
         }
 
         return false;
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }
