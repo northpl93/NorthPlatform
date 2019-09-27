@@ -4,9 +4,12 @@
 
 dependencies {
     shadow project(path: ':API', configuration: 'shadow')
+    shadow project(path: ':API', configuration: 'compile')
+
     shadow project(':API:Chat')
     shadow project(':API:Economy')
     shadow project(':NetworkController')
     shadow project(':WorldProperties')
+
     shadow 'net.citizensnpcs:citizens:2.0.22-SNAPSHOT'
 }

@@ -28,6 +28,8 @@ public interface TemplateEngine
 
     Type[] getTypeParameters(Type type);
 
+    Type createParameterizedType(Class clazz, Type[] parameters);
+
     boolean isNeedsDynamicResolution(Type type);
 
     boolean isTypePredictingSupported();

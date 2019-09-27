@@ -116,6 +116,31 @@ import pl.north93.northplatform.api.global.serializer.platform.template.builtin.
     }
 
     @Override
+    public Type createParameterizedType(final Class clazz, final Type[] parameters)
+    {
+        return new ParameterizedType()
+        {
+            @Override
+            public Type[] getActualTypeArguments()
+            {
+                return parameters;
+            }
+
+            @Override
+            public Type getRawType()
+            {
+                return clazz;
+            }
+
+            @Override
+            public Type getOwnerType()
+            {
+                return null;
+            }
+        };
+    }
+
+    @Override
     public boolean isNeedsDynamicResolution(final Type type)
     {
         final Class<?> clazz = this.getRawClassFromType(type);

@@ -19,9 +19,9 @@ dependencies {
     shadow 'com.sk89q.worldedit:worldedit-bukkit:6.1.4'
 
     // APIS deprecated/removed in Java 9+
-    shadow 'javax.xml.bind:jaxb-api:2.3.1'
-    shadow 'com.sun.xml.bind:jaxb-core:2.3.0.1'
-    shadow 'com.sun.xml.bind:jaxb-impl:2.3.1'
+    compile 'javax.xml.bind:jaxb-api:2.3.1'
+    compile 'com.sun.xml.bind:jaxb-core:2.3.0.1'
+    compile 'com.sun.xml.bind:jaxb-impl:2.3.1'
 
     // logging
     compile 'org.slf4j:slf4j-jdk14:1.7.25'
@@ -66,10 +66,9 @@ shadowJar {
 
 test {
     workingDir "$projectDir/build/northplatform-test"
+    doFirst {
+        mkdir "$projectDir/build/northplatform-test"
+    }
 
     systemProperty "jdk.attach.allowAttachSelf", "true"
-}
-
-tasks.test.doFirst {
-    mkdir "$projectDir/build/northplatform-test"
 }

@@ -1,17 +1,14 @@
 package pl.north93.northplatform.api.global.serializer.platform.template.builtin;
 
-import static sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl.make;
-
-
 import java.lang.reflect.Type;
 
+import pl.north93.northplatform.api.global.serializer.platform.CustomFieldInfo;
 import pl.north93.northplatform.api.global.serializer.platform.FieldInfo;
 import pl.north93.northplatform.api.global.serializer.platform.context.DeserializationContext;
 import pl.north93.northplatform.api.global.serializer.platform.context.SerializationContext;
 import pl.north93.northplatform.api.global.serializer.platform.template.Template;
 import pl.north93.northplatform.api.global.serializer.platform.template.TemplateEngine;
 import pl.north93.northplatform.api.global.serializer.platform.template.TemplateFilter;
-import pl.north93.northplatform.api.global.serializer.platform.CustomFieldInfo;
 import pl.north93.northplatform.api.global.serializer.platform.template.TemplatePriority;
 
 public class DynamicTemplate implements Template<Object, SerializationContext, DeserializationContext>
@@ -122,7 +119,7 @@ public class DynamicTemplate implements Template<Object, SerializationContext, D
     private Type addMissingGenericType(final TemplateEngine templateEngine, final Type fieldType, final Class templateClass)
     {
         final Type[] typeParameters = templateEngine.getTypeParameters(fieldType); // generic type
-        return typeParameters.length == 0 ? templateClass : make(templateClass, typeParameters, null);
+        return typeParameters.length == 0 ? templateClass : templateEngine.createParameterizedType(templateClass, typeParameters);
     }
 
     private FieldInfo getValueField(final Type type)
