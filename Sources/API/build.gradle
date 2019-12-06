@@ -42,12 +42,12 @@ dependencies {
     compile 'com.carrotsearch:hppc:0.7.3'
 
     // MongoDB stuff
-    compile 'org.mongodb:mongo-java-driver:3.8.0'
-    compile 'org.mongodb:bson:3.8.0'
-    compile 'io.netty:netty-transport-native-epoll:4.1.17.Final'
+    compile 'org.mongodb:mongo-java-driver:3.11.2'
+    compile 'org.mongodb:bson:3.11.2'
+    compile 'io.netty:netty-transport-native-epoll:4.1.43.Final'
 
     // Redis stuff
-    compile 'biz.paluch.redis:lettuce:4.4.3.Final'
+    compile 'biz.paluch.redis:lettuce:4.5.0.Final'
 
     // Unit tests things
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.4.1'

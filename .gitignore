@@ -4,6 +4,7 @@
 /Sources/API/connection.yml
 
 ### Java/Maven/Gradle
+.gradle
 target/
 build/
 local.properties
@@ -15,7 +16,7 @@ hs_err_pid*
 
 ### IntelliJ
 *.iml
-/out/
+out/
 .idea/
 .idea_modules/
 

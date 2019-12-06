@@ -4,9 +4,9 @@
  */
 
 plugins {
-    id 'org.ajoberstar.grgit' version '3.0.0'
-    id 'io.franzbecker.gradle-lombok' version '1.14'
-    id 'com.github.johnrengelman.shadow' version '4.0.3'
+    id 'org.ajoberstar.grgit' version '4.0.0'
+    id "io.freefair.lombok" version "4.1.6"
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
 allprojects {
@@ -25,13 +25,8 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'io.franzbecker.gradle-lombok'
+    apply plugin: 'io.freefair.lombok'
     apply plugin: 'com.github.johnrengelman.shadow'
-
-    lombok {
-        // Manually set lombok version because default one doesnt't work on Java 11
-        version = "1.18.4"
-    }
 
     jar {
         // Add some attributes to every manifest
