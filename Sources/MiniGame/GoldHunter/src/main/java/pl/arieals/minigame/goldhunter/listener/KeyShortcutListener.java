@@ -9,7 +9,7 @@ import pl.arieals.minigame.goldhunter.gui.JoinTeamGui;
 import pl.arieals.minigame.goldhunter.gui.SelectClassGui;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.northspigot.event.PlayerPressQEvent;
-import pl.north93.zgame.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.utils.AutoListener;
 
 public class KeyShortcutListener implements AutoListener
 {

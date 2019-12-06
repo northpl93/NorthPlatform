@@ -1,6 +1,6 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import java.util.ArrayList;
@@ -17,28 +17,28 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.arena.player.ArenaChatManager;
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
-import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
-import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
-import pl.arieals.api.minigame.shared.api.GamePhase;
-import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
-import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
-import pl.arieals.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
-import pl.arieals.api.minigame.shared.api.statistics.unit.NumberUnit;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.ArenaChatManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.reward.CurrencyReward;
+import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticHolder;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsManager;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.PlayerReconnectTimedOut;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.event.TeamEliminatedEvent;
-import pl.north93.zgame.api.bukkit.utils.SimpleCountdown;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.MessageLayout;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.messages.TranslatableString;
-import pl.north93.zgame.api.global.network.players.Identity;
+import pl.north93.northplatform.api.bukkit.utils.SimpleCountdown;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.MessageLayout;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.messages.TranslatableString;
+import pl.north93.northplatform.api.global.network.players.Identity;
 
 @Slf4j
 public class GameEndListener implements Listener

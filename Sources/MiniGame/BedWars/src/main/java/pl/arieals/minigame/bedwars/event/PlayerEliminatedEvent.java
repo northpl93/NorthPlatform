@@ -2,7 +2,7 @@ package pl.arieals.minigame.bedwars.event;
 
 import org.bukkit.event.HandlerList;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 
 /**

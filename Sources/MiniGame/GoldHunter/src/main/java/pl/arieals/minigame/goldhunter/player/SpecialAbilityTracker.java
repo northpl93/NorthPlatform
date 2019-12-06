@@ -15,9 +15,9 @@ import org.diorite.commons.math.DioriteMathUtils;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.arena.SoundEffect;
 import pl.arieals.minigame.goldhunter.classes.SpecialAbilityType;
-import pl.north93.zgame.api.bukkit.tick.ITickable;
-import pl.north93.zgame.api.bukkit.tick.Tick;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.bukkit.tick.ITickable;
+import pl.north93.northplatform.api.bukkit.tick.Tick;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class SpecialAbilityTracker implements ITickable
 {

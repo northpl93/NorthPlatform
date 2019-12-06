@@ -1,41 +1,38 @@
 package pl.arieals.minigame.bedwars.npc;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
-import static pl.north93.zgame.api.global.messages.TranslatableString.of;
-
-
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Objects;
-
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.trait.VillagerProfession;
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.npc.NPCRegistry;
-import net.citizensnpcs.trait.VillagerProfession;
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
-import pl.arieals.api.minigame.server.shared.citizens.SkinTrait;
-import pl.arieals.api.minigame.server.shared.citizens.TranslatedNameTrait;
-import pl.arieals.api.minigame.shared.api.PlayerStatus;
-import pl.arieals.globalshops.server.IGlobalShops;
-import pl.arieals.globalshops.server.domain.ItemsGroup;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.shop.gui.ShopMain;
 import pl.arieals.minigame.bedwars.shop.gui.UpgradesGui;
-import pl.north93.zgame.api.bukkit.player.INorthPlayer;
-import pl.north93.zgame.api.bukkit.server.IBukkitExecutor;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.component.annotations.bean.Named;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.component.annotations.bean.Named;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.north93.northplatform.api.minigame.server.shared.citizens.SkinTrait;
+import pl.north93.northplatform.api.minigame.server.shared.citizens.TranslatedNameTrait;
+import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
+import pl.north93.northplatform.globalshops.server.IGlobalShops;
+import pl.north93.northplatform.globalshops.server.domain.ItemsGroup;
+
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Objects;
+
+import static pl.north93.northplatform.api.global.messages.TranslatableString.of;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
 
 public class NpcCreator implements Listener
 {
@@ -44,7 +41,7 @@ public class NpcCreator implements Listener
     @Inject
     private IBukkitExecutor executor;
     @Inject
-    private IGlobalShops    globalShops;
+    private IGlobalShops globalShops;
     @Inject @Named("BedWarsNpcRegistry")
     private NPCRegistry     npcRegistry;
 

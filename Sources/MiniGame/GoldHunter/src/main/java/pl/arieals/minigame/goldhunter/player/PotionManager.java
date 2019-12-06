@@ -15,9 +15,9 @@ import org.bukkit.entity.ThrownPotion;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import pl.arieals.minigame.goldhunter.GoldHunter;
-import pl.north93.zgame.api.bukkit.utils.nms.NbtTagType;
-import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
-import pl.north93.zgame.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.bukkit.utils.nms.NbtTagType;
+import pl.north93.northplatform.api.global.component.annotations.bean.Aggregator;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 
 @Slf4j
 public class PotionManager

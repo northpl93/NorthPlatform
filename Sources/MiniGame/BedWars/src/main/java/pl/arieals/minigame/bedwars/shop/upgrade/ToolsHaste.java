@@ -8,11 +8,11 @@ import org.bukkit.potion.PotionEffectType;
 
 import org.diorite.commons.math.DioriteMathUtils;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.event.PlayerRevivedEvent;
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
 
 public class ToolsHaste implements IUpgrade, Listener
 {

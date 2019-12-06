@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.base.Preconditions;
 
-import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
+import pl.north93.northplatform.api.bukkit.utils.xml.XmlLocation;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "goldHunterMap")

@@ -1,15 +1,15 @@
 package pl.arieals.minigame.bedwars.event;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.event.player.PlayerArenaEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerArenaEvent;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
-import pl.north93.zgame.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
 /**
  * Event powiązany z graczem BedWars i areną.

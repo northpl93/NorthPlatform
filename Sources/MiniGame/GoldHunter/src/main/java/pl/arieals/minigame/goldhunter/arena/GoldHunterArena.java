@@ -31,10 +31,10 @@ import org.bukkit.util.Vector;
 
 import org.slf4j.Logger;
 
-import pl.arieals.api.minigame.server.gamehost.arena.IArenaData;
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.shared.api.GamePhase;
-import pl.arieals.api.minigame.shared.api.arena.StandardArenaMetaData;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.IArenaData;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
+import pl.north93.northplatform.api.minigame.shared.api.arena.StandardArenaMetaData;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.arena.structure.GoldChestStructure;
 import pl.arieals.minigame.goldhunter.player.GameTeam;
@@ -42,14 +42,14 @@ import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.arieals.minigame.goldhunter.player.PlayerRank;
 import pl.arieals.minigame.goldhunter.scoreboard.ArenaScoreboardManager;
 import pl.arieals.minigame.goldhunter.utils.TimeStringUtils;
-import pl.north93.zgame.api.bukkit.gui.IGuiManager;
-import pl.north93.zgame.api.bukkit.tick.ITickable;
-import pl.north93.zgame.api.bukkit.tick.Tick;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.messages.TranslatableString;
-import pl.north93.zgame.api.global.utils.lang.ListUtils;
+import pl.north93.northplatform.api.bukkit.gui.IGuiManager;
+import pl.north93.northplatform.api.bukkit.tick.ITickable;
+import pl.north93.northplatform.api.bukkit.tick.Tick;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.messages.TranslatableString;
+import pl.north93.northplatform.api.global.utils.lang.ListUtils;
 
 public class GoldHunterArena implements IArenaData, ITickable
 {

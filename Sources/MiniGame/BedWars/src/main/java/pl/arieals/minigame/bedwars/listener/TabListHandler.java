@@ -1,7 +1,7 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
@@ -19,13 +19,13 @@ import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.arena.player.PlayersManager;
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
-import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.PlayersManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
-import pl.north93.zgame.api.bukkit.protocol.wrappers.WrapperPlayOutPlayerInfo;
+import pl.north93.northplatform.api.bukkit.protocol.wrappers.WrapperPlayOutPlayerInfo;
 
 @Slf4j
 public class TabListHandler implements Listener

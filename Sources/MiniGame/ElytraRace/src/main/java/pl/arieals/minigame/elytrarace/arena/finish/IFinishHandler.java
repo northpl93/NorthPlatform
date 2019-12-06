@@ -1,11 +1,11 @@
 package pl.arieals.minigame.elytrarace.arena.finish;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import org.bukkit.entity.Player;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 
 public interface IFinishHandler

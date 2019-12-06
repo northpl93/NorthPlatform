@@ -1,6 +1,6 @@
 package pl.arieals.minigame.elytrarace.listener;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import org.bukkit.Sound;
@@ -11,13 +11,13 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
-import pl.arieals.api.minigame.server.gamehost.region.IRegionManager;
-import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.region.IRegionManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
-import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
-import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
+import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
+import pl.north93.northplatform.api.bukkit.utils.xml.XmlCuboid;
 
 public class FinishLineListener implements Listener
 {

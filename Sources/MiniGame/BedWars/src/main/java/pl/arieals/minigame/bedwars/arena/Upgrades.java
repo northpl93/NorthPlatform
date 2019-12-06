@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.shop.upgrade.IUpgrade;
 
 public class Upgrades

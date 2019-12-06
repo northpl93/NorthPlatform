@@ -13,7 +13,7 @@ import org.bukkit.util.Vector;
 
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.north93.zgame.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.utils.AutoListener;
 
 public class AdditionalGameplayMechanicsListener implements AutoListener
 {

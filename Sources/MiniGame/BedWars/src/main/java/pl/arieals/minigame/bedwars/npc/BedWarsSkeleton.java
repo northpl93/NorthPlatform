@@ -1,6 +1,6 @@
 package pl.arieals.minigame.bedwars.npc;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import net.minecraft.server.v1_12_R1.EntityHuman;
@@ -22,7 +22,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
-import pl.north93.zgame.api.bukkit.utils.nms.EntityUtils;
+import pl.north93.northplatform.api.bukkit.utils.nms.EntityUtils;
 
 @SuppressWarnings("unchecked")
 public class BedWarsSkeleton extends EntitySkeleton

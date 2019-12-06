@@ -1,23 +1,20 @@
 package pl.arieals.minigame.bedwars.arena;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
-
-
-import org.bukkit.Bukkit;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.arieals.api.minigame.shared.api.PlayerStatus;
+import org.bukkit.Bukkit;
 import pl.arieals.minigame.bedwars.event.PlayerEliminatedEvent;
 import pl.arieals.minigame.bedwars.shop.elimination.IEliminationEffect;
 import pl.arieals.minigame.bedwars.utils.TeamArmorUtils;
-import pl.north93.zgame.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
+
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
 
 public class BedWarsPlayer
 {
-    private final INorthPlayer       bukkitPlayer;
+    private final INorthPlayer bukkitPlayer;
     private final IEliminationEffect eliminationEffect;
     private Team    team;
     private boolean eliminated;

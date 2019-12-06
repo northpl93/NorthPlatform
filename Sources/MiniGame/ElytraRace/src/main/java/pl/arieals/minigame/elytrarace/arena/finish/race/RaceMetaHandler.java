@@ -10,25 +10,25 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.arena.player.ArenaChatManager;
-import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
-import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
-import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
-import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
-import pl.arieals.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
-import pl.arieals.api.minigame.shared.api.statistics.type.LongerTimeBetterStatistic;
-import pl.arieals.api.minigame.shared.api.statistics.type.ShorterTimeBetterStatistic;
-import pl.arieals.api.minigame.shared.api.statistics.unit.DurationUnit;
-import pl.arieals.api.minigame.shared.api.statistics.unit.NumberUnit;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.ArenaChatManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.reward.CurrencyReward;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticHolder;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsManager;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.type.LongerTimeBetterStatistic;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.type.ShorterTimeBetterStatistic;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.DurationUnit;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.finish.ElytraWinReward;
 import pl.arieals.minigame.elytrarace.arena.finish.IFinishHandler;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.network.players.Identity;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.network.players.Identity;
 
 public class RaceMetaHandler implements IFinishHandler
 {

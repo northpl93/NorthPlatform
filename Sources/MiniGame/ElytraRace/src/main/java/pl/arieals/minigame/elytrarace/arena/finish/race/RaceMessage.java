@@ -1,6 +1,6 @@
 package pl.arieals.minigame.elytrarace.arena.finish.race;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 
 
 import java.text.SimpleDateFormat;
@@ -14,15 +14,15 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.shared.api.statistics.IRecord;
-import pl.arieals.api.minigame.shared.api.statistics.unit.DurationUnit;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.component.annotations.bean.Named;
-import pl.north93.zgame.api.global.messages.MessageLayout;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.DurationUnit;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.component.annotations.bean.Named;
+import pl.north93.northplatform.api.global.messages.MessageLayout;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.network.INetworkManager;
 
 public class RaceMessage
 {

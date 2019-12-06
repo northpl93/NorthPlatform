@@ -1,6 +1,6 @@
 package pl.arieals.minigame.bedwars.arena.generator;
 
-import static pl.north93.zgame.api.bukkit.utils.nms.EntityTrackerHelper.getTrackerEntry;
+import static pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper.getTrackerEntry;
 
 
 import java.util.ArrayList;
@@ -20,15 +20,15 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import io.netty.buffer.ByteBuf;
-import pl.arieals.api.minigame.server.gamehost.arena.player.PlayersManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.PlayersManager;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.cfg.BwGeneratorItemConfig;
 import pl.arieals.minigame.bedwars.cfg.BwGeneratorType;
-import pl.north93.zgame.api.bukkit.utils.nms.EntityMetaPacketHelper;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.MessageLayout;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.bukkit.utils.nms.EntityMetaPacketHelper;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.MessageLayout;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
 
 class GeneratorHudHandlerImpl implements IGeneratorHudHandler
 {

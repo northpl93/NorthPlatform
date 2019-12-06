@@ -1,32 +1,30 @@
 package pl.arieals.minigame.goldhunter;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import pl.arieals.api.minigame.server.MiniGameServer;
-import pl.arieals.api.minigame.server.gamehost.GameHostManager;
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.goldhunter.arena.GoldHunterArena;
 import pl.arieals.minigame.goldhunter.classes.CharacterClassManager;
 import pl.arieals.minigame.goldhunter.classes.SpecialAbilityType;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.component.annotations.bean.Bean;
-import pl.north93.zgame.api.global.component.annotations.bean.DynamicBean;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.component.annotations.bean.Named;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.component.annotations.bean.DynamicBean;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.component.annotations.bean.Named;
+import pl.north93.northplatform.api.minigame.server.MiniGameServer;
+import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 public class GoldHunter
 {

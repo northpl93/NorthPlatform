@@ -1,10 +1,10 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.setPlayerStatus;
-import static pl.north93.zgame.api.global.utils.lang.JavaUtils.instanceOf;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.setPlayerStatus;
+import static pl.north93.northplatform.api.global.utils.lang.JavaUtils.instanceOf;
 
 
 import java.time.Duration;
@@ -20,10 +20,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
-import pl.arieals.api.minigame.shared.api.PlayerStatus;
-import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.reward.CurrencyReward;
+import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
+import pl.north93.northplatform.api.minigame.shared.api.arena.DeathMatchState;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.RevivePlayerCountdown;
@@ -31,14 +31,14 @@ import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.shop.elimination.IEliminationEffect;
 import pl.arieals.minigame.bedwars.shop.stattrack.StatTrackManager;
 import pl.arieals.minigame.bedwars.shop.stattrack.TrackedStatistic;
-import pl.north93.zgame.api.bukkit.player.INorthPlayer;
-import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageContainer;
-import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageEntry;
-import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageTracker;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.network.players.Identity;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageContainer;
+import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageEntry;
+import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageTracker;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.network.players.Identity;
 
 @Slf4j
 public class DeathListener implements Listener

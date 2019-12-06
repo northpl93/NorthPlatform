@@ -7,7 +7,7 @@ import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import pl.arieals.minigame.goldhunter.effect.RegenerationEffect;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.arieals.minigame.goldhunter.player.PotionHandler;
-import pl.north93.zgame.api.bukkit.utils.nms.NbtTagType;
+import pl.north93.northplatform.api.bukkit.utils.nms.NbtTagType;
 
 public class RegenerationPotion implements PotionHandler
 {

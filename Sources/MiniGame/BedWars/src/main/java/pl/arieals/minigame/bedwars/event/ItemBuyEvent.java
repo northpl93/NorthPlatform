@@ -8,9 +8,9 @@ import org.bukkit.inventory.ItemStack;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.cfg.BwShopEntry;
-import pl.north93.zgame.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
 /**
  * Event wywoływany gdy gracz kupuje przedmiot ze sklepu.

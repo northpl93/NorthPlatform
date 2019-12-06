@@ -1,15 +1,15 @@
 package pl.arieals.minigame.bedwars;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
-import pl.north93.zgame.api.bukkit.player.INorthPlayer;
-import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
-import pl.north93.zgame.api.chat.global.ChatFormatter;
-import pl.north93.zgame.api.chat.global.formatter.PermissionsBasedFormatter;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils;
+import pl.north93.northplatform.api.chat.global.ChatFormatter;
+import pl.north93.northplatform.api.chat.global.formatter.PermissionsBasedFormatter;
 
 public class BedWarsChatFormatter implements ChatFormatter
 {

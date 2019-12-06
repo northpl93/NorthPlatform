@@ -1,6 +1,6 @@
 package pl.arieals.minigame.bedwars.shop.stattrack;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import java.util.Locale;
@@ -11,13 +11,13 @@ import org.bukkit.inventory.ItemStack;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.shared.api.statistics.IStatistic;
-import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
-import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
-import pl.arieals.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
-import pl.arieals.api.minigame.shared.api.statistics.unit.NumberUnit;
-import pl.north93.zgame.api.global.component.annotations.bean.Bean;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticHolder;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsManager;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class StatTrackManager
 {

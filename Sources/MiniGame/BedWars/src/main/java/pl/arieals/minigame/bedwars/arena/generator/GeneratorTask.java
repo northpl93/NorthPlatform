@@ -5,8 +5,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 
 public final class GeneratorTask extends BukkitRunnable

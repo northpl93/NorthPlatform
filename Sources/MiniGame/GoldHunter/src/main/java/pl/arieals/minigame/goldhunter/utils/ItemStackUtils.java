@@ -14,8 +14,8 @@ import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import net.minecraft.server.v1_12_R1.NBTTagList;
 
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.north93.zgame.api.global.utils.lang.MethodHandlesUtils;
-import pl.north93.zgame.api.global.utils.lang.SneakyThrow;
+import pl.north93.northplatform.api.global.utils.lang.MethodHandlesUtils;
+import pl.north93.northplatform.api.global.utils.lang.SneakyThrow;
 
 public final class ItemStackUtils
 {

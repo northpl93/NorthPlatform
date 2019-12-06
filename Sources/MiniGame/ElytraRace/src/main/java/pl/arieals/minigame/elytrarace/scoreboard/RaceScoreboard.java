@@ -1,7 +1,7 @@
 package pl.arieals.minigame.elytrarace.scoreboard;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import java.time.Duration;
@@ -16,18 +16,18 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
-import pl.arieals.api.minigame.shared.api.statistics.type.ShorterTimeBetterStatistic;
-import pl.arieals.api.minigame.shared.api.statistics.unit.DurationUnit;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsManager;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.type.ShorterTimeBetterStatistic;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.DurationUnit;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
-import pl.north93.zgame.api.bukkit.scoreboard.ContentBuilder;
-import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
-import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardLayout;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.bukkit.scoreboard.ContentBuilder;
+import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardContext;
+import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardLayout;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
 
 public class RaceScoreboard implements IScoreboardLayout
 {

@@ -1,9 +1,9 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import static pl.arieals.minigame.bedwars.utils.TeamArmorUtils.createColorArmor;
-import static pl.north93.zgame.api.global.utils.lang.JavaUtils.instanceOf;
+import static pl.north93.northplatform.api.global.utils.lang.JavaUtils.instanceOf;
 
 
 import org.bukkit.Color;
@@ -33,12 +33,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.SpawnEgg;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.npc.BedWarsSkeleton;
 import pl.arieals.minigame.bedwars.utils.TeamArmorUtils;
-import pl.north93.zgame.api.bukkit.utils.nms.FastBlockOp;
+import pl.north93.northplatform.api.bukkit.utils.nms.FastBlockOp;
 
 public class SpecialItems implements Listener
 {

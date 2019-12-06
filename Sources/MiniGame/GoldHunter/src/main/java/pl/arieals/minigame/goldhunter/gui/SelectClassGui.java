@@ -15,14 +15,14 @@ import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.classes.CharacterClass;
 import pl.arieals.minigame.goldhunter.classes.CharacterClassManager;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.north93.zgame.api.bukkit.gui.ClickHandler;
-import pl.north93.zgame.api.bukkit.gui.event.GuiClickEvent;
-import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
-import pl.north93.zgame.api.bukkit.utils.xml.XmlEnchant;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.uri.UriHandler;
+import pl.north93.northplatform.api.bukkit.gui.ClickHandler;
+import pl.north93.northplatform.api.bukkit.gui.event.GuiClickEvent;
+import pl.north93.northplatform.api.bukkit.utils.itemstack.ItemStackBuilder;
+import pl.north93.northplatform.api.bukkit.utils.xml.XmlEnchant;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.uri.UriHandler;
 
 public class SelectClassGui extends GoldHunterGui
 {

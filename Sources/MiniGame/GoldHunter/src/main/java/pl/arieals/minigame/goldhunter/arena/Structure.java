@@ -13,8 +13,8 @@ import org.bukkit.util.Vector;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.north93.zgame.api.bukkit.tick.ITickable;
-import pl.north93.zgame.api.global.utils.lang.CatchException;
+import pl.north93.northplatform.api.bukkit.tick.ITickable;
+import pl.north93.northplatform.api.global.utils.lang.CatchException;
 
 public abstract class Structure implements ITickable
 {

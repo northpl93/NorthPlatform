@@ -6,9 +6,9 @@ import com.google.common.base.Preconditions;
 
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.north93.zgame.api.global.commands.Arguments;
-import pl.north93.zgame.api.global.commands.NorthCommand;
-import pl.north93.zgame.api.global.commands.NorthCommandSender;
+import pl.north93.northplatform.api.global.commands.Arguments;
+import pl.north93.northplatform.api.global.commands.NorthCommand;
+import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 
 public class FastAbilityCommand extends NorthCommand
 {

@@ -1,7 +1,7 @@
 package pl.arieals.minigame.elytrarace.arena;
 
 import static pl.arieals.minigame.elytrarace.ElytraRaceMode.RACE_MODE;
-import static pl.north93.zgame.api.global.utils.lang.CollectionUtils.findInCollection;
+import static pl.north93.northplatform.api.global.utils.lang.CollectionUtils.findInCollection;
 
 
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.Set;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.arena.IArenaData;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.IArenaData;
 import pl.arieals.minigame.elytrarace.ElytraRaceMode;
 import pl.arieals.minigame.elytrarace.arena.finish.IFinishHandler;
 import pl.arieals.minigame.elytrarace.arena.finish.race.RaceMetaHandler;

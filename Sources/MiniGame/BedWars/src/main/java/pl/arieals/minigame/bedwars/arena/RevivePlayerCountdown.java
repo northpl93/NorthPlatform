@@ -1,8 +1,8 @@
 package pl.arieals.minigame.bedwars.arena;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.setPlayerStatus;
-import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.fromLegacyText;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.setPlayerStatus;
+import static pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils.fromLegacyText;
 
 
 import com.destroystokyo.paper.Title;
@@ -14,13 +14,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
 import net.md_5.bungee.api.chat.BaseComponent;
-import pl.arieals.api.minigame.shared.api.PlayerStatus;
+import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.minigame.bedwars.event.PlayerRevivedEvent;
-import pl.north93.zgame.api.bukkit.player.INorthPlayer;
-import pl.north93.zgame.api.bukkit.utils.AbstractCountdown;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.utils.AbstractCountdown;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
 
 @Slf4j
 public class RevivePlayerCountdown extends AbstractCountdown

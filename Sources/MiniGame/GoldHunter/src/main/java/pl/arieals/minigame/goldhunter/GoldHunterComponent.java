@@ -1,7 +1,7 @@
 package pl.arieals.minigame.goldhunter;
 
-import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.component.Component;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class GoldHunterComponent extends Component
 {

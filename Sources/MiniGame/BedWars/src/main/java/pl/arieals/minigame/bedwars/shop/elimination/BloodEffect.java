@@ -1,6 +1,6 @@
 package pl.arieals.minigame.bedwars.shop.elimination;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 
 
 import java.util.Collection;
@@ -15,7 +15,7 @@ import org.bukkit.material.MaterialData;
 
 import org.diorite.commons.math.DioriteRandomUtils;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 
 public class BloodEffect implements IEliminationEffect
 {

@@ -7,8 +7,8 @@ import org.bukkit.event.Listener;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class HeadsListener implements Listener
 {

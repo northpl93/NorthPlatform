@@ -1,6 +1,6 @@
 package pl.arieals.minigame.bedwars.shop.specialentry;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import java.util.Collection;
@@ -13,7 +13,7 @@ import org.bukkit.material.Wool;
 
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.utils.TeamArmorUtils;
-import pl.north93.zgame.api.bukkit.utils.itemstack.ItemTransaction;
+import pl.north93.northplatform.api.bukkit.utils.itemstack.ItemTransaction;
 
 public class WoolTeamColor implements IShopSpecialEntry
 {

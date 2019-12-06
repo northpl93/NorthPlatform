@@ -14,8 +14,8 @@ import pl.arieals.minigame.goldhunter.classes.xml.XmlRewardsInfo;
 import pl.arieals.minigame.goldhunter.classes.xml.XmlSpecialAbilityInfo;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.arieals.minigame.goldhunter.player.PlayerRank;
-import pl.north93.zgame.api.bukkit.utils.xml.itemstack.XmlItemStack;
-import pl.north93.zgame.api.global.messages.TranslatableString;
+import pl.north93.northplatform.api.bukkit.utils.xml.itemstack.XmlItemStack;
+import pl.north93.northplatform.api.global.messages.TranslatableString;
 
 @RequiredArgsConstructor
 public class CharacterClass

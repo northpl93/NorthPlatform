@@ -1,6 +1,6 @@
 package pl.arieals.minigame.bedwars.utils;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import java.util.function.Predicate;

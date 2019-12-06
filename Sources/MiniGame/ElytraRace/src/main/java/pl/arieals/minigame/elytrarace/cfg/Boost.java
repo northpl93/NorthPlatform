@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.minigame.elytrarace.BoostType;
-import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
+import pl.north93.northplatform.api.bukkit.utils.xml.XmlCuboid;
 
 @XmlRootElement(name = "boost")
 @XmlAccessorType(XmlAccessType.FIELD)

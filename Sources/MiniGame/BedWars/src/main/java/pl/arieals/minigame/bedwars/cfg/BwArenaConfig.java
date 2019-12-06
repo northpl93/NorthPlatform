@@ -11,8 +11,8 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
-import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
+import pl.north93.northplatform.api.bukkit.utils.xml.XmlCuboid;
+import pl.north93.northplatform.api.bukkit.utils.xml.XmlLocation;
 
 @XmlRootElement(name = "arena")
 @XmlAccessorType(XmlAccessType.FIELD)

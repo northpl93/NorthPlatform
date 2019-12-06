@@ -1,11 +1,8 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.setPlayerData;
-
-
-import java.util.Comparator;
-
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,18 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import lombok.extern.slf4j.Slf4j;
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.arena.player.PlayersManager;
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
-import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
-import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
-import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
-import pl.arieals.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
@@ -33,12 +18,24 @@ import pl.arieals.minigame.bedwars.cfg.BwConfig;
 import pl.arieals.minigame.bedwars.scoreboard.GameScoreboard;
 import pl.arieals.minigame.bedwars.scoreboard.LobbyScoreboard;
 import pl.arieals.minigame.bedwars.shop.EliminationEffectManager;
-import pl.north93.zgame.api.bukkit.player.INorthPlayer;
-import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.MessageLayout;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardManager;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.MessageLayout;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.PlayersManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
+import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
+
+import java.util.Comparator;
+
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.setPlayerData;
 
 @Slf4j
 public class PlayerTeamListener implements Listener
@@ -85,7 +82,7 @@ public class PlayerTeamListener implements Listener
 
             if (smallestTeam == null)
             {
-                log.error("smallestTeam is null in gameStart on arena {0} player {1}", arena.getId(), player.getName());
+                log.error("smallestTeam is null in gameStart on arena {} player {}", arena.getId(), player.getName());
                 player.sendMessage(ChatColor.RED + "Blad krytyczny; brak wolnego teamu (niepoprawna konfiguracja areny?)");
                 return;
             }

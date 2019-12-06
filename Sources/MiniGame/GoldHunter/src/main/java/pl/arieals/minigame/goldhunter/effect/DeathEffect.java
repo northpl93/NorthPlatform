@@ -4,7 +4,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import pl.arieals.minigame.goldhunter.player.Effect;
-import pl.north93.zgame.api.bukkit.tick.Tick;
+import pl.north93.northplatform.api.bukkit.tick.Tick;
 
 public class DeathEffect extends Effect
 {

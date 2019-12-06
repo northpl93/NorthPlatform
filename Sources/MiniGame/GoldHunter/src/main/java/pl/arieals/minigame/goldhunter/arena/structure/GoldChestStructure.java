@@ -5,7 +5,7 @@ import org.bukkit.util.BlockVector;
 
 import com.google.common.base.Preconditions;
 
-import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.goldhunter.arena.SoundEffect;
 import pl.arieals.minigame.goldhunter.arena.Structure;
 import pl.arieals.minigame.goldhunter.player.GameTeam;

@@ -3,13 +3,13 @@ package pl.arieals.minigame.elytrarace.listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
-import pl.arieals.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
-import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
+import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ScoreController;
-import pl.north93.zgame.api.bukkit.utils.SimpleCountdown;
+import pl.north93.northplatform.api.bukkit.utils.SimpleCountdown;
 
 public class ArenaEndListener implements Listener
 {

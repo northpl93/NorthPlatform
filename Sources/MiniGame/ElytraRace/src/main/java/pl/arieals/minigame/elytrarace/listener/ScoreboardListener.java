@@ -10,15 +10,15 @@ import org.bukkit.event.Listener;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
-import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.scoreboard.LobbyScoreboard;
 import pl.arieals.minigame.elytrarace.scoreboard.RaceScoreboard;
 import pl.arieals.minigame.elytrarace.scoreboard.ScoreScoreboard;
-import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardLayout;
-import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardLayout;
+import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardManager;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class ScoreboardListener implements Listener
 {

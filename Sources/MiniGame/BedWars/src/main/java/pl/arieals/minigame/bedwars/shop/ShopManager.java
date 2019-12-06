@@ -1,11 +1,11 @@
 package pl.arieals.minigame.bedwars.shop;
 
 import static java.text.MessageFormat.format;
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
-import static pl.north93.zgame.api.bukkit.utils.nms.ItemStackHelper.ensureCraftItemStack;
-import static pl.north93.zgame.api.bukkit.utils.nms.ItemStackHelper.getOrCreatePersistentStorage;
-import static pl.north93.zgame.api.bukkit.utils.nms.ItemStackHelper.getPersistentStorage;
-import static pl.north93.zgame.api.global.utils.lang.CollectionUtils.findInCollection;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
+import static pl.north93.northplatform.api.bukkit.utils.nms.ItemStackHelper.ensureCraftItemStack;
+import static pl.north93.northplatform.api.bukkit.utils.nms.ItemStackHelper.getOrCreatePersistentStorage;
+import static pl.north93.northplatform.api.bukkit.utils.nms.ItemStackHelper.getPersistentStorage;
+import static pl.north93.northplatform.api.global.utils.lang.CollectionUtils.findInCollection;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,24 +19,24 @@ import org.bukkit.inventory.ItemStack;
 
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.cfg.BwShopConfig;
 import pl.arieals.minigame.bedwars.cfg.BwShopEntry;
 import pl.arieals.minigame.bedwars.event.ItemBuyEvent;
 import pl.arieals.minigame.bedwars.event.ItemPreBuyEvent;
 import pl.arieals.minigame.bedwars.shop.gui.ShopBase;
 import pl.arieals.minigame.bedwars.shop.specialentry.IShopSpecialEntry;
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.bukkit.gui.Gui;
-import pl.north93.zgame.api.bukkit.gui.IGuiManager;
-import pl.north93.zgame.api.bukkit.player.INorthPlayer;
-import pl.north93.zgame.api.bukkit.utils.itemstack.ItemTransaction;
-import pl.north93.zgame.api.bukkit.utils.xml.itemstack.XmlItemStack;
-import pl.north93.zgame.api.global.component.annotations.bean.Aggregator;
-import pl.north93.zgame.api.global.component.annotations.bean.Bean;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.uri.UriHandler;
-import pl.north93.zgame.api.global.uri.UriInvocationContext;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.gui.Gui;
+import pl.north93.northplatform.api.bukkit.gui.IGuiManager;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.utils.itemstack.ItemTransaction;
+import pl.north93.northplatform.api.bukkit.utils.xml.itemstack.XmlItemStack;
+import pl.north93.northplatform.api.global.component.annotations.bean.Aggregator;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.uri.UriHandler;
+import pl.north93.northplatform.api.global.uri.UriInvocationContext;
 
 /**
  * Klasa zarzadzajaca sklepem bedwarsów.

@@ -10,13 +10,13 @@ import org.bukkit.scoreboard.Team.OptionStatus;
 
 import com.google.common.base.Preconditions;
 
-import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.goldhunter.arena.GoldHunterArena;
 import pl.arieals.minigame.goldhunter.player.GameTeam;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
-import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardManager;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardContext;
+import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardManager;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class ArenaScoreboardManager
 {

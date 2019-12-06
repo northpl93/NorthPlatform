@@ -10,10 +10,10 @@ import org.slf4j.Logger;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.classes.xml.XmlClassDesc;
 import pl.arieals.minigame.goldhunter.classes.xml.XmlClasses;
-import pl.north93.zgame.api.global.component.annotations.bean.Bean;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
 
 public class CharacterClassManager
 {

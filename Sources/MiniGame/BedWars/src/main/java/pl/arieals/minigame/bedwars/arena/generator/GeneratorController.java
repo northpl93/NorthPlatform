@@ -21,7 +21,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import org.diorite.commons.math.DioriteRandomUtils;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.cfg.BwConfig;
 import pl.arieals.minigame.bedwars.cfg.BwGenerator;

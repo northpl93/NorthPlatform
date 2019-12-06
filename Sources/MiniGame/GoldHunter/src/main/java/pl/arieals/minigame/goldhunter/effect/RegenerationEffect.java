@@ -4,7 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 
 import pl.arieals.minigame.goldhunter.player.Effect;
-import pl.north93.zgame.api.bukkit.tick.Tick;
+import pl.north93.northplatform.api.bukkit.tick.Tick;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)

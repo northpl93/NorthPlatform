@@ -2,7 +2,6 @@
  * NorthPlatform's build settings
  */
 
-
 rootProject.name = 'NorthPlatform'
 
 def addModule(String name, String directory) {
@@ -16,6 +15,11 @@ addModule("API:BaseFeatures", "Sources/API/BaseFeatures")
 addModule("API:Chat", "Sources/API/Chat")
 addModule("API:Economy", "Sources/API/Economy")
 addModule("API:MiniGame", "Sources/API/MiniGame")
+
+addModule("MiniGame", "Sources/MiniGame")
+addModule("MiniGame:BedWars", "Sources/MiniGame/BedWars")
+addModule("MiniGame:ElytraRace", "Sources/MiniGame/ElytraRace")
+addModule("MiniGame:GoldHunter", "Sources/MiniGame/GoldHunter")
 
 addModule("AntyCheat", "Sources/AntyCheat")
 addModule("AntyCheat:AntyCheatClient", "Sources/AntyCheat/AntyCheatClient")

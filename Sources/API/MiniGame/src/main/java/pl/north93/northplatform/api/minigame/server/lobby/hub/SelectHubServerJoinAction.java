@@ -1,19 +1,17 @@
 package pl.north93.northplatform.api.minigame.server.lobby.hub;
 
-import java.util.Collections;
-
+import lombok.ToString;
 import org.bukkit.Location;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
-import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.server.joinaction.IServerJoinAction;
-import pl.north93.northplatform.api.global.serializer.platform.annotations.NorthTransient;
+import pl.north93.northplatform.api.minigame.server.MiniGameServer;
+import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
+import pl.north93.serializer.platform.annotations.NorthTransient;
 
+import java.util.Collections;
+
+@ToString(of = "hubId")
 public class SelectHubServerJoinAction implements IServerJoinAction
 {
     @NorthTransient
@@ -48,11 +46,5 @@ public class SelectHubServerJoinAction implements IServerJoinAction
     {
         final LobbyManager lobbyManager = this.miniGameServer.getServerManager();
         lobbyManager.tpToHub(Collections.singleton(player), this.hubId);
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("hubId", this.hubId).toString();
     }
 }

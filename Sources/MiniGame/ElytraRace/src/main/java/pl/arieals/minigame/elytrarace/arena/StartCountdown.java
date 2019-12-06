@@ -1,7 +1,7 @@
 package pl.arieals.minigame.elytrarace.arena;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-import static pl.north93.zgame.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
 
 
 import com.destroystokyo.paper.Title;
@@ -15,11 +15,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.chat.BaseComponent;
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.zgame.api.bukkit.utils.AbstractCountdown;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.bukkit.utils.AbstractCountdown;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
 
 public class StartCountdown extends AbstractCountdown
 {

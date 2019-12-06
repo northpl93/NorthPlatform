@@ -11,8 +11,8 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 
 import pl.arieals.minigame.goldhunter.GoldHunter;
-import pl.north93.zgame.api.bukkit.utils.AutoListener;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class FireListener implements AutoListener
 {

@@ -1,6 +1,6 @@
 package pl.arieals.minigame.elytrarace.listener;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import java.util.List;
@@ -16,10 +16,10 @@ import org.bukkit.event.Listener;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
-import pl.arieals.api.minigame.server.gamehost.region.IRegionManager;
-import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.region.IRegionManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.arieals.minigame.elytrarace.ElytraRaceMode;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
@@ -27,13 +27,13 @@ import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.arieals.minigame.elytrarace.arena.ScoreController;
 import pl.arieals.minigame.elytrarace.cfg.Score;
 import pl.arieals.minigame.elytrarace.cfg.ScoreGroup;
-import pl.north93.zgame.api.bukkit.utils.nms.FastBlockOp;
-import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.messages.PluralForm;
-import pl.north93.zgame.api.global.messages.TranslatableString;
+import pl.north93.northplatform.api.bukkit.utils.nms.FastBlockOp;
+import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.messages.PluralForm;
+import pl.north93.northplatform.api.global.messages.TranslatableString;
 
 public class ScoreListener implements Listener
 {

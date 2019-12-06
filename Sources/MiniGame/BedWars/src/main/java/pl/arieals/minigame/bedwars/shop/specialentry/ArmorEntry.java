@@ -16,8 +16,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import lombok.extern.slf4j.Slf4j;
 import pl.arieals.minigame.bedwars.event.ItemPreBuyEvent;
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.bukkit.utils.itemstack.ArmorMaterial;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.utils.itemstack.ArmorMaterial;
 
 @Slf4j
 public class ArmorEntry implements IShopSpecialEntry, Listener

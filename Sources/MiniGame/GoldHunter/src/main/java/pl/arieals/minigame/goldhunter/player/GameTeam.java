@@ -3,8 +3,8 @@ package pl.arieals.minigame.goldhunter.player;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 
-import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.messages.TranslatableString;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.messages.TranslatableString;
 
 public enum GameTeam
 {

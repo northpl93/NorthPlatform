@@ -7,8 +7,8 @@ import org.bukkit.block.Block;
 import com.google.common.base.Preconditions;
 
 import pl.arieals.minigame.goldhunter.GoldHunter;
-import pl.north93.zgame.api.global.component.annotations.bean.Bean;
-import pl.north93.zgame.api.global.utils.Result;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.utils.Result;
 
 public class ArenaBuilder
 {

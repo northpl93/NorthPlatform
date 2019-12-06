@@ -8,8 +8,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.citizensnpcs.api.npc.NPCRegistry;
-import pl.arieals.api.minigame.server.MiniGameServer;
-import pl.arieals.api.minigame.server.lobby.LobbyManager;
+import pl.north93.northplatform.api.minigame.server.MiniGameServer;
+import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.minigame.bedwars.arena.generator.ItemRotator;
 import pl.arieals.minigame.bedwars.cfg.BwConfig;
 import pl.arieals.minigame.bedwars.cfg.BwShopConfig;
@@ -29,13 +29,13 @@ import pl.arieals.minigame.bedwars.listener.TabListHandler;
 import pl.arieals.minigame.bedwars.listener.UpgradeInstallListener;
 import pl.arieals.minigame.bedwars.npc.NpcCreator;
 import pl.arieals.minigame.bedwars.shop.stattrack.StatTrackListener;
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageTracker;
-import pl.north93.zgame.api.global.ApiCore;
-import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.bean.Bean;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.component.annotations.bean.Named;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageTracker;
+import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.global.component.Component;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.component.annotations.bean.Named;
 
 public class BedWarsComponent extends Component
 {

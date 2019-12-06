@@ -1,6 +1,6 @@
 package pl.arieals.minigame.bedwars.shop.elimination;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 
 
 import java.util.Collection;
@@ -11,7 +11,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 
 public class CookiesEffect implements IEliminationEffect
 {

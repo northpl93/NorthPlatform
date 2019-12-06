@@ -15,12 +15,12 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.material.Bed;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.cfg.BwTeamConfig;
 import pl.arieals.minigame.bedwars.event.BedDestroyedEvent;
 import pl.arieals.minigame.bedwars.event.TeamEliminatedEvent;
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 
 public class Team
 {

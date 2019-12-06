@@ -1,7 +1,7 @@
 package pl.arieals.minigame.bedwars.shop.upgrade;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
 
 
 import com.destroystokyo.paper.Title;
@@ -14,15 +14,15 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.chat.BaseComponent;
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.region.ITrackedRegion;
-import pl.arieals.api.minigame.shared.api.PlayerStatus;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.region.ITrackedRegion;
+import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
-import pl.north93.zgame.api.bukkit.player.INorthPlayer;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.messages.TranslatableString;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.messages.TranslatableString;
 
 public class IslandTrapUpgrade implements IUpgrade
 {

@@ -11,9 +11,9 @@ import org.slf4j.Logger;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.classes.xml.XmlInventoryRefilRule;
 import pl.arieals.minigame.goldhunter.utils.ItemStackUtils;
-import pl.north93.zgame.api.bukkit.tick.ITickable;
-import pl.north93.zgame.api.bukkit.tick.Tick;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.bukkit.tick.ITickable;
+import pl.north93.northplatform.api.bukkit.tick.Tick;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class InventoryRefilTracker implements ITickable
 {

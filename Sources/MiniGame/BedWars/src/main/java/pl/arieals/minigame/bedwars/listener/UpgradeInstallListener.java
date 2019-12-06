@@ -18,9 +18,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.arieals.minigame.bedwars.cfg.BwShopConfig;
 import pl.arieals.minigame.bedwars.event.UpgradeInstallEvent;
 import pl.arieals.minigame.bedwars.shop.upgrade.IUpgrade;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
 
 public class UpgradeInstallListener implements Listener
 {

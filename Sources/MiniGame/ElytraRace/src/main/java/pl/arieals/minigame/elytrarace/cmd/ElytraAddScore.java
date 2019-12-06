@@ -1,6 +1,6 @@
 package pl.arieals.minigame.elytrarace.cmd;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.minigame.elytrarace.cmd.ElytraDevMode.checkDevMode;
 
 
@@ -15,14 +15,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.cfg.Score;
-import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
-import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
-import pl.north93.zgame.api.global.commands.Arguments;
-import pl.north93.zgame.api.global.commands.NorthCommand;
-import pl.north93.zgame.api.global.commands.NorthCommandSender;
+import pl.north93.northplatform.api.bukkit.utils.xml.XmlCuboid;
+import pl.north93.northplatform.api.bukkit.utils.xml.XmlLocation;
+import pl.north93.northplatform.api.global.commands.Arguments;
+import pl.north93.northplatform.api.global.commands.NorthCommand;
+import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 
 public class ElytraAddScore extends NorthCommand
 {

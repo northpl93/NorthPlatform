@@ -1,12 +1,6 @@
 package pl.arieals.minigame.bedwars.shop.stattrack;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.setPlayerData;
-
-
-import java.util.ArrayList;
-import java.util.Locale;
-
+import lombok.ToString;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,26 +9,29 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
-import pl.arieals.globalshops.server.IGlobalShops;
-import pl.arieals.globalshops.server.IPlayerContainer;
-import pl.arieals.globalshops.server.domain.Item;
-import pl.arieals.globalshops.server.domain.ItemsGroup;
 import pl.arieals.minigame.bedwars.event.ItemBuyEvent;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
+import pl.north93.northplatform.globalshops.server.IGlobalShops;
+import pl.north93.northplatform.globalshops.server.IPlayerContainer;
+import pl.north93.northplatform.globalshops.server.domain.Item;
+import pl.north93.northplatform.globalshops.server.domain.ItemsGroup;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.setPlayerData;
+
+@ToString
 public class StatTrackListener implements Listener
 {
     @Inject
-    private IGlobalShops     globalShops;
+    private IGlobalShops globalShops;
     @Inject
     private StatTrackManager statTrackManager;
     @Inject
-    private StatTrackItems   statTrackItems;
+    private StatTrackItems statTrackItems;
 
     @EventHandler
     public void createStatTrackPlayer(final PlayerJoinArenaEvent event)
@@ -126,11 +123,5 @@ public class StatTrackListener implements Listener
         {
             this.statTrackItems.updateItem(event.getPlayer(), itemStack);
         }
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

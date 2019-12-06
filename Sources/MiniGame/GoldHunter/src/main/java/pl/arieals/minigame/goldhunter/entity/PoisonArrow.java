@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.effect.PoisonEffect;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class PoisonArrow extends HomingArrow
 {

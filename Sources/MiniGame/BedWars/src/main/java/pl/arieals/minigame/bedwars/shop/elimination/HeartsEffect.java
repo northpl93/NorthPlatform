@@ -1,14 +1,14 @@
 package pl.arieals.minigame.bedwars.shop.elimination;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 
 
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.zgame.api.bukkit.utils.SimpleCountdown;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.bukkit.utils.SimpleCountdown;
 
 public class HeartsEffect implements IEliminationEffect
 {

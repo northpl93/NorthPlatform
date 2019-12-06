@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
+import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardContext;
 
 public class LobbyOutgameScoreboardLayout extends GoldHunterScoreboardLayout
 {

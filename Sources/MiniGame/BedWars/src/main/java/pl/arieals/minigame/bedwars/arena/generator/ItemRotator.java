@@ -1,12 +1,12 @@
 package pl.arieals.minigame.bedwars.arena.generator;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArenas;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArenas;
 
 
 import net.minecraft.server.v1_12_R1.MinecraftServer;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.shared.api.GamePhase;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 
 /**

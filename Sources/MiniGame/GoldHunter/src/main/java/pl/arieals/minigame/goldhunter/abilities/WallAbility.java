@@ -16,7 +16,7 @@ import pl.arieals.minigame.goldhunter.arena.ArenaBuilder;
 import pl.arieals.minigame.goldhunter.player.AbilityHandler;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.arieals.minigame.goldhunter.utils.Direction;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class WallAbility implements AbilityHandler
 {

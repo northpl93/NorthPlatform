@@ -1,17 +1,11 @@
 package pl.arieals.minigame.goldhunter.player;
 
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
-
+import com.google.common.base.Preconditions;
 import net.minecraft.server.v1_12_R1.DamageSource;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.MinecraftServer;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
-
-import com.google.common.base.Preconditions;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,13 +20,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
-
 import org.slf4j.Logger;
-
-import pl.arieals.api.minigame.server.gamehost.reward.CurrencyReward;
-import pl.arieals.globalshops.server.IGlobalShops;
-import pl.arieals.globalshops.server.domain.Item;
-import pl.arieals.globalshops.server.domain.ItemsGroup;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.arena.ArenaBuilder;
 import pl.arieals.minigame.goldhunter.arena.GoldHunterArena;
@@ -41,21 +29,29 @@ import pl.arieals.minigame.goldhunter.classes.CharacterClassManager;
 import pl.arieals.minigame.goldhunter.effect.RespawnProtection;
 import pl.arieals.minigame.goldhunter.gui.LobbyHotbar;
 import pl.arieals.minigame.goldhunter.utils.Direction;
-import pl.north93.zgame.api.bukkit.entityhider.IEntityHider;
-import pl.north93.zgame.api.bukkit.gui.IGuiManager;
-import pl.north93.zgame.api.bukkit.player.INorthPlayer;
-import pl.north93.zgame.api.bukkit.scoreboard.IScoreboardContext;
-import pl.north93.zgame.api.bukkit.tick.ITickable;
-import pl.north93.zgame.api.bukkit.tick.ITickableManager;
-import pl.north93.zgame.api.bukkit.tick.Tick;
-import pl.north93.zgame.api.bukkit.utils.itemstack.ItemStackBuilder;
-import pl.north93.zgame.api.economy.ICurrency;
-import pl.north93.zgame.api.economy.IEconomyManager;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.MessageLayout;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.network.players.Identity;
+import pl.north93.northplatform.api.bukkit.entityhider.IEntityHider;
+import pl.north93.northplatform.api.bukkit.gui.IGuiManager;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardContext;
+import pl.north93.northplatform.api.bukkit.tick.ITickable;
+import pl.north93.northplatform.api.bukkit.tick.ITickableManager;
+import pl.north93.northplatform.api.bukkit.tick.Tick;
+import pl.north93.northplatform.api.bukkit.utils.itemstack.ItemStackBuilder;
+import pl.north93.northplatform.api.economy.ICurrency;
+import pl.north93.northplatform.api.economy.IEconomyManager;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.MessageLayout;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.network.players.Identity;
+import pl.north93.northplatform.api.minigame.server.gamehost.reward.CurrencyReward;
+import pl.north93.northplatform.globalshops.server.IGlobalShops;
+import pl.north93.northplatform.globalshops.server.domain.Item;
+import pl.north93.northplatform.globalshops.server.domain.ItemsGroup;
+
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public class GoldHunterPlayer implements ITickable
 {

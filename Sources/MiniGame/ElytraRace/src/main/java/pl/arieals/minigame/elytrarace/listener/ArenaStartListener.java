@@ -1,6 +1,6 @@
 package pl.arieals.minigame.elytrarace.listener;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.setPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.setPlayerData;
 import static pl.arieals.minigame.elytrarace.ElytraRaceMode.fromVariantId;
 
 
@@ -20,11 +20,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.arena.player.ArenaChatManager;
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
-import pl.arieals.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.ArenaChatManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.minigame.elytrarace.ElytraRaceMode;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
@@ -34,11 +34,11 @@ import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
 import pl.arieals.minigame.elytrarace.shop.ElytraEffectTask;
 import pl.arieals.minigame.elytrarace.shop.ElytraEffectsManager;
 import pl.arieals.minigame.elytrarace.shop.effects.IElytraEffect;
-import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.MessageLayout;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.bukkit.utils.xml.XmlLocation;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.MessageLayout;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
 
 public class ArenaStartListener implements Listener
 {

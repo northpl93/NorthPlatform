@@ -1,6 +1,6 @@
 package pl.arieals.minigame.bedwars.shop;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 
 
 import java.util.Locale;
@@ -26,15 +26,15 @@ import pl.arieals.minigame.bedwars.shop.gui.ShopMain;
 import pl.arieals.minigame.bedwars.shop.gui.ShopMaterials;
 import pl.arieals.minigame.bedwars.shop.gui.ShopSwords;
 import pl.arieals.minigame.bedwars.shop.gui.ShopTools;
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.bukkit.player.INorthPlayer;
-import pl.north93.zgame.api.bukkit.utils.chat.ChatUtils;
-import pl.north93.zgame.api.global.component.annotations.bean.Bean;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.messages.PluralForm;
-import pl.north93.zgame.api.global.uri.UriHandler;
-import pl.north93.zgame.api.global.uri.UriInvocationContext;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.messages.PluralForm;
+import pl.north93.northplatform.api.global.uri.UriHandler;
+import pl.north93.northplatform.api.global.uri.UriInvocationContext;
 
 public final class ShopGuiManager
 {

@@ -13,14 +13,14 @@ import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoActio
 import pl.arieals.minigame.goldhunter.GoldHunter;
 import pl.arieals.minigame.goldhunter.player.GameTeam;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.north93.zgame.api.bukkit.protocol.wrappers.WrapperPlayOutPlayerInfo;
-import pl.north93.zgame.api.bukkit.protocol.wrappers.WrapperPlayOutPlayerInfo.PlayerInfoData;
-import pl.north93.zgame.api.bukkit.protocol.ChannelWrapper;
-import pl.north93.zgame.api.bukkit.protocol.HandlerPriority;
-import pl.north93.zgame.api.bukkit.protocol.PacketEvent;
-import pl.north93.zgame.api.bukkit.protocol.PacketHandler;
-import pl.north93.zgame.api.bukkit.protocol.ProtocolManager;
-import pl.north93.zgame.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.protocol.wrappers.WrapperPlayOutPlayerInfo;
+import pl.north93.northplatform.api.bukkit.protocol.wrappers.WrapperPlayOutPlayerInfo.PlayerInfoData;
+import pl.north93.northplatform.api.bukkit.protocol.ChannelWrapper;
+import pl.north93.northplatform.api.bukkit.protocol.HandlerPriority;
+import pl.north93.northplatform.api.bukkit.protocol.PacketEvent;
+import pl.north93.northplatform.api.bukkit.protocol.PacketHandler;
+import pl.north93.northplatform.api.bukkit.protocol.ProtocolManager;
+import pl.north93.northplatform.api.bukkit.utils.AutoListener;
 
 public class PlayerListPacketListener implements AutoListener
 {    

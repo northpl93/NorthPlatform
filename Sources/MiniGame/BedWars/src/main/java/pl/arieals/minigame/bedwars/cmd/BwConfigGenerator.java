@@ -1,6 +1,6 @@
 package pl.arieals.minigame.bedwars.cmd;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 
 
 import javax.xml.bind.JAXB;
@@ -13,14 +13,14 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.cfg.BwArenaConfig;
 import pl.arieals.minigame.bedwars.cfg.BwGenerator;
-import pl.north93.zgame.api.bukkit.utils.xml.XmlLocation;
-import pl.north93.zgame.api.global.commands.Arguments;
-import pl.north93.zgame.api.global.commands.NorthCommand;
-import pl.north93.zgame.api.global.commands.NorthCommandSender;
+import pl.north93.northplatform.api.bukkit.utils.xml.XmlLocation;
+import pl.north93.northplatform.api.global.commands.Arguments;
+import pl.north93.northplatform.api.global.commands.NorthCommand;
+import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 
 public class BwConfigGenerator extends NorthCommand
 {

@@ -12,9 +12,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.minigame.bedwars.event.ItemBuyEvent;
 import pl.arieals.minigame.bedwars.event.ItemPreBuyEvent;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
 
 public class ItemBuyListener implements Listener
 {

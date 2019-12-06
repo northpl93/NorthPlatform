@@ -14,17 +14,17 @@ import com.google.common.collect.ImmutableMap;
 
 import org.slf4j.Logger;
 
-import pl.arieals.api.minigame.shared.api.statistics.IStatisticHolder;
-import pl.arieals.api.minigame.shared.api.statistics.IStatisticsManager;
-import pl.arieals.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
-import pl.arieals.api.minigame.shared.api.statistics.unit.NumberUnit;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticHolder;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsManager;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
 import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.effect.BetrayalEffect;
 import pl.arieals.minigame.goldhunter.effect.ShadowEffect;
-import pl.north93.zgame.api.bukkit.tick.ITickable;
-import pl.north93.zgame.api.bukkit.tick.ITickableManager;
-import pl.north93.zgame.api.bukkit.tick.Tick;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.bukkit.tick.ITickable;
+import pl.north93.northplatform.api.bukkit.tick.ITickableManager;
+import pl.north93.northplatform.api.bukkit.tick.Tick;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class StatsTracker implements ITickable
 {

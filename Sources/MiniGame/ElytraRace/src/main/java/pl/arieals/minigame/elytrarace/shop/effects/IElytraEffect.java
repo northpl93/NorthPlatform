@@ -3,8 +3,8 @@ package pl.arieals.minigame.elytrarace.shop.effects;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import pl.north93.zgame.api.global.utils.math.MathUtils;
-import pl.north93.zgame.api.global.utils.math.Point;
+import pl.north93.northplatform.api.global.utils.math.MathUtils;
+import pl.north93.northplatform.api.global.utils.math.Point;
 
 public interface IElytraEffect
 {

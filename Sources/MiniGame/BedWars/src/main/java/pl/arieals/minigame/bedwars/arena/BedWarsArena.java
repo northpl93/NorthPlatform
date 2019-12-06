@@ -9,8 +9,8 @@ import org.bukkit.block.Block;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import pl.arieals.api.minigame.server.gamehost.arena.IArenaData;
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.IArenaData;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.generator.GeneratorController;
 import pl.arieals.minigame.bedwars.cfg.BwArenaConfig;
 import pl.arieals.minigame.bedwars.cfg.BwConfig;
@@ -18,8 +18,8 @@ import pl.arieals.minigame.bedwars.cfg.BwGenerator;
 import pl.arieals.minigame.bedwars.cfg.BwGeneratorItemConfig;
 import pl.arieals.minigame.bedwars.cfg.BwGeneratorType;
 import pl.arieals.minigame.bedwars.cfg.BwTeamConfig;
-import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
-import pl.north93.zgame.api.bukkit.utils.xml.XmlCuboid;
+import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
+import pl.north93.northplatform.api.bukkit.utils.xml.XmlCuboid;
 
 public class BedWarsArena implements IArenaData
 {

@@ -5,13 +5,13 @@ import java.util.List;
 
 import pl.arieals.minigame.bedwars.cfg.BwGeneratorItemConfig;
 import pl.arieals.minigame.bedwars.cfg.BwGeneratorType;
-import pl.north93.zgame.api.bukkit.hologui.hologram.HologramRenderContext;
-import pl.north93.zgame.api.bukkit.hologui.hologram.IHologram;
-import pl.north93.zgame.api.bukkit.hologui.hologram.IHologramMessage;
-import pl.north93.zgame.api.bukkit.hologui.hologram.impl.HologramFactory;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.bukkit.hologui.hologram.HologramRenderContext;
+import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologram;
+import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologramMessage;
+import pl.north93.northplatform.api.bukkit.hologui.hologram.impl.HologramFactory;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
 
 public class GeneratorHologram implements IHologramMessage
 {

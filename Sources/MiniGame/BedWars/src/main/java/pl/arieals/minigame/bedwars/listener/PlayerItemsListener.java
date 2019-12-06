@@ -1,15 +1,10 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-
-
-import java.time.Duration;
-import java.util.ListIterator;
-
 import com.carrotsearch.hppc.ObjectIntHashMap;
 import com.carrotsearch.hppc.ObjectIntMap;
 import com.carrotsearch.hppc.cursors.ObjectIntCursor;
-
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,23 +18,24 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.event.PlayerRevivedEvent;
 import pl.arieals.minigame.bedwars.shop.ShopManager;
 import pl.arieals.minigame.bedwars.shop.UpgradeManager;
 import pl.arieals.minigame.bedwars.shop.stattrack.StatTrackItems;
 import pl.arieals.minigame.bedwars.shop.upgrade.RoadOfWarrior;
-import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageEntry;
-import pl.north93.zgame.api.bukkit.utils.dmgtracker.DamageTracker;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.messages.Messages;
-import pl.north93.zgame.api.global.messages.MessagesBox;
-import pl.north93.zgame.api.global.messages.PluralForm;
+import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageEntry;
+import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageTracker;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.messages.PluralForm;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+
+import java.time.Duration;
+import java.util.ListIterator;
+
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 public class PlayerItemsListener implements Listener
 {
@@ -50,7 +46,7 @@ public class PlayerItemsListener implements Listener
     @Inject
     private StatTrackItems statTrackItems;
     @Inject @Messages("BedWars")
-    private MessagesBox    messages;
+    private MessagesBox messages;
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onInventoryClick(final InventoryClickEvent event)

@@ -1,7 +1,7 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getArena;
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
 
 
 import org.bukkit.Location;
@@ -13,11 +13,11 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
-import pl.arieals.api.minigame.shared.api.PlayerStatus;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
+import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
-import pl.north93.zgame.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
 public class BwSpectatorListener implements Listener
 {

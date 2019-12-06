@@ -7,8 +7,8 @@ import org.bukkit.Bukkit;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.arieals.api.minigame.server.MiniGameServer;
-import pl.arieals.api.minigame.server.lobby.LobbyManager;
+import pl.north93.northplatform.api.minigame.server.MiniGameServer;
+import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
 import pl.arieals.minigame.elytrarace.listener.ArenaEndListener;
 import pl.arieals.minigame.elytrarace.listener.ArenaStartListener;
 import pl.arieals.minigame.elytrarace.listener.BoostListener;
@@ -19,11 +19,11 @@ import pl.arieals.minigame.elytrarace.listener.MoveListener;
 import pl.arieals.minigame.elytrarace.listener.ScoreListener;
 import pl.arieals.minigame.elytrarace.listener.ScoreboardListener;
 import pl.arieals.minigame.elytrarace.shop.HeadsListener;
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.component.Component;
-import pl.north93.zgame.api.global.component.annotations.bean.Bean;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
-import pl.north93.zgame.api.global.component.annotations.bean.Named;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.global.component.Component;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.component.annotations.bean.Named;
 
 public class ElytraRaceComponent extends Component
 {

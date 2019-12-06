@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
-import pl.north93.zgame.api.bukkit.utils.xml.itemstack.XmlItemStack;
+import pl.north93.northplatform.api.bukkit.utils.xml.itemstack.XmlItemStack;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlRefilItemRule extends XmlItemStack

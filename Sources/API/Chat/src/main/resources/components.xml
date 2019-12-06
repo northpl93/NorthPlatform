@@ -6,8 +6,8 @@
             <mainClass>pl.north93.northplatform.api.chat.bukkit.BukkitChatComponent</mainClass>
             <description>Chat API.</description>
             <packages>
-                <package>pl.north93.zgame.api.chat.global</package>
-                <package>pl.north93.zgame.api.chat.bukkit</package>
+                <package>pl.north93.northplatform.api.chat.global</package>
+                <package>pl.north93.northplatform.api.chat.bukkit</package>
             </packages>
             <dependencies>
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>
@@ -22,8 +22,8 @@
             <mainClass>pl.north93.northplatform.api.chat.bungee.BungeeChatComponent</mainClass>
             <description>Chat API.</description>
             <packages>
-                <package>pl.north93.zgame.api.chat.global</package>
-                <package>pl.north93.zgame.api.chat.bungee</package>
+                <package>pl.north93.northplatform.api.chat.global</package>
+                <package>pl.north93.northplatform.api.chat.bungee</package>
             </packages>
             <dependencies>
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>
@@ -38,8 +38,8 @@
             <mainClass>pl.north93.northplatform.api.chat.controller.ControllerChatComponent</mainClass>
             <description>Chat API.</description>
             <packages>
-                <package>pl.north93.zgame.api.chat.global</package>
-                <package>pl.north93.zgame.api.chat.controller</package>
+                <package>pl.north93.northplatform.api.chat.global</package>
+                <package>pl.north93.northplatform.api.chat.controller</package>
             </packages>
             <platforms>
                 <platform>STANDALONE</platform>

@@ -1,13 +1,13 @@
 package pl.arieals.minigame.bedwars.shop.stattrack;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.bukkit.entity.Player;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.bukkit.entity.Player;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class StatTrackPlayer
 {
@@ -42,45 +42,11 @@ public class StatTrackPlayer
     }
 }
 
+@ToString
+@EqualsAndHashCode
+@AllArgsConstructor
 final class StatTrackCacheKey
 {
     private final TrackedWeapon weapon;
     private final TrackedStatistic statistic;
-
-    public StatTrackCacheKey(final TrackedWeapon weapon, final TrackedStatistic statistic)
-    {
-        this.weapon = weapon;
-        this.statistic = statistic;
-    }
-
-    @Override
-    public boolean equals(final Object o)
-    {
-        if (this == o)
-        {
-            return true;
-        }
-        if (o == null || this.getClass() != o.getClass())
-        {
-            return false;
-        }
-
-        final StatTrackCacheKey that = (StatTrackCacheKey) o;
-
-        return this.weapon == that.weapon && this.statistic == that.statistic;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int result = this.weapon.hashCode();
-        result = 31 * result + this.statistic.hashCode();
-        return result;
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("weapon", this.weapon).append("statistic", this.statistic).toString();
-    }
 }

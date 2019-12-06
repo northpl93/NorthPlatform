@@ -12,10 +12,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
-import pl.arieals.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
-import pl.arieals.api.minigame.shared.api.arena.DeathMatchState;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
+import pl.north93.northplatform.api.minigame.shared.api.arena.DeathMatchState;
 import pl.arieals.minigame.bedwars.BedWarsChatFormatter;
 import pl.arieals.minigame.bedwars.arena.BedDestroyTask;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
@@ -23,9 +23,9 @@ import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.arena.generator.GeneratorTask;
 import pl.arieals.minigame.bedwars.cfg.BwArenaConfig;
 import pl.arieals.minigame.bedwars.cfg.BwConfig;
-import pl.north93.zgame.api.bukkit.utils.nms.FastBlockOp;
-import pl.north93.zgame.api.bukkit.utils.region.Cuboid;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.bukkit.utils.nms.FastBlockOp;
+import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 @Slf4j
 public class ArenaStartListener implements Listener

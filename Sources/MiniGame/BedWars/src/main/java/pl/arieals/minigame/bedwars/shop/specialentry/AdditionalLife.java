@@ -1,6 +1,6 @@
 package pl.arieals.minigame.bedwars.shop.specialentry;
 
-import static pl.arieals.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import java.util.Collection;
@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.event.ItemPreBuyEvent;
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 
 public class AdditionalLife implements IShopSpecialEntry, Listener
 {

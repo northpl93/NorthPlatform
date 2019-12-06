@@ -8,12 +8,12 @@ import org.bukkit.inventory.ItemStack;
 
 import org.diorite.commons.math.DioriteMathUtils;
 
-import pl.arieals.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.cfg.BwConfig;
 import pl.arieals.minigame.bedwars.event.ItemBuyEvent;
-import pl.north93.zgame.api.bukkit.BukkitApiCore;
-import pl.north93.zgame.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
 
 public class ArmorProtection implements IUpgrade, Listener
 {

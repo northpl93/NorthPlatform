@@ -12,8 +12,8 @@ import com.google.common.base.Preconditions;
 import lombok.NonNull;
 
 import pl.arieals.minigame.goldhunter.event.EffectAttachEvent;
-import pl.north93.zgame.api.bukkit.tick.ITickableManager;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.bukkit.tick.ITickableManager;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class EffectTracker
 {

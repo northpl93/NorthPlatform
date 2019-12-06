@@ -17,9 +17,9 @@ import pl.arieals.minigame.goldhunter.GoldHunterLogger;
 import pl.arieals.minigame.goldhunter.effect.RespawnProtection;
 import pl.arieals.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.arieals.minigame.goldhunter.utils.ItemStackUtils;
-import pl.north93.zgame.api.bukkit.utils.AutoListener;
-import pl.north93.zgame.api.bukkit.utils.itemstack.MaterialUtils;
-import pl.north93.zgame.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.utils.itemstack.MaterialUtils;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class DamageListener implements AutoListener
 {
