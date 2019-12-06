@@ -1,31 +1,22 @@
 package pl.north93.northplatform.api.global.redis.observable.impl;
 
+import com.lambdaworks.redis.api.sync.RedisCommands;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import pl.north93.northplatform.api.global.PlatformConnector;
+import pl.north93.northplatform.api.global.component.Component;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.redis.observable.*;
+import pl.north93.northplatform.api.global.redis.subscriber.RedisSubscriber;
+import pl.north93.northplatform.api.global.storage.StorageConnector;
+import pl.north93.northplatform.api.global.utils.ReferenceHashMap;
+import pl.north93.serializer.platform.NorthSerializer;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import com.lambdaworks.redis.api.sync.RedisCommands;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.north93.northplatform.api.global.redis.subscriber.RedisSubscriber;
-import pl.north93.northplatform.api.global.utils.ReferenceHashMap;
-import pl.north93.northplatform.api.global.PlatformConnector;
-import pl.north93.northplatform.api.global.component.Component;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.redis.observable.Hash;
-import pl.north93.northplatform.api.global.redis.observable.ICacheBuilder;
-import pl.north93.northplatform.api.global.redis.observable.IObservationManager;
-import pl.north93.northplatform.api.global.redis.observable.Lock;
-import pl.north93.northplatform.api.global.redis.observable.ObjectKey;
-import pl.north93.northplatform.api.global.redis.observable.ProvidingRedisKey;
-import pl.north93.northplatform.api.global.redis.observable.SortedSet;
-import pl.north93.northplatform.api.global.redis.observable.Value;
-import pl.north93.northplatform.api.global.serializer.platform.NorthSerializer;
-import pl.north93.northplatform.api.global.storage.StorageConnector;
 
 public class ObservationManagerImpl extends Component implements IObservationManager
 {
@@ -35,7 +26,7 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     @Inject
     private       StorageConnector         storageConnector;
     @Inject
-    private       NorthSerializer<byte[]>  msgPack;
+    private       NorthSerializer<byte[], byte[]>  msgPack;
     @Inject
     private       RedisSubscriber          redisSubscriber;
 
@@ -196,7 +187,7 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         return this.storageConnector;
     }
 
-    /*default*/ NorthSerializer<byte[]> getMsgPack()
+    /*default*/ NorthSerializer<byte[], byte[]> getMsgPack()
     {
         return this.msgPack;
     }

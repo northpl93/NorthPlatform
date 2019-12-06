@@ -7,7 +7,7 @@ rootProject.name = 'NorthPlatform'
 
 def addModule(String name, String directory) {
     include ":${name}"
-    project(":${name}").projectDir = file(directory)
+    project(":${name}").projectDir = file("${rootProject.projectDir}/$directory")
 }
 
 // Includes

@@ -1,36 +1,28 @@
 package pl.north93.northplatform.api.global.storage;
 
-import static pl.north93.northplatform.api.global.utils.ConfigUtils.loadConfig;
-
-
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
-
 import com.lambdaworks.redis.RedisClient;
 import com.lambdaworks.redis.RedisURI;
 import com.lambdaworks.redis.api.StatefulRedisConnection;
 import com.lambdaworks.redis.api.sync.RedisCommands;
-import com.mongodb.Function;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoClientURI;
+import com.mongodb.*;
 import com.mongodb.client.MongoDatabase;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.BsonReader;
+import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.codecs.configuration.CodecRegistry;
-
-import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.component.Component;
-import pl.north93.northplatform.api.global.serializer.mongodb.MongoDbCodec;
-import pl.north93.northplatform.api.global.serializer.mongodb.MongoDbSerializationFormat;
 import pl.north93.northplatform.api.global.utils.ConfigUtils;
-import pl.north93.northplatform.api.global.serializer.platform.NorthSerializer;
-import pl.north93.northplatform.api.global.serializer.platform.impl.NorthSerializerImpl;
+import pl.north93.serializer.mongodb.MongoDbCodec;
+import pl.north93.serializer.mongodb.MongoDbSerializationFormat;
+import pl.north93.serializer.platform.NorthSerializer;
+import pl.north93.serializer.platform.template.impl.NorthSerializerImpl;
+
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 @Slf4j
 public class StorageConnector extends Component
@@ -64,7 +56,7 @@ public class StorageConnector extends Component
 
         final MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
 
-        final NorthSerializerImpl<BsonReader> serializer = new NorthSerializerImpl<>(new MongoDbSerializationFormat(), new NorthPlatformClassResolver());
+        final NorthSerializerImpl<BsonWriter, BsonReader> serializer = new NorthSerializerImpl<>(new MongoDbSerializationFormat(), new NorthPlatformClassResolver());
         builder.codecRegistry(this.configureMongoCodecRegistry(serializer));
 
         builder.connectionsPerHost(10); // maksymalnie 10 polaczen. Default 100
@@ -74,7 +66,7 @@ public class StorageConnector extends Component
         this.mainDatabase = this.mongoClient.getDatabase(config.getMongoMainDatabase());
     }
 
-    private CodecRegistry configureMongoCodecRegistry(final NorthSerializer<BsonReader> northSerializer)
+    private CodecRegistry configureMongoCodecRegistry(final NorthSerializer<BsonWriter, BsonReader> northSerializer)
     {
         /*return fromProviders(asList(new ValueCodecProvider(),
                 new BsonValueCodecProvider(),

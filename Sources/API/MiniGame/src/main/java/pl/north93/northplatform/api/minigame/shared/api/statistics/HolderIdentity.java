@@ -1,24 +1,20 @@
 package pl.north93.northplatform.api.minigame.shared.api.statistics;
 
-import java.util.UUID;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import lombok.AllArgsConstructor;
+import lombok.ToString;
 import org.bson.Document;
+
+import java.util.UUID;
 
 /**
  * Umo
  */
+@ToString
+@AllArgsConstructor
 public final class HolderIdentity
 {
     private final String type;
     private final UUID   uuid;
-
-    public HolderIdentity(final String type, final UUID uuid)
-    {
-        this.type = type;
-        this.uuid = uuid;
-    }
 
     public String getType()
     {
@@ -36,11 +32,5 @@ public final class HolderIdentity
         document.put("uuid", this.uuid);
 
         return document;
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("type", this.type).append("uuid", this.uuid).toString();
     }
 }

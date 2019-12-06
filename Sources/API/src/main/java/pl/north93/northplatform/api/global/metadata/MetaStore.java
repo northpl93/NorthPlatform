@@ -1,15 +1,14 @@
 package pl.north93.northplatform.api.global.metadata;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import pl.north93.serializer.platform.annotations.NorthField;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Optional;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.north93.northplatform.api.global.serializer.platform.annotations.NorthField;
 
 public final class MetaStore
 {

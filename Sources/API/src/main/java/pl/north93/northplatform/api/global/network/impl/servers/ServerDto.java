@@ -1,17 +1,17 @@
 package pl.north93.northplatform.api.global.network.impl.servers;
 
-import java.util.UUID;
-
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import pl.north93.northplatform.api.global.network.JoiningPolicy;
 import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.global.network.server.ServerState;
 import pl.north93.northplatform.api.global.network.server.ServerType;
 import pl.north93.northplatform.api.global.network.server.group.IServersGroup;
 import pl.north93.northplatform.api.global.redis.rpc.IRpcTarget;
 import pl.north93.northplatform.api.global.redis.rpc.Targets;
-import pl.north93.northplatform.api.global.network.JoiningPolicy;
-import pl.north93.northplatform.api.global.serializer.platform.annotations.NorthCustomTemplate;
+import pl.north93.serializer.platform.annotations.NorthCustomTemplate;
+
+import java.util.UUID;
 
 /**
  * Obiekt przechowujacy dane o serwerze uruchomionym w sieci.

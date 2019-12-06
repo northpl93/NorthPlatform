@@ -1,16 +1,11 @@
 package pl.north93.northplatform.api.global.network.impl.players;
 
 
-import java.util.Locale;
-import java.util.UUID;
-
 import com.google.common.base.Preconditions;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
 import pl.north93.northplatform.api.global.metadata.MetaKey;
@@ -19,12 +14,15 @@ import pl.north93.northplatform.api.global.network.players.IOfflinePlayer;
 import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
 import pl.north93.northplatform.api.global.network.proxy.IProxyRpc;
 import pl.north93.northplatform.api.global.network.server.Server;
-import pl.north93.northplatform.api.global.redis.RedisKeys;
-import pl.north93.northplatform.api.global.redis.observable.ObjectKey;
 import pl.north93.northplatform.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.northplatform.api.global.permissions.Group;
 import pl.north93.northplatform.api.global.permissions.GroupInStringTemplate;
-import pl.north93.northplatform.api.global.serializer.platform.annotations.NorthCustomTemplate;
+import pl.north93.northplatform.api.global.redis.RedisKeys;
+import pl.north93.northplatform.api.global.redis.observable.ObjectKey;
+import pl.north93.serializer.platform.annotations.NorthCustomTemplate;
+
+import java.util.Locale;
+import java.util.UUID;
 
 /**
  * Reprezentuje gracza będącego online w sieci

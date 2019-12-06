@@ -1,7 +1,22 @@
 package pl.north93.northplatform.datashare.sharedimpl;
 
-import static pl.north93.northplatform.api.global.utils.lang.StringUtils.toBytes;
-
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.bson.Document;
+import org.bukkit.entity.Player;
+import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.network.JoiningPolicy;
+import pl.north93.northplatform.api.global.redis.observable.IObservationManager;
+import pl.north93.northplatform.api.global.redis.observable.Value;
+import pl.north93.northplatform.api.global.redis.subscriber.RedisSubscriber;
+import pl.north93.northplatform.datashare.api.DataSharingGroup;
+import pl.north93.northplatform.datashare.api.IDataShareManager;
+import pl.north93.northplatform.datashare.api.data.IDataUnit;
+import pl.north93.northplatform.datashare.api.data.IDataUnitPersistence;
+import pl.north93.northplatform.datashare.api.data.IDataUnitSerialization;
+import pl.north93.serializer.platform.NorthSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,25 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import org.bukkit.entity.Player;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.bson.Document;
-
-import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.global.ApiCore;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.JoiningPolicy;
-import pl.north93.northplatform.api.global.redis.observable.IObservationManager;
-import pl.north93.northplatform.api.global.redis.observable.Value;
-import pl.north93.northplatform.api.global.redis.subscriber.RedisSubscriber;
-import pl.north93.northplatform.api.global.serializer.platform.NorthSerializer;
-import pl.north93.northplatform.datashare.api.DataSharingGroup;
-import pl.north93.northplatform.datashare.api.IDataShareManager;
-import pl.north93.northplatform.datashare.api.data.IDataUnit;
-import pl.north93.northplatform.datashare.api.data.IDataUnitPersistence;
-import pl.north93.northplatform.datashare.api.data.IDataUnitSerialization;
+import static pl.north93.northplatform.api.global.utils.lang.StringUtils.toBytes;
 
 @Slf4j
 public class DataShareManagerImpl implements IDataShareManager
@@ -37,7 +34,7 @@ public class DataShareManagerImpl implements IDataShareManager
     @Inject
     private RedisSubscriber         subscriber;
     @Inject
-    private NorthSerializer<byte[]> msgPack;
+    private NorthSerializer<byte[], byte[]> msgPack;
     @Inject
     private IObservationManager     observer;
     private final ShareDataDao                    dataDao   = new ShareDataDao();

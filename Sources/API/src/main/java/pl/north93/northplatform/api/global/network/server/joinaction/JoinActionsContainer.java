@@ -1,20 +1,19 @@
 package pl.north93.northplatform.api.global.network.server.joinaction;
 
-import java.util.UUID;
-
-import org.diorite.commons.arrays.DioriteArrayUtils;
-
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.diorite.commons.arrays.DioriteArrayUtils;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.serializer.platform.NorthSerializer;
+import pl.north93.serializer.platform.NorthSerializer;
+
+import java.util.UUID;
 
 @ToString
 @NoArgsConstructor
 public final class JoinActionsContainer
 {
     @Inject
-    private static NorthSerializer<byte[]> templateManager;
+    private static NorthSerializer<byte[], byte[]> templateManager;
     private UUID   serverId;
     private byte[] serverJoinActions;
 

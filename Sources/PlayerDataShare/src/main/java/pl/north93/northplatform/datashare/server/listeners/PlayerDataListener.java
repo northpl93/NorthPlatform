@@ -1,19 +1,17 @@
 package pl.north93.northplatform.datashare.server.listeners;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import lombok.extern.slf4j.Slf4j;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.redis.subscriber.SubscriptionHandler;
-import pl.north93.northplatform.api.global.serializer.platform.NorthSerializer;
 import pl.north93.northplatform.datashare.server.PlayerDataShareServer;
 import pl.north93.northplatform.datashare.sharedimpl.DataContainer;
 import pl.north93.northplatform.datashare.sharedimpl.PlayerDataShareComponent;
+import pl.north93.serializer.platform.NorthSerializer;
 
 @Slf4j
 public class PlayerDataListener implements SubscriptionHandler
@@ -25,7 +23,7 @@ public class PlayerDataListener implements SubscriptionHandler
     @Inject
     private PlayerDataShareComponent playerDataShare;
     @Inject
-    private NorthSerializer<byte[]>  msgPack;
+    private NorthSerializer<byte[], byte[]> msgPack;
 
     @Override
     public void handle(final String channel, final byte[] message)

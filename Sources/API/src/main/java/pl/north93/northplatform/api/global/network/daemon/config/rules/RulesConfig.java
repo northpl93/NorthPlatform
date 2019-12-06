@@ -1,18 +1,12 @@
 package pl.north93.northplatform.api.global.network.daemon.config.rules;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import pl.north93.serializer.platform.annotations.NorthField;
 
-import pl.north93.northplatform.api.global.serializer.platform.annotations.NorthField;
+import javax.xml.bind.annotation.*;
+import java.util.LinkedList;
+import java.util.List;
 
 @XmlRootElement(name = "rules")
 @XmlAccessorType(XmlAccessType.FIELD)

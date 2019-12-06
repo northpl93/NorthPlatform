@@ -1,10 +1,10 @@
 package pl.north93.northplatform.api.global.permissions;
 
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.serializer.platform.FieldInfo;
-import pl.north93.northplatform.api.global.serializer.platform.context.DeserializationContext;
-import pl.north93.northplatform.api.global.serializer.platform.context.SerializationContext;
-import pl.north93.northplatform.api.global.serializer.platform.template.Template;
+import pl.north93.serializer.platform.context.DeserializationContext;
+import pl.north93.serializer.platform.context.SerializationContext;
+import pl.north93.serializer.platform.template.Template;
+import pl.north93.serializer.platform.template.field.FieldInfo;
 
 public final class GroupInStringTemplate implements Template<Group, SerializationContext, DeserializationContext>
 {

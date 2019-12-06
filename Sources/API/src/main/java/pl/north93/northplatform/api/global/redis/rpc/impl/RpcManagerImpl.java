@@ -1,27 +1,25 @@
 package pl.north93.northplatform.api.global.redis.rpc.impl;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.carrotsearch.hppc.IntObjectHashMap;
 import com.carrotsearch.hppc.IntObjectMap;
 import com.lambdaworks.redis.api.sync.RedisCommands;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.component.Component;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.redis.rpc.IRpcManager;
+import pl.north93.northplatform.api.global.redis.rpc.IRpcTarget;
 import pl.north93.northplatform.api.global.redis.rpc.exceptions.RpcUnimplementedException;
 import pl.north93.northplatform.api.global.redis.rpc.impl.messaging.RpcExceptionInfo;
 import pl.north93.northplatform.api.global.redis.rpc.impl.messaging.RpcInvokeMessage;
 import pl.north93.northplatform.api.global.redis.rpc.impl.messaging.RpcResponseMessage;
 import pl.north93.northplatform.api.global.redis.subscriber.RedisSubscriber;
 import pl.north93.northplatform.api.global.storage.StorageConnector;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.redis.rpc.IRpcManager;
-import pl.north93.northplatform.api.global.redis.rpc.IRpcTarget;
-import pl.north93.northplatform.api.global.serializer.platform.NorthSerializer;
+import pl.north93.serializer.platform.NorthSerializer;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class RpcManagerImpl extends Component implements IRpcManager
@@ -31,7 +29,7 @@ public class RpcManagerImpl extends Component implements IRpcManager
     @Inject
     private       RedisSubscriber                     redisSubscriber;
     @Inject
-    private       NorthSerializer<byte[]>             msgPack;
+    private       NorthSerializer<byte[], byte[]>     msgPack;
     private final RpcProxyCache                       rpcProxyCache      = new RpcProxyCache(this);
     private final IntObjectMap<RpcResponseHandler>    responseHandlerMap = new IntObjectHashMap<>();
     private final IntObjectMap<RpcResponseLock>       locks              = new IntObjectHashMap<>();
@@ -116,7 +114,7 @@ public class RpcManagerImpl extends Component implements IRpcManager
         return this.storageConnector.getRedis();
     }
 
-    /*default*/ NorthSerializer<byte[]> getMsgPack()
+    /*default*/ NorthSerializer<byte[], byte[]> getMsgPack()
     {
         return this.msgPack;
     };

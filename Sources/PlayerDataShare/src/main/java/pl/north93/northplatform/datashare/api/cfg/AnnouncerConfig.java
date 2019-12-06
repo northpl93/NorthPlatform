@@ -1,17 +1,15 @@
 package pl.north93.northplatform.datashare.api.cfg;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import pl.north93.serializer.platform.annotations.NorthField;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.north93.northplatform.api.global.serializer.platform.annotations.NorthField;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AnnouncerConfig

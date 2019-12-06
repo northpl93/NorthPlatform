@@ -1,13 +1,12 @@
 package pl.north93.northplatform.api.chat.global.impl;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
 import pl.north93.northplatform.api.global.network.players.Identity;
-import pl.north93.northplatform.api.global.serializer.platform.annotations.NorthField;
+import pl.north93.serializer.platform.annotations.NorthField;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Obiekt przechowujący informacje o pokoju czatu.

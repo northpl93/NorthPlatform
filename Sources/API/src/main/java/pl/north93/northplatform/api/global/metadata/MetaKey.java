@@ -1,16 +1,15 @@
 package pl.north93.northplatform.api.global.metadata;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import pl.north93.northplatform.api.global.serializer.platform.annotations.NorthCustomTemplate;
+import org.apache.commons.lang3.StringUtils;
+import pl.north93.serializer.platform.annotations.NorthCustomTemplate;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 @Getter
 @ToString

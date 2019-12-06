@@ -1,15 +1,10 @@
 package pl.north93.northplatform.api.global.network.daemon.config;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
+import pl.north93.serializer.platform.annotations.NorthField;
 
+import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import pl.north93.northplatform.api.global.serializer.platform.annotations.NorthField;
 
 /**
  * Reprezentuje wzór według którego tworzone będą instancje serwerów.

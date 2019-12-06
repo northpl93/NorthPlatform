@@ -1,38 +1,33 @@
 package pl.north93.northplatform.datashare.server.listeners;
 
-import static org.bukkit.ChatColor.translateAlternateColorCodes;
-
-import static pl.north93.northplatform.api.global.utils.lang.StringUtils.asString;
-
-
-import java.text.MessageFormat;
-import java.util.Formatter;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import org.diorite.commons.cooldown.CooldownEntry;
 import org.diorite.commons.cooldown.CooldownManager;
-
 import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.global.network.JoiningPolicy;
 import pl.north93.northplatform.api.global.redis.subscriber.RedisSubscriber;
-import pl.north93.northplatform.api.global.serializer.platform.NorthSerializer;
 import pl.north93.northplatform.datashare.api.DataSharingGroup;
 import pl.north93.northplatform.datashare.api.chat.ChatMessage;
 import pl.north93.northplatform.datashare.sharedimpl.PlayerDataShareComponent;
+import pl.north93.serializer.platform.NorthSerializer;
+
+import java.text.MessageFormat;
+import java.util.Formatter;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import static org.bukkit.ChatColor.translateAlternateColorCodes;
+import static pl.north93.northplatform.api.global.utils.lang.StringUtils.asString;
 
 public class ChatSharingManager implements Listener
 {
@@ -42,7 +37,7 @@ public class ChatSharingManager implements Listener
     @Inject
     private RedisSubscriber          redisSubscriber;
     @Inject
-    private NorthSerializer<byte[]>  msgPack;
+    private NorthSerializer<byte[], byte[]> msgPack;
     @Inject
     private PlayerDataShareComponent shareComponent;
     @Inject @Messages("PlayerDataShare")

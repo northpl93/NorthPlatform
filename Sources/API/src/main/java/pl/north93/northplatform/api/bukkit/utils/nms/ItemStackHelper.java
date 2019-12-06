@@ -1,19 +1,14 @@
 package pl.north93.northplatform.api.bukkit.utils.nms;
 
-import static org.diorite.commons.reflections.DioriteReflectionUtils.getField;
-
-
+import com.mojang.authlib.GameProfile;
+import lombok.NonNull;
 import net.minecraft.server.v1_12_R1.ItemStack;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
-
-import com.mojang.authlib.GameProfile;
-
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-
 import org.diorite.commons.reflections.FieldAccessor;
 
-import lombok.NonNull;
+import static org.diorite.commons.reflections.DioriteReflectionUtils.getField;
 
 public final class ItemStackHelper
 {
@@ -67,7 +62,7 @@ public final class ItemStackHelper
         return handle.d(storageName); // ItemStakc#d() should be getPersistentStorageIfExists()
     }
     
-    public static NBTTagCompound getOrCreatePersistentStorage(@NonNull org.bukkit.inventory.ItemStack bukkitStack,  @NonNull String storageName)
+    public static NBTTagCompound getOrCreatePersistentStorage(@NonNull org.bukkit.inventory.ItemStack bukkitStack, @NonNull String storageName)
     {
         final ItemStack handle = getHandle(bukkitStack);
         if (handle == null)

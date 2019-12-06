@@ -1,20 +1,16 @@
 package pl.north93.northplatform.api.global.network.impl.players;
 
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import pl.north93.northplatform.api.global.metadata.MetaKey;
 import pl.north93.northplatform.api.global.network.players.IOfflinePlayer;
 import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
 import pl.north93.northplatform.api.global.network.players.IPlayer;
-import pl.north93.northplatform.api.global.serializer.platform.annotations.NorthField;
+import pl.north93.serializer.platform.annotations.NorthField;
+
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Reprezentuje encje gracza zapisaną w bazie danych MongoDB.
