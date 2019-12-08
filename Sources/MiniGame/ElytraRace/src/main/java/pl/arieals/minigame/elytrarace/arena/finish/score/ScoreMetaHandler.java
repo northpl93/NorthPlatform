@@ -15,15 +15,6 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.api.minigame.server.gamehost.reward.CurrencyReward;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticHolder;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsManager;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.filter.BestRecordFilter;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
@@ -33,14 +24,21 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.global.network.players.Identity;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.reward.CurrencyReward;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticHolder;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsManager;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.filter.BestRecordFilter;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
 
 public class ScoreMetaHandler implements IFinishHandler
 {
     @Inject @Messages("ElytraRace")
-    private       MessagesBox          messages;
+    private MessagesBox messages;
     @Inject
-    private       IStatisticsManager   statisticsManager;
-    private       IRecord              currentGlobalRecord;
+    private IStatisticsManager statisticsManager;
     private final Set<ScoreFinishInfo> points = new HashSet<>(); // uzywane w SCORE_MODE do wyswietlania wynikow
 
     @Override
@@ -56,7 +54,7 @@ public class ScoreMetaHandler implements IFinishHandler
                 player.getDisplayName(),
                 scoreData.getPoints());
 
-        final IStatistic<NumberUnit> scoreStatistic = this.getScoreStatistic(arena);
+        final IStatistic<Long, NumberUnit> scoreStatistic = this.getScoreStatistic(arena);
         final IStatisticHolder statisticsHolder = this.statisticsManager.getPlayerHolder(player.getUniqueId());
 
         this.points.add(new ScoreFinishInfo(player.getUniqueId(), player.getDisplayName(), scoreData.getPoints()));

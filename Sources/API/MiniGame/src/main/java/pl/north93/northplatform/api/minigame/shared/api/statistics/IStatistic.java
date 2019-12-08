@@ -4,7 +4,7 @@ package pl.north93.northplatform.api.minigame.shared.api.statistics;
  * Reprezentuje pojedyncza statystyke zbierajaca dane graczy.
  * @param <UNIT> Jednostka zbieranych danych.
  */
-public interface IStatistic<UNIT extends IStatisticUnit>
+public interface IStatistic<T, UNIT extends IStatisticUnit<T>>
 {
     /**
      * @return unikalna nazwa tej statystyki.

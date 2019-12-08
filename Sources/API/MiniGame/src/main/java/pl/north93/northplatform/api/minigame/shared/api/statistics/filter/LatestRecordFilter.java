@@ -8,13 +8,13 @@ import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticFil
 public class LatestRecordFilter implements IStatisticFilter
 {
     @Override
-    public void appendConditions(final IStatistic<?> statistic, final Document query)
+    public void appendConditions(final IStatistic<?, ?> statistic, final Document query)
     {
 
     }
 
     @Override
-    public void appendSort(final IStatistic<?> statistic, final Document sort)
+    public void appendSort(final IStatistic<?, ?> statistic, final Document sort)
     {
         sort.append("time", 1);
     }

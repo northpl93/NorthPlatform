@@ -24,7 +24,7 @@ public class StatTrackManager
     @Inject
     private IStatisticsManager statisticsManager;
     @Inject
-    private StatTrackItems     statTrackItems;
+    private StatTrackItems statTrackItems;
 
     @Bean
     private StatTrackManager()
@@ -43,7 +43,7 @@ public class StatTrackManager
 
             for (final TrackedStatistic trackedStatistic : TrackedStatistic.values())
             {
-                final IStatistic<NumberUnit> statistic = this.getStatistic(trackedStatistic, trackedWeapon);
+                final IStatistic<Long, NumberUnit> statistic = this.getStatistic(trackedStatistic, trackedWeapon);
                 holder.getBest(statistic).whenComplete((result, throwable) ->
                 {
                     if (result == null)
@@ -74,7 +74,7 @@ public class StatTrackManager
             return;
         }
 
-        final IStatistic<NumberUnit> statisticSystem = this.getStatistic(statistic, weapon);
+        final IStatistic<Long, NumberUnit> statisticSystem = this.getStatistic(statistic, weapon);
         holder.increment(statisticSystem, new NumberUnit(1L)).whenComplete((result, throwable) ->
         {
             final long newValue = result.getValue().getValue() + 1;
@@ -83,7 +83,7 @@ public class StatTrackManager
         });
     }
 
-    public IStatistic<NumberUnit> getStatistic(final TrackedStatistic statistic, final TrackedWeapon weapon)
+    public IStatistic<Long, NumberUnit> getStatistic(final TrackedStatistic statistic, final TrackedWeapon weapon)
     {
         final String statName = statistic.name().toLowerCase(Locale.ROOT);
         final String weaponName = weapon.name().toLowerCase(Locale.ROOT);

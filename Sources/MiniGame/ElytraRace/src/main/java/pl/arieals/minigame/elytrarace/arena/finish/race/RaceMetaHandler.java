@@ -1,15 +1,16 @@
 package pl.arieals.minigame.elytrarace.arena.finish.race;
 
-import java.time.Duration;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import org.bukkit.entity.Player;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
+import org.bukkit.entity.Player;
+import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
+import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
+import pl.arieals.minigame.elytrarace.arena.finish.ElytraWinReward;
+import pl.arieals.minigame.elytrarace.arena.finish.IFinishHandler;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.ArenaChatManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.reward.CurrencyReward;
@@ -21,14 +22,11 @@ import pl.north93.northplatform.api.minigame.shared.api.statistics.type.LongerTi
 import pl.north93.northplatform.api.minigame.shared.api.statistics.type.ShorterTimeBetterStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.DurationUnit;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
-import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
-import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
-import pl.arieals.minigame.elytrarace.arena.finish.ElytraWinReward;
-import pl.arieals.minigame.elytrarace.arena.finish.IFinishHandler;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.messages.Messages;
-import pl.north93.northplatform.api.global.messages.MessagesBox;
-import pl.north93.northplatform.api.global.network.players.Identity;
+
+import java.time.Duration;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class RaceMetaHandler implements IFinishHandler
 {
@@ -72,7 +70,7 @@ public class RaceMetaHandler implements IFinishHandler
         // czas jaki osiagnal gracz
         final DurationUnit playerTimeDuration = new DurationUnit(Duration.ofMillis(playerTime));
 
-        final IStatistic<DurationUnit> raceStatistic = this.getRaceStatistic(arena);
+        final IStatistic<Duration, DurationUnit> raceStatistic = this.getRaceStatistic(arena);
         final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(player.getUniqueId());
 
         final boolean isFinished = IFinishHandler.checkFinished(arena);
@@ -118,7 +116,7 @@ public class RaceMetaHandler implements IFinishHandler
             return;
         }
 
-        final IStatistic<DurationUnit> raceStatistic = this.getRaceStatistic(arena);
+        final IStatistic<Duration, DurationUnit> raceStatistic = this.getRaceStatistic(arena);
         this.statisticsManager.getRecord(raceStatistic).whenComplete((result, throwable) ->
         {
             final RaceMessage raceMessage = new RaceMessage(this.finishInfo, result, false);
@@ -131,7 +129,7 @@ public class RaceMetaHandler implements IFinishHandler
         arena.endGame();
     }
 
-    private IStatistic<DurationUnit> getRaceStatistic(final LocalArena arena)
+    private IStatistic<Duration, DurationUnit> getRaceStatistic(final LocalArena arena)
     {
         return new ShorterTimeBetterStatistic("elytra/race/" + arena.getWorld().getCurrentMapTemplate().getName());
     }

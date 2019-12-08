@@ -5,7 +5,7 @@ import java.util.Collection;
 /**
  * Reprezentuje wygenerowany ranking danej statystyki.
  */
-public interface IRanking<UNIT extends IStatisticUnit>
+public interface IRanking<T, UNIT extends IStatisticUnit<T>>
 {
     /**
      * Zwraca ilosc miejsc dla ktorych wygenerowano ranking.
@@ -32,7 +32,7 @@ public interface IRanking<UNIT extends IStatisticUnit>
      * @see #fetchedSize()
      * @return Pobrane z bazy rekordy.
      */
-    Collection<IRecord<UNIT>> getPlaces();
+    Collection<IRecord<T, UNIT>> getPlaces();
 
-    IRecord<UNIT> getPlace(int place);
+    IRecord<T, UNIT> getPlace(int place);
 }

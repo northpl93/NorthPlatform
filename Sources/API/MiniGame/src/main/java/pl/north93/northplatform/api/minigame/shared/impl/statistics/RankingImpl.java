@@ -1,26 +1,21 @@
 package pl.north93.northplatform.api.minigame.shared.impl.statistics;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.AllArgsConstructor;
+import lombok.ToString;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IRanking;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticUnit;
 
-class RankingImpl<UNIT extends IStatisticUnit> implements IRanking<UNIT>
-{
-    private final int                 size;
-    private final List<IRecord<UNIT>> results;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-    public RankingImpl(final int size, final List<IRecord<UNIT>> results)
-    {
-        this.size = size;
-        this.results = results;
-    }
+@ToString
+@AllArgsConstructor
+class RankingImpl<T, UNIT extends IStatisticUnit<T>> implements IRanking<T, UNIT>
+{
+    private final int size;
+    private final List<IRecord<T, UNIT>> results;
 
     @Override
     public int size()
@@ -35,20 +30,14 @@ class RankingImpl<UNIT extends IStatisticUnit> implements IRanking<UNIT>
     }
 
     @Override
-    public Collection<IRecord<UNIT>> getPlaces()
+    public Collection<IRecord<T, UNIT>> getPlaces()
     {
         return Collections.unmodifiableCollection(this.results);
     }
 
     @Override
-    public IRecord<UNIT> getPlace(final int place)
+    public IRecord<T, UNIT> getPlace(final int place)
     {
         return this.results.get(place);
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("size", this.size).append("results", this.results).toString();
     }
 }

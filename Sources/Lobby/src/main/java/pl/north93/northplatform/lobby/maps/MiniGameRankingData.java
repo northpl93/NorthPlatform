@@ -1,47 +1,38 @@
 package pl.north93.northplatform.lobby.maps;
 
-import static java.text.MessageFormat.format;
-
-
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.north93.northplatform.api.minigame.shared.api.statistics.IRanking;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsManager;
 import pl.north93.northplatform.api.bukkit.map.loader.xml.RankingMapConfig;
 import pl.north93.northplatform.api.bukkit.map.renderer.ranking.IRankingRenderer;
 import pl.north93.northplatform.api.bukkit.map.renderer.ranking.RankingEntry;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.*;
 
-public class MiniGameRankingData implements RankingMapConfig.IMapRankingData
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+
+import static java.text.MessageFormat.format;
+
+@AllArgsConstructor
+public class MiniGameRankingData<L, L_UNIT extends IStatisticUnit<L>, R, R_UNIT extends IStatisticUnit<R>> implements RankingMapConfig.IMapRankingData
 {
     @Inject
     private static IStatisticsManager statisticsManager;
     @Inject
     private static INetworkManager    networkManager;
 
-    private final IStatistic<?> leftStatistic;
-    private final IStatistic<?> rightStatistic;
-
-    public MiniGameRankingData(final IStatistic<?> leftStatistic, final IStatistic<?> rightStatistic)
-    {
-        this.leftStatistic = leftStatistic;
-        this.rightStatistic = rightStatistic;
-    }
+    private final IStatistic<L, L_UNIT> leftStatistic;
+    private final IStatistic<R, R_UNIT> rightStatistic;
 
     @Override
     public void setUp(final IRankingRenderer rankingRenderer)
     {
-        final IRanking leftRanking = this.getRanking(this.leftStatistic);
+        final IRanking<L, L_UNIT> leftRanking = this.getRanking(this.leftStatistic);
         for (int i = 0; i < leftRanking.fetchedSize(); i++)
         {
-            final IRecord place = leftRanking.getPlace(i);
+            final IRecord<L, L_UNIT> place = leftRanking.getPlace(i);
 
             final UUID playerId = place.getHolder().getIdentity().getUuid();
             final String nick = networkManager.getPlayers().getNickFromUuid(playerId).orElse("");
@@ -49,10 +40,10 @@ public class MiniGameRankingData implements RankingMapConfig.IMapRankingData
             rankingRenderer.setLeftPlace(i, new RankingEntry(playerId, nick, place.getValue().getValue().toString()));
         }
 
-        final IRanking rightRanking = this.getRanking(this.rightStatistic);
+        final IRanking<R, R_UNIT> rightRanking = this.getRanking(this.rightStatistic);
         for (int i = 0; i < rightRanking.fetchedSize(); i++)
         {
-            final IRecord place = rightRanking.getPlace(i);
+            final IRecord<R, R_UNIT> place = rightRanking.getPlace(i);
 
             final UUID playerId = place.getHolder().getIdentity().getUuid();
             final String nick = networkManager.getPlayers().getNickFromUuid(playerId).orElse("");
@@ -61,7 +52,7 @@ public class MiniGameRankingData implements RankingMapConfig.IMapRankingData
         }
     }
 
-    private IRanking getRanking(final IStatistic<?> statistic)
+    private <T, UNIT extends IStatisticUnit<T>> IRanking<T, UNIT> getRanking(final IStatistic<T, UNIT> statistic)
     {
         try
         {

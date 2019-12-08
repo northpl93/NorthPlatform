@@ -1,12 +1,17 @@
 package pl.north93.northplatform.lobby.game.elytra;
 
 import java.time.Duration;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
+import pl.north93.northplatform.api.bukkit.scoreboard.ContentBuilder;
+import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardContext;
+import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardLayout;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticHolder;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsManager;
@@ -14,18 +19,11 @@ import pl.north93.northplatform.api.minigame.shared.api.statistics.type.HigherNu
 import pl.north93.northplatform.api.minigame.shared.api.statistics.type.LongerTimeBetterStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.DurationUnit;
 import pl.north93.northplatform.lobby.game.HubScoreboardLayout;
-import pl.north93.northplatform.api.bukkit.scoreboard.ContentBuilder;
-import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardContext;
-import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardLayout;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.messages.Messages;
-import pl.north93.northplatform.api.global.messages.MessagesBox;
 
 public class ElytraHubScoreboard extends HubScoreboardLayout
 {
-    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("DD'D' HH'H' mm'M'");
     @Inject @Messages("HubElytraRace")
-    private MessagesBox        messages;
+    private MessagesBox messages;
     @Inject
     private IStatisticsManager statisticsManager;
 
@@ -78,7 +76,7 @@ public class ElytraHubScoreboard extends HubScoreboardLayout
         return builder.getContent();
     }
 
-    protected final String parseTime(final Optional<IRecord<DurationUnit>> optional)
+    protected final String parseTime(final Optional<IRecord<Duration, DurationUnit>> optional)
     {
         final Duration duration = optional.map(durationUnitIRecord -> durationUnitIRecord.getValue().getValue()).orElse(Duration.ZERO);
         return DurationFormatUtils.formatDuration(duration.toMillis(), "d'D' H'H' m'M'");

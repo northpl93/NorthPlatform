@@ -1,18 +1,17 @@
 package pl.north93.northplatform.api.minigame.shared.api.statistics.type;
 
-import java.time.Duration;
-
 import org.bson.Document;
-
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticDbComposer;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.DurationUnit;
+
+import java.time.Duration;
 
 /**
  * Statystyka reprezentujaca czas wykonywania czynnosci.
  * Uwaza krotszy czas za lepszy.
  */
-public class ShorterTimeBetterStatistic implements IStatistic<DurationUnit>
+public class ShorterTimeBetterStatistic implements IStatistic<Duration, DurationUnit>
 {
     private final String id;
 

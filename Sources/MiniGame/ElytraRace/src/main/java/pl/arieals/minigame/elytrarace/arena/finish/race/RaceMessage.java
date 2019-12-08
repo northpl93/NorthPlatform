@@ -1,28 +1,26 @@
 package pl.arieals.minigame.elytrarace.arena.finish.race;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
-
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-
-import org.bukkit.entity.Player;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.DurationUnit;
+import org.bukkit.entity.Player;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.component.annotations.bean.Named;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.DurationUnit;
+
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 
 public class RaceMessage
 {
@@ -33,10 +31,10 @@ public class RaceMessage
     @Inject @Named("Elytra Race time format")
     private       SimpleDateFormat      timeFormat;
     private final List<RaceFinishInfo>  finishInfo;
-    private final IRecord<DurationUnit> record;
+    private final IRecord<Duration, DurationUnit> record;
     private final boolean               isPartial;
 
-    public RaceMessage(final List<RaceFinishInfo> finishInfo, final IRecord<DurationUnit> record, final boolean isPartial)
+    public RaceMessage(final List<RaceFinishInfo> finishInfo, final IRecord<Duration, DurationUnit> record, final boolean isPartial)
     {
         this.finishInfo = finishInfo;
         this.record = record;

@@ -46,7 +46,7 @@ public abstract class HubScoreboardLayout implements IScoreboardLayout
      * @param optional Wynik z metody pobierajacej statystyke.
      * @return Sformatowana liczba.
      */
-    protected final String parseNumber(final Optional<IRecord<NumberUnit>> optional)
+    protected final String parseNumber(final Optional<IRecord<Long, NumberUnit>> optional)
     {
         return optional.map(numberUnitIRecord -> numberUnitIRecord.getValue().getValue().toString()).orElse("0");
     }

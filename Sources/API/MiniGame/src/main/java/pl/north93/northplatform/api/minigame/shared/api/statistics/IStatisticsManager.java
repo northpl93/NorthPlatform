@@ -12,13 +12,13 @@ public interface IStatisticsManager
         return this.getHolder(new HolderIdentity("player", playerId));
     }
 
-    <UNIT extends IStatisticUnit> CompletableFuture<IRanking> getRanking(IStatistic<UNIT> statistic, int size, IStatisticFilter... filters);
+    <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRanking<T, UNIT>> getRanking(IStatistic<T, UNIT> statistic, int size, IStatisticFilter... filters);
 
-    <UNIT extends IStatisticUnit> CompletableFuture<IRecord<UNIT>> getRecord(IStatistic<UNIT> statistic, IStatisticFilter... filters);
+    <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRecord<T, UNIT>> getRecord(IStatistic<T, UNIT> statistic, IStatisticFilter... filters);
 
-    <UNIT extends IStatisticUnit> CompletableFuture<UNIT> getAverage(IStatistic<UNIT> statistic);
+    <T, UNIT extends IStatisticUnit<T>> CompletableFuture<UNIT> getAverage(IStatistic<T, UNIT> statistic);
 
-    <UNIT extends IStatisticUnit> CompletableFuture<UNIT> getPercentile(IStatistic<UNIT> statistic, double percentile);
+    <T, UNIT extends IStatisticUnit<T>> CompletableFuture<UNIT> getPercentile(IStatistic<T, UNIT> statistic, double percentile);
 
-    <UNIT extends IStatisticUnit> CompletableFuture<UNIT> getMedian(IStatistic<UNIT> statistic);
+    <T, UNIT extends IStatisticUnit<T>> CompletableFuture<UNIT> getMedian(IStatistic<T, UNIT> statistic);
 }

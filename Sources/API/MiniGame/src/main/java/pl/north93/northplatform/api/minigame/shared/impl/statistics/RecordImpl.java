@@ -1,32 +1,25 @@
 package pl.north93.northplatform.api.minigame.shared.impl.statistics;
 
-import java.time.Instant;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.AllArgsConstructor;
+import lombok.ToString;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticHolder;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticUnit;
 
-class RecordImpl<UNIT extends IStatisticUnit> implements IRecord<UNIT>
-{
-    private final IStatistic<UNIT> statistic;
-    private final IStatisticHolder holder;
-    private final Instant          recordTime;
-    private final UNIT             value;
+import java.time.Instant;
 
-    public RecordImpl(final IStatistic<UNIT> statistic, final IStatisticHolder holder, final Instant recordTime, final UNIT value)
-    {
-        this.statistic = statistic;
-        this.holder = holder;
-        this.recordTime = recordTime;
-        this.value = value;
-    }
+@ToString
+@AllArgsConstructor
+class RecordImpl<T, UNIT extends IStatisticUnit<T>> implements IRecord<T, UNIT>
+{
+    private final IStatistic<T, UNIT> statistic;
+    private final IStatisticHolder holder;
+    private final Instant recordTime;
+    private final UNIT value;
 
     @Override
-    public IStatistic<UNIT> getStatistic()
+    public IStatistic<T, UNIT> getStatistic()
     {
         return this.statistic;
     }
@@ -47,11 +40,5 @@ class RecordImpl<UNIT extends IStatisticUnit> implements IRecord<UNIT>
     public UNIT getValue()
     {
         return this.value;
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("statistic", this.statistic).append("holder", this.holder).append("recordTime", this.recordTime).append("value", this.value).toString();
     }
 }

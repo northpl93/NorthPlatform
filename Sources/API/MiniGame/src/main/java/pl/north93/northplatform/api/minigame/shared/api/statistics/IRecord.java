@@ -5,9 +5,9 @@ import java.time.Instant;
 /**
  * Reprezentuje zapisana wartosc danej statystyki dla danego holdera.
  */
-public interface IRecord<UNIT extends IStatisticUnit>
+public interface IRecord<T, UNIT extends IStatisticUnit<T>>
 {
-    IStatistic<UNIT> getStatistic();
+    IStatistic<T, UNIT> getStatistic();
 
     IStatisticHolder getHolder();
 

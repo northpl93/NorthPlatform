@@ -1,26 +1,20 @@
 package pl.north93.northplatform.api.bukkit.map.loader.xml;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
-import java.net.URI;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.north93.northplatform.api.bukkit.map.renderer.ranking.IRankingRenderer;
-import pl.north93.northplatform.api.bukkit.map.renderer.ranking.RankingRenderer;
-import pl.north93.northplatform.api.global.uri.IUriManager;
+import lombok.ToString;
 import pl.north93.northplatform.api.bukkit.map.IMapCanvas;
 import pl.north93.northplatform.api.bukkit.map.IMapRenderer;
+import pl.north93.northplatform.api.bukkit.map.renderer.ranking.IRankingRenderer;
+import pl.north93.northplatform.api.bukkit.map.renderer.ranking.RankingRenderer;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.uri.IUriManager;
+
+import javax.xml.bind.annotation.*;
+import java.net.URI;
 
 @XmlRootElement(name = "ranking")
 @XmlAccessorType(XmlAccessType.FIELD)
+@ToString(of = {"background", "rankingData"})
 public class RankingMapConfig extends MapConfig
 {
     @Inject @XmlTransient
@@ -38,6 +32,7 @@ public class RankingMapConfig extends MapConfig
          * Usuwamy tym samym blad powstajacy gdy mapa zaladuje sie szybciej niz
          * komponent udostepniajacy dane rankingu.
          */
+        @ToString(of = {"renderer", "rankingDataUri"})
         class LazyRankingRenderer implements IMapRenderer
         {
             @Inject
@@ -59,12 +54,6 @@ public class RankingMapConfig extends MapConfig
 
                 this.renderer.render(canvas, player);
             }
-
-            @Override
-            public String toString()
-            {
-                return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("renderer", this.renderer).append("rankingDataUri", this.rankingDataUri).toString();
-            }
         }
 
         final RankingRenderer renderer = new RankingRenderer(this.background);
@@ -78,11 +67,5 @@ public class RankingMapConfig extends MapConfig
     public interface IMapRankingData
     {
         void setUp(IRankingRenderer rankingRenderer);
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("background", this.background).append("rankingData", this.rankingData).toString();
     }
 }

@@ -7,7 +7,7 @@ import org.bson.Document;
  */
 public interface IStatisticFilter
 {
-    void appendConditions(IStatistic<?> statistic, Document query);
+    void appendConditions(IStatistic<?, ?> statistic, Document query);
 
-    void appendSort(IStatistic<?> statistic, Document sort);
+    void appendSort(IStatistic<?, ?> statistic, Document sort);
 }

@@ -13,9 +13,6 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -23,22 +20,25 @@ import pl.north93.northplatform.api.global.messages.MessageLayout;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
 
 public class ScoreMessage
 {
     @Inject @Messages("ElytraRace")
-    private       MessagesBox           messages;
+    private MessagesBox messages;
     @Inject
-    private       INetworkManager       network;
+    private INetworkManager network;
+    private final boolean isPartial;
     private final List<ScoreFinishInfo> top;
-    private final IRecord<NumberUnit>   record;
-    private final boolean               isPartial;
+    private final IRecord<Long, NumberUnit> record;
 
-    public ScoreMessage(final List<ScoreFinishInfo> top, final IRecord<NumberUnit> record, final boolean isPartial)
+    public ScoreMessage(final List<ScoreFinishInfo> top, final IRecord<Long, NumberUnit> record, final boolean isPartial)
     {
+        this.isPartial = isPartial;
         this.top = top;
         this.record = record;
-        this.isPartial = isPartial;
     }
 
     public void print(final Player player)

@@ -6,7 +6,7 @@ import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticDbComposer;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
 
-public class HigherNumberBetterStatistic implements IStatistic<NumberUnit>
+public class HigherNumberBetterStatistic implements IStatistic<Long, NumberUnit>
 {
     private final String id;
 
