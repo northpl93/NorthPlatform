@@ -15,9 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.agent.InstrumentationClient;
 import pl.north93.northplatform.api.global.component.IComponentManager;
 import pl.north93.northplatform.api.global.component.impl.general.ComponentManagerImpl;
-import pl.north93.northplatform.api.global.component.annotations.ProvidesComponent;
-import pl.north93.northplatform.api.global.network.INetworkManager;
-import pl.north93.northplatform.api.global.permissions.PermissionsManager;
 
 @Slf4j
 public abstract class ApiCore
@@ -109,18 +106,6 @@ public abstract class ApiCore
         this.componentManager.disableAllComponents();
         this.setApiState(ApiState.DISABLED);
         log.info("North API Core stopped.");
-    }
-
-    @ProvidesComponent
-    public INetworkManager getNetworkManager()
-    {
-        return this.componentManager.getComponent("API.MinecraftNetwork.NetworkManager");
-    }
-
-    @ProvidesComponent
-    public PermissionsManager getPermissionsManager()
-    {
-        return this.componentManager.getComponent("API.MinecraftNetwork.PermissionsManager");
     }
 
     public InstrumentationClient getInstrumentationClient()

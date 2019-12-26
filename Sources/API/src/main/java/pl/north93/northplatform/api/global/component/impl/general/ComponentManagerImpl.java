@@ -161,7 +161,10 @@ public class ComponentManagerImpl implements IComponentManager
             }
             if (componentBundle.getBeanContext() instanceof ComponentBeanContext && dependencyBundle.getBeanContext() instanceof ComponentBeanContext)
             {
-                ((ComponentBeanContext) componentBundle.getBeanContext()).addDependency(((ComponentBeanContext) dependencyBundle.getBeanContext()));
+                final ComponentBeanContext checkedContext = (ComponentBeanContext) componentBundle.getBeanContext();
+                final ComponentBeanContext dependencyContext = (ComponentBeanContext) dependencyBundle.getBeanContext();
+
+                checkedContext.addDependency(dependencyContext);
             }
 
             if (dependencyBundle.isEnabled()) // if dependencyBundle is already enabled, skip checking
