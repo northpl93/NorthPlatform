@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.global.messages.LegacyMessage;
 import pl.north93.northplatform.lobby.game.HubScoreboardLayout;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.scoreboard.ContentBuilder;
@@ -22,7 +23,7 @@ public class MainHubScoreboard extends HubScoreboardLayout
     @Override
     public String getTitle(final IScoreboardContext context)
     {
-        return this.messages.getMessage(context.getLocale(), "scoreboard.title");
+        return this.messages.getString(context.getLocale(), "scoreboard.title");
     }
 
     @Override
@@ -51,10 +52,10 @@ public class MainHubScoreboard extends HubScoreboardLayout
         return builder.getContent();
     }
 
-    private String getGroupName(final INorthPlayer player)
+    private LegacyMessage getGroupName(final INorthPlayer player)
     {
         final String groupName = player.getGroup().getName();
-        return this.messages.getLegacyMessage(player.getLocale(), "scoreboard.group." + groupName);
+        return this.messages.getLegacy(player.getLocale(), "scoreboard.group." + groupName);
     }
 
     @Override

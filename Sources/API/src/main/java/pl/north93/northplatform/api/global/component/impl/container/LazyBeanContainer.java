@@ -9,9 +9,9 @@ import pl.north93.northplatform.api.global.component.impl.injection.IInjectionCo
 
 class LazyBeanContainer extends AbstractBeanContainer
 {
-    private final LazyValue value;
+    private final LazyValue<?> value;
 
-    public LazyBeanContainer(final Class<?> type, final String name, final LazyValue value)
+    public LazyBeanContainer(final Class<?> type, final String name, final LazyValue<?> value)
     {
         super(type, name);
         this.value = value;

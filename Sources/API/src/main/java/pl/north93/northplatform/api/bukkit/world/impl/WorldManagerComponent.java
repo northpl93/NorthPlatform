@@ -165,10 +165,10 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
         Location spawn = source.getSpawnLocation();
         target.setSpawnLocation(spawn.getBlockX(), spawn.getBlockY(), spawn.getBlockZ());
         
-        for (final ChunkLocation xmlChunk : chunks)
+        for (final ChunkLocation chunkLocation : chunks)
         {
-            final Chunk sourceChunk = ((CraftChunk) source.getChunkAt(xmlChunk.getX(), xmlChunk.getZ())).getHandle();
-            final Chunk targetChunk = ((CraftChunk) target.getChunkAt(xmlChunk.getX(), xmlChunk.getZ())).getHandle();
+            final Chunk sourceChunk = ((CraftChunk) source.getChunkAt(chunkLocation.getX(), chunkLocation.getZ())).getHandle();
+            final Chunk targetChunk = ((CraftChunk) target.getChunkAt(chunkLocation.getX(), chunkLocation.getZ())).getHandle();
 
             System.arraycopy(sourceChunk.getSections(), 0, targetChunk.getSections(), 0, sourceChunk.getSections().length);
             System.arraycopy(sourceChunk.heightMap, 0, targetChunk.heightMap, 0, sourceChunk.heightMap.length);

@@ -3,18 +3,17 @@ package pl.north93.northplatform.api.bukkit.hologui.hologram.impl;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.WeakHashMap;
 
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.ToString;
 import pl.north93.northplatform.api.bukkit.hologui.hologram.HologramRenderContext;
 import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologramMessage;
 
+@ToString
 /*default*/ class HologramCache
 {
     private final Map<Player, HologramCacheEntry> cache = new WeakHashMap<>();
@@ -33,22 +32,19 @@ import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologramMessage;
 
     /*default*/ HologramCacheEntry getEntry(final HologramRenderContext context)
     {
-        return Optional.ofNullable(this.message).map(message ->
+        if (this.message == null)
         {
-            return this.cache.computeIfAbsent(context.getPlayer(), player ->
-            {
-                return new HologramCacheEntry(this.message.render(context));
-            });
-        }).orElse(HologramCacheEntry.EMPTY);
-    }
+            return HologramCacheEntry.EMPTY;
+        }
 
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("cache", this.cache).append("message", this.message).toString();
+        return this.cache.computeIfAbsent(context.getPlayer(), player ->
+        {
+            return new HologramCacheEntry(this.message.render(context));
+        });
     }
 }
 
+@ToString(of = "lines")
 /*default*/ class HologramCacheEntry
 {
     /*default*/ static final HologramCacheEntry EMPTY = new HologramCacheEntry(Collections.emptyList());
@@ -79,11 +75,5 @@ import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologramMessage;
     public List<String> getLines()
     {
         return this.lines;
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("lines", this.lines).toString();
     }
 }

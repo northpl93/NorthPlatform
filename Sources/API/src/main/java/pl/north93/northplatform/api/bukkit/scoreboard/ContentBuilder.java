@@ -8,10 +8,10 @@ import java.util.Locale;
 
 import com.google.common.base.Preconditions;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.global.messages.LegacyMessage;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 
 public final class ContentBuilder
@@ -38,8 +38,8 @@ public final class ContentBuilder
 
     public ContentBuilder translated(final MessagesBox messagesBox, final Locale locale, final String key, final Object... args)
     {
-        final String message = messagesBox.getLegacyMessage(locale, key, args);
-        this.content.addAll(Arrays.asList(StringUtils.split(message, '\n')));
+        final LegacyMessage message = messagesBox.getLegacy(locale, key, args);
+        this.content.addAll(message.asList());
         return this;
     }
 

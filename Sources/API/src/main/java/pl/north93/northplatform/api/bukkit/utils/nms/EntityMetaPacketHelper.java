@@ -33,7 +33,7 @@ public class EntityMetaPacketHelper
         this.buffer = UnpooledByteBufAllocator.DEFAULT.buffer(32);
         this.pds = new PacketDataSerializer(this.buffer);
 
-        this.pds.d(0x3C); // writeVarInt PacketPlayOutEntityMetadata id PAMIETAC ZEBY TU ZMIENIC PRZY AKTUSLIZACJI MINECRAFTA
+        this.pds.d(0x3C); // writeVarInt PacketPlayOutEntityMetadata id PAMIETAC ZEBY TU ZMIENIC PRZY AKTUALIZACJI MINECRAFTA
         this.pds.d(entityId); // writeVarInt
     }
 

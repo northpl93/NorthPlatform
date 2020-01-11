@@ -7,16 +7,15 @@ import com.google.common.base.Preconditions;
 
 import org.bukkit.entity.Player;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
 import pl.north93.northplatform.api.bukkit.map.IMapRenderer;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 @Slf4j
+@ToString(of = "renderers")
 class RendererScheduler
 {
     @Inject
@@ -95,14 +94,9 @@ class RendererScheduler
         }
         return null;
     }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("renderers", this.renderers).toString();
-    }
 }
 
+@ToString
 class InProgressRenderer
 {
     private final INorthPlayer player;
@@ -140,11 +134,5 @@ class InProgressRenderer
     public void setAborted(final boolean aborted)
     {
         this.aborted = aborted;
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("player", this.player).append("board", this.board).append("renderer", this.renderer).append("aborted", this.aborted).toString();
     }
 }

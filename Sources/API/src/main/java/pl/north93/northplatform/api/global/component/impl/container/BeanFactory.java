@@ -145,7 +145,7 @@ public class BeanFactory
         }
     }
 
-    public void createLazyBean(final AbstractBeanContext beanContext, final Class<?> type, final String name, final LazyValue object)
+    public void createLazyBean(final AbstractBeanContext beanContext, final Class<?> type, final String name, final LazyValue<?> object)
     {
         final LazyBeanContainer lazyBeanContainer = new LazyBeanContainer(type, name, object);
         beanContext.add(lazyBeanContainer);

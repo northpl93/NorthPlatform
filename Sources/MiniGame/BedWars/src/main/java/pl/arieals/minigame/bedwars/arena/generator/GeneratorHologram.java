@@ -10,6 +10,7 @@ import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologram;
 import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologramMessage;
 import pl.north93.northplatform.api.bukkit.hologui.hologram.impl.HologramFactory;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.LegacyMessage;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 
@@ -33,27 +34,27 @@ public class GeneratorHologram implements IHologramMessage
     @Override
     public List<String> render(final HologramRenderContext renderContext)
     {
-        final String tier = this.messages.getLegacyMessage(renderContext.getLocale(), "generator.tier", this.currentItem.getName());
+        final LegacyMessage tier = this.messages.getLegacy(renderContext.getLocale(), "generator.tier", this.currentItem.getName());
 
         final BwGeneratorType generatorType = this.controller.getGeneratorType();
-        final String type = this.messages.getLegacyMessage(renderContext.getLocale(), "generator.type.nominative." + generatorType.getName());
+        final LegacyMessage type = this.messages.getLegacy(renderContext.getLocale(), "generator.type.nominative." + generatorType.getName());
 
-        final String status;
+        final LegacyMessage status;
         if (this.timer < 0)
         {
-            status = this.messages.getLegacyMessage(renderContext.getLocale(), "generator.overload");
+            status = this.messages.getLegacy(renderContext.getLocale(), "generator.overload");
         }
         else if (this.currentItem.getStartAt() > this.controller.getGameTime())
         {
-            status = this.messages.getLegacyMessage(renderContext.getLocale(), "generator.disabled");
+            status = this.messages.getLegacy(renderContext.getLocale(), "generator.disabled");
         }
         else
         {
             final int timeTo = (this.currentItem.getEvery() - this.timer) / 20;
-            status = this.messages.getLegacyMessage(renderContext.getLocale(), "generator.next_item_in", timeTo);
+            status = this.messages.getLegacy(renderContext.getLocale(), "generator.next_item_in", timeTo);
         }
 
-        return Arrays.asList(tier, type, status);
+        return Arrays.asList(tier.asString(), type.asString(), status.asString());
     }
 
     public void update(final BwGeneratorItemConfig currentItem, final int timer)

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -12,7 +13,7 @@ import java.util.ResourceBundle;
 public class UTF8Control extends ResourceBundle.Control
 {
     @Override
-    public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload) throws IllegalAccessException, InstantiationException, IOException
+    public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload) throws IOException
     {
         final String bundleName = this.toBundleName(baseName, locale);
         final String resourceName = this.toResourceName(bundleName, "properties");
@@ -38,7 +39,7 @@ public class UTF8Control extends ResourceBundle.Control
         {
             try
             {
-                return new PropertyResourceBundle(new InputStreamReader(stream, "UTF-8"));
+                return new PropertyResourceBundle(new InputStreamReader(stream, StandardCharsets.UTF_8));
             }
             finally
             {
