@@ -3,6 +3,8 @@ package pl.north93.northplatform.api.bukkit.player;
 import static pl.north93.northplatform.api.bukkit.player.Helper.bukkitPlayers;
 
 
+import javax.annotation.Nullable;
+
 import java.util.UUID;
 
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
@@ -10,6 +12,7 @@ import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messageable;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.global.metadata.Metadatable;
@@ -17,7 +20,6 @@ import pl.north93.northplatform.api.global.network.players.IPlayerTransaction;
 import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.global.network.server.joinaction.IServerJoinAction;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.permissions.Group;
 
 /**
@@ -75,6 +77,13 @@ public interface INorthPlayer extends Player, Metadatable, Messageable
      * @return CraftPlayer
      */
     CraftPlayer getCraftPlayer();
+
+    @Nullable
+    <T> T getPlayerData(Class<T> clazz);
+
+    <T> void setPlayerData(T data);
+
+    <T> void setPlayerData(Class<T> clazz, T data);
 
     /**
      * Zwraca Identity tego gracza, czyli lekki obiekt służący do

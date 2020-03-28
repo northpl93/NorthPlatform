@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 
 public interface IRpcObjectDescription
 {
-    Integer getClassId();
+    int getClassId();
 
-    Integer getMethodId(Method method);
+    int getMethodId(Method method);
 }

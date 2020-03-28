@@ -57,6 +57,7 @@ import org.bukkit.inventory.MainHand;
 import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.map.MapView;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
@@ -70,13 +71,13 @@ import org.bukkit.util.Vector;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.AllArgsConstructor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
 import pl.north93.northplatform.api.global.metadata.MetaStore;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
 import pl.north93.northplatform.api.global.network.players.IPlayerTransaction;
 import pl.north93.northplatform.api.global.network.players.Identity;
@@ -85,23 +86,44 @@ import pl.north93.northplatform.api.global.network.server.joinaction.IServerJoin
 import pl.north93.northplatform.api.global.permissions.Group;
 import pl.north93.northplatform.api.global.redis.observable.Value;
 
+@AllArgsConstructor
 /*default*/ class NorthPlayerImpl implements INorthPlayer
 {
-    private final INetworkManager      networkManager;
-    private final Player               bukkitPlayer;
+    private final CraftPlayer bukkitPlayer;
     private final Value<IOnlinePlayer> playerData;
-
-    public NorthPlayerImpl(final INetworkManager networkManager, final Player bukkitPlayer, final Value<IOnlinePlayer> playerData)
-    {
-        this.networkManager = networkManager;
-        this.bukkitPlayer = bukkitPlayer;
-        this.playerData = playerData;
-    }
+    private final BukkitPlayerManagerImpl playerManager;
 
     @Override
     public CraftPlayer getCraftPlayer()
     {
-        return (CraftPlayer) this.bukkitPlayer;
+        return this.bukkitPlayer;
+    }
+
+    @Override
+    public <T> T getPlayerData(final Class<T> clazz)
+    {
+        final List<MetadataValue> metadata = this.bukkitPlayer.getMetadata(clazz.getName());
+        if (metadata.isEmpty())
+        {
+            return null;
+        }
+        //noinspection unchecked
+        return (T) metadata.get(0).value();
+    }
+
+    @Override
+    public <T> void setPlayerData(final T data)
+    {
+        @SuppressWarnings("unchecked")
+        final Class<T> aClass = (Class<T>) data.getClass();
+        this.setPlayerData(aClass, data);
+    }
+
+    @Override
+    public <T> void setPlayerData(final Class<T> clazz, final T data)
+    {
+        final FixedMetadataValue value = this.playerManager.createFixedMetadataValue(data);
+        this.bukkitPlayer.setMetadata(clazz.getName(), value);
     }
 
     @Override
@@ -109,7 +131,7 @@ import pl.north93.northplatform.api.global.redis.observable.Value;
     {
         try
         {
-            return this.networkManager.getPlayers().transaction(Identity.of(this.bukkitPlayer));
+            return this.playerManager.openTransaction(Identity.of(this.bukkitPlayer));
         }
         catch (final PlayerNotFoundException e)
         {
@@ -148,7 +170,7 @@ import pl.north93.northplatform.api.global.redis.observable.Value;
     public pl.north93.northplatform.api.global.network.server.Server getCurrentServer()
     {
         final IOnlinePlayer playerData = this.playerData.get();
-        return this.networkManager.getServers().withUuid(playerData.getServerId());
+        return this.playerManager.getServerById(playerData.getServerId());
     }
 
     @Override

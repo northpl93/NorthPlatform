@@ -1,8 +1,7 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import static pl.north93.northplatform.api.global.utils.math.MathUtils.distanceSquared;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 
 
 import org.bukkit.Location;
@@ -18,8 +17,6 @@ import org.bukkit.material.Bed;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
@@ -31,6 +28,8 @@ import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 
 public class BuildListener implements Listener
 {
@@ -85,7 +84,6 @@ public class BuildListener implements Listener
         }
 
         final BedWarsArena arenaData = arena.getArenaData();
-        final BedWarsPlayer playerData = getPlayerData(event.getPlayer(), BedWarsPlayer.class);
         if (this.checkSecureRegion(arenaData, block))
         {
             player.sendActionBar(this.messages, "no_permissions");
@@ -93,6 +91,7 @@ public class BuildListener implements Listener
             return;
         }
 
+        final BedWarsPlayer playerData = player.getPlayerData(BedWarsPlayer.class);
         if (this.handleBedBreak(event, arenaData, playerData))
         {
             return;

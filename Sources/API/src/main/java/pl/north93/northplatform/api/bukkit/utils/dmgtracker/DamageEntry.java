@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Optional;
 
 import com.google.common.base.Preconditions;
 
@@ -95,9 +96,9 @@ public class DamageEntry
      * Zwraca przedmiot ktorym zadano te obrazenia.
      * @return Przedmiot ktorym zadano obrazenia.
      */
-    public @Nullable ItemStack getTool()
+    public Optional<ItemStack> getTool()
     {
-        return this.tool;
+        return Optional.ofNullable(this.tool);
     }
 
     /**

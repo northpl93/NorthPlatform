@@ -1,7 +1,6 @@
 package pl.arieals.minigame.bedwars.listener;
 
 import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
@@ -19,13 +18,14 @@ import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
+import pl.arieals.minigame.bedwars.arena.Team;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.protocol.wrappers.WrapperPlayOutPlayerInfo;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.PlayersManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
-import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
-import pl.arieals.minigame.bedwars.arena.Team;
-import pl.north93.northplatform.api.bukkit.protocol.wrappers.WrapperPlayOutPlayerInfo;
 
 @Slf4j
 public class TabListHandler implements Listener
@@ -36,9 +36,10 @@ public class TabListHandler implements Listener
         final LocalArena arena = event.getArena();
         final PlayersManager playersManager = arena.getPlayersManager();
 
-        for (final Player player : playersManager.getPlayers())
+        for (final INorthPlayer player : playersManager.getPlayers())
         {
-            final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+            final BedWarsPlayer playerData = player.getPlayerData(BedWarsPlayer.class);
+            assert playerData != null : "Data is set in previous GameStartEvent listener";
 
             for (final Player scoreboardUpdate : playersManager.getPlayers())
             {
@@ -77,10 +78,12 @@ public class TabListHandler implements Listener
     @EventHandler(priority = EventPriority.HIGHEST)
     public void removeEliminatedPlayer(final PlayerDeathEvent event)
     {
-        final Player player = event.getEntity();
+        final INorthPlayer player = INorthPlayer.wrap(event.getEntity());
+
         final LocalArena arena = getArena(player);
         assert arena != null;
-        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+
+        final BedWarsPlayer playerData = player.getPlayerData(BedWarsPlayer.class);
 
         if (playerData == null || playerData.isEliminated())
         {

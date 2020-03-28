@@ -14,11 +14,13 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.entity.Firework;
-import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.meta.FireworkMeta;
 
 import org.diorite.commons.math.DioriteRandomUtils;
+
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 
 public class FireworkEffect implements IEliminationEffect
 {
@@ -29,7 +31,7 @@ public class FireworkEffect implements IEliminationEffect
     }
 
     @Override
-    public void playerEliminated(final Player player, final Player by)
+    public void playerEliminated(final LocalArena arena, final INorthPlayer player, final INorthPlayer by)
     {
         final Location location = player.getLocation();
         location.setY(Math.max(0, location.getY()));

@@ -4,11 +4,10 @@ import java.util.UUID;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.northplatform.api.global.messages.Messageable;
-import pl.north93.northplatform.api.global.redis.observable.ProvidingRedisKey;
 import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.global.network.server.joinaction.IServerJoinAction;
 
-public interface IOnlinePlayer extends IPlayer, ProvidingRedisKey, Messageable
+public interface IOnlinePlayer extends IPlayer, Messageable
 {
     void transferDataFrom(IOfflinePlayer offlinePlayer);
 

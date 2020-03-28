@@ -7,14 +7,16 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftItem;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 
 public interface IEliminationEffect
 {
     String getName();
 
-    void playerEliminated(Player player, Player by);
+    void playerEliminated(final LocalArena arena, INorthPlayer player, INorthPlayer by);
 
     /**
      * Util sluzacy do dropienia itemkow wokol danej lokacji.

@@ -1,8 +1,5 @@
 package pl.arieals.minigame.elytrarace.listener;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-
-
 import java.util.List;
 
 import org.bukkit.Material;
@@ -16,10 +13,6 @@ import org.bukkit.event.Listener;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
-import pl.north93.northplatform.api.minigame.server.gamehost.region.IRegionManager;
-import pl.north93.northplatform.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.arieals.minigame.elytrarace.ElytraRaceMode;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
@@ -27,6 +20,7 @@ import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.arieals.minigame.elytrarace.arena.ScoreController;
 import pl.arieals.minigame.elytrarace.cfg.Score;
 import pl.arieals.minigame.elytrarace.cfg.ScoreGroup;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.nms.FastBlockOp;
 import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -34,6 +28,10 @@ import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.global.messages.PluralForm;
 import pl.north93.northplatform.api.global.messages.TranslatableString;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.region.IRegionManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.region.ITrackedRegion;
 
 public class ScoreListener implements Listener
 {
@@ -76,9 +74,9 @@ public class ScoreListener implements Listener
         }
     }
 
-    private void addPoints(final Player player, final ElytraRaceArena arena, final Score score)
+    private void addPoints(final INorthPlayer player, final ElytraRaceArena arena, final Score score)
     {
-        final ElytraRacePlayer racePlayer = getPlayerData(player, ElytraRacePlayer.class);
+        final ElytraRacePlayer racePlayer = player.getPlayerData(ElytraRacePlayer.class);
         if (racePlayer == null || racePlayer.isFinished())
         {
             // gracz moze byc nullem jesli spectator wejdzie w region mety

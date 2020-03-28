@@ -2,13 +2,12 @@ package pl.north93.northplatform.api.global.redis.observable.impl;
 
 import java.util.Map;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.ToString;
+import pl.north93.northplatform.api.global.finalizer.FinalizerUtils;
 import pl.north93.northplatform.api.global.redis.subscriber.SubscriptionHandler;
 import pl.north93.northplatform.api.global.utils.ReferenceHashMap;
-import pl.north93.northplatform.api.global.finalizer.FinalizerUtils;
 
+@ToString(of = "listeners")
 class ValueSubscriptionHandler implements SubscriptionHandler
 {
     /*default*/ final static String CHANNEL_PREFIX = "caval_upd:";
@@ -52,11 +51,5 @@ class ValueSubscriptionHandler implements SubscriptionHandler
         }
 
         cachedValue.handleNewValue(message);
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
     }
 }

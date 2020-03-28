@@ -1,9 +1,5 @@
 package pl.arieals.minigame.elytrarace.arena;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-import static pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils.translateAlternateColorCodes;
-
-
 import com.destroystokyo.paper.Title;
 
 import org.bukkit.ChatColor;
@@ -15,11 +11,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.chat.BaseComponent;
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.AbstractCountdown;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 
 public class StartCountdown extends AbstractCountdown
 {
@@ -39,7 +36,7 @@ public class StartCountdown extends AbstractCountdown
     {
         for (final Player player : this.arena.getPlayersManager().getPlayers())
         {
-            final String locale = player.spigot().getLocale();
+            final String locale = player.getLocale();
 
             final ChatColor color;
             if (time < 4)
@@ -55,7 +52,7 @@ public class StartCountdown extends AbstractCountdown
                 color = ChatColor.GREEN;
             }
 
-            final BaseComponent message = this.msg.getMessage(locale, "start_countdown", time);
+            final BaseComponent message = this.msg.getComponent(locale, "start_countdown", time);
             message.setColor(color.asBungee());
             final Title title = new Title(message, null, 0, 21, 0);
 
@@ -77,7 +74,7 @@ public class StartCountdown extends AbstractCountdown
 
         data.setStarted(true);
 
-        for (final Player player : this.arena.getPlayersManager().getPlayers())
+        for (final INorthPlayer player : this.arena.getPlayersManager().getPlayers())
         {
             final String message = this.msg.getString(player.getLocale(), "start");
             final Title title = new Title(message, "", 0, 20, 0);
@@ -87,7 +84,7 @@ public class StartCountdown extends AbstractCountdown
             player.setAllowFlight(false);
             player.setGliding(true);
             
-            player.teleport(getPlayerData(player, ElytraRacePlayer.class).getStartLocation());
+            player.teleport(player.getPlayerData(ElytraRacePlayer.class).getStartLocation());
             final Vector direction = player.getLocation().getDirection();
             direction.multiply(0.7);
 

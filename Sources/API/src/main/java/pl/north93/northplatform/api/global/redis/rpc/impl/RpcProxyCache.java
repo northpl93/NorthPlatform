@@ -4,14 +4,15 @@ import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import pl.north93.northplatform.api.global.redis.rpc.IRpcTarget;
 
+@ToString(of = "cache")
 class RpcProxyCache
 {
-    private final RpcManagerImpl          rpcManager;
+    private final RpcManagerImpl rpcManager;
     private final Map<CacheEntry, Object> cache = new ConcurrentHashMap<>();
 
     public RpcProxyCache(final RpcManagerImpl rpcManager)
@@ -22,62 +23,21 @@ class RpcProxyCache
     public Object get(final Class<?> classInterface, final IRpcTarget target)
     {
         final CacheEntry cacheEntry = new CacheEntry(classInterface, target);
-        final Object cacheProxy = this.cache.get(cacheEntry);
-        if (cacheProxy == null)
+        return this.cache.computeIfAbsent(cacheEntry, entry ->
         {
-            final Object proxy = Proxy.newProxyInstance(classInterface.getClassLoader(), new Class<?>[] {classInterface}, new RpcInvocationHandler(this.rpcManager, classInterface, target));
-            this.cache.put(cacheEntry, proxy);
-            return proxy;
-        }
-        return cacheProxy;
+            final Class<?>[] classes = {classInterface};
+            final RpcInvocationHandler invocationHandler = new RpcInvocationHandler(this.rpcManager, classInterface, target);
+
+            return Proxy.newProxyInstance(classInterface.getClassLoader(), classes, invocationHandler);
+        });
     }
 
+    @ToString
+    @EqualsAndHashCode
+    @AllArgsConstructor
     private static final class CacheEntry
     {
         private final Class<?>   interfaceClass;
         private final IRpcTarget target;
-
-        public CacheEntry(final Class<?> interfaceClass, final IRpcTarget target)
-        {
-            this.interfaceClass = interfaceClass;
-            this.target = target;
-        }
-
-        @Override
-        public boolean equals(final Object o)
-        {
-            if (this == o)
-            {
-                return true;
-            }
-            if (o == null || this.getClass() != o.getClass())
-            {
-                return false;
-            }
-
-            final CacheEntry that = (CacheEntry) o;
-            return this.interfaceClass.equals(that.interfaceClass) && this.target.equals(that.target);
-
-        }
-
-        @Override
-        public int hashCode()
-        {
-            int result = this.interfaceClass.hashCode();
-            result = 31 * result + this.target.hashCode();
-            return result;
-        }
-
-        @Override
-        public String toString()
-        {
-            return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("interfaceClass", this.interfaceClass).append("target", this.target).toString();
-        }
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("cache", this.cache).toString();
     }
 }

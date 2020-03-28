@@ -1,9 +1,8 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import static pl.arieals.minigame.bedwars.utils.TeamArmorUtils.createColorArmor;
 import static pl.north93.northplatform.api.global.utils.lang.JavaUtils.instanceOf;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 
 
 import org.bukkit.Color;
@@ -33,12 +32,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.SpawnEgg;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.npc.BedWarsSkeleton;
 import pl.arieals.minigame.bedwars.utils.TeamArmorUtils;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.nms.FastBlockOp;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 
 public class SpecialItems implements Listener
 {
@@ -63,8 +63,8 @@ public class SpecialItems implements Listener
         {
             return;
         }
-        final BedWarsArena arenaData = arena.getArenaData();
 
+        final BedWarsArena arenaData = arena.getArenaData();
         event.blockList().removeIf(block -> ! arenaData.getPlayerBlocks().remove(block));
     }
 
@@ -127,7 +127,7 @@ public class SpecialItems implements Listener
     @EventHandler
     public void spawnSkeleton(final PlayerInteractEvent event)
     {
-        final Player player = event.getPlayer();
+        final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
         final PlayerInventory inventory = player.getInventory();
 
         final Block clickedBlock = event.getClickedBlock();
@@ -149,7 +149,7 @@ public class SpecialItems implements Listener
             return;
         }
 
-        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        final BedWarsPlayer playerData = player.getPlayerData(BedWarsPlayer.class);
         if (playerData == null)
         {
             return;
@@ -224,7 +224,7 @@ public class SpecialItems implements Listener
             return;
         }
 
-        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        final BedWarsPlayer playerData = INorthPlayer.wrap(player).getPlayerData(BedWarsPlayer.class);
         if (playerData == null || skeleton.getOwner() == playerData.getTeam())
         {
             event.setCancelled(true);

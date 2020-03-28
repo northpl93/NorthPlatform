@@ -4,7 +4,9 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
+
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 
 public class BoomEffect implements IEliminationEffect
 {
@@ -15,7 +17,7 @@ public class BoomEffect implements IEliminationEffect
     }
 
     @Override
-    public void playerEliminated(final Player player, final Player by)
+    public void playerEliminated(final LocalArena arena, final INorthPlayer player, final INorthPlayer by)
     {
         final Location location = player.getLocation();
         final World world = location.getWorld();

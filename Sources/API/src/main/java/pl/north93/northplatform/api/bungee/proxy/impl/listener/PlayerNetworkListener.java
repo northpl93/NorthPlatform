@@ -1,16 +1,29 @@
 package pl.north93.northplatform.api.bungee.proxy.impl.listener;
 
+import java.util.Locale;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import org.diorite.commons.reflections.DioriteReflectionUtils;
+import org.diorite.commons.reflections.FieldAccessor;
+
 import lombok.extern.slf4j.Slf4j;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.*;
+import net.md_5.bungee.api.event.AsyncEvent;
+import net.md_5.bungee.api.event.LoginAbortedEvent;
+import net.md_5.bungee.api.event.LoginEvent;
+import net.md_5.bungee.api.event.PlayerDisconnectEvent;
+import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.api.event.PreLoginEvent;
+import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.diorite.commons.reflections.DioriteReflectionUtils;
-import org.diorite.commons.reflections.FieldAccessor;
 import pl.north93.northplatform.api.bungee.BungeeApiCore;
 import pl.north93.northplatform.api.bungee.Main;
 import pl.north93.northplatform.api.bungee.proxy.event.HandlePlayerProxyJoinEvent;
@@ -23,16 +36,16 @@ import pl.north93.northplatform.api.global.network.event.PlayerQuitNetEvent;
 import pl.north93.northplatform.api.global.network.impl.players.OnlinePlayerImpl;
 import pl.north93.northplatform.api.global.network.mojang.IMojangCache;
 import pl.north93.northplatform.api.global.network.mojang.UsernameDetails;
-import pl.north93.northplatform.api.global.network.players.*;
+import pl.north93.northplatform.api.global.network.players.IOfflinePlayer;
+import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
+import pl.north93.northplatform.api.global.network.players.IPlayerTransaction;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
+import pl.north93.northplatform.api.global.network.players.Identity;
+import pl.north93.northplatform.api.global.network.players.NameSizeMistakeException;
 import pl.north93.northplatform.api.global.redis.event.IEventManager;
 import pl.north93.northplatform.api.global.redis.observable.IObservationManager;
 import pl.north93.northplatform.api.global.redis.observable.Lock;
 import pl.north93.northplatform.api.global.redis.observable.Value;
-
-import java.util.Locale;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.regex.Pattern;
 
 /**
  * Zarządza ładowaniem danych gracza i usuwaniem ich z Redisa.
@@ -69,7 +82,7 @@ public class PlayerNetworkListener implements Listener
             }
 
             final Optional<UsernameDetails> details = this.mojangCache.getUsernameDetails(nick);
-            if (! details.isPresent())
+            if (details.isEmpty())
             {
                 event.setCancelled(true);
                 event.setCancelReason(this.apiMessages.getComponent("pl-PL", "join.premium.check_failed"));
@@ -200,7 +213,7 @@ public class PlayerNetworkListener implements Listener
                 return;
             }
 
-            final IOnlinePlayer onlinePlayer = (IOnlinePlayer) transaction.getPlayer();
+            final IOnlinePlayer onlinePlayer = transaction.getPlayer();
             onlinePlayer.setServerId(UUID.fromString(event.getPlayer().getServer().getInfo().getName()));
             this.updateLocale(event.getPlayer(), onlinePlayer.getMyLocale());
         }

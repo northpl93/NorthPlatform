@@ -66,15 +66,16 @@ public class ArenaChatManager
      * @param layout Wyglad tej wiadomości.
      * @param args argumenty.
      */
-    public void broadcast(final Predicate<Player> condition, final MessagesBox messagesBox, final String messageKey, final MessageLayout layout, final Object... args)
+    public void broadcast(final Predicate<INorthPlayer> condition, final MessagesBox messagesBox, final String messageKey, final MessageLayout layout, final Object... args)
     {
-        for (final Player player : this.arena.getPlayersManager().getAllPlayers())
+        for (final INorthPlayer player : this.arena.getPlayersManager().getAllPlayers())
         {
             if (! condition.test(player))
             {
                 continue;
             }
-            messagesBox.sendMessage(player, messageKey, layout, args);
+
+            player.sendMessage(messagesBox, messageKey, layout, args);
         }
     }
 
@@ -88,7 +89,7 @@ public class ArenaChatManager
      * @param messageKey klucz wiadomości.
      * @param args argumenty.
      */
-    public void broadcast(final Predicate<Player> condition, final MessagesBox messagesBox, final String messageKey, final Object... args)
+    public void broadcast(final Predicate<INorthPlayer> condition, final MessagesBox messagesBox, final String messageKey, final Object... args)
     {
         this.broadcast(condition, messagesBox, messageKey, MessageLayout.DEFAULT, args);
     }

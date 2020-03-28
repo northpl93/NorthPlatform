@@ -14,6 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import org.diorite.commons.reflections.FieldAccessor;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.shared.api.GameIdentity;
 import pl.arieals.minigame.elytrarace.ElytraRaceMode;
@@ -34,7 +35,7 @@ public class ElytraSetMode extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        final Player player = (Player) sender.unwrapped();
+        final INorthPlayer player = INorthPlayer.wrap(sender);
         if (! checkDevMode(player))
         {
             return;

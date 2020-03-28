@@ -1,11 +1,7 @@
 package pl.arieals.minigame.bedwars.shop.specialentry;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-
-
 import java.util.Collection;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -14,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.event.ItemPreBuyEvent;
 import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
 public class AdditionalLife implements IShopSpecialEntry, Listener
 {
@@ -30,7 +27,7 @@ public class AdditionalLife implements IShopSpecialEntry, Listener
             return;
         }
 
-        final BedWarsPlayer playerData = getPlayerData(event.getPlayer(), BedWarsPlayer.class);
+        final BedWarsPlayer playerData = event.getPlayer().getPlayerData(BedWarsPlayer.class);
         if (playerData == null)
         {
             return;
@@ -43,9 +40,9 @@ public class AdditionalLife implements IShopSpecialEntry, Listener
     }
 
     @Override
-    public boolean buy(final Player player, final Collection<ItemStack> items)
+    public boolean buy(final INorthPlayer player, final Collection<ItemStack> items)
     {
-        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        final BedWarsPlayer playerData = player.getPlayerData(BedWarsPlayer.class);
         if (playerData == null)
         {
             return false;

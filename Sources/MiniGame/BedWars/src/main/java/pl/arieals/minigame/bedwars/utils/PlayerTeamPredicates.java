@@ -1,14 +1,10 @@
 package pl.arieals.minigame.bedwars.utils;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-
-
 import java.util.function.Predicate;
-
-import org.bukkit.entity.Player;
 
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
 public final class PlayerTeamPredicates
 {
@@ -16,20 +12,20 @@ public final class PlayerTeamPredicates
     {
     }
 
-    public static Predicate<Player> isInTeam(final Team team)
+    public static Predicate<INorthPlayer> isInTeam(final Team team)
     {
         return player ->
         {
-            final BedWarsPlayer data = getPlayerData(player, BedWarsPlayer.class);
+            final BedWarsPlayer data = player.getPlayerData(BedWarsPlayer.class);
             return data != null && data.getTeam() == team;
         };
     }
 
-    public static Predicate<Player> notInTeam(final Team team)
+    public static Predicate<INorthPlayer> notInTeam(final Team team)
     {
         return player ->
         {
-            final BedWarsPlayer data = getPlayerData(player, BedWarsPlayer.class);
+            final BedWarsPlayer data = player.getPlayerData(BedWarsPlayer.class);
             return data == null || data.getTeam() != team;
         };
     }

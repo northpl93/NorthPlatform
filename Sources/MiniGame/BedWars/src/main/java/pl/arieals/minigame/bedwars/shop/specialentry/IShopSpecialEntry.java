@@ -2,8 +2,9 @@ package pl.arieals.minigame.bedwars.shop.specialentry;
 
 import java.util.Collection;
 
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
 /**
  * Specjalny sposób obsługi danego przedmiotu ze sklepu.
@@ -15,5 +16,5 @@ import org.bukkit.inventory.ItemStack;
  */
 public interface IShopSpecialEntry
 {
-    boolean buy(Player player, Collection<ItemStack> items);
+    boolean buy(INorthPlayer player, Collection<ItemStack> items);
 }

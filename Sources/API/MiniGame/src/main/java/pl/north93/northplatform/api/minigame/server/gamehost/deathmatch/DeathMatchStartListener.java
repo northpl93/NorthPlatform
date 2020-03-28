@@ -1,13 +1,18 @@
 package pl.north93.northplatform.api.minigame.server.gamehost.deathmatch;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.MessageLayout;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.minigame.server.MiniGameServer;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
@@ -15,11 +20,6 @@ import pl.north93.northplatform.api.minigame.server.gamehost.arena.world.ArenaWo
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.deathmatch.DeathMatchFightStartEvent;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.deathmatch.DeathMatchLoadedEvent;
 import pl.north93.northplatform.api.minigame.server.gamehost.region.ITrackedRegion;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.messages.MessageLayout;
-import pl.north93.northplatform.api.global.messages.Messages;
-import pl.north93.northplatform.api.global.messages.MessagesBox;
 
 public class DeathMatchStartListener implements AutoListener
 {
@@ -39,11 +39,11 @@ public class DeathMatchStartListener implements AutoListener
         serverManager.getRegionManager().getRegions(event.getOldWorld()).forEach(ITrackedRegion::unTrack);
 
         final Location location = event.getArena().getDeathMatch().getArenaSpawn();
-        for (final Player player : event.getArena().getPlayersManager().getAllPlayers())
+        for (final INorthPlayer player : event.getArena().getPlayersManager().getAllPlayers())
         {
-            this.messages.sendMessage(player, "separator");
-            this.messages.sendMessage(player, "deathmatch.welcome", MessageLayout.CENTER);
-            this.messages.sendMessage(player, "separator");
+            player.sendMessage(this.messages, "separator");
+            player.sendMessage(this.messages, "deathmatch.welcome", MessageLayout.CENTER);
+            player.sendMessage(this.messages, "separator");
             player.teleport(location);
         }
     }

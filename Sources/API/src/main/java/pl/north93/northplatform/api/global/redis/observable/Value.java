@@ -57,12 +57,6 @@ public interface Value<T>
     }
 
     /**
-     * Asynchronously gets value.
-     * @param callback Callback.
-     */
-    void get(Consumer<T> callback);
-
-    /**
      * Synchronously performs specified action if value is present.
      * @param action Action to perform if value is present.
      */

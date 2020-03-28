@@ -1,14 +1,13 @@
 package pl.north93.northplatform.api.economy.impl.shared;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.ToString;
 import pl.north93.northplatform.api.economy.IAccountAccessor;
 import pl.north93.northplatform.api.economy.ICurrency;
 import pl.north93.northplatform.api.global.metadata.MetaKey;
 import pl.north93.northplatform.api.global.metadata.MetaStore;
 import pl.north93.northplatform.api.global.network.players.IPlayer;
 
+@ToString(of = {"player", "currency"})
 class PlayerAccessor implements IAccountAccessor
 {
     private final IPlayer   player;
@@ -50,11 +49,5 @@ class PlayerAccessor implements IAccountAccessor
     public boolean has(final double amount)
     {
         return this.getAmount() >= amount;
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("player", this.player).append("currency", this.currency).toString();
     }
 }

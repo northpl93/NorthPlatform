@@ -1,34 +1,41 @@
 package pl.north93.northplatform.api.global.redis.observable.impl;
 
-import com.lambdaworks.redis.api.sync.RedisCommands;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import pl.north93.northplatform.api.global.PlatformConnector;
-import pl.north93.northplatform.api.global.component.Component;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.redis.observable.*;
-import pl.north93.northplatform.api.global.redis.subscriber.RedisSubscriber;
-import pl.north93.northplatform.api.global.storage.StorageConnector;
-import pl.north93.northplatform.api.global.utils.ReferenceHashMap;
-import pl.north93.serializer.platform.NorthSerializer;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import com.lambdaworks.redis.api.sync.RedisCommands;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import pl.north93.northplatform.api.global.component.Component;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.redis.observable.Hash;
+import pl.north93.northplatform.api.global.redis.observable.ICacheBuilder;
+import pl.north93.northplatform.api.global.redis.observable.IObservationManager;
+import pl.north93.northplatform.api.global.redis.observable.Lock;
+import pl.north93.northplatform.api.global.redis.observable.ObjectKey;
+import pl.north93.northplatform.api.global.redis.observable.SortedSet;
+import pl.north93.northplatform.api.global.redis.observable.Value;
+import pl.north93.northplatform.api.global.redis.subscriber.RedisSubscriber;
+import pl.north93.northplatform.api.global.storage.StorageConnector;
+import pl.north93.northplatform.api.global.utils.ReferenceHashMap;
+import pl.north93.serializer.platform.NorthSerializer;
+
 public class ObservationManagerImpl extends Component implements IObservationManager
 {
     private final Map<String, CachedValue> cachedValues;
-    private final Queue<LockImpl>          waitingLocks;
+    private final Queue<LockImpl> waitingLocks;
     private final ValueSubscriptionHandler valueSubHandler;
     @Inject
-    private       StorageConnector         storageConnector;
+    private StorageConnector storageConnector;
     @Inject
-    private       NorthSerializer<byte[], byte[]>  msgPack;
+    private RedisSubscriber redisSubscriber;
     @Inject
-    private       RedisSubscriber          redisSubscriber;
+    private NorthSerializer<byte[], byte[]> msgPack;
 
     public ObservationManagerImpl()
     {
@@ -52,12 +59,6 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         return this.cachedValues.computeIfAbsent(key, p1 -> new CachedValueImpl<>(this, clazz, objectKey));
     }
 
-    @Override
-    public <T> Value<T> get(final Class<T> clazz, final ProvidingRedisKey keyProvider)
-    {
-        return this.get(clazz, keyProvider.getKey());
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public <T> Value<T> get(final Hash<T> hash, final String key)
@@ -66,15 +67,6 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         final String mapKey = "hash:" + hash.getName() + ":" + key;
 
         return this.cachedValues.computeIfAbsent(mapKey, p1 -> new CachedHashValueImpl<>(this, hashImpl, key, hashImpl.getClazz()));
-    }
-
-    @Override
-    public <T extends ProvidingRedisKey> Value<T> of(final T preCachedObject)
-    {
-        //noinspection unchecked
-        final Value<T> value = this.get((Class<T>) preCachedObject.getClass(), preCachedObject);
-        value.set(preCachedObject);
-        return value;
     }
 
     @Override
@@ -170,11 +162,6 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         {
             this.cachedValues.clear();
         }
-    }
-
-    /*default*/ PlatformConnector getPlatformConnector()
-    {
-        return this.getApiCore().getPlatformConnector();
     }
 
     /*default*/ RedisCommands<String, byte[]> getRedis()

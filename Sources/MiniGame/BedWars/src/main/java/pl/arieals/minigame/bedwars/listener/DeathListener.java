@@ -1,14 +1,14 @@
 package pl.arieals.minigame.bedwars.listener;
 
+import static pl.north93.northplatform.api.global.utils.lang.JavaUtils.instanceOf;
 import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
 import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.setPlayerStatus;
-import static pl.north93.northplatform.api.global.utils.lang.JavaUtils.instanceOf;
 
 
 import java.time.Duration;
 
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,10 +20,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.api.minigame.server.gamehost.reward.CurrencyReward;
-import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
-import pl.north93.northplatform.api.minigame.shared.api.arena.DeathMatchState;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.RevivePlayerCountdown;
@@ -39,6 +35,10 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.global.network.players.Identity;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.reward.CurrencyReward;
+import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
+import pl.north93.northplatform.api.minigame.shared.api.arena.DeathMatchState;
 
 @Slf4j
 public class DeathListener implements Listener
@@ -74,15 +74,18 @@ public class DeathListener implements Listener
     @EventHandler
     public void onPlayerHitPlayer(final EntityDamageByEntityEvent event)
     {
-        final Player player = instanceOf(event.getEntity(), Player.class);
-        final Player damager = new DamageEntry(event, null).getPlayerDamager(); // pozyczylismy sobie kod z damagetrackera
-        if (player == null || damager == null)
+        final Player bukkitVictim = instanceOf(event.getEntity(), Player.class);
+        final Player bukkitDamager = new DamageEntry(event, null).getPlayerDamager(); // pozyczylismy sobie kod z damagetrackera
+        if (bukkitVictim == null || bukkitDamager == null)
         {
             return;
         }
 
-        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
-        final BedWarsPlayer damagerData = getPlayerData(damager, BedWarsPlayer.class);
+        final INorthPlayer victim = INorthPlayer.wrap(bukkitVictim);
+        final INorthPlayer damager = INorthPlayer.wrap(bukkitDamager);
+
+        final BedWarsPlayer playerData = victim.getPlayerData(BedWarsPlayer.class);
+        final BedWarsPlayer damagerData = damager.getPlayerData(BedWarsPlayer.class);
 
         if (playerData == null || damagerData == null || playerData.getTeam() == damagerData.getTeam())
         {
@@ -95,7 +98,7 @@ public class DeathListener implements Listener
     {
         final INorthPlayer player = INorthPlayer.wrap(event.getEntity());
         final LocalArena arena = getArena(player);
-        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        final BedWarsPlayer playerData = player.getPlayerData(BedWarsPlayer.class);
 
         final Team team = playerData.getTeam();
         if (arena == null || team == null)
@@ -105,7 +108,7 @@ public class DeathListener implements Listener
 
         log.info("Player {} death on arena {}", player.getName(), arena.getId());
 
-        player.setHealth(player.getMaxHealth());
+        player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
         setPlayerStatus(player, PlayerStatus.PLAYING_SPECTATOR);
 
         // usuwamy wszystkie efekty potionek, upgradey zadbaja zeby je oddac
@@ -164,7 +167,7 @@ public class DeathListener implements Listener
     {
         event.setDeathMessage(null);
 
-        final Player player = event.getEntity();
+        final INorthPlayer player = INorthPlayer.wrap(event.getEntity());
         final Team team = deathData.getTeam();
 
         final DamageContainer dmgContainer = DamageTracker.get().getContainer(player);
@@ -175,10 +178,10 @@ public class DeathListener implements Listener
             return;
         }
 
-        final Player damager = lastDmg.getPlayerDamager();
+        final INorthPlayer damager = INorthPlayer.wrap(lastDmg.getPlayerDamager());
         assert damager != null; // damager nie moze byc tu nullem bo uzywamy getLastDamageByPlayer
 
-        final BedWarsPlayer damagerData = getPlayerData(damager, BedWarsPlayer.class);
+        final BedWarsPlayer damagerData = damager.getPlayerData(BedWarsPlayer.class);
         if (damagerData == null || damagerData.isEliminated())
         {
             // jesli damager jest wyeliminowany to nie uznajemy go za zabojce
@@ -189,11 +192,15 @@ public class DeathListener implements Listener
         if (eliminationEffect != null)
         {
             // odtwarzamy animacje zabicia gracza
-            eliminationEffect.playerEliminated(player, damager);
+            eliminationEffect.playerEliminated(arena, player, damager);
         }
 
-        // dodajemy zabojcy killa w systemia stattrak
-        this.statTrackManager.bumpStatistic(damager, TrackedStatistic.KILLS, lastDmg.getTool());
+        lastDmg.getTool().ifPresent(tool ->
+        {
+            // dodajemy zabojcy killa w systemia stattrak, jesli narzedzie nie jest nullem
+            this.statTrackManager.bumpStatistic(damager, TrackedStatistic.KILLS, tool);
+        });
+
         // dodajemy zabojcy killa w obiekcie BedWarsPlayer
         damagerData.incrementKills();
 

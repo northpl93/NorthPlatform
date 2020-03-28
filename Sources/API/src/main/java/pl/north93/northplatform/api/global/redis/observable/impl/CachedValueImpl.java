@@ -1,7 +1,6 @@
 package pl.north93.northplatform.api.global.redis.observable.impl;
 
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 import com.lambdaworks.redis.api.sync.RedisCommands;
 
@@ -88,19 +87,6 @@ class CachedValueImpl<T> extends CachedValue<T>
         this.observationManager.getValueSubHandler().update(this, new byte[0]);
 
         return this.observationManager.getMsgPack().deserialize(this.clazz, getResult);
-    }
-
-    @Override
-    public void get(final Consumer<T> callback)
-    {
-        if (this.isCached())
-        {
-            callback.accept(this.cache);
-        }
-        else
-        {
-            this.observationManager.getPlatformConnector().runTaskAsynchronously(() -> callback.accept(this.getFromRedis()));
-        }
     }
 
     private synchronized T getFromRedis()

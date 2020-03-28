@@ -20,6 +20,7 @@ import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.arieals.minigame.elytrarace.arena.finish.ElytraWinReward;
 import pl.arieals.minigame.elytrarace.arena.finish.IFinishHandler;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
@@ -42,7 +43,7 @@ public class ScoreMetaHandler implements IFinishHandler
     private final Set<ScoreFinishInfo> points = new HashSet<>(); // uzywane w SCORE_MODE do wyswietlania wynikow
 
     @Override
-    public void handle(final LocalArena arena, final Player player, final ElytraRacePlayer playerData)
+    public void handle(final LocalArena arena, final INorthPlayer player, final ElytraRacePlayer playerData)
     {
         playerData.setFinished(true);
 
@@ -69,7 +70,7 @@ public class ScoreMetaHandler implements IFinishHandler
                 final ScoreMessage scoreMessage = new ScoreMessage(this.getTop(), bestRecord, !isFinished);
                 if (isFinished)
                 {
-                    for (final Player playerInArena : arena.getPlayersManager().getPlayers())
+                    for (final INorthPlayer playerInArena : arena.getPlayersManager().getPlayers())
                     {
                         scoreMessage.print(playerInArena);
                     }
@@ -109,7 +110,7 @@ public class ScoreMetaHandler implements IFinishHandler
         this.statisticsManager.getRecord(scoreStatistic, new BestRecordFilter()).whenComplete((result, throwable) ->
         {
             final ScoreMessage scoreMessage = new ScoreMessage(this.getTop(), result, false);
-            for (final Player playerInArena : arena.getPlayersManager().getPlayers())
+            for (final INorthPlayer playerInArena : arena.getPlayersManager().getPlayers())
             {
                 scoreMessage.print(playerInArena);
             }

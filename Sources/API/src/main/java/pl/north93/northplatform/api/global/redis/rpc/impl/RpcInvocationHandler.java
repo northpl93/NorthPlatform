@@ -7,20 +7,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.global.API;
+import pl.north93.northplatform.api.global.redis.rpc.IRpcTarget;
 import pl.north93.northplatform.api.global.redis.rpc.exceptions.RpcRemoteException;
 import pl.north93.northplatform.api.global.redis.rpc.exceptions.RpcTimeoutException;
 import pl.north93.northplatform.api.global.redis.rpc.impl.messaging.RpcExceptionInfo;
 import pl.north93.northplatform.api.global.redis.rpc.impl.messaging.RpcInvokeMessage;
-import pl.north93.northplatform.api.global.API;
-import pl.north93.northplatform.api.global.redis.rpc.IRpcTarget;
 
 class RpcInvocationHandler implements InvocationHandler
 {
-    private static final Object[]      EMPTY_ARRAY    = new Object[0];
+    private static final Object[] EMPTY_ARRAY = new Object[0];
     private static final AtomicInteger requestCounter = new AtomicInteger(0);
-    private final RpcManagerImpl       rpcManager;
+    private final RpcManagerImpl rpcManager;
     private final RpcObjectDescription objectDescription;
-    private final String               invokeChannel;
+    private final String invokeChannel;
 
     public RpcInvocationHandler(final RpcManagerImpl rpcManager, final Class<?> classInterface, final IRpcTarget target)
     {
@@ -34,19 +34,18 @@ class RpcInvocationHandler implements InvocationHandler
     {
         final RpcMethodDescription methodDescription = this.objectDescription.getMethodDescription(method);
 
-        final int methodId = methodDescription.getId();
         final int requestId = requestCounter.getAndIncrement();
         final boolean needsWaitForResponse = methodDescription.isNeedsWaitForResponse();
 
-        final RpcResponseLock lock = needsWaitForResponse ? this.rpcManager.createFor(requestId) : null;
-
-        final RpcInvokeMessage rpcInvokeMessage = new RpcInvokeMessage(API.getApiCore().getId(), this.objectDescription.getClassId(), requestId, methodId, args == null ? EMPTY_ARRAY : args);
-        this.rpcManager.getJedisPool().publish(this.invokeChannel, this.rpcManager.getMsgPack().serialize(RpcInvokeMessage.class, rpcInvokeMessage));
-
+        final RpcInvokeMessage rpcInvokeMessage = this.constructInvokeMessage(methodDescription, requestId, args);
         if (! needsWaitForResponse)
         {
-            return null; // Nie jest wymagana odpowiedz, idziemy sobie
+            this.rpcManager.publishInvokeMessage(this.invokeChannel, rpcInvokeMessage);
+            return null;
         }
+
+        final RpcResponseLock lock = this.rpcManager.createLockForRequest(requestId);
+        this.rpcManager.publishInvokeMessage(this.invokeChannel, rpcInvokeMessage);
 
         final Object response;
         try
@@ -64,6 +63,14 @@ class RpcInvocationHandler implements InvocationHandler
             throw new RpcRemoteException((RpcExceptionInfo) response);
         }
         return response;
+    }
+
+    private RpcInvokeMessage constructInvokeMessage(final RpcMethodDescription methodDescription, final int requestId, final Object[] args)
+    {
+        final int classId = this.objectDescription.getClassId();
+        final int methodId = methodDescription.getId();
+
+        return new RpcInvokeMessage(API.getApiCore().getId(), classId, requestId, methodId, args == null ? EMPTY_ARRAY : args);
     }
 
     @Override

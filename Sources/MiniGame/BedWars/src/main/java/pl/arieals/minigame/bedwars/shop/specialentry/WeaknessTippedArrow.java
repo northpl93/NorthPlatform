@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Locale;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -70,7 +69,7 @@ public class WeaknessTippedArrow implements IShopSpecialEntry
     }
 
     @Override
-    public boolean buy(final Player player, final Collection<ItemStack> items)
+    public boolean buy(final INorthPlayer player, final Collection<ItemStack> items)
     {
         final ItemStack itemStack = this.createBase();
 

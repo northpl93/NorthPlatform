@@ -8,7 +8,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import org.diorite.commons.math.DioriteRandomUtils;
 
-import pl.north93.northplatform.api.minigame.shared.api.party.IPartyManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
@@ -18,7 +17,8 @@ import pl.north93.northplatform.api.global.network.event.PlayerQuitNetEvent;
 import pl.north93.northplatform.api.global.network.players.IPlayer;
 import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.global.redis.event.NetEventSubscriber;
-import pl.north93.northplatform.api.minigame.shared.api.party.event.LeavePartyNetEvent;
+import pl.north93.northplatform.api.minigame.shared.api.party.IPartyManager;
+import pl.north93.northplatform.api.minigame.shared.api.party.event.LeavePartyNetEvent.LeavePartyReason;
 
 /**
  * Listenery odpowiedzialne za działanie Party po stronie kontrolera sieci.
@@ -51,7 +51,7 @@ public class PartyControllerListener
                 if (players.size() == 1)
                 {
                     // usuwamy tego gracza z party
-                    partyAccess.removePlayer(player.getIdentity(), LeavePartyNetEvent.LeavePartyReason.NETWORK_DISCONNECT);
+                    partyAccess.removePlayer(player.getIdentity(), LeavePartyReason.NETWORK_DISCONNECT);
 
                     // usuwamy party bez graczy
                     partyAccess.delete();
@@ -65,12 +65,12 @@ public class PartyControllerListener
                     partyAccess.changeOwner(DioriteRandomUtils.getRandom(remainderPlayers));
 
                     // usuwamy gracza z party który juz nie jest wlascicielem
-                    partyAccess.removePlayer(player.getIdentity(), LeavePartyNetEvent.LeavePartyReason.NETWORK_DISCONNECT);
+                    partyAccess.removePlayer(player.getIdentity(), LeavePartyReason.NETWORK_DISCONNECT);
                 }
             }
             else
             {
-                partyAccess.removePlayer(player.getIdentity(), LeavePartyNetEvent.LeavePartyReason.NETWORK_DISCONNECT);
+                partyAccess.removePlayer(player.getIdentity(), LeavePartyReason.NETWORK_DISCONNECT);
             }
         });
     }

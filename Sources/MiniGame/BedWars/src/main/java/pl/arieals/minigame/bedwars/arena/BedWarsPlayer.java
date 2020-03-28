@@ -1,16 +1,18 @@
 package pl.arieals.minigame.bedwars.arena;
 
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
+
+
+import org.bukkit.Bukkit;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.bukkit.Bukkit;
+
 import pl.arieals.minigame.bedwars.event.PlayerEliminatedEvent;
 import pl.arieals.minigame.bedwars.shop.elimination.IEliminationEffect;
 import pl.arieals.minigame.bedwars.utils.TeamArmorUtils;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
-
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
 
 public class BedWarsPlayer
 {
@@ -39,10 +41,10 @@ public class BedWarsPlayer
      */
     public boolean isOffline()
     {
-        final BedWarsPlayer newData = getPlayerData(this.bukkitPlayer, BedWarsPlayer.class);
+        final BedWarsPlayer bedWarsPlayer = this.bukkitPlayer.getPlayerData(BedWarsPlayer.class);
         if (this.bukkitPlayer.isOnline())
         {
-            return this != newData;
+            return this != bedWarsPlayer;
         }
 
         return true;

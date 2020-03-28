@@ -17,6 +17,4 @@ public interface RedisSubscriber
     }
 
     void unSubscribe(String channel);
-
-    void unSubscribeAll();
 }

@@ -1,6 +1,5 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 import static pl.arieals.minigame.bedwars.utils.PlayerTeamPredicates.isInTeam;
 import static pl.arieals.minigame.bedwars.utils.PlayerTeamPredicates.notInTeam;
 
@@ -15,9 +14,6 @@ import org.bukkit.event.Listener;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.ArenaChatManager;
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.api.minigame.server.gamehost.reward.CurrencyReward;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
@@ -29,6 +25,9 @@ import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.global.messages.TranslatableString;
 import pl.north93.northplatform.api.global.network.players.Identity;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.ArenaChatManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.reward.CurrencyReward;
 
 public class BedDestroyListener implements Listener
 {
@@ -52,7 +51,7 @@ public class BedDestroyListener implements Listener
         final ArenaChatManager chatManager = arena.getChatManager();
         if (event.getDestroyer() != null)
         {
-            final BedWarsPlayer destroyerData = getPlayerData(event.getDestroyer(), BedWarsPlayer.class);
+            final BedWarsPlayer destroyerData = event.getDestroyer().getPlayerData(BedWarsPlayer.class);
             assert destroyerData != null; // tu nie moze byc nullem, bo gracz niszczacy na pewno bedzie online
 
             final int currencyAmount = bedWarsArena.getBedWarsConfig().getRewards().getBedDestroy();

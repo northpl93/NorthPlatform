@@ -1,8 +1,5 @@
 package pl.arieals.minigame.elytrarace.listener;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-
-
 import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,13 +8,13 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
-import pl.north93.northplatform.api.minigame.server.gamehost.region.IRegionManager;
-import pl.north93.northplatform.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 import pl.north93.northplatform.api.bukkit.utils.xml.XmlCuboid;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.region.IRegionManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.region.ITrackedRegion;
 
 public class FinishLineListener implements Listener
 {
@@ -33,8 +30,8 @@ public class FinishLineListener implements Listener
 
         trackedRegion.whenEnter(player ->
         {
-            final ElytraRacePlayer playerData = getPlayerData(player, ElytraRacePlayer.class);
-            if (playerData.isFinished())
+            final ElytraRacePlayer playerData = player.getPlayerData(ElytraRacePlayer.class);
+            if (playerData == null || playerData.isFinished())
             {
                 // gracz juz przekroczyl linie mety, wiecej razy nie mozemy go obslugiwac
                 return;

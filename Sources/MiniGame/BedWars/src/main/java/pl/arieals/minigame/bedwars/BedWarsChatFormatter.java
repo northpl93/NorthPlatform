@@ -1,8 +1,5 @@
 package pl.arieals.minigame.bedwars;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-
-
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
@@ -20,7 +17,7 @@ public class BedWarsChatFormatter implements ChatFormatter
     {
         final BaseComponent baseFormat = PermissionsBasedFormatter.INSTANCE.format(player, input);
 
-        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        final BedWarsPlayer playerData = player.getPlayerData(BedWarsPlayer.class);
         if (playerData == null || playerData.getTeam() == null)
         {
             // występuje gdy jesteśmy na etapie lobby

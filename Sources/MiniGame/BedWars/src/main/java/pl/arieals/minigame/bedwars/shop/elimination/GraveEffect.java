@@ -1,8 +1,5 @@
 package pl.arieals.minigame.bedwars.shop.elimination;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
-
-
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -16,13 +13,13 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.SimpleCountdown;
 import pl.north93.northplatform.api.bukkit.utils.nms.NorthFallingBlock;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 
 public class GraveEffect implements IEliminationEffect
 {
@@ -35,16 +32,10 @@ public class GraveEffect implements IEliminationEffect
     }
 
     @Override
-    public void playerEliminated(final Player player, final Player by)
+    public void playerEliminated(final LocalArena arena, final INorthPlayer player, final INorthPlayer by)
     {
         final Location location = player.getLocation();
         final CraftWorld world = (CraftWorld) location.getWorld();
-
-        final LocalArena arena = getArena(player);
-        if (arena == null)
-        {
-            return;
-        }
 
         final Collection<Entity> entities = new ArrayList<>();
 

@@ -1,7 +1,6 @@
 package pl.north93.northplatform.api.global.redis.observable.impl;
 
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -70,19 +69,6 @@ class CachedHashValueImpl<T> extends CachedValue<T>
         }
 
         return value;
-    }
-
-    @Override
-    public void get(final Consumer<T> callback)
-    {
-        if (this.isCached())
-        {
-            callback.accept(this.cache);
-        }
-        else
-        {
-            this.observationManager.getPlatformConnector().runTaskAsynchronously(() -> callback.accept(this.getFromRedis()));
-        }
     }
 
     @Override

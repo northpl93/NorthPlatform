@@ -14,9 +14,9 @@ import pl.north93.northplatform.api.global.redis.rpc.IRpcObjectDescription;
 
 class RpcObjectDescription implements IRpcObjectDescription
 {
-    private final Class<?>                           classInterface;
-    private final Integer                            classId;
-    private final Map<Method, RpcMethodDescription>  methodToDescription;
+    private final Class<?> classInterface;
+    private final int classId;
+    private final Map<Method, RpcMethodDescription> methodToDescription;
     private final IntObjectMap<RpcMethodDescription> methodDesc;
 
     public RpcObjectDescription(final Class<?> classInterface)
@@ -42,13 +42,13 @@ class RpcObjectDescription implements IRpcObjectDescription
     }
 
     @Override
-    public Integer getClassId()
+    public int getClassId()
     {
         return this.classId;
     }
 
     @Override
-    public Integer getMethodId(final Method method)
+    public int getMethodId(final Method method)
     {
         return this.methodToDescription.get(method).getId();
     }

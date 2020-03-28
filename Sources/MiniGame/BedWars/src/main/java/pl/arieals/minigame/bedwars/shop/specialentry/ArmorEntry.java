@@ -6,7 +6,6 @@ import static java.text.MessageFormat.format;
 import java.util.Collection;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -17,6 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import lombok.extern.slf4j.Slf4j;
 import pl.arieals.minigame.bedwars.event.ItemPreBuyEvent;
 import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.itemstack.ArmorMaterial;
 
 @Slf4j
@@ -28,7 +28,7 @@ public class ArmorEntry implements IShopSpecialEntry, Listener
     }
 
     @Override
-    public boolean buy(final Player player, final Collection<ItemStack> items)
+    public boolean buy(final INorthPlayer player, final Collection<ItemStack> items)
     {
         final ItemStack[] armorContents = player.getInventory().getArmorContents();
         for (final ItemStack item : items)
@@ -37,7 +37,7 @@ public class ArmorEntry implements IShopSpecialEntry, Listener
             armorContents[type.ordinal()] = item;
 
             final ItemMeta itemMeta = item.getItemMeta();
-            itemMeta.spigot().setUnbreakable(true);
+            itemMeta.setUnbreakable(true);
             item.setItemMeta(itemMeta);
         }
         player.getInventory().setArmorContents(armorContents);

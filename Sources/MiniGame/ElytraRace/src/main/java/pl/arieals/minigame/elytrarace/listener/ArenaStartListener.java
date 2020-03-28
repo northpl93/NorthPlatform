@@ -1,6 +1,5 @@
 package pl.arieals.minigame.elytrarace.listener;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.setPlayerData;
 import static pl.arieals.minigame.elytrarace.ElytraRaceMode.fromVariantId;
 
 
@@ -20,11 +19,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.ArenaChatManager;
-import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
-import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
-import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.arieals.minigame.elytrarace.ElytraRaceMode;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
@@ -34,11 +28,17 @@ import pl.arieals.minigame.elytrarace.cfg.ArenaConfig;
 import pl.arieals.minigame.elytrarace.shop.ElytraEffectTask;
 import pl.arieals.minigame.elytrarace.shop.ElytraEffectsManager;
 import pl.arieals.minigame.elytrarace.shop.effects.IElytraEffect;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.xml.XmlLocation;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.ArenaChatManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 
 public class ArenaStartListener implements Listener
 {
@@ -98,26 +98,26 @@ public class ArenaStartListener implements Listener
         final Iterator<XmlLocation> locations = elytraRaceArena.getArenaConfig().getStartLocations().iterator();
 
         final Set<ElytraRacePlayer> elytraPlayers = elytraRaceArena.getPlayers();
-        for (final Player player : arena.getPlayersManager().getPlayers())
+        for (final INorthPlayer player : arena.getPlayersManager().getPlayers())
         {
             final IElytraEffect elytraEffect = this.getEffect(player);
             final Location startLoc = locations.next().toBukkit(arena.getWorld().getCurrentWorld());
 
-            final ElytraRacePlayer data;
+            final ElytraRacePlayer elytraRacePlayer;
             if (elytraRaceArena.getGameMode() == ElytraRaceMode.SCORE_MODE)
             {
                 // w trybie score ustawiamy graczowi dodatkowy rozszerzony obiekt
                 // sledzacy ilosc punktów, combo itp.
-                data = new ElytraScorePlayer(player, elytraEffect, startLoc);
+                elytraRacePlayer = new ElytraScorePlayer(player, elytraEffect, startLoc);
             }
             else
             {
                 // w trybie race ustawiamy standardowy obiekt
-                data = new ElytraRacePlayer(player, elytraEffect, startLoc);
+                elytraRacePlayer = new ElytraRacePlayer(player, elytraEffect, startLoc);
             }
 
-            elytraPlayers.add(data);
-            setPlayerData(player, ElytraRacePlayer.class, data);
+            elytraPlayers.add(elytraRacePlayer);
+            player.setPlayerData(elytraRacePlayer);
 
             player.teleport(startLoc);
             player.getInventory().setChestplate(this.createElytra());
@@ -136,7 +136,7 @@ public class ArenaStartListener implements Listener
     {
         final ItemStack elytra = new ItemStack(Material.ELYTRA);
         final ItemMeta itemMeta = elytra.getItemMeta();
-        itemMeta.spigot().setUnbreakable(true);
+        itemMeta.setUnbreakable(true);
         elytra.setItemMeta(itemMeta);
         return elytra;
     }

@@ -8,6 +8,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import org.diorite.commons.math.DioriteMathUtils;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.bedwars.arena.Team;
 import pl.arieals.minigame.bedwars.event.PlayerRevivedEvent;
@@ -34,7 +35,7 @@ public class ToolsHaste implements IUpgrade, Listener
     @EventHandler
     public void onPlayerRevive(final PlayerRevivedEvent event)
     {
-        final Player player = event.getPlayer();
+        final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
         final int upgradeLevel = this.getUpgradeLevel(player);
         if (upgradeLevel == 0)
         {

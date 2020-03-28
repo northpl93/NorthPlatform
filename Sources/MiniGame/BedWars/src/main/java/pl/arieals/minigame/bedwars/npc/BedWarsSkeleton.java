@@ -1,8 +1,5 @@
 package pl.arieals.minigame.bedwars.npc;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-
-
 import net.minecraft.server.v1_12_R1.EntityHuman;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.EntitySkeleton;
@@ -16,12 +13,12 @@ import net.minecraft.server.v1_12_R1.World;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.nms.EntityUtils;
 
 @SuppressWarnings("unchecked")
@@ -79,8 +76,8 @@ public class BedWarsSkeleton extends EntitySkeleton
     // warunek ataku w PathfinderGoalNearestAttackableTarget
     private boolean attackPlayer(final EntityPlayer entityPlayer)
     {
-        final Player player = entityPlayer.getBukkitEntity();
-        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        final INorthPlayer player = INorthPlayer.wrap(entityPlayer.getBukkitEntity());
+        final BedWarsPlayer playerData = player.getPlayerData(BedWarsPlayer.class);
 
         if (playerData == null)
         {

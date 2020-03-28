@@ -1,7 +1,6 @@
 package pl.arieals.minigame.elytrarace.listener;
 
 import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import org.bukkit.Bukkit;
@@ -18,19 +17,20 @@ import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
-import pl.north93.northplatform.api.minigame.server.gamehost.region.ITrackedRegion;
-import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.arieals.minigame.elytrarace.cfg.Checkpoint;
 import pl.arieals.minigame.elytrarace.event.PlayerCheckpointEvent;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.region.ITrackedRegion;
+import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 
 public class CheckpointListener implements Listener
 {
@@ -55,9 +55,14 @@ public class CheckpointListener implements Listener
         }
     }
 
-    private void playerEnterCheckpoint(final Player player, final ElytraRaceArena arena, final Checkpoint checkpoint)
+    private void playerEnterCheckpoint(final INorthPlayer player, final ElytraRaceArena arena, final Checkpoint checkpoint)
     {
-        final ElytraRacePlayer elytraPlayer = getPlayerData(player, ElytraRacePlayer.class);
+        final ElytraRacePlayer elytraPlayer = player.getPlayerData(ElytraRacePlayer.class);
+        if (elytraPlayer == null)
+        {
+            // don't handle if player isn't known by minigame
+            return;
+        }
 
         final Checkpoint prevCheck = elytraPlayer.getCheckpoint();
         if (prevCheck != null && prevCheck.getNumber() >= checkpoint.getNumber())
@@ -74,7 +79,7 @@ public class CheckpointListener implements Listener
 
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_HARP, 1, 0);
         elytraPlayer.setCheckpoint(checkpoint);
-        this.messages.sendMessage(player, "checkpoint.taken", elytraPlayer.getCheckpointNumber(), arena.getMaxCheckpoints());
+        player.sendMessage(this.messages, "checkpoint.taken", elytraPlayer.getCheckpointNumber(), arena.getMaxCheckpoints());
     }
 
     @EventHandler
@@ -87,7 +92,8 @@ public class CheckpointListener implements Listener
 
         event.setCancelled(true);
 
-        final Player player = (Player) event.getEntity();
+        final INorthPlayer player = INorthPlayer.wrap((Player) event.getEntity());
+
         final LocalArena arena = getArena(player);
         if (arena.getGamePhase() != GamePhase.STARTED)
         {
@@ -113,7 +119,8 @@ public class CheckpointListener implements Listener
             return;
         }
 
-        final Player player = (Player) event.getEntity();
+        final INorthPlayer player = INorthPlayer.wrap((Player) event.getEntity());
+
         final LocalArena arena = getArena(player);
         if (arena.getGamePhase() != GamePhase.STARTED)
         {
@@ -128,15 +135,15 @@ public class CheckpointListener implements Listener
         this.backToCheckpoint(player, arena);
     }
 
-    private void backToCheckpoint(final Player player, final LocalArena arena)
+    private void backToCheckpoint(final INorthPlayer player, final LocalArena arena)
     {
-        final ElytraRacePlayer elytraPlayer = getPlayerData(player, ElytraRacePlayer.class);
+        final ElytraRacePlayer elytraPlayer = player.getPlayerData(ElytraRacePlayer.class);
         if (elytraPlayer == null || elytraPlayer.isDev() || elytraPlayer.isFinished())
         {
             return;
         }
 
-        final ElytraScorePlayer scorePlayer = getPlayerData(player, ElytraScorePlayer.class);
+        final ElytraScorePlayer scorePlayer = player.getPlayerData(ElytraScorePlayer.class);
         if (scorePlayer != null)
         {
             // resetujemy combo gdy teleportujemy do checkpointu
@@ -150,7 +157,7 @@ public class CheckpointListener implements Listener
 
         player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 0);
 
-        this.messages.sendMessage(player, "checkpoint.teleport");
+        player.sendMessage(this.messages, "checkpoint.teleport");
 
         final Checkpoint checkpoint = elytraPlayer.getCheckpoint();
         if (checkpoint != null)

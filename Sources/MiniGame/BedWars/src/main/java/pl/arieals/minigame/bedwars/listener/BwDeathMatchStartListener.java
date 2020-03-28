@@ -1,18 +1,15 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-
-
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffectType;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.deathmatch.DeathMatchLoadedEvent;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.deathmatch.DeathMatchLoadedEvent;
 
 @Slf4j
 public class BwDeathMatchStartListener implements Listener
@@ -28,15 +25,15 @@ public class BwDeathMatchStartListener implements Listener
         arenaData.getPlayerBlocks().clear(); // usuwamy bloki by nie trzymac referencji na swiat
         arenaData.getSecureRegions().clear(); // usuwamy bo niepotrzebne
 
-        for (final Player player : arena.getPlayersManager().getPlayers())
+        for (final INorthPlayer player : arena.getPlayersManager().getPlayers())
         {
             this.preparePlayerToDeathMatch(player);
         }
     }
 
-    private void preparePlayerToDeathMatch(final Player player)
+    private void preparePlayerToDeathMatch(final INorthPlayer player)
     {
-        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        final BedWarsPlayer playerData = player.getPlayerData(BedWarsPlayer.class);
         if (playerData == null)
         {
             return;

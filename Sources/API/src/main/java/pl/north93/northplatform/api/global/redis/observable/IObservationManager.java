@@ -6,11 +6,7 @@ public interface IObservationManager
 
     <T> Value<T> get(Class<T> clazz, ObjectKey objectKey);
 
-    <T> Value<T> get(Class<T> clazz, ProvidingRedisKey keyProvider);
-
     <T> Value<T> get(Hash<T> hash, String key); // tworzy Value z klucza hasha
-
-    <T extends ProvidingRedisKey> Value<T> of(T preCachedObject);
 
     <K, V> ICacheBuilder<K, V> cacheBuilder(Class<K> keyClass, Class<V> valueClass);
 

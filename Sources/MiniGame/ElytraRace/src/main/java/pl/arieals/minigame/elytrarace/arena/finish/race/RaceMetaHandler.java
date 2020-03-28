@@ -1,12 +1,20 @@
 package pl.arieals.minigame.elytrarace.arena.finish.race;
 
+import java.time.Duration;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.bukkit.entity.Player;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.bukkit.entity.Player;
+
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.finish.ElytraWinReward;
 import pl.arieals.minigame.elytrarace.arena.finish.IFinishHandler;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
@@ -23,11 +31,6 @@ import pl.north93.northplatform.api.minigame.shared.api.statistics.type.ShorterT
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.DurationUnit;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
 
-import java.time.Duration;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 public class RaceMetaHandler implements IFinishHandler
 {
     @Inject @Messages("ElytraRace")
@@ -38,7 +41,7 @@ public class RaceMetaHandler implements IFinishHandler
     private int                  place; // uzywane w RACE_MODE do okreslania miejsca gracza
 
     @Override
-    public void handle(final LocalArena arena, final Player player, final ElytraRacePlayer playerData)
+    public void handle(final LocalArena arena, final INorthPlayer player, final ElytraRacePlayer playerData)
     {
         playerData.setFinished(true);
 

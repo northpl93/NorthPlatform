@@ -1,16 +1,14 @@
 package pl.arieals.minigame.elytrarace.arena.finish;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-
-
 import org.bukkit.entity.Player;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 
 public interface IFinishHandler
 {
-    void handle(LocalArena arena, Player player, ElytraRacePlayer elytraPlayer);
+    void handle(LocalArena arena, INorthPlayer player, ElytraRacePlayer elytraPlayer);
 
     void playerQuit(LocalArena arena, Player player);
 
@@ -18,9 +16,9 @@ public interface IFinishHandler
 
     static boolean checkFinished(final LocalArena arena)
     {
-        for (final Player player : arena.getPlayersManager().getPlayers())
+        for (final INorthPlayer player : arena.getPlayersManager().getPlayers())
         {
-            final ElytraRacePlayer playerData = getPlayerData(player, ElytraRacePlayer.class);
+            final ElytraRacePlayer playerData = player.getPlayerData(ElytraRacePlayer.class);
             if (! playerData.isFinished())
             {
                 return false;

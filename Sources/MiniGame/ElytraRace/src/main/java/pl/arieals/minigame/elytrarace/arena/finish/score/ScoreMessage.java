@@ -1,20 +1,18 @@
 package pl.arieals.minigame.elytrarace.arena.finish.score;
 
 import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-import org.bukkit.entity.Player;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.arena.ElytraScorePlayer;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
 import pl.north93.northplatform.api.global.messages.Messages;
@@ -41,10 +39,10 @@ public class ScoreMessage
         this.record = record;
     }
 
-    public void print(final Player player)
+    public void print(final INorthPlayer player)
     {
-        this.messages.sendMessage(player, "separator");
-        this.messages.sendMessage(player, "finish.score.header", MessageLayout.CENTER);
+        player.sendMessage(this.messages, "separator");
+        player.sendMessage(this.messages, "finish.score.header", MessageLayout.CENTER);
         player.sendMessage("");
         if (this.isPartial)
         {
@@ -57,38 +55,39 @@ public class ScoreMessage
         this.yourInfo(player);
 
         player.sendMessage(" ");
-        this.messages.sendMessage(player, "separator");
-        this.messages.sendMessage(player, "finish.rewards", MessageLayout.CENTER);
+        player.sendMessage(this.messages, "separator");
+        player.sendMessage(this.messages, "finish.rewards", MessageLayout.CENTER);
         player.sendMessage(" ");
 
         final LocalArena arena = getArena(player);
         if (this.isPartial)
         {
-            this.messages.sendMessage(player, "finish.wait_awards", MessageLayout.CENTER);
+            player.sendMessage(this.messages, "finish.wait_awards", MessageLayout.CENTER);
         }
         else if (arena != null) // zawsze powinno byc spelnione
         {
             arena.getRewards().renderRewards(this.messages, player);
         }
 
-        this.messages.sendMessage(player, "separator");
+        player.sendMessage(this.messages, "separator");
     }
 
-    private void fullResults(final Player player)
+    private void fullResults(final INorthPlayer player)
     {
         final Iterator<ScoreFinishInfo> topIter = this.top.iterator();
         for (int place = 1; topIter.hasNext() && place < 4; place++)
         {
             final ScoreFinishInfo finishInfo = topIter.next();
 
-            this.messages.sendMessage(player, "finish.score.place." + place, MessageLayout.CENTER, finishInfo.getDisplayName(), finishInfo.getPoints());
+            final String messageKey = "finish.score.place." + place;
+            player.sendMessage(this.messages, messageKey, MessageLayout.CENTER, finishInfo.getDisplayName(), finishInfo.getPoints());
         }
     }
 
-    private void partialResults(final Player player)
+    private void partialResults(final INorthPlayer player)
     {
         final Iterator<ScoreFinishInfo> topIter = this.top.iterator();
-        this.messages.sendMessage(player, "finish.partial_results", MessageLayout.CENTER);
+        player.sendMessage(this.messages, "finish.partial_results", MessageLayout.CENTER);
         for (int place = 0; topIter.hasNext() && place < 3; place++)
         {
             final ScoreFinishInfo finishInfo = topIter.next();
@@ -102,11 +101,11 @@ public class ScoreMessage
         }
     }
 
-    private void yourInfo(final Player player)
+    private void yourInfo(final INorthPlayer player)
     {
         player.sendMessage("");
 
-        final ElytraRacePlayer racePlayer = getPlayerData(player, ElytraRacePlayer.class);
+        final ElytraRacePlayer racePlayer = player.getPlayerData(ElytraRacePlayer.class);
         assert racePlayer != null; // tutaj nie moze byc nullem, bo jakos ukonczyl ta arene...
 
         final ElytraScorePlayer scorePlayer = racePlayer.asScorePlayer();

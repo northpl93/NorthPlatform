@@ -1,12 +1,8 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.bukkit.entity.Player;
@@ -17,6 +13,19 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.arieals.minigame.bedwars.arena.BedWarsArena;
+import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
+import pl.arieals.minigame.bedwars.arena.PlayerReconnectTimedOut;
+import pl.arieals.minigame.bedwars.arena.Team;
+import pl.arieals.minigame.bedwars.event.TeamEliminatedEvent;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.utils.SimpleCountdown;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.MessageLayout;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.messages.TranslatableString;
+import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.ArenaChatManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameEndEvent;
@@ -27,18 +36,6 @@ import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticHol
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsManager;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
-import pl.arieals.minigame.bedwars.arena.BedWarsArena;
-import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
-import pl.arieals.minigame.bedwars.arena.PlayerReconnectTimedOut;
-import pl.arieals.minigame.bedwars.arena.Team;
-import pl.arieals.minigame.bedwars.event.TeamEliminatedEvent;
-import pl.north93.northplatform.api.bukkit.utils.SimpleCountdown;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.messages.MessageLayout;
-import pl.north93.northplatform.api.global.messages.Messages;
-import pl.north93.northplatform.api.global.messages.MessagesBox;
-import pl.north93.northplatform.api.global.messages.TranslatableString;
-import pl.north93.northplatform.api.global.network.players.Identity;
 
 @Slf4j
 public class GameEndListener implements Listener
@@ -84,14 +81,16 @@ public class GameEndListener implements Listener
     @EventHandler
     public void endArenaWhenOnePlayerLeft(final PlayerQuitArenaEvent event)
     {
-        final BedWarsPlayer playerData = getPlayerData(event.getPlayer(), BedWarsPlayer.class);
+        final INorthPlayer player = event.getPlayer();
+
+        final BedWarsPlayer playerData = player.getPlayerData(BedWarsPlayer.class);
         if (event.getArena().getGamePhase() != GamePhase.STARTED || playerData == null)
         {
             return;
         }
 
         final Team team = playerData.getTeam();
-        final Object[] playerLogData = {event.getPlayer().getName(), event.getArena().getId()};
+        final Object[] playerLogData = {player.getName(), event.getArena().getId()};
 
         if (team.isBedAlive())
         {
@@ -129,18 +128,16 @@ public class GameEndListener implements Listener
         chatManager.broadcast(this.messages, "end.header", MessageLayout.CENTER);
 
         final Predicate<Team> isEliminatedPredicate = Team::isEliminated;
-        final Optional<Team> winner = arenaData.getTeams().stream().filter(isEliminatedPredicate.negate()).findAny();
-        if (winner.isPresent())
+        arenaData.getTeams().stream().filter(isEliminatedPredicate.negate()).findAny().ifPresent(winner ->
         {
-            final Team winnerTeam = winner.get();
             // obslugujemy zwyciestwo danego teamu (nagrody, licznik zwyciestw)
-            this.handleTeamWin(arena, arenaData, winnerTeam);
+            this.handleTeamWin(arena, arenaData, winner);
 
-            final TranslatableString teamNameKey = TranslatableString.of(this.messages, "@team.scoreboard." + winnerTeam.getName());
-            final String nicks = this.playersList(winnerTeam);
+            final TranslatableString teamNameKey = TranslatableString.of(this.messages, "@team.scoreboard." + winner.getName());
+            final String nicks = this.playersList(winner);
 
-            chatManager.broadcast(this.messages, "end.winner_list", MessageLayout.CENTER, winnerTeam.getColor(), teamNameKey, nicks);
-        }
+            chatManager.broadcast(this.messages, "end.winner_list", MessageLayout.CENTER, winner.getColor(), teamNameKey, nicks);
+        });
 
         chatManager.broadcast(this.messages, "end.top_kills", MessageLayout.CENTER);
 

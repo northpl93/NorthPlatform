@@ -1,7 +1,7 @@
 package pl.arieals.minigame.elytrarace.cmd;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.arieals.minigame.elytrarace.cmd.ElytraDevMode.checkDevMode;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 
 
 import javax.xml.bind.JAXB;
@@ -13,17 +13,17 @@ import com.sk89q.worldedit.bukkit.selections.Selection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.elytrarace.BoostType;
 import pl.arieals.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.arieals.minigame.elytrarace.cfg.Boost;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.xml.XmlCuboid;
 import pl.north93.northplatform.api.bukkit.utils.xml.XmlLocation;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 
 public class ElytraAddBoost extends NorthCommand
 {
@@ -36,7 +36,7 @@ public class ElytraAddBoost extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        final Player player = (Player) sender.unwrapped();
+        final INorthPlayer player = INorthPlayer.wrap(sender);
         if (! checkDevMode(player))
         {
             return;

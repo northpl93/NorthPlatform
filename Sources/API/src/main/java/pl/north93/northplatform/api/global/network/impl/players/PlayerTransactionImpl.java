@@ -19,7 +19,6 @@ class PlayerTransactionImpl implements IPlayerTransaction
 
     public PlayerTransactionImpl(final Value<? extends IPlayer> playerValue, final Lock lock, final Consumer<IPlayer> callback)
     {
-        //noinspection unchecked
         this.player = playerValue.get();
         this.lock = lock;
         this.callback = callback;

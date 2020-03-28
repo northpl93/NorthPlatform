@@ -44,7 +44,8 @@ class DynamicBeanContainer extends AbstractBeanContainer
         }
         else
         {
-            return SmartExecutor.execute(this.method, beanContext, this.beanContext.getBean(this.method.getDeclaringClass()));
+            final Object instance = this.beanContext.getBean(this.method.getDeclaringClass());
+            return SmartExecutor.execute(this.method, beanContext, instance);
         }
     }
 

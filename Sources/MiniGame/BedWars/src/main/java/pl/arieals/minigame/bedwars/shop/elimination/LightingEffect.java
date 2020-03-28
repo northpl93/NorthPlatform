@@ -1,7 +1,9 @@
 package pl.arieals.minigame.bedwars.shop.elimination;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
+
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 
 public class LightingEffect implements IEliminationEffect
 {
@@ -12,7 +14,7 @@ public class LightingEffect implements IEliminationEffect
     }
 
     @Override
-    public void playerEliminated(final Player player, final Player by)
+    public void playerEliminated(final LocalArena arena, final INorthPlayer player, final INorthPlayer by)
     {
         final Location location = player.getLocation();
         location.getWorld().strikeLightningEffect(location);

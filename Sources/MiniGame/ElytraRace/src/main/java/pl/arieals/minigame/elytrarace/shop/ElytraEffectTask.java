@@ -1,16 +1,12 @@
 package pl.arieals.minigame.elytrarace.shop;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-
-
-import org.bukkit.entity.Player;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.arieals.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.arieals.minigame.elytrarace.shop.effects.IElytraEffect;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 
 public class ElytraEffectTask implements Runnable
 {
@@ -24,9 +20,9 @@ public class ElytraEffectTask implements Runnable
     @Override
     public void run()
     {
-        for (final Player player : this.arena.getPlayersManager().getPlayers())
+        for (final INorthPlayer player : this.arena.getPlayersManager().getPlayers())
         {
-            final ElytraRacePlayer playerData = getPlayerData(player, ElytraRacePlayer.class);
+            final ElytraRacePlayer playerData = player.getPlayerData(ElytraRacePlayer.class);
             if (playerData == null || !player.isGliding())
             {
                 continue;

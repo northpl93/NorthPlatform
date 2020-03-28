@@ -1,6 +1,5 @@
 package pl.north93.northplatform.api.minigame.server.gamehost.listener;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.north93.northplatform.api.bukkit.player.INorthPlayer.asCraftPlayer;
 import static pl.north93.northplatform.api.bukkit.player.INorthPlayer.wrap;
 import static pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper.getTrackerEntry;
@@ -22,20 +21,20 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
+import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.minigame.server.MiniGameServer;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.PlayersManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinWithoutArenaEvent;
 import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 import pl.north93.northplatform.api.minigame.shared.api.status.IPlayerStatusManager;
 import pl.north93.northplatform.api.minigame.shared.api.status.InGameStatus;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.players.Identity;
-import pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi;
 
 public class PlayerListener implements AutoListener
 {
@@ -124,15 +123,11 @@ public class PlayerListener implements AutoListener
         final INorthPlayer player = wrap(event.getPlayer());
 
         final GameHostManager gameHostManager = this.server.getServerManager();
-        final Optional<LocalArena> arena = gameHostManager.getArenaManager().getArenaAssociatedWith(player.getUniqueId());
-
-        if (! arena.isPresent())
+        gameHostManager.getArenaManager().getArenaAssociatedWith(player.getUniqueId()).ifPresent(arena ->
         {
-            return;
-        }
-
-        final PlayersManager playersManager = arena.get().getPlayersManager();
-        playersManager.playerDisconnected(player);
+            final PlayersManager playersManager = arena.getPlayersManager();
+            playersManager.playerDisconnected(player);
+        });
     }
 
     @EventHandler

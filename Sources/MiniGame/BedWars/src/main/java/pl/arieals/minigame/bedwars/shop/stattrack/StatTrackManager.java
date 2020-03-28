@@ -1,23 +1,20 @@
 package pl.arieals.minigame.bedwars.shop.stattrack;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-
-
 import java.util.Locale;
 
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticHolder;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsManager;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
-import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class StatTrackManager
 {
@@ -57,7 +54,7 @@ public class StatTrackManager
         }
     }
 
-    public void bumpStatistic(final Player player, final TrackedStatistic statistic, final ItemStack tool)
+    public void bumpStatistic(final INorthPlayer player, final TrackedStatistic statistic, ItemStack tool)
     {
         final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(player.getUniqueId());
         this.bumpGlobalStatistic(holder);
@@ -68,7 +65,7 @@ public class StatTrackManager
             return;
         }
 
-        final StatTrackPlayer playerData = getPlayerData(player, StatTrackPlayer.class);
+        final StatTrackPlayer playerData = player.getPlayerData(StatTrackPlayer.class);
         if (playerData == null || !playerData.isEnabled(weapon))
         {
             return;

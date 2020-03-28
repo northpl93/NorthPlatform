@@ -4,11 +4,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.ToString;
 import pl.north93.northplatform.api.global.redis.rpc.exceptions.RpcTimeoutException;
 
+@ToString
 class RpcResponseLock
 {
     private final CompletableFuture<Object> future = new CompletableFuture<>();
@@ -22,29 +21,13 @@ class RpcResponseLock
         }
         catch (final TimeoutException exception)
         {
-            throw new RpcTimeoutException(); // response is not provided after some time
+            throw new RpcTimeoutException(); // response has not been provided after some time
         }
         return result;
     }
 
-    public CompletableFuture<Object> getFuture()
-    {
-        return this.future;
-    }
-
-    public boolean isResponseProvided()
-    {
-        return this.future.isDone();
-    }
-
-    /*default*/ void provideResponse(final Object response)
+    public void provideResponse(final Object response)
     {
         this.future.complete(response);
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("future", this.future).toString();
     }
 }

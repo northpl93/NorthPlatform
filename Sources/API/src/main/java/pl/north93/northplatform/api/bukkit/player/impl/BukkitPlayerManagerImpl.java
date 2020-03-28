@@ -10,10 +10,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.player.IBukkitPlayers;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
@@ -21,11 +23,16 @@ import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
+import pl.north93.northplatform.api.global.network.players.IPlayerTransaction;
 import pl.north93.northplatform.api.global.network.players.IPlayersManager;
+import pl.north93.northplatform.api.global.network.players.Identity;
+import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.global.redis.observable.Value;
 
 public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
 {
+    @Inject
+    private BukkitApiCore apiCore;
     @Inject
     private IPlayersManager playersManager;
     @Inject
@@ -116,7 +123,22 @@ public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
         }
 
         final Value<IOnlinePlayer> playerData = this.playersManager.unsafe().getOnlineValue(player.getName());
-        return new NorthPlayerImpl(this.networkManager, player, playerData);
+        return new NorthPlayerImpl((CraftPlayer) player, playerData, this);
+    }
+
+    FixedMetadataValue createFixedMetadataValue(final Object value)
+    {
+        return new FixedMetadataValue(this.apiCore.getPluginMain(), value);
+    }
+
+    IPlayerTransaction openTransaction(final Identity identity)
+    {
+        return this.networkManager.getPlayers().transaction(identity);
+    }
+
+    Server getServerById(final UUID serverId)
+    {
+        return this.networkManager.getServers().withUuid(serverId);
     }
 
     @Override

@@ -1,15 +1,12 @@
 package pl.arieals.minigame.bedwars.event;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerArenaEvent;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerArenaEvent;
 
 /**
  * Event powiązany z graczem BedWars i areną.
@@ -41,7 +38,7 @@ public abstract class BedWarsPlayerArenaEvent extends PlayerArenaEvent
     {
         super(arena, player);
 
-        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        final BedWarsPlayer playerData = player.getPlayerData(BedWarsPlayer.class);
         if (playerData == null)
         {
             throw new IllegalArgumentException("No BedWarsPlayer found");

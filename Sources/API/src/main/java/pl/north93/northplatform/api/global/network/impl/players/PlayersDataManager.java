@@ -37,6 +37,7 @@ import pl.north93.northplatform.api.global.network.players.LoginHistoryEntry;
 import pl.north93.northplatform.api.global.network.players.NameSizeMistakeException;
 import pl.north93.northplatform.api.global.permissions.Group;
 import pl.north93.northplatform.api.global.permissions.PermissionsManager;
+import pl.north93.northplatform.api.global.redis.RedisKeys;
 import pl.north93.northplatform.api.global.redis.observable.Cache;
 import pl.north93.northplatform.api.global.redis.observable.IObservationManager;
 import pl.north93.northplatform.api.global.redis.observable.ObjectKey;
@@ -135,7 +136,15 @@ import pl.north93.northplatform.api.global.storage.StorageConnector;
         this.nick2uuid.put(name.toLowerCase(Locale.ROOT), uuid);
         this.uuid2nick.put(uuid, name);
 
-        return this.observationManager.of(player);
+        final Value<OnlinePlayerImpl> playerValue = this.observationManager.get(OnlinePlayerImpl.class, this.createPlayerKeyName(name));
+        playerValue.set(player);
+
+        return playerValue;
+    }
+
+    private String createPlayerKeyName(final String name)
+    {
+        return RedisKeys.PLAYERS + name.toLowerCase(Locale.ROOT);
     }
 
     @Override

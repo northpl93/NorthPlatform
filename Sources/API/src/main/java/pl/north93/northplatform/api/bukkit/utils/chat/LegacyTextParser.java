@@ -128,7 +128,7 @@ public final class LegacyTextParser
                 }
 
                 final String parameter = message.substring(i + 1, closingPos);
-                final int paramIndex = Integer.valueOf(parameter); // zostanie rzucony wyjątek w przypadku niepoprawnej liczby
+                final int paramIndex = Integer.parseInt(parameter); // zostanie rzucony wyjątek w przypadku niepoprawnej liczby
 
                 if (builder.length() > 0) // jeśli mamy już tekst w buforze to go zrzucamy
                 {

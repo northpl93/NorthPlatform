@@ -1,10 +1,12 @@
 package pl.arieals.minigame.bedwars.listener;
 
+import java.time.Duration;
+import java.util.ListIterator;
+
 import com.carrotsearch.hppc.ObjectIntHashMap;
 import com.carrotsearch.hppc.ObjectIntMap;
 import com.carrotsearch.hppc.cursors.ObjectIntCursor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,12 +20,17 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.event.PlayerRevivedEvent;
 import pl.arieals.minigame.bedwars.shop.ShopManager;
 import pl.arieals.minigame.bedwars.shop.UpgradeManager;
 import pl.arieals.minigame.bedwars.shop.stattrack.StatTrackItems;
 import pl.arieals.minigame.bedwars.shop.upgrade.RoadOfWarrior;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageEntry;
 import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageTracker;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -31,11 +38,6 @@ import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.global.messages.PluralForm;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
-
-import java.time.Duration;
-import java.util.ListIterator;
-
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
 
 public class PlayerItemsListener implements Listener
 {
@@ -89,7 +91,7 @@ public class PlayerItemsListener implements Listener
     @EventHandler
     public void filterDeathItems(final PlayerDeathEvent event)
     {
-        final Player player = event.getEntity();
+        final INorthPlayer player = INorthPlayer.wrap(event.getEntity());
         event.setKeepInventory(true);
 
         final ObjectIntMap<Material> trackedMaterials = new ObjectIntHashMap<>(5, 0.01f);
@@ -153,17 +155,17 @@ public class PlayerItemsListener implements Listener
     }
 
     // daje przedmioty z mapy zabojcy danego gracza
-    private void giveItemsToKiller(final ObjectIntMap<Material> items, final Player death)
+    private void giveItemsToKiller(final ObjectIntMap<Material> items, final INorthPlayer death)
     {
         final DamageEntry lastDamageByPlayer = DamageTracker.get().getContainer(death).getLastDamageByPlayer(Duration.ofSeconds(10));
         if (lastDamageByPlayer == null)
         {
             return;
         }
-        final Player lastDamager = lastDamageByPlayer.getPlayerDamager();
+        final INorthPlayer lastDamager = INorthPlayer.wrap(lastDamageByPlayer.getPlayerDamager());
         assert lastDamager != null;
 
-        final BedWarsPlayer playerData = getPlayerData(lastDamager, BedWarsPlayer.class);
+        final BedWarsPlayer playerData = lastDamager.getPlayerData(BedWarsPlayer.class);
         if (playerData == null || playerData.isEliminated())
         {
             // wyeliminowanemu graczowi nie dajemy surowcow.
@@ -182,14 +184,14 @@ public class PlayerItemsListener implements Listener
             }
 
             final String messageKey = PluralForm.transformKey("die.received_items." + type, entry.value);
-            this.messages.sendMessage(lastDamager, messageKey, entry.value);
+            lastDamager.sendMessage(this.messages, messageKey, entry.value);
         }
     }
 
     @EventHandler // dodajemy drewniany miecz gdy gra startuje
     public void giveWoodSwordWhenGameStarts(final GameStartEvent event)
     {
-        for (final Player player : event.getArena().getPlayersManager().getPlayers())
+        for (final INorthPlayer player : event.getArena().getPlayersManager().getPlayers())
         {
             this.giveWoodSword(player);
         }
@@ -198,7 +200,7 @@ public class PlayerItemsListener implements Listener
     @EventHandler // dodajemy drewniany miecz gdy gracz sie respawni
     public void giveWoodSwordWhenPlayerRespawn(final PlayerRevivedEvent event)
     {
-        final Player bukkitPlayer = event.getPlayer();
+        final INorthPlayer bukkitPlayer = event.getPlayer();
         this.giveWoodSword(bukkitPlayer);
     }
 
@@ -206,11 +208,11 @@ public class PlayerItemsListener implements Listener
      * Daje graczowi podanemu w argumencie startowy drewniany miecz.
      * @param player gracz ktoremu dac miecz.
      */
-    private void giveWoodSword(final Player player)
+    private void giveWoodSword(final INorthPlayer player)
     {
         final ItemStack woodSword = new ItemStack(Material.WOOD_SWORD);
         final ItemMeta itemMeta = woodSword.getItemMeta();
-        itemMeta.spigot().setUnbreakable(true);
+        itemMeta.setUnbreakable(true);
         woodSword.setItemMeta(itemMeta);
 
         final RoadOfWarrior upgrade = (RoadOfWarrior) this.upgradeManager.getUpgradeByName("RoadOfWarrior");

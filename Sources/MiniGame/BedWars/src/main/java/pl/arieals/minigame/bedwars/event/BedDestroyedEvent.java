@@ -3,15 +3,15 @@ package pl.arieals.minigame.bedwars.event;
 import javax.annotation.Nullable;
 
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.arieals.minigame.bedwars.arena.Team;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.ArenaEvent;
-import pl.arieals.minigame.bedwars.arena.Team;
 
 /**
  * Event wywoływany gdy łózko danego teamu zostanie zniszczone.
@@ -19,12 +19,12 @@ import pl.arieals.minigame.bedwars.arena.Team;
 public class BedDestroyedEvent extends ArenaEvent
 {
     private static final HandlerList handlers = new HandlerList();
-    private final Player  destroyer;
-    private final Block   bedBlock;
-    private final Team    team;
+    private final INorthPlayer destroyer;
+    private final Block bedBlock;
+    private final Team team;
     private final boolean silent;
 
-    public BedDestroyedEvent(final LocalArena arena, final Player destroyer, final Block bedBlock, final Team team, final boolean silent)
+    public BedDestroyedEvent(final LocalArena arena, final INorthPlayer destroyer, final Block bedBlock, final Team team, final boolean silent)
     {
         super(arena);
         this.destroyer = destroyer;
@@ -39,7 +39,7 @@ public class BedDestroyedEvent extends ArenaEvent
      *
      * @return gracz który zniszczył łóżko.
      */
-    public @Nullable Player getDestroyer()
+    public @Nullable INorthPlayer getDestroyer()
     {
         return this.destroyer;
     }

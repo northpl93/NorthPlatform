@@ -1,8 +1,7 @@
 package pl.arieals.minigame.bedwars.listener;
 
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import java.util.Comparator;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,6 +10,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import lombok.extern.slf4j.Slf4j;
 import pl.arieals.minigame.bedwars.arena.BedWarsArena;
 import pl.arieals.minigame.bedwars.arena.BedWarsPlayer;
 import pl.arieals.minigame.bedwars.arena.Team;
@@ -32,11 +36,6 @@ import pl.north93.northplatform.api.minigame.server.gamehost.event.player.Player
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
 import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 
-import java.util.Comparator;
-
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.setPlayerData;
-
 @Slf4j
 public class PlayerTeamListener implements Listener
 {
@@ -55,8 +54,8 @@ public class PlayerTeamListener implements Listener
         final INorthPlayer player = event.getPlayer();
 
         final BedWarsArena arenaData = event.getArena().getArenaData();
-        final BedWarsPlayer playerData = new BedWarsPlayer(player, this.eliminationEffect.getEffectOf(player));
-        setPlayerData(player, playerData);
+        final BedWarsPlayer bedWarsPlayer = new BedWarsPlayer(player, this.eliminationEffect.getEffectOf(player));
+        player.setPlayerData(bedWarsPlayer);
 
         final Location lobbyLocation = arenaData.getConfig().getLobby().toBukkit(event.getArena().getWorld().getCurrentWorld());
         player.teleport(lobbyLocation);
@@ -78,7 +77,7 @@ public class PlayerTeamListener implements Listener
                                                .filter(team -> team.getPlayers().size() < this.config.getTeamSize())
                                                .min(Comparator.comparing(team -> team.getPlayers().size()))
                                                .orElse(null);
-            final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+            final BedWarsPlayer playerData = player.getPlayerData(BedWarsPlayer.class);
 
             if (smallestTeam == null)
             {
@@ -123,7 +122,7 @@ public class PlayerTeamListener implements Listener
     @EventHandler
     public void playerLeave(final PlayerQuitArenaEvent event)
     {
-        final BedWarsPlayer playerData = getPlayerData(event.getPlayer(), BedWarsPlayer.class);
+        final BedWarsPlayer playerData = event.getPlayer().getPlayerData(BedWarsPlayer.class);
         if (playerData == null)
         {
             return;
@@ -147,7 +146,7 @@ public class PlayerTeamListener implements Listener
             return;
         }
 
-        final BedWarsPlayer playerData = getPlayerData(player, BedWarsPlayer.class);
+        final BedWarsPlayer playerData = player.getPlayerData(BedWarsPlayer.class);
         if (playerData == null || playerData.getTeam() == null)
         {
             event.setCancelled(true);

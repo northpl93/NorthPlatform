@@ -1,20 +1,15 @@
 package pl.arieals.minigame.bedwars.shop.stattrack;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerData;
-
-
-import java.util.Arrays;
-
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.LegacyMessage;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 
@@ -28,9 +23,13 @@ public class StatTrackItems
     {
     }
 
-    public void updateWeapons(final Player player, final TrackedWeapon type)
+    public void updateWeapons(final INorthPlayer player, final TrackedWeapon type)
     {
-        final StatTrackPlayer playerData = getPlayerData(player, StatTrackPlayer.class);
+        final StatTrackPlayer playerData = player.getPlayerData(StatTrackPlayer.class);
+        if (playerData == null)
+        {
+            return;
+        }
 
         for (final ItemStack itemStack : player.getInventory().getContents())
         {
@@ -43,7 +42,7 @@ public class StatTrackItems
         }
     }
 
-    public void updateItem(final Player player, final ItemStack itemStack)
+    public void updateItem(final INorthPlayer player, final ItemStack itemStack)
     {
         final TrackedWeapon trackedWeapon = TrackedWeapon.getByMaterial(itemStack.getType());
         if (trackedWeapon == null)
@@ -51,7 +50,7 @@ public class StatTrackItems
             return;
         }
 
-        final StatTrackPlayer playerData = getPlayerData(player, StatTrackPlayer.class);
+        final StatTrackPlayer playerData = player.getPlayerData(StatTrackPlayer.class);
         if (playerData == null)
         {
             return;
@@ -70,10 +69,10 @@ public class StatTrackItems
         final long kills = playerData.getCachedStatistic(TrackedStatistic.KILLS, type);
 
         final String playerLocale = playerData.getBukkitPlayer().getLocale();
-        final String loreContent = this.messages.getLegacyMessage(playerLocale, "stattrack_lore", kills);
+        final LegacyMessage loreContent = this.messages.getLegacy(playerLocale, "stattrack_lore", kills);
 
         final ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setLore(Arrays.asList(StringUtils.split(loreContent, "\n")));
+        itemMeta.setLore(loreContent.asList());
         itemStack.setItemMeta(itemMeta);
     }
 

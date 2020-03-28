@@ -117,7 +117,7 @@ public class PartyManagerImpl implements IPartyManager
             return partyData;
         });
 
-        log.debug("Party data with ID {} has been updated (access)");
+        log.debug("Party data with ID {} has been updated (access)", partyId);
         return wrapper.get();
     }
 

@@ -12,7 +12,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.arieals.minigame.bedwars.event.ItemBuyEvent;
 import pl.arieals.minigame.bedwars.event.ItemPreBuyEvent;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.LegacyMessage;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 
@@ -31,12 +33,12 @@ public class ItemBuyListener implements Listener
     @EventHandler(priority = EventPriority.MONITOR)
     public void announceItemBuy(final ItemBuyEvent event)
     {
-        final Player player = event.getPlayer();
+        final INorthPlayer player = event.getPlayer();
 
         final String messageKey = "item." + event.getShopEntry().getInternalName() + ".name";
-        final String itemName = this.messagesShop.getLegacyMessage(player.getLocale(), messageKey, "&e");
+        final LegacyMessage itemName = this.messagesShop.getLegacy(player.getLocale(), messageKey, "&e");
 
-        this.messagesShop.sendMessage(player, "action.buy_item", itemName);
+        player.sendMessage(this.messagesShop, "action.buy_item", itemName);
     }
 
     @EventHandler

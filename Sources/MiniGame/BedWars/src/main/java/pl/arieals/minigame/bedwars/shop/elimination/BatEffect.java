@@ -1,16 +1,13 @@
 package pl.arieals.minigame.bedwars.shop.elimination;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
-
-
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.SimpleCountdown;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 
 public class BatEffect implements IEliminationEffect
 {
@@ -23,15 +20,9 @@ public class BatEffect implements IEliminationEffect
     }
 
     @Override
-    public void playerEliminated(final Player player, final Player by)
+    public void playerEliminated(final LocalArena arena, final INorthPlayer player, final INorthPlayer by)
     {
         final Location location = player.getLocation();
-
-        final LocalArena arena = getArena(player);
-        if (arena == null)
-        {
-            return;
-        }
 
         final Bat bat = (Bat) location.getWorld().spawnEntity(location, EntityType.BAT);
         bat.setInvulnerable(true);

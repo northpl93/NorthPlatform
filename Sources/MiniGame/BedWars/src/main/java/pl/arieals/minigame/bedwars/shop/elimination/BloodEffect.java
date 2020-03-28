@@ -1,20 +1,17 @@
 package pl.arieals.minigame.bedwars.shop.elimination;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
-
-
 import java.util.Collection;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
 import org.diorite.commons.math.DioriteRandomUtils;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 
 public class BloodEffect implements IEliminationEffect
@@ -28,15 +25,9 @@ public class BloodEffect implements IEliminationEffect
     }
 
     @Override
-    public void playerEliminated(final Player player, final Player by)
+    public void playerEliminated(final LocalArena arena, final INorthPlayer player, final INorthPlayer by)
     {
         final Location eyeLocation = player.getEyeLocation();
-
-        final LocalArena arena = getArena(player);
-        if (arena == null)
-        {
-            return;
-        }
 
         final MaterialData data = new ItemStack(Material.REDSTONE_BLOCK).getData();
         eyeLocation.getWorld().spawnParticle(Particle.BLOCK_CRACK, eyeLocation, 100, data);

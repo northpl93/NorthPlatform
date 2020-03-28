@@ -1,11 +1,15 @@
 package pl.north93.northplatform.api.global.redis.rpc.impl;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.carrotsearch.hppc.IntObjectHashMap;
 import com.carrotsearch.hppc.IntObjectMap;
-import com.lambdaworks.redis.api.sync.RedisCommands;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.redis.rpc.IRpcManager;
@@ -18,22 +22,19 @@ import pl.north93.northplatform.api.global.redis.subscriber.RedisSubscriber;
 import pl.north93.northplatform.api.global.storage.StorageConnector;
 import pl.north93.serializer.platform.NorthSerializer;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 @Slf4j
 public class RpcManagerImpl extends Component implements IRpcManager
 {
     @Inject
-    private       StorageConnector                    storageConnector;
+    private StorageConnector storageConnector;
     @Inject
-    private       RedisSubscriber                     redisSubscriber;
+    private RedisSubscriber redisSubscriber;
     @Inject
-    private       NorthSerializer<byte[], byte[]>     msgPack;
-    private final RpcProxyCache                       rpcProxyCache      = new RpcProxyCache(this);
-    private final IntObjectMap<RpcResponseHandler>    responseHandlerMap = new IntObjectHashMap<>();
-    private final IntObjectMap<RpcResponseLock>       locks              = new IntObjectHashMap<>();
-    private final Map<Class<?>, RpcObjectDescription> descriptionCache   = new ConcurrentHashMap<>();
+    private NorthSerializer<byte[], byte[]> msgPack;
+    private final RpcProxyCache rpcProxyCache = new RpcProxyCache(this);
+    private final IntObjectMap<RpcResponseHandler> responseHandlerMap = new IntObjectHashMap<>();
+    private final IntObjectMap<RpcResponseLock> locks = new IntObjectHashMap<>();
+    private final Map<Class<?>, RpcObjectDescription> descriptionCache = new ConcurrentHashMap<>();
 
     @Override
     protected void enableComponent()
@@ -81,17 +82,10 @@ public class RpcManagerImpl extends Component implements IRpcManager
     @Override
     public RpcObjectDescription getObjectDescription(final Class<?> classInterface)
     {
-        final RpcObjectDescription rpcObjectDescription = this.descriptionCache.get(classInterface);
-        if (rpcObjectDescription == null)
-        {
-            final RpcObjectDescription newObjDesc = new RpcObjectDescription(classInterface);
-            this.descriptionCache.put(classInterface, newObjDesc);
-            return newObjDesc;
-        }
-        return rpcObjectDescription;
+        return this.descriptionCache.computeIfAbsent(classInterface, RpcObjectDescription::new);
     }
 
-    /*default*/ RpcResponseLock createFor(final int requestId)
+    public RpcResponseLock createLockForRequest(final int requestId)
     {
         final RpcResponseLock lock = new RpcResponseLock();
         synchronized (this.locks)
@@ -101,7 +95,7 @@ public class RpcManagerImpl extends Component implements IRpcManager
         return lock;
     }
 
-    /*default*/ void removeLock(final int requestId)
+    public void removeLock(final int requestId)
     {
         synchronized (this.locks)
         {
@@ -109,17 +103,13 @@ public class RpcManagerImpl extends Component implements IRpcManager
         }
     }
 
-    /*default*/ RedisCommands<String, byte[]> getJedisPool()
+    public void publishInvokeMessage(final String invokeChannel, final RpcInvokeMessage rpcInvokeMessage)
     {
-        return this.storageConnector.getRedis();
+        final byte[] serializedMessage = this.msgPack.serialize(RpcInvokeMessage.class, rpcInvokeMessage);
+        this.storageConnector.getRedis().publish(invokeChannel, serializedMessage);
     }
 
-    /*default*/ NorthSerializer<byte[], byte[]> getMsgPack()
-    {
-        return this.msgPack;
-    };
-
-    /*default*/ void sendResponse(final String target, final Integer requestId, final Object response)
+    public void sendResponse(final String target, final Integer requestId, final Object response)
     {
         final RpcResponseMessage responseMessage = new RpcResponseMessage(requestId, response);
         this.storageConnector.getRedis().publish("rpc:" + target + ":response", this.msgPack.serialize(RpcResponseMessage.class, responseMessage));
