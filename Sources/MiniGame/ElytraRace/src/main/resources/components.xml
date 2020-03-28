@@ -3,7 +3,7 @@
     <components>
         <component>
             <name>MiniGame.ElytraRace</name>
-            <mainClass>pl.arieals.minigame.elytrarace.ElytraRaceComponent</mainClass>
+            <mainClass>pl.north93.northplatform.minigame.elytrarace.ElytraRaceComponent</mainClass>
             <description>Elytra Race plugin.</description>
             <dependencies>
                 <dependency>MiniGameApi.Server</dependency>

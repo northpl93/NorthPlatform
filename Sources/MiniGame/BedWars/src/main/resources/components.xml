@@ -3,7 +3,7 @@
     <components>
         <component>
             <name>MiniGame.BedWars</name>
-            <mainClass>pl.arieals.minigame.bedwars.BedWarsComponent</mainClass>
+            <mainClass>pl.north93.northplatform.minigame.bedwars.BedWarsComponent</mainClass>
             <description>Bed Wars plugin.</description>
             <dependencies>
                 <dependency>MiniGameApi.Server</dependency>

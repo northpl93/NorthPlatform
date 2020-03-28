@@ -3,7 +3,7 @@
     <components>
         <component>
             <name>MiniGame.GoldHunter</name>
-            <mainClass>pl.arieals.minigame.goldhunter.GoldHunterComponent</mainClass>
+            <mainClass>pl.north93.northplatform.minigame.goldhunter.GoldHunterComponent</mainClass>
             <description>Gold Hunter plugin.</description>
             <dependencies>
                 <dependency>MiniGameApi.Server</dependency>
