@@ -89,7 +89,7 @@ public class ComponentBundle implements IComponentBundle
             Injector.inject(this.component, this.component.getClass()); // wstrzykujemy klase glowna
             this.getComponent().callStartMethod(true); // wywolujemy enableComponent
         }
-        catch (final Exception e)
+        catch (final Exception | NoClassDefFoundError e)
         {
             this.status = ComponentStatus.ERROR;
             log.error("An exception has been thrown while enabling component {}", this.getName(), e);
