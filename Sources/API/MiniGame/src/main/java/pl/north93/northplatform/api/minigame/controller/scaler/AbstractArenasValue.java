@@ -31,12 +31,8 @@ public abstract class AbstractArenasValue implements IScalingValue
 
     protected Set<UUID> getServerIdInGroup(final LocalManagedServersGroup managedServersGroup)
     {
-        return this.networkManager.getServers()
-                                  .all()
-                                  .stream()
-                                  .filter(server -> server.getServersGroup().getName().equals(managedServersGroup.getName()))
-                                  .map(Server::getUuid)
-                                  .collect(Collectors.toSet());
+        final Set<Server> servers = this.networkManager.getServers().inGroup(managedServersGroup.getName());
+        return servers.stream().map(Server::getUuid).collect(Collectors.toSet());
     }
 
     // sprawdza czy dana arena jest wolna, czyli zdatna do wejscia dla graczy.

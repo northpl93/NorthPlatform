@@ -6,13 +6,11 @@ I have started developing it in mid-2016 for my Minecraft networks (firstly skyb
 
 ## Developers
 * Michał Kasprzyk (NorthPL93)
-* Rafał Szewczyk (xxRafiiiisxx)
-* Cestis
-
-_Look into pom.xml files for more details._
+* Rafał Szewczyk (xxRafiiiisxx) - _API.GuiManager, parts of API.MiniGame, GoldHunter_
+* Cestis - _Some old parts of skyblock code._
 
 ## Detailed description of modules
-### API (_/API/src_)
+### [API (_/Sources/API/src_)](/Sources/API/src/)
 It's a heart of whole system.
 It provides API for custom extensions (called components) which allows sharing code between platforms (bukkit/bungee/standalone).
 There are also core APIs that allows management of Minecraft network (players, proxies, daemons, servers).
@@ -45,22 +43,45 @@ List of features:
   * Scoreboard API
   * Simple API for packets manipulation
   
-### Network Controller (_/Network Controller/src_)
+### [NetworkController (_/Sources/NetworkController/src_)](/Sources/NetworkController/src/)
+It's one of the most important components.
+Each network must have one instance of standalone API with this component.
+Main features:
+* Broadcasts configuration files in Redis. (NetworkController.ConfigServer)
+* Automatically manages amount of running servers in servers groups. (NetworkController.ServersManager)
 
-### Server Daemon (_/Server Deamon/src_)
+### [ServerDaemon (_/Sources/ServerDeamon/src_)](/Sources/ServerDeamon/src/)
+This component starts and manages Spigot instances.
 
-### API.BaseFeatures (_/API/BaseFeatures/src_)
+### [API.BaseFeatures (_/Sources/API/BaseFeatures/src_)](/Sources/API/BaseFeatures/src/)
 
-### API.Chat (_/API/Chat/src_)
+### [API.Chat (_/Sources/API/Chat/src_)](/Sources/API/Chat/src/)
 
-### API.Economy (_/API/Economy/src_)
+### [API.Economy (_/Sources/API/Economy/src_)](/Sources/API/Economy/src/)
 
-### API.MiniGame (_/API/MiniGame/src_)
+### [API.MiniGame (_/Sources/API/MiniGame/src_)](/Sources/API/MiniGame/src/)
+* Manages lifecycle of game arenas.
+* Manages player's parties.
+* Provides useful utils for minigame development.
+* Provides integration with `NetworkController`
+  (allows to automatically manage amount of servers depending on the amount of free arenas)
 
-### GlobalShops (_/GlobalShops/src_)
+### [GlobalShops (_/Sources/GlobalShops/src_)](/Sources/GlobalShops/src/)
+This component manages shops with persistent (between matches) items.
 
-### Lobby (_/Lobby/src_)
+### [Lobby (_/Sources/Lobby/src_)](/Sources/Lobby/src/)
 
-### NoPremiumAuth (_/NoPremiumAuth/src_)
+### [NoPremiumAuth (_/Sources/NoPremiumAuth/src_)](/Sources/NoPremiumAuth/src/)
+Features required to handle both players with bought copy of game and pirates.
 
-### world-properties (_/WorldProperties/src_)
+### [WorldProperties (_/Sources/WorldProperties/src_)](/Sources/WorldProperties/src/)
+
+## List of minigames
+### [BedWars](/Sources/MiniGame/BedWars/src)
+_Developed by Michał Kasprzyk_
+
+### [ElytraRace](/Sources/MiniGame/ElytraRace/src)
+_Developed by Michał Kasprzyk_
+
+### [GoldHunter](/Sources/MiniGame/GoldHunter/src)
+_Developed by Rafał Szewczyk_
