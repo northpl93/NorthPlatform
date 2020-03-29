@@ -18,12 +18,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
-import pl.north93.northplatform.minigame.bedwars.arena.Team;
-import pl.north93.northplatform.minigame.bedwars.cfg.BwShopConfig;
-import pl.north93.northplatform.minigame.bedwars.event.UpgradeInstallEvent;
-import pl.north93.northplatform.minigame.bedwars.shop.gui.UpgradesGui;
-import pl.north93.northplatform.minigame.bedwars.shop.upgrade.IUpgrade;
 import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.gui.Gui;
 import pl.north93.northplatform.api.bukkit.gui.impl.GuiTracker;
@@ -39,6 +33,12 @@ import pl.north93.northplatform.api.global.messages.PluralForm;
 import pl.north93.northplatform.api.global.uri.UriHandler;
 import pl.north93.northplatform.api.global.uri.UriInvocationContext;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
+import pl.north93.northplatform.minigame.bedwars.arena.Team;
+import pl.north93.northplatform.minigame.bedwars.cfg.BwShopConfig;
+import pl.north93.northplatform.minigame.bedwars.event.UpgradeInstallEvent;
+import pl.north93.northplatform.minigame.bedwars.shop.gui.UpgradesGui;
+import pl.north93.northplatform.minigame.bedwars.shop.upgrade.IUpgrade;
 
 @Slf4j
 public class UpgradeManager

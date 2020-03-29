@@ -13,11 +13,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
-import pl.north93.northplatform.minigame.bedwars.arena.PlayerReconnectTimedOut;
-import pl.north93.northplatform.minigame.bedwars.arena.Team;
-import pl.north93.northplatform.minigame.bedwars.event.TeamEliminatedEvent;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.SimpleCountdown;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -36,6 +31,11 @@ import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticHol
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsManager;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
+import pl.north93.northplatform.minigame.bedwars.arena.PlayerReconnectTimedOut;
+import pl.north93.northplatform.minigame.bedwars.arena.Team;
+import pl.north93.northplatform.minigame.bedwars.event.TeamEliminatedEvent;
 
 @Slf4j
 public class GameEndListener implements Listener
@@ -104,7 +104,6 @@ public class GameEndListener implements Listener
 
         log.info("Player {} eliminated because he disconnected without bed on arena {}", playerLogData);
         playerData.eliminate();
-        team.checkEliminated();
     }
 
     @EventHandler
@@ -165,7 +164,7 @@ public class GameEndListener implements Listener
     private String playersList(final Team team)
     {
         final StringBuilder nicks = new StringBuilder();
-        final Iterator<Player> playersIterator = team.getBukkitPlayers().iterator();
+        final Iterator<INorthPlayer> playersIterator = team.getBukkitPlayers().iterator();
         while (playersIterator.hasNext())
         {
             nicks.append("&7");

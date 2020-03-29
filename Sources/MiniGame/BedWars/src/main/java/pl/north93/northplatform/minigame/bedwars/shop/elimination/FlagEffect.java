@@ -9,10 +9,10 @@ import org.bukkit.block.Block;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
-import pl.north93.northplatform.minigame.bedwars.utils.TeamArmorUtils;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
+import pl.north93.northplatform.minigame.bedwars.utils.TeamArmorUtils;
 
 public class FlagEffect implements IEliminationEffect
 {

@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public abstract class FinishInfo
 {
-    private final UUID   uuid;
+    private final UUID uuid;
     private final String displayName;
 
     public FinishInfo(final UUID uuid, final String displayName)

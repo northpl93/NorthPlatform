@@ -3,10 +3,10 @@ package pl.north93.northplatform.minigame.elytrarace.shop;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRacePlayer;
-import pl.north93.northplatform.minigame.elytrarace.shop.effects.IElytraEffect;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRacePlayer;
+import pl.north93.northplatform.minigame.elytrarace.shop.effects.IElytraEffect;
 
 public class ElytraEffectTask implements Runnable
 {

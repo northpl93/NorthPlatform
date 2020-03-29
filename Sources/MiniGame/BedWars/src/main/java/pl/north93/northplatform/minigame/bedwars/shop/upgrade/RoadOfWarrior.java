@@ -9,12 +9,12 @@ import org.bukkit.inventory.ItemStack;
 
 import org.diorite.commons.math.DioriteMathUtils;
 
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.minigame.bedwars.arena.Team;
 import pl.north93.northplatform.minigame.bedwars.cfg.BwConfig;
 import pl.north93.northplatform.minigame.bedwars.event.ItemBuyEvent;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
-import pl.north93.northplatform.api.global.messages.MessagesBox;
 
 public class RoadOfWarrior implements IUpgrade, Listener
 {
@@ -47,7 +47,7 @@ public class RoadOfWarrior implements IUpgrade, Listener
     public String getLoreDescription(final MessagesBox messagesBox, final Team team, final Player player)
     {
         final String sharpnessLevel = DioriteMathUtils.toRoman(Math.min(team.getUpgrades().getUpgradeLevel(this) + 1, this.maxLevel()));
-        return messagesBox.getLegacyMessage(player.getLocale(), "upgrade_gui.RoadOfWarrior.lore", sharpnessLevel);
+        return messagesBox.getString(player.getLocale(), "upgrade_gui.RoadOfWarrior.lore", sharpnessLevel);
     }
 
     @EventHandler(ignoreCancelled = true)

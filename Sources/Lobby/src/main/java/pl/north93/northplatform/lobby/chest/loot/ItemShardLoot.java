@@ -95,7 +95,7 @@ public class ItemShardLoot implements ILoot
         final String locale = player.getLocale();
         final String shardsKey = PluralForm.transformKey("shards", shards);
 
-        return TranslatableString.constant(this.messages.getMessage(locale, shardsKey, shards));
+        return TranslatableString.constant(this.messages.getComponent(locale, shardsKey, shards));
     }
 
     /**

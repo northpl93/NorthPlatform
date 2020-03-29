@@ -9,8 +9,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.minigame.bedwars.cfg.BwConfig;
 import pl.north93.northplatform.api.bukkit.scoreboard.ContentBuilder;
 import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardLayout;
@@ -18,6 +16,8 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.global.messages.TranslatableString;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.minigame.bedwars.cfg.BwConfig;
 
 public class LobbyScoreboard implements IScoreboardLayout
 {

@@ -21,13 +21,13 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.minigame.elytrarace.cfg.Score;
 import pl.north93.northplatform.api.bukkit.entityhider.IEntityHider;
 import pl.north93.northplatform.api.bukkit.utils.nms.FastBlockOp;
 import pl.north93.northplatform.api.bukkit.utils.nms.NorthFallingBlock;
 import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.minigame.elytrarace.cfg.Score;
 
 public class ScoreController
 {

@@ -14,11 +14,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.utils.ISyncCallback;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.deathmatch.FightStartCountdown;
 import pl.north93.northplatform.api.minigame.server.gamehost.deathmatch.IFightManager;
-import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.MapSwitchedEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.MapSwitchedEvent.MapSwitchReason;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.deathmatch.DeathMatchLoadedEvent;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.deathmatch.DeathMatchPrepareEvent;
 import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
@@ -26,20 +29,17 @@ import pl.north93.northplatform.api.minigame.shared.api.MapTemplate;
 import pl.north93.northplatform.api.minigame.shared.api.arena.DeathMatchState;
 import pl.north93.northplatform.api.minigame.shared.api.cfg.DeathMatchConfig;
 import pl.north93.northplatform.api.minigame.shared.api.cfg.GameMapConfig;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
-import pl.north93.northplatform.api.bukkit.world.IWorldLoadCallback;
-import pl.north93.northplatform.api.bukkit.world.IWorldManager;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.minigame.shared.api.utils.InvalidGamePhaseException;
 
 @Slf4j
 public class DeathMatch
 {
-    private final GameHostManager     manager;
-    private final LocalArena          arena;
-    private       DeathMatchState     state; // stan deathmatchu
-    private       FightStartCountdown fightStart; // task startujacy walke
     @Inject
-    private       BukkitApiCore       apiCore;
+    private BukkitApiCore apiCore;
+    private final GameHostManager manager;
+    private final LocalArena arena;
+    private DeathMatchState state; // stan deathmatchu
+    private FightStartCountdown fightStart; // task startujacy walke
 
     public DeathMatch(final GameHostManager manager, final LocalArena arena)
     {
@@ -55,7 +55,7 @@ public class DeathMatch
 
     public String getDeathMathWorldName()
     {
-        return this.arena.getWorld().getName() + "_deathmatch";
+        return this.arena.getWorld().getDefaultWorldName() + "_deathmatch";
     }
 
     public DeathMatchConfig getConfig()
@@ -111,7 +111,7 @@ public class DeathMatch
     {
         checkState(this.getConfig().getEnabled(), "Death match is disabled in this minigame!");
         checkState(this.state == DeathMatchState.NOT_STARTED, "Death match already started!");
-        checkState(this.arena.getGamePhase() == GamePhase.STARTED, "Arena must be in STARTED gamephase");
+        InvalidGamePhaseException.checkGamePhase(this.arena.getGamePhase(), GamePhase.STARTED);
 
         final DeathMatchPrepareEvent event = this.apiCore.callEvent(new DeathMatchPrepareEvent(this.arena));
         if (event.isCancelled())
@@ -123,35 +123,19 @@ public class DeathMatch
         final File templateFile = new File(this.manager.getMapTemplateManager().getTemplatesDirectory(), this.getConfig().getTemplateName());
         final MapTemplate template = this.loadTemplate(templateFile);
 
+        log.info("Switching arena {} to death match mode!", this.arena.getId());
+
         final ArenaWorld arenaWorld = this.arena.getWorld();
-        final IWorldManager worldManager = this.manager.getWorldManager();
+        final World oldWorld = arenaWorld.getCurrentWorld();
 
-        log.info("Switching arena " + this.arena.getId() + " to death match mode!");
-
-        final File templateDir = template.getMapDirectory();
-        worldManager.copyWorld(this.getDeathMathWorldName(), templateDir);
-        final IWorldLoadCallback loadCallback = worldManager.loadWorld(this.getDeathMathWorldName(), true, true);
-
-        loadCallback.onComplete(world ->
+        final ISyncCallback setMapCallback = arenaWorld.setActiveMap(template, this.getDeathMathWorldName(), MapSwitchReason.DEATH_MATCH);
+        setMapCallback.onComplete(() ->
         {
-            if (this.arena.getGamePhase() != GamePhase.STARTED || this.state != DeathMatchState.LOADING)
-            {
-                log.info("Death match arena loaded, but arena is in gamephase " + this.arena.getGamePhase() + "! Unloading that world...");
-                worldManager.unloadAndDeleteWorld(this.getDeathMathWorldName());
-                return;
-            }
-
-            final World oldWorld = arenaWorld.getCurrentWorld();
-
             log.info("Death match arena loaded successfully");
             this.state = DeathMatchState.STARTED;
 
-            arenaWorld.switchMap(template, world);
-            this.apiCore.callEvent(new MapSwitchedEvent(this.arena, MapSwitchedEvent.MapSwitchReason.DEATH_MATCH));
-            this.apiCore.callEvent(new DeathMatchLoadedEvent(this.arena, oldWorld, world));
-
-            // usuwamy poprzedni-normalny swiat areny
-            worldManager.unloadAndDeleteWorld(arenaWorld.getName());
+            final World newWorld = this.arena.getWorld().getCurrentWorld();
+            this.apiCore.callEvent(new DeathMatchLoadedEvent(this.arena, oldWorld, newWorld));
 
             this.fightStart = new FightStartCountdown(this.arena);
             // task zostanie automatycznie anulowany/usuniety gdy arena sie skonczy

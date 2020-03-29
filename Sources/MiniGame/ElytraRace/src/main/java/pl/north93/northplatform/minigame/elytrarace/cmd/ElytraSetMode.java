@@ -14,12 +14,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.diorite.commons.reflections.FieldAccessor;
 
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.api.minigame.shared.api.GameIdentity;
-import pl.north93.northplatform.minigame.elytrarace.ElytraRaceMode;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.shared.api.GameIdentity;
+import pl.north93.northplatform.minigame.elytrarace.ElytraRaceMode;
 
 public class ElytraSetMode extends NorthCommand
 {

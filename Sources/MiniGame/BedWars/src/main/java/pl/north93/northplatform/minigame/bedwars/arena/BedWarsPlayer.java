@@ -8,20 +8,20 @@ import org.bukkit.Bukkit;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
 import pl.north93.northplatform.minigame.bedwars.event.PlayerEliminatedEvent;
 import pl.north93.northplatform.minigame.bedwars.shop.elimination.IEliminationEffect;
 import pl.north93.northplatform.minigame.bedwars.utils.TeamArmorUtils;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
 
 public class BedWarsPlayer
 {
     private final INorthPlayer bukkitPlayer;
     private final IEliminationEffect eliminationEffect;
-    private Team    team;
+    private Team team;
     private boolean eliminated;
-    private int     kills;
-    private int     lives; // ilosc dodatkowych zyc
+    private int kills;
+    private int lives; // amount of additional lives
 
     public BedWarsPlayer(final INorthPlayer bukkitPlayer, final IEliminationEffect eliminationEffect)
     {

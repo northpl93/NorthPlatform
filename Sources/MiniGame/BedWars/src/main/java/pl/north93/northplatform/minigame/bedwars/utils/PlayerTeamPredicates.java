@@ -2,9 +2,9 @@ package pl.north93.northplatform.minigame.bedwars.utils;
 
 import java.util.function.Predicate;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
 import pl.north93.northplatform.minigame.bedwars.arena.Team;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
 public final class PlayerTeamPredicates
 {

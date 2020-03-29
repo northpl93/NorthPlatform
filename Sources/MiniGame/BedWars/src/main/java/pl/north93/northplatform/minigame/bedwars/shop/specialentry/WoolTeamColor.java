@@ -7,10 +7,10 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Wool;
 
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
-import pl.north93.northplatform.minigame.bedwars.utils.TeamArmorUtils;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.itemstack.ItemTransaction;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
+import pl.north93.northplatform.minigame.bedwars.utils.TeamArmorUtils;
 
 public class WoolTeamColor implements IShopSpecialEntry
 {

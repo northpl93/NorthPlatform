@@ -1,11 +1,12 @@
 package pl.north93.northplatform.minigame.bedwars.npc;
 
-import lombok.ToString;
+import java.util.Map;
+
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
-import pl.north93.northplatform.globalshops.server.domain.Item;
 
-import java.util.Map;
+import lombok.ToString;
+import pl.north93.northplatform.globalshops.server.domain.Item;
 
 @ToString
 public class NpcItem

@@ -29,9 +29,9 @@ import pl.north93.northplatform.api.global.network.players.Identity;
 /*default*/ class ReconnectHandler
 {
     @Inject
-    private       IReconnectManager    reconnectManager;
-    private final GameHostManager      gameHostManager;
-    private final LocalArena           arena;
+    private IReconnectManager reconnectManager;
+    private final GameHostManager gameHostManager;
+    private final LocalArena arena;
     private final Set<ReconnectTicket> tickets;
 
     public ReconnectHandler(final GameHostManager gameHostManager, final LocalArena arena)

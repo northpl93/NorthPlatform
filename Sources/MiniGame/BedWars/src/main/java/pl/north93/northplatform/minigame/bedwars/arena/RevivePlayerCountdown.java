@@ -2,7 +2,6 @@ package pl.north93.northplatform.minigame.bedwars.arena;
 
 import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.setPlayerStatus;
-import static pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils.fromLegacyText;
 
 
 import com.destroystokyo.paper.Title;
@@ -14,20 +13,20 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
 import net.md_5.bungee.api.chat.BaseComponent;
-import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
-import pl.north93.northplatform.minigame.bedwars.event.PlayerRevivedEvent;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.AbstractCountdown;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
+import pl.north93.northplatform.minigame.bedwars.event.PlayerRevivedEvent;
 
 @Slf4j
 public class RevivePlayerCountdown extends AbstractCountdown
 {
     @Inject @Messages("BedWars")
     private MessagesBox messages;
-    private final INorthPlayer  player;
+    private final INorthPlayer player;
     private final BedWarsPlayer bedWarsPlayer;
 
     public RevivePlayerCountdown(final INorthPlayer player, final BedWarsPlayer bedWarsPlayer)
@@ -42,8 +41,8 @@ public class RevivePlayerCountdown extends AbstractCountdown
     {
         final String locale = this.player.getLocale();
 
-        final BaseComponent title = fromLegacyText(this.messages.getMessage(locale, "die.respawn.title"));
-        final BaseComponent subtitle = this.messages.getMessage(locale, "die.respawn.subtitle", time);
+        final BaseComponent title = this.messages.getComponent(locale, "die.respawn.title");
+        final BaseComponent subtitle = this.messages.getComponent(locale, "die.respawn.subtitle", time);
 
         this.player.sendTitle(new Title(title, subtitle, 0, 20, 0));
     }

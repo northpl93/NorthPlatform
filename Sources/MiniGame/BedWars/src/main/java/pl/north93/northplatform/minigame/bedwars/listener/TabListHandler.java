@@ -18,14 +18,14 @@ import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
-import pl.north93.northplatform.minigame.bedwars.arena.Team;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.protocol.wrappers.WrapperPlayOutPlayerInfo;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.PlayersManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
+import pl.north93.northplatform.minigame.bedwars.arena.Team;
 
 @Slf4j
 public class TabListHandler implements Listener

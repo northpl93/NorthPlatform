@@ -6,19 +6,19 @@ import org.bukkit.event.HandlerList;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.minigame.bedwars.arena.Team;
 import pl.north93.northplatform.minigame.bedwars.shop.upgrade.IUpgrade;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
 public class UpgradeInstallEvent extends BedWarsPlayerArenaEvent implements Cancellable
 {
     private static final HandlerList handlers = new HandlerList();
-    private final Team     team;
+    private final Team team;
     private final IUpgrade upgrade;
-    private final int      level;
-    private final boolean  isInstalling;
-    private       boolean  cancelled;
+    private final int level;
+    private final boolean isInstalling;
+    private boolean cancelled;
 
     public UpgradeInstallEvent(final LocalArena arena, final Team team, final INorthPlayer issuer, final IUpgrade upgrade, final int level, final boolean isInstalling)
     {

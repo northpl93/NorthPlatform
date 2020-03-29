@@ -8,8 +8,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.minigame.elytrarace.BoostType;
 import pl.north93.northplatform.api.bukkit.utils.xml.XmlCuboid;
+import pl.north93.northplatform.minigame.elytrarace.BoostType;
 
 @XmlRootElement(name = "boost")
 @XmlAccessorType(XmlAccessType.FIELD)

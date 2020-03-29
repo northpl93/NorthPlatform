@@ -26,9 +26,9 @@ public class ElytraRaceArena implements IArenaData
     private final ArenaConfig arenaConfig;
     private final ElytraRaceMode gameMode;
     private final IFinishHandler metaHandler;
-    private final Set<ElytraRacePlayer>       players;
+    private final Set<ElytraRacePlayer> players;
     private final Map<Score, ScoreController> scoreControllers; // w trybie score mapuje score do jego kontrolera
-    private       boolean                     isStarted; // czy odliczanie do startu dobieglo konca
+    private boolean isStarted; // czy odliczanie do startu dobieglo konca
 
     public ElytraRaceArena(final ArenaConfig arenaConfig, final ElytraRaceMode gameMode)
     {

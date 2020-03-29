@@ -3,13 +3,13 @@ package pl.north93.northplatform.minigame.bedwars.cmd;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.minigame.bedwars.shop.ShopManager;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.uri.IUriManager;
+import pl.north93.northplatform.minigame.bedwars.shop.ShopManager;
 
 public class BedWarsBuy extends NorthCommand
 {
@@ -17,7 +17,6 @@ public class BedWarsBuy extends NorthCommand
     private ShopManager manager;
     @Inject
     private IUriManager uriManager;
-
 
     public BedWarsBuy()
     {

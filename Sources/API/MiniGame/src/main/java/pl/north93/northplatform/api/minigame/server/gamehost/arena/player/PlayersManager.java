@@ -41,13 +41,13 @@ import pl.north93.northplatform.api.global.metadata.MetaStore;
 @Slf4j
 public class PlayersManager
 {
-    private static final long                      PLAYER_JOIN_TIMEOUT = TimeUnit.SECONDS.toMillis(30);
-    private final        GameHostManager           gameHostManager;
-    private final        ReconnectHandler          reconnectHandler;
-    private final        LocalArena                arena;
-    private final        Set<INorthPlayer>         players; // lista połączonych już graczy
-    private final        Set<INorthPlayer>         spectators; // lista polaczonych spectatorow
-    private final        Map<UUID, PlayerJoinInfo> joinInfos; // lista graczy chcacych wejsc na arene juz na niej bedacych
+    private static final long PLAYER_JOIN_TIMEOUT = TimeUnit.SECONDS.toMillis(30);
+    private final GameHostManager gameHostManager;
+    private final ReconnectHandler reconnectHandler;
+    private final LocalArena arena;
+    private final Set<INorthPlayer> players; // lista połączonych już graczy
+    private final Set<INorthPlayer> spectators; // lista polaczonych spectatorow
+    private final Map<UUID, PlayerJoinInfo> joinInfos; // lista graczy chcacych wejsc na arene juz na niej bedacych
 
     public PlayersManager(final GameHostManager gameHostManager, final LocalArena arena)
     {

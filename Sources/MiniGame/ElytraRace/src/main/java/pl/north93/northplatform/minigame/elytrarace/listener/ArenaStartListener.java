@@ -17,15 +17,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.minigame.elytrarace.ElytraRaceMode;
-import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
-import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRacePlayer;
-import pl.north93.northplatform.minigame.elytrarace.arena.ElytraScorePlayer;
-import pl.north93.northplatform.minigame.elytrarace.arena.StartCountdown;
-import pl.north93.northplatform.minigame.elytrarace.cfg.ArenaConfig;
-import pl.north93.northplatform.minigame.elytrarace.shop.ElytraEffectTask;
-import pl.north93.northplatform.minigame.elytrarace.shop.ElytraEffectsManager;
-import pl.north93.northplatform.minigame.elytrarace.shop.effects.IElytraEffect;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.xml.XmlLocation;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -37,6 +28,15 @@ import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.ArenaC
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
+import pl.north93.northplatform.minigame.elytrarace.ElytraRaceMode;
+import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
+import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRacePlayer;
+import pl.north93.northplatform.minigame.elytrarace.arena.ElytraScorePlayer;
+import pl.north93.northplatform.minigame.elytrarace.arena.StartCountdown;
+import pl.north93.northplatform.minigame.elytrarace.cfg.ArenaConfig;
+import pl.north93.northplatform.minigame.elytrarace.shop.ElytraEffectTask;
+import pl.north93.northplatform.minigame.elytrarace.shop.ElytraEffectsManager;
+import pl.north93.northplatform.minigame.elytrarace.shop.effects.IElytraEffect;
 
 public class ArenaStartListener implements Listener
 {

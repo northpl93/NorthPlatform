@@ -13,13 +13,6 @@ import org.bukkit.event.Listener;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.minigame.elytrarace.ElytraRaceMode;
-import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
-import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRacePlayer;
-import pl.north93.northplatform.minigame.elytrarace.arena.ElytraScorePlayer;
-import pl.north93.northplatform.minigame.elytrarace.arena.ScoreController;
-import pl.north93.northplatform.minigame.elytrarace.cfg.Score;
-import pl.north93.northplatform.minigame.elytrarace.cfg.ScoreGroup;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.nms.FastBlockOp;
 import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
@@ -32,6 +25,13 @@ import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.north93.northplatform.api.minigame.server.gamehost.region.IRegionManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.region.ITrackedRegion;
+import pl.north93.northplatform.minigame.elytrarace.ElytraRaceMode;
+import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
+import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRacePlayer;
+import pl.north93.northplatform.minigame.elytrarace.arena.ElytraScorePlayer;
+import pl.north93.northplatform.minigame.elytrarace.arena.ScoreController;
+import pl.north93.northplatform.minigame.elytrarace.cfg.Score;
+import pl.north93.northplatform.minigame.elytrarace.cfg.ScoreGroup;
 
 public class ScoreListener implements Listener
 {

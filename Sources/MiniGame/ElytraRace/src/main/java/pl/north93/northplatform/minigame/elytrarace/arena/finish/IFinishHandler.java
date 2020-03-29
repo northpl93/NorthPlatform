@@ -2,9 +2,9 @@ package pl.north93.northplatform.minigame.elytrarace.arena.finish;
 
 import org.bukkit.entity.Player;
 
-import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRacePlayer;
 
 public interface IFinishHandler
 {

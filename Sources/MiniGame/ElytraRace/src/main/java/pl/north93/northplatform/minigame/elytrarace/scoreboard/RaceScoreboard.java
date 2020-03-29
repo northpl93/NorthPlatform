@@ -13,8 +13,6 @@ import java.util.Optional;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
-import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.scoreboard.ContentBuilder;
 import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardContext;
@@ -26,6 +24,8 @@ import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsManager;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.type.ShorterTimeBetterStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.DurationUnit;
+import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
+import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRacePlayer;
 
 public class RaceScoreboard implements IScoreboardLayout
 {

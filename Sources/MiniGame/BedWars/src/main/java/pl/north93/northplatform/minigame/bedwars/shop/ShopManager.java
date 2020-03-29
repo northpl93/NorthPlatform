@@ -1,11 +1,13 @@
 package pl.north93.northplatform.minigame.bedwars.shop;
 
 import static java.text.MessageFormat.format;
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
+
 import static pl.north93.northplatform.api.bukkit.utils.nms.ItemStackHelper.ensureCraftItemStack;
 import static pl.north93.northplatform.api.bukkit.utils.nms.ItemStackHelper.getOrCreatePersistentStorage;
 import static pl.north93.northplatform.api.bukkit.utils.nms.ItemStackHelper.getPersistentStorage;
 import static pl.north93.northplatform.api.global.utils.lang.CollectionUtils.findInCollection;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,19 +15,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.bukkit.inventory.ItemStack;
-
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.minigame.bedwars.cfg.BwShopConfig;
-import pl.north93.northplatform.minigame.bedwars.cfg.BwShopEntry;
-import pl.north93.northplatform.minigame.bedwars.event.ItemBuyEvent;
-import pl.north93.northplatform.minigame.bedwars.event.ItemPreBuyEvent;
-import pl.north93.northplatform.minigame.bedwars.shop.gui.ShopBase;
-import pl.north93.northplatform.minigame.bedwars.shop.specialentry.IShopSpecialEntry;
+import org.bukkit.inventory.ItemStack;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.gui.Gui;
 import pl.north93.northplatform.api.bukkit.gui.IGuiManager;
@@ -37,6 +33,13 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.uri.UriHandler;
 import pl.north93.northplatform.api.global.uri.UriInvocationContext;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.minigame.bedwars.cfg.BwShopConfig;
+import pl.north93.northplatform.minigame.bedwars.cfg.BwShopEntry;
+import pl.north93.northplatform.minigame.bedwars.event.ItemBuyEvent;
+import pl.north93.northplatform.minigame.bedwars.event.ItemPreBuyEvent;
+import pl.north93.northplatform.minigame.bedwars.shop.gui.ShopBase;
+import pl.north93.northplatform.minigame.bedwars.shop.specialentry.IShopSpecialEntry;
 
 /**
  * Klasa zarzadzajaca sklepem bedwarsów.

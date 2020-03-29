@@ -6,9 +6,9 @@ import org.bukkit.inventory.ItemStack;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.minigame.bedwars.cfg.BwShopEntry;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
 /**
  * Event wywolywany przed zakupem itemu i
@@ -18,9 +18,9 @@ public class ItemPreBuyEvent extends BedWarsPlayerArenaEvent
 {
     private static final HandlerList handlers = new HandlerList();
     private final BwShopEntry shopEntry;
-    private final ItemStack   price;
-    private final boolean     isCheck;
-    private       BuyStatus   buyStatus;
+    private final ItemStack price;
+    private final boolean isCheck;
+    private BuyStatus buyStatus;
 
     public ItemPreBuyEvent(final LocalArena arena, final INorthPlayer player, final BwShopEntry shopEntry, final ItemStack price, final boolean isCheck)
     {

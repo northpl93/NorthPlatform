@@ -69,7 +69,7 @@ public class PartyMessagesBroadcaster implements Listener
         proxiedPlayer.sendMessage();
         this.partyMessages.sendMessage(proxiedPlayer, "invite.info", MessageLayout.CENTER, this.identityToNick(party.getOwner()));
 
-        final String cmdClickMessage = this.partyMessages.getMessage(proxiedPlayer.getLocale(), "invite.cmd");
+        final String cmdClickMessage = this.partyMessages.getString(proxiedPlayer.getLocale(), "invite.cmd");
         final BaseComponent[] cmdClickComponents = ChatUtils.builderFromLegacyText(cmdClickMessage).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party accept")).create();
         proxiedPlayer.sendMessage(MessageLayout.CENTER.processMessage(new TextComponent(cmdClickComponents)));
 

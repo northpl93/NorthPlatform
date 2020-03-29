@@ -13,15 +13,15 @@ import pl.north93.northplatform.api.global.metadata.MetaStore;
 public class ReconnectTicket
 {
     private static final MetaKey EXPIRATION = MetaKey.get("reconnectTicket_expiration");
-    private static final MetaKey PLAYER_ID  = MetaKey.get("reconnectTicket_playerId");
-    private static final MetaKey SERVER_ID  = MetaKey.get("reconnectTicket_serverId");
-    private static final MetaKey ARENA_ID   = MetaKey.get("reconnectTicket_arenaId");
-    private static final MetaKey MATCH_ID   = MetaKey.get("reconnectTicket_matchId");
+    private static final MetaKey PLAYER_ID = MetaKey.get("reconnectTicket_playerId");
+    private static final MetaKey SERVER_ID = MetaKey.get("reconnectTicket_serverId");
+    private static final MetaKey ARENA_ID = MetaKey.get("reconnectTicket_arenaId");
+    private static final MetaKey MATCH_ID = MetaKey.get("reconnectTicket_matchId");
     private Instant expiration;
-    private UUID    playerId;
-    private UUID    serverId;
-    private UUID    arenaId;
-    private UUID    matchId;
+    private UUID playerId;
+    private UUID serverId;
+    private UUID arenaId;
+    private UUID matchId;
 
     public ReconnectTicket()
     {

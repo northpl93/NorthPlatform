@@ -7,12 +7,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.util.Vector;
 
+import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.north93.northplatform.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.north93.northplatform.minigame.elytrarace.cfg.Boost;
-import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 
 public class BoostListener implements Listener
 {

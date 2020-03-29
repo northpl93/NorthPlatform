@@ -6,21 +6,19 @@ import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.
 import javax.xml.bind.JAXB;
 
 import java.io.File;
-import java.util.Set;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
-import pl.north93.northplatform.minigame.bedwars.cfg.BwArenaConfig;
-import pl.north93.northplatform.minigame.bedwars.cfg.BwGenerator;
 import pl.north93.northplatform.api.bukkit.utils.xml.XmlLocation;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
+import pl.north93.northplatform.minigame.bedwars.cfg.BwArenaConfig;
+import pl.north93.northplatform.minigame.bedwars.cfg.BwGenerator;
 
 public class BwConfigGenerator extends NorthCommand
 {
@@ -39,7 +37,7 @@ public class BwConfigGenerator extends NorthCommand
         final BedWarsArena arenaData = arena.getArenaData();
         final BwArenaConfig config = arenaData.getConfig();
 
-        if (args.length() == 0)
+        if (args.isEmpty())
         {
             sender.sendMessage("&aKonfiguracja generatorow. Aktualnie: " + config.getGenerators().size());
             sender.sendMessage("&a/bwgenerator add <type> - dodaje generator w miejscu patrzenia");
@@ -49,7 +47,7 @@ public class BwConfigGenerator extends NorthCommand
 
         if (args.length() == 1 && "fix".equalsIgnoreCase(args.asString(0)))
         {
-            final Block targetBlock = player.getTargetBlock((Set<Material>) null, 100);
+            final Block targetBlock = player.getTargetBlock(null, 100);
             final Location fixLocation = targetBlock.getLocation().add(0.5, 0, 0.5);
 
             for (final BwGenerator bwGenerator : config.getGenerators())
@@ -73,7 +71,7 @@ public class BwConfigGenerator extends NorthCommand
 
         if (args.length() == 2 && "add".equalsIgnoreCase(args.asString(0)))
         {
-            final Block targetBlock = player.getTargetBlock((Set<Material>) null, 100);
+            final Block targetBlock = player.getTargetBlock(null, 100);
             final String type = args.asString(1);
 
             final BwGenerator newGen = new BwGenerator(type, new XmlLocation(targetBlock.getX() + 0.5, targetBlock.getY(), targetBlock.getZ() + 0.5, 0, 0));

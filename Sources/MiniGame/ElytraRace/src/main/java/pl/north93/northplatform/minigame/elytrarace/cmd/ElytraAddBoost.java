@@ -13,9 +13,6 @@ import com.sk89q.worldedit.bukkit.selections.Selection;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
-import pl.north93.northplatform.minigame.elytrarace.BoostType;
-import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
-import pl.north93.northplatform.minigame.elytrarace.cfg.Boost;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.xml.XmlCuboid;
 import pl.north93.northplatform.api.bukkit.utils.xml.XmlLocation;
@@ -23,6 +20,9 @@ import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.minigame.elytrarace.BoostType;
+import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
+import pl.north93.northplatform.minigame.elytrarace.cfg.Boost;
 
 public class ElytraAddBoost extends NorthCommand
 {

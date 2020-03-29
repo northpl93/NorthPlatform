@@ -10,12 +10,16 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.utils.StaticTimer;
+import pl.north93.northplatform.api.global.metadata.MetaStore;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.ArenaChatManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.PlayersManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.world.ArenaWorld;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.world.DeathMatch;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.world.MapVote;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.MapSwitchedEvent.MapSwitchReason;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
 import pl.north93.northplatform.api.minigame.server.gamehost.region.IRegionManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.reward.IArenaRewards;
@@ -31,28 +35,25 @@ import pl.north93.northplatform.api.minigame.shared.api.arena.netevent.ArenaData
 import pl.north93.northplatform.api.minigame.shared.api.arena.netevent.ArenaDeletedNetEvent;
 import pl.north93.northplatform.api.minigame.shared.api.match.IMatchAccess;
 import pl.north93.northplatform.api.minigame.shared.impl.arena.ArenaManager;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.bukkit.utils.StaticTimer;
-import pl.north93.northplatform.api.global.metadata.MetaStore;
 
 @Slf4j
 public class LocalArena implements IArena
 {
-    private static final int                 MAX_TIME_TO_DISCONNECT = 30 * 20; // czas po jakim serwer wyrzuci graczy ktorzy nie wylecieli z areny
-    private final        GameHostManager     gameHostManager;
-    private final        ArenaManager        arenaManager;
-    private final        RemoteArena         data;
-    private final        ArenaWorld          world;
-    private final        PlayersManager      playersManager;
-    private final        ArenaChatManager    chatManager;
-    private final        StaticTimer         timer;
-    private final        ArenaScheduler      scheduler;
-    private final        DeathMatch          deathMatch;
-    private final        IArenaRewards       rewards;
-    private final        ArenaStartScheduler startScheduler;
-    private              IMatchAccess        match;
-    private              IArenaData          arenaData;
-    private              MapVote             mapVote;
+    private static final int MAX_TIME_TO_DISCONNECT = 30 * 20; // czas po jakim serwer wyrzuci graczy ktorzy nie wylecieli z areny
+    private final GameHostManager gameHostManager;
+    private final ArenaManager arenaManager;
+    private final RemoteArena data;
+    private final ArenaWorld world;
+    private final PlayersManager playersManager;
+    private final ArenaChatManager chatManager;
+    private final StaticTimer timer;
+    private final ArenaScheduler scheduler;
+    private final DeathMatch deathMatch;
+    private final IArenaRewards rewards;
+    private final ArenaStartScheduler startScheduler;
+    private IMatchAccess match;
+    private IArenaData arenaData;
+    private MapVote mapVote;
 
     public LocalArena(final GameHostManager gameHostManager, final ArenaManager arenaManager, final RemoteArena data)
     {
@@ -120,8 +121,6 @@ public class LocalArena implements IArena
 
         this.scheduler.cancelAndClear();
         this.data.setGamePhase(gamePhase);
-        
-        //this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.getId(), this.getMiniGame(), mapName, gamePhase, this.data.getPlayers().size()));
 
         log.info("Switched {} to game phase {}", this.getId(), gamePhase);
         GamePhaseEventFactory.getInstance().callEvent(this);
@@ -377,7 +376,8 @@ public class LocalArena implements IArena
         }
 
         this.mapVote.printVotingResult();
-        this.world.setActiveMap(this.mapVote.getWinner()).onComplete(() -> this.setGamePhase(GamePhase.STARTED));
+        this.world.setActiveMap(this.mapVote.getWinner(), MapSwitchReason.ARENA_INITIALISE)
+                  .onComplete(() -> this.setGamePhase(GamePhase.STARTED));
     }
 
     public void uploadRemoteData()

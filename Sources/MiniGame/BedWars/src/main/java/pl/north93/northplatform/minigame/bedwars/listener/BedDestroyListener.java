@@ -14,10 +14,6 @@ import org.bukkit.event.Listener;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
-import pl.north93.northplatform.minigame.bedwars.arena.Team;
-import pl.north93.northplatform.minigame.bedwars.event.BedDestroyedEvent;
 import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
@@ -28,13 +24,17 @@ import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.ArenaChatManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.reward.CurrencyReward;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
+import pl.north93.northplatform.minigame.bedwars.arena.Team;
+import pl.north93.northplatform.minigame.bedwars.event.BedDestroyedEvent;
 
 public class BedDestroyListener implements Listener
 {
     @Inject
     private BukkitApiCore apiCore;
     @Inject @Messages("BedWars")
-    private MessagesBox   messages;
+    private MessagesBox messages;
 
     @EventHandler
     public void announceBedDestroy(final BedDestroyedEvent event)

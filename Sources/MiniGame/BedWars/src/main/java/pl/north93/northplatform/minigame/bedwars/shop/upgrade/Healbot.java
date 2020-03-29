@@ -4,10 +4,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.north93.northplatform.minigame.bedwars.arena.Team;
-import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 
 public class Healbot implements IUpgrade
 {

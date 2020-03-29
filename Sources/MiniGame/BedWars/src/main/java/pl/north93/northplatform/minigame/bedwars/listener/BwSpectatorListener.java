@@ -13,11 +13,11 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
 import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
 import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
 public class BwSpectatorListener implements Listener
 {

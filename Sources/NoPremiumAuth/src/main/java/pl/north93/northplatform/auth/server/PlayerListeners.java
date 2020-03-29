@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
@@ -50,7 +51,7 @@ public class PlayerListeners implements AutoListener
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(final PlayerJoinEvent event)
     {
-        final Player player = event.getPlayer();
+        final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
         if (this.authManager.isLoggedIn(player.getName()))
         {
             return;
@@ -61,11 +62,11 @@ public class PlayerListeners implements AutoListener
         this.sendMessage(player, "separator");
         if (authPlayer.isRegistered())
         {
-            this.messages.sendMessage(player, "join.login", MessageLayout.CENTER);
+            player.sendMessage(this.messages, "join.login", MessageLayout.CENTER);
         }
         else
         {
-            this.messages.sendMessage(player, "join.register", MessageLayout.CENTER);
+            player.sendMessage(this.messages, "join.register", MessageLayout.CENTER);
         }
         this.sendMessage(player, "separator");
     }
@@ -174,7 +175,7 @@ public class PlayerListeners implements AutoListener
     // metoda pomocnicza do wysyłania wiadomości
     private void sendMessage(final Player player, final String message, final Object... args)
     {
-        this.messages.sendMessage(player, message, args);
+        player.sendMessage(this.messages.getComponent(player.getLocale(), message, args));
     }
 
     @Override

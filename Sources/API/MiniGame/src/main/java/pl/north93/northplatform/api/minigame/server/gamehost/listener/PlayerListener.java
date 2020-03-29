@@ -6,8 +6,6 @@ import static pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper.
 import static pl.north93.northplatform.api.global.utils.lang.JavaUtils.instanceOf;
 
 
-import java.util.Optional;
-
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
 
@@ -51,22 +49,14 @@ public class PlayerListener implements AutoListener
         final INorthPlayer player = wrap(event.getPlayer());
 
         final GameHostManager gameHostManager = this.server.getServerManager();
-        final Optional<LocalArena> arena = gameHostManager.getArenaManager().getArenaAssociatedWith(player.getUniqueId());
-
-        if (arena.isPresent())
+        gameHostManager.getArenaManager().getArenaAssociatedWith(player.getUniqueId()).ifPresentOrElse(arena ->
         {
-            final LocalArena localArena = arena.get();
-
-            final PlayersManager playersManager = localArena.getPlayersManager();
+            final PlayersManager playersManager = arena.getPlayersManager();
             playersManager.playerConnected(player);
 
-            this.setPlayerStatus(player, localArena);
-            this.fixLobbyVisibility(player, localArena);
-        }
-        else
-        {
-            Bukkit.getPluginManager().callEvent(new PlayerJoinWithoutArenaEvent(player));
-        }
+            this.setPlayerStatus(player, arena);
+            this.fixLobbyVisibility(player, arena);
+        }, () -> Bukkit.getPluginManager().callEvent(new PlayerJoinWithoutArenaEvent(player)));
     }
 
     /*

@@ -12,11 +12,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
 import net.md_5.bungee.api.chat.BaseComponent;
-import pl.north93.northplatform.minigame.bedwars.event.PlayerEliminatedEvent;
-import pl.north93.northplatform.minigame.bedwars.hotbar.SpectatorHotbar;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.minigame.bedwars.arena.Team;
+import pl.north93.northplatform.minigame.bedwars.event.PlayerEliminatedEvent;
+import pl.north93.northplatform.minigame.bedwars.hotbar.SpectatorHotbar;
 
 @Slf4j
 public class PlayerEliminationListener implements Listener
@@ -25,11 +26,15 @@ public class PlayerEliminationListener implements Listener
     private MessagesBox messages;
 
     @EventHandler
-    public void onPlayerEliminated(final PlayerEliminatedEvent event)
+    public void handlePlayerElimination(final PlayerEliminatedEvent event)
     {
         final Player player = event.getPlayer();
-
         log.info("Player eliminated event called for {} on arena {}", player.getName(), event.getArena().getId());
+
+        // trigger team elimination check when player is eliminated
+        final Team team = event.getBedWarsPlayer().getTeam();
+        team.checkEliminated();
+
         if (event.getBedWarsPlayer().isOffline())
         {
             // gracz nie jest online gdy zostal wyeliminowany

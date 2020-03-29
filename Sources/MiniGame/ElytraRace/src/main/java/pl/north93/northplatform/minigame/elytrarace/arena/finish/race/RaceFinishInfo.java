@@ -10,7 +10,7 @@ import pl.north93.northplatform.minigame.elytrarace.arena.finish.FinishInfo;
 public class RaceFinishInfo extends FinishInfo
 {
     private final long time;
-    private final int  place;
+    private final int place;
 
     public RaceFinishInfo(final UUID uuid, final String displayName, final long time, final int place)
     {

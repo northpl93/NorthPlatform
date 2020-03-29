@@ -18,8 +18,8 @@ import pl.north93.northplatform.api.global.finalizer.IFinalizer;
 public class FinalizerImpl extends Component implements IFinalizer
 {
     private static final int QUEUE_CLEANUP_TIME = 10;
-    private final ReferenceQueue<Object> queue      = new ReferenceQueue<>();
-    private final Set<FinaliseObject>    references = new ConcurrentSet<>(100);
+    private final ReferenceQueue<Object> queue = new ReferenceQueue<>();
+    private final Set<FinaliseObject> references = new ConcurrentSet<>(100);
 
     @Override
     protected void enableComponent()
@@ -53,13 +53,8 @@ public class FinalizerImpl extends Component implements IFinalizer
 
     private void handleCleanup()
     {
-        for (Reference reference = this.queue.poll();; reference = this.queue.poll())
+        for (Reference<?> reference = this.queue.poll(); reference != null; reference = this.queue.poll())
         {
-            if (reference == null)
-            {
-                break;
-            }
-
             final FinaliseObject finaliseObject = (FinaliseObject) reference;
             this.references.remove(finaliseObject);
 

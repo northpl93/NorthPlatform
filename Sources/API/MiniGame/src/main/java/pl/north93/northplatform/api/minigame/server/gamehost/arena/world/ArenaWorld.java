@@ -15,9 +15,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.MapSwitchedEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.MapSwitchedEvent.MapSwitchReason;
 import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 import pl.north93.northplatform.api.minigame.shared.api.LobbyMode;
 import pl.north93.northplatform.api.minigame.shared.api.MapTemplate;
@@ -30,12 +32,13 @@ import pl.north93.northplatform.api.bukkit.world.IWorldLoadCallback;
 import pl.north93.northplatform.api.bukkit.world.IWorldManager;
 import pl.north93.northplatform.api.minigame.shared.api.utils.InvalidGamePhaseException;
 
+@Slf4j
 public class ArenaWorld
 {
     private final GameHostManager gameHostManager;
-    private final LocalArena      arena;
-    private       MapTemplate     currentMapTemplate;
-    private       World           currentWorld;
+    private final LocalArena arena;
+    private MapTemplate currentMapTemplate;
+    private World currentWorld;
 
     public ArenaWorld(final GameHostManager gameHostManager, final LocalArena arena)
     {
@@ -43,9 +46,14 @@ public class ArenaWorld
         this.arena = arena;;
     }
 
+    public String getDefaultWorldName()
+    {
+        return "arena_" + this.arena.getId();
+    }
+
     public File getWorldDirectory()
     {
-        return new File(Bukkit.getWorldContainer(), this.getName());
+        return new File(Bukkit.getWorldContainer(), this.currentWorld.getName());
     }
 
     public File getResource(final String name)
@@ -70,11 +78,6 @@ public class ArenaWorld
         return this.currentWorld;
     }
 
-    public String getName()
-    {
-        return "arena_" + this.arena.getId();
-    }
-
     public MapTemplate getCurrentMapTemplate()
     {
         return this.currentMapTemplate;
@@ -90,56 +93,103 @@ public class ArenaWorld
         return this.currentMapTemplate.getMapConfig().getProperties().get(key);
     }
 
-    /**
-     * Sprawdza czy mapa jest załadowana.
-     * @return czy mapa jest załadowana.
-     */
-    public boolean isReady()
+    public ISyncCallback setActiveMap(final MapTemplate template, final MapSwitchReason reason)
     {
-        return this.currentWorld != null;
+        return this.setActiveMap(template, this.getDefaultWorldName(), reason);
     }
 
     /**
-     * Wczytuje wybraną mapę dla tej areny.
-     * Może być wykonane tylko gdy arena znajduje się w GamePhase LOBBY.
-     * @param template Mapa do załadowania.
-     * @return callback który informuje o pomyślnym załadowaniu mapy.
+     * Changes active map for this arena
+     * You can change map when:
+     * 1. Arena is in LOBBY and has external lobby
+     * 2. Arena is in INITIALISING and has internal lobby
+     * 3. Arena is in STARTED.
+     *
+     * @param template New template to be loaded
+     * @param worldName Name of the new world
+     * @param reason Reason of the world switch.
+     * @return callback which is executed when new map is ready for use.
      */
-    public ISyncCallback setActiveMap(final MapTemplate template)
+    public ISyncCallback setActiveMap(final MapTemplate template, final String worldName, final MapSwitchReason reason)
     {
         Preconditions.checkNotNull(template, "New MapTemplate can't be null");
 
-        if (this.arena.getLobbyMode() == LobbyMode.EXTERNAL)
+        final LobbyMode lobbyMode = this.arena.getLobbyMode();
+        final GamePhase gamePhase = this.arena.getGamePhase();
+
+        if (lobbyMode == LobbyMode.EXTERNAL && gamePhase == GamePhase.LOBBY)
         {
-            InvalidGamePhaseException.checkGamePhase(this.arena.getGamePhase(), GamePhase.LOBBY);
+            return this.performOutGameMapSwitch(template, worldName, reason);
         }
-        else
+        else if (lobbyMode == LobbyMode.INTEGRATED && gamePhase == GamePhase.INITIALISING)
         {
-            InvalidGamePhaseException.checkGamePhase(this.arena.getGamePhase(), GamePhase.INITIALISING);
+            return this.performOutGameMapSwitch(template, worldName, reason);
+        }
+        else if (gamePhase == GamePhase.STARTED)
+        {
+            return this.performInGameMapSwitch(template, worldName, reason);
         }
 
-        this.delete(); // delete previous world
-        final IWorldManager worldManager = this.gameHostManager.getWorldManager();
+        throw new InvalidGamePhaseException(gamePhase, null);
+    }
 
-        final File templateDir = template.getMapDirectory();
-        worldManager.copyWorld(this.getName(), templateDir);
+    private ISyncCallback performOutGameMapSwitch(final MapTemplate template, final String worldName, final MapSwitchReason reason)
+    {
+        // delete previous world
+        this.delete();
 
-        final IWorldLoadCallback worldLoadCallback = worldManager.loadWorld(this.getName(), true, true);
-        this.switchMap(template, worldLoadCallback.getWorld());
+        // load new world and set variables in this object
+        final IWorldLoadCallback worldLoadCallback = this.loadAndSwitchWorld(template, worldName);
 
         final SimpleSyncCallback callback = new SimpleSyncCallback();
         worldLoadCallback.onComplete(world ->
         {
-            this.arena.uploadRemoteData(); // wywola sieciowy event aktualizacji danych areny
-            Bukkit.getPluginManager().callEvent(new MapSwitchedEvent(this.arena, MapSwitchedEvent.MapSwitchReason.ARENA_INITIALISE));
+            this.arena.uploadRemoteData(); // broadcast new world metadata in network
+            Bukkit.getPluginManager().callEvent(new MapSwitchedEvent(this.arena, false, reason));
             callback.callComplete();
         });
 
         return callback;
     }
 
-    /*default*/ void switchMap(final MapTemplate newMapTemplate, final World newWorld)
+    private ISyncCallback performInGameMapSwitch(final MapTemplate template, final String worldName, final MapSwitchReason reason)
     {
+        final World worldBeforeSwitch = this.currentWorld;
+        final IWorldLoadCallback worldLoadCallback = this.loadAndSwitchWorld(template, worldName);
+
+        final SimpleSyncCallback callback = new SimpleSyncCallback();
+        worldLoadCallback.onComplete(world ->
+        {
+            final IWorldManager worldManager = this.gameHostManager.getWorldManager();
+            if (this.arena.getGamePhase() != GamePhase.STARTED)
+            {
+                log.info("Arena {} ended before in game world switch completed. Deleting {}", this.arena.getId(), world.getName());
+                worldManager.unloadAndDeleteWorld(world);
+                return;
+            }
+
+            this.arena.uploadRemoteData(); // wywola sieciowy event aktualizacji danych areny
+            Bukkit.getPluginManager().callEvent(new MapSwitchedEvent(this.arena, true, reason));
+            callback.callComplete();
+
+            log.info("In game world switch on {} completed, removing old world {}", this.arena.getId(), worldBeforeSwitch.getName());
+            worldManager.unloadAndDeleteWorld(worldBeforeSwitch);
+        });
+
+        return callback;
+    }
+
+    private IWorldLoadCallback loadAndSwitchWorld(final MapTemplate newMapTemplate, final String worldName)
+    {
+        final IWorldManager worldManager = this.gameHostManager.getWorldManager();
+        log.info("Switching arena {} to new world with name {}", this.arena.getId(), worldName);
+
+        final File templateDir = newMapTemplate.getMapDirectory();
+        worldManager.copyWorld(worldName, templateDir);
+
+        final IWorldLoadCallback worldLoadCallback = worldManager.loadWorld(worldName, true, true);
+        final World newWorld = worldLoadCallback.getWorld();
+
         this.currentMapTemplate = newMapTemplate;
         this.currentWorld = newWorld;
 
@@ -151,6 +201,8 @@ public class ArenaWorld
         {
             newWorld.setGameRuleValue(gameRule.getKey(), gameRule.getValue());
         }
+
+        return worldLoadCallback;
     }
 
     public void delete()

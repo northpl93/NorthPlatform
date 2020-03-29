@@ -15,19 +15,20 @@ import org.bukkit.inventory.PlayerInventory;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.minigame.bedwars.cfg.BwShopConfig;
-import pl.north93.northplatform.minigame.bedwars.event.UpgradeInstallEvent;
-import pl.north93.northplatform.minigame.bedwars.shop.upgrade.IUpgrade;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.minigame.bedwars.cfg.BwShopConfig;
+import pl.north93.northplatform.minigame.bedwars.event.UpgradeInstallEvent;
+import pl.north93.northplatform.minigame.bedwars.shop.upgrade.IUpgrade;
 
 public class UpgradeInstallListener implements Listener
 {
     @Inject
     private BwShopConfig config;
     @Inject @Messages("BedWarsShop")
-    private MessagesBox  messagesShop;
+    private MessagesBox messagesShop;
 
     @EventHandler
     public void onUpgradeInstall(final UpgradeInstallEvent event)
@@ -72,12 +73,12 @@ public class UpgradeInstallListener implements Listener
         }
 
         final Player issuer = event.getIssuer();
-        for (final Player player : event.getTeam().getBukkitPlayers())
+        for (final INorthPlayer player : event.getTeam().getBukkitPlayers())
         {
             final String messageKey = "upgrade_gui." + event.getUpgrade().getName() + ".name";
-            final String upgradeName = this.messagesShop.getLegacyMessage(player.getLocale(), messageKey, "&e");
+            final String upgradeName = this.messagesShop.getString(player.getLocale(), messageKey, "&e");
 
-            this.messagesShop.sendMessage(player, "action.buy_upgrade", issuer.getDisplayName(), upgradeName);
+            player.sendMessage(this.messagesShop, "action.buy_upgrade", issuer.getDisplayName(), upgradeName);
         }
     }
 

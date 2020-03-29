@@ -7,11 +7,11 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 
+import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.north93.northplatform.minigame.elytrarace.cfg.Boost;
-import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 
 public class ParticleTask implements Runnable
 {

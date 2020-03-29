@@ -1,14 +1,20 @@
 package pl.north93.northplatform.minigame.elytrarace.shop;
 
+import java.util.Map;
+import java.util.UUID;
+
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import pl.north93.northplatform.api.bukkit.utils.nms.ItemStackHelper;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -16,9 +22,6 @@ import pl.north93.northplatform.globalshops.server.IGlobalShops;
 import pl.north93.northplatform.globalshops.server.IPlayerContainer;
 import pl.north93.northplatform.globalshops.server.domain.Item;
 import pl.north93.northplatform.globalshops.server.domain.ItemsGroup;
-
-import java.util.Map;
-import java.util.UUID;
 
 public class HeadsManagement implements Listener
 {

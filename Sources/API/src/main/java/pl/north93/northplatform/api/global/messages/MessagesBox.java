@@ -91,43 +91,17 @@ public class MessagesBox
     
     // BELOW ARE LEGACY METHODS ONLY FOR BACKWARD COMAPTIBILITY
     // you never should use that methods in new code
-    
-    @Deprecated
-    public String getMessage(final Locale locale, final String key)
-    {
-        return getMessageForKey(locale, key);
-    }
 
     @Deprecated
-    public String getMessage(final String locale, final String key)
-    {
-        return this.getMessage(Locale.forLanguageTag(locale), key);
-    }
-
-    // = = = POBIERANIE WIADOMOSCI Z PARAMETRAMI = = = //
-
-    @Deprecated
-    public BaseComponent getMessage(final Locale locale, final String key, final Object... params)
+    private BaseComponent getMessage(final Locale locale, final String key, final Object... params)
     {
         return getComponent(locale, key, params);
     }
 
     @Deprecated
-    public String getLegacyMessage(final Locale locale, final String key, final Object... params)
-    {
-        return getLegacy(locale, key, params).asString();
-    }
-
-    @Deprecated
-    public BaseComponent getMessage(final String locale, final String key, final Object... params)
+    private BaseComponent getMessage(final String locale, final String key, final Object... params)
     {
         return this.getMessage(Locale.forLanguageTag(locale), key, params);
-    }
-
-    @Deprecated
-    public String getLegacyMessage(final String locale, final String key, final Object... params)
-    {
-        return this.getLegacyMessage(Locale.forLanguageTag(locale), key, params);
     }
 
     // = = = WYSYLANIE WIADOMOSCI = = = //

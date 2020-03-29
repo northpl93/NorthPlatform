@@ -1,8 +1,21 @@
 package pl.north93.northplatform.minigame.elytrarace.arena.finish.race;
 
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
+
+
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
+import org.bukkit.entity.Player;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.bukkit.entity.Player;
+
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.component.annotations.bean.Named;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
@@ -13,26 +26,17 @@ import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.DurationUnit;
 
-import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
-
 public class RaceMessage
 {
     @Inject @Messages("ElytraRace")
-    private       MessagesBox           messages;
+    private MessagesBox messages;
     @Inject
-    private       INetworkManager       network;
+    private INetworkManager network;
     @Inject @Named("Elytra Race time format")
-    private       SimpleDateFormat      timeFormat;
-    private final List<RaceFinishInfo>  finishInfo;
+    private SimpleDateFormat timeFormat;
+    private final List<RaceFinishInfo> finishInfo;
     private final IRecord<Duration, DurationUnit> record;
-    private final boolean               isPartial;
+    private final boolean isPartial;
 
     public RaceMessage(final List<RaceFinishInfo> finishInfo, final IRecord<Duration, DurationUnit> record, final boolean isPartial)
     {
@@ -41,7 +45,7 @@ public class RaceMessage
         this.isPartial = isPartial;
     }
 
-    public void print(final Player player)
+    public void print(final INorthPlayer player)
     {
         this.messages.sendMessage(player, "separator");
         this.messages.sendMessage(player, "finish.race.header", MessageLayout.CENTER);
@@ -74,7 +78,7 @@ public class RaceMessage
         this.messages.sendMessage(player, "separator");
     }
 
-    private void fullResults(final Player player)
+    private void fullResults(final INorthPlayer player)
     {
         final Iterator<RaceFinishInfo> iterator = this.finishInfo.iterator();
         for (int place = 1; iterator.hasNext() && place < 4; place++)
@@ -86,7 +90,7 @@ public class RaceMessage
         }
     }
 
-    private void partialResults(final Player player)
+    private void partialResults(final INorthPlayer player)
     {
         final Iterator<RaceFinishInfo> iterator = this.finishInfo.iterator();
         this.messages.sendMessage(player, "finish.partial_results", MessageLayout.CENTER);
@@ -104,7 +108,7 @@ public class RaceMessage
         }
     }
 
-    private void yourInfo(final Player player)
+    private void yourInfo(final INorthPlayer player)
     {
         player.sendMessage("");
 

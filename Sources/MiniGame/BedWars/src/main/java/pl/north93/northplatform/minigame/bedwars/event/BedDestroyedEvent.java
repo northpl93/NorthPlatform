@@ -8,10 +8,10 @@ import org.bukkit.event.HandlerList;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.minigame.bedwars.arena.Team;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.ArenaEvent;
+import pl.north93.northplatform.minigame.bedwars.arena.Team;
 
 /**
  * Event wywoływany gdy łózko danego teamu zostanie zniszczone.

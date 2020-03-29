@@ -25,11 +25,11 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class ArenaScheduler implements IArenaScheduler
 {
-    private static final MethodInvoker           parsePending = DioriteReflectionUtils.getMethod(CraftScheduler.class, "parsePending");
+    private static final MethodInvoker parsePending = DioriteReflectionUtils.getMethod(CraftScheduler.class, "parsePending");
     @Inject
-    private              BukkitApiCore           apiCore;
-    private final        LocalArena              arena;
-    private final        List<BukkitTaskWrapper> wrappers;
+    private BukkitApiCore apiCore;
+    private final LocalArena arena;
+    private final List<BukkitTaskWrapper> wrappers;
 
     public ArenaScheduler(final LocalArena arena)
     {

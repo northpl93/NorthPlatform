@@ -15,10 +15,10 @@ import pl.north93.northplatform.minigame.elytrarace.shop.effects.IElytraEffect;
 
 public class ElytraScorePlayer extends ElytraRacePlayer // uzywane w SCORE_MODE
 {
-    private int          points;
+    private int points;
+    private int combo;
     private ScoreGroup latestScoreGroup;
-    private int          combo;
-    private List<Score>  reachedScores        = new ArrayList<>();
+    private List<Score> reachedScores = new ArrayList<>();
     private List<String> reachedAchieveGroups = new ArrayList<>();
 
     public ElytraScorePlayer(final Player player, final IElytraEffect effect, final Location startLocation)

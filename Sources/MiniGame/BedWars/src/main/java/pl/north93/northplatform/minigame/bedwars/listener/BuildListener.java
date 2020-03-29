@@ -17,11 +17,6 @@ import org.bukkit.material.Bed;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
-import pl.north93.northplatform.minigame.bedwars.arena.Team;
-import pl.north93.northplatform.minigame.bedwars.arena.generator.GeneratorController;
-import pl.north93.northplatform.minigame.bedwars.event.BedDestroyedEvent;
 import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
@@ -30,13 +25,18 @@ import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
+import pl.north93.northplatform.minigame.bedwars.arena.Team;
+import pl.north93.northplatform.minigame.bedwars.arena.generator.GeneratorController;
+import pl.north93.northplatform.minigame.bedwars.event.BedDestroyedEvent;
 
 public class BuildListener implements Listener
 {
     @Inject
     private BukkitApiCore apiCore;
     @Inject @Messages("BedWars")
-    private MessagesBox   messages;
+    private MessagesBox messages;
 
     @EventHandler
     public void onCrafting(final CraftItemEvent event) // blokujemy wszelki crafting zeby sami nie zrobili sobie blokow z irona
@@ -67,6 +67,19 @@ public class BuildListener implements Listener
         }
 
         arenaData.getPlayerBlocks().add(block);
+    }
+
+    private boolean checkGenerator(final BedWarsArena arenaData, final Block block)
+    {
+        for (final GeneratorController generator : arenaData.getGenerators())
+        {
+            final Location gen = generator.getLocation();
+            if (distanceSquared(gen.getBlockX(), gen.getBlockY(), gen.getBlockZ(), block.getX(), block.getY(), block.getZ()) <= 3)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -104,6 +117,27 @@ public class BuildListener implements Listener
 
         event.setCancelled(true);
         player.sendActionBar(this.messages, "no_permissions");
+    }
+
+    // zwraca true jesli blok jest w strefie niemodyfikowalnej
+    private boolean checkSecureRegion(final BedWarsArena arenaData, final Block block)
+    {
+        for (final Team team : arenaData.getTeams())
+        {
+            if (team.getHealArena().contains(block))
+            {
+                return true;
+            }
+        }
+
+        for (final Cuboid cuboid : arenaData.getSecureRegions())
+        {
+            if (cuboid.contains(block))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     // zwraca true jesli gracz niszczy lozko - wtedy nie wykonujemy reszty kodu w evencie
@@ -148,40 +182,6 @@ public class BuildListener implements Listener
         this.apiCore.callEvent(new BedDestroyedEvent(arenaData.getArena(), playerData.getBukkitPlayer(), block, teamAt, false));
 
         return true;
-    }
-
-    private boolean checkGenerator(final BedWarsArena arenaData, final Block block)
-    {
-        for (final GeneratorController generator : arenaData.getGenerators())
-        {
-            final Location gen = generator.getLocation();
-            if (distanceSquared(gen.getBlockX(), gen.getBlockY(), gen.getBlockZ(), block.getX(), block.getY(), block.getZ()) <= 3)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // zwraca true jesli blok jest w strefie niemodyfikowalnej
-    private boolean checkSecureRegion(final BedWarsArena arenaData, final Block block)
-    {
-        for (final Team team : arenaData.getTeams())
-        {
-            if (team.getHealArena().contains(block))
-            {
-                return true;
-            }
-        }
-
-        for (final Cuboid cuboid : arenaData.getSecureRegions())
-        {
-            if (cuboid.contains(block))
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override

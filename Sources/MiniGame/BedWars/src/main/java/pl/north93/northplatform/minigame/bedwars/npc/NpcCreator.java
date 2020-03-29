@@ -1,19 +1,25 @@
 package pl.north93.northplatform.minigame.bedwars.npc;
 
-import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.npc.NPCRegistry;
-import net.citizensnpcs.trait.VillagerProfession;
-import org.apache.commons.lang3.tuple.Pair;
+import static pl.north93.northplatform.api.global.messages.TranslatableString.of;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
+
+
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Objects;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
-import pl.north93.northplatform.minigame.bedwars.arena.Team;
-import pl.north93.northplatform.minigame.bedwars.shop.gui.ShopMain;
-import pl.north93.northplatform.minigame.bedwars.shop.gui.UpgradesGui;
+
+import org.apache.commons.lang3.tuple.Pair;
+
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.trait.VillagerProfession;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -26,13 +32,10 @@ import pl.north93.northplatform.api.minigame.server.shared.citizens.TranslatedNa
 import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
 import pl.north93.northplatform.globalshops.server.IGlobalShops;
 import pl.north93.northplatform.globalshops.server.domain.ItemsGroup;
-
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Objects;
-
-import static pl.north93.northplatform.api.global.messages.TranslatableString.of;
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getPlayerStatus;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
+import pl.north93.northplatform.minigame.bedwars.arena.Team;
+import pl.north93.northplatform.minigame.bedwars.shop.gui.ShopMain;
+import pl.north93.northplatform.minigame.bedwars.shop.gui.UpgradesGui;
 
 public class NpcCreator implements Listener
 {

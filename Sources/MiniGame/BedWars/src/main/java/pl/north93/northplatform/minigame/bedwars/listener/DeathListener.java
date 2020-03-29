@@ -20,13 +20,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
-import pl.north93.northplatform.minigame.bedwars.arena.RevivePlayerCountdown;
-import pl.north93.northplatform.minigame.bedwars.arena.Team;
-import pl.north93.northplatform.minigame.bedwars.shop.elimination.IEliminationEffect;
-import pl.north93.northplatform.minigame.bedwars.shop.stattrack.StatTrackManager;
-import pl.north93.northplatform.minigame.bedwars.shop.stattrack.TrackedStatistic;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageContainer;
 import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageEntry;
@@ -39,6 +32,13 @@ import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.reward.CurrencyReward;
 import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
 import pl.north93.northplatform.api.minigame.shared.api.arena.DeathMatchState;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
+import pl.north93.northplatform.minigame.bedwars.arena.RevivePlayerCountdown;
+import pl.north93.northplatform.minigame.bedwars.arena.Team;
+import pl.north93.northplatform.minigame.bedwars.shop.elimination.IEliminationEffect;
+import pl.north93.northplatform.minigame.bedwars.shop.stattrack.StatTrackManager;
+import pl.north93.northplatform.minigame.bedwars.shop.stattrack.TrackedStatistic;
 
 @Slf4j
 public class DeathListener implements Listener
@@ -46,7 +46,7 @@ public class DeathListener implements Listener
     @Inject
     private StatTrackManager statTrackManager;
     @Inject @Messages("BedWars")
-    private MessagesBox      messages;
+    private MessagesBox messages;
 
     @EventHandler
     public void onVoidDamage(final EntityDamageEvent event)

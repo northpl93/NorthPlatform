@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 import net.minecraft.server.v1_12_R1.AxisAlignedBB;
 import net.minecraft.server.v1_12_R1.EntityItem;
+import net.minecraft.server.v1_12_R1.WorldServer;
 
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
@@ -30,12 +32,12 @@ import pl.north93.northplatform.minigame.bedwars.cfg.BwGeneratorType;
 
 public class GeneratorController
 {
-    private final LocalArena               arena;
-    private final BedWarsArena             arenaData;
-    private final BwGeneratorType          generatorType;
-    private final Location                 location;
+    private final LocalArena arena;
+    private final BedWarsArena arenaData;
+    private final BwGeneratorType generatorType;
+    private final Location location;
     private final List<ItemGeneratorEntry> entries;
-    private final IGeneratorHudHandler     hudHandler;
+    private final IGeneratorHudHandler hudHandler;
 
     public GeneratorController(final LocalArena arena, final BwConfig bwConfig, final BedWarsArena arenaData, final BwGenerator config)
     {
@@ -93,7 +95,9 @@ public class GeneratorController
     private int countItems(final Location loc, final double x, final double y, final double z)
     {
         final AxisAlignedBB bb = new AxisAlignedBB(loc.getX() - x, loc.getY() - y, loc.getZ() - z, loc.getX() + x, loc.getY() + y, loc.getZ() + z);
-        final List<EntityItem> items = (List) ((CraftWorld) loc.getWorld()).getHandle().getEntities(null, bb, entity -> entity instanceof EntityItem);
+
+        final WorldServer worldServer = ((CraftWorld) loc.getWorld()).getHandle();
+        final List<EntityItem> items = (List) worldServer.getEntities(null, bb, entity -> entity instanceof EntityItem);
 
         int count = 0;
         for (final EntityItem entity : items)
@@ -166,16 +170,13 @@ public class GeneratorController
 
         public BwGeneratorItemConfig getCurrent()
         {
-            return this.items.stream()
-                             .filter(config -> config.getStartAt() <= GeneratorController.this.getGameTime())
-                             .findFirst().orElse(null);
+            final Predicate<BwGeneratorItemConfig> itemConfigPredicate = config -> config.getStartAt() <= GeneratorController.this.getGameTime();
+            return this.items.stream().filter(itemConfigPredicate).findFirst().orElse(null);
         }
 
         private void tick(final long gameTime)
         {
-            final BwGeneratorItemConfig current = this.items.stream()
-                                                            .filter(config -> ! config.isTriggerable() && config.getStartAt() <= gameTime)
-                                                            .findFirst().orElse(null);
+            final BwGeneratorItemConfig current = this.getCurrentItemConfig(gameTime);
 
             GeneratorController.this.hudHandler.tick(current == null ? this.items.iterator().next() : current, this.timer);
             if (current == null || ++this.timer < current.getEvery())
@@ -199,6 +200,12 @@ public class GeneratorController
             {
                 item.setVelocity(new Vector()); // set 0 vector
             }
+        }
+
+        private BwGeneratorItemConfig getCurrentItemConfig(final long gameTime)
+        {
+            final Predicate<BwGeneratorItemConfig> itemConfigPredicate = config -> ! config.isTriggerable() && config.getStartAt() <= gameTime;
+            return this.items.stream().filter(itemConfigPredicate).findFirst().orElse(null);
         }
 
         @Override

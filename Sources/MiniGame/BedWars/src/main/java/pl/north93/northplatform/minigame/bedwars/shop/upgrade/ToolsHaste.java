@@ -8,12 +8,12 @@ import org.bukkit.potion.PotionEffectType;
 
 import org.diorite.commons.math.DioriteMathUtils;
 
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.minigame.bedwars.arena.Team;
 import pl.north93.northplatform.minigame.bedwars.event.PlayerRevivedEvent;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
-import pl.north93.northplatform.api.global.messages.MessagesBox;
 
 public class ToolsHaste implements IUpgrade, Listener
 {
@@ -50,7 +50,7 @@ public class ToolsHaste implements IUpgrade, Listener
     public String getLoreDescription(final MessagesBox messagesBox, final Team team, final Player player)
     {
         final String hasteLevel = DioriteMathUtils.toRoman(Math.min(team.getUpgrades().getUpgradeLevel(this) + 1, this.maxLevel()));
-        return messagesBox.getLegacyMessage(player.getLocale(), "upgrade_gui.ToolsHaste.lore", hasteLevel);
+        return messagesBox.getString(player.getLocale(), "upgrade_gui.ToolsHaste.lore", hasteLevel);
     }
 
     @Override

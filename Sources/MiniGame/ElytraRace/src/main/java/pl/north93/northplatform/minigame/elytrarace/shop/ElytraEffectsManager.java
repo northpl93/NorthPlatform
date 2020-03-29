@@ -1,9 +1,13 @@
 package pl.north93.northplatform.minigame.elytrarace.shop;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.bukkit.entity.Player;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.bukkit.entity.Player;
-import pl.north93.northplatform.minigame.elytrarace.shop.effects.IElytraEffect;
+
 import pl.north93.northplatform.api.global.component.annotations.bean.Aggregator;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -11,9 +15,7 @@ import pl.north93.northplatform.globalshops.server.IGlobalShops;
 import pl.north93.northplatform.globalshops.server.IPlayerContainer;
 import pl.north93.northplatform.globalshops.server.domain.Item;
 import pl.north93.northplatform.globalshops.server.domain.ItemsGroup;
-
-import java.util.HashMap;
-import java.util.Map;
+import pl.north93.northplatform.minigame.elytrarace.shop.effects.IElytraEffect;
 
 public class ElytraEffectsManager
 {

@@ -15,6 +15,15 @@ import org.bukkit.inventory.ItemStack;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.messages.PluralForm;
+import pl.north93.northplatform.api.global.uri.UriHandler;
+import pl.north93.northplatform.api.global.uri.UriInvocationContext;
 import pl.north93.northplatform.minigame.bedwars.cfg.BwShopEntry;
 import pl.north93.northplatform.minigame.bedwars.event.ItemPreBuyEvent;
 import pl.north93.northplatform.minigame.bedwars.shop.gui.ShopArmor;
@@ -26,15 +35,6 @@ import pl.north93.northplatform.minigame.bedwars.shop.gui.ShopMain;
 import pl.north93.northplatform.minigame.bedwars.shop.gui.ShopMaterials;
 import pl.north93.northplatform.minigame.bedwars.shop.gui.ShopSwords;
 import pl.north93.northplatform.minigame.bedwars.shop.gui.ShopTools;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils;
-import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
-import pl.north93.northplatform.api.global.messages.Messages;
-import pl.north93.northplatform.api.global.messages.MessagesBox;
-import pl.north93.northplatform.api.global.messages.PluralForm;
-import pl.north93.northplatform.api.global.uri.UriHandler;
-import pl.north93.northplatform.api.global.uri.UriInvocationContext;
 
 public final class ShopGuiManager
 {

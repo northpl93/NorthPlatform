@@ -15,6 +15,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.chat.global.ChatManager;
+import pl.north93.northplatform.api.chat.global.ChatRoom;
+import pl.north93.northplatform.api.chat.global.ChatRoomPriority;
+import pl.north93.northplatform.api.chat.global.formatter.PermissionsBasedFormatter;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.minigame.server.MiniGameServer;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
@@ -25,23 +31,22 @@ import pl.north93.northplatform.api.minigame.shared.api.arena.RemoteArena;
 import pl.north93.northplatform.api.minigame.shared.api.arena.netevent.ArenaCreatedNetEvent;
 import pl.north93.northplatform.api.minigame.shared.api.cfg.MiniGameConfig;
 import pl.north93.northplatform.api.minigame.shared.impl.arena.ArenaManager;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
-import pl.north93.northplatform.api.chat.global.ChatManager;
-import pl.north93.northplatform.api.chat.global.ChatRoom;
-import pl.north93.northplatform.api.chat.global.ChatRoomPriority;
-import pl.north93.northplatform.api.chat.global.formatter.PermissionsBasedFormatter;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 @Slf4j
 public class LocalArenaManager
 {
-    @Inject
-    private BukkitApiCore  apiCore;
-    @Inject
-    private MiniGameServer miniGameServer;
-    @Inject
-    private ChatManager    chatManager;
+    private final BukkitApiCore apiCore;
+    private final MiniGameServer miniGameServer;
+    private final ChatManager chatManager;
     private final List<LocalArena> arenas = new ArrayList<>();
+
+    @Bean
+    private LocalArenaManager(final BukkitApiCore apiCore, final MiniGameServer miniGameServer, final ChatManager chatManager)
+    {
+        this.apiCore = apiCore;
+        this.miniGameServer = miniGameServer;
+        this.chatManager = chatManager;
+    }
 
     public LocalArena createArena()
     {

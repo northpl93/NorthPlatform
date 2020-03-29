@@ -2,8 +2,8 @@ package pl.north93.northplatform.minigame.bedwars.scoreboard;
 
 import static java.util.Comparator.comparing;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils.stripColor;
+import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 
 
 import java.time.LocalDateTime;
@@ -21,20 +21,20 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.Pair;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.world.DeathMatch;
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.api.minigame.shared.api.arena.DeathMatchState;
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
-import pl.north93.northplatform.minigame.bedwars.arena.Team;
-import pl.north93.northplatform.minigame.bedwars.cfg.BwConfig;
-import pl.north93.northplatform.minigame.bedwars.cfg.BwGeneratorItemConfig;
-import pl.north93.northplatform.minigame.bedwars.cfg.BwGeneratorType;
 import pl.north93.northplatform.api.bukkit.scoreboard.ContentBuilder;
 import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardLayout;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.world.DeathMatch;
+import pl.north93.northplatform.api.minigame.shared.api.arena.DeathMatchState;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
+import pl.north93.northplatform.minigame.bedwars.arena.Team;
+import pl.north93.northplatform.minigame.bedwars.cfg.BwConfig;
+import pl.north93.northplatform.minigame.bedwars.cfg.BwGeneratorItemConfig;
+import pl.north93.northplatform.minigame.bedwars.cfg.BwGeneratorType;
 
 public class GameScoreboard implements IScoreboardLayout
 {

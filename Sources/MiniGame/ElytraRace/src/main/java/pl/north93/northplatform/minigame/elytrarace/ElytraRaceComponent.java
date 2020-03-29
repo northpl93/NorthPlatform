@@ -7,6 +7,11 @@ import org.bukkit.Bukkit;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.global.component.Component;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.component.annotations.bean.Named;
 import pl.north93.northplatform.api.minigame.server.MiniGameServer;
 import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
 import pl.north93.northplatform.minigame.elytrarace.listener.ArenaEndListener;
@@ -19,11 +24,6 @@ import pl.north93.northplatform.minigame.elytrarace.listener.MoveListener;
 import pl.north93.northplatform.minigame.elytrarace.listener.ScoreListener;
 import pl.north93.northplatform.minigame.elytrarace.listener.ScoreboardListener;
 import pl.north93.northplatform.minigame.elytrarace.shop.HeadsListener;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
-import pl.north93.northplatform.api.global.component.Component;
-import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.component.annotations.bean.Named;
 
 public class ElytraRaceComponent extends Component
 {

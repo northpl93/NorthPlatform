@@ -9,6 +9,8 @@ import org.bukkit.block.Block;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
+import pl.north93.northplatform.api.bukkit.utils.xml.XmlCuboid;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.IArenaData;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.minigame.bedwars.arena.generator.GeneratorController;
@@ -18,20 +20,18 @@ import pl.north93.northplatform.minigame.bedwars.cfg.BwGenerator;
 import pl.north93.northplatform.minigame.bedwars.cfg.BwGeneratorItemConfig;
 import pl.north93.northplatform.minigame.bedwars.cfg.BwGeneratorType;
 import pl.north93.northplatform.minigame.bedwars.cfg.BwTeamConfig;
-import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
-import pl.north93.northplatform.api.bukkit.utils.xml.XmlCuboid;
 
 public class BedWarsArena implements IArenaData
 {
-    private final LocalArena    arena;
-    private final BwConfig      bedWarsConfig;
+    private final LocalArena arena;
+    private final BwConfig bedWarsConfig;
     private final BwArenaConfig config;
     private final Set<BwGeneratorItemConfig> announcedItems = new HashSet<>();
-    private final Set<GeneratorController>   generators     = new HashSet<>();
-    private final Set<Team>                  teams          = new HashSet<>();
-    private final Set<Cuboid>                secureRegions  = new HashSet<>();
-    private final Set<Block>                 playerBlocks   = new HashSet<>();
-    private final Set<BedWarsPlayer>         players        = new HashSet<>();
+    private final Set<GeneratorController> generators = new HashSet<>();
+    private final Set<Team> teams = new HashSet<>();
+    private final Set<Cuboid> secureRegions = new HashSet<>();
+    private final Set<Block> playerBlocks = new HashSet<>();
+    private final Set<BedWarsPlayer> players = new HashSet<>();
 
     public BedWarsArena(final LocalArena arena, final BwConfig bedWarsConfig, final BwArenaConfig config)
     {
@@ -116,7 +116,7 @@ public class BedWarsArena implements IArenaData
                                  .stream()
                                  .flatMap(type -> type.getItems().stream().map(item -> Pair.of(type, item)))
                                  .filter(pair -> pair.getValue().getStartAt() > time)
-                                 .sorted(Comparator.comparingInt(p -> p.getValue().getStartAt()))
-                                 .findFirst().orElse(null);
+                                 .min(Comparator.comparingInt(p -> p.getValue().getStartAt()))
+                                 .orElse(null);
     }
 }

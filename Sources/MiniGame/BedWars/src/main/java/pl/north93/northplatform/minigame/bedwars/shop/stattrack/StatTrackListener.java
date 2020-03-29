@@ -13,7 +13,6 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 import lombok.ToString;
-import pl.north93.northplatform.minigame.bedwars.event.ItemBuyEvent;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
@@ -21,6 +20,7 @@ import pl.north93.northplatform.globalshops.server.IGlobalShops;
 import pl.north93.northplatform.globalshops.server.IPlayerContainer;
 import pl.north93.northplatform.globalshops.server.domain.Item;
 import pl.north93.northplatform.globalshops.server.domain.ItemsGroup;
+import pl.north93.northplatform.minigame.bedwars.event.ItemBuyEvent;
 
 @ToString
 public class StatTrackListener implements Listener

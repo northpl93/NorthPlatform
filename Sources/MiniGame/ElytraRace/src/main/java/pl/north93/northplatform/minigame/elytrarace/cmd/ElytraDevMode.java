@@ -2,11 +2,11 @@ package pl.north93.northplatform.minigame.elytrarace.cmd;
 
 import org.bukkit.ChatColor;
 
-import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRacePlayer;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
+import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRacePlayer;
 
 public class ElytraDevMode extends NorthCommand
 {

@@ -13,31 +13,32 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftArmorStand;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import io.netty.buffer.ByteBuf;
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.PlayersManager;
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
-import pl.north93.northplatform.minigame.bedwars.cfg.BwGeneratorItemConfig;
-import pl.north93.northplatform.minigame.bedwars.cfg.BwGeneratorType;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.nms.EntityMetaPacketHelper;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.PlayersManager;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
+import pl.north93.northplatform.minigame.bedwars.arena.generator.GeneratorController.ItemGeneratorEntry;
+import pl.north93.northplatform.minigame.bedwars.cfg.BwGeneratorItemConfig;
+import pl.north93.northplatform.minigame.bedwars.cfg.BwGeneratorType;
 
 class GeneratorHudHandlerImpl implements IGeneratorHudHandler
 {
     @Inject @Messages("BedWars")
-    private       MessagesBox         messages;
+    private MessagesBox messages;
     private final GeneratorController generator;
-    private final GeneratorHologram   hologram;
-    private final ArmorStand          item;
-    private       float               itemPose;
+    private final GeneratorHologram hologram;
+    private final ArmorStand item;
+    private float itemPose;
 
     public GeneratorHudHandlerImpl(final GeneratorController generator)
     {
@@ -99,36 +100,28 @@ class GeneratorHudHandlerImpl implements IGeneratorHudHandler
     public void markOverload()
     {
         this.hologram.overload();
-        this.checkAnnouncement(null);
+
+        final ItemGeneratorEntry itemGeneratorEntry = this.generator.getEntries().get(0);
+        this.checkAnnouncement(itemGeneratorEntry.getCurrent());
     }
 
     // Wysyla komunikaty o nowym itemie w generatorze
     private void checkAnnouncement(final BwGeneratorItemConfig item)
     {
-        final BwGeneratorItemConfig current;
-        if (item == null)
-        {
-            final GeneratorController.ItemGeneratorEntry itemGeneratorEntry = this.generator.getEntries().get(0);
-            current = itemGeneratorEntry.getCurrent();
-        }
-        else
-        {
-            current = item;
-        }
-        if (current.getStartAt() > this.generator.getGameTime())
+        if (item.getStartAt() > this.generator.getGameTime())
         {
             return; // nie wywalamy komunikatu jesli generator w ogole nie wystartowal (lapis)
         }
 
         final BedWarsArena arenaData = this.generator.getArenaData();
-        if (arenaData.getAnnouncedItems().contains(current))
+        if (! arenaData.getAnnouncedItems().add(item))
         {
+            // we already announced this upgrade
             return;
         }
-        arenaData.getAnnouncedItems().add(current);
 
         final PlayersManager playersManager = this.generator.getArena().getPlayersManager();
-        for (final Player player : playersManager.getPlayers())
+        for (final INorthPlayer player : playersManager.getPlayers())
         {
             final BwGeneratorType type = this.generator.getGeneratorType();
             final String generatorName = this.messages.getString(player.getLocale(), "generator.type.genitive." + type.getName());
@@ -136,7 +129,7 @@ class GeneratorHudHandlerImpl implements IGeneratorHudHandler
             final long generatorsCount = this.countSameGenerators();
             final String msgName = generatorsCount == 1 ? "generator.upgrade.singular" : "generator.upgrade.plural";
 
-            this.messages.sendMessage(player, msgName, MessageLayout.SEPARATED, generatorName, current.getName());
+            player.sendMessage(this.messages, msgName, MessageLayout.SEPARATED, generatorName, item.getName());
         }
     }
 

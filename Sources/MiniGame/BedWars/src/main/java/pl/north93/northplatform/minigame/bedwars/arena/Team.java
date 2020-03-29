@@ -15,24 +15,25 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.material.Bed;
 
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.minigame.bedwars.cfg.BwTeamConfig;
 import pl.north93.northplatform.minigame.bedwars.event.BedDestroyedEvent;
 import pl.north93.northplatform.minigame.bedwars.event.TeamEliminatedEvent;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
-import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 
 public class Team
 {
-    private final LocalArena         arena;
-    private final BwTeamConfig       config;
+    private final LocalArena arena;
+    private final BwTeamConfig config;
     private final Set<BedWarsPlayer> players;
-    private Cuboid   teamArena; // teren obejmujacy cala baze
-    private Cuboid   healArena; // teren wewnatrz budynku bazy
+    private Cuboid teamArena; // teren obejmujacy cala baze
+    private Cuboid healArena; // teren wewnatrz budynku bazy
     private Location spawn;
     private Location bedLocation;
-    private boolean  isBedAlive;
-    private boolean  isAlreadyEliminated;
+    private boolean isBedAlive;
+    private boolean isAlreadyEliminated;
     private Upgrades upgrades;
 
     public Team(final LocalArena arena, final BwTeamConfig config)
@@ -107,12 +108,12 @@ public class Team
         return this.players;
     }
 
-    public Stream<Player> getBukkitPlayersAsStream()
+    public Stream<INorthPlayer> getBukkitPlayersAsStream()
     {
         return this.players.stream().map(BedWarsPlayer::getBukkitPlayer);
     }
 
-    public Set<Player> getBukkitPlayers()
+    public Set<INorthPlayer> getBukkitPlayers()
     {
         return this.getBukkitPlayersAsStream().collect(Collectors.toSet());
     }

@@ -15,11 +15,6 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
-import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRacePlayer;
-import pl.north93.northplatform.minigame.elytrarace.arena.ElytraScorePlayer;
-import pl.north93.northplatform.minigame.elytrarace.arena.finish.ElytraWinReward;
-import pl.north93.northplatform.minigame.elytrarace.arena.finish.IFinishHandler;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
@@ -33,6 +28,11 @@ import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsMa
 import pl.north93.northplatform.api.minigame.shared.api.statistics.filter.BestRecordFilter;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
+import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
+import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRacePlayer;
+import pl.north93.northplatform.minigame.elytrarace.arena.ElytraScorePlayer;
+import pl.north93.northplatform.minigame.elytrarace.arena.finish.ElytraWinReward;
+import pl.north93.northplatform.minigame.elytrarace.arena.finish.IFinishHandler;
 
 public class ScoreMetaHandler implements IFinishHandler
 {

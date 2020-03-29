@@ -11,10 +11,10 @@ import pl.north93.northplatform.minigame.elytrarace.shop.effects.IElytraEffect;
 
 public class ElytraRacePlayer
 {
-    private Player        player;
-    private Location      startLocation;
-    private boolean       isDev;
-    private boolean       finished;
+    private Player player;
+    private Location startLocation;
+    private boolean isDev;
+    private boolean finished;
     private Checkpoint checkpoint;
     private IElytraEffect effect;
 

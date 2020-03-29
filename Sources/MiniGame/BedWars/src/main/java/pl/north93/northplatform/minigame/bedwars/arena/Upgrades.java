@@ -12,8 +12,8 @@ import pl.north93.northplatform.minigame.bedwars.shop.upgrade.IUpgrade;
 
 public class Upgrades
 {
-    private final LocalArena             arena;
-    private final Team                   team;
+    private final LocalArena arena;
+    private final Team team;
     private final Map<IUpgrade, Integer> installedUpgrades;
 
     public Upgrades(final LocalArena arena, final Team team)

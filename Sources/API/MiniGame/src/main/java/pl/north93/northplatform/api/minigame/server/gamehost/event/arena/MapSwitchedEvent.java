@@ -11,12 +11,22 @@ import pl.north93.northplatform.api.minigame.shared.api.MapTemplate;
 public class MapSwitchedEvent extends ArenaEvent
 {
     private static final HandlerList handlers = new HandlerList();
+    private final boolean inGameSwitch;
     private final MapSwitchReason reason;
 
-    public MapSwitchedEvent(final LocalArena arena, final MapSwitchReason reason)
+    public MapSwitchedEvent(final LocalArena arena, final boolean inGameSwitch, final MapSwitchReason reason)
     {
         super(arena);
+        this.inGameSwitch = inGameSwitch;
         this.reason = reason;
+    }
+
+    /**
+     * @return True when world has been changed during game. (in gamephase STARTED)
+     */
+    public boolean isInGameSwitch()
+    {
+        return this.inGameSwitch;
     }
 
     public MapTemplate getGameMap()

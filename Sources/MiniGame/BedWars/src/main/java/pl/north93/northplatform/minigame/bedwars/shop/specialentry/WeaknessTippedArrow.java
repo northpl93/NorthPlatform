@@ -15,7 +15,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.minigame.bedwars.shop.ShopGuiManager;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.itemstack.ItemTransaction;
 import pl.north93.northplatform.api.global.messages.Messages;
@@ -24,6 +23,7 @@ import pl.north93.northplatform.api.global.messages.TranslatableString;
 import pl.north93.northplatform.api.global.uri.UriHandler;
 import pl.north93.northplatform.api.global.uri.UriInvocationContext;
 import pl.north93.northplatform.api.global.utils.Vars;
+import pl.north93.northplatform.minigame.bedwars.shop.ShopGuiManager;
 
 public class WeaknessTippedArrow implements IShopSpecialEntry
 {

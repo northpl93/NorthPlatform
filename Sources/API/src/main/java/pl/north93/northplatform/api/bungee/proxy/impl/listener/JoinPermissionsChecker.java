@@ -36,7 +36,7 @@ public class JoinPermissionsChecker implements Listener
         final NetworkMeta networkMeta = this.networkManager.getNetworkConfig().get();
         if (networkMeta == null)
         {
-            event.setCancelled(this.messages.getMessage("pl-PL", "kick.generic_error", "networkMeta==null"));
+            event.setCancelled(this.messages.getComponent("pl-PL", "kick.generic_error", "networkMeta==null"));
             return;
         }
 
@@ -45,22 +45,22 @@ public class JoinPermissionsChecker implements Listener
 
         if (joiningPolicy == JoiningPolicy.NOBODY)
         {
-            event.setCancelled(this.messages.getMessage("pl-PL", "join.access_locked", EMPTY_OBJECT));
+            event.setCancelled(this.messages.getComponent("pl-PL", "join.access_locked", EMPTY_OBJECT));
         }
         else if (joiningPolicy == JoiningPolicy.ONLY_ADMIN && ! group.hasPermission("join.admin")) // wpuszczanie tylko adminów
         {
-            event.setCancelled(this.messages.getMessage("pl-PL", "join.access_locked", EMPTY_OBJECT));
+            event.setCancelled(this.messages.getComponent("pl-PL", "join.access_locked", EMPTY_OBJECT));
         }
         else if (joiningPolicy == JoiningPolicy.ONLY_VIP && ! group.hasPermission("join.vip"))
         {
-            event.setCancelled(this.messages.getMessage("pl-PL", "join.access_locked", EMPTY_OBJECT));
+            event.setCancelled(this.messages.getComponent("pl-PL", "join.access_locked", EMPTY_OBJECT));
         }
         else
         {
             final int onlinePlayersCount = this.networkManager.getProxies().onlinePlayersCount();
             if (onlinePlayersCount > networkMeta.displayMaxPlayers && ! group.hasPermission("join.bypass"))
             {
-                event.setCancelled(this.messages.getMessage("pl-PL", "join.server_full", EMPTY_OBJECT));
+                event.setCancelled(this.messages.getComponent("pl-PL", "join.server_full", EMPTY_OBJECT));
             }
         }
     }

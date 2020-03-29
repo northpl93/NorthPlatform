@@ -8,9 +8,9 @@ import org.bukkit.inventory.ItemStack;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.minigame.bedwars.cfg.BwShopEntry;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.minigame.bedwars.shop.ShopManager;
 
 /**
@@ -23,7 +23,7 @@ import pl.north93.northplatform.minigame.bedwars.shop.ShopManager;
 public class ItemBuyEvent extends BedWarsPlayerArenaEvent
 {
     private static final HandlerList handlers = new HandlerList();
-    private final BwShopEntry     shopEntry;
+    private final BwShopEntry shopEntry;
     private final List<ItemStack> items;
 
     public ItemBuyEvent(final LocalArena arena, final INorthPlayer player, final BwShopEntry shopEntry, final List<ItemStack> items)

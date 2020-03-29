@@ -3,8 +3,6 @@ package pl.north93.northplatform.minigame.bedwars.arena.generator;
 import java.util.Arrays;
 import java.util.List;
 
-import pl.north93.northplatform.minigame.bedwars.cfg.BwGeneratorItemConfig;
-import pl.north93.northplatform.minigame.bedwars.cfg.BwGeneratorType;
 import pl.north93.northplatform.api.bukkit.hologui.hologram.HologramRenderContext;
 import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologram;
 import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologramMessage;
@@ -13,16 +11,18 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.LegacyMessage;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.minigame.bedwars.cfg.BwGeneratorItemConfig;
+import pl.north93.northplatform.minigame.bedwars.cfg.BwGeneratorType;
 
 public class GeneratorHologram implements IHologramMessage
 {
     @Inject @Messages("BedWars")
     private MessagesBox messages;
 
-    private final IHologram           hologram;
+    private final IHologram hologram;
     private final GeneratorController controller;
     private BwGeneratorItemConfig currentItem;
-    private int                   timer;
+    private int timer;
 
     public GeneratorHologram(final GeneratorController generatorController)
     {

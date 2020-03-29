@@ -1,6 +1,7 @@
 package pl.north93.northplatform.minigame.bedwars.listener;
 
 import java.util.Comparator;
+import java.util.function.Predicate;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -15,13 +16,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
-import pl.north93.northplatform.minigame.bedwars.arena.Team;
-import pl.north93.northplatform.minigame.bedwars.cfg.BwConfig;
-import pl.north93.northplatform.minigame.bedwars.scoreboard.GameScoreboard;
-import pl.north93.northplatform.minigame.bedwars.scoreboard.LobbyScoreboard;
-import pl.north93.northplatform.minigame.bedwars.shop.EliminationEffectManager;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -35,18 +29,26 @@ import pl.north93.northplatform.api.minigame.server.gamehost.event.player.Player
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerQuitArenaEvent;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
 import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
+import pl.north93.northplatform.minigame.bedwars.arena.Team;
+import pl.north93.northplatform.minigame.bedwars.cfg.BwConfig;
+import pl.north93.northplatform.minigame.bedwars.scoreboard.GameScoreboard;
+import pl.north93.northplatform.minigame.bedwars.scoreboard.LobbyScoreboard;
+import pl.north93.northplatform.minigame.bedwars.shop.EliminationEffectManager;
 
 @Slf4j
 public class PlayerTeamListener implements Listener
 {
+    @Inject @Messages("BedWars")
+    private MessagesBox messages;
     @Inject
-    private BwConfig                 config;
+    private BwConfig config;
     @Inject
-    private IScoreboardManager       scoreboardManager;
+    private IScoreboardManager scoreboardManager;
     @Inject
     private EliminationEffectManager eliminationEffect;
-    @Inject @Messages("BedWars")
-    private MessagesBox              messages;
+
 
     @EventHandler
     public void playerJoin(final PlayerJoinArenaEvent event)
@@ -72,24 +74,20 @@ public class PlayerTeamListener implements Listener
         final PlayersManager playersManager = arena.getPlayersManager();
         for (final INorthPlayer player : playersManager.getPlayers())
         {
-            final Team smallestTeam = arenaData.getTeams()
-                                               .stream()
-                                               .filter(team -> team.getPlayers().size() < this.config.getTeamSize())
-                                               .min(Comparator.comparing(team -> team.getPlayers().size()))
-                                               .orElse(null);
             final BedWarsPlayer playerData = player.getPlayerData(BedWarsPlayer.class);
 
+            if (playerData == null)
+            {
+                log.error("Player {} has no associated BedWarsPlayer. It will cause trouble", player.getName());
+                continue;
+            }
+
+            final Team smallestTeam = this.findBestTeam(arenaData);
             if (smallestTeam == null)
             {
                 log.error("smallestTeam is null in gameStart on arena {} player {}", arena.getId(), player.getName());
                 player.sendMessage(ChatColor.RED + "Blad krytyczny; brak wolnego teamu (niepoprawna konfiguracja areny?)");
                 return;
-            }
-
-            if (playerData == null)
-            {
-                // todo log it
-                continue;
             }
 
             playerData.switchTeam(smallestTeam);
@@ -105,6 +103,14 @@ public class PlayerTeamListener implements Listener
         {
             this.scoreboardManager.setLayout(player, new GameScoreboard());
         }
+    }
+
+    private Team findBestTeam(final BedWarsArena arena)
+    {
+        final Predicate<Team> filter = team -> team.getPlayers().size() < this.config.getTeamSize();
+        final Comparator<Team> teamComparator = Comparator.comparing(team -> team.getPlayers().size());
+
+        return arena.getTeams().stream().filter(filter).min(teamComparator).orElse(null);
     }
 
     @EventHandler

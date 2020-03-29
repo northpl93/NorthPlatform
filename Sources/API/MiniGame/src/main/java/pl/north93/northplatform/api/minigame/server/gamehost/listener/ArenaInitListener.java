@@ -9,23 +9,24 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.diorite.commons.math.DioriteRandomUtils;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
+import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.minigame.server.MiniGameServer;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.MapSwitchedEvent.MapSwitchReason;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameInitEvent;
 import pl.north93.northplatform.api.minigame.server.gamehost.region.ITrackedRegion;
 import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 import pl.north93.northplatform.api.minigame.shared.api.LobbyMode;
 import pl.north93.northplatform.api.minigame.shared.api.MapTemplate;
-import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 @Slf4j
 public class ArenaInitListener implements AutoListener
 {
     @Inject
-    private MiniGameServer       server;
+    private MiniGameServer server;
     @Inject
     private IBukkitServerManager bukkitServerManager;
 
@@ -53,7 +54,7 @@ public class ArenaInitListener implements AutoListener
         final GameHostManager hostManager = this.server.getServerManager();
         final LocalArena arena = event.getArena();
 
-        log.info("Minigames API is initialising arena " + arena.getId());
+        log.info("Minigames API is initialising arena {}", arena.getId());
 
         // resetujemy licznik, aby przy kazdej inicjalizacji wskazywal 0
         arena.getTimer().reset();
@@ -79,7 +80,7 @@ public class ArenaInitListener implements AutoListener
             // i musimy juz teraz zaladowac nowa losowa mape.
             // Po zakonczeniu arena bedzie przelaczona w LOBBY.
             final MapTemplate map = DioriteRandomUtils.getRandom(hostManager.getMapTemplateManager().getAllTemplates());
-            arena.getWorld().setActiveMap(map).onComplete(() -> arena.setGamePhase(GamePhase.LOBBY));
+            arena.getWorld().setActiveMap(map, MapSwitchReason.ARENA_INITIALISE).onComplete(() -> arena.setGamePhase(GamePhase.LOBBY));
         }
     }
 
@@ -90,6 +91,7 @@ public class ArenaInitListener implements AutoListener
         if (arena.getLobbyMode() == LobbyMode.EXTERNAL)
         {
             // na arenie z lobby zewnętrznym możemy bez czekania przełączyć arenę w tryb LOBBY
+            // na arenie z lobby wbudowanym czekamy, aż się załaduje mapa (wyżej onComplete)
             arena.setGamePhase(GamePhase.LOBBY);
         }
     }

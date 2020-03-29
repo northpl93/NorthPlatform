@@ -8,15 +8,15 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.diorite.commons.math.DioriteRandomUtils;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.bukkit.player.IBukkitPlayers;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.SelectHubServerJoinAction;
 import pl.north93.northplatform.api.minigame.shared.api.hub.IHubServer;
 import pl.north93.northplatform.api.minigame.shared.api.hub.RemoteHub;
 import pl.north93.northplatform.api.minigame.shared.impl.HubsManager;
-import pl.north93.northplatform.api.bukkit.player.IBukkitPlayers;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
-import pl.north93.northplatform.api.global.network.server.Server;
 
 /**
  * Klasa pomocnicza do zadan zwiazanych z hubami (poczekalniami) minigier.
@@ -25,12 +25,17 @@ import pl.north93.northplatform.api.global.network.server.Server;
 @Slf4j
 public class GameHostHubsManager
 {
-    @Inject
-    private INetworkManager networkManager;
-    @Inject
-    private IBukkitPlayers  bukkitPlayers;
-    @Inject
-    private HubsManager     hubsManager;
+    private final INetworkManager networkManager;
+    private final IBukkitPlayers bukkitPlayers;
+    private final HubsManager hubsManager;
+
+    @Bean
+    private GameHostHubsManager(final INetworkManager networkManager, final IBukkitPlayers bukkitPlayers, final HubsManager hubsManager)
+    {
+        this.networkManager = networkManager;
+        this.bukkitPlayers = bukkitPlayers;
+        this.hubsManager = hubsManager;
+    }
 
     /**
      * Teleportuje podanych graczy do huba o podanym ID na losowa instancje.

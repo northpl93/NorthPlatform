@@ -1,13 +1,14 @@
 package pl.north93.northplatform.minigame.bedwars.shop.stattrack;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.bukkit.entity.Player;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.bukkit.entity.Player;
+
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 public class StatTrackPlayer
 {

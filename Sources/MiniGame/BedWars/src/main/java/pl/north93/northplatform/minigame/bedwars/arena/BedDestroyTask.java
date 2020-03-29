@@ -2,10 +2,10 @@ package pl.north93.northplatform.minigame.bedwars.arena;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.api.minigame.shared.api.arena.DeathMatchState;
 import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.shared.api.arena.DeathMatchState;
 
 public class BedDestroyTask extends BukkitRunnable
 {

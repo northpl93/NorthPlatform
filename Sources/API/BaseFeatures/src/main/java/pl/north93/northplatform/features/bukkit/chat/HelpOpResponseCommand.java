@@ -85,7 +85,7 @@ public class HelpOpResponseCommand extends NorthCommand
     	
     	result.addExtra(msg);
     	
-    	BaseComponent[] hoverText = new BaseComponent[] { messages.getMessage(receiver.getMyLocale(), "command.helpop.click_to_reply", new Object[0]) };
+    	BaseComponent[] hoverText = new BaseComponent[] { messages.getComponent(receiver.getMyLocale(), "command.helpop.click_to_reply", new Object[0]) };
     	result.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverText));
     	result.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/helpop "));
     	

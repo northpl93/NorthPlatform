@@ -24,12 +24,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
-import pl.north93.northplatform.minigame.bedwars.event.PlayerRevivedEvent;
-import pl.north93.northplatform.minigame.bedwars.shop.ShopManager;
-import pl.north93.northplatform.minigame.bedwars.shop.UpgradeManager;
-import pl.north93.northplatform.minigame.bedwars.shop.stattrack.StatTrackItems;
-import pl.north93.northplatform.minigame.bedwars.shop.upgrade.RoadOfWarrior;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageEntry;
 import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageTracker;
@@ -38,17 +32,23 @@ import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.global.messages.PluralForm;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
+import pl.north93.northplatform.minigame.bedwars.event.PlayerRevivedEvent;
+import pl.north93.northplatform.minigame.bedwars.shop.ShopManager;
+import pl.north93.northplatform.minigame.bedwars.shop.UpgradeManager;
+import pl.north93.northplatform.minigame.bedwars.shop.stattrack.StatTrackItems;
+import pl.north93.northplatform.minigame.bedwars.shop.upgrade.RoadOfWarrior;
 
 public class PlayerItemsListener implements Listener
 {
+    @Inject @Messages("BedWars")
+    private MessagesBox messages;
     @Inject
-    private ShopManager    shopManager;
+    private ShopManager shopManager;
     @Inject
     private UpgradeManager upgradeManager;
     @Inject
     private StatTrackItems statTrackItems;
-    @Inject @Messages("BedWars")
-    private MessagesBox messages;
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onInventoryClick(final InventoryClickEvent event)

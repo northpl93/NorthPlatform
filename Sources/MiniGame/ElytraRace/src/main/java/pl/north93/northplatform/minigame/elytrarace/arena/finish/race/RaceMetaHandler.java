@@ -10,10 +10,6 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
-import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRacePlayer;
-import pl.north93.northplatform.minigame.elytrarace.arena.finish.ElytraWinReward;
-import pl.north93.northplatform.minigame.elytrarace.arena.finish.IFinishHandler;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
@@ -30,23 +26,26 @@ import pl.north93.northplatform.api.minigame.shared.api.statistics.type.LongerTi
 import pl.north93.northplatform.api.minigame.shared.api.statistics.type.ShorterTimeBetterStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.DurationUnit;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
+import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
+import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRacePlayer;
+import pl.north93.northplatform.minigame.elytrarace.arena.finish.ElytraWinReward;
+import pl.north93.northplatform.minigame.elytrarace.arena.finish.IFinishHandler;
 
 public class RaceMetaHandler implements IFinishHandler
 {
     @Inject @Messages("ElytraRace")
-    private MessagesBox          messages;
+    private MessagesBox messages;
     @Inject
-    private IStatisticsManager   statisticsManager;
+    private IStatisticsManager statisticsManager;
     private List<RaceFinishInfo> finishInfo = new LinkedList<>();
-    private int                  place; // uzywane w RACE_MODE do okreslania miejsca gracza
+    private int place; // uzywane w RACE_MODE do okreslania miejsca gracza
 
     @Override
     public void handle(final LocalArena arena, final INorthPlayer player, final ElytraRacePlayer playerData)
     {
         playerData.setFinished(true);
 
-        final int playerPlace = this.place + 1;
-        this.place = playerPlace;
+        final int playerPlace = ++this.place;
 
         final long playerTime = arena.getTimer().getCurrentTime(TimeUnit.MILLISECONDS);
         this.finishInfo.add(new RaceFinishInfo(player.getUniqueId(), player.getDisplayName(), playerTime, playerPlace));
@@ -84,7 +83,7 @@ public class RaceMetaHandler implements IFinishHandler
                 final RaceMessage raceMessage = new RaceMessage(this.finishInfo, bestRecord, !isFinished);
                 if (isFinished)
                 {
-                    for (final Player playerInArena : arena.getPlayersManager().getPlayers())
+                    for (final INorthPlayer playerInArena : arena.getPlayersManager().getPlayers())
                     {
                         raceMessage.print(playerInArena);
                     }
@@ -123,7 +122,7 @@ public class RaceMetaHandler implements IFinishHandler
         this.statisticsManager.getRecord(raceStatistic).whenComplete((result, throwable) ->
         {
             final RaceMessage raceMessage = new RaceMessage(this.finishInfo, result, false);
-            for (final Player playerInArena : arena.getPlayersManager().getPlayers())
+            for (final INorthPlayer playerInArena : arena.getPlayersManager().getPlayers())
             {
                 raceMessage.print(playerInArena);
             }

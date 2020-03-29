@@ -8,6 +8,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.citizensnpcs.api.npc.NPCRegistry;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageTracker;
+import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.global.component.Component;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.component.annotations.bean.Named;
 import pl.north93.northplatform.api.minigame.server.MiniGameServer;
 import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
 import pl.north93.northplatform.minigame.bedwars.arena.generator.ItemRotator;
@@ -16,9 +23,9 @@ import pl.north93.northplatform.minigame.bedwars.cfg.BwShopConfig;
 import pl.north93.northplatform.minigame.bedwars.listener.ArenaStartListener;
 import pl.north93.northplatform.minigame.bedwars.listener.BedDestroyListener;
 import pl.north93.northplatform.minigame.bedwars.listener.BuildListener;
+import pl.north93.northplatform.minigame.bedwars.listener.BwDeathMatchStartListener;
 import pl.north93.northplatform.minigame.bedwars.listener.BwSpectatorListener;
 import pl.north93.northplatform.minigame.bedwars.listener.DeathListener;
-import pl.north93.northplatform.minigame.bedwars.listener.BwDeathMatchStartListener;
 import pl.north93.northplatform.minigame.bedwars.listener.GameEndListener;
 import pl.north93.northplatform.minigame.bedwars.listener.ItemBuyListener;
 import pl.north93.northplatform.minigame.bedwars.listener.PlayerEliminationListener;
@@ -29,13 +36,6 @@ import pl.north93.northplatform.minigame.bedwars.listener.TabListHandler;
 import pl.north93.northplatform.minigame.bedwars.listener.UpgradeInstallListener;
 import pl.north93.northplatform.minigame.bedwars.npc.NpcCreator;
 import pl.north93.northplatform.minigame.bedwars.shop.stattrack.StatTrackListener;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
-import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageTracker;
-import pl.north93.northplatform.api.global.ApiCore;
-import pl.north93.northplatform.api.global.component.Component;
-import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.component.annotations.bean.Named;
 
 public class BedWarsComponent extends Component
 {

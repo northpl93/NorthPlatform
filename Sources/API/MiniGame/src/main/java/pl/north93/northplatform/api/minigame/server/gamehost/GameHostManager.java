@@ -38,18 +38,20 @@ import pl.north93.northplatform.api.global.redis.rpc.IRpcManager;
 public class GameHostManager implements IServerManager
 {
     @Inject
-    private BukkitApiCore       apiCore;
+    private BukkitApiCore apiCore;
     @Inject
-    private IRpcManager         rpcManager;
+    private IRpcManager rpcManager;
     @Inject
-    private IEventManager       eventManager;
+    private IEventManager eventManager;
     @Inject
-    private IWorldManager       worldManager;
-    private GameHostHubsManager gameHostHubsManager = new GameHostHubsManager();
-    private LocalArenaManager   arenaManager        = new LocalArenaManager();
-    private RegionManagerImpl   regionManager       = new RegionManagerImpl();
-    private MapTemplateManager  mapTemplateManager  = new MapTemplateManager();
-    private MiniGameConfig      miniGameConfig;
+    private IWorldManager worldManager;
+    @Inject
+    private GameHostHubsManager gameHostHubsManager;
+    @Inject
+    private LocalArenaManager arenaManager;
+    private RegionManagerImpl regionManager = new RegionManagerImpl();
+    private MapTemplateManager mapTemplateManager = new MapTemplateManager();
+    private MiniGameConfig miniGameConfig;
 
     @Override
     public void start()

@@ -2,11 +2,11 @@ package pl.north93.northplatform.minigame.bedwars;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
-import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.northplatform.api.chat.global.ChatFormatter;
 import pl.north93.northplatform.api.chat.global.formatter.PermissionsBasedFormatter;
+import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
 
 public class BedWarsChatFormatter implements ChatFormatter
 {

@@ -8,7 +8,7 @@ public class ArenaStartCancelledEvent extends ArenaEvent
 {
     private static final HandlerList handlers = new HandlerList();
     
-    public ArenaStartCancelledEvent(LocalArena arena)
+    public ArenaStartCancelledEvent(final LocalArena arena)
     {
         super(arena);
     }
