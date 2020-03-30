@@ -1,7 +1,5 @@
 package pl.north93.northplatform.globalshops.controller;
 
-import javax.xml.bind.JAXB;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -10,11 +8,12 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.globalshops.controller.cfg.ItemsGroupCfg;
-import pl.north93.northplatform.globalshops.shared.ItemsDataContainer;
 import pl.north93.northplatform.api.global.ApiCore;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 import pl.north93.northplatform.controller.configserver.source.IConfigSource;
+import pl.north93.northplatform.globalshops.controller.cfg.ItemsGroupCfg;
+import pl.north93.northplatform.globalshops.shared.ItemsDataContainer;
 
 public class ShopsConfigSource implements IConfigSource<ItemsDataContainer>
 {
@@ -42,7 +41,7 @@ public class ShopsConfigSource implements IConfigSource<ItemsDataContainer>
 
     private ItemsGroupCfg loadGroup(final File file)
     {
-        return JAXB.unmarshal(file, ItemsGroupCfg.class);
+        return JaxbUtils.unmarshal(file, ItemsGroupCfg.class);
     }
 
     @Override

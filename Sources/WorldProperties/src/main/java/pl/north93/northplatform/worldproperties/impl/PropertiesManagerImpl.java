@@ -1,7 +1,5 @@
 package pl.north93.northplatform.worldproperties.impl;
 
-import javax.xml.bind.JAXB;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,14 +16,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.tick.ITickableManager;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 import pl.north93.northplatform.worldproperties.IPlayerProperties;
 import pl.north93.northplatform.worldproperties.IWorldProperties;
 import pl.north93.northplatform.worldproperties.IWorldPropertiesManager;
 import pl.north93.northplatform.worldproperties.PropertiesConfig;
 import pl.north93.northplatform.worldproperties.impl.xml.XmlWorldProperties;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
-import pl.north93.northplatform.api.bukkit.tick.ITickableManager;
-import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 
 @Slf4j
 public class PropertiesManagerImpl implements IWorldPropertiesManager, Listener
@@ -107,7 +106,7 @@ public class PropertiesManagerImpl implements IWorldPropertiesManager, Listener
             System.out.println(new File(".").getAbsolutePath());
             if ( xmlFile.isFile() )
             {
-                JAXB.unmarshal(xmlFile, XmlWorldProperties.class).applyToConfig(serverConfig);
+                JaxbUtils.unmarshal(xmlFile, XmlWorldProperties.class).applyToConfig(serverConfig);
             }
             else
             {

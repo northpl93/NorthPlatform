@@ -2,27 +2,28 @@ package pl.north93.northplatform.api.global.permissions;
 
 import javax.annotation.Nullable;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.component.Component;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.config.ConfigUpdatedNetEvent;
 import pl.north93.northplatform.api.global.config.IConfig;
 import pl.north93.northplatform.api.global.config.NetConfig;
 import pl.north93.northplatform.api.global.redis.event.NetEventSubscriber;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 @Slf4j
 public class PermissionsManager extends Component
 {
     @Inject @NetConfig(type = GroupsContainer.class, id = "groups")
-    private       IConfig<GroupsContainer> groups;
-    private final Set<Group>               cachedGroups = new HashSet<>();
-    private       Group                    defaultGroup;
+    private IConfig<GroupsContainer> groups;
+    private final Map<String, Group> cachedGroups = new HashMap<>();
+    private Group defaultGroup;
 
     @Override
     protected void enableComponent()
@@ -37,14 +38,7 @@ public class PermissionsManager extends Component
 
     public Group getGroupByName(final String name)
     {
-        for (final Group cachedGroup : this.cachedGroups)
-        {
-            if (cachedGroup.getName().equals(name))
-            {
-                return cachedGroup;
-            }
-        }
-        return null;
+        return this.cachedGroups.get(name.toLowerCase(Locale.ROOT));
     }
 
     public Group getDefaultGroup()
@@ -80,7 +74,9 @@ public class PermissionsManager extends Component
         {
             final Group group = new Group(groupEntry.name, groupEntry.chatFormat, groupEntry.joinMessage);
             groupEntry.permissions.forEach(group::addPermission);
-            this.cachedGroups.add(group);
+
+            final String name = group.getName().toLowerCase(Locale.ROOT);
+            this.cachedGroups.put(name, group);
         }
 
         // All groups populated. Now link the inheritance.

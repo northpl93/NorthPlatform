@@ -1,6 +1,5 @@
 package pl.north93.northplatform.lobby.chest.opening;
 
-import javax.xml.bind.JAXB;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -13,8 +12,9 @@ import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.lobby.hub.HubWorld;
 import pl.north93.northplatform.api.bukkit.utils.xml.XmlLocation;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
+import pl.north93.northplatform.api.minigame.server.lobby.hub.HubWorld;
 
 @XmlRootElement(name = "hubOpening")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -65,7 +65,7 @@ class HubOpeningConfigCache
             {
                 throw new RuntimeException("Hub.Opening.xml doesn't exists in " + hubOpeningFile.getParent());
             }
-            return JAXB.unmarshal(hubOpeningFile, HubOpeningConfig.class);
+            return JaxbUtils.unmarshal(hubOpeningFile, HubOpeningConfig.class);
         });
     }
 

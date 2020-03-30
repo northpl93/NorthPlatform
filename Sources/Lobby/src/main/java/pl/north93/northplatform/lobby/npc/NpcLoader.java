@@ -1,7 +1,5 @@
 package pl.north93.northplatform.lobby.npc;
 
-import javax.xml.bind.JAXB;
-
 import java.io.File;
 
 import org.bukkit.World;
@@ -10,9 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.citizensnpcs.api.npc.NPCRegistry;
+import pl.north93.northplatform.api.bukkit.server.IWorldInitializer;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 import pl.north93.northplatform.lobby.npc.xml.WorldNpcs;
 import pl.north93.northplatform.lobby.npc.xml.XmlNpc;
-import pl.north93.northplatform.api.bukkit.server.IWorldInitializer;
 
 @Slf4j
 public class NpcLoader implements IWorldInitializer
@@ -35,7 +34,7 @@ public class NpcLoader implements IWorldInitializer
 
         log.info("Loading NPCs from {}", xmlFile);
 
-        final WorldNpcs npcs = JAXB.unmarshal(xmlFile, WorldNpcs.class);
+        final WorldNpcs npcs = JaxbUtils.unmarshal(xmlFile, WorldNpcs.class);
         for (final XmlNpc xmlNpc : npcs.getNpcs())
         {
             xmlNpc.createNpc(this.registry, world);

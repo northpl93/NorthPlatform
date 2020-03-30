@@ -1,7 +1,5 @@
 package pl.north93.northplatform.api.economy.impl.server;
 
-import javax.xml.bind.JAXB;
-
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -16,6 +14,7 @@ import pl.north93.northplatform.api.economy.IEconomyManager;
 import pl.north93.northplatform.api.economy.impl.client.EconomyComponent;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 
 @Slf4j
 public class EconomyServerComponent extends Component
@@ -27,7 +26,7 @@ public class EconomyServerComponent extends Component
     @Override
     protected void enableComponent()
     {
-        this.config = JAXB.unmarshal(this.getApiCore().getFile("vault.xml"), VaultConfig.class);
+        this.config = JaxbUtils.unmarshal(this.getApiCore().getFile("vault.xml"), VaultConfig.class);
         if (this.config.isEnableVaultIntegration())
         {
             this.enableIntegration();

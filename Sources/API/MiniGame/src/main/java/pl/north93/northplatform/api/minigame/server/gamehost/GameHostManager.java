@@ -1,7 +1,5 @@
 package pl.north93.northplatform.api.minigame.server.gamehost;
 
-import javax.xml.bind.JAXB;
-
 import java.io.File;
 import java.util.UUID;
 
@@ -14,6 +12,13 @@ import org.spigotmc.SneakyThrow;
 import org.spigotmc.SpigotConfig;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.world.IWorldManager;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.redis.event.IEventManager;
+import pl.north93.northplatform.api.global.redis.rpc.IRpcManager;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
+import pl.north93.northplatform.api.global.utils.exceptions.ConfigurationException;
 import pl.north93.northplatform.api.minigame.server.IServerManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.region.impl.RegionManagerImpl;
@@ -27,12 +32,6 @@ import pl.north93.northplatform.api.minigame.shared.api.cfg.MiniGameConfig;
 import pl.north93.northplatform.api.minigame.shared.api.hub.IHubServer;
 import pl.north93.northplatform.api.minigame.shared.api.status.IPlayerStatus;
 import pl.north93.northplatform.api.minigame.shared.api.status.InGameStatus;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
-import pl.north93.northplatform.api.bukkit.world.IWorldManager;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.utils.exceptions.ConfigurationException;
-import pl.north93.northplatform.api.global.redis.event.IEventManager;
-import pl.north93.northplatform.api.global.redis.rpc.IRpcManager;
 
 @Slf4j
 public class GameHostManager implements IServerManager
@@ -168,7 +167,7 @@ public class GameHostManager implements IServerManager
 
     private void loadConfig()
     {
-        this.miniGameConfig = JAXB.unmarshal(this.apiCore.getFile("minigame.xml"), MiniGameConfig.class);
+        this.miniGameConfig = JaxbUtils.unmarshal(this.apiCore.getFile("minigame.xml"), MiniGameConfig.class);
         this.validateConfig();
     }
     

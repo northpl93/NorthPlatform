@@ -1,19 +1,18 @@
 package pl.north93.northplatform.minigame.goldhunter.classes;
 
-import javax.xml.bind.JAXB;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 
-import pl.north93.northplatform.minigame.goldhunter.GoldHunterLogger;
-import pl.north93.northplatform.minigame.goldhunter.classes.xml.XmlClassDesc;
-import pl.north93.northplatform.minigame.goldhunter.classes.xml.XmlClasses;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
+import pl.north93.northplatform.minigame.goldhunter.GoldHunterLogger;
+import pl.north93.northplatform.minigame.goldhunter.classes.xml.XmlClassDesc;
+import pl.north93.northplatform.minigame.goldhunter.classes.xml.XmlClasses;
 
 public class CharacterClassManager
 {
@@ -33,7 +32,7 @@ public class CharacterClassManager
     
     public void initClasses()
     {
-        XmlClasses classes = JAXB.unmarshal(getClass().getResourceAsStream("/classes.xml"), XmlClasses.class);
+        XmlClasses classes = JaxbUtils.unmarshal(getClass().getResourceAsStream("/classes.xml"), XmlClasses.class);
         
         classes.getClasses().forEach(this::loadCharacterClass);
     }
@@ -42,7 +41,7 @@ public class CharacterClassManager
     {
         try
         {
-            XmlClassDesc classDesc = JAXB.unmarshal(getClass().getResourceAsStream("/classes/" + className + ".xml"), XmlClassDesc.class);
+            XmlClassDesc classDesc = JaxbUtils.unmarshal(getClass().getResourceAsStream("/classes/" + className + ".xml"), XmlClassDesc.class);
             characterClasses.put(className, classDesc.toCharacterClass(messages));
         }
         catch ( Exception e )

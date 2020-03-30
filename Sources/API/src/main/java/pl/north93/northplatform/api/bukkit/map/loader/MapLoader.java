@@ -1,19 +1,18 @@
 package pl.north93.northplatform.api.bukkit.map.loader;
 
-import javax.xml.bind.JAXB;
-
 import java.io.File;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import pl.north93.northplatform.api.bukkit.map.loader.xml.MapConfig;
-import pl.north93.northplatform.api.bukkit.map.loader.xml.MapsConfig;
-import pl.north93.northplatform.api.bukkit.server.IWorldInitializer;
 import pl.north93.northplatform.api.bukkit.map.IBoard;
 import pl.north93.northplatform.api.bukkit.map.IMapManager;
 import pl.north93.northplatform.api.bukkit.map.IMapRenderer;
+import pl.north93.northplatform.api.bukkit.map.loader.xml.MapConfig;
+import pl.north93.northplatform.api.bukkit.map.loader.xml.MapsConfig;
+import pl.north93.northplatform.api.bukkit.server.IWorldInitializer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 
 /**
  * Klasa odpowiadająca za automatyczne wczytywanie map-obrazów z konfiguracji
@@ -33,7 +32,7 @@ public class MapLoader implements IWorldInitializer
             return;
         }
 
-        final MapsConfig mapsConfig = JAXB.unmarshal(xmlFile, MapsConfig.class);
+        final MapsConfig mapsConfig = JaxbUtils.unmarshal(xmlFile, MapsConfig.class);
         for (final MapConfig mapConfig : mapsConfig.getMaps())
         {
             final Location left = mapConfig.getLeftCorner().toBukkit(world);

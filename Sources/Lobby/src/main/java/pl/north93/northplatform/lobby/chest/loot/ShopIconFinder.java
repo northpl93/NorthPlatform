@@ -1,12 +1,11 @@
 package pl.north93.northplatform.lobby.chest.loot;
 
-import static pl.north93.northplatform.lobby.chest.loot.XmlGuiElementReflect.getOnClick;
 import static pl.north93.northplatform.api.global.utils.lang.CollectionUtils.findInCollection;
+import static pl.north93.northplatform.lobby.chest.loot.XmlGuiElementReflect.getOnClick;
 
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.xml.bind.JAXB;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -29,14 +28,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.globalshops.server.domain.Item;
-import pl.north93.northplatform.globalshops.server.domain.ItemsGroup;
 import pl.north93.northplatform.api.bukkit.gui.impl.XmlLayoutRegistry;
 import pl.north93.northplatform.api.bukkit.gui.impl.xml.XmlButtonElement;
-import pl.north93.northplatform.api.bukkit.gui.impl.xml.XmlStaticContainerElement;
 import pl.north93.northplatform.api.bukkit.gui.impl.xml.XmlGuiElement;
 import pl.north93.northplatform.api.bukkit.gui.impl.xml.XmlGuiLayout;
+import pl.north93.northplatform.api.bukkit.gui.impl.xml.XmlStaticContainerElement;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
+import pl.north93.northplatform.globalshops.server.domain.Item;
+import pl.north93.northplatform.globalshops.server.domain.ItemsGroup;
 
 /**
  * Klasa wyszukujaca w plikach konfiguracyjnych GUI sklepu
@@ -53,7 +53,7 @@ public class ShopIconFinder
     private ShopIconFinder()
     {
         final URL file = ShopIconFinder.class.getResource("/ItemIconMapping.xml");
-        this.iconMappingsXml = JAXB.unmarshal(file, IconMappingsXml.class);
+        this.iconMappingsXml = JaxbUtils.unmarshal(file, IconMappingsXml.class);
     }
 
     /**

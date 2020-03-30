@@ -3,7 +3,7 @@ package pl.north93.northplatform.api.global.storage;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
-import com.lambdaworks.redis.codec.RedisCodec;
+import io.lettuce.core.codec.RedisCodec;
 
 public class StringByteRedisCodec implements RedisCodec<String, byte[]>
 {

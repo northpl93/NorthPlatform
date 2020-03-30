@@ -1,15 +1,14 @@
 package pl.north93.northplatform.api.bukkit.hologui.hologram.loader;
 
-import javax.xml.bind.JAXB;
-
 import java.io.File;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 
 import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologram;
-import pl.north93.northplatform.api.bukkit.server.IWorldInitializer;
 import pl.north93.northplatform.api.bukkit.hologui.hologram.impl.HologramFactory;
+import pl.north93.northplatform.api.bukkit.server.IWorldInitializer;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 
 public class HologramLoader implements IWorldInitializer
 {
@@ -22,7 +21,7 @@ public class HologramLoader implements IWorldInitializer
             return;
         }
 
-        final HologramsConfig holograms = JAXB.unmarshal(xmlFile, HologramsConfig.class);
+        final HologramsConfig holograms = JaxbUtils.unmarshal(xmlFile, HologramsConfig.class);
         for (final HologramEntryConfig entryConfig : holograms.getHolograms())
         {
             final Location location = entryConfig.getLocation().toBukkit(world);

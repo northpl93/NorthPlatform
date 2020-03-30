@@ -2,12 +2,11 @@ package pl.north93.northplatform.controller.playerfixer;
 
 import java.util.List;
 
-import com.lambdaworks.redis.api.sync.RedisCommands;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import io.lettuce.core.api.sync.RedisCommands;
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;

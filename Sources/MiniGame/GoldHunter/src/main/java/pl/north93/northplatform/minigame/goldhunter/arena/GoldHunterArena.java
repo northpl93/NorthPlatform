@@ -1,7 +1,5 @@
 package pl.north93.northplatform.minigame.goldhunter.arena;
 
-import javax.xml.bind.JAXB;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,6 +29,15 @@ import org.bukkit.util.Vector;
 
 import org.slf4j.Logger;
 
+import pl.north93.northplatform.api.bukkit.gui.IGuiManager;
+import pl.north93.northplatform.api.bukkit.tick.ITickable;
+import pl.north93.northplatform.api.bukkit.tick.Tick;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.messages.Messages;
+import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.messages.TranslatableString;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
+import pl.north93.northplatform.api.global.utils.lang.ListUtils;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.IArenaData;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
@@ -42,14 +49,6 @@ import pl.north93.northplatform.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.northplatform.minigame.goldhunter.player.PlayerRank;
 import pl.north93.northplatform.minigame.goldhunter.scoreboard.ArenaScoreboardManager;
 import pl.north93.northplatform.minigame.goldhunter.utils.TimeStringUtils;
-import pl.north93.northplatform.api.bukkit.gui.IGuiManager;
-import pl.north93.northplatform.api.bukkit.tick.ITickable;
-import pl.north93.northplatform.api.bukkit.tick.Tick;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.messages.Messages;
-import pl.north93.northplatform.api.global.messages.MessagesBox;
-import pl.north93.northplatform.api.global.messages.TranslatableString;
-import pl.north93.northplatform.api.global.utils.lang.ListUtils;
 
 public class GoldHunterArena implements IArenaData, ITickable
 {
@@ -183,7 +182,7 @@ public class GoldHunterArena implements IArenaData, ITickable
     {
         logger.debug("Arena gameStart()");
         
-        mapConfig = JAXB.unmarshal(localArena.getWorld().getResource("ghmap.xml"), GoldHunterMapConfig.class);
+        mapConfig = JaxbUtils.unmarshal(localArena.getWorld().getResource("ghmap.xml"), GoldHunterMapConfig.class);
         mapConfig.validateConfig();
         
         setupSpawns();

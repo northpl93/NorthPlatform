@@ -1,7 +1,5 @@
 package pl.north93.northplatform.api.bukkit.gui.impl;
 
-import javax.xml.bind.JAXB;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +15,7 @@ import pl.north93.northplatform.api.bukkit.gui.impl.xml.XmlGuiLayout;
 import pl.north93.northplatform.api.bukkit.gui.impl.xml.XmlHotbarLayout;
 import pl.north93.northplatform.api.global.ApiCore;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 import pl.north93.northplatform.api.global.utils.lang.CatchException;
 
 @Slf4j
@@ -65,7 +64,7 @@ public class XmlLayoutRegistry
     private static void loadGuiLayout(ClassLoader cl, String path)
     {
         String name = path.substring("gui/".length(), path.length() - ".xml".length());
-        XmlGuiLayout layout = JAXB.unmarshal(cl.getResourceAsStream(path), XmlGuiLayout.class);
+        XmlGuiLayout layout = JaxbUtils.unmarshal(cl.getResourceAsStream(path), XmlGuiLayout.class);
         loadedGuiLayouts.putIfAbsent(name, layout);
         log.info("Loaded gui layout with name {}", name);
     }
@@ -73,7 +72,7 @@ public class XmlLayoutRegistry
     private static void loadHotbarLayout(ClassLoader cl, String path)
     {
         String name = path.substring("hotbar/".length(), path.length() - ".xml".length());
-        XmlHotbarLayout layout = JAXB.unmarshal(cl.getResourceAsStream(path), XmlHotbarLayout.class);
+        XmlHotbarLayout layout = JaxbUtils.unmarshal(cl.getResourceAsStream(path), XmlHotbarLayout.class);
         loadedHotbarLayouts.putIfAbsent(name, layout);
         log.info("Loaded hotbar layout with name {}", name);
     }

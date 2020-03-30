@@ -3,8 +3,6 @@ package pl.north93.northplatform.api.global.component.impl.general;
 import static pl.north93.northplatform.api.global.utils.lang.CollectionUtils.findInCollection;
 
 
-import javax.xml.bind.JAXB;
-
 import java.io.File;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -27,20 +25,21 @@ import org.reflections.Reflections;
 import javassist.ClassPool;
 import javassist.LoaderClassPath;
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.global.Platform;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.ComponentDescription;
 import pl.north93.northplatform.api.global.component.IComponentBundle;
 import pl.north93.northplatform.api.global.component.IComponentManager;
+import pl.north93.northplatform.api.global.component.impl.aggregation.AggregationManager;
+import pl.north93.northplatform.api.global.component.impl.container.BeanFactory;
 import pl.north93.northplatform.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.northplatform.api.global.component.impl.context.ComponentBeanContext;
 import pl.north93.northplatform.api.global.component.impl.context.RootBeanContext;
 import pl.north93.northplatform.api.global.component.impl.profile.ProfileManagerImpl;
 import pl.north93.northplatform.api.global.component.impl.scanner.ClassloaderScanningTask;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
-import pl.north93.northplatform.api.global.ApiCore;
-import pl.north93.northplatform.api.global.Platform;
-import pl.north93.northplatform.api.global.component.impl.aggregation.AggregationManager;
-import pl.north93.northplatform.api.global.component.impl.container.BeanFactory;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 
 @Slf4j
 public class ComponentManagerImpl implements IComponentManager
@@ -238,7 +237,7 @@ public class ComponentManagerImpl implements IComponentManager
         {
             return null;
         }
-        return JAXB.unmarshal(stream, ComponentsConfig.class);
+        return JaxbUtils.unmarshal(stream, ComponentsConfig.class);
     }
 
     private void scanClassloaderWithoutComponents(final ClassLoader classLoader, final Set<String> excludedPackages, final List<ComponentDescription> components)

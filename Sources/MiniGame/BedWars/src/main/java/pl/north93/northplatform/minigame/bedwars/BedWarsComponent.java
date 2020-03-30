@@ -1,7 +1,5 @@
 package pl.north93.northplatform.minigame.bedwars;
 
-import javax.xml.bind.JAXB;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -15,6 +13,7 @@ import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.component.annotations.bean.Named;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 import pl.north93.northplatform.api.minigame.server.MiniGameServer;
 import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
 import pl.north93.northplatform.minigame.bedwars.arena.generator.ItemRotator;
@@ -81,13 +80,13 @@ public class BedWarsComponent extends Component
     @Bean
     private BwConfig bedWarsConfig(final ApiCore api)
     {
-        return JAXB.unmarshal(api.getFile("MiniGame.BedWars.xml"), BwConfig.class);
+        return JaxbUtils.unmarshal(api.getFile("MiniGame.BedWars.xml"), BwConfig.class);
     }
 
     @Bean
     private BwShopConfig bedWarsShopConfig(final ApiCore api)
     {
-        return JAXB.unmarshal(api.getFile("MiniGame.BedWars.Shop.xml"), BwShopConfig.class);
+        return JaxbUtils.unmarshal(api.getFile("MiniGame.BedWars.Shop.xml"), BwShopConfig.class);
     }
 
     @Bean @Named("BedWarsNpcRegistry")

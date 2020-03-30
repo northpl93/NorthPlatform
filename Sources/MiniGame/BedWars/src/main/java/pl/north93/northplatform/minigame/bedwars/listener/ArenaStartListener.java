@@ -1,7 +1,5 @@
 package pl.north93.northplatform.minigame.bedwars.listener;
 
-import javax.xml.bind.JAXB;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -15,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.bukkit.utils.nms.FastBlockOp;
 import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.LobbyInitEvent;
@@ -38,7 +37,7 @@ public class ArenaStartListener implements Listener
     {
         final LocalArena arena = event.getArena();
 
-        final BwArenaConfig arenaConfig = JAXB.unmarshal(arena.getWorld().getResource("BedWarsArena.xml"), BwArenaConfig.class);
+        final BwArenaConfig arenaConfig = JaxbUtils.unmarshal(arena.getWorld().getResource("BedWarsArena.xml"), BwArenaConfig.class);
         arena.setArenaData(new BedWarsArena(arena, this.config, arenaConfig));
 
         // ustawiamy formatter naszemu głównemu pokojowi czatu,

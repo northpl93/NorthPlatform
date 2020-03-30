@@ -1,7 +1,5 @@
 package pl.north93.northplatform.worldproperties.impl;
 
-import javax.xml.bind.JAXB;
-
 import java.io.File;
 import java.util.Map;
 
@@ -13,14 +11,15 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.bukkit.tick.ITickable;
+import pl.north93.northplatform.api.bukkit.tick.Tick;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 import pl.north93.northplatform.worldproperties.IWorldProperties;
 import pl.north93.northplatform.worldproperties.PropertiesConfig;
 import pl.north93.northplatform.worldproperties.Weather;
 import pl.north93.northplatform.worldproperties.impl.util.GamerulesUtils;
 import pl.north93.northplatform.worldproperties.impl.xml.XmlWorldProperties;
-import pl.north93.northplatform.api.bukkit.tick.ITickable;
-import pl.north93.northplatform.api.bukkit.tick.Tick;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 @Slf4j
 public class WorldPropertiesImpl implements IWorldProperties, ITickable
@@ -129,7 +128,7 @@ public class WorldPropertiesImpl implements IWorldProperties, ITickable
             File xmlFile = new File(world.getWorldFolder(), "world-properties.xml");
             if ( xmlFile.isFile() )
             {
-                JAXB.unmarshal(xmlFile, XmlWorldProperties.class).applyToConfig(worldConfig);
+                JaxbUtils.unmarshal(xmlFile, XmlWorldProperties.class).applyToConfig(worldConfig);
             }
             else
             {

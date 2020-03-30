@@ -7,13 +7,12 @@ import static pl.north93.northplatform.api.global.utils.lang.StringUtils.toBytes
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.lambdaworks.redis.ScoredValue;
-import com.lambdaworks.redis.api.sync.RedisCommands;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.Pair;
 
+import io.lettuce.core.ScoredValue;
+import io.lettuce.core.api.sync.RedisCommands;
 import pl.north93.northplatform.api.global.redis.observable.SortedSet;
 import pl.north93.northplatform.api.global.utils.lang.StringUtils;
 
@@ -110,7 +109,7 @@ class SortedSetImpl<K> implements SortedSet<K>
 
     private Pair<String, Long> tupleToPair(final ScoredValue<byte[]> value) // used by *WithScore
     {
-        return Pair.of(asString(value.value), (long) value.score);
+        return Pair.of(asString(value.getValue()), (long) value.getScore());
     }
 
     @Override

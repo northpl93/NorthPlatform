@@ -1,7 +1,6 @@
 package pl.north93.northplatform.api.global.redis.subscriber;
 
-import com.lambdaworks.redis.pubsub.StatefulRedisPubSubConnection;
-
+import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.component.Component;

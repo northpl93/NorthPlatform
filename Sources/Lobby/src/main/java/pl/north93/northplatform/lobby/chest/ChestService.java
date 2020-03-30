@@ -5,8 +5,6 @@ import static java.util.Collections.unmodifiableCollection;
 import static pl.north93.northplatform.api.global.utils.lang.CollectionUtils.findInCollection;
 
 
-import javax.xml.bind.JAXB;
-
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
@@ -26,6 +24,7 @@ import pl.north93.northplatform.api.global.network.players.IPlayer;
 import pl.north93.northplatform.api.global.network.players.IPlayerTransaction;
 import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.network.players.Identity;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 
 /**
  * Klasa zarzadzajaca konfiguracja skrzynek i iloscia skrzynek
@@ -42,7 +41,7 @@ public class ChestService
     private ChestService()
     {
         final URL chestTypesFile = ChestService.class.getResource("/ChestTypes.xml");
-        this.typeConfig = JAXB.unmarshal(chestTypesFile, ChestTypeConfig.class);
+        this.typeConfig = JaxbUtils.unmarshal(chestTypesFile, ChestTypeConfig.class);
     }
 
     /**

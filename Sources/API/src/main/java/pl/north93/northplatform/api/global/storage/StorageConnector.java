@@ -1,12 +1,15 @@
 package pl.north93.northplatform.api.global.storage;
 
-import com.lambdaworks.redis.RedisClient;
-import com.lambdaworks.redis.RedisURI;
-import com.lambdaworks.redis.api.StatefulRedisConnection;
-import com.lambdaworks.redis.api.sync.RedisCommands;
-import com.mongodb.*;
+import java.time.Duration;
+import java.util.function.Function;
+import java.util.logging.Logger;
+
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.BsonReader;
@@ -14,15 +17,18 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.codecs.configuration.CodecRegistry;
+
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisURI;
+import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.sync.RedisCommands;
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.utils.ConfigUtils;
 import pl.north93.serializer.mongodb.MongoDbCodec;
 import pl.north93.serializer.mongodb.MongoDbSerializationFormat;
 import pl.north93.serializer.platform.NorthSerializer;
 import pl.north93.serializer.platform.template.impl.NorthSerializerImpl;
-
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 @Slf4j
 public class StorageConnector extends Component
@@ -39,10 +45,11 @@ public class StorageConnector extends Component
         final ConnectionConfig config = ConfigUtils.loadConfig(ConnectionConfig.class, "connection.xml");
 
         final RedisURI connectionUri = RedisURI.Builder.redis(config.getRedisHost(), config.getRedisPort())
-                                               .withPassword(config.getRedisPassword())
-                                               .withTimeout(config.getRedisTimeout(), TimeUnit.MILLISECONDS)
-                                               .withDatabase(0)
-                                               .build();
+                                                       .withPassword(config.getRedisPassword())
+                                                       .withTimeout(Duration.ofMillis(config.getRedisTimeout()))
+                                                       .withDatabase(0)
+                                                       .build();
+
         this.redisClient = RedisClient.create(connectionUri);
         this.redisConnection  = this.redisClient.connect(StringByteRedisCodec.INSTANCE);
         this.atomicallyConnection = this.redisClient.connect(StringByteRedisCodec.INSTANCE);

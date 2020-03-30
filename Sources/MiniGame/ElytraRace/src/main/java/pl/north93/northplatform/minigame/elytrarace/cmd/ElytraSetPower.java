@@ -3,8 +3,6 @@ package pl.north93.northplatform.minigame.elytrarace.cmd;
 import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 
 
-import javax.xml.bind.JAXB;
-
 import java.io.File;
 
 import org.bukkit.ChatColor;
@@ -13,6 +11,7 @@ import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.north93.northplatform.minigame.elytrarace.cfg.Boost;
@@ -69,7 +68,7 @@ public class ElytraSetPower extends NorthCommand
 
                 player.sendMessage(ChatColor.GREEN + "Ustawiono moc na " + boost.getHeightPower() + "/" + boost.getSpeedPower());
 
-                JAXB.marshal(arenaData.getArenaConfig(), new File(arena.getWorld().getCurrentMapTemplate().getMapDirectory(), "ElytraRaceArena.xml"));
+                JaxbUtils.marshal(arenaData.getArenaConfig(), new File(arena.getWorld().getCurrentMapTemplate().getMapDirectory(), "ElytraRaceArena.xml"));
 
                 return;
             }

@@ -65,8 +65,7 @@ public final class DioriteReflectionUtils
             methodModifiersOffset = unsafe.objectFieldOffset(methodModifiers);
             fieldModifiers = Field.class.getDeclaredField("modifiers");
             fieldModifiersOffset = unsafe.objectFieldOffset(fieldModifiers);
-            //setAccessible = AccessibleObject.class.getDeclaredMethod("setAccessible0", boolean.class);
-            setAccessible = AccessibleObject.class.getDeclaredMethod("setAccessible0", AccessibleObject.class, boolean.class);
+            setAccessible = AccessibleObject.class.getDeclaredMethod("setAccessible0", boolean.class);
             setForceAccessible(setAccessible);
         }
         catch (Exception e)
@@ -328,7 +327,7 @@ public final class DioriteReflectionUtils
                 for (Method cm : clazz.getMethods())
                 {
                     if ((cm.getName().equalsIgnoreCase("get" + fieldName) || cm.getName().equalsIgnoreCase("is" + fieldName)) &&
-                        (cm.getReturnType() != Void.class) && (cm.getReturnType() != void.class) && (cm.getParameterCount() == 0))
+                                (cm.getReturnType() != Void.class) && (cm.getReturnType() != void.class) && (cm.getParameterCount() == 0))
                     {
                         m = cm;
                         break;
@@ -396,7 +395,7 @@ public final class DioriteReflectionUtils
                 for (Method cm : clazz.getMethods())
                 {
                     if ((cm.getName().equalsIgnoreCase("get" + fieldName) || cm.getName().equalsIgnoreCase("is" + fieldName)) &&
-                        (cm.getReturnType() != Void.class) && (cm.getReturnType() != void.class) && (cm.getParameterCount() == 0))
+                                (cm.getReturnType() != Void.class) && (cm.getReturnType() != void.class) && (cm.getParameterCount() == 0))
                     {
                         m = cm;
                         break;
@@ -634,7 +633,7 @@ public final class DioriteReflectionUtils
         {
             try
             {
-                setAccessible.invoke(null, o, true);
+                setAccessible.invoke(o, true);
             }
             catch (Exception e)
             {
@@ -866,7 +865,7 @@ public final class DioriteReflectionUtils
         for (Method method : clazz.getDeclaredMethods())
         {
             if (((methodName == null) || method.getName().equals(methodName)) && ((returnType == null) || method.getReturnType().equals(returnType)) &&
-                Arrays.equals(method.getParameterTypes(), params))
+                        Arrays.equals(method.getParameterTypes(), params))
             {
                 getAccess(method);
                 return new MethodInvoker(method);
@@ -906,7 +905,7 @@ public final class DioriteReflectionUtils
         for (Method method : clazz.getDeclaredMethods())
         {
             if (((methodName == null) || method.getName().equals(methodName)) && ((returnType == null) || method.getReturnType().equals(returnType)) &&
-                Arrays.equals(method.getParameterTypes(), params))
+                        Arrays.equals(method.getParameterTypes(), params))
             {
                 getAccess(method);
                 return new MethodInvoker(method);
@@ -950,7 +949,7 @@ public final class DioriteReflectionUtils
         for (Method method : clazz.getDeclaredMethods())
         {
             if (((params.length == 0) || Arrays.equals(method.getParameterTypes(), params)) && ((methodName == null) || method.getName().equals(methodName)) &&
-                ((returnType == null) || method.getReturnType().equals(returnType)))
+                        ((returnType == null) || method.getReturnType().equals(returnType)))
             {
                 getAccess(method);
                 return new MethodInvoker(method);
@@ -1270,7 +1269,7 @@ public final class DioriteReflectionUtils
             }
             // if aType is less specialized than bType
             if ((aType.isPrimitive() && ! bType.isPrimitive()) ||
-                DioriteReflectionUtils.getWrapperClass(aType).isAssignableFrom(DioriteReflectionUtils.getWrapperClass(bType)))
+                        DioriteReflectionUtils.getWrapperClass(aType).isAssignableFrom(DioriteReflectionUtils.getWrapperClass(bType)))
             {
                 // one of prev types was less specialized, javac fails to find such constructor, we should too
                 if (result < 0)

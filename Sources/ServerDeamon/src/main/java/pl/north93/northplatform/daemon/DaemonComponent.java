@@ -1,7 +1,5 @@
 package pl.north93.northplatform.daemon;
 
-import javax.xml.bind.JAXB;
-
 import com.google.common.eventbus.EventBus;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,6 +11,7 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.component.annotations.bean.Named;
 import pl.north93.northplatform.api.global.network.daemon.DaemonRpc;
 import pl.north93.northplatform.api.global.redis.rpc.IRpcManager;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 import pl.north93.northplatform.daemon.cfg.DaemonConfig;
 import pl.north93.northplatform.daemon.network.DaemonInfoHandler;
 import pl.north93.northplatform.daemon.servers.ProcessWatchdog;
@@ -41,7 +40,7 @@ public class DaemonComponent extends Component
     @Bean
     private DaemonConfig daemonConfig()
     {
-        return JAXB.unmarshal(this.getApiCore().getFile("daemon.xml"), DaemonConfig.class);
+        return JaxbUtils.unmarshal(this.getApiCore().getFile("daemon.xml"), DaemonConfig.class);
     }
 
     @Named("daemon") @Bean

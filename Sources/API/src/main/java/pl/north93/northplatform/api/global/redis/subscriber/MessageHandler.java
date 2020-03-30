@@ -6,8 +6,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import com.lambdaworks.redis.pubsub.RedisPubSubAdapter;
-
+import io.lettuce.core.pubsub.RedisPubSubAdapter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 

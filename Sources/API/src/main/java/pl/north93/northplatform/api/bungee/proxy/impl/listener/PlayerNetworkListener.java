@@ -53,19 +53,19 @@ import pl.north93.northplatform.api.global.redis.observable.Value;
 @Slf4j
 public class PlayerNetworkListener implements Listener
 {
-    private static final Pattern             NICK_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{3,16}$");
+    private static final Pattern NICK_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{3,16}$");
     @Inject @Messages("Messages")
-    private              MessagesBox         apiMessages;
+    private MessagesBox apiMessages;
     @Inject
-    private              BungeeApiCore       bungeeApiCore;
+    private BungeeApiCore bungeeApiCore;
     @Inject
-    private              IObservationManager observer;
+    private IObservationManager observer;
     @Inject
-    private              IEventManager       eventManager;
+    private IEventManager eventManager;
     @Inject
-    private              IMojangCache        mojangCache;
+    private IMojangCache mojangCache;
     @Inject
-    private              IPlayersManager     playersManager;
+    private IPlayersManager playersManager;
 
     @EventHandler
     public void onLogin(final PreLoginEvent event)

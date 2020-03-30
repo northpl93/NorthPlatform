@@ -8,9 +8,14 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 /**
  * Represents a permissions group.
  */
+@NoArgsConstructor
+@EqualsAndHashCode(of = "name")
 public class Group
 {
     private String name;
@@ -107,51 +112,6 @@ public class Group
     public void removeInheritGroup(final Group group)
     {
         this.inheritance.remove(group);
-    }
-
-    @Override
-    public boolean equals(final Object o)
-    {
-        if (this == o)
-        {
-            return true;
-        }
-        if (o == null || this.getClass() != o.getClass())
-        {
-            return false;
-        }
-
-        final Group group = (Group) o;
-
-        if (! this.name.equals(group.name))
-        {
-            return false;
-        }
-        if (! this.chatFormat.equals(group.chatFormat))
-        {
-            return false;
-        }
-        if (! this.joinMessage.equals(group.joinMessage))
-        {
-            return false;
-        }
-        if (! this.permissions.equals(group.permissions))
-        {
-            return false;
-        }
-        return this.inheritance.equals(group.inheritance);
-
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int result = this.name.hashCode();
-        result = 31 * result + this.chatFormat.hashCode();
-        result = 31 * result + this.joinMessage.hashCode();
-        result = 31 * result + this.permissions.hashCode();
-        result = 31 * result + this.inheritance.hashCode();
-        return result;
     }
 
     @Override

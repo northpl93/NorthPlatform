@@ -6,11 +6,10 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import com.lambdaworks.redis.ScriptOutputType;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import io.lettuce.core.ScriptOutputType;
 import pl.north93.northplatform.api.global.redis.observable.Cache;
 import pl.north93.northplatform.api.global.redis.observable.ObjectKey;
 import pl.north93.northplatform.api.global.redis.observable.Value;

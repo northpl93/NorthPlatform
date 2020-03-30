@@ -3,8 +3,6 @@ package pl.north93.northplatform.api.minigame.server.gamehost.arena.world;
 import static com.google.common.base.Preconditions.checkState;
 
 
-import javax.xml.bind.JAXB;
-
 import java.io.File;
 
 import org.bukkit.Location;
@@ -17,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.utils.ISyncCallback;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.deathmatch.FightStartCountdown;
@@ -163,7 +162,7 @@ public class DeathMatch
 
     private MapTemplate loadTemplate(final File dir)
     {
-        return new MapTemplate(dir.getName(), dir, JAXB.unmarshal(new File(dir, "mapconfig.xml"), GameMapConfig.class));
+        return new MapTemplate(dir.getName(), dir, JaxbUtils.unmarshal(new File(dir, "mapconfig.xml"), GameMapConfig.class));
     }
 
     @Override

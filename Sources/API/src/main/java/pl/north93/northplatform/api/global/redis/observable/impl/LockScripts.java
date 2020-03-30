@@ -1,7 +1,7 @@
 package pl.north93.northplatform.api.global.redis.observable.impl;
 
-import com.lambdaworks.redis.ScriptOutputType;
-import com.lambdaworks.redis.api.sync.RedisCommands;
+import io.lettuce.core.ScriptOutputType;
+import io.lettuce.core.api.sync.RedisCommands;
 import pl.north93.serializer.platform.NorthSerializer;
 
 /*default*/ final class LockScripts

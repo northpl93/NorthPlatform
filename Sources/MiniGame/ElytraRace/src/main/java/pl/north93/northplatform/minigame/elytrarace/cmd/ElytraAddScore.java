@@ -3,8 +3,6 @@ package pl.north93.northplatform.minigame.elytrarace.cmd;
 import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 
 
-import javax.xml.bind.JAXB;
-
 import java.io.File;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -19,6 +17,7 @@ import pl.north93.northplatform.api.bukkit.utils.xml.XmlLocation;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.north93.northplatform.minigame.elytrarace.cfg.Score;
@@ -72,6 +71,6 @@ public class ElytraAddScore extends NorthCommand
         player.sendMessage(ChatColor.GREEN + "lokacja2: " + xmlLoc2);
         player.sendMessage(" ");
 
-        JAXB.marshal(arenaData.getArenaConfig(), new File(arena.getWorld().getCurrentMapTemplate().getMapDirectory(), "ElytraRaceArena.xml"));
+        JaxbUtils.marshal(arenaData.getArenaConfig(), new File(arena.getWorld().getCurrentMapTemplate().getMapDirectory(), "ElytraRaceArena.xml"));
     }
 }

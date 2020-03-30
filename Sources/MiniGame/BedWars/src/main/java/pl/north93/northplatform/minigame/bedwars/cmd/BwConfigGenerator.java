@@ -3,8 +3,6 @@ package pl.north93.northplatform.minigame.bedwars.cmd;
 import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 
 
-import javax.xml.bind.JAXB;
-
 import java.io.File;
 
 import org.bukkit.Location;
@@ -15,6 +13,7 @@ import pl.north93.northplatform.api.bukkit.utils.xml.XmlLocation;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
 import pl.north93.northplatform.minigame.bedwars.cfg.BwArenaConfig;
@@ -87,6 +86,6 @@ public class BwConfigGenerator extends NorthCommand
     private void save(final LocalArena arena, final BwArenaConfig bwConfig)
     {
         final File mapDirectory = arena.getWorld().getCurrentMapTemplate().getMapDirectory();
-        JAXB.marshal(bwConfig, new File(mapDirectory, "BedWarsArena.xml"));
+        JaxbUtils.marshal(bwConfig, new File(mapDirectory, "BedWarsArena.xml"));
     }
 }

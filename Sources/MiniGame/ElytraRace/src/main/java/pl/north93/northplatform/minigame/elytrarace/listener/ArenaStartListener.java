@@ -1,8 +1,6 @@
 package pl.north93.northplatform.minigame.elytrarace.listener;
 
 
-import javax.xml.bind.JAXB;
-
 import java.util.Iterator;
 import java.util.Set;
 
@@ -23,6 +21,7 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.ArenaChatManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
@@ -88,7 +87,7 @@ public class ArenaStartListener implements Listener
 
     private ArenaConfig loadConfig(final LocalArena arena)
     {
-        return JAXB.unmarshal(arena.getWorld().getResource("ElytraRaceArena.xml"), ArenaConfig.class);
+        return JaxbUtils.unmarshal(arena.getWorld().getResource("ElytraRaceArena.xml"), ArenaConfig.class);
     }
 
     private void setupPlayers(final LocalArena arena, final ElytraRaceArena elytraRaceArena)

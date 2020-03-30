@@ -1,7 +1,5 @@
 package pl.north93.northplatform.api.global.utils;
 
-import javax.xml.bind.JAXB;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -34,7 +32,7 @@ public final class ConfigUtils
         if (configFile.exists())
         {
             log.info("Loading config from file {}", configFile);
-            return JAXB.unmarshal(configFile, configClass);
+            return JaxbUtils.unmarshal(configFile, configClass);
         }
 
         final String configName = configFile.getName();
@@ -56,6 +54,6 @@ public final class ConfigUtils
         }
 
         log.info("Successfully copied default config {}!", configName);
-        return JAXB.unmarshal(exampleConfig, configClass);
+        return JaxbUtils.unmarshal(exampleConfig, configClass);
     }
 }

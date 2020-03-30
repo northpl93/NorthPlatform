@@ -2,11 +2,10 @@ package pl.north93.northplatform.api.global.redis.observable.impl;
 
 import java.util.concurrent.TimeUnit;
 
-import com.lambdaworks.redis.api.sync.RedisCommands;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import io.lettuce.core.api.sync.RedisCommands;
 import pl.north93.northplatform.api.global.redis.observable.Lock;
 import pl.north93.northplatform.api.global.redis.observable.ObjectKey;
 import pl.north93.northplatform.api.global.storage.StorageConnector;
@@ -161,7 +160,7 @@ class CachedValueImpl<T> extends CachedValue<T>
     @Override
     public boolean isAvailable()
     {
-        return this.observationManager.getRedis().exists(this.objectKey.getKey());
+        return this.observationManager.getRedis().exists(this.objectKey.getKey()) > 0;
     }
 
     @Override
