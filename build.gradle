@@ -3,6 +3,12 @@
  * Also look at Sources/build.gradle
  */
 
+buildscript {
+    dependencies {
+        classpath files('Libraries/gradle-idea-ext-0.8-SNAPSHOT.jar')
+    }
+}
+
 plugins {
     id 'org.ajoberstar.grgit' version '4.0.0'
     id "io.freefair.lombok" version "4.1.6"
@@ -27,6 +33,10 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'io.freefair.lombok'
     apply plugin: 'com.github.johnrengelman.shadow'
+
+    compileJava {
+        options.compilerArgs << '-parameters'
+    }
 
     jar {
         // Add some attributes to every manifest
@@ -54,4 +64,118 @@ subprojects {
 
     // execute shadowJar when we run 'gradle build'
     tasks.build.dependsOn tasks.shadowJar
+}
+
+apply plugin: 'org.jetbrains.gradle.plugin.idea-ext'
+
+idea.project.settings {
+    ideArtifacts {
+        "API.jar" {
+            archive("API.jar") {
+                moduleOutput("NorthPlatform.API.main")
+                directoryContent('Sources/API/src/main/resources/')
+                extractedLibraries(project(":API").configurations.compile)
+            }
+        }
+
+        "API.BaseFeatures.jar" {
+            archive("API.BaseFeatures.jar") {
+                moduleOutput("NorthPlatform.API.BaseFeatures.main")
+                directoryContent('Sources/API/BaseFeatures/src/main/resources/')
+            }
+        }
+
+        "API.Chat.jar" {
+            archive("API.Chat.jar") {
+                moduleOutput("NorthPlatform.API.Chat.main")
+                directoryContent('Sources/API/Chat/src/main/resources/')
+            }
+        }
+
+        "API.Economy.jar" {
+            archive("API.Economy.jar") {
+                moduleOutput("NorthPlatform.API.Economy.main")
+                directoryContent('Sources/API/Economy/src/main/resources/')
+            }
+        }
+
+        "API.MiniGame.jar" {
+            archive("API.MiniGame.jar") {
+                moduleOutput("NorthPlatform.API.MiniGame.main")
+                directoryContent('Sources/API/MiniGame/src/main/resources/')
+            }
+        }
+
+        "AntyCheat" {
+            archive("AntyCheat.jar") {
+                moduleOutput("NorthPlatform.AntyCheat.main")
+                directoryContent('Sources/AntyCheat/src/main/resources/')
+            }
+        }
+
+        "AntyCheat.Client" {
+            archive("AntyCheat.Client.jar") {
+                moduleOutput("NorthPlatform.AntyCheat.AntyCheatClient.main")
+                directoryContent('Sources/AntyCheat/AntyCheatClient/src/main/resources/')
+            }
+        }
+
+        "GlobalShops" {
+            archive("GlobalShops.jar") {
+                moduleOutput("NorthPlatform.GlobalShops.main")
+                directoryContent('Sources/GlobalShops/src/main/resources/')
+            }
+        }
+
+        "GroovyScript" {
+            archive("GroovyScript.jar") {
+                moduleOutput("NorthPlatform.GroovyScript.main")
+                directoryContent('Sources/GroovyScript/src/main/resources/')
+                extractedLibraries(project(":GroovyScript").configurations.compile)
+            }
+        }
+
+        "ItemShop" {
+            archive("ItemShop.jar") {
+                moduleOutput("NorthPlatform.ItemShop.main")
+                directoryContent('Sources/ItemShop/src/main/resources/')
+            }
+        }
+
+        "Lobby" {
+            archive("Lobby.jar") {
+                moduleOutput("NorthPlatform.Lobby.main")
+                directoryContent('Sources/Lobby/src/main/resources/')
+            }
+        }
+
+        "NetworkController.jar" {
+            archive("NetworkController.jar") {
+                moduleOutput("NorthPlatform.NetworkController.main")
+                directoryContent('Sources/NetworkController/src/main/resources/')
+            }
+        }
+
+        "NoPremiumAuth" {
+            archive("NoPremiumAuth.jar") {
+                moduleOutput("NorthPlatform.NoPremiumAuth.main")
+                directoryContent('Sources/NoPremiumAuth/src/main/resources/')
+            }
+        }
+
+        "RestfulApi" {
+            archive("RestfulApi.jar") {
+                moduleOutput("NorthPlatform.RestfulApi.main")
+                directoryContent('Sources/RestfulApi/src/main/resources/')
+                extractedLibraries(project(":RestfulApi").configurations.compile)
+            }
+        }
+
+        "WorldProperties" {
+            archive("WorldProperties.jar") {
+                moduleOutput("NorthPlatform.WorldProperties.main")
+                directoryContent('Sources/WorldProperties/src/main/resources/')
+            }
+        }
+    }
 }
