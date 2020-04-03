@@ -1,10 +1,13 @@
 package pl.north93.northplatform.api.global.redis.observable.impl;
 
+import java.nio.charset.StandardCharsets;
+
 import io.lettuce.core.ScriptOutputType;
 import io.lettuce.core.api.sync.RedisCommands;
-import pl.north93.serializer.platform.NorthSerializer;
+import lombok.ToString;
 
-/*default*/ final class LockScripts
+@ToString(of = {"lockScriptSha", "unlockScriptSha"})
+final class LockScripts
 {
     private static final String LOCK_SCRIPT =
                     "if(redis.call('exists',KEYS[1])==1) then\n" +
@@ -37,23 +40,29 @@ import pl.north93.serializer.platform.NorthSerializer;
                         "return 0\n" +
                     "end";
 
-    public static boolean lock(final ObservationManagerImpl observationManager, final String name, final long threadId)
-    {
-        final RedisCommands<String, byte[]> redis = observationManager.getRedis();
-        final NorthSerializer<byte[], byte[]> msgPack = observationManager.getMsgPack();
+    private final RedisCommands<String, byte[]> redis;
+    private final String lockScriptSha;
+    private final String unlockScriptSha;
 
-        final byte[] arg = msgPack.serialize(Long.class, threadId);
-        return redis.eval(LockScripts.LOCK_SCRIPT, ScriptOutputType.BOOLEAN, new String[]{name}, arg);
+    public LockScripts(final RedisCommands<String, byte[]> redis)
+    {
+        this.redis = redis;
+
+        final byte[] lockScriptBytes = LOCK_SCRIPT.getBytes(StandardCharsets.UTF_8);
+        this.lockScriptSha = redis.scriptLoad(lockScriptBytes);
+
+        final byte[] unlockScriptBytes = UNLOCK_SCRIPT.getBytes(StandardCharsets.UTF_8);
+        this.unlockScriptSha = redis.scriptLoad(unlockScriptBytes);
     }
 
-    public static int unlock(final ObservationManagerImpl observationManager, final String name, final long threadId)
+    public boolean lock(final String name, final byte[] threadId)
     {
-        final RedisCommands<String, byte[]> redis = observationManager.getRedis();
-        final NorthSerializer<byte[], byte[]> msgPack = observationManager.getMsgPack();
+        return this.redis.evalsha(this.lockScriptSha, ScriptOutputType.BOOLEAN, new String[]{name}, threadId);
+    }
 
-        final byte[] arg = msgPack.serialize(Long.class, threadId);
-        final Long eval = redis.eval(LockScripts.UNLOCK_SCRIPT, ScriptOutputType.INTEGER, new String[]{name}, arg);
-
+    public int unlock(final String name, final byte[] threadId)
+    {
+        final Long eval = this.redis.evalsha(this.unlockScriptSha, ScriptOutputType.INTEGER, new String[]{name}, threadId);
         return eval.intValue();
     }
 }

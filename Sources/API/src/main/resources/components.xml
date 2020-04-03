@@ -8,13 +8,14 @@
 
     <!-- Zeby skanowanie nie trwalo wieki wykluczamy pakiety libek -->
     <excludedPackages>
+        <excludedPackage>reactor</excludedPackage>
         <excludedPackage>rx</excludedPackage>
         <excludedPackage>org</excludedPackage>
         <excludedPackage>net</excludedPackage>
         <excludedPackage>javax</excludedPackage>
         <excludedPackage>javassist</excludedPackage>
-        <excludedPackage>it</excludedPackage>
         <excludedPackage>io</excludedPackage>
+        <excludedPackage>edu</excludedPackage>
         <excludedPackage>com</excludedPackage>
         <excludedPackage>biz</excludedPackage>
     </excludedPackages>

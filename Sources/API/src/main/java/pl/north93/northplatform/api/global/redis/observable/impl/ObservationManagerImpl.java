@@ -1,10 +1,6 @@
 package pl.north93.northplatform.api.global.redis.observable.impl;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -27,8 +23,8 @@ import pl.north93.serializer.platform.NorthSerializer;
 public class ObservationManagerImpl extends Component implements IObservationManager
 {
     private final Map<String, CachedValue> cachedValues;
-    private final Queue<LockImpl> waitingLocks;
     private final ValueSubscriptionHandler valueSubHandler;
+    private LockManagement lockManagement;
     @Inject
     private StorageConnector storageConnector;
     @Inject
@@ -39,7 +35,6 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     public ObservationManagerImpl()
     {
         this.cachedValues = new ReferenceHashMap<>();
-        this.waitingLocks = new ConcurrentLinkedQueue<>();
         this.valueSubHandler = new ValueSubscriptionHandler(this);
     }
 
@@ -77,7 +72,7 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     @Override
     public Lock getLock(final String name)
     {
-        return new LockImpl(this, name);
+        return new LockImpl(this.lockManagement, name);
     }
 
     @Override
@@ -120,37 +115,13 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         return new HashImpl<>(this, valueClass, name);
     }
 
-    /*default*/ void addWaitingLock(final LockImpl lock)
-    {
-        this.waitingLocks.add(lock);
-    }
-
-    /*default*/ void removeWaitingLock(final LockImpl lock)
-    {
-        this.waitingLocks.remove(lock);
-    }
-
-    private void unlockNotify(final String channel, final byte[] message)
-    {
-        final String lock = new String(message, StandardCharsets.UTF_8);
-
-        final Iterator<LockImpl> lockIter = this.waitingLocks.iterator();
-        while (lockIter.hasNext())
-        {
-            final LockImpl waitingLock = lockIter.next();
-            if (waitingLock.getName().equals(lock))
-            {
-                lockIter.remove();
-                waitingLock.remoteUnlock();
-            }
-        }
-    }
-
     @Override
     protected void enableComponent()
     {
-        this.redisSubscriber.subscribe("unlock", this::unlockNotify);
-        this.redisSubscriber.subscribe("__keyevent@0__:expired", this::unlockNotify); // nasluchujemy na przeterminowanie klucza
+        this.lockManagement = new LockManagement(this.msgPack, this.storageConnector.getRedis());
+
+        this.redisSubscriber.subscribe("unlock", this.lockManagement::unlockNotify);
+        this.redisSubscriber.subscribe("__keyevent@0__:expired", this.lockManagement::unlockNotify); // nasluchujemy na przeterminowanie klucza
         this.redisSubscriber.subscribe(ValueSubscriptionHandler.CHANNEL_PREFIX + "*", this.valueSubHandler, true);
     }
 

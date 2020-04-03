@@ -1,8 +1,5 @@
 package pl.north93.northplatform.api.global.redis.observable.impl;
 
-import static java.lang.management.ManagementFactory.getRuntimeMXBean;
-
-
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -14,13 +11,13 @@ import pl.north93.northplatform.api.global.redis.observable.Lock;
 @Slf4j
 class LockImpl implements Lock
 {
-    private final ObservationManagerImpl observationManager;
-    private final String                 name;
-    private final Object                 waiter;
+    private final LockManagement lockManagement;
+    private final String name;
+    private final Object waiter;
 
-    public LockImpl(final ObservationManagerImpl observationManager, final String name)
+    public LockImpl(final LockManagement lockManagement, final String name)
     {
-        this.observationManager = observationManager;
+        this.lockManagement = lockManagement;
         this.name = name;
         this.waiter = new Object();
     }
@@ -40,7 +37,7 @@ class LockImpl implements Lock
         }
         else
         {
-            this.observationManager.addWaitingLock(this);
+            this.lockManagement.addWaitingLock(this);
             log.debug("[Lock] Lock {} is waiting...", this.name);
             while (! this.tryLock0())
             {
@@ -66,7 +63,7 @@ class LockImpl implements Lock
     {
         final long threadId = this.getVmThreadIdentifier();
 
-        return LockScripts.lock(this.observationManager, this.name, threadId);
+        return this.lockManagement.lock(this.name, threadId);
     }
 
     @Override
@@ -83,11 +80,11 @@ class LockImpl implements Lock
     {
         final long threadId = this.getVmThreadIdentifier();
 
-        final int result = LockScripts.unlock(this.observationManager, this.name, threadId);
+        final int result = this.lockManagement.unlock(this.name, threadId);
         switch (result)
         {
             case 1:
-                this.observationManager.removeWaitingLock(this);
+                this.lockManagement.removeWaitingLock(this);
                 this.notifyAllLocalWaiters();
 
                 return true;
@@ -128,9 +125,7 @@ class LockImpl implements Lock
 
     private long getVmThreadIdentifier()
     {
-        final String processName = getRuntimeMXBean().getName();
-        final long processId = Long.parseLong(processName.split("@")[0]);
-
+        final long processId = ProcessHandle.current().pid();
         final long threadId = Thread.currentThread().getId();
 
         return processId * 1000 + threadId;
