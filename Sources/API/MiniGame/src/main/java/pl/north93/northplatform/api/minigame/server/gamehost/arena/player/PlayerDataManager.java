@@ -1,10 +1,6 @@
 package pl.north93.northplatform.api.minigame.server.gamehost.arena.player;
 
-import java.util.List;
 import java.util.Set;
-
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -34,12 +30,7 @@ public class PlayerDataManager
 
     public PlayerStatus getStatus(final INorthPlayer player)
     {
-        final List<MetadataValue> minigameApiStatus = player.getMetadata("minigameApiStatus");
-        if (minigameApiStatus.isEmpty())
-        {
-            return null;
-        }
-        return (PlayerStatus) minigameApiStatus.get(0).value();
+        return player.getPlayerData(PlayerStatus.class);
     }
 
     public void updateStatus(final INorthPlayer player, final PlayerStatus newStatus)
@@ -60,7 +51,7 @@ public class PlayerDataManager
             throw new IllegalArgumentException("You can't set any other status than SPECTATING for spectating player.");
         }
 
-        player.setMetadata("minigameApiStatus", new FixedMetadataValue(this.apiCore.getPluginMain(), newStatus));
+        player.setPlayerData(PlayerStatus.class, newStatus);
         this.apiCore.callEvent(new SpectatorModeChangeEvent(arena, player, oldStatus, newStatus));
     }
 

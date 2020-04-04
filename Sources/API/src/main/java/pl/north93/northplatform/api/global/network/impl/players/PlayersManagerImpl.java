@@ -132,11 +132,11 @@ class PlayersManagerImpl implements IPlayersManager
         {
             if (transaction.isOnline())
             {
-                modifierOnline.accept((IOnlinePlayer) transaction.getPlayer());
+                modifierOnline.accept(transaction.getPlayer());
             }
             else
             {
-                modifierOffline.accept((IOfflinePlayer) transaction.getPlayer());
+                modifierOffline.accept(transaction.getPlayer());
             }
 
             return true;

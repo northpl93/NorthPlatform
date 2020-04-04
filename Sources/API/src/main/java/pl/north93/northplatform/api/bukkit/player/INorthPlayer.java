@@ -5,12 +5,15 @@ import static pl.north93.northplatform.api.bukkit.player.Helper.bukkitPlayers;
 
 import javax.annotation.Nullable;
 
+import java.util.Locale;
 import java.util.UUID;
+import java.util.function.Function;
 
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.BaseComponent;
+import pl.north93.northplatform.api.bukkit.player.event.PlayerPlatformLocaleChangedEvent;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messageable;
@@ -81,9 +84,13 @@ public interface INorthPlayer extends Player, Metadatable, Messageable
     @Nullable
     <T> T getPlayerData(Class<T> clazz);
 
+    <T> T getPlayerData(Class<T> clazz, Function<INorthPlayer, T> producer);
+
     <T> void setPlayerData(T data);
 
     <T> void setPlayerData(Class<T> clazz, T data);
+
+    void removePlayerData(Class<?> clazz);
 
     /**
      * Zwraca Identity tego gracza, czyli lekki obiekt służący do
@@ -141,6 +148,14 @@ public interface INorthPlayer extends Player, Metadatable, Messageable
      * @return True jeśli posiadamy lokalne cache danych gracza.
      */
     boolean isDataCached();
+
+    /**
+     * Changes player's locale. Triggers {@link PlayerPlatformLocaleChangedEvent}.
+     * This method opens transaction, use in only in asynchronous context!
+     *
+     * @param locale New locale.
+     */
+    void updateLocale(Locale locale);
 
     /**
      * Konwertuje komponent na tekst legacy i wysyła go na action bar gracza.

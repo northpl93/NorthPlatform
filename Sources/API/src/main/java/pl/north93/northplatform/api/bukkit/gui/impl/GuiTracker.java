@@ -28,6 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import pl.north93.northplatform.api.bukkit.gui.element.GuiElement;
+import pl.north93.northplatform.api.bukkit.player.event.PlayerPlatformLocaleChangedEvent;
 import pl.north93.northplatform.api.bukkit.tick.ITickable;
 import pl.north93.northplatform.api.bukkit.tick.ITickableManager;
 import pl.north93.northplatform.api.bukkit.tick.Tick;
@@ -274,6 +275,18 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
         
         HotbarEntry clickedEntry = entry.getCurrentHotbarMenu().getEntry(slot);
         entry.getCurrentHotbarMenu().click(event.getPlayer(), clickedEntry, ClickType.fromBukkitAction(event.getAction()));
+    }
+
+    @EventHandler
+    public void updateHotbarsOnLanguageChange(PlayerPlatformLocaleChangedEvent event)
+    {
+        final HotbarMenu hotbarMenu = this.getCurrentHotbarMenu(event.getPlayer());
+        if (hotbarMenu == null)
+        {
+            return;
+        }
+
+        hotbarMenu.markDirty();
     }
 
     @Tick

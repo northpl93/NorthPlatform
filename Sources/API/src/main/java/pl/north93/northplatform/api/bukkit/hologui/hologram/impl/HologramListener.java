@@ -10,6 +10,7 @@ import org.bukkit.event.world.WorldUnloadEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.player.event.PlayerPlatformLocaleChangedEvent;
 import pl.north93.northplatform.api.bukkit.utils.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northspigot.event.entity.EntityTrackedPlayerEvent;
@@ -29,6 +30,12 @@ public class HologramListener implements AutoListener
 
             hologramArmorStand.getHoloLine().playerStartedTracking(event.getPlayer());
         }
+    }
+
+    @EventHandler
+    public void updateHologramOnLanguageChange(final PlayerPlatformLocaleChangedEvent event)
+    {
+        this.hologramManager.updatePlayerHolograms(event.getPlayer());
     }
 
     @EventHandler

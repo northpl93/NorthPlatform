@@ -12,10 +12,10 @@ import pl.north93.northplatform.api.global.storage.StorageConnector;
 
 class CachedValueImpl<T> extends CachedValue<T>
 {
-    private final Class<T>  clazz;
+    private final Class<T> clazz;
     private final ObjectKey objectKey;
-    private final Lock      myLock;
-    private       T         cache;
+    private final Lock myLock;
+    private T cache;
 
     public CachedValueImpl(final ObservationManagerImpl observationManager, final Class<T> clazz, final ObjectKey objectKey)
     {

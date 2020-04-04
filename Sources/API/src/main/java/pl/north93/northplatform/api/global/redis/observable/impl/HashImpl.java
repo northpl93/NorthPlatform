@@ -15,8 +15,8 @@ import pl.north93.northplatform.api.global.storage.StorageConnector;
 class HashImpl<V> implements Hash<V>
 {
     private final ObservationManagerImpl observer;
-    private final Class<V>               valueClass;
-    private final String                 name;
+    private final Class<V> valueClass;
+    private final String name;
 
     public HashImpl(final ObservationManagerImpl observer, final Class<V> valueClass, final String name)
     {
@@ -59,7 +59,7 @@ class HashImpl<V> implements Hash<V>
             redis.hget(this.name, key);
             redis.hdel(this.name, key);
 
-            return (byte[]) redis.exec().get(0);
+            return redis.exec().get(0);
         });
 
         return this.deserialize(result);

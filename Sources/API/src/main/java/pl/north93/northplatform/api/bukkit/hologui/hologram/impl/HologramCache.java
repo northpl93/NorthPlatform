@@ -25,11 +25,6 @@ import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologramMessage;
         this.cache.clear();
     }
 
-    public String getLine(final HologramRenderContext context, final int lineNumber)
-    {
-        return this.getEntry(context).getLine(lineNumber);
-    }
-
     /*default*/ HologramCacheEntry getEntry(final HologramRenderContext context)
     {
         if (this.message == null)
@@ -41,6 +36,11 @@ import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologramMessage;
         {
             return new HologramCacheEntry(this.message.render(context));
         });
+    }
+
+    void flushCache(final Player player)
+    {
+        this.cache.remove(player);
     }
 }
 

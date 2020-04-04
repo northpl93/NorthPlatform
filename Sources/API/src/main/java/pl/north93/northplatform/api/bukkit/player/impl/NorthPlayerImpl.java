@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 
 import com.destroystokyo.paper.Title;
 import com.destroystokyo.paper.profile.PlayerProfile;
@@ -72,9 +73,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.player.event.PlayerPlatformLocaleChangedEvent;
 import pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
 import pl.north93.northplatform.api.global.metadata.MetaStore;
@@ -86,6 +89,7 @@ import pl.north93.northplatform.api.global.network.server.joinaction.IServerJoin
 import pl.north93.northplatform.api.global.permissions.Group;
 import pl.north93.northplatform.api.global.redis.observable.Value;
 
+@Slf4j
 @AllArgsConstructor
 /*default*/ class NorthPlayerImpl implements INorthPlayer
 {
@@ -112,6 +116,20 @@ import pl.north93.northplatform.api.global.redis.observable.Value;
     }
 
     @Override
+    public <T> T getPlayerData(final Class<T> clazz, final Function<INorthPlayer, T> producer)
+    {
+        final List<MetadataValue> metadata = this.bukkitPlayer.getMetadata(clazz.getName());
+        if (metadata.isEmpty())
+        {
+            final T data = producer.apply(this);
+            this.setPlayerData(data);
+            return data;
+        }
+        //noinspection unchecked
+        return (T) metadata.get(0).value();
+    }
+
+    @Override
     public <T> void setPlayerData(final T data)
     {
         @SuppressWarnings("unchecked")
@@ -124,6 +142,12 @@ import pl.north93.northplatform.api.global.redis.observable.Value;
     {
         final FixedMetadataValue value = this.playerManager.createFixedMetadataValue(data);
         this.bukkitPlayer.setMetadata(clazz.getName(), value);
+    }
+
+    @Override
+    public void removePlayerData(final Class<?> clazz)
+    {
+        this.playerManager.removePlayerData(this.bukkitPlayer, clazz.getName());
     }
 
     @Override
@@ -198,6 +222,23 @@ import pl.north93.northplatform.api.global.redis.observable.Value;
     public boolean isDataCached()
     {
         return this.playerData.isCached();
+    }
+
+    @Override
+    public void updateLocale(final Locale locale)
+    {
+        try (final IPlayerTransaction t = this.openTransaction())
+        {
+            t.getPlayer().setLocale(locale);
+        }
+        catch (final Exception e)
+        {
+            log.error("Failed to update language for player {}", this.getName(), e);
+            return;
+        }
+
+        LanguageKeeper.updateLocale(this.bukkitPlayer, locale);
+        this.bukkitPlayer.getServer().getPluginManager().callEvent(new PlayerPlatformLocaleChangedEvent(this, locale));
     }
 
     @Override

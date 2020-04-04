@@ -16,6 +16,7 @@ import org.bukkit.event.world.WorldUnloadEvent;
 
 import lombok.ToString;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.player.event.PlayerPlatformLocaleChangedEvent;
 import pl.north93.northplatform.api.bukkit.protocol.PacketEvent;
 import pl.north93.northplatform.api.bukkit.protocol.PacketHandler;
 import pl.north93.northplatform.api.bukkit.protocol.wrappers.WrapperPlayOutEntityMetadata;
@@ -30,7 +31,7 @@ public class MapListener implements AutoListener
     @Inject
     private MapManagerImpl mapManager;
     @Inject
-    private MapController  mapController;
+    private MapController mapController;
 
     @Bean
     private MapListener()
@@ -54,13 +55,15 @@ public class MapListener implements AutoListener
     public void deletePlayerMapData(final PlayerQuitEvent event)
     {
         // nie zajmujemy pamieci i upewniamy sie ze po ponownym wejsciu wszystko bedzie ok
-        this.mapController.deletePlayerMapData(event.getPlayer());
+        final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
+        this.mapController.deletePlayerMapData(player);
     }
 
     @EventHandler
     public void resetCanvasesWhenRespawn(final PlayerRespawnEvent event)
     {
-        final PlayerMapData data = this.mapController.getPlayerMapData(event.getPlayer());
+        final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
+        final PlayerMapData data = this.mapController.getPlayerMapData(player);
 
         // Respawn u klienta powoduje zresetowanie wszystkich zcachowanych kanw,
         // dlatego my robimy to samo na serwerze.
@@ -70,10 +73,24 @@ public class MapListener implements AutoListener
     @EventHandler
     public void resetCanvasesWhenWorldSwitch(final PlayerChangedWorldEvent event)
     {
-        final PlayerMapData data = this.mapController.getPlayerMapData(event.getPlayer());
+        final INorthPlayer player = INorthPlayer.wrap(event.getPlayer());
+        final PlayerMapData data = this.mapController.getPlayerMapData(player);
 
         // Zmiana swiata u klienta powoduje dziwne zachowanie i niewyswietlanie map.
         data.resetAllClientSideCanvases();
+    }
+
+    @EventHandler
+    public void triggerRenderingOnLanguageChange(final PlayerPlatformLocaleChangedEvent event)
+    {
+        final INorthPlayer player = event.getPlayer();
+        for (final BoardImpl board : this.mapManager.getBoards())
+        {
+            if (board.isVisibleBy(player))
+            {
+                board.renderFor(player);
+            }
+        }
     }
 
     @EventHandler

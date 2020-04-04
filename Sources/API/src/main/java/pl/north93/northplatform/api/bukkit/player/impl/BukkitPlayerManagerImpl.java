@@ -131,6 +131,11 @@ public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
         return new FixedMetadataValue(this.apiCore.getPluginMain(), value);
     }
 
+    void removePlayerData(final Player player, final String name)
+    {
+        player.removeMetadata(name, this.apiCore.getPluginMain());
+    }
+
     IPlayerTransaction openTransaction(final Identity identity)
     {
         return this.networkManager.getPlayers().transaction(identity);

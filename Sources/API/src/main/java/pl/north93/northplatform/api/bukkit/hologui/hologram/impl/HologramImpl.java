@@ -8,22 +8,23 @@ import java.util.List;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologram;
-import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologramVisibility;
 import pl.north93.northplatform.api.bukkit.hologui.hologram.HologramRenderContext;
+import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologram;
 import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologramMessage;
+import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologramVisibility;
 
 final class HologramImpl implements IHologram
 {
-    private final HologramManager     hologramManager;
+    private final HologramManager hologramManager;
     private final IHologramVisibility hologramVisibility;
-    private final Location            location;
-    private final HologramCache       hologramCache;
-    private final List<HoloLine>      lines;
+    private final Location location;
+    private final HologramCache hologramCache;
+    private final List<HoloLine> lines;
 
     public HologramImpl(final HologramManager hologramManager, final IHologramVisibility hologramVisibility, final Location location)
     {
@@ -57,6 +58,19 @@ final class HologramImpl implements IHologram
     public void remove()
     {
         this.hologramManager.remove(this);
+    }
+
+    @Override
+    public boolean isVisibleBy(final Player player)
+    {
+        for (final HoloLine line : this.lines)
+        {
+            if (line.isTrackedBy(player))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Location getLocation()
@@ -99,6 +113,15 @@ final class HologramImpl implements IHologram
         this.ensureLineCount(cache.linesCount());
 
         return cache.getLine(lineId);
+    }
+
+    /*default*/ void forceUpdateForPlayer(final Player player)
+    {
+        this.hologramCache.flushCache(player);
+        for (final HoloLine line : this.lines)
+        {
+            line.sendUpdateTo(player);
+        }
     }
 
     /*default*/ void setupVisibility(final ArmorStand armorStand)

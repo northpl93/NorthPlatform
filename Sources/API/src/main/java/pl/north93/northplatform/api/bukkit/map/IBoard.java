@@ -15,6 +15,8 @@ public interface IBoard
 
     Collection<Player> getPlayersInRange();
 
+    boolean isVisibleBy(Player player);
+
     void setRenderer(IMapRenderer renderer);
 
     IMap getMap(int x, int y);

@@ -61,6 +61,27 @@ class BoardImpl implements IBoard
     }
 
     @Override
+    public boolean isVisibleBy(final Player player)
+    {
+        if (this.getWorld() != player.getWorld())
+        {
+            return false;
+        }
+
+        for (final MapImpl[] yMaps : this.maps)
+        {
+            for (final MapImpl map : yMaps)
+            {
+                if (map.isTrackedBy(player))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
     public void setRenderer(final IMapRenderer renderer)
     {
         this.renderer = renderer;

@@ -5,6 +5,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 import java.util.Locale;
 
+import net.minecraft.server.v1_12_R1.Entity;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
 import net.minecraft.server.v1_12_R1.WorldServer;
@@ -14,6 +15,7 @@ import com.google.common.base.Preconditions;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftArmorStand;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -21,17 +23,17 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.hologui.hologram.HologramRenderContext;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
 import pl.north93.northplatform.api.bukkit.utils.nms.EntityMetaPacketHelper;
 import pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper;
-import pl.north93.northplatform.api.bukkit.hologui.hologram.HologramRenderContext;
 
 final class HoloLine
 {
     private final HologramImpl hologram;
-    private final int          lineNo;
-    private       ArmorStand   armorStand;
+    private final int lineNo;
+    private ArmorStand armorStand;
 
     public HoloLine(final HologramImpl hologram, final int lineNo)
     {
@@ -82,6 +84,25 @@ final class HoloLine
 
         final IBukkitExecutor bukkitExecutor = this.hologram.getHologramManager().getBukkitExecutor();
         bukkitExecutor.syncLater(1, () -> this.sendUpdateTo(entityPlayer, northPlayer.getMyLocale()));
+    }
+
+    /*default*/ boolean isTrackedBy(final Player player)
+    {
+        final Entity entityArmorStand = EntityTrackerHelper.toNmsEntity(this.armorStand);
+
+        final CraftPlayer craftPlayer = INorthPlayer.asCraftPlayer(player);
+        final EntityPlayer entityPlayer = craftPlayer.getHandle();
+
+        final EntityTrackerEntry trackerEntry = EntityTrackerHelper.getTrackerEntry(entityArmorStand);
+        return trackerEntry.trackedPlayers.contains(entityPlayer);
+    }
+
+    /*default*/ void sendUpdateTo(final Player player)
+    {
+        final INorthPlayer northPlayer = INorthPlayer.wrap(player);
+        final EntityPlayer entityPlayer = northPlayer.getCraftPlayer().getHandle();
+
+        this.sendUpdateTo(entityPlayer, northPlayer.getMyLocale());
     }
 
     /*default*/ void broadcastUpdate()

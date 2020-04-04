@@ -6,7 +6,6 @@ import net.minecraft.server.v1_12_R1.EntityPlayer;
 
 import org.bukkit.Material;
 import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -108,22 +107,14 @@ class MapController implements Listener
         }
     }
 
-    public PlayerMapData getPlayerMapData(final Player player)
+    public PlayerMapData getPlayerMapData(final INorthPlayer player)
     {
-        final List<MetadataValue> playerMapData = player.getMetadata("PlayerMapData");
-        if (! playerMapData.isEmpty())
-        {
-            return (PlayerMapData) playerMapData.get(0).value();
-        }
-
-        final PlayerMapData newPlayerMapData = new PlayerMapData(player);
-        player.setMetadata("PlayerMapData", new FixedMetadataValue(this.apiCore.getPluginMain(), newPlayerMapData));
-        return newPlayerMapData;
+        return player.getPlayerData(PlayerMapData.class, PlayerMapData::new);
     }
 
-    public void deletePlayerMapData(final Player player)
+    public void deletePlayerMapData(final INorthPlayer player)
     {
-        player.removeMetadata("PlayerMapData", this.apiCore.getPluginMain());
+        player.removePlayerData(PlayerMapData.class);
     }
 
     /*default*/ MapImpl getMapFromEntity(final org.bukkit.entity.Entity entity)

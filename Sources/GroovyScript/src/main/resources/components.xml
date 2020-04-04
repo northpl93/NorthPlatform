@@ -3,8 +3,8 @@
     <excludedPackages>
         <excludePackage>org</excludePackage>
         <excludePackage>groovyjarjarpicocli</excludePackage>
-        <excludePackage>groovyjarjarcommonscli</excludePackage>
         <excludePackage>groovyjarjarasm</excludePackage>
+        <excludePackage>groovyjarjarantlr4</excludePackage>
         <excludePackage>groovyjarjarantlr</excludePackage>
         <excludePackage>groovy</excludePackage>
     </excludedPackages>

@@ -20,7 +20,7 @@ import pl.north93.northplatform.api.bukkit.map.IMapCanvas;
 @ToString
 class PlayerMapData
 {
-    private final Player                     player;
+    private final Player player;
     private final Map<MapImpl, MapContainer> mapping;
     private int latestId;
 
@@ -113,9 +113,9 @@ class PlayerMapData
 @ToString
 final class MapContainer
 {
-    private final int        id;
-    private       IMapCanvas serverCanvas;
-    private       IMapCanvas clientCanvas;
+    private final int id;
+    private IMapCanvas serverCanvas;
+    private IMapCanvas clientCanvas;
 
     public MapContainer(final int id)
     {

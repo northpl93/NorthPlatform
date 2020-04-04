@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -23,9 +24,9 @@ import pl.north93.northplatform.api.bukkit.entityhider.IEntityHider;
 /*default*/ class HologramManager
 {
     @Inject
-    private BukkitApiCore   apiCore;
+    private BukkitApiCore apiCore;
     @Inject
-    private IEntityHider    entityHider;
+    private IEntityHider entityHider;
     @Inject
     private IBukkitExecutor bukkitExecutor;
 
@@ -93,6 +94,17 @@ import pl.north93.northplatform.api.bukkit.entityhider.IEntityHider;
 
             return false;
         });
+    }
+
+    public void updatePlayerHolograms(final Player player)
+    {
+        for (final HologramImpl hologram : this.holograms)
+        {
+            if (hologram.isVisibleBy(player))
+            {
+                hologram.forceUpdateForPlayer(player);
+            }
+        }
     }
 
     public BukkitApiCore getApiCore()

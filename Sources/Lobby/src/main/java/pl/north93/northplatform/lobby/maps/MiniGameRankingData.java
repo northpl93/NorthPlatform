@@ -1,19 +1,25 @@
 package pl.north93.northplatform.lobby.maps;
 
-import lombok.AllArgsConstructor;
+import static java.text.MessageFormat.format;
+
+
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import lombok.AllArgsConstructor;
 import pl.north93.northplatform.api.bukkit.map.loader.xml.RankingMapConfig;
 import pl.north93.northplatform.api.bukkit.map.renderer.ranking.IRankingRenderer;
 import pl.north93.northplatform.api.bukkit.map.renderer.ranking.RankingEntry;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.INetworkManager;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.*;
-
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-
-import static java.text.MessageFormat.format;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IRanking;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticUnit;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsManager;
 
 @AllArgsConstructor
 public class MiniGameRankingData<L, L_UNIT extends IStatisticUnit<L>, R, R_UNIT extends IStatisticUnit<R>> implements RankingMapConfig.IMapRankingData
@@ -21,7 +27,7 @@ public class MiniGameRankingData<L, L_UNIT extends IStatisticUnit<L>, R, R_UNIT 
     @Inject
     private static IStatisticsManager statisticsManager;
     @Inject
-    private static INetworkManager    networkManager;
+    private static INetworkManager networkManager;
 
     private final IStatistic<L, L_UNIT> leftStatistic;
     private final IStatistic<R, R_UNIT> rightStatistic;
