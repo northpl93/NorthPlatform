@@ -142,6 +142,10 @@ public class LocalServersManager
         this.setupJavaOptimizations(java);
 
         java.setJar(this.filesManager.getEngineFile(pattern.getEngineName()).getAbsolutePath());
+
+        java.addJavaArg("javaagent:Agent.jar");
+        java.addEnvVar("jdk.attach.allowAttachSelf", "true"); // since jdk9 we need permission to attach self
+
         java.addJavaArg("XX:+AlwaysPreTouch"); // na starcie alokuje pamiec w systemie, zapobiega wpadkom
         java.addEnvVar("jline.terminal", "jline.UnsupportedTerminal"); // Disable fancy terminal
         java.addEnvVar("northplatform.serverid", serverId.toString());

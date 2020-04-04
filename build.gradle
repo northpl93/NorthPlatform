@@ -62,8 +62,9 @@ subprojects {
 
     version = grgit.head().abbreviatedId
 
-    // execute shadowJar when we run 'gradle build'
+    // execute shadowJar when we run 'gradle build' or 'gradle jar'
     tasks.build.dependsOn tasks.shadowJar
+    tasks.jar.dependsOn tasks.shadowJar
 }
 
 apply plugin: 'org.jetbrains.gradle.plugin.idea-ext'
