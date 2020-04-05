@@ -8,6 +8,7 @@
             <dependencies>
                 <dependency>MiniGameApi.Server</dependency>
                 <dependency>API.EntityHider</dependency>
+                <dependency>API.Chat.Bukkit</dependency>
                 <dependency>GlobalShops.Server</dependency>
             </dependencies>
             <platforms>

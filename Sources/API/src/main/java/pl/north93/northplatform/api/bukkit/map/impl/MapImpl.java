@@ -26,8 +26,8 @@ import pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper;
 class MapImpl implements IMap
 {
     private final BoardImpl board;
-    private final UUID      frameId;
-    private       ItemFrame itemFrame;
+    private final UUID frameId;
+    private ItemFrame itemFrame;
 
     public MapImpl(final MapController controller, final BoardImpl board, final ItemFrame itemFrame)
     {

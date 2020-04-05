@@ -39,7 +39,7 @@ final class BoardFactory
         final BlockFace mapFace = getMapFace(loc1, loc2);
 
         final MapImpl[][] maps = new MapImpl[width][height];
-        final BoardImpl board = new BoardImpl(mapController, width, height, maps);
+        final BoardImpl board = new BoardImpl(mapController, loc1.getWorld(), width, height, maps);
 
         walkWall(loc1, loc2, location ->
         {

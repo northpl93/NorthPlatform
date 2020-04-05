@@ -153,6 +153,27 @@ idea.project.settings {
             }
         }
 
+        "MiniGame.BedWars" {
+            archive("MiniGame.BedWars.jar") {
+                moduleOutput("NorthPlatform.MiniGame.BedWars.main")
+                directoryContent('Sources/MiniGame/BedWars/src/main/resources/')
+            }
+        }
+
+        "MiniGame.ElytraRace" {
+            archive("MiniGame.ElytraRace.jar") {
+                moduleOutput("NorthPlatform.MiniGame.ElytraRace.main")
+                directoryContent('Sources/MiniGame/ElytraRace/src/main/resources/')
+            }
+        }
+
+        "MiniGame.GoldHunter" {
+            archive("MiniGame.GoldHunter.jar") {
+                moduleOutput("NorthPlatform.GoldHunter.BedWars.main")
+                directoryContent('Sources/MiniGame/GoldHunter/src/main/resources/')
+            }
+        }
+
         "NetworkController.jar" {
             archive("NetworkController.jar") {
                 moduleOutput("NorthPlatform.NetworkController.main")

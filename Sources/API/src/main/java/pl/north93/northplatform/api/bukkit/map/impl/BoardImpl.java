@@ -8,20 +8,24 @@ import java.util.HashSet;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import lombok.ToString;
 import pl.north93.northplatform.api.bukkit.map.IBoard;
 import pl.north93.northplatform.api.bukkit.map.IMapRenderer;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
+@ToString(of = {"world", "width", "height"})
 class BoardImpl implements IBoard
 {
     private final MapController mapController;
+    private final World world;
     private final int width, height;
     private final MapImpl[][] maps;
     private IMapRenderer renderer;
 
-    public BoardImpl(final MapController mapController, final int width, final int height, final MapImpl[][] maps)
+    public BoardImpl(final MapController mapController, final World world, final int width, final int height, final MapImpl[][] maps)
     {
         this.mapController = mapController;
+        this.world = world;
         this.width = width;
         this.height = height;
         this.maps = maps;
@@ -30,8 +34,7 @@ class BoardImpl implements IBoard
     @Override
     public World getWorld()
     {
-        final MapImpl firstMap = this.maps[0][0];
-        return firstMap.getLocation().getWorld();
+        return this.world;
     }
 
     @Override
