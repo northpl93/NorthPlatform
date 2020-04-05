@@ -5,9 +5,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import lombok.ToString;
 
+@ToString
 @XmlRootElement(name = "daemon")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class DaemonConfig
@@ -17,13 +17,11 @@ public class DaemonConfig
     @XmlElement
     public String listenHost = "0.0.0.0";
     @XmlElement
-    public int portRangeStart = 25570;
+    public int portRangeStart = 25600;
     @XmlElement
     public int maxMemory = 1024;
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("externalHost", this.externalHost).append("listenHost", this.listenHost).append("portRangeStart", this.portRangeStart).append("maxMemory", this.maxMemory).toString();
-    }
+    @XmlElement
+    public String debuggerHost = "*";
+    @XmlElement
+    public int debuggerRangeStart = 26600;
 }

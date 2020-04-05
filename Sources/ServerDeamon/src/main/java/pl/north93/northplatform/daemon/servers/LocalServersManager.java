@@ -43,14 +43,14 @@ import pl.north93.northplatform.daemon.event.ServerExitedEvent;
 public class LocalServersManager
 {
     @Inject
-    private ApiCore                    apiCore;
+    private ApiCore apiCore;
     @Inject
-    private FilesManager               filesManager;
+    private FilesManager filesManager;
     @Inject
-    private PortManagement             portManagement;
+    private PortManagement portManagement;
     @Inject
-    private INetworkManager            networkManager;
-    private EventBus                   eventBus;
+    private INetworkManager networkManager;
+    private EventBus eventBus;
     @Inject @NetConfig(type = AutoScalingConfig.class, id = "autoscaler")
     private IConfig<AutoScalingConfig> config;
     private final Map<UUID, LocalServerInstance> instances = new HashMap<>();

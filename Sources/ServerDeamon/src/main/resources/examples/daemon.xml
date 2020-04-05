@@ -7,8 +7,14 @@
     <listenHost>0.0.0.0</listenHost>
 
     <!-- Początek zakresu portów do instalowania serwerow -->
-    <portRangeStart>25590</portRangeStart>
+    <portRangeStart>25600</portRangeStart>
 
     <!-- Maksymalna ilość pamięci w MB którą użyją zainstalowane serwery -->
     <maxMemory>2048</maxMemory>
+
+    <!-- Host na którym będzie nasłuchiwać debugger. Jeśli chcesz wyłączyć tą funkcję, usuń tą linijkę -->
+    <debuggerHost>*</debuggerHost>
+
+    <!-- Początek zakresu portów do uruchamiania debuggera -->
+    <debuggerRangeStart>26600</debuggerRangeStart>
 </daemon>

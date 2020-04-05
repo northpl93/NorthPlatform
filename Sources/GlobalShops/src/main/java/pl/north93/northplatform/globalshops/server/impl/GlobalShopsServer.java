@@ -30,9 +30,9 @@ import pl.north93.northplatform.api.global.utils.lang.CollectionUtils;
 public class GlobalShopsServer extends Component implements IGlobalShops
 {
     @Inject @NetConfig(type = ItemsDataContainer.class, id = "globalShops")
-    private IConfig<ItemsDataContainer>   config;
+    private IConfig<ItemsDataContainer> config;
     @Inject
-    private ItemFactory                   itemFactory;
+    private ItemFactory itemFactory;
     private final Map<String, ItemsGroup> groups = new HashMap<>();
 
     @Override

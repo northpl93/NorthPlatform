@@ -15,7 +15,7 @@
             <mainClass>pl.north93.northplatform.discord.DiscordBotComponent</mainClass>
             <description>Discord Bot</description>
             <packages>
-                <package>pl.north93.minecraft.discord</package>
+                <package>pl.north93.northplatform.discord</package>
             </packages>
             <dependencies>
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>

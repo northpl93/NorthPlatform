@@ -48,6 +48,9 @@ subprojects {
 
     shadowJar {
         archiveName "${project.name}.jar"
+
+        // ShadowJavaPlugin#configureShadowTask - remove doFirst with manifest
+        getActions().remove(0)
     }
 
     test {

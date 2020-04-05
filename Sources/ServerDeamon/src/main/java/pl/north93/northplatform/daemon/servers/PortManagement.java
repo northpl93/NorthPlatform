@@ -17,9 +17,9 @@ import pl.north93.northplatform.daemon.cfg.DaemonConfig;
 public class PortManagement
 {
     @Inject
-    private       DaemonConfig config;
+    private DaemonConfig config;
     private final Set<Integer> freePorts = new HashSet<>();
-    private       int          firstFree;
+    private int firstFree;
 
     @Bean
     private PortManagement()

@@ -26,7 +26,7 @@ import pl.north93.northplatform.daemon.servers.FilesManager;
 public class WorkspaceSetup
 {
     @Inject
-    private ApiCore      apiCore;
+    private ApiCore apiCore;
     @Inject
     private FilesManager filesManager;
 

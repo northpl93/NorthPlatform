@@ -6,13 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBContext;
-
 import com.google.common.base.Preconditions;
 
+import pl.north93.northplatform.api.global.utils.JaxbUtils;
 import pl.north93.northplatform.api.minigame.server.gamehost.world.IMapTemplateManager;
-import pl.north93.northplatform.api.minigame.shared.api.cfg.GameMapConfig;
 import pl.north93.northplatform.api.minigame.shared.api.MapTemplate;
+import pl.north93.northplatform.api.minigame.shared.api.cfg.GameMapConfig;
 
 public class MapTemplateManager implements IMapTemplateManager
 {
@@ -90,8 +89,7 @@ public class MapTemplateManager implements IMapTemplateManager
     
     private GameMapConfig loadMapConfig(File configFile) throws Exception
     {
-        JAXBContext ctx = JAXBContext.newInstance(GameMapConfig.class);
-        return (GameMapConfig) ctx.createUnmarshaller().unmarshal(configFile);
+        return JaxbUtils.unmarshal(configFile, GameMapConfig.class);
     }
 }
 
