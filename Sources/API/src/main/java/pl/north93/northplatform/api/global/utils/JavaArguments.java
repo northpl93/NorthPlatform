@@ -7,12 +7,12 @@ import java.util.Map;
 
 public class JavaArguments
 {
-    private String              jar;
-    private int                 startHeapSize;
-    private int                 maxHeapSize;
-    private List<String>        javaArgs;
-    private Map<String, String> envVars;
-    private List<String>        programArgs;
+    private String jar;
+    private int startHeapSize;
+    private int maxHeapSize;
+    private final List<String> javaArgs;
+    private final Map<String, String> envVars;
+    private final List<String> programArgs;
 
     public JavaArguments()
     {

@@ -4,18 +4,18 @@ import java.lang.invoke.MethodHandle;
 import java.util.Arrays;
 import java.util.UUID;
 
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
+import net.minecraft.server.v1_12_R1.NBTTagList;
+
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.minecraft.server.v1_12_R1.NBTTagCompound;
-import net.minecraft.server.v1_12_R1.NBTTagList;
-
-import pl.north93.northplatform.minigame.goldhunter.player.GoldHunterPlayer;
+import lombok.SneakyThrows;
 import pl.north93.northplatform.api.global.utils.lang.MethodHandlesUtils;
-import pl.north93.northplatform.api.global.utils.lang.SneakyThrow;
+import pl.north93.northplatform.minigame.goldhunter.player.GoldHunterPlayer;
 
 public final class ItemStackUtils
 {
@@ -47,7 +47,8 @@ public final class ItemStackUtils
         NBTTagCompound ghmetadata = getGoldHunterMetadata(is);
         return ghmetadata != null && ghmetadata.hasKey("assasinDagger");
     }
-    
+
+    @SneakyThrows(Throwable.class)
     private static void tryPrepareAssasinDagger(GoldHunterPlayer player, ItemStack is)
     {
         if ( !isAssasinDagger(is) )
@@ -57,7 +58,7 @@ public final class ItemStackUtils
         
         // TODO: add way to configure this!
         
-        net.minecraft.server.v1_12_R1.ItemStack nms = (net.minecraft.server.v1_12_R1.ItemStack) SneakyThrow.sneaky(() -> HANDLE_GETTER.invoke(is));
+        net.minecraft.server.v1_12_R1.ItemStack nms = (net.minecraft.server.v1_12_R1.ItemStack) HANDLE_GETTER.invoke(is);
         NBTTagCompound ghmetadata = nms.d("goldhunter");
         ghmetadata.setString("message", "There aren't any easter eggs here! Go away!");
         
@@ -85,7 +86,8 @@ public final class ItemStackUtils
         
         is.setItemMeta(meta);
     }
-    
+
+    @SneakyThrows(Throwable.class)
     public static NBTTagCompound getGoldHunterMetadata(ItemStack is)
     {
         if ( !( is instanceof CraftItemStack ) )
@@ -93,7 +95,7 @@ public final class ItemStackUtils
             return null;
         }
         
-        net.minecraft.server.v1_12_R1.ItemStack nms = (net.minecraft.server.v1_12_R1.ItemStack) SneakyThrow.sneaky(() -> HANDLE_GETTER.invoke(is));
+        net.minecraft.server.v1_12_R1.ItemStack nms = (net.minecraft.server.v1_12_R1.ItemStack) HANDLE_GETTER.invoke(is);
         if ( nms == null )
         {
             return null;

@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.api.bukkit.gui.event.ClickEvent;
-import pl.north93.northplatform.api.global.utils.lang.SneakyThrow;
+import pl.north93.northplatform.api.global.utils.lang.CatchException;
 
 public class MethodClickHandler implements IClickHandler
 {
@@ -45,7 +45,7 @@ public class MethodClickHandler implements IClickHandler
             }
 
             // nie próbujemy zlapac Throwable typu OutOfMemoryError
-            SneakyThrow.sneaky(throwable);
+            CatchException.sneaky(throwable);
         }
     }
 

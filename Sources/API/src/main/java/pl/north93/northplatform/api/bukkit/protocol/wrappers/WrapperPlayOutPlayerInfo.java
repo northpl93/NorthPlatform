@@ -13,7 +13,7 @@ import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoActio
 
 import com.mojang.authlib.GameProfile;
 
-import pl.north93.northplatform.api.global.utils.lang.SneakyThrow;
+import lombok.SneakyThrows;
 
 public class WrapperPlayOutPlayerInfo extends AbstractWrapper<PacketPlayOutPlayerInfo>
 {
@@ -55,10 +55,11 @@ public class WrapperPlayOutPlayerInfo extends AbstractWrapper<PacketPlayOutPlaye
     {
         addPlayerData(new PlayerInfoData(gameProfile, ping, gameMode, displayName));
     }
-    
+
+    @SneakyThrows(Throwable.class)
     public List<Object> getRawData()
     {
-        return SneakyThrow.sneaky(() -> (List<Object>) get_field_data.invokeExact(packet));
+        return (List<Object>) get_field_data.invokeExact(packet);
     }
     
     public List<PlayerInfoData> getPlayerData()
@@ -104,30 +105,35 @@ public class WrapperPlayOutPlayerInfo extends AbstractWrapper<PacketPlayOutPlaye
         {
             this.handle = handle;
         }
-        
+
+        @SneakyThrows(Throwable.class)
         public PlayerInfoData(GameProfile gameProfile, int ping, EnumGamemode gamemode, IChatBaseComponent displayName)
         {
-            this.handle = SneakyThrow.sneaky(() -> CONSTRUCT.invoke(null, gameProfile, ping, gamemode, displayName)); // It seems that we don't have to pass outer class refence
+            this.handle = CONSTRUCT.invoke(null, gameProfile, ping, gamemode, displayName); // It seems that we don't have to pass outer class refence
         }
-        
+
+        @SneakyThrows(Throwable.class)
         public GameProfile getGameProfile()
         {
-            return SneakyThrow.sneaky(() -> (GameProfile) GET_GAMEPROFILE.invoke(handle));
+            return (GameProfile) GET_GAMEPROFILE.invoke(handle);
         }
-        
+
+        @SneakyThrows(Throwable.class)
         public int getPing()
         {
-            return SneakyThrow.sneaky(() -> (Integer) GET_PING.invoke(handle)).intValue();
+            return (Integer) GET_PING.invoke(handle);
         }
-        
+
+        @SneakyThrows(Throwable.class)
         public EnumGamemode getGameMode()
         {
-            return SneakyThrow.sneaky(() -> (EnumGamemode) GET_GAMEMODE.invoke(handle));
+            return (EnumGamemode) GET_GAMEMODE.invoke(handle);
         }
-        
+
+        @SneakyThrows(Throwable.class)
         public IChatBaseComponent getDisplayName()
         {
-            return SneakyThrow.sneaky(() -> (IChatBaseComponent) GET_DISPLAY_NAME.invoke(handle));
+            return (IChatBaseComponent) GET_DISPLAY_NAME.invoke(handle);
         }
     }
 }

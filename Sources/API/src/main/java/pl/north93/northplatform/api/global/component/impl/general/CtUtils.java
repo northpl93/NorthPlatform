@@ -8,7 +8,7 @@ import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtField;
 import javassist.CtMethod;
-import pl.north93.northplatform.api.global.utils.lang.SneakyThrow;
+import pl.north93.northplatform.api.global.utils.lang.CatchException;
 
 /**
  * Narzędzia do zamieniania obiektów z Javassista na Javowe wersje.
@@ -23,7 +23,7 @@ public class CtUtils
         }
         catch ( Throwable e )
         {
-            SneakyThrow.sneaky(e);
+            CatchException.sneaky(e);
             return null;
         }
     }

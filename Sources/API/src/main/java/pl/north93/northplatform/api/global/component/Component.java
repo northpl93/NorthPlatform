@@ -30,7 +30,7 @@ public abstract class Component implements IBeanContext
         return this.name;
     }
 
-    protected final ApiCore getApiCore()
+    public final ApiCore getApiCore()
     {
         return this.apiCore;
     }

@@ -1,8 +1,5 @@
 package pl.north93.northplatform.api.global.component.impl.aggregation;
 
-import static pl.north93.northplatform.api.global.utils.lang.JavaUtils.hideException;
-
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -12,6 +9,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.diorite.commons.lazy.LazyValue;
 
 import javassist.CtClass;
+import javassist.NotFoundException;
+import lombok.SneakyThrows;
 import pl.north93.northplatform.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.northplatform.api.global.component.impl.context.TemporaryBeanContext;
 import pl.north93.northplatform.api.global.component.impl.general.SmartExecutor;
@@ -31,24 +30,22 @@ class InstancesAggregator implements IAggregator
         return ! Modifier.isAbstract(clazz.getModifiers()) && ! clazz.isInterface() && this.isSuitable(clazz);
     }
 
+    @SneakyThrows(NotFoundException.class)
     private boolean isSuitable(final CtClass checkedClass)
     {
         if (this.clazz.isInterface())
         {
-            final CtClass[] interfaces = hideException(checkedClass::getInterfaces);
-            if (interfaces != null)
+            final CtClass[] interfaces = checkedClass.getInterfaces();
+            for (final CtClass anInterface : interfaces)
             {
-                for (final CtClass anInterface : interfaces)
+                if (anInterface.getName().equals(this.clazz.getName()))
                 {
-                    if (anInterface.getName().equals(this.clazz.getName()))
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
         }
 
-        final CtClass superclass = hideException(checkedClass::getSuperclass);
+        final CtClass superclass = checkedClass.getSuperclass();
         if (superclass != null && !superclass.getName().equals("java.lang.Object"))
         {
             return superclass.getName().equals(this.clazz.getName()) || this.isSuitable(superclass);

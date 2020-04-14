@@ -22,9 +22,9 @@ import pl.north93.northplatform.api.global.utils.lang.CatchException;
 public class XmlLayoutRegistry
 {
     @Inject
-    private static       ApiCore                      apiCore;
-    private static final Set<ClassLoader>             scannedLoaders      = new HashSet<>();
-    private static final Map<String, XmlGuiLayout>    loadedGuiLayouts    = new HashMap<>();
+    private static ApiCore apiCore;
+    private static final Set<ClassLoader> scannedLoaders = new HashSet<>();
+    private static final Map<String, XmlGuiLayout> loadedGuiLayouts = new HashMap<>();
     private static final Map<String, XmlHotbarLayout> loadedHotbarLayouts = new HashMap<>();
     
     public static XmlGuiLayout getGuiLayout(final ClassLoader classLoader, String name)

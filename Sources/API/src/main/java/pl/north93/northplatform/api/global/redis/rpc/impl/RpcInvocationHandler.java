@@ -7,7 +7,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.global.API;
 import pl.north93.northplatform.api.global.redis.rpc.IRpcTarget;
 import pl.north93.northplatform.api.global.redis.rpc.exceptions.RpcRemoteException;
 import pl.north93.northplatform.api.global.redis.rpc.exceptions.RpcTimeoutException;
@@ -67,10 +66,11 @@ class RpcInvocationHandler implements InvocationHandler
 
     private RpcInvokeMessage constructInvokeMessage(final RpcMethodDescription methodDescription, final int requestId, final Object[] args)
     {
+        final String senderId = this.rpcManager.getApiCore().getId();
         final int classId = this.objectDescription.getClassId();
         final int methodId = methodDescription.getId();
 
-        return new RpcInvokeMessage(API.getApiCore().getId(), classId, requestId, methodId, args == null ? EMPTY_ARRAY : args);
+        return new RpcInvokeMessage(senderId, classId, requestId, methodId, args == null ? EMPTY_ARRAY : args);
     }
 
     @Override

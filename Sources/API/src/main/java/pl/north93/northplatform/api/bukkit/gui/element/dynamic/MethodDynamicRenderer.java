@@ -10,8 +10,8 @@ import java.util.Map;
 
 import com.google.common.base.Preconditions;
 
+import lombok.SneakyThrows;
 import pl.north93.northplatform.api.bukkit.gui.Gui;
-import pl.north93.northplatform.api.global.utils.lang.SneakyThrow;
 
 class MethodDynamicRenderer implements IDynamicRenderer
 {
@@ -28,20 +28,22 @@ class MethodDynamicRenderer implements IDynamicRenderer
         Preconditions.checkState(method != null);
     }
     
-    @SuppressWarnings("unchecked")
     @Override
+    @SuppressWarnings("unchecked")
+    @SneakyThrows(Throwable.class)
     public Collection<DynamicElementData> render()
     {
-        return (Collection<DynamicElementData>) SneakyThrow.sneaky(() -> method.invoke(gui));
+        return (Collection<DynamicElementData>) method.invoke(gui);
     }
     
     private static MethodHandle findMethod(Class<? extends Gui> guiClass, String name)
     {
-        Map<String, MethodHandle> methods = methodHandlesCache.computeIfAbsent(guiClass, cls -> SneakyThrow.sneaky(() -> findMethods(cls)));
+        Map<String, MethodHandle> methods = methodHandlesCache.computeIfAbsent(guiClass, MethodDynamicRenderer::findMethods);
         return methods.get(name);
     }
-    
-    private static Map<String, MethodHandle> findMethods(Class<? extends Gui> guiClass) throws Exception
+
+    @SneakyThrows(IllegalAccessException.class)
+    private static Map<String, MethodHandle> findMethods(Class<? extends Gui> guiClass)
     {
         Map<String, MethodHandle> result = new HashMap<>();
         

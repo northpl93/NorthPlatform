@@ -36,10 +36,10 @@ import org.bukkit.generator.ChunkGenerator;
 
 import org.diorite.commons.io.DioriteFileUtils;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.utils.lang.CatchException;
 import pl.north93.northplatform.api.global.utils.lang.MethodHandlesUtils;
-import pl.north93.northplatform.api.global.utils.lang.SneakyThrow;
 
 @Slf4j
 class NmsWorldUtils
@@ -141,7 +141,7 @@ class NmsWorldUtils
      * If you want to save world you must use save method first.
      * @return
      */
-    @SuppressWarnings({"deprecation", "unchecked"})
+    @SuppressWarnings({"deprecation"})
     static boolean unloadWorld(World world, boolean force)
     {
         Preconditions.checkState(Bukkit.isPrimaryThread());
@@ -171,9 +171,8 @@ class NmsWorldUtils
         {
             return false;
         }
-        
-        
-        Map<String, World> worlds = (Map<String, World>) SneakyThrow.sneaky(() -> WORLDS_GETTER.invoke(Bukkit.getServer()));
+
+        Map<String, World> worlds = getWorldsMap();
         
         worlds.remove(world.getName().toLowerCase(java.util.Locale.ENGLISH));
         MinecraftServer.getServer().worlds.remove(MinecraftServer.getServer().worlds.indexOf(handle));
@@ -185,6 +184,12 @@ class NmsWorldUtils
         removeRegionCache(handle);
         
         return true;
+    }
+
+    @SneakyThrows
+    private static Map<String, World> getWorldsMap()
+    {
+        return (Map<String, World>) WORLDS_GETTER.invoke(Bukkit.getServer());
     }
     
     private static void removeRegionCache(WorldServer world)
@@ -206,13 +211,14 @@ class NmsWorldUtils
             }
         }
     }
-    
+
+    @SneakyThrows(Throwable.class)
     private static void cancelPendingSaves(WorldServer world)
     {
         ChunkProviderServer chunkProvider = world.getChunkProviderServer();
         ChunkRegionLoader chunkLoader = (ChunkRegionLoader) NorthChunkProvider.getChunkLoader(chunkProvider);
         
-        Queue<?> queue = (Queue<?>) SneakyThrow.sneaky(() -> CHUNK_QUEUE_GETTER.invoke(chunkLoader));
+        Queue<?> queue = (Queue<?>) CHUNK_QUEUE_GETTER.invoke(chunkLoader);
         
         // Syncronize to avoid race condition with ChunkRegionLoader#processSaveQueueEntry
         synchronized ( chunkLoader )

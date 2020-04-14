@@ -34,9 +34,9 @@ import pl.north93.northplatform.api.global.finalizer.FinalizerUtils;
  */
 public class ReferenceHashMap<K, V> implements Map<K, V>
 {
-    private final ReferenceType        type;
-    private final ReadWriteLock        lock = new ReentrantReadWriteLock();
-    private final Map<K, Reference<V>> map  = new HashMap<>();
+    private final ReferenceType type;
+    private final ReadWriteLock lock = new ReentrantReadWriteLock();
+    private final Map<K, Reference<V>> map = new HashMap<>();
 
     public ReferenceHashMap()
     {

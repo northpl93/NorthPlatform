@@ -17,7 +17,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils;
-import pl.north93.northplatform.api.global.API;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.ICommandsManager;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
@@ -28,10 +27,12 @@ import pl.north93.northplatform.api.global.messages.UTF8Control;
 public class BukkitCommandsManager implements ICommandsManager
 {
     private final ResourceBundle apiMessages = ResourceBundle.getBundle("Messages", new UTF8Control());
-    private final CommandMap     commandMap;
+    private final BukkitApiCore apiCore;
+    private final CommandMap commandMap;
 
-    public BukkitCommandsManager()
+    public BukkitCommandsManager(final BukkitApiCore apiCore)
     {
+        this.apiCore = apiCore;
         this.commandMap = Bukkit.getCommandMap();
     }
 
@@ -136,7 +137,7 @@ public class BukkitCommandsManager implements ICommandsManager
             }
             if (this.wrapped.isAsync())
             {
-                API.getApiCore().getPlatformConnector().runTaskAsynchronously(() ->
+                BukkitCommandsManager.this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
                 {
                     this.wrapped.execute(new WrappedSender(commandSender), new Arguments(args), label);
                 });

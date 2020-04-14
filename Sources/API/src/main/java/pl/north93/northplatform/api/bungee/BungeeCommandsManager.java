@@ -11,7 +11,6 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils;
-import pl.north93.northplatform.api.global.API;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.ICommandsManager;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
@@ -20,10 +19,17 @@ import pl.north93.northplatform.api.global.messages.MessageLayout;
 
 public class BungeeCommandsManager implements ICommandsManager
 {
+    private final BungeeApiCore apiCore;
+
+    public BungeeCommandsManager(final BungeeApiCore apiCore)
+    {
+        this.apiCore = apiCore;
+    }
+
     @Override
     public void registerCommand(final NorthCommand northCommand)
     {
-        ProxyServer.getInstance().getPluginManager().registerCommand(((BungeeApiCore) API.getApiCore()).getBungeePlugin(), new WrappedCommand(northCommand));
+        ProxyServer.getInstance().getPluginManager().registerCommand(this.apiCore.getBungeePlugin(), new WrappedCommand(northCommand));
     }
 
     @Override
@@ -48,7 +54,7 @@ public class BungeeCommandsManager implements ICommandsManager
             final String label = this.northCommand.getName();
             if (this.northCommand.isAsync())
             {
-                API.getApiCore().getPlatformConnector().runTaskAsynchronously(() ->
+                BungeeCommandsManager.this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
                 {
                     this.northCommand.execute(new WrappedSender(commandSender), new Arguments(strings), label);
                 });

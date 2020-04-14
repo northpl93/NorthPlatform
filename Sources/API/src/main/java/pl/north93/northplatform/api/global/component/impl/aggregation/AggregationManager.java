@@ -1,8 +1,5 @@
 package pl.north93.northplatform.api.global.component.impl.aggregation;
 
-import static pl.north93.northplatform.api.global.utils.lang.JavaUtils.hideException;
-
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -18,6 +15,8 @@ import org.diorite.commons.lazy.LazyValue;
 
 import javassist.ClassPool;
 import javassist.CtClass;
+import javassist.NotFoundException;
+import lombok.SneakyThrows;
 import pl.north93.northplatform.api.global.component.annotations.SkipInjections;
 import pl.north93.northplatform.api.global.component.annotations.bean.Aggregator;
 import pl.north93.northplatform.api.global.component.impl.context.AbstractBeanContext;
@@ -28,6 +27,7 @@ public class AggregationManager
 {
     private Multimap<IAggregator, Method> listeners = ArrayListMultimap.create();
 
+    @SneakyThrows(NotFoundException.class)
     public void addAggregator(final Method method)
     {
         final Aggregator aggregatorAnn = method.getAnnotation(Aggregator.class);
@@ -41,7 +41,7 @@ public class AggregationManager
         else
         {
             final ClassPool classPool = ComponentManagerImpl.instance.getClassPool(method.getDeclaringClass().getClassLoader());
-            final CtClass ctClass = hideException(() -> classPool.getCtClass(clazz.getName()));
+            final CtClass ctClass = classPool.getCtClass(clazz.getName());
 
             this.listeners.put(new InstancesAggregator(ctClass), method);
         }

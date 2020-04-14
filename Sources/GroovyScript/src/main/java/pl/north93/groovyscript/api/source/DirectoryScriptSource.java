@@ -1,6 +1,7 @@
 package pl.north93.groovyscript.api.source;
 
 import java.io.File;
+import java.io.IOException;
 
 import com.google.common.base.Preconditions;
 
@@ -12,7 +13,7 @@ import org.diorite.commons.reflections.MethodInvoker;
 
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyCodeSource;
-import pl.north93.northplatform.api.global.utils.lang.SneakyThrow;
+import lombok.SneakyThrows;
 
 public class DirectoryScriptSource implements IScriptSource
 {
@@ -30,15 +31,11 @@ public class DirectoryScriptSource implements IScriptSource
         this.doRecursiveLoading(loader, this.file);
     }
 
+    @SneakyThrows(IOException.class)
     private void loadScript(final GroovyClassLoader loader, final File scriptFile)
     {
-        final GroovyCodeSource codeSource = SneakyThrow.sneaky(() -> new GroovyCodeSource(scriptFile, "UTF-8"));
-        if (codeSource == null)
-        {
-            return;
-        }
-
-        final Class clazz = loader.parseClass(codeSource);
+        final GroovyCodeSource codeSource = new GroovyCodeSource(scriptFile, "UTF-8");
+        final Class<?> clazz = loader.parseClass(codeSource);
 
         final MethodInvoker main = DioriteReflectionUtils.getMethod(clazz, "main", String[].class);
         main.invoke(null, (Object) null);

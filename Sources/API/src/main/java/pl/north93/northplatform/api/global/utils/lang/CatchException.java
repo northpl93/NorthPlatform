@@ -11,7 +11,13 @@ public final class CatchException
     {
         void run() throws Throwable;
     }
-    
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Throwable> void sneaky(final Throwable e) throws T
+    {
+        throw (T) e;
+    }
+
     public static void catchThrowable(final ExceptionRunnable runnable, final Consumer<Throwable> handler)
     {
         try
@@ -36,19 +42,9 @@ public final class CatchException
         catchThrowable(runnable, t -> printStackTrace(logger, t, null));
     }
     
-    public static void log(ExceptionRunnable runnable, Logger logger, String message)
-    {
-        catchThrowable(runnable, e -> logger.error(message, e));
-    }
-    
-    public static void log(ExceptionRunnable runnable, Logger logger)
-    {
-        catchThrowable(runnable, e -> logger.error("Exception thrown", e));
-    }
-    
     public static void sneaky(final ExceptionRunnable runnable)
     {
-        catchThrowable(runnable, t -> SneakyThrow.sneaky(t));
+        catchThrowable(runnable, t -> sneaky(t));
     }
 
     private static void printStackTrace(Logger logger, Throwable throwable, String message)

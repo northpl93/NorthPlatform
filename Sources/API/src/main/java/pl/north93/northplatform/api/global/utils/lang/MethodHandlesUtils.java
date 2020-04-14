@@ -4,25 +4,21 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 
+import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class MethodHandlesUtils
 {
-    private MethodHandlesUtils()
-    {
-    }
-    
     // TODO: make better reflection utils
     
     public static MethodHandle unreflectGetter(Class<?> clazz, String fieldName)
     {
         return unreflectGetter(clazz, fieldName, true);
     }
-    
+
+    @SneakyThrows({Exception.class})
     public static MethodHandle unreflectGetter(Class<?> clazz, String fieldName, boolean forceAccess)
-    {
-        return SneakyThrow.sneaky(() -> unreflectGetter0(clazz, fieldName, forceAccess));
-    }
-    
-    private static MethodHandle unreflectGetter0(Class<?> clazz, String fieldName, boolean forceAccess) throws Exception
     {
         Field field = findField(clazz, fieldName, forceAccess);
         return MethodHandles.lookup().unreflectGetter(field);
@@ -32,13 +28,9 @@ public class MethodHandlesUtils
     {
         return unreflectSetter(clazz, fieldName, true);
     }
-    
+
+    @SneakyThrows({Exception.class})
     public static MethodHandle unreflectSetter(Class<?> clazz, String fieldName, boolean forceAccess)
-    {
-        return SneakyThrow.sneaky(() -> unreflectSetter0(clazz, fieldName, forceAccess));
-    }
-    
-    private static MethodHandle unreflectSetter0(Class<?> clazz, String fieldName, boolean forceAccess) throws Exception
     {
         Field field = findField(clazz, fieldName, forceAccess);
         return MethodHandles.lookup().unreflectSetter(field);

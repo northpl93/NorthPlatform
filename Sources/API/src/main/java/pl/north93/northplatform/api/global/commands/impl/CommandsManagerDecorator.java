@@ -7,6 +7,8 @@ import java.util.Set;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bungee.BungeeApiCore;
 import pl.north93.northplatform.api.global.commands.annotation.QuickCommand;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.IBeanContext;
@@ -28,10 +30,10 @@ public class CommandsManagerDecorator extends Component implements ICommandsMana
         switch (this.getApiCore().getPlatform())
         {
             case BUKKIT:
-                this.commandsManager = new BukkitCommandsManager();
+                this.commandsManager = new BukkitCommandsManager((BukkitApiCore) this.getApiCore());
                 break;
             case BUNGEE:
-                this.commandsManager = new BungeeCommandsManager();
+                this.commandsManager = new BungeeCommandsManager((BungeeApiCore) this.getApiCore());
                 break;
             case STANDALONE:
                 this.commandsManager = new StandaloneCommandsManager();
@@ -41,11 +43,6 @@ public class CommandsManagerDecorator extends Component implements ICommandsMana
         {
             this.registerCommand(northCommand);
         }
-
-        //this.getExtensionPoint(NorthCommand.class).setHandler(this::registerCommand);
-
-        //final IAnnotatedExtensionPoint quickCommandExtension = (IAnnotatedExtensionPoint) this.getExtensionPoint(QuickCommand.class);
-        //quickCommandExtension.setAnnotatedHandler(this::handleQuickCommandAnnotation);
     }
 
     @Aggregator(NorthCommand.class)

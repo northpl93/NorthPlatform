@@ -5,12 +5,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public final class ListUtils
 {
-    private ListUtils()
-    {
-    }
-    
     public static <T> T getOrNull(List<? extends T> list, int index)
     {
         if ( list.size() > index )

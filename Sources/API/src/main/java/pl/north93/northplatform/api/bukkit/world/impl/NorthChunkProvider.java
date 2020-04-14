@@ -10,10 +10,10 @@ import net.minecraft.server.v1_12_R1.IChunkLoader;
 import net.minecraft.server.v1_12_R1.World;
 import net.minecraft.server.v1_12_R1.WorldServer;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.utils.lang.CatchException;
 import pl.north93.northplatform.api.global.utils.lang.MethodHandlesUtils;
-import pl.north93.northplatform.api.global.utils.lang.SneakyThrow;
 
 @Slf4j
 /*default*/ class NorthChunkProvider extends ChunkProviderServer
@@ -28,10 +28,11 @@ import pl.north93.northplatform.api.global.utils.lang.SneakyThrow;
     {
         super(original.world, getChunkLoader(original), original.chunkGenerator);
     }
-    
+
+    @SneakyThrows(Throwable.class)
     static IChunkLoader getChunkLoader(ChunkProviderServer chunkProvider)
     {
-        return (IChunkLoader) SneakyThrow.sneaky(() -> GET_CHUNK_LOADER.invoke(chunkProvider));
+        return (IChunkLoader) GET_CHUNK_LOADER.invoke(chunkProvider);
     }
     
     public static void inject(WorldServer world, boolean keepingEntireWorldLoaded, boolean generateNewChunksDisabled)

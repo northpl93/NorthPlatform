@@ -16,11 +16,11 @@ import net.minecraft.server.v1_12_R1.Packet;
 
 import com.google.common.base.Preconditions;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.bukkit.protocol.HandlerPriority;
 import pl.north93.northplatform.api.bukkit.protocol.PacketEvent;
 import pl.north93.northplatform.api.global.utils.lang.ListUtils;
-import pl.north93.northplatform.api.global.utils.lang.SneakyThrow;
 
 public class PacketEventDispatcher
 {
@@ -30,7 +30,8 @@ public class PacketEventDispatcher
     PacketEventDispatcher()
     {
     }
-    
+
+    @SneakyThrows(IllegalAccessException.class)
     public void addMethod(Method method, Object instance, HandlerPriority priority)
     {
         lock.writeLock().lock();
@@ -39,7 +40,7 @@ public class PacketEventDispatcher
             Class<? extends Packet<?>> packetType = findPacketType(method);
             
             method.setAccessible(true);
-            MethodHandle methodHandle = SneakyThrow.sneaky(() -> MethodHandles.lookup().unreflect(method));
+            MethodHandle methodHandle = MethodHandles.lookup().unreflect(method);
             
             PacketEventHandler packetEventHandler = new PacketEventHandler(methodHandle, instance, priority);
             

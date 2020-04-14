@@ -1,8 +1,5 @@
 package pl.north93.northplatform.api.global.component.impl.scanner;
 
-import static pl.north93.northplatform.api.global.utils.lang.JavaUtils.hideException;
-
-
 import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -26,6 +23,8 @@ import org.reflections.util.FilterBuilder;
 
 import javassist.ClassPool;
 import javassist.CtClass;
+import javassist.NotFoundException;
+import lombok.SneakyThrows;
 import pl.north93.northplatform.api.global.component.ComponentDescription;
 import pl.north93.northplatform.api.global.component.annotations.SkipInjections;
 import pl.north93.northplatform.api.global.component.impl.context.AbstractBeanContext;
@@ -197,6 +196,7 @@ public class ClassloaderScanningTask
         return sb.toString();
     }
 
+    @SneakyThrows(NotFoundException.class)
     /*default*/ Set<Pair<Class<?>, CtClass>> getAllClasses(final Reflections reflections, final FilterBuilder filter)
     {
         final Collection<String> classes = reflections.getStore().get(SubTypesScanner.class.getSimpleName()).values();
@@ -211,7 +211,7 @@ public class ClassloaderScanningTask
             final Class<?> outClass = forName(clazz, reflections.getConfiguration().getClassLoaders());
             if (outClass != null)
             {
-                out.add(Pair.of(outClass, hideException(() -> this.classPool.getCtClass(clazz))));
+                out.add(Pair.of(outClass, this.classPool.getCtClass(clazz)));
             }
         }
         return out;

@@ -1,5 +1,6 @@
 package pl.north93.groovyscript.impl;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -12,9 +13,9 @@ import org.diorite.commons.sets.ConcurrentSet;
 
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovySystem;
+import lombok.SneakyThrows;
 import pl.north93.groovyscript.api.IScriptContext;
 import pl.north93.groovyscript.api.IScriptResource;
-import pl.north93.northplatform.api.global.utils.lang.JavaUtils;
 
 /*default*/ class ScriptContextImpl implements IScriptContext
 {
@@ -59,12 +60,13 @@ import pl.north93.northplatform.api.global.utils.lang.JavaUtils;
     }
 
     @Override
+    @SneakyThrows(IOException.class)
     public void destroy()
     {
         this.destroyed = true;
         this.groovyManager.removeDestroyedContext(this);
 
-        for (final IScriptResource resource : this.resources)
+        for (final IScriptResource<?> resource : this.resources)
         {
             if (resource.isDestroyed())
             {
@@ -75,12 +77,12 @@ import pl.north93.northplatform.api.global.utils.lang.JavaUtils;
         }
         this.resources.clear();
 
-        for (final Class clazz : this.classLoader.getLoadedClasses())
+        for (final Class<?> clazz : this.classLoader.getLoadedClasses())
         {
             GroovySystem.getMetaClassRegistry().removeMetaClass(clazz);
         }
 
-        JavaUtils.hideException(this.classLoader::close);
+        this.classLoader.close();
     }
 
     private void checkDestroyed()

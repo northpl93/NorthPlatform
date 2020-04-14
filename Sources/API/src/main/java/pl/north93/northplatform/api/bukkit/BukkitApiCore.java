@@ -3,6 +3,7 @@ package pl.north93.northplatform.api.bukkit;
 
 import java.io.File;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -21,7 +22,6 @@ import pl.north93.northplatform.api.global.Platform;
 import pl.north93.northplatform.api.global.component.impl.general.ComponentManagerImpl;
 import pl.north93.northplatform.api.global.redis.RedisKeys;
 import pl.north93.northplatform.api.global.utils.exceptions.ConfigurationException;
-import pl.north93.northplatform.api.global.utils.lang.SneakyThrow;
 
 public class BukkitApiCore extends ApiCore
 {
@@ -60,7 +60,7 @@ public class BukkitApiCore extends ApiCore
     {
         // property handle national characters in path
         String location = Bukkit.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        String path = SneakyThrow.sneaky(() -> URLEncoder.encode(location, "UTF-8"));
+        String path = URLEncoder.encode(location, StandardCharsets.UTF_8);
         return new File(path).getParentFile();
     }
 
