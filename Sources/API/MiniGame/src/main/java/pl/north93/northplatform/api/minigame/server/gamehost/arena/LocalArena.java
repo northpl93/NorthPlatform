@@ -346,7 +346,7 @@ public class LocalArena implements IArena
 
         this.gameHostManager.getArenaManager().getArenas().remove(this);
 
-        this.world.delete();
+        this.world.deleteCurrentWorld();
     }
 
     public void startVoting()

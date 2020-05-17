@@ -2,18 +2,17 @@ package pl.north93.northplatform.api.global.redis.observable.impl;
 
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.ToString;
 import pl.north93.northplatform.api.global.redis.observable.Lock;
 
+@ToString(of = {"hash", "name", "clazz"})
 class CachedHashValueImpl<T> extends CachedValue<T>
 {
     private final HashImpl<T> hash;
-    private final String      name;
-    private final Class<T>    clazz;
-    private final Lock        myLock;
-    private       T           cache;
+    private final String name;
+    private final Class<T> clazz;
+    private final Lock myLock;
+    private T cache;
 
     public CachedHashValueImpl(final ObservationManagerImpl observationManager, final HashImpl<T> hash, final String name, final Class<T> clazz)
     {
@@ -144,11 +143,5 @@ class CachedHashValueImpl<T> extends CachedValue<T>
         {
             this.cache = this.observationManager.getMsgPack().deserialize(this.clazz, newValue);
         }
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("hash", this.hash).append("name", this.name).append("clazz", this.clazz).toString();
     }
 }

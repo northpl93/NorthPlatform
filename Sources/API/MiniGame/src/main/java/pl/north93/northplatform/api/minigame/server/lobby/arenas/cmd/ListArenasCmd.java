@@ -24,7 +24,7 @@ public class ListArenasCmd extends NorthCommand
     @Inject
     private MiniGameServer miniGameServer;
     @Inject
-    private ArenaManager   arenaManager;
+    private ArenaManager arenaManager;
 
     public ListArenasCmd()
     {

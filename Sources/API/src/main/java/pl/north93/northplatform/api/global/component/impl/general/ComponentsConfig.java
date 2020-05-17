@@ -11,21 +11,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.ToString;
 import pl.north93.northplatform.api.global.component.ComponentDescription;
 
+@ToString
 @XmlRootElement(name = "bundle")
 @XmlAccessorType(XmlAccessType.FIELD)
 class ComponentsConfig
 {
     @XmlElementWrapper(name = "includes")
     @XmlElement(name = "include")
-    private List<String>               include = new ArrayList<>();
+    private List<String> include = new ArrayList<>();
     @XmlElementWrapper(name = "excludedPackages")
     @XmlElement(name = "excludedPackage")
-    private Set<String>                excludedPackages = new HashSet<>();
+    private Set<String> excludedPackages = new HashSet<>();
     @XmlElementWrapper(name = "components")
     @XmlElement(name = "component")
     private List<ComponentDescription> components = new ArrayList<>();
@@ -43,11 +42,5 @@ class ComponentsConfig
     public List<ComponentDescription> getComponents()
     {
         return this.components;
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("include", this.include).append("excludedPackages", this.excludedPackages).append("components", this.components).toString();
     }
 }

@@ -2,14 +2,13 @@ package pl.north93.northplatform.api.global.redis.observable.impl;
 
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import io.lettuce.core.api.sync.RedisCommands;
+import lombok.ToString;
 import pl.north93.northplatform.api.global.redis.observable.Lock;
 import pl.north93.northplatform.api.global.redis.observable.ObjectKey;
 import pl.north93.northplatform.api.global.storage.StorageConnector;
 
+@ToString(of = {"clazz", "objectKey", "cache"})
 class CachedValueImpl<T> extends CachedValue<T>
 {
     private final Class<T> clazz;
@@ -74,7 +73,7 @@ class CachedValueImpl<T> extends CachedValue<T>
             redis.get(key);
             redis.del(key);
 
-            return (byte[]) redis.exec().get(0);
+            return redis.exec().get(0);
         });
 
         if (getResult == null)
@@ -193,11 +192,5 @@ class CachedValueImpl<T> extends CachedValue<T>
     public final Lock getLock()
     {
         return this.myLock;
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("clazz", this.clazz).append("objectKey", this.objectKey).append("cache", this.cache).toString();
     }
 }

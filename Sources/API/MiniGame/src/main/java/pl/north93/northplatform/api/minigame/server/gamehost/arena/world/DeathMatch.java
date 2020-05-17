@@ -130,6 +130,12 @@ public class DeathMatch
         final ISyncCallback setMapCallback = arenaWorld.setActiveMap(template, this.getDeathMathWorldName(), MapSwitchReason.DEATH_MATCH);
         setMapCallback.onComplete(() ->
         {
+            if (this.state != DeathMatchState.LOADING)
+            {
+                log.info("Deathmatch is in invalid state: {} after successful map load", this.state);
+                return;
+            }
+
             log.info("Death match arena loaded successfully");
             this.state = DeathMatchState.STARTED;
 
@@ -150,11 +156,6 @@ public class DeathMatch
         if (this.state == DeathMatchState.LOADING)
         {
             log.info("Reset state called while death match arena is loading. Loading will be canceled later.");
-        }
-        else if (this.state == DeathMatchState.STARTED)
-        {
-            log.info("Removing death match world for arena " + this.arena.getId());
-            this.arena.getWorld().delete();
         }
         this.state = DeathMatchState.NOT_STARTED;
         this.fightStart = null;

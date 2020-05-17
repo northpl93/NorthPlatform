@@ -4,5 +4,5 @@
 
 dependencies {
     shadow project(path: ':API', configuration: 'shadow')
-    compile 'com.sparkjava:spark-core:2.7.1'
+    compile 'com.sparkjava:spark-core:2.9.1'
 }

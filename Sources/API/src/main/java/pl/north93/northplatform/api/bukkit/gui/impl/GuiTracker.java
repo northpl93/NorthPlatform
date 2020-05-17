@@ -27,13 +27,6 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import pl.north93.northplatform.api.bukkit.gui.element.GuiElement;
-import pl.north93.northplatform.api.bukkit.player.event.PlayerPlatformLocaleChangedEvent;
-import pl.north93.northplatform.api.bukkit.tick.ITickable;
-import pl.north93.northplatform.api.bukkit.tick.ITickableManager;
-import pl.north93.northplatform.api.bukkit.tick.Tick;
-import pl.north93.northplatform.api.global.component.Component;
-import pl.north93.northspigot.event.PlayerPressQEvent;
 import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.gui.ClickType;
 import pl.north93.northplatform.api.bukkit.gui.Gui;
@@ -41,7 +34,14 @@ import pl.north93.northplatform.api.bukkit.gui.GuiCanvas;
 import pl.north93.northplatform.api.bukkit.gui.HotbarEntry;
 import pl.north93.northplatform.api.bukkit.gui.HotbarMenu;
 import pl.north93.northplatform.api.bukkit.gui.IGuiManager;
+import pl.north93.northplatform.api.bukkit.gui.element.GuiElement;
+import pl.north93.northplatform.api.bukkit.player.event.PlayerPlatformLocaleChangedEvent;
+import pl.north93.northplatform.api.bukkit.tick.ITickable;
+import pl.north93.northplatform.api.bukkit.tick.ITickableManager;
+import pl.north93.northplatform.api.bukkit.tick.Tick;
+import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northspigot.event.PlayerPressQEvent;
 
 public class GuiTracker extends Component implements IGuiManager, ITickable, Listener
 {

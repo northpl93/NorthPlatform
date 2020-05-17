@@ -4,7 +4,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
 
@@ -80,7 +79,7 @@ public class ComponentBundle implements IComponentBundle
 
     public final void enable()
     {
-        final String prettyPackages = this.getBasePackages().stream().collect(Collectors.joining(", "));
+        final String prettyPackages = String.join(", ", this.getBasePackages());
         log.info("Enabling component {} (packages used to scan: {})", this.getName(), prettyPackages);
         try
         {

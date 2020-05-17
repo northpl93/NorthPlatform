@@ -9,32 +9,31 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.ToString;
 import pl.north93.northplatform.api.global.Platform;
 
+@ToString
 @XmlRootElement(name = "component")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ComponentDescription
 {
     @XmlElement
-    private String       mainClass;
+    private String mainClass;
     @XmlElementWrapper(name = "packages")
     @XmlElement(name = "package")
     private List<String> packages = new ArrayList<>();
     @XmlElement
-    private String       name;
+    private String name;
     @XmlElement
-    private boolean      enabled = true;
+    private boolean enabled = true;
     @XmlElement
-    private String       description;
+    private String description;
     @XmlElementWrapper(name = "dependencies")
     @XmlElement(name = "dependency")
     private List<String> dependencies = new ArrayList<>();
     @XmlElementWrapper(name = "platforms")
     @XmlElement(name = "platform")
-    private Platform[]   platforms = Platform.values(); // deault all platforms
+    private Platform[] platforms = Platform.values(); // deault all platforms
 
     public String getMainClass()
     {
@@ -69,16 +68,5 @@ public class ComponentDescription
     public Platform[] getPlatforms()
     {
         return this.platforms;
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("mainClass", this.mainClass).append("packages", this.packages).append("name", this.name).append("enabled", this.enabled).append("description", this.description).append("dependencies", this.dependencies).append("platforms", this.platforms).toString();
-    }
-
-    private static Platform[] defaultPlatforms()
-    {
-        return new Platform[] { Platform.BUKKIT, Platform.BUNGEE, Platform.STANDALONE };
     }
 }

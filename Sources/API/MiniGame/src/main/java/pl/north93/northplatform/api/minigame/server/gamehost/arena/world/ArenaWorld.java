@@ -12,10 +12,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.bukkit.utils.ISyncCallback;
+import pl.north93.northplatform.api.bukkit.utils.SimpleSyncCallback;
+import pl.north93.northplatform.api.bukkit.world.IWorldLoadCallback;
+import pl.north93.northplatform.api.bukkit.world.IWorldManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.MapSwitchedEvent;
@@ -26,13 +29,10 @@ import pl.north93.northplatform.api.minigame.shared.api.MapTemplate;
 import pl.north93.northplatform.api.minigame.shared.api.arena.RemoteArena;
 import pl.north93.northplatform.api.minigame.shared.api.arena.StandardArenaMetaData;
 import pl.north93.northplatform.api.minigame.shared.api.cfg.GameMapConfig;
-import pl.north93.northplatform.api.bukkit.utils.ISyncCallback;
-import pl.north93.northplatform.api.bukkit.utils.SimpleSyncCallback;
-import pl.north93.northplatform.api.bukkit.world.IWorldLoadCallback;
-import pl.north93.northplatform.api.bukkit.world.IWorldManager;
 import pl.north93.northplatform.api.minigame.shared.api.utils.InvalidGamePhaseException;
 
 @Slf4j
+@ToString(of = {"currentWorld"})
 public class ArenaWorld
 {
     private final GameHostManager gameHostManager;
@@ -136,26 +136,26 @@ public class ArenaWorld
     private ISyncCallback performOutGameMapSwitch(final MapTemplate template, final String worldName, final MapSwitchReason reason)
     {
         // delete previous world
-        this.delete();
+        this.deleteCurrentWorld();
 
         // load new world and set variables in this object
-        final IWorldLoadCallback worldLoadCallback = this.loadAndSwitchWorld(template, worldName);
+        final IWorldLoadCallback worldLoadCallback = this.copyAndLoadWorld(template, worldName);
 
-        final SimpleSyncCallback callback = new SimpleSyncCallback();
+        final SimpleSyncCallback mapSwitchCallback = new SimpleSyncCallback();
         worldLoadCallback.onComplete(world ->
         {
-            this.arena.uploadRemoteData(); // broadcast new world metadata in network
+            this.updateWorldMetadata(world, template);
             Bukkit.getPluginManager().callEvent(new MapSwitchedEvent(this.arena, false, reason));
-            callback.callComplete();
+            mapSwitchCallback.callComplete();
         });
 
-        return callback;
+        return mapSwitchCallback;
     }
 
     private ISyncCallback performInGameMapSwitch(final MapTemplate template, final String worldName, final MapSwitchReason reason)
     {
         final World worldBeforeSwitch = this.currentWorld;
-        final IWorldLoadCallback worldLoadCallback = this.loadAndSwitchWorld(template, worldName);
+        final IWorldLoadCallback worldLoadCallback = this.copyAndLoadWorld(template, worldName);
 
         final SimpleSyncCallback callback = new SimpleSyncCallback();
         worldLoadCallback.onComplete(world ->
@@ -168,7 +168,7 @@ public class ArenaWorld
                 return;
             }
 
-            this.arena.uploadRemoteData(); // wywola sieciowy event aktualizacji danych areny
+            this.updateWorldMetadata(world, template);
             Bukkit.getPluginManager().callEvent(new MapSwitchedEvent(this.arena, true, reason));
             callback.callComplete();
 
@@ -179,7 +179,7 @@ public class ArenaWorld
         return callback;
     }
 
-    private IWorldLoadCallback loadAndSwitchWorld(final MapTemplate newMapTemplate, final String worldName)
+    private IWorldLoadCallback copyAndLoadWorld(final MapTemplate newMapTemplate, final String worldName)
     {
         final IWorldManager worldManager = this.gameHostManager.getWorldManager();
         log.info("Switching arena {} to new world with name {}", this.arena.getId(), worldName);
@@ -187,9 +187,11 @@ public class ArenaWorld
         final File templateDir = newMapTemplate.getMapDirectory();
         worldManager.copyWorld(worldName, templateDir);
 
-        final IWorldLoadCallback worldLoadCallback = worldManager.loadWorld(worldName, true, true);
-        final World newWorld = worldLoadCallback.getWorld();
+        return worldManager.loadWorld(worldName, true, true);
+    }
 
+    private void updateWorldMetadata(final World newWorld, final MapTemplate newMapTemplate)
+    {
         this.currentMapTemplate = newMapTemplate;
         this.currentWorld = newWorld;
 
@@ -202,10 +204,11 @@ public class ArenaWorld
             newWorld.setGameRuleValue(gameRule.getKey(), gameRule.getValue());
         }
 
-        return worldLoadCallback;
+        log.info("World successfully updated on {}, uploading info to redis...", this.arena.getId());
+        this.arena.uploadRemoteData(); // wywola sieciowy event aktualizacji danych areny
     }
 
-    public void delete()
+    public void deleteCurrentWorld()
     {
         if (this.currentWorld == null)
         {
@@ -217,11 +220,5 @@ public class ArenaWorld
 
         this.currentMapTemplate = null;
         this.currentWorld = null;
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("world", this.currentWorld).toString();
     }
 }
