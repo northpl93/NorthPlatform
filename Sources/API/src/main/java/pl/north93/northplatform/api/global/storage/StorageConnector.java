@@ -10,6 +10,7 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.BsonReader;
@@ -33,24 +34,18 @@ import pl.north93.serializer.platform.template.impl.NorthSerializerImpl;
 @Slf4j
 public class StorageConnector extends Component
 {
-    private RedisClient                             redisClient;
+    private RedisClient redisClient;
     private StatefulRedisConnection<String, byte[]> redisConnection;
     private StatefulRedisConnection<String, byte[]> atomicallyConnection;
-    private MongoClient                             mongoClient;
-    private MongoDatabase                           mainDatabase;
+    private MongoClient mongoClient;
+    private MongoDatabase mainDatabase;
 
     @Override
     protected void enableComponent()
     {
         final ConnectionConfig config = ConfigUtils.loadConfig(ConnectionConfig.class, "connection.xml");
 
-        final RedisURI connectionUri = RedisURI.Builder.redis(config.getRedisHost(), config.getRedisPort())
-                                                       .withPassword(config.getRedisPassword())
-                                                       .withTimeout(Duration.ofMillis(config.getRedisTimeout()))
-                                                       .withDatabase(0)
-                                                       .build();
-
-        this.redisClient = RedisClient.create(connectionUri);
+        this.redisClient = RedisClient.create(this.buildRedisUri(config));
         this.redisConnection  = this.redisClient.connect(StringByteRedisCodec.INSTANCE);
         this.atomicallyConnection = this.redisClient.connect(StringByteRedisCodec.INSTANCE);
 
@@ -71,6 +66,20 @@ public class StorageConnector extends Component
         this.mongoClient = new MongoClient(new MongoClientURI(config.getMongoDbConnect(), builder));
 
         this.mainDatabase = this.mongoClient.getDatabase(config.getMongoMainDatabase());
+    }
+
+    private RedisURI buildRedisUri(final ConnectionConfig config)
+    {
+        final RedisURI.Builder redisBuilder = RedisURI.Builder.redis(config.getRedisHost(), config.getRedisPort());
+
+        final String redisPassword = config.getRedisPassword();
+        if (StringUtils.isNotEmpty(redisPassword))
+        {
+            redisBuilder.withPassword(redisPassword);
+        }
+
+        final Duration timeout = Duration.ofMillis(config.getRedisTimeout());
+        return redisBuilder.withTimeout(timeout).withDatabase(0).build();
     }
 
     private CodecRegistry configureMongoCodecRegistry(final NorthSerializer<BsonWriter, BsonReader> northSerializer)
