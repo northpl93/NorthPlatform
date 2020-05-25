@@ -23,7 +23,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.reflections.Reflections;
 
 import javassist.ClassPool;
-import javassist.LoaderClassPath;
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.global.ApiCore;
@@ -44,18 +43,18 @@ import pl.north93.northplatform.api.global.utils.JaxbUtils;
 @Slf4j
 public class ComponentManagerImpl implements IComponentManager
 {
-    public static ComponentManagerImpl    instance;
-    private final ApiCore                 apiCore;
-    private final List<ComponentBundle>   components;
-    private final ClassPool               rootClassPool;
-    private final ClassResolver           classResolver;
-    private final BossClassLoader         bossClassLoader;
-    private final RootBeanContext         rootBeanCtx;
-    private final ProfileManagerImpl      profileManager;
-    private final AggregationManager      aggregationManager;
-    private       ClassloaderScanningTask rootScanningTask;
-    private       boolean                 autoEnable;
-    private       List<ClassLoader>       scannedClassloaders = new ArrayList<>();
+    public static ComponentManagerImpl instance;
+    private final ApiCore apiCore;
+    private final List<ComponentBundle> components;
+    private final WeakClassPool rootClassPool;
+    private final ClassResolver classResolver;
+    private final BossClassLoader bossClassLoader;
+    private final RootBeanContext rootBeanCtx;
+    private final ProfileManagerImpl profileManager;
+    private final AggregationManager aggregationManager;
+    private ClassloaderScanningTask rootScanningTask;
+    private boolean autoEnable;
+    private List<ClassLoader> scannedClassloaders = new ArrayList<>();
 
     public ComponentManagerImpl(final ApiCore apiCore)
     {
@@ -63,8 +62,8 @@ public class ComponentManagerImpl implements IComponentManager
         this.apiCore = apiCore;
         this.components = new ArrayList<>();
 
-        this.rootClassPool = new ClassPool();
-        this.rootClassPool.appendClassPath(new LoaderClassPath(this.getClass().getClassLoader()));
+        final ClassLoader classLoader = this.getClass().getClassLoader();
+        this.rootClassPool = new WeakClassPool(null, classLoader);
 
         this.classResolver = new ClassResolver(this);
         this.bossClassLoader = new BossClassLoader(this);
@@ -455,10 +454,15 @@ public class ComponentManagerImpl implements IComponentManager
      */
     public ClassPool getClassPool(final ClassLoader classLoader)
     {
+        return this.getWeakClassPool(classLoader).getClassPool();
+    }
+
+    public WeakClassPool getWeakClassPool(final ClassLoader classLoader)
+    {
         if (classLoader instanceof JarComponentLoader)
         {
             final JarComponentLoader componentLoader = (JarComponentLoader) classLoader;
-            return componentLoader.getClassPool();
+            return componentLoader.getWeakClassPool();
         }
         else if (classLoader == this.getClass().getClassLoader())
         {

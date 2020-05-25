@@ -25,7 +25,7 @@ import pl.north93.northplatform.api.global.component.impl.general.SmartExecutor;
 
 public class AggregationManager
 {
-    private Multimap<IAggregator, Method> listeners = ArrayListMultimap.create();
+    private final Multimap<IAggregator, Method> listeners = ArrayListMultimap.create();
 
     @SneakyThrows(NotFoundException.class)
     public void addAggregator(final Method method)

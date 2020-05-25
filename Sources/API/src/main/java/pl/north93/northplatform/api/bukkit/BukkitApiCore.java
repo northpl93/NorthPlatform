@@ -15,11 +15,10 @@ import org.bukkit.plugin.PluginManager;
 
 import org.spigotmc.SpigotConfig;
 
-import javassist.ClassPool;
-import javassist.LoaderClassPath;
 import pl.north93.northplatform.api.global.ApiCore;
 import pl.north93.northplatform.api.global.Platform;
 import pl.north93.northplatform.api.global.component.impl.general.ComponentManagerImpl;
+import pl.north93.northplatform.api.global.component.impl.general.WeakClassPool;
 import pl.north93.northplatform.api.global.redis.RedisKeys;
 import pl.north93.northplatform.api.global.utils.exceptions.ConfigurationException;
 
@@ -142,14 +141,14 @@ public class BukkitApiCore extends ApiCore
      */
     private void registerPluginsPaths()
     {
-        final ClassPool classPool = ComponentManagerImpl.instance.getClassPool(this.getClass().getClassLoader());
+        final WeakClassPool classPool = ComponentManagerImpl.instance.getWeakClassPool(this.getClass().getClassLoader());
         for (final Plugin plugin : Bukkit.getPluginManager().getPlugins())
         {
             if (plugin == this.pluginMain)
             {
                 continue;
             }
-            classPool.appendClassPath(new LoaderClassPath(plugin.getClass().getClassLoader()));
+            classPool.addClassPath(plugin.getClass().getClassLoader());
         }
     }
 }

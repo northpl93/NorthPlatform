@@ -5,8 +5,6 @@ import java.net.URLClassLoader;
 import java.util.HashSet;
 import java.util.Set;
 
-import javassist.ClassPool;
-import javassist.LoaderClassPath;
 import lombok.ToString;
 import pl.north93.northplatform.api.global.ApiCore;
 import pl.north93.northplatform.api.global.component.impl.context.JarBeanContext;
@@ -19,7 +17,7 @@ public class JarComponentLoader extends URLClassLoader
     private final URL fileUrl;
     private final Set<JarComponentLoader> dependencies;
     private final JarBeanContext beanContext;
-    private final ClassPool classPool;
+    private final WeakClassPool weakClassPool;
     private ClassloaderScanningTask scanningTask;
 
     public JarComponentLoader(final RootBeanContext rootBeanContext, final URL url, final ClassLoader parent)
@@ -29,9 +27,8 @@ public class JarComponentLoader extends URLClassLoader
         this.dependencies = new HashSet<>();
         this.beanContext = new JarBeanContext(rootBeanContext, this);
 
-        final ClassPool apiPool = ComponentManagerImpl.instance.getClassPool(ApiCore.class.getClassLoader());
-        this.classPool = new ClassPool(apiPool);
-        this.classPool.appendClassPath(new LoaderClassPath(this));
+        final WeakClassPool apiPool = ComponentManagerImpl.instance.getWeakClassPool(ApiCore.class.getClassLoader());
+        this.weakClassPool = new WeakClassPool(apiPool, this);
     }
 
     @Override
@@ -103,7 +100,7 @@ public class JarComponentLoader extends URLClassLoader
             return;
         }
         this.dependencies.add(loader);
-        this.classPool.appendClassPath(new LoaderClassPath(loader));
+        this.weakClassPool.addClassPath(loader);
     }
 
     public ClassloaderScanningTask getScanningTask()
@@ -116,9 +113,9 @@ public class JarComponentLoader extends URLClassLoader
         this.scanningTask = scanningTask;
     }
 
-    public ClassPool getClassPool()
+    public WeakClassPool getWeakClassPool()
     {
-        return this.classPool;
+        return this.weakClassPool;
     }
 
     public JarBeanContext getBeanContext()

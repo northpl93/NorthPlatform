@@ -31,15 +31,16 @@ import pl.north93.northplatform.api.global.component.impl.context.AbstractBeanCo
 import pl.north93.northplatform.api.global.component.impl.general.ComponentBundle;
 import pl.north93.northplatform.api.global.component.impl.general.ComponentManagerImpl;
 import pl.north93.northplatform.api.global.component.impl.general.JarComponentLoader;
+import pl.north93.northplatform.api.global.component.impl.general.WeakClassPool;
 
 public class ClassloaderScanningTask
 {
-    private final ComponentManagerImpl        manager;
-    private final ClassLoader                 classLoader;
-    private final URL                         loadedFile;
-    private final ClassPool                   classPool;
-    private final Reflections                 reflections;
-    private final InjectorInstaller           injectorInstaller;
+    private final ComponentManagerImpl manager;
+    private final ClassLoader classLoader;
+    private final URL loadedFile;
+    private final WeakClassPool weakClassPool;
+    private final Reflections reflections;
+    private final InjectorInstaller injectorInstaller;
     private final Queue<AbstractScanningTask> pendingTasks;
 
     public ClassloaderScanningTask(final ComponentManagerImpl manager, final ClassLoader classLoader, final URL loadedFile, final Set<String> excludedPackages)
@@ -47,7 +48,7 @@ public class ClassloaderScanningTask
         this.manager = manager;
         this.classLoader = classLoader;
         this.loadedFile = loadedFile;
-        this.classPool = manager.getClassPool(classLoader);
+        this.weakClassPool = manager.getWeakClassPool(classLoader);
         this.injectorInstaller = new InjectorInstaller(manager.getApiCore());
 
         final FilterBuilder filterBuilder = new FilterBuilder();
@@ -199,6 +200,8 @@ public class ClassloaderScanningTask
     @SneakyThrows(NotFoundException.class)
     /*default*/ Set<Pair<Class<?>, CtClass>> getAllClasses(final Reflections reflections, final FilterBuilder filter)
     {
+        final ClassPool classPool = this.weakClassPool.getClassPool();
+
         final Collection<String> classes = reflections.getStore().get(SubTypesScanner.class.getSimpleName()).values();
         final Set<Pair<Class<?>, CtClass>> out = new HashSet<>(classes.size());
         for (final String clazz : classes)
@@ -211,7 +214,7 @@ public class ClassloaderScanningTask
             final Class<?> outClass = forName(clazz, reflections.getConfiguration().getClassLoaders());
             if (outClass != null)
             {
-                out.add(Pair.of(outClass, this.classPool.getCtClass(clazz)));
+                out.add(Pair.of(outClass, classPool.getCtClass(clazz)));
             }
         }
         return out;
