@@ -116,7 +116,7 @@ class HashImpl<V> implements Hash<V>
         return this.observer.getMsgPack().deserialize(this.valueClass, bytes);
     }
 
-    /*default*/ Class<V> getClazz()
+    /*default*/ Class<V> getValueClass()
     {
         return this.valueClass;
     }

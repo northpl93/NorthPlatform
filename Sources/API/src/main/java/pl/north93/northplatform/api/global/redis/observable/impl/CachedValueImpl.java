@@ -23,7 +23,7 @@ class CachedValueImpl<T> extends CachedValue<T>
         this.objectKey = objectKey;
 
         this.myLock = observationManager.getLock("caval_lock:" + this.getInternalName());
-        observationManager.getValueSubHandler().addListener(this);
+        observationManager.getValueSubHandler().registerListener(this);
     }
 
     @Override
@@ -82,7 +82,7 @@ class CachedValueImpl<T> extends CachedValue<T>
         }
 
         // wysylamy aktualizacje mowiaca o usunieciu wartosci.
-        this.observationManager.getValueSubHandler().update(this, new byte[0]);
+        this.observationManager.getValueSubHandler().broadcastUpdate(this, new byte[0]);
 
         return this.observationManager.getMsgPack().deserialize(this.clazz, getResult);
     }
@@ -142,7 +142,7 @@ class CachedValueImpl<T> extends CachedValue<T>
         {
             redis.psetex(this.objectKey.getKey(), time, serialized);
         }
-        this.observationManager.getValueSubHandler().update(this, serialized);
+        this.observationManager.getValueSubHandler().broadcastUpdate(this, serialized);
     }
 
     @Override
@@ -152,7 +152,7 @@ class CachedValueImpl<T> extends CachedValue<T>
 
         final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
         final boolean success = redis.del(this.objectKey.getKey()) != 0L;
-        this.observationManager.getValueSubHandler().update(this, new byte[0]);
+        this.observationManager.getValueSubHandler().broadcastUpdate(this, new byte[0]);
         return success;
     }
 

@@ -22,7 +22,7 @@ class CachedHashValueImpl<T> extends CachedValue<T>
         this.clazz = clazz;
 
         this.myLock = observationManager.getLock("caval_lock:" + this.getInternalName());
-        observationManager.getValueSubHandler().addListener(this);
+        observationManager.getValueSubHandler().registerListener(this);
     }
 
     private synchronized T getFromRedis()
@@ -35,7 +35,7 @@ class CachedHashValueImpl<T> extends CachedValue<T>
         final byte[] serialized = this.observationManager.getMsgPack().serialize(this.clazz, this.cache);
 
         this.hash.put(this.name, serialized);
-        this.observationManager.getValueSubHandler().update(this, serialized);
+        this.observationManager.getValueSubHandler().broadcastUpdate(this, serialized);
     }
 
     @Override
@@ -64,7 +64,7 @@ class CachedHashValueImpl<T> extends CachedValue<T>
             this.cache = null;
 
             // wysylamy aktualizacje mowiaca o usunieciu wartosci.
-            this.observationManager.getValueSubHandler().update(this, new byte[0]);
+            this.observationManager.getValueSubHandler().broadcastUpdate(this, new byte[0]);
         }
 
         return value;

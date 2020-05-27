@@ -2,6 +2,9 @@ package pl.north93.northplatform.api.global.redis.observable.impl;
 
 import java.util.Map;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -17,12 +20,11 @@ import pl.north93.northplatform.api.global.redis.observable.SortedSet;
 import pl.north93.northplatform.api.global.redis.observable.Value;
 import pl.north93.northplatform.api.global.redis.subscriber.RedisSubscriber;
 import pl.north93.northplatform.api.global.storage.StorageConnector;
-import pl.north93.northplatform.api.global.utils.ReferenceHashMap;
 import pl.north93.serializer.platform.NorthSerializer;
 
 public class ObservationManagerImpl extends Component implements IObservationManager
 {
-    private final Map<String, CachedValue> cachedValues;
+    private final Map<String, CachedValue<?>> cachedValues;
     private final ValueSubscriptionHandler valueSubHandler;
     private LockManagement lockManagement;
     @Inject
@@ -34,8 +36,13 @@ public class ObservationManagerImpl extends Component implements IObservationMan
 
     public ObservationManagerImpl()
     {
-        this.cachedValues = new ReferenceHashMap<>();
+        this.cachedValues = this.instantiateCache().asMap();
         this.valueSubHandler = new ValueSubscriptionHandler(this);
+    }
+
+    private Cache<String, CachedValue<?>> instantiateCache()
+    {
+        return CacheBuilder.newBuilder().recordStats().softValues().build();
     }
 
     @Override
@@ -50,7 +57,7 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     {
         final String key = objectKey.getKey();
 
-        return this.cachedValues.computeIfAbsent(key, p1 -> new CachedValueImpl<>(this, clazz, objectKey));
+        return (Value<T>) this.cachedValues.computeIfAbsent(key, p1 -> new CachedValueImpl<>(this, clazz, objectKey));
     }
 
     @SuppressWarnings("unchecked")
@@ -60,7 +67,7 @@ public class ObservationManagerImpl extends Component implements IObservationMan
         final HashImpl<T> hashImpl = (HashImpl<T>) hash;
         final String mapKey = "hash:" + hash.getName() + ":" + key;
 
-        return this.cachedValues.computeIfAbsent(mapKey, p1 -> new CachedHashValueImpl<>(this, hashImpl, key, hashImpl.getClazz()));
+        return (Value<T>) this.cachedValues.computeIfAbsent(mapKey, p1 -> new CachedHashValueImpl<>(this, hashImpl, key, hashImpl.getValueClass()));
     }
 
     @Override
