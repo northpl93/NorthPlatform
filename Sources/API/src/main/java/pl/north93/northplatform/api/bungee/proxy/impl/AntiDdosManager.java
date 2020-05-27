@@ -8,27 +8,27 @@ import lombok.ToString;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import pl.north93.northplatform.api.bungee.BungeeApiCore;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.config.ConfigUpdatedNetEvent;
 import pl.north93.northplatform.api.global.config.IConfig;
 import pl.north93.northplatform.api.global.config.NetConfig;
-import pl.north93.northplatform.api.global.redis.event.NetEventSubscriber;
-import pl.north93.northplatform.api.bungee.BungeeApiCore;
 import pl.north93.northplatform.api.global.network.proxy.AntiDdosConfig;
 import pl.north93.northplatform.api.global.network.proxy.AntiDdosMode;
+import pl.north93.northplatform.api.global.redis.event.NetEventSubscriber;
 
 @ToString
 public class AntiDdosManager implements Listener
 {
-    private static final int                     ANTI_DDOS_CYCLE_TIME = 20;
+    private static final int ANTI_DDOS_CYCLE_TIME = 20;
     @Inject
     @NetConfig(type = AntiDdosConfig.class, id = "antiddos")
-    private              IConfig<AntiDdosConfig> config;
+    private IConfig<AntiDdosConfig> config;
     @Inject
-    private              AntiDdosState           antiDdosState;
-    private final        AtomicInteger           connections;
-    private              Instant                 suspendedUntil;
+    private AntiDdosState antiDdosState;
+    private final AtomicInteger connections;
+    private Instant suspendedUntil;
 
     @Bean
     private AntiDdosManager(final BungeeApiCore apiCore)

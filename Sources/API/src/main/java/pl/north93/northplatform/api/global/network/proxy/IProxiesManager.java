@@ -3,7 +3,6 @@ package pl.north93.northplatform.api.global.network.proxy;
 import java.util.Set;
 
 import pl.north93.northplatform.api.global.network.server.Server;
-import pl.north93.northplatform.api.global.redis.observable.Hash;
 
 /**
  * Menadzer serwerow proxy w sieci.
@@ -27,6 +26,10 @@ public interface IProxiesManager
 
     IProxyRpc getRpc(ProxyDto proxyDto);
 
+    void addOrUpdateProxy(String proxyId, ProxyDto proxyDto);
+
+    void removeProxy(String proxyId);
+
     /**
      * Dodaje podany serwer do wszystkich polaczonych proxy.
      *
@@ -40,11 +43,4 @@ public interface IProxiesManager
      * @param proxyData Serwer do usuniecia.
      */
     void removeServer(Server proxyData);
-
-    Unsafe unsafe();
-
-    interface Unsafe
-    {
-        Hash<ProxyDto> getHash();
-    }
 }

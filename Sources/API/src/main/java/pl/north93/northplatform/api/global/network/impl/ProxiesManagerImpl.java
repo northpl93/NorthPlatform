@@ -16,8 +16,7 @@ import pl.north93.northplatform.api.global.redis.rpc.Targets;
 
 class ProxiesManagerImpl implements IProxiesManager
 {
-    private final IRpcManager    rpcManager;
-    private final Unsafe         unsafe = new ProxiesManagerUnsafe();
+    private final IRpcManager rpcManager;
     private final Hash<ProxyDto> proxies;
 
     public ProxiesManagerImpl(final IRpcManager rpcManager, final IObservationManager observationManager)
@@ -45,43 +44,40 @@ class ProxiesManagerImpl implements IProxiesManager
     }
 
     @Override
-    public void addServer(final Server proxyData)
+    public void addOrUpdateProxy(final String proxyId, final ProxyDto proxyDto)
+    {
+        this.proxies.put(proxyId, proxyDto);
+    }
+
+    @Override
+    public void removeProxy(final String proxyId)
+    {
+        this.proxies.delete(proxyId);
+    }
+
+    @Override
+    public void addServer(final Server server)
     {
         for (final ProxyDto proxy : this.all())
         {
             final IProxyRpc rpc = this.getRpc(proxy);
-            rpc.addServer(proxyData);
+            rpc.addServer(server);
         }
     }
 
     @Override
-    public void removeServer(final Server proxyData)
+    public void removeServer(final Server server)
     {
         for (final ProxyDto proxy : this.all())
         {
             final IProxyRpc rpc = this.getRpc(proxy);
-            rpc.removeServer(proxyData);
+            rpc.removeServer(server);
         }
-    }
-
-    @Override
-    public Unsafe unsafe()
-    {
-        return this.unsafe;
     }
 
     @Override
     public String toString()
     {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).toString();
-    }
-
-    private class ProxiesManagerUnsafe implements Unsafe
-    {
-        @Override
-        public Hash<ProxyDto> getHash()
-        {
-            return ProxiesManagerImpl.this.proxies;
-        }
     }
 }

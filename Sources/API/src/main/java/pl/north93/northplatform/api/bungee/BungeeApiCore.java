@@ -22,8 +22,8 @@ import pl.north93.northplatform.api.standalone.logger.NorthGelfHandler;
 
 public class BungeeApiCore extends ApiCore
 {
-    private final Main                bungeePlugin;
-    private       ProxyInstanceConfig config;
+    private final Main bungeePlugin;
+    private ProxyInstanceConfig config;
 
     public BungeeApiCore(final Main bungeePlugin)
     {

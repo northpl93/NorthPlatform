@@ -20,18 +20,20 @@ import pl.north93.northplatform.api.global.component.impl.general.ComponentManag
 public abstract class ApiCore
 {
     @Getter
-    private final boolean               isDebug;
+    private final boolean isDebug;
     private final InstrumentationClient instrumentationClient;
-    private final IComponentManager     componentManager;
-    private final Platform              platform;
-    private final PlatformConnector     connector;
-    private       ApiState              apiState;
+    private final IComponentManager componentManager;
+    private final Platform platform;
+    private final PlatformConnector connector;
+    private final String hostname;
+    private ApiState apiState;
 
     public ApiCore(final Platform platform, final PlatformConnector platformConnector)
     {
         this.platform = platform;
         this.connector = platformConnector;
 
+        this.hostname = this.obtainHostName();
         this.isDebug = System.getProperties().containsKey("debug");
         this.instrumentationClient = new InstrumentationClient();
         this.componentManager = new ComponentManagerImpl(this);
@@ -124,6 +126,11 @@ public abstract class ApiCore
      * @return host name
      */
     public String getHostName()
+    {
+        return this.hostname;
+    }
+
+    private String obtainHostName()
     {
         try
         {

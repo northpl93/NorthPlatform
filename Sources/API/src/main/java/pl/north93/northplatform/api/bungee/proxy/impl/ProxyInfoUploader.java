@@ -1,34 +1,44 @@
 package pl.north93.northplatform.api.bungee.proxy.impl;
 
+import java.util.Objects;
+
+import lombok.ToString;
 import net.md_5.bungee.api.ProxyServer;
+import pl.north93.northplatform.api.bungee.BungeeApiCore;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.proxy.ProxyDto;
-import pl.north93.northplatform.api.global.redis.observable.Hash;
-import pl.north93.northplatform.api.bungee.BungeeApiCore;
 
+@ToString(of = {"latestDto"})
 /*default*/ class ProxyInfoUploader
 {
-    private static final int             UPDATE_PROXY_DATA_EVERY = 20;
-    @Inject
-    private              BungeeApiCore   apiCore;
-    @Inject
-    private              INetworkManager networkManager;
-    @Inject
-    private              AntiDdosState   antiDdosState;
+    private static final int UPDATE_PROXY_DATA_EVERY = 20;
+    private final BungeeApiCore apiCore;
+    private final INetworkManager networkManager;
+    private final AntiDdosState antiDdosState;
+    private ProxyDto latestDto;
 
     @Bean
-    private ProxyInfoUploader()
+    private ProxyInfoUploader(final BungeeApiCore apiCore, final INetworkManager networkManager, final AntiDdosState antiDdosState)
     {
+        this.apiCore = apiCore;
+        this.networkManager = networkManager;
+        this.antiDdosState = antiDdosState;
+
         this.uploadInfo();
         this.apiCore.getPlatformConnector().runTaskAsynchronously(this::uploadInfo, UPDATE_PROXY_DATA_EVERY);
     }
 
     private void uploadInfo()
     {
-        final Hash<ProxyDto> hash = this.networkManager.getProxies().unsafe().getHash();
-        hash.put(this.apiCore.getId(), this.generateInfo());
+        final ProxyDto newProxyInfo = this.generateInfo();
+        if (Objects.equals(this.latestDto, newProxyInfo))
+        {
+            return;
+        }
+
+        this.latestDto = newProxyInfo;
+        this.networkManager.getProxies().addOrUpdateProxy(this.apiCore.getId(), newProxyInfo);
     }
 
     private ProxyDto generateInfo()
