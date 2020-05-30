@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.bukkit.World;
 
+import org.apache.commons.io.FileUtils;
+
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.bukkit.tick.ITickable;
 import pl.north93.northplatform.api.bukkit.tick.ITickableManager;
@@ -15,7 +17,7 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 @Slf4j
 /*default*/ class ChunkLoadManager implements ITickable
 {
-    private static final int MIN_MEMORY = 128 * 1024 * 1024;
+    private static final long MIN_MEMORY = calculateMinMemory();
 
     private final Map<String, ChunkLoadTask> tasks = new HashMap<>();
     
@@ -25,6 +27,10 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
     private ChunkLoadManager(ITickableManager tickableManager)
     {
         tickableManager.addTickableObject(this);
+
+        final String maxMemory = FileUtils.byteCountToDisplaySize(Runtime.getRuntime().maxMemory());
+        final String minMemory = FileUtils.byteCountToDisplaySize(MIN_MEMORY);
+        log.info("Max server memory: {}, free memory target {}", maxMemory, minMemory);
     }
     
     public void cancelForWorld(World world)
@@ -74,6 +80,12 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
     private boolean serverHasEnoughMemory()
     {
         return Runtime.getRuntime().freeMemory() >= MIN_MEMORY;
+    }
+
+    private static long calculateMinMemory()
+    {
+        final double freeMemoryPercent = 0.1;
+        return (long) (Runtime.getRuntime().maxMemory() * freeMemoryPercent);
     }
 }
 

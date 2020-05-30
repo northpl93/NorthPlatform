@@ -19,6 +19,8 @@ import pl.north93.northplatform.api.bukkit.utils.xml.itemstack.XmlItemStack;
  */
 public final class ItemTransaction
 {
+    private static final ItemStack[] EMPTY_ITEMSTACK_ARRAY = new ItemStack[0];
+
     private ItemTransaction()
     {
     }
@@ -47,7 +49,7 @@ public final class ItemTransaction
 
     public static boolean addItems(final Inventory inventory, final Collection<ItemStack> items)
     {
-        return addItems(inventory, items.toArray(new ItemStack[items.size()]));
+        return addItems(inventory, items.toArray(EMPTY_ITEMSTACK_ARRAY));
     }
 
     public static boolean addXmlItems(final Inventory inventory, final Collection<XmlItemStack> items)
