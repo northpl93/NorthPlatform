@@ -3,6 +3,6 @@
  */
 
 dependencies {
-    shadow project(path: ':API', configuration: 'compile')
+    shadow project(':API')
     shadow project(path: ':API', configuration: 'shadow')
 }

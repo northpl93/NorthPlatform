@@ -3,7 +3,7 @@
  */
 
 dependencies {
-    shadow project(path: ':API', configuration: 'compile')
+    shadow project(':API')
     shadow project(path: ':API', configuration: 'shadow')
     shadow project(path: ':API:MiniGame', configuration: 'shadow')
     shadow project(':NetworkController')

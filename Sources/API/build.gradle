@@ -4,17 +4,17 @@
 
 dependencies {
     // Add libraries from lib/ directory
-    compile ':AgentUtils-1.0'
+    implementation ':AgentUtils-1.0'
     shadow ':spigot-1.12.2'
     shadow ':FastAsyncWorldEdit'
 
     // Bungee libs
     shadow 'net.md-5:bungeecord-api:1.13-mcpiraci'
-    compile 'net.md-5:bungeecord-chat:1.13-mcpiraci'
+    api 'net.md-5:bungeecord-chat:1.13-mcpiraci'
 
-    compile 'pl.north93.serializer:platform:1.0-SNAPSHOT'
-    compile 'pl.north93.serializer:msgpack:1.0-SNAPSHOT'
-    compile 'pl.north93.serializer:mongodb:1.0-SNAPSHOT'
+    api 'pl.north93.serializer:platform:1.0-SNAPSHOT'
+    api 'pl.north93.serializer:msgpack:1.0-SNAPSHOT'
+    api 'pl.north93.serializer:mongodb:1.0-SNAPSHOT'
 
     // WorldEdit
     shadow ('com.sk89q.worldedit:worldedit-core:6.1.4-SNAPSHOT') {
@@ -23,31 +23,31 @@ dependencies {
     shadow 'com.sk89q.worldedit:worldedit-bukkit:6.1.4'
 
     // APIS deprecated/removed in Java 9+
-    compile 'javax.xml.bind:jaxb-api:2.3.1'
-    compile 'com.sun.xml.bind:jaxb-core:2.3.0.1'
-    compile 'com.sun.xml.bind:jaxb-impl:2.3.1'
+    api 'javax.xml.bind:jaxb-api:2.3.1'
+    api 'com.sun.xml.bind:jaxb-core:2.3.0.1'
+    api 'com.sun.xml.bind:jaxb-impl:2.3.1'
 
     // logging
-    compile 'org.slf4j:slf4j-jdk14:1.7.25'
-    compile 'biz.paluch.logging:logstash-gelf:1.11.2'
+    api 'org.slf4j:slf4j-jdk14:1.7.25'
+    implementation 'biz.paluch.logging:logstash-gelf:1.11.2'
 
     // 17 bo taka jest w spigocie
-    compile 'com.google.guava:guava:17.0'
+    api 'com.google.guava:guava:17.0'
 
     // We doesn't have it in BungeeCord
-    compile 'org.apache.commons:commons-lang3:3.7'
-    compile 'commons-io:commons-io:2.6'
+    api 'org.apache.commons:commons-lang3:3.7'
+    api 'commons-io:commons-io:2.6'
 
-    compile 'org.reflections:reflections:0.9.10'
-    compile 'com.carrotsearch:hppc:0.7.3'
+    api 'org.reflections:reflections:0.9.10'
+    api 'com.carrotsearch:hppc:0.7.3'
 
     // MongoDB stuff
-    compile 'org.mongodb:mongo-java-driver:3.12.2'
-    compile 'org.mongodb:bson:3.12.2'
-    compile 'io.netty:netty-transport-native-epoll:4.1.43.Final'
+    api 'org.mongodb:mongo-java-driver:3.12.2'
+    api 'org.mongodb:bson:3.12.2'
+    api 'io.netty:netty-transport-native-epoll:4.1.43.Final'
 
     // Redis stuff
-    compile 'io.lettuce:lettuce-core:5.2.2.RELEASE'
+    api 'io.lettuce:lettuce-core:5.2.2.RELEASE'
 
     // Unit tests things
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.4.1'

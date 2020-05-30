@@ -4,7 +4,7 @@
 
 dependencies {
     shadow project(path: ':API', configuration: 'shadow')
-    shadow project(path: ':API', configuration: 'compile')
+    shadow project(':API')
 
     shadow project(':API:Chat')
     shadow project(':API:Economy')

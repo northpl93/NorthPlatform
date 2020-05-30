@@ -3,12 +3,12 @@
  */
 
 dependencies {
-    shadow project(path: ':API', configuration: 'compile')
+    shadow project(':API')
     shadow project(path: ':API', configuration: 'shadow')
 
-    shadow project(path: ':API:MiniGame', configuration: 'compile')
+    shadow project(':API:MiniGame')
     shadow project(path: ':API:MiniGame', configuration: 'shadow')
 
-    shadow project(path: ':GlobalShops', configuration: 'compile')
+    shadow project(':GlobalShops')
     shadow project(path: ':GlobalShops', configuration: 'shadow')
 }

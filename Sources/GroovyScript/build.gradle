@@ -4,5 +4,5 @@
 
 dependencies {
     shadow project(path: ':API', configuration: 'shadow')
-    compile 'org.codehaus.groovy:groovy:3.0.2'
+    implementation 'org.codehaus.groovy:groovy:3.0.2'
 }

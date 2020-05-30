@@ -3,7 +3,9 @@
  */
 
 dependencies {
+    shadow project(':API')
     shadow project(path: ':API', configuration: 'shadow')
+
     shadow project(':API:Chat')
     shadow project(':NetworkController')
 }

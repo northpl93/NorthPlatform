@@ -30,7 +30,7 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'io.freefair.lombok'
     apply plugin: 'com.github.johnrengelman.shadow'
 
@@ -78,7 +78,7 @@ idea.project.settings {
             archive("API.jar") {
                 moduleOutput("NorthPlatform.API.main")
                 directoryContent('Sources/API/src/main/resources/')
-                extractedLibraries(project(":API").configurations.compile)
+                extractedLibraries(project(":API").configurations.runtimeClasspath)
             }
         }
 
@@ -135,7 +135,7 @@ idea.project.settings {
             archive("GroovyScript.jar") {
                 moduleOutput("NorthPlatform.GroovyScript.main")
                 directoryContent('Sources/GroovyScript/src/main/resources/')
-                extractedLibraries(project(":GroovyScript").configurations.compile)
+                extractedLibraries(project(":GroovyScript").configurations.runtimeClasspath)
             }
         }
 
@@ -192,7 +192,7 @@ idea.project.settings {
             archive("RestfulApi.jar") {
                 moduleOutput("NorthPlatform.RestfulApi.main")
                 directoryContent('Sources/RestfulApi/src/main/resources/')
-                extractedLibraries(project(":RestfulApi").configurations.compile)
+                extractedLibraries(project(":RestfulApi").configurations.runtimeClasspath)
             }
         }
 
