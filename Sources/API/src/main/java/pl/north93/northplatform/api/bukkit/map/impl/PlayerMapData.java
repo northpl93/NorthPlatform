@@ -5,10 +5,9 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
-import org.bukkit.entity.Player;
-
 import lombok.ToString;
 import pl.north93.northplatform.api.bukkit.map.IMapCanvas;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
 /**
  * Klasa przechowujaca stan map u danego gracza.
@@ -20,11 +19,11 @@ import pl.north93.northplatform.api.bukkit.map.IMapCanvas;
 @ToString
 class PlayerMapData
 {
-    private final Player player;
+    private final INorthPlayer player;
     private final Map<MapImpl, MapContainer> mapping;
     private int latestId;
 
-    public PlayerMapData(final Player player)
+    public PlayerMapData(final INorthPlayer player)
     {
         this.player = player;
         this.mapping = new WeakHashMap<>();
