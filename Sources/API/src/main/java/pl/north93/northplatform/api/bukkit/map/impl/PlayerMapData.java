@@ -104,9 +104,7 @@ class PlayerMapData
             this.latestId = (++this.latestId) % Short.MAX_VALUE;
         } while (values.contains(this.latestId));
 
-        final MapContainer container = new MapContainer(this.latestId);
-        this.mapping.put(map, container);
-        return container;
+        return new MapContainer(this.latestId);
     }
 }
 
