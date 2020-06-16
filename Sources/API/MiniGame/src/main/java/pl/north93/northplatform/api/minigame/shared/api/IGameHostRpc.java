@@ -28,7 +28,7 @@ public interface IGameHostRpc
      * @param metadata Matadata która zostanie ustawiona po poprawnym dodaniu graczy.
      * @return czy serwer zezwolił na dołączenie (czy nie przekraczamy ilości graczy itp) i dodał graczy
      */
-    Boolean tryConnectPlayers(List<PlayerJoinInfo> players, UUID arenaId, MetaStore metadata);
+    boolean tryConnectPlayers(List<PlayerJoinInfo> players, UUID arenaId, MetaStore metadata);
 
     /**
      * Próbuje dodać graczy(a) do areny o podanym ID jako spectator.
@@ -37,7 +37,7 @@ public interface IGameHostRpc
      * @param arenaId identyfikator aren.
      * @return czy serwer zezwolił na dołączenie (czy nie przekraczamy ilości graczy itp) i dodał graczy
      */
-    Boolean tryConnectSpectators(List<PlayerJoinInfo> players, UUID arenaId);
+    boolean tryConnectSpectators(List<PlayerJoinInfo> players, UUID arenaId);
 
     /**
      * Próbuje ponownie dodać gracza do areny wskazanej w {@link ReconnectTicket}.
@@ -45,5 +45,5 @@ public interface IGameHostRpc
      * @param ticket ReconnectTicket pobrany z sieciowego obiektu gracza.
      * @return czy serwer zezwolił na ponowne dołączenie i dodał gracza.
      */
-    Boolean tryReconnect(ReconnectTicket ticket);
+    boolean tryReconnect(ReconnectTicket ticket);
 }

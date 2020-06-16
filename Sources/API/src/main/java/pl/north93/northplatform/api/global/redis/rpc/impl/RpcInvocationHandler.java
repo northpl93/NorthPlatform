@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -15,7 +16,6 @@ import pl.north93.northplatform.api.global.redis.rpc.impl.messaging.RpcInvokeMes
 
 class RpcInvocationHandler implements InvocationHandler
 {
-    private static final Object[] EMPTY_ARRAY = new Object[0];
     private static final AtomicInteger requestCounter = new AtomicInteger(0);
     private final RpcManagerImpl rpcManager;
     private final RpcObjectDescription objectDescription;
@@ -70,7 +70,7 @@ class RpcInvocationHandler implements InvocationHandler
         final int classId = this.objectDescription.getClassId();
         final int methodId = methodDescription.getId();
 
-        return new RpcInvokeMessage(senderId, classId, requestId, methodId, args == null ? EMPTY_ARRAY : args);
+        return new RpcInvokeMessage(senderId, classId, requestId, methodId, args == null ? ArrayUtils.EMPTY_OBJECT_ARRAY : args);
     }
 
     @Override

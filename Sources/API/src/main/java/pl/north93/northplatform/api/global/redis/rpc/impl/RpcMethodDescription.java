@@ -4,21 +4,20 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.ToString;
 import pl.north93.northplatform.api.global.redis.rpc.annotation.DoNotWaitForResponse;
 import pl.north93.northplatform.api.global.redis.rpc.annotation.Timeout;
 
+@ToString
 class RpcMethodDescription
 {
-    private final Integer      id;
-    private final Method       method;
+    private final int id;
+    private final Method method;
     private final MethodHandle methodHandle;
-    private final int          timeout;
-    private final boolean      needsWaitForResponse;
+    private final int timeout;
+    private final boolean needsWaitForResponse;
 
-    public RpcMethodDescription(final Integer id, final Method method)
+    public RpcMethodDescription(final int id, final Method method)
     {
         this.id = id;
         this.method = method;
@@ -83,11 +82,5 @@ class RpcMethodDescription
     public boolean isNeedsWaitForResponse()
     {
         return this.needsWaitForResponse;
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("id", this.id).append("method", this.method).append("methodHandle", this.methodHandle).append("timeout", this.timeout).append("needsWaitForResponse", this.needsWaitForResponse).toString();
     }
 }

@@ -15,13 +15,13 @@ public class ServerRpcImpl implements IServerRpc
     private IBukkitServerManager serverManager;
 
     @Override
-    public Integer getOnlinePlayers()
+    public int getOnlinePlayers()
     {
         return Bukkit.getOnlinePlayers().size();
     }
 
     @Override
-    public Boolean isShutdownScheduled()
+    public boolean isShutdownScheduled()
     {
         return this.serverManager.isShutdownScheduled();
     }
@@ -37,7 +37,7 @@ public class ServerRpcImpl implements IServerRpc
     }
 
     @Override
-    public Boolean cancelShutdown()
+    public boolean cancelShutdown()
     {
         try
         {

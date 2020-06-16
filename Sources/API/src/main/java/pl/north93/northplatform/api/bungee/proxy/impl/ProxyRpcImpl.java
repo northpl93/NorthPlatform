@@ -7,25 +7,26 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.packet.Chat;
 import net.md_5.bungee.protocol.packet.Kick;
+import pl.north93.northplatform.api.bungee.BungeeApiCore;
+import pl.north93.northplatform.api.bungee.proxy.IConnectionManager;
+import pl.north93.northplatform.api.bungee.proxy.IProxyServerManager;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.proxy.IProxyRpc;
 import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.global.network.server.joinaction.JoinActionsContainer;
-import pl.north93.northplatform.api.bungee.BungeeApiCore;
-import pl.north93.northplatform.api.bungee.proxy.IProxyServerManager;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 class ProxyRpcImpl implements IProxyRpc
 {
-    private static final ProxyServer                                                  PROXY = ProxyServer.getInstance();
+    private static final ProxyServer PROXY = ProxyServer.getInstance();
     @Inject
-    private              BungeeApiCore                                                apiCore;
+    private BungeeApiCore apiCore;
     @Inject
-    private              IProxyServerManager                                          proxyServerManager;
+    private IProxyServerManager proxyServerManager;
     @Inject
-    private              pl.north93.northplatform.api.bungee.proxy.IConnectionManager IConnectionManager;
+    private IConnectionManager connectionManager;
 
     @Override
-    public Boolean isOnline(final String nick)
+    public boolean isOnline(final String nick)
     {
         return PROXY.getPlayer(nick) != null;
     }
@@ -67,7 +68,7 @@ class ProxyRpcImpl implements IProxyRpc
             return;
         }
 
-        this.IConnectionManager.connectPlayerToServer(player, serverName, actions);
+        this.connectionManager.connectPlayerToServer(player, serverName, actions);
     }
 
     @Override

@@ -6,7 +6,7 @@ package pl.north93.northplatform.api.global.config.server;
  */
 public interface IConfigServerRpc
 {
-    Boolean reloadConfig(String configId);
+    boolean reloadConfig(String configId);
 
-    Boolean updateConfig(String configId, Object newValue);
+    boolean updateConfig(String configId, Object newValue);
 }

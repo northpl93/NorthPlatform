@@ -10,12 +10,12 @@ public interface IServerRpc
     /**
      * @return aktualna ilosc graczy na serwerze.
      */
-    Integer getOnlinePlayers();
+    int getOnlinePlayers();
 
     /**
      * @return czy serwer jest zaplanowany do wylaczenia.
      */
-    Boolean isShutdownScheduled();
+    boolean isShutdownScheduled();
 
     /**
      * Planuje wylaczenie tego serwera.
@@ -30,5 +30,5 @@ public interface IServerRpc
      *
      * @return Czy udalo sie anulowac wylaczenie.
      */
-    Boolean cancelShutdown();
+    boolean cancelShutdown();
 }

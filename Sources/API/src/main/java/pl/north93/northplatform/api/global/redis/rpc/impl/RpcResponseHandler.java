@@ -2,19 +2,18 @@ package pl.north93.northplatform.api.global.redis.rpc.impl;
 
 import java.lang.invoke.MethodHandle;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.redis.rpc.impl.messaging.RpcExceptionInfo;
 import pl.north93.northplatform.api.global.redis.rpc.impl.messaging.RpcInvokeMessage;
 
 @Slf4j
+@ToString(of = {"objectDescription", "implementation"})
 class RpcResponseHandler
 {
-    private final RpcManagerImpl       rpcManager;
+    private final RpcManagerImpl rpcManager;
     private final RpcObjectDescription objectDescription;
-    private final Object               implementation;
+    private final Object implementation;
 
     public RpcResponseHandler(final RpcManagerImpl rpcManager, final Class<?> classInterface, final Object implementation)
     {
@@ -48,7 +47,8 @@ class RpcResponseHandler
                 }
                 else
                 {
-                    this.rpcManager.sendResponse(rpcInvokeMessage.getSender(), rpcInvokeMessage.getRequestId(), methodHandle.invokeWithArguments(invocationArgs));
+                    final Object result = methodHandle.invokeWithArguments(invocationArgs);
+                    this.rpcManager.sendResponse(rpcInvokeMessage.getSender(), rpcInvokeMessage.getRequestId(), result);
                 }
             }
             catch (final Throwable throwable)
@@ -73,11 +73,5 @@ class RpcResponseHandler
         {
             log.warn("[RPC] Method {} took {}ms to invoke. It means that timeout occurred.", methodDescription.getMethod().getName(), end);
         }
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("objectDescription", this.objectDescription).append("implementation", this.implementation).toString();
     }
 }

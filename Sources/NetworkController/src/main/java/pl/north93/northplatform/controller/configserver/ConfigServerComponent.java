@@ -54,7 +54,7 @@ public class ConfigServerComponent extends Component implements IConfigServer, I
     }
 
     @Override
-    public Boolean reloadConfig(final String configId)
+    public boolean reloadConfig(final String configId)
     {
         final ConfigImpl<?> config = this.configs.get(configId);
         if (config == null)
@@ -72,7 +72,7 @@ public class ConfigServerComponent extends Component implements IConfigServer, I
 
     @SuppressWarnings("unchecked")
     @Override
-    public Boolean updateConfig(final String configId, final Object newValue)
+    public boolean updateConfig(final String configId, final Object newValue)
     {
         final ConfigImpl<Object> config = (ConfigImpl<Object>) this.configs.get(configId);
         if (config == null)
@@ -84,7 +84,7 @@ public class ConfigServerComponent extends Component implements IConfigServer, I
         config.update(newValue);
         this.eventManager.callEvent(new ConfigUpdatedNetEvent(configId));
         log.info("Config with ID {} has been updated programmatically", config);
-        
+
         return true;
     }
 

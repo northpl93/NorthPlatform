@@ -6,7 +6,7 @@ import pl.north93.northplatform.api.global.redis.rpc.annotation.DoNotWaitForResp
 
 public interface IProxyRpc
 {
-    Boolean isOnline(String nick); // sprawdza czy gracz jest online na tym proxy
+    boolean isOnline(String nick); // sprawdza czy gracz jest online na tym proxy
 
     @DoNotWaitForResponse
     void sendJsonMessage(String nick, String json);

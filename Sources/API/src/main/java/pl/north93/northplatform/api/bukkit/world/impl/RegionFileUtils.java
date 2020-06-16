@@ -9,6 +9,8 @@ import net.minecraft.server.v1_12_R1.RegionFileCache;
 
 import org.bukkit.World;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import lombok.experimental.UtilityClass;
 import pl.north93.northplatform.api.bukkit.world.ChunkLocation;
 
@@ -73,7 +75,7 @@ class RegionFileUtils
         
         if ( !region.isDirectory() )
         {
-            return new String[0];
+            return ArrayUtils.EMPTY_STRING_ARRAY;
         }
         
         return region.list();

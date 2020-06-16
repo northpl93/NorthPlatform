@@ -30,7 +30,7 @@ public class GameHostRpcImpl implements IGameHostRpc
     }
 
     @Override
-    public Boolean tryConnectPlayers(final List<PlayerJoinInfo> players, final UUID arenaId, final MetaStore metadata)
+    public boolean tryConnectPlayers(final List<PlayerJoinInfo> players, final UUID arenaId, final MetaStore metadata)
     {
         final LocalArena arena = this.manager.getArenaManager().getArena(arenaId);
         if (arena == null)
@@ -43,7 +43,7 @@ public class GameHostRpcImpl implements IGameHostRpc
     }
 
     @Override
-    public Boolean tryConnectSpectators(final List<PlayerJoinInfo> players, final UUID arenaId)
+    public boolean tryConnectSpectators(final List<PlayerJoinInfo> players, final UUID arenaId)
     {
         final LocalArena arena = this.manager.getArenaManager().getArena(arenaId);
         if (arena == null)
@@ -56,7 +56,7 @@ public class GameHostRpcImpl implements IGameHostRpc
     }
 
     @Override
-    public Boolean tryReconnect(final ReconnectTicket ticket)
+    public boolean tryReconnect(final ReconnectTicket ticket)
     {
         final LocalArena arena = this.manager.getArenaManager().getArena(ticket.getArenaId());
         if (arena == null)
