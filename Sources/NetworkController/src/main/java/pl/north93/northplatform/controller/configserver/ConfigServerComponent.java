@@ -56,9 +56,17 @@ public class ConfigServerComponent extends Component implements IConfigServer, I
     @Override
     public Boolean reloadConfig(final String configId)
     {
-        this.configs.get(configId).reload();
+        final ConfigImpl<?> config = this.configs.get(configId);
+        if (config == null)
+        {
+            log.warn("Tried to reload unknown config {}", configId);
+            return false;
+        }
+
+        config.reload();
         this.eventManager.callEvent(new ConfigUpdatedNetEvent(configId));
         log.info("Successfully reloaded config {}", configId);
+
         return true;
     }
 
@@ -67,9 +75,16 @@ public class ConfigServerComponent extends Component implements IConfigServer, I
     public Boolean updateConfig(final String configId, final Object newValue)
     {
         final ConfigImpl<Object> config = (ConfigImpl<Object>) this.configs.get(configId);
+        if (config == null)
+        {
+            log.warn("Tried to update unknown config {}", configId);
+            return false;
+        }
+
         config.update(newValue);
         this.eventManager.callEvent(new ConfigUpdatedNetEvent(configId));
         log.info("Config with ID {} has been updated programmatically", config);
+        
         return true;
     }
 
