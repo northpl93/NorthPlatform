@@ -1,14 +1,12 @@
 package pl.north93.northplatform.api.global.messages;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
+import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class ChatColorUtils
 {
-    public static String getLastColors(final String input)
+    public String getLastColors(final String input)
     {
         String result = "";
         final int length = input.length();

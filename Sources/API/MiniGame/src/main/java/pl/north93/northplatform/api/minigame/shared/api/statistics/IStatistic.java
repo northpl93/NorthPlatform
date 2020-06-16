@@ -22,5 +22,5 @@ public interface IStatistic<T, UNIT extends IStatisticUnit<T>>
      */
     boolean isBetter(UNIT value1, UNIT value2);
 
-    IStatisticDbComposer<UNIT> getDbComposer();
+    IStatisticDbComposer<T, UNIT> getDbComposer();
 }

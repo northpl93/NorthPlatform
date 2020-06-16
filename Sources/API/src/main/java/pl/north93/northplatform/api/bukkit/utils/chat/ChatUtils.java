@@ -8,8 +8,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public final class ChatUtils
 {
-    public  static final char    COLOR_CHAR          = '§';
-    private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)(" + COLOR_CHAR + "|&)[0-9A-FK-OR]");
+    public  static final char COLOR_CHAR = '§';
+    private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)([" + COLOR_CHAR + "&])[0-9A-FK-OR]");
 
     /**
      * Konwertuje tekst legacy na BaseComponent, bez systemu parametrów.

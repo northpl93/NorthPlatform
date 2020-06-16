@@ -8,19 +8,19 @@ import java.util.stream.Collectors;
 
 import org.bson.Document;
 
-import pl.north93.northplatform.api.minigame.shared.api.GameIdentity;
 import pl.north93.northplatform.api.global.network.players.Identity;
+import pl.north93.northplatform.api.minigame.shared.api.GameIdentity;
 
 /*default*/ class MatchData
 {
-    private UUID                 matchId;
-    private UUID                 arenaId;
-    private UUID                 serverId;
-    private GameIdentity         game;
-    private String               mapId;
-    private Instant              startTime;
+    private UUID matchId;
+    private UUID arenaId;
+    private UUID serverId;
+    private GameIdentity game;
+    private String mapId;
+    private Instant startTime;
     private Collection<Identity> startParticipants;
-    private Instant              endedAt;
+    private Instant endedAt;
 
     public MatchData(final UUID matchId, final UUID arenaId, final UUID serverId, final GameIdentity game, final String mapId, final Instant startTime, final Collection<Identity> startParticipants)
     {

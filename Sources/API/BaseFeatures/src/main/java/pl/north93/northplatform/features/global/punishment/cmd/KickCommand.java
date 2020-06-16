@@ -48,7 +48,7 @@ public class KickCommand extends NorthCommand
                 sender.sendMessage(this.messages, "command.no_player");
                 return;
             }
-            final IOnlinePlayer player = (IOnlinePlayer) t.getPlayer();
+            final IOnlinePlayer player = t.getPlayer();
 
             final String reason = args.asText(1);
             final String kickMessage;

@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public final class DioriteURLUtils
@@ -42,13 +43,7 @@ public final class DioriteURLUtils
         {
             return "";
         }
-        try
-        {
-            return URLEncoder.encode(str, "UTF-8");
-        } catch (final UnsupportedEncodingException e)
-        { // should never be thrown
-            throw new RuntimeException(e);
-        }
+        return URLEncoder.encode(str, StandardCharsets.UTF_8);
     }
 
     public static String createQueryElement(final String key, final String value)

@@ -43,7 +43,7 @@ public class ArenaWorld
     public ArenaWorld(final GameHostManager gameHostManager, final LocalArena arena)
     {
         this.gameHostManager = gameHostManager;
-        this.arena = arena;;
+        this.arena = arena;
     }
 
     public String getDefaultWorldName()

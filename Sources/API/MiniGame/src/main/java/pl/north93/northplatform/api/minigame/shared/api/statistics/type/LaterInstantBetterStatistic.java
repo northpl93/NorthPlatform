@@ -1,11 +1,12 @@
 package pl.north93.northplatform.api.minigame.shared.api.statistics.type;
 
+import java.time.Instant;
+
 import org.bson.Document;
+
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticDbComposer;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.InstantUnit;
-
-import java.time.Instant;
 
 /**
  * Statystyka uznajaca pozniejszy czas wystapienia za lepszy.
@@ -33,13 +34,13 @@ public class LaterInstantBetterStatistic implements IStatistic<Instant, InstantU
     }
 
     @Override
-    public IStatisticDbComposer<InstantUnit> getDbComposer()
+    public IStatisticDbComposer<Instant, InstantUnit> getDbComposer()
     {
         return LaterInstantBetterStatisticDbComposer.INSTANCE;
     }
 }
 
-class LaterInstantBetterStatisticDbComposer implements IStatisticDbComposer<InstantUnit>
+class LaterInstantBetterStatisticDbComposer implements IStatisticDbComposer<Instant, InstantUnit>
 {
     static final LaterInstantBetterStatisticDbComposer INSTANCE = new LaterInstantBetterStatisticDbComposer();
 

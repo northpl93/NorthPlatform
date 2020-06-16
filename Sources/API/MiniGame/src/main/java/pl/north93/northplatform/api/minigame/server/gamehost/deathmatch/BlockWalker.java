@@ -38,20 +38,16 @@ public class BlockWalker
             case NORTH:
                 return facesN;
             case SOUTH_WEST:
-                return facesW;
 
             case WEST:
-                return facesW;
             case SOUTH_EAST:
                 return facesW;
 
             case SOUTH:
-                return facesS;
             case NORTH_EAST:
                 return facesS;
 
             case EAST:
-                return facesE;
             case NORTH_WEST:
                 return facesE;
         }

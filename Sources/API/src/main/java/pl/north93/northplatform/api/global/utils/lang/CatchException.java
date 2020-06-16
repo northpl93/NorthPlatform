@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 public final class CatchException
 {
     @FunctionalInterface
-    public static interface ExceptionRunnable
+    public interface ExceptionRunnable
     {
         void run() throws Throwable;
     }

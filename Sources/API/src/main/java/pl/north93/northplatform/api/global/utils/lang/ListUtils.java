@@ -8,9 +8,9 @@ import java.util.Optional;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public final class ListUtils
+public class ListUtils
 {
-    public static <T> T getOrNull(List<? extends T> list, int index)
+    public <T> T getOrNull(final List<? extends T> list, final int index)
     {
         if ( list.size() > index )
         {
@@ -20,20 +20,20 @@ public final class ListUtils
         return null;
     }
     
-    public static <T> Optional<T> getIfExists(List<? extends T> list, int index)
+    public <T> Optional<T> getIfExists(final List<? extends T> list, final int index)
     {
         return Optional.ofNullable(getOrNull(list, index));
     }
     
-    public static <T extends Comparable<? super T>> void insertSorted(List<T> list, T element)
+    public <T extends Comparable<? super T>> void insertSorted(final List<T> list, final T element)
     {
-        int index = Collections.binarySearch(list, element);
+        final int index = Collections.binarySearch(list, element);
         list.add(index < 0 ? -(index + 1) : index + 1, element);
     }
     
-    public static <T> void insertSorted(List<T> list, T element, Comparator<? super T> comparator)
+    public <T> void insertSorted(final List<T> list, final T element, final Comparator<? super T> comparator)
     {
-        int index = Collections.binarySearch(list, element, comparator);
+        final int index = Collections.binarySearch(list, element, comparator);
         list.add(index < 0 ? -(index + 1) : index + 1, element);
     }
 }

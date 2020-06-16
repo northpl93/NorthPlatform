@@ -1,6 +1,5 @@
 package pl.north93.northplatform.api.minigame.server.gamehost.deathmatch;
 
-import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.north93.northplatform.api.global.utils.lang.JavaUtils.instanceOf;
 
 

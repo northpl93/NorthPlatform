@@ -12,31 +12,31 @@ public class MethodHandlesUtils
 {
     // TODO: make better reflection utils
     
-    public static MethodHandle unreflectGetter(Class<?> clazz, String fieldName)
+    public MethodHandle unreflectGetter(Class<?> clazz, String fieldName)
     {
         return unreflectGetter(clazz, fieldName, true);
     }
 
     @SneakyThrows({Exception.class})
-    public static MethodHandle unreflectGetter(Class<?> clazz, String fieldName, boolean forceAccess)
+    public MethodHandle unreflectGetter(Class<?> clazz, String fieldName, boolean forceAccess)
     {
         Field field = findField(clazz, fieldName, forceAccess);
         return MethodHandles.lookup().unreflectGetter(field);
     }
     
-    public static MethodHandle unreflectSetter(Class<?> clazz, String fieldName)
+    public MethodHandle unreflectSetter(Class<?> clazz, String fieldName)
     {
         return unreflectSetter(clazz, fieldName, true);
     }
 
     @SneakyThrows({Exception.class})
-    public static MethodHandle unreflectSetter(Class<?> clazz, String fieldName, boolean forceAccess)
+    public MethodHandle unreflectSetter(Class<?> clazz, String fieldName, boolean forceAccess)
     {
         Field field = findField(clazz, fieldName, forceAccess);
         return MethodHandles.lookup().unreflectSetter(field);
     }
     
-    private static Field findField(Class<?> clazz, String fieldName, boolean forceAccess) throws Exception
+    private Field findField(Class<?> clazz, String fieldName, boolean forceAccess) throws Exception
     {
         Class<?> cls = clazz;
         while ( cls != null )

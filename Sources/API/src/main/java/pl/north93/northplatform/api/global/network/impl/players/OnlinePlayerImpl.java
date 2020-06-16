@@ -2,6 +2,7 @@ package pl.north93.northplatform.api.global.network.impl.players;
 
 
 import java.util.Locale;
+import java.util.Objects;
 import java.util.UUID;
 
 import com.google.common.base.Preconditions;
@@ -153,11 +154,7 @@ public class OnlinePlayerImpl implements IOnlinePlayer
     @Override
     public long getGroupExpireAt()
     {
-        if (this.groupExpireAt == null)
-        {
-            return 0;
-        }
-        return this.groupExpireAt;
+        return Objects.requireNonNullElse(this.groupExpireAt, 0L);
     }
 
     @Override

@@ -746,7 +746,7 @@ public class Arguments implements Iterable<String>
     @Override
     public Iterator<String> iterator()
     {
-        return new Iterator<String>()
+        return new Iterator<>()
         {
             private int index = 0;
 

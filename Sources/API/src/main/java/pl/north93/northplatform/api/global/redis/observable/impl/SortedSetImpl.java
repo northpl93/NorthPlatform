@@ -4,6 +4,7 @@ import static pl.north93.northplatform.api.global.utils.lang.StringUtils.asStrin
 import static pl.north93.northplatform.api.global.utils.lang.StringUtils.toBytes;
 
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,6 +12,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.Pair;
 
+import io.lettuce.core.Range;
 import io.lettuce.core.ScoredValue;
 import io.lettuce.core.api.sync.RedisCommands;
 import pl.north93.northplatform.api.global.redis.observable.SortedSet;
@@ -65,18 +67,14 @@ class SortedSetImpl<K> implements SortedSet<K>
     {
         final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
         final Long zrevrank = redis.zrevrank(this.prefix, toBytes(key.toString()));
-        if (zrevrank == null)
-        {
-            return 0;
-        }
-        return zrevrank;
+        return Objects.requireNonNullElse(zrevrank, 0L);
     }
 
     @Override
     public long count(final double from, final double to)
     {
         final RedisCommands<String, byte[]> redis = this.observationManager.getRedis();
-        return redis.zcount(this.prefix, from, to);
+        return redis.zcount(this.prefix, Range.create(from, to));
     }
 
     @Override

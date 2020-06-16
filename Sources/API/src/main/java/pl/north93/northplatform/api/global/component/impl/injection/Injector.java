@@ -10,7 +10,7 @@ import pl.north93.northplatform.api.global.component.impl.context.AbstractBeanCo
 import pl.north93.northplatform.api.global.component.impl.general.BeanQuery;
 import pl.north93.northplatform.api.global.component.impl.general.ComponentManagerImpl;
 
-public class Injector
+public final class Injector
 {
     public static void inject(final Object instance, final Class<?> clazz)
     {

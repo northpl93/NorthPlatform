@@ -1,6 +1,7 @@
 package pl.north93.northplatform.api.global.redis.rpc.impl;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,9 @@ class RpcObjectDescription implements IRpcObjectDescription
 
     private void populateMethodList()
     {
-        final Method[] methods = ReflectUtil.getDeclaredMethodsInOrder(this.classInterface);
+        final Method[] methods = this.classInterface.getDeclaredMethods();
+        Arrays.sort(methods, new MethodComparator());
+
         for (int methodId = 0; methodId < methods.length; methodId++)
         {
             final Method method = methods[methodId];

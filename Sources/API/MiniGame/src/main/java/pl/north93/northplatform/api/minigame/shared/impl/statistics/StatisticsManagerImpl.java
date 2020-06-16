@@ -1,35 +1,48 @@
 package pl.north93.northplatform.api.minigame.shared.impl.statistics;
 
-import com.google.common.collect.Lists;
-import com.mongodb.client.AggregateIterable;
-import com.mongodb.client.MongoCollection;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.bson.Document;
-import pl.north93.northplatform.api.global.ApiCore;
-import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.storage.StorageConnector;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.*;
-
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import com.google.common.collect.Lists;
+import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.MongoCollection;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.bson.Document;
+
+import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.storage.StorageConnector;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.HolderIdentity;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IRanking;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticFilter;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticHolder;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticUnit;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsManager;
+
 public class StatisticsManagerImpl implements IStatisticsManager
 {
     @Inject
-    private ApiCore          apiCore;
-    @Inject
-    private StorageConnector storage;
+    private ApiCore apiCore;
+    private final MongoCollection<Document> collection;
 
     @Bean
-    private StatisticsManagerImpl()
+    private StatisticsManagerImpl(final StorageConnector storage)
     {
+        this.collection = storage.getMainDatabase().getCollection("statistics");
     }
 
     @Override
@@ -41,7 +54,6 @@ public class StatisticsManagerImpl implements IStatisticsManager
     @Override
     public <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRanking<T, UNIT>> getRanking(final IStatistic<T, UNIT> statistic, final int size, final IStatisticFilter... filters)
     {
-        final MongoCollection<Document> collection = this.getCollection();
         final Document sort = statistic.getDbComposer().bestRecordQuery();
 
         final List<Document> aggregation = this.composeStatisticsAggregation(statistic, Arrays.asList(filters));
@@ -51,7 +63,7 @@ public class StatisticsManagerImpl implements IStatisticsManager
         final CompletableFuture<IRanking<T, UNIT>> future = new CompletableFuture<>();
         this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
         {
-            final AggregateIterable<Document> documents = collection.aggregate(aggregation);
+            final AggregateIterable<Document> documents = this.collection.aggregate(aggregation);
             final Stream<Document> stream = StreamSupport.stream(documents.spliterator(), false);
 
             final List<IRecord<T, UNIT>> result = stream.map(document -> this.documentToUnit(statistic, document))
@@ -66,8 +78,6 @@ public class StatisticsManagerImpl implements IStatisticsManager
     @Override
     public <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRecord<T, UNIT>> getRecord(final IStatistic<T, UNIT> statistic, final IStatisticFilter[] filters)
     {
-        final MongoCollection<Document> collection = this.getCollection();
-
         final Document query = new Document("statId", statistic.getId());
         final Document sort = new Document();
         Arrays.stream(filters).forEach(filter -> filter.appendSort(statistic, sort));
@@ -75,7 +85,7 @@ public class StatisticsManagerImpl implements IStatisticsManager
         final CompletableFuture<IRecord<T, UNIT>> future = new CompletableFuture<>();
         this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
         {
-            final Document result = collection.find(query).sort(sort).first();
+            final Document result = this.collection.find(query).sort(sort).first();
             final IRecord<T, UNIT> resultRecord = this.documentToUnit(statistic, result);
 
             future.complete(resultRecord);
@@ -87,8 +97,6 @@ public class StatisticsManagerImpl implements IStatisticsManager
     @Override
     public <T, UNIT extends IStatisticUnit<T>> CompletableFuture<UNIT> getAverage(final IStatistic<T, UNIT> statistic)
     {
-        final MongoCollection<Document> collection = this.getCollection();
-
         final List<Document> aggregation = this.composeStatisticsAggregation(statistic, new ArrayList<>());
 
         final Document group = new Document("_id", null).append("value", new Document("$avg", "$value"));
@@ -97,7 +105,7 @@ public class StatisticsManagerImpl implements IStatisticsManager
         final CompletableFuture<UNIT> future = new CompletableFuture<>();
         this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
         {
-            final Document first = collection.aggregate(aggregation).first();
+            final Document first = this.collection.aggregate(aggregation).first();
 
             final UNIT value;
             if (first == null)
@@ -118,8 +126,6 @@ public class StatisticsManagerImpl implements IStatisticsManager
     @Override
     public <T, UNIT extends IStatisticUnit<T>> CompletableFuture<UNIT> getPercentile(final IStatistic<T, UNIT> statistic, final double percentile)
     {
-        final MongoCollection<Document> collection = this.getCollection();
-
         //        {'$sort': {'value': 1}},
         //        {'$group': {'_id': '$_id', 'value': {'$push': '$value'}}},
         //        {'$project': {
@@ -145,7 +151,7 @@ public class StatisticsManagerImpl implements IStatisticsManager
         final CompletableFuture<UNIT> future = new CompletableFuture<>();
         this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
         {
-            final Document first = collection.aggregate(aggregation).first();
+            final Document first = this.collection.aggregate(aggregation).first();
 
             final UNIT value;
             if (first == null)
@@ -221,7 +227,7 @@ public class StatisticsManagerImpl implements IStatisticsManager
 
     /*default*/ MongoCollection<Document> getCollection()
     {
-        return this.storage.getMainDatabase().getCollection("statistics");
+        return this.collection;
     }
 
     @Override

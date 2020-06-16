@@ -3,9 +3,10 @@ package pl.north93.northplatform.api.global.utils.lang;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public final class JavaUtils
+public class JavaUtils
 {
-    public static <T> T instanceOf(final Object object, final Class<T> clazz)
+    @SuppressWarnings("unchecked")
+    public <T> T instanceOf(final Object object, final Class<T> clazz)
     {
         if (object == null)
         {

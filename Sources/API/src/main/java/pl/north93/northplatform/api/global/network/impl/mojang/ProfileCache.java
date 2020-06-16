@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -96,7 +97,7 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
         final boolean isError = urlConnection.getResponseCode() >= HttpURLConnection.HTTP_INTERNAL_ERROR;
         try (final InputStream stream = isError ? urlConnection.getErrorStream() : urlConnection.getInputStream())
         {
-            return IOUtils.toString(stream);
+            return IOUtils.toString(stream, StandardCharsets.UTF_8);
         }
     }
 

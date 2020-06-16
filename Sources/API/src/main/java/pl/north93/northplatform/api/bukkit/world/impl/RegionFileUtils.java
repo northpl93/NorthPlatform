@@ -9,16 +9,18 @@ import net.minecraft.server.v1_12_R1.RegionFileCache;
 
 import org.bukkit.World;
 
+import lombok.experimental.UtilityClass;
 import pl.north93.northplatform.api.bukkit.world.ChunkLocation;
 
+@UtilityClass
 class RegionFileUtils
 {    
-    static Set<ChunkLocation> getGeneratedChunks(World bukkitWorld)
+    Set<ChunkLocation> getGeneratedChunks(World bukkitWorld)
     {
         return getGeneratedChunks(bukkitWorld.getWorldFolder());
     }
     
-    static Set<ChunkLocation> getGeneratedChunks(File worldFolder)
+    Set<ChunkLocation> getGeneratedChunks(File worldFolder)
     {
         Set<ChunkLocation> result = new HashSet<>();
         
@@ -49,7 +51,7 @@ class RegionFileUtils
         return result;
     }
     
-    private static void handleRegionFile(File worldFolder, int x, int z, Set<ChunkLocation> result)
+    private void handleRegionFile(File worldFolder, int x, int z, Set<ChunkLocation> result)
     {
         RegionFile regionFile = RegionFileCache.b(worldFolder, x << 5, z << 5);
 
@@ -65,7 +67,7 @@ class RegionFileUtils
         }
     }
     
-    private static String[] listRegionFiles(File worldFolder)
+    private String[] listRegionFiles(File worldFolder)
     {
         File region = new File(worldFolder, "region");
         

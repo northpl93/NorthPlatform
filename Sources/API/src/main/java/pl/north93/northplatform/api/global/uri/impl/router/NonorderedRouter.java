@@ -1,7 +1,7 @@
 package pl.north93.northplatform.api.global.uri.impl.router;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -181,7 +181,7 @@ public class NonorderedRouter
             throw new RuntimeException("Missing value for param: " + params[params.length - 1]);
         }
 
-        final Map<Object, Object> map = new HashMap<Object, Object>();
+        final Map<Object, Object> map = new HashMap<>();
         for (int i = 0; i < params.length; i += 2)
         {
             final String key = params[i].toString();
@@ -199,89 +199,82 @@ public class NonorderedRouter
             return null;
         }
 
-        try
+        // The best one is the one with minimum number of params in the query
+        String bestCandidate = null;
+        int minQueryParams = Integer.MAX_VALUE;
+
+        boolean matched = true;
+        final Set<String> usedKeys = new HashSet<String>();
+
+        for (final Pattern pattern : patterns)
         {
-            // The best one is the one with minimum number of params in the query
-            String bestCandidate = null;
-            int minQueryParams = Integer.MAX_VALUE;
+            matched = true;
+            usedKeys.clear();
 
-            boolean matched = true;
-            final Set<String> usedKeys = new HashSet<String>();
+            final StringBuilder b = new StringBuilder();
 
-            for (final Pattern pattern : patterns)
+            for (final String token : pattern.tokens())
             {
-                matched = true;
-                usedKeys.clear();
+                b.append('/');
 
-                final StringBuilder b = new StringBuilder();
-
-                for (final String token : pattern.tokens())
+                if (token.length() > 0 && token.charAt(0) == ':')
                 {
-                    b.append('/');
-
-                    if (token.length() > 0 && token.charAt(0) == ':')
+                    final String key = token.substring(1);
+                    final Object value = params.get(key);
+                    if (value == null)
                     {
-                        final String key = token.substring(1);
-                        final Object value = params.get(key);
-                        if (value == null)
-                        {
-                            matched = false;
-                            break;
-                        }
+                        matched = false;
+                        break;
+                    }
 
-                        usedKeys.add(key);
-                        b.append(value);
-                    }
-                    else
-                    {
-                        b.append(token);
-                    }
+                    usedKeys.add(key);
+                    b.append(value);
                 }
-
-                if (matched)
+                else
                 {
-                    final int numQueryParams = params.size() - usedKeys.size();
-                    if (numQueryParams < minQueryParams)
-                    {
-                        if (numQueryParams > 0)
-                        {
-                            boolean firstQueryParam = true;
-
-                            for (final Map.Entry<Object, Object> entry : params.entrySet())
-                            {
-                                final String key = entry.getKey().toString();
-                                if (! usedKeys.contains(key))
-                                {
-                                    if (firstQueryParam)
-                                    {
-                                        b.append('?');
-                                        firstQueryParam = false;
-                                    }
-                                    else
-                                    {
-                                        b.append('&');
-                                    }
-
-                                    final String value = entry.getValue().toString();
-                                    b.append(URLEncoder.encode(key, "UTF-8"));    // May throw UnsupportedEncodingException
-                                    b.append('=');
-                                    b.append(URLEncoder.encode(value, "UTF-8"));  // May throw UnsupportedEncodingException
-                                }
-                            }
-                        }
-
-                        bestCandidate = b.toString();
-                        minQueryParams = numQueryParams;
-                    }
+                    b.append(token);
                 }
             }
 
-            return bestCandidate;
+            if (matched)
+            {
+                final int numQueryParams = params.size() - usedKeys.size();
+                if (numQueryParams < minQueryParams)
+                {
+                    if (numQueryParams > 0)
+                    {
+                        boolean firstQueryParam = true;
+
+                        for (final Map.Entry<Object, Object> entry : params.entrySet())
+                        {
+                            final String key = entry.getKey().toString();
+                            if (! usedKeys.contains(key))
+                            {
+                                if (firstQueryParam)
+                                {
+                                    b.append('?');
+                                    firstQueryParam = false;
+                                }
+                                else
+                                {
+                                    b.append('&');
+                                }
+
+                                final String value = entry.getValue().toString();
+                                b.append(URLEncoder.encode(key, StandardCharsets.UTF_8));    // May throw UnsupportedEncodingException
+                                b.append('=');
+                                b.append(URLEncoder.encode(value, StandardCharsets.UTF_8));  // May throw UnsupportedEncodingException
+                            }
+                        }
+                    }
+
+                    bestCandidate = b.toString();
+                    minQueryParams = numQueryParams;
+                }
+            }
         }
-        catch (UnsupportedEncodingException e)
-        {
-            return null;
-        }
+
+        return bestCandidate;
     }
 
     @Override

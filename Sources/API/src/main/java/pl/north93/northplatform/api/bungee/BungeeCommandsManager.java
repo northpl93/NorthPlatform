@@ -72,7 +72,7 @@ public class BungeeCommandsManager implements ICommandsManager
         }
     }
 
-    private class WrappedSender implements NorthCommandSender
+    private static class WrappedSender implements NorthCommandSender
     {
         private final CommandSender sender;
 

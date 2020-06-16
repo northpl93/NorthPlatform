@@ -4,15 +4,14 @@ import org.bukkit.Material;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class MaterialUtils
 {
-    private static final Material[] SWORD_MATERIALS = { Material.WOOD_SWORD, Material.STONE_SWORD, Material.IRON_SWORD, Material.GOLD_SWORD, Material.DIAMOND_SWORD };
+    private final Material[] SWORD_MATERIALS = { Material.WOOD_SWORD, Material.STONE_SWORD, Material.IRON_SWORD, Material.GOLD_SWORD, Material.DIAMOND_SWORD };
     
-    private MaterialUtils()
-    {
-    }
-    
-    public static boolean isSword(Material material)
+    public boolean isSword(final Material material)
     {
         return ArrayUtils.contains(SWORD_MATERIALS, material);
     }

@@ -1,33 +1,32 @@
 package pl.north93.northplatform.api.minigame.server.gamehost.cmd;
 
-import static org.apache.commons.lang3.StringUtils.getJaroWinklerDistance;
-
-
 import java.util.Locale;
 
 import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.text.similarity.JaroWinklerDistance;
 
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
-import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.world.MapVote;
-import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
-import pl.north93.northplatform.api.minigame.shared.api.MapTemplate;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.minigame.server.MiniGameServer;
+import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.world.MapVote;
+import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
+import pl.north93.northplatform.api.minigame.shared.api.MapTemplate;
 
 public class MapVoteCmd extends NorthCommand
 {
     private static final double DISTANCE_THRESHOLD = 0.5;
+    private static final JaroWinklerDistance DISTANCE = new JaroWinklerDistance();
     @Inject @Messages("MiniGameApi")
-    private MessagesBox    messages;
+    private MessagesBox messages;
     @Inject
     private MiniGameServer server;
 
@@ -111,7 +110,7 @@ public class MapVoteCmd extends NorthCommand
             final MapTemplate mapTemplate = options[i];
 
             final String mapName = mapTemplate.getDisplayName().toLowerCase(Locale.ROOT);
-            final double distance = getJaroWinklerDistance(userInput, mapName);
+            final double distance = DISTANCE.apply(userInput, mapName);
             if (distance <= DISTANCE_THRESHOLD)
             {
                 continue;

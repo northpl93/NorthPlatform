@@ -13,8 +13,8 @@ import com.google.common.base.Preconditions;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.commons.lang3.text.StrBuilder;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.text.TextStringBuilder;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.scanners.SubTypesScanner;
@@ -176,7 +176,7 @@ public class ClassloaderScanningTask
 
     private String generateScanningError()
     {
-        final StrBuilder sb = new StrBuilder(512);
+        final TextStringBuilder sb = new TextStringBuilder(512);
         sb.append("They're ").append(this.pendingTasks.size()).append(" uncompleted tasks! Below you will se trace of these tasks.").appendNewLine();
         for (final AbstractScanningTask task : this.pendingTasks)
         {

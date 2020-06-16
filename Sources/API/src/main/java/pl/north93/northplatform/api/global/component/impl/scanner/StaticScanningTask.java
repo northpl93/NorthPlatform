@@ -1,7 +1,5 @@
 package pl.north93.northplatform.api.global.component.impl.scanner;
 
-import static pl.north93.northplatform.api.global.component.impl.general.CtUtils.toJavaField;
-
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -20,6 +18,7 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Named;
 import pl.north93.northplatform.api.global.component.impl.general.BeanQuery;
 import pl.north93.northplatform.api.global.component.impl.container.AbstractBeanContainer;
 import pl.north93.northplatform.api.global.component.impl.context.AbstractBeanContext;
+import pl.north93.northplatform.api.global.component.impl.general.CtUtils;
 import pl.north93.northplatform.api.global.component.impl.injection.FieldInjectionContext;
 
 class StaticScanningTask extends AbstractScanningTask
@@ -49,7 +48,7 @@ class StaticScanningTask extends AbstractScanningTask
             
             try
             {
-                field = toJavaField(this.clazz, next);
+                field = CtUtils.toJavaField(this.clazz, next);
             }
             catch ( Throwable e )
             {

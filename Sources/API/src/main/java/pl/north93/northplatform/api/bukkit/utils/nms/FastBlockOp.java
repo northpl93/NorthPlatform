@@ -11,6 +11,9 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
 import org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class FastBlockOp
 {
     /**
@@ -21,7 +24,7 @@ public class FastBlockOp
      * @param material material nowego bloku.
      * @param data data nowego bloku.
      */
-    public static void setType(final Block block, final Material material, final byte data)
+    public void setType(final Block block, final Material material, final byte data)
     {
         final Chunk nmsChunk = ((CraftChunk) block.getChunk()).getHandle();
         final ChunkSection[] sections = nmsChunk.getSections();
@@ -58,7 +61,7 @@ public class FastBlockOp
         }
     }
 
-    private static void fixHeightMap(final Block block, final Chunk nmsChunk, final int mapIndex)
+    private void fixHeightMap(final Block block, final Chunk nmsChunk, final int mapIndex)
     {
         for (int i = block.getY(); i >= 0; i--)
         {

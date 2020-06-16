@@ -2,7 +2,7 @@ package pl.north93.northplatform.api.minigame.shared.api.statistics;
 
 import org.bson.Document;
 
-public interface IStatisticDbComposer<UNIT extends IStatisticUnit>
+public interface IStatisticDbComposer<T, UNIT extends IStatisticUnit<T>>
 {
     Document bestRecordQuery();
 

@@ -28,13 +28,13 @@ public class HigherNumberBetterStatistic implements IStatistic<Long, NumberUnit>
     }
 
     @Override
-    public IStatisticDbComposer<NumberUnit> getDbComposer()
+    public IStatisticDbComposer<Long, NumberUnit> getDbComposer()
     {
         return HigherNumberBetterStatisticDbComposer.INSTANCE;
     }
 }
 
-class HigherNumberBetterStatisticDbComposer implements IStatisticDbComposer<NumberUnit>
+class HigherNumberBetterStatisticDbComposer implements IStatisticDbComposer<Long, NumberUnit>
 {
     static final HigherNumberBetterStatisticDbComposer INSTANCE = new HigherNumberBetterStatisticDbComposer();
 

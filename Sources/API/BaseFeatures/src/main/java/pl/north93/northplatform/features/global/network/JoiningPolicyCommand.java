@@ -27,7 +27,7 @@ public class JoiningPolicyCommand extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        if (args.length() == 0)
+        if (args.isEmpty())
         {
             final String values = Arrays.stream(JoiningPolicy.values()).map(Enum::name).collect(Collectors.joining(", "));
             sender.sendMessage("&eDostępne wartości: " + values);

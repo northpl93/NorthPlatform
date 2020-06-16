@@ -43,7 +43,7 @@ public class GroupsCommand extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        if (args.length() == 0)
+        if (args.isEmpty())
         {
             sender.sendMessage("&e/" + label + " <gracz> - wyswietla grupe gracza");
             sender.sendMessage("&e/" + label + " <gracz> <grupa> [czas] - zmienia grupe gracza");

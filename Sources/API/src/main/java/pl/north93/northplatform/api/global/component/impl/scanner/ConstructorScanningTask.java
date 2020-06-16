@@ -1,8 +1,6 @@
 package pl.north93.northplatform.api.global.component.impl.scanner;
 
-import static pl.north93.northplatform.api.global.component.impl.general.CtUtils.toJavaConstructor;
-
-
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -16,6 +14,7 @@ import javassist.CtConstructor;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.impl.container.BeanFactory;
 import pl.north93.northplatform.api.global.component.impl.context.AbstractBeanContext;
+import pl.north93.northplatform.api.global.component.impl.general.CtUtils;
 
 class ConstructorScanningTask extends AbstractScanningTask
 {
@@ -38,7 +37,8 @@ class ConstructorScanningTask extends AbstractScanningTask
             {
                 if (this.isConstructorBean(constructor))
                 {
-                    BeanFactory.INSTANCE.createStaticBean(this.beanContext, toJavaConstructor(this.clazz, constructor));
+                    final Constructor<?> javaConstructor = CtUtils.toJavaConstructor(this.clazz, constructor);
+                    BeanFactory.INSTANCE.createStaticBean(this.beanContext, javaConstructor);
                 }
             }
             catch (final Exception exception)

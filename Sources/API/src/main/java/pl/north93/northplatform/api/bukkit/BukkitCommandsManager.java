@@ -48,7 +48,7 @@ public class BukkitCommandsManager implements ICommandsManager
         // todo unregister commands?
     }
 
-    private class WrappedSender implements NorthCommandSender
+    private static class WrappedSender implements NorthCommandSender
     {
         private final CommandSender wrappedSender;
 

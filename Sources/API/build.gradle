@@ -35,7 +35,8 @@ dependencies {
     api 'com.google.guava:guava:17.0'
 
     // We doesn't have it in BungeeCord
-    api 'org.apache.commons:commons-lang3:3.7'
+    api 'org.apache.commons:commons-lang3:3.9'
+    api 'org.apache.commons:commons-text:1.8'
     api 'commons-io:commons-io:2.6'
 
     api 'org.reflections:reflections:0.9.10'

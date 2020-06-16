@@ -52,13 +52,13 @@ class BoardLine
         {
             prefix = newText.substring(0, 15);
             suffix = ChatColor.getLastColors(newText.substring(0, 17));
-            suffix += newText.substring(17, newText.length());
+            suffix += newText.substring(17);
         }
         else
         {
             prefix = first16;
             suffix = ChatColor.getLastColors(first16);
-            suffix += newText.substring(16, newText.length());
+            suffix += newText.substring(16);
         }
 
         if (suffix.length() > 16)

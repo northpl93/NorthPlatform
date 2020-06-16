@@ -31,7 +31,7 @@ public class NetworkCommand extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        if (args.length() == 0)
+        if (args.isEmpty())
         {
             sender.sendMessage("&e/network - pomoc");
             sender.sendMessage("&e  proxies - lista połączonych serwerów proxy");

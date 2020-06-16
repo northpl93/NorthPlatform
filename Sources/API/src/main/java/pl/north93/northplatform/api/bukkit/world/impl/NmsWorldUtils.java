@@ -37,17 +37,19 @@ import org.bukkit.generator.ChunkGenerator;
 import org.diorite.commons.io.DioriteFileUtils;
 
 import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.utils.lang.CatchException;
 import pl.north93.northplatform.api.global.utils.lang.MethodHandlesUtils;
 
 @Slf4j
+@UtilityClass
 class NmsWorldUtils
 {
-    private static final MethodHandle WORLDS_GETTER = MethodHandlesUtils.unreflectGetter(CraftServer.class, "worlds");
-    private static final MethodHandle CHUNK_QUEUE_GETTER = MethodHandlesUtils.unreflectGetter(ChunkRegionLoader.class, "queue");
+    private final MethodHandle WORLDS_GETTER = MethodHandlesUtils.unreflectGetter(CraftServer.class, "worlds");
+    private final MethodHandle CHUNK_QUEUE_GETTER = MethodHandlesUtils.unreflectGetter(ChunkRegionLoader.class, "queue");
 
-    static WorldServer getMinecraftWorld(World bukkitWorld)
+    WorldServer getMinecraftWorld(World bukkitWorld)
     {
         return ((CraftWorld) bukkitWorld).getHandle();
     }
@@ -59,7 +61,7 @@ class NmsWorldUtils
      * @return created instance of world or null if it wasn't posibble
      */
     @SuppressWarnings("deprecation")
-    static WorldServer createWorldInstance(String name, WorldCreator creator)
+    WorldServer createWorldInstance(String name, WorldCreator creator)
     {
         Preconditions.checkState(Bukkit.isPrimaryThread());
         Preconditions.checkArgument(name != null, "World name cannot be null");
@@ -142,7 +144,7 @@ class NmsWorldUtils
      * @return
      */
     @SuppressWarnings({"deprecation"})
-    static boolean unloadWorld(World world, boolean force)
+    boolean unloadWorld(World world, boolean force)
     {
         Preconditions.checkState(Bukkit.isPrimaryThread());
         Preconditions.checkArgument(world != null, "world cannot be null");
@@ -187,12 +189,12 @@ class NmsWorldUtils
     }
 
     @SneakyThrows
-    private static Map<String, World> getWorldsMap()
+    private Map<String, World> getWorldsMap()
     {
         return (Map<String, World>) WORLDS_GETTER.invoke(Bukkit.getServer());
     }
     
-    private static void removeRegionCache(WorldServer world)
+    private void removeRegionCache(WorldServer world)
     {
         synchronized ( RegionFileCache.class )
         {
@@ -213,7 +215,7 @@ class NmsWorldUtils
     }
 
     @SneakyThrows(Throwable.class)
-    private static void cancelPendingSaves(WorldServer world)
+    private void cancelPendingSaves(WorldServer world)
     {
         ChunkProviderServer chunkProvider = world.getChunkProviderServer();
         ChunkRegionLoader chunkLoader = (ChunkRegionLoader) NorthChunkProvider.getChunkLoader(chunkProvider);
@@ -232,7 +234,7 @@ class NmsWorldUtils
      * Force saving world, the save process should be syncronized to main server thread, 
      * so world will be saved when that method exited
      */
-    static void forceSave(World bukkitWorld)
+    void forceSave(World bukkitWorld)
     {
         log.debug("Saving chunks for world {}", bukkitWorld.getName());
         

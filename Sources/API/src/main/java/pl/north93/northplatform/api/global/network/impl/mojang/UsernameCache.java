@@ -87,7 +87,7 @@ class UsernameCache
         try
         {
             final String url = "https://api.mojang.com/users/profiles/minecraft/" + DioriteURLUtils.encodeUTF8(username);
-            final String response = IOUtils.toString(new URL(url));
+            final String response = IOUtils.toString(new URL(url), StandardCharsets.UTF_8);
 
             if (StringUtils.isEmpty(response))
             {

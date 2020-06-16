@@ -25,7 +25,7 @@ public class SlotsCommand extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        if (args.length() == 0)
+        if (args.isEmpty())
         {
             final NetworkMeta meta = this.networkManager.getNetworkConfig().get();
             sender.sendMessage("&eAktualne sloty: " + meta.displayMaxPlayers + " Gracze: " + this.networkManager.getProxies().onlinePlayersCount());

@@ -76,7 +76,7 @@ public class BanService
 
             if (t.isOnline())
             {
-                final IOnlinePlayer onlinePlayer = (IOnlinePlayer) t.getPlayer();
+                final IOnlinePlayer onlinePlayer = t.getPlayer();
                 onlinePlayer.kick(this.getBanMessage(ban, onlinePlayer.getMyLocale()));
             }
         }

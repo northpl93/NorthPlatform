@@ -11,11 +11,13 @@ import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.entity.Player;
 
+import lombok.experimental.UtilityClass;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
+@UtilityClass
 public class EntityTrackerHelper
 {
-    private static final MethodHandle entity_field_tracker;
+    private final MethodHandle entity_field_tracker;
     static
     {
         try
@@ -37,7 +39,7 @@ public class EntityTrackerHelper
      * @param bukkitEntity Obiekt Bukkita reprezentujący Entity.
      * @return Obiekt NMS reprezentujący Entity.
      */
-    public static Entity toNmsEntity(final org.bukkit.entity.Entity bukkitEntity)
+    public Entity toNmsEntity(final org.bukkit.entity.Entity bukkitEntity)
     {
         if ( bukkitEntity instanceof Player )
         {
@@ -56,7 +58,7 @@ public class EntityTrackerHelper
      * @param entity Entity z ktorego wyciagnac EntityTrackerEntry.
      * @return EntityTrackerEntry dla danego entity.
      */
-    public static EntityTrackerEntry getTrackerEntry(final Entity entity)
+    public EntityTrackerEntry getTrackerEntry(final Entity entity)
     {
         try
         {

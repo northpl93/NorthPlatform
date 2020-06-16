@@ -1,8 +1,5 @@
 package pl.north93.northplatform.api.global.component.impl.scanner;
 
-import static pl.north93.northplatform.api.global.component.impl.general.CtUtils.toJavaMethod;
-
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,6 +16,7 @@ import pl.north93.northplatform.api.global.component.annotations.bean.DynamicBea
 import pl.north93.northplatform.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.northplatform.api.global.component.impl.container.BeanFactory;
 import pl.north93.northplatform.api.global.component.impl.general.ComponentManagerImpl;
+import pl.north93.northplatform.api.global.component.impl.general.CtUtils;
 
 class MethodScanningTask extends AbstractScanningTask
 {
@@ -47,15 +45,15 @@ class MethodScanningTask extends AbstractScanningTask
 
                 if (method.hasAnnotation(Bean.class))
                 {
-                    BeanFactory.INSTANCE.createStaticBean(this.beanContext, toJavaMethod(this.clazz, method));
+                    BeanFactory.INSTANCE.createStaticBean(this.beanContext, CtUtils.toJavaMethod(this.clazz, method));
                 }
                 else if (method.hasAnnotation(DynamicBean.class))
                 {
-                    BeanFactory.INSTANCE.createDynamicBean(this.beanContext, toJavaMethod(this.clazz, method));
+                    BeanFactory.INSTANCE.createDynamicBean(this.beanContext, CtUtils.toJavaMethod(this.clazz, method));
                 }
                 else if (method.hasAnnotation(Aggregator.class))
                 {
-                    ComponentManagerImpl.instance.getAggregationManager().addAggregator(toJavaMethod(this.clazz, method));
+                    ComponentManagerImpl.instance.getAggregationManager().addAggregator(CtUtils.toJavaMethod(this.clazz, method));
                 }
             }
             catch (final Exception exception)

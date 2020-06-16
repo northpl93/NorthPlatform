@@ -19,7 +19,7 @@ public class FlyCommand extends NorthCommand
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
         final Player player;
-        if (args.length() == 0)
+        if (args.isEmpty())
         {
             player = (Player) sender.unwrapped();
         }

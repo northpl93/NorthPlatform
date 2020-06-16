@@ -138,7 +138,7 @@ public class Cuboid implements IRegion
     public List<Block> getBlocks()
     {
         Iterator<Block> blockI = this.iterator();
-        List<Block> copy = new ArrayList<Block>();
+        List<Block> copy = new ArrayList<>();
         while (blockI.hasNext())
         {
             copy.add(blockI.next());
@@ -681,7 +681,7 @@ public class Cuboid implements IRegion
         return "Cuboid: " + this.worldName + "," + this.x1 + "," + this.y1 + "," + this.z1 + "=>" + this.x2 + "," + this.y2 + "," + this.z2;
     }
 
-    public class CuboidIterator implements Iterator<Block>
+    public static class CuboidIterator implements Iterator<Block>
     {
         private World w;
         private int   baseX, baseY, baseZ;

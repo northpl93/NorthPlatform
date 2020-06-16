@@ -8,14 +8,16 @@ import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtField;
 import javassist.CtMethod;
+import lombok.experimental.UtilityClass;
 import pl.north93.northplatform.api.global.utils.lang.CatchException;
 
 /**
  * Narzędzia do zamieniania obiektów z Javassista na Javowe wersje.
  */
+@UtilityClass
 public class CtUtils
 {
-    public static Field toJavaField(final Class<?> clazz, final CtField ctField)
+    public Field toJavaField(final Class<?> clazz, final CtField ctField)
     {
         try
         {
@@ -28,7 +30,7 @@ public class CtUtils
         }
     }
 
-    public static Method toJavaMethod(final Class<?> clazz, final CtMethod ctMethod)
+    public Method toJavaMethod(final Class<?> clazz, final CtMethod ctMethod)
     {
         try
         {
@@ -41,7 +43,7 @@ public class CtUtils
         }
     }
 
-    public static Constructor toJavaConstructor(final Class<?> clazz, final CtConstructor ctConstructor)
+    public Constructor<?> toJavaConstructor(final Class<?> clazz, final CtConstructor ctConstructor)
     {
         try
         {
@@ -54,7 +56,7 @@ public class CtUtils
         }
     }
 
-    public static Class<?>[] ctTypesToJava(final ClassLoader classLoader, final CtClass[] classes)
+    public Class<?>[] ctTypesToJava(final ClassLoader classLoader, final CtClass[] classes)
     {
         final Class<?>[] out = new Class[classes.length];
         for (int i = 0; i < classes.length; i++)

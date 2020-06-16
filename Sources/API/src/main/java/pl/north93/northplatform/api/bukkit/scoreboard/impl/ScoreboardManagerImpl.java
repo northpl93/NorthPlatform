@@ -92,7 +92,7 @@ public class ScoreboardManagerImpl extends Component implements IScoreboardManag
         // uruchamiane taski sa synchroniczne, API jest przeznaczone
         // do uzytko synchronicznego wiec nie musimy sie bac, ze
         // cos sie spierdoli.
-        if (this.layoutUpdaters.values().contains(layout))
+        if (this.layoutUpdaters.containsValue(layout))
         {
             return;
         }

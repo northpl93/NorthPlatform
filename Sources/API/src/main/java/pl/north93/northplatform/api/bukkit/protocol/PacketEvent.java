@@ -48,7 +48,7 @@ public interface PacketEvent<P extends Packet<?>>
      */
     Intent registerIntent();
     
-    public interface Intent
+    interface Intent
     {
         /**
          * Completes an intent.

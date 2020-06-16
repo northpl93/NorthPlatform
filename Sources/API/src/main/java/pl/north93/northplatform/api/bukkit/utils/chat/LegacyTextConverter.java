@@ -16,7 +16,7 @@ import net.md_5.bungee.api.chat.TextComponent;
  */
 public final class LegacyTextConverter
 {
-    public static final Pattern URL_PATTERN = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
+    public static final Pattern URL_PATTERN = Pattern.compile("^(?:(https?)://)?([-\\w_.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
 
     public static BaseComponent[] fromLegacyText(final String message)
     {

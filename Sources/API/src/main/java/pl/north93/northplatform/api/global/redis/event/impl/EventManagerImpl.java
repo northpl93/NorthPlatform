@@ -114,7 +114,7 @@ public class EventManagerImpl extends Component implements IEventManager
     private String getClassNameFromChannel(final String channelName)
     {
         final int prefixLength = 11;
-        return channelName.substring(prefixLength, channelName.length());
+        return channelName.substring(prefixLength);
     }
 
     // generuje nazwe kanalu przez który sa przesylane eventy danego typu

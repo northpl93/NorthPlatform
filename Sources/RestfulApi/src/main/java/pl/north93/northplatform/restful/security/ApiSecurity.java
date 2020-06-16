@@ -6,19 +6,14 @@ import static spark.Spark.halt;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import pl.north93.northplatform.api.global.ApiCore;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.utils.ConfigUtils;
 
+@Slf4j
 public class ApiSecurity
 {
-    private final Logger logger = LoggerFactory.getLogger(ApiSecurity.class);
-    @Inject
-    private ApiCore   api;
-    private ApiConfig apiConfig;
+    private final ApiConfig apiConfig;
 
     public ApiSecurity()
     {
@@ -29,7 +24,7 @@ public class ApiSecurity
     {
         if (! this.apiConfig.isSecurityEnabled())
         {
-            this.logger.warn("Restful API security is DISABLED! Anyone can access our API.");
+            log.warn("Restful API security is DISABLED! Anyone can access our API.");
             return;
         }
 

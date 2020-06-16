@@ -1,11 +1,12 @@
 package pl.north93.northplatform.api.minigame.shared.api.statistics.type;
 
+import java.time.Duration;
+
 import org.bson.Document;
+
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticDbComposer;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.DurationUnit;
-
-import java.time.Duration;
 
 /**
  * Statystyka reprezentujaca czas wykonywania czynnosci.
@@ -34,13 +35,13 @@ public class LongerTimeBetterStatistic implements IStatistic<Duration, DurationU
     }
 
     @Override
-    public IStatisticDbComposer<DurationUnit> getDbComposer()
+    public IStatisticDbComposer<Duration, DurationUnit> getDbComposer()
     {
         return LongerTimeBetterStatisticDbComposer.INSTANCE;
     }
 }
 
-class LongerTimeBetterStatisticDbComposer implements IStatisticDbComposer<DurationUnit>
+class LongerTimeBetterStatisticDbComposer implements IStatisticDbComposer<Duration, DurationUnit>
 {
     static final LongerTimeBetterStatisticDbComposer INSTANCE = new LongerTimeBetterStatisticDbComposer();
 

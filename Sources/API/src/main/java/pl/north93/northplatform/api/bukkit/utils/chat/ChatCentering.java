@@ -262,7 +262,7 @@ public final class ChatCentering
             spaces.setStrikethrough(false);
             spaces.setColor(ChatColor.WHITE);
 
-            TextComponent afterSpaces = new TextComponent(text.substring(startIndex, text.length()));
+            TextComponent afterSpaces = new TextComponent(text.substring(startIndex));
             if ( startComponent.getExtra() == null )
             {
                 startComponent.addExtra(spaces);

@@ -1,25 +1,32 @@
 package pl.north93.northplatform.api.minigame.shared.impl.statistics;
 
-import com.google.common.collect.Lists;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.FindOneAndUpdateOptions;
-import lombok.ToString;
-import org.bson.Document;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.*;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.filter.BestRecordFilter;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.filter.LatestRecordFilter;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import com.google.common.collect.Lists;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
+
+import org.bson.Document;
+
+import lombok.ToString;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.HolderIdentity;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticFilter;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticHolder;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticUnit;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.filter.BestRecordFilter;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.filter.LatestRecordFilter;
+
 @ToString(of = "holder")
 class StatisticHolderImpl implements IStatisticHolder
 {
-    private static final Document TIME_SORT = new Document("time", -1); // najnowsze na górze
+    private static final Document TIME_SORT = new Document("time", -1); // newest on the top
     private final StatisticsManagerImpl manager;
-    private final HolderIdentity        holder;
+    private final HolderIdentity holder;
 
     public StatisticHolderImpl(final StatisticsManagerImpl manager, final HolderIdentity holder)
     {

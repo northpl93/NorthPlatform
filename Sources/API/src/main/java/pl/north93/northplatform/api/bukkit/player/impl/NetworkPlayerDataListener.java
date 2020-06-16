@@ -152,7 +152,7 @@ public class NetworkPlayerDataListener implements AutoListener
         {
             if (permission.startsWith("-"))
             {
-                attachment.setPermission(permission.substring(1, permission.length()), false);
+                attachment.setPermission(permission.substring(1), false);
             }
             else
             {

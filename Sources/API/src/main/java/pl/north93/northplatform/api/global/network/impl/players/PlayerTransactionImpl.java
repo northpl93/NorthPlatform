@@ -12,10 +12,10 @@ import pl.north93.northplatform.api.global.redis.observable.Value;
 
 class PlayerTransactionImpl implements IPlayerTransaction
 {
-    private final IPlayer           player;
-    private final Lock              lock;
+    private final IPlayer player;
+    private final Lock lock;
     private final Consumer<IPlayer> callback;
-    private       boolean           isClosed;
+    private boolean isClosed;
 
     public PlayerTransactionImpl(final Value<? extends IPlayer> playerValue, final Lock lock, final Consumer<IPlayer> callback)
     {
