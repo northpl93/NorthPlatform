@@ -1,15 +1,15 @@
 package pl.north93.northplatform.api.minigame.shared.api.arena;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import pl.north93.northplatform.api.global.metadata.MetaStore;
 import pl.north93.northplatform.api.minigame.shared.api.GameIdentity;
 import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 import pl.north93.serializer.platform.annotations.NorthField;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * Obiekt przedstawia arenę znajdującą się *gdzieś* w sieci.
@@ -19,15 +19,15 @@ import java.util.UUID;
 @NoArgsConstructor
 public class RemoteArena implements IArena
 {
-    private UUID         arenaId;
-    private UUID         serverId;
+    private UUID arenaId;
+    private UUID serverId;
     private GameIdentity miniGame;
-    private Boolean      isDynamic;
-    private GamePhase    gamePhase;
-    private Integer      maxPlayers;
+    private Boolean isDynamic;
+    private GamePhase gamePhase;
+    private Integer maxPlayers;
     @NorthField(type = HashSet.class)
-    private Set<UUID>    players;
-    private MetaStore    metadata;
+    private Set<UUID> players;
+    private MetaStore metadata;
 
     public RemoteArena(final UUID arenaId, final UUID serverId, final GameIdentity miniGame, final Boolean isDynamic, final GamePhase gamePhase, final Integer maxPlayers, final Set<UUID> players)
     {
@@ -66,7 +66,7 @@ public class RemoteArena implements IArena
     }
     
     @Override
-    public MetaStore getMetadata()
+    public MetaStore getMetaStore()
     {
         return this.metadata;
     }

@@ -107,9 +107,9 @@ public class LocalArena implements IArena
     }
     
     @Override
-    public MetaStore getMetadata()
+    public MetaStore getMetaStore()
     {
-        return this.data.getMetadata();
+        return this.data.getMetaStore();
     }
 
     public void setGamePhase(final GamePhase gamePhase)

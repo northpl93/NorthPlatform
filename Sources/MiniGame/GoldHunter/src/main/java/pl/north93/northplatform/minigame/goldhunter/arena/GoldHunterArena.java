@@ -386,7 +386,7 @@ public class GoldHunterArena implements IArenaData, ITickable
                 "team1Count", signedPlayers.get(GameTeam.RED).size(),
                 "team2Count", signedPlayers.get(GameTeam.BLUE).size());
         
-        localArena.getMetadata().set(StandardArenaMetaData.SIGNED_PLAYERS, signedPlayers.size());
+        localArena.getMetaStore().set(StandardArenaMetaData.SIGNED_PLAYERS, signedPlayers.size());
         localArena.uploadRemoteData();
         
         if ( hasGame() && ( signedPlayers.get(GameTeam.RED).size() == 0 || signedPlayers.get(GameTeam.BLUE).size() == 0 ) )

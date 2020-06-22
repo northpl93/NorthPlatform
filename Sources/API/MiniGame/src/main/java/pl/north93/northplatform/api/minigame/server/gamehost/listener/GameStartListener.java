@@ -63,8 +63,8 @@ public class GameStartListener implements AutoListener
         {
             // jeżeli gra jest dynamiczna ustawiamy nazwe swiata na "Lobby"
             final RemoteArena remoteArena = event.getArena().getAsRemoteArena();
-            remoteArena.getMetadata().set(StandardArenaMetaData.WORLD_ID, "");
-            remoteArena.getMetadata().set(StandardArenaMetaData.WORLD_NAME, "Lobby");
+            remoteArena.getMetaStore().set(StandardArenaMetaData.WORLD_ID, "");
+            remoteArena.getMetaStore().set(StandardArenaMetaData.WORLD_NAME, "Lobby");
         }
         
         //if ( event.getArena().getPlayersManager().isEnoughToStart() )

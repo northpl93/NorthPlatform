@@ -181,7 +181,7 @@ public class PlayersManager
         {
             remoteArena.getPlayers().add(player.getUuid());
         }
-        remoteArena.getMetadata().addAll(metadata);
+        remoteArena.getMetaStore().addAll(metadata);
         this.arena.uploadRemoteData();
 
         return true;

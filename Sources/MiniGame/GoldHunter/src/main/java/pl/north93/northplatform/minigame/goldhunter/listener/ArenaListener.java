@@ -45,7 +45,7 @@ public class ArenaListener implements AutoListener
         LocalArena localArena = event.getArena();
         if ( localArena.getArenaData() == null )
         {
-            localArena.getMetadata().set(StandardArenaMetaData.SIGNED_PLAYERS, 0);
+            localArena.getMetaStore().set(StandardArenaMetaData.SIGNED_PLAYERS, 0);
             localArena.setArenaData(new GoldHunterArena(localArena));
             tickableManager.addTickableObject((ITickable) localArena.getArenaData());
             logger.info("Add GoldHunter arena with uuid: {}", localArena.getId());

@@ -3,13 +3,13 @@ package pl.north93.northplatform.api.minigame.shared.api.arena;
 import java.util.Set;
 import java.util.UUID;
 
+import pl.north93.northplatform.api.global.metadata.Metadatable;
 import pl.north93.northplatform.api.minigame.shared.api.GameIdentity;
 import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
-import pl.north93.northplatform.api.minigame.shared.api.status.InGameStatus;
-import pl.north93.northplatform.api.global.metadata.MetaStore;
 import pl.north93.northplatform.api.minigame.shared.api.status.IPlayerStatus;
+import pl.north93.northplatform.api.minigame.shared.api.status.InGameStatus;
 
-public interface IArena
+public interface IArena extends Metadatable
 {
     /**
      * Zwraca unikalny identyfikator tej areny.
@@ -72,7 +72,7 @@ public interface IArena
      */
     default String getWorldId()
     {
-        return this.getMetadata().get(StandardArenaMetaData.WORLD_ID);
+        return this.getMetaStore().get(StandardArenaMetaData.WORLD_ID);
     }
 
     /**
@@ -81,7 +81,7 @@ public interface IArena
      */
     default String getWorldDisplayName()
     {
-        return this.getMetadata().get(StandardArenaMetaData.WORLD_NAME);
+        return this.getMetaStore().get(StandardArenaMetaData.WORLD_NAME);
     }
 
     /**
@@ -93,11 +93,4 @@ public interface IArena
     {
         return new InGameStatus(this.getServerId(), this.getId(), this.getMiniGame());
     }
-    
-    /**
-     * 
-     * @return zwraca obiekt metastore umozliwiajacy przypisanie metadaty do areny
-     */
-    MetaStore getMetadata();
-
 }

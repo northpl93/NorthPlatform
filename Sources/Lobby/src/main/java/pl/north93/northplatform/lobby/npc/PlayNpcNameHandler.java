@@ -73,7 +73,7 @@ public class PlayNpcNameHandler implements IArenaObserver
     
     private int getPlayersCount(final IArena arena)
     {
-        final Integer signedPlayers = arena.getMetadata().get(StandardArenaMetaData.SIGNED_PLAYERS);
+        final Integer signedPlayers = arena.getMetaStore().get(StandardArenaMetaData.SIGNED_PLAYERS);
         return signedPlayers != null ? signedPlayers : arena.getPlayersCount();
     }
     

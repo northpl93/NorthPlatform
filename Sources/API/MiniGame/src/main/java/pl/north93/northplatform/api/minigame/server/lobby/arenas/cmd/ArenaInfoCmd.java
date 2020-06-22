@@ -53,7 +53,7 @@ public class ArenaInfoCmd extends NorthCommand
         sender.sendMessage("&eGamePhase: &f{0}", arena.getGamePhase());
 
         sender.sendMessage("&eMetadata: ", arena.getId());
-        for (final Map.Entry<MetaKey, Object> metaEntry : arena.getMetadata().getInternalMap().entrySet())
+        for (final Map.Entry<MetaKey, Object> metaEntry : arena.getMetaStore().getInternalMap().entrySet())
         {
             final String keyName = metaEntry.getKey().getKey();
             sender.sendMessage("  &e{0}: &f{1}", keyName, metaEntry.getValue());

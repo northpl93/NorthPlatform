@@ -196,8 +196,8 @@ public class ArenaWorld
         this.currentWorld = newWorld;
 
         final RemoteArena remoteArena = this.arena.getAsRemoteArena(); // upload nastąpi w onComplete
-        remoteArena.getMetadata().set(StandardArenaMetaData.WORLD_ID, newMapTemplate.getName());
-        remoteArena.getMetadata().set(StandardArenaMetaData.WORLD_NAME, newMapTemplate.getDisplayName());
+        remoteArena.getMetaStore().set(StandardArenaMetaData.WORLD_ID, newMapTemplate.getName());
+        remoteArena.getMetaStore().set(StandardArenaMetaData.WORLD_NAME, newMapTemplate.getDisplayName());
 
         for (final Map.Entry<String, String> gameRule : newMapTemplate.getMapConfig().getGameRules().entrySet())
         {

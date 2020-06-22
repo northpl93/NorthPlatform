@@ -12,6 +12,13 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import pl.north93.northplatform.api.bukkit.gui.element.dynamic.DynamicElementData;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.global.uri.UriHandler;
+import pl.north93.northplatform.api.global.uri.UriInvocationContext;
+import pl.north93.northplatform.api.global.utils.Vars;
 import pl.north93.northplatform.api.minigame.server.lobby.arenas.IArenaClient;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.LocalHubServer;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.visibility.DefaultHubVisibilityPolicy;
@@ -22,24 +29,17 @@ import pl.north93.northplatform.api.minigame.server.lobby.hub.visibility.PartyHu
 import pl.north93.northplatform.api.minigame.shared.api.arena.IArena;
 import pl.north93.northplatform.api.minigame.shared.api.hub.IHubServer;
 import pl.north93.northplatform.lobby.play.PlayGameController;
-import pl.north93.northplatform.api.bukkit.gui.element.dynamic.DynamicElementData;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
-import pl.north93.northplatform.api.global.uri.UriHandler;
-import pl.north93.northplatform.api.global.uri.UriInvocationContext;
-import pl.north93.northplatform.api.global.utils.Vars;
 
 public final class UiHelper
 {
     @Inject
-    private INetworkManager      networkManager;
+    private INetworkManager networkManager;
     @Inject
-    private PlayGameController   playController;
+    private PlayGameController playController;
     @Inject
     private HubVisibilityService hubVisibilityService;
     @Inject
-    private IArenaClient         arenaClient;
+    private IArenaClient arenaClient;
 
     @UriHandler("/lobby/ui/playersCount")
     public int getPlayersCount(final UriInvocationContext context)
@@ -52,7 +52,7 @@ public final class UiHelper
     {
         final String gameId = context.asString("gameId");
         
-        return arenaClient.getAll().stream().filter(arena ->
+        return this.arenaClient.getAll().stream().filter(arena ->
         {
             if (arena == null) // todo usunac to po jakims czasie jak bug nie bedzie juz wystepowal
             {

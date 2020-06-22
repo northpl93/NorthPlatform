@@ -6,19 +6,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import org.diorite.commons.math.DioriteMathUtils;
 
-import pl.north93.northplatform.api.minigame.server.lobby.arenas.ArenaQuery;
-import pl.north93.northplatform.api.minigame.server.lobby.arenas.IArenaClient;
-import pl.north93.northplatform.api.minigame.shared.api.GameIdentity;
-import pl.north93.northplatform.api.minigame.shared.api.arena.IArena;
-import pl.north93.northplatform.api.minigame.shared.api.arena.StandardArenaMetaData;
-import pl.north93.northplatform.lobby.play.PlayGameController;
 import pl.north93.northplatform.api.bukkit.gui.ConfigGuiIcon;
 import pl.north93.northplatform.api.bukkit.gui.Gui;
 import pl.north93.northplatform.api.bukkit.gui.IGuiIcon;
@@ -33,6 +29,12 @@ import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.global.messages.TranslatableString;
 import pl.north93.northplatform.api.global.utils.Vars;
+import pl.north93.northplatform.api.minigame.server.lobby.arenas.ArenaQuery;
+import pl.north93.northplatform.api.minigame.server.lobby.arenas.IArenaClient;
+import pl.north93.northplatform.api.minigame.shared.api.GameIdentity;
+import pl.north93.northplatform.api.minigame.shared.api.arena.IArena;
+import pl.north93.northplatform.api.minigame.shared.api.arena.StandardArenaMetaData;
+import pl.north93.northplatform.lobby.play.PlayGameController;
 
 public class JoinDynamicGui extends Gui
 {
@@ -160,7 +162,7 @@ public class JoinDynamicGui extends Gui
     
     private int getSignedPlayers(IArena arena)
     {
-        Integer signedPlayers = arena.getMetadata().get(StandardArenaMetaData.SIGNED_PLAYERS);
+        Integer signedPlayers = arena.getMetaStore().get(StandardArenaMetaData.SIGNED_PLAYERS);
         return signedPlayers != null ? signedPlayers.intValue() : arena.getPlayersCount();
     }
     
