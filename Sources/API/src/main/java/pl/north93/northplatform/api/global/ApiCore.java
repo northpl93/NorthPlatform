@@ -54,7 +54,7 @@ public abstract class ApiCore
     public final void startCore()
     {
         Locale.setDefault(new Locale("pl", "PL"));
-        log.info("Starting North API Core.");
+        log.info("Starting NorthPlatform API");
 
         try
         {
@@ -63,7 +63,7 @@ public abstract class ApiCore
         }
         catch (final Exception e)
         {
-            log.error("Failed to initialise North API", e);
+            log.error("Failed to initialise NorthPlatform API", e);
             return;
         }
 
@@ -86,12 +86,12 @@ public abstract class ApiCore
         }
         catch (final Exception e)
         {
-            e.printStackTrace();
+            log.error("Failed to start NorthPlatform API", e);
             this.getPlatformConnector().stop();
             return;
         }
         this.setApiState(ApiState.ENABLED);
-        log.info("Client id is " + this.getId());
+        log.info("Client id is {}", this.getId());
         log.debug("If you see this message debug mode is enabled");
     }
 
@@ -103,11 +103,11 @@ public abstract class ApiCore
         }
         catch (final Exception e)
         {
-            e.printStackTrace();
+            log.error("Failed to stop NorthPlatform API", e);
         }
         this.componentManager.disableAllComponents();
         this.setApiState(ApiState.DISABLED);
-        log.info("North API Core stopped.");
+        log.info("NorthPlatform API stopped.");
     }
 
     public InstrumentationClient getInstrumentationClient()
@@ -145,7 +145,7 @@ public abstract class ApiCore
     private void setApiState(final ApiState newState)
     {
         this.apiState = newState;
-        log.debug("Api forced into {} state.", newState);
+        log.debug("NorthPlatform API forced into {} state.", newState);
     }
 
     public final ApiState getApiState()

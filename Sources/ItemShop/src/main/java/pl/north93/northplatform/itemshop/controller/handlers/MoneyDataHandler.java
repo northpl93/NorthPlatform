@@ -2,6 +2,7 @@ package pl.north93.northplatform.itemshop.controller.handlers;
 
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.economy.ICurrency;
 import pl.north93.northplatform.api.economy.ITransaction;
 import pl.north93.northplatform.api.economy.impl.netcontroller.EconomyControllerComponent;
@@ -10,6 +11,7 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.itemshop.shared.IDataHandler;
 
+@Slf4j
 public class MoneyDataHandler implements IDataHandler
 {
     @Inject
@@ -35,7 +37,7 @@ public class MoneyDataHandler implements IDataHandler
         }
         catch (final Exception e)
         {
-            e.printStackTrace();
+            log.error("Failed to add money for {}", player, e);
             return false;
         }
 
