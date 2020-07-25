@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.slf4j.Logger;
 
 import org.diorite.commons.io.DioriteFileUtils;
@@ -53,6 +54,8 @@ public abstract class ApiCore
 
     public final void startCore()
     {
+        final long startTime = System.currentTimeMillis();
+
         Locale.setDefault(new Locale("pl", "PL"));
         log.info("Starting NorthPlatform API");
 
@@ -91,7 +94,11 @@ public abstract class ApiCore
             return;
         }
         this.setApiState(ApiState.ENABLED);
-        log.info("Client id is {}", this.getId());
+
+        final long startDurationMillis = System.currentTimeMillis() - startTime;
+        final String formattedDuration = DurationFormatUtils.formatDurationWords(startDurationMillis, true, true);
+        log.info("NorthPlatform API started in {}, client id is {}", formattedDuration, this.getId());
+
         log.debug("If you see this message debug mode is enabled");
     }
 
