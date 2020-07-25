@@ -54,7 +54,6 @@ public class ComponentManagerImpl implements IComponentManager
     private final AggregationManager aggregationManager;
     private ClassloaderScanningTask rootScanningTask;
     private boolean autoEnable;
-    private List<ClassLoader> scannedClassloaders = new ArrayList<>();
 
     public ComponentManagerImpl(final ApiCore apiCore)
     {
@@ -194,7 +193,8 @@ public class ComponentManagerImpl implements IComponentManager
         this.flatComponentsConfig(classLoader, componentsConfig);
 
         // skanujemy elementy nie nalezace do zadnego komponentu
-        this.scanClassloaderWithoutComponents(classLoader, componentsConfig.getExcludedPackages(), componentsConfig.getComponents());
+        final ClassloaderScanningTask classloaderScanningTask = this.getScanningTask(classLoader, componentsConfig.getExcludedPackages());
+        classloaderScanningTask.scanWithoutComponents(componentsConfig.getComponents());
 
         // skanujemy komponenty
         for (final ComponentDescription componentDescription : componentsConfig.getComponents())
@@ -239,17 +239,6 @@ public class ComponentManagerImpl implements IComponentManager
         return JaxbUtils.unmarshal(stream, ComponentsConfig.class);
     }
 
-    private void scanClassloaderWithoutComponents(final ClassLoader classLoader, final Set<String> excludedPackages, final List<ComponentDescription> components)
-    {
-        if (this.scannedClassloaders.contains(classLoader))
-        {
-            return;
-        }
-
-        this.getScanningTask(classLoader, excludedPackages).scanWithoutComponents(components);
-        this.scannedClassloaders.add(classLoader);
-    }
-
     @Override
     public void doComponentScan(final File file)
     {
@@ -282,7 +271,7 @@ public class ComponentManagerImpl implements IComponentManager
         }
         catch (final MalformedURLException e)
         {
-            log.error("Failed to load components from file", e);
+            log.error("Failed to load components from file {}", file.getPath(), e);
             return;
         }
 

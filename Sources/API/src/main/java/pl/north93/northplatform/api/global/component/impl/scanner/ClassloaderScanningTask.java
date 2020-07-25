@@ -25,6 +25,7 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
 import lombok.SneakyThrows;
+import lombok.ToString;
 import pl.north93.northplatform.api.global.component.ComponentDescription;
 import pl.north93.northplatform.api.global.component.annotations.SkipInjections;
 import pl.north93.northplatform.api.global.component.impl.context.AbstractBeanContext;
@@ -33,6 +34,7 @@ import pl.north93.northplatform.api.global.component.impl.general.ComponentManag
 import pl.north93.northplatform.api.global.component.impl.general.JarComponentLoader;
 import pl.north93.northplatform.api.global.component.impl.general.WeakClassPool;
 
+@ToString(of = {"classLoader"})
 public class ClassloaderScanningTask
 {
     private final ComponentManagerImpl manager;
@@ -75,6 +77,7 @@ public class ClassloaderScanningTask
         throw new IllegalArgumentException();
     }
 
+    // first stage of scanning, done before loading components
     public void scanWithoutComponents(final List<ComponentDescription> components)
     {
         final FilterBuilder filter = new FilterBuilder();
@@ -96,6 +99,7 @@ public class ClassloaderScanningTask
         this.scan(filter);
     }
 
+    // second stage of scanning, done when component is being loaded
     public void scanComponent(final ComponentBundle bundle)
     {
         final FilterBuilder filter = new FilterBuilder();
@@ -116,29 +120,29 @@ public class ClassloaderScanningTask
         for (final Pair<Class<?>, CtClass> entry : allClasses)
         {
             final Class<?> clazz = entry.getKey();
-            final CtClass ctClass = entry.getValue();
-            if (clazz.isAnnotationPresent(SkipInjections.class)) // pomijamy klase jesli trzeba
+            if (clazz.isAnnotationPresent(SkipInjections.class))
             {
                 continue;
             }
 
+            final CtClass ctClass = entry.getValue();
             if (! clazz.isInterface() && ! clazz.isEnum())
             {
-                // nie probujemy instalowac injectora w enumach i interfejsach
-                // zeby nie marnowac czasu.
+                // don't try to install injector in interfaces&enums,
+                // because it's waste of time
                 this.injectorInstaller.tryInstall(ctClass);
             }
 
             final AbstractBeanContext beanContext = this.manager.getOwningContext(clazz);
 
-            // dodajemy pozostale zadania do kolejki zeby wykonaly sie w miare mozliwosci
+            // add all required tasks to the queue, so we can process them
             pendingTasks.add(new ProfileScanningTask(this, clazz, ctClass, beanContext));
             pendingTasks.add(new StaticScanningTask(this, clazz, ctClass, beanContext));
             pendingTasks.add(new ConstructorScanningTask(this, clazz, ctClass, beanContext));
             pendingTasks.add(new MethodScanningTask(this, clazz, ctClass, beanContext));
             if (clazz.isEnum())
             {
-                // dodatkowe wsparcie do wstrzykiwania wartosci w enumach
+                // required to inject non-static fields in enums
                 pendingTasks.add(new EnumScanningTask(this, clazz, ctClass, beanContext));
             }
         }
