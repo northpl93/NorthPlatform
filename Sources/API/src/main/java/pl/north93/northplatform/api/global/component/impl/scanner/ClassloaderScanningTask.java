@@ -41,7 +41,6 @@ public class ClassloaderScanningTask
     private final WeakClassPool weakClassPool;
     private final Reflections reflections;
     private final InjectorInstaller injectorInstaller;
-    private final Queue<AbstractScanningTask> pendingTasks;
 
     public ClassloaderScanningTask(final ComponentManagerImpl manager, final ClassLoader classLoader, final URL loadedFile, final Set<String> excludedPackages)
     {
@@ -57,8 +56,6 @@ public class ClassloaderScanningTask
             filterBuilder.excludePackage(excludedPackage);
         }
         this.reflections = this.createReflections(filterBuilder);
-
-        this.pendingTasks = new ArrayDeque<>();
     }
 
     public static ClassloaderScanningTask create(final ComponentManagerImpl manager, final ClassLoader classLoader, final Set<String> excludedPackages)
@@ -111,6 +108,10 @@ public class ClassloaderScanningTask
 
     private void scan(final FilterBuilder filter)
     {
+        // accumulates pending tasks during this scan,
+        // scan is considered successful when this queue is empty after processing
+        final Queue<AbstractScanningTask> pendingTasks = new ArrayDeque<>();
+
         final Set<Pair<Class<?>, CtClass>> allClasses = this.getAllClasses(this.reflections, filter);
         for (final Pair<Class<?>, CtClass> entry : allClasses)
         {
@@ -131,21 +132,21 @@ public class ClassloaderScanningTask
             final AbstractBeanContext beanContext = this.manager.getOwningContext(clazz);
 
             // dodajemy pozostale zadania do kolejki zeby wykonaly sie w miare mozliwosci
-            this.pendingTasks.add(new ProfileScanningTask(this, clazz, ctClass, beanContext));
-            this.pendingTasks.add(new StaticScanningTask(this, clazz, ctClass, beanContext));
-            this.pendingTasks.add(new ConstructorScanningTask(this, clazz, ctClass, beanContext));
-            this.pendingTasks.add(new MethodScanningTask(this, clazz, ctClass, beanContext));
+            pendingTasks.add(new ProfileScanningTask(this, clazz, ctClass, beanContext));
+            pendingTasks.add(new StaticScanningTask(this, clazz, ctClass, beanContext));
+            pendingTasks.add(new ConstructorScanningTask(this, clazz, ctClass, beanContext));
+            pendingTasks.add(new MethodScanningTask(this, clazz, ctClass, beanContext));
             if (clazz.isEnum())
             {
                 // dodatkowe wsparcie do wstrzykiwania wartosci w enumach
-                this.pendingTasks.add(new EnumScanningTask(this, clazz, ctClass, beanContext));
+                pendingTasks.add(new EnumScanningTask(this, clazz, ctClass, beanContext));
             }
         }
 
-        this.processQueue();
-        if (! this.pendingTasks.isEmpty())
+        this.processQueue(pendingTasks);
+        if (! pendingTasks.isEmpty())
         {
-            throw new RuntimeException(this.generateScanningError());
+            throw new RuntimeException(this.generateScanningError(pendingTasks));
         }
 
         for (final Pair<Class<?>, CtClass> entry : allClasses)
@@ -155,13 +156,13 @@ public class ClassloaderScanningTask
         }
     }
 
-    private void processQueue()
+    private void processQueue(final Queue<AbstractScanningTask> pendingTasks)
     {
         boolean modified = true;
         while (modified)
         {
             modified = false;
-            final Iterator<AbstractScanningTask> iterator = this.pendingTasks.iterator();
+            final Iterator<AbstractScanningTask> iterator = pendingTasks.iterator();
             while (iterator.hasNext())
             {
                 final AbstractScanningTask task = iterator.next();
@@ -174,11 +175,11 @@ public class ClassloaderScanningTask
         }
     }
 
-    private String generateScanningError()
+    private String generateScanningError(final Queue<AbstractScanningTask> pendingTasks)
     {
         final TextStringBuilder sb = new TextStringBuilder(512);
-        sb.append("They're ").append(this.pendingTasks.size()).append(" uncompleted tasks! Below you will se trace of these tasks.").appendNewLine();
-        for (final AbstractScanningTask task : this.pendingTasks)
+        sb.append("They're ").append(pendingTasks.size()).append(" uncompleted tasks! Below you will se trace of these tasks.").appendNewLine();
+        for (final AbstractScanningTask task : pendingTasks)
         {
             sb.append("> > > TASK BEGIN > > >").appendNewLine();
             sb.append("|- Task type: ").append(task.getClass().getSimpleName()).appendNewLine();

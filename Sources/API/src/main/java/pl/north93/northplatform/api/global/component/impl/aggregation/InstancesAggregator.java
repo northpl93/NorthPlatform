@@ -3,25 +3,28 @@ package pl.north93.northplatform.api.global.component.impl.aggregation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import org.diorite.commons.lazy.LazyValue;
 
 import javassist.CtClass;
 import javassist.NotFoundException;
+import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;
+import lombok.ToString;
 import pl.north93.northplatform.api.global.component.impl.context.AbstractBeanContext;
 import pl.north93.northplatform.api.global.component.impl.context.TemporaryBeanContext;
 import pl.north93.northplatform.api.global.component.impl.general.SmartExecutor;
 
+@ToString
+@EqualsAndHashCode
 class InstancesAggregator implements IAggregator
 {
-    private final CtClass clazz;
+    private final String className;
+    private final boolean isInterface;
 
     public InstancesAggregator(final CtClass clazz)
     {
-        this.clazz = clazz;
+        this.className = clazz.getName();
+        this.isInterface = clazz.isInterface();
     }
 
     @Override
@@ -33,12 +36,12 @@ class InstancesAggregator implements IAggregator
     @SneakyThrows(NotFoundException.class)
     private boolean isSuitable(final CtClass checkedClass)
     {
-        if (this.clazz.isInterface())
+        if (this.isInterface)
         {
             final CtClass[] interfaces = checkedClass.getInterfaces();
             for (final CtClass anInterface : interfaces)
             {
-                if (anInterface.getName().equals(this.clazz.getName()))
+                if (anInterface.getName().equals(this.className))
                 {
                     return true;
                 }
@@ -48,7 +51,7 @@ class InstancesAggregator implements IAggregator
         final CtClass superclass = checkedClass.getSuperclass();
         if (superclass != null && !superclass.getName().equals("java.lang.Object"))
         {
-            return superclass.getName().equals(this.clazz.getName()) || this.isSuitable(superclass);
+            return superclass.getName().equals(this.className) || this.isSuitable(superclass);
         }
 
         // nic nie pasuje
@@ -69,34 +72,5 @@ class InstancesAggregator implements IAggregator
         {
             SmartExecutor.execute(listener, tempContext, beanContext.getBean(listener.getDeclaringClass()));
         }
-    }
-
-    @Override
-    public boolean equals(final Object o)
-    {
-        if (this == o)
-        {
-            return true;
-        }
-        if (o == null || this.getClass() != o.getClass())
-        {
-            return false;
-        }
-
-        final InstancesAggregator that = (InstancesAggregator) o;
-
-        return this.clazz.equals(that.clazz);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return this.clazz.hashCode();
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("clazz", this.clazz).toString();
     }
 }
