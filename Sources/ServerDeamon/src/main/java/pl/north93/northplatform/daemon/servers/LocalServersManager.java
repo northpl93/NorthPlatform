@@ -50,9 +50,9 @@ public class LocalServersManager
     private PortManagement portManagement;
     @Inject
     private INetworkManager networkManager;
-    private EventBus eventBus;
     @Inject @NetConfig(type = AutoScalingConfig.class, id = "autoscaler")
     private IConfig<AutoScalingConfig> config;
+    private final EventBus eventBus;
     private final Map<UUID, LocalServerInstance> instances = new HashMap<>();
 
     @Bean

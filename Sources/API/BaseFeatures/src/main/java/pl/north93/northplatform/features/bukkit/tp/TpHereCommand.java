@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
@@ -19,7 +19,7 @@ import pl.north93.northplatform.api.global.network.server.Server;
 public class TpHereCommand extends NorthCommand
 {
     @Inject
-    private ApiCore         apiCore;
+    private IBukkitExecutor bukkitExecutor;
     @Inject
     private INetworkManager networkManager;
 
@@ -46,7 +46,7 @@ public class TpHereCommand extends NorthCommand
             return;
         }
 
-        this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
+        this.bukkitExecutor.async(() ->
         {
             final IOnlinePlayer playerSender = this.networkManager.getPlayers().unsafe().getOnlineValue(sender.getName()).get();
             final IOnlinePlayer player = this.networkManager.getPlayers().unsafe().getOnlineValue(origin).get();

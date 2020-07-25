@@ -97,7 +97,7 @@ public class PlayerNetworkListener implements Listener
                 return;
             }
 
-            if (this.playersManager.isOnline(nick)) // sprawdzanie czy taki gracz juz jest w sieci
+            if (this.playersManager.isOnline(nick))
             {
                 event.setCancelled(true);
                 event.setCancelReason(this.apiMessages.getComponent("pl-PL", "join.already_online"));

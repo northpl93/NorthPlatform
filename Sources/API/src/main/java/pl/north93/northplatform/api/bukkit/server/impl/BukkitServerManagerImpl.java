@@ -14,12 +14,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.server.event.ServerStartedEvent;
-import pl.north93.northplatform.api.bukkit.server.event.ShutdownCancelledEvent;
-import pl.north93.northplatform.api.bukkit.server.event.ShutdownScheduledEvent;
 import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
 import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
+import pl.north93.northplatform.api.bukkit.server.event.ServerStartedEvent;
+import pl.north93.northplatform.api.bukkit.server.event.ShutdownCancelledEvent;
+import pl.north93.northplatform.api.bukkit.server.event.ShutdownScheduledEvent;
 import pl.north93.northplatform.api.bukkit.utils.SimpleCountdown;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -36,14 +36,14 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
 {
     private static final int TIME_TO_NEXT_TRY = 30 * 20; // 30 sekund
     @Inject
-    private BukkitApiCore    apiCore;
+    private BukkitApiCore apiCore;
     @Inject
-    private INetworkManager  networkManager;
+    private INetworkManager networkManager;
     @Inject
-    private IRpcManager      rpcManager;
+    private IRpcManager rpcManager;
     // - - - - - - -
     private Value<ServerDto> serverValue;
-    private SimpleCountdown  countdown;
+    private SimpleCountdown countdown;
 
     @Override
     protected void enableComponent()

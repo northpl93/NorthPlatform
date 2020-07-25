@@ -1,18 +1,18 @@
 package pl.north93.northplatform.api.minigame.controller.party;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.minigame.shared.api.party.IParty;
 import pl.north93.northplatform.api.minigame.shared.api.party.IPartyAccess;
 import pl.north93.northplatform.api.minigame.shared.api.party.IPartyManager;
 import pl.north93.northplatform.api.minigame.shared.api.party.PartyInvite;
-import pl.north93.northplatform.api.global.ApiCore;
-import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 
 @Slf4j
 public class PartyValidityChecker implements Runnable
 {
-    private static final int           TIME = 60 * 20; // 1 minute
-    private final        IPartyManager partyManager;
+    private static final int TIME = 60 * 20; // 1 minute
+    private final IPartyManager partyManager;
 
     @Bean
     private PartyValidityChecker(final IPartyManager partyManager, final ApiCore apiCore)
