@@ -7,6 +7,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.chat.global.ChatManager;
+import pl.north93.northplatform.api.chat.global.ChatPlayer;
+import pl.north93.northplatform.api.chat.global.ChatRoom;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.minigame.server.MiniGameServer;
 import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.HubWorld;
@@ -14,25 +20,19 @@ import pl.north93.northplatform.api.minigame.server.lobby.hub.event.PlayerSwitch
 import pl.north93.northplatform.api.minigame.shared.api.status.IPlayerStatus;
 import pl.north93.northplatform.api.minigame.shared.api.status.IPlayerStatusManager;
 import pl.north93.northplatform.api.minigame.shared.api.status.InHubStatus;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
-import pl.north93.northplatform.api.chat.global.ChatManager;
-import pl.north93.northplatform.api.chat.global.ChatPlayer;
-import pl.north93.northplatform.api.chat.global.ChatRoom;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.players.Identity;
 
 /**
  * Ogólna obsługa czatu na hubach.
  */
 public class PlayerHubChatListener implements AutoListener
 {
-    private static final int                  RACE_CONDITION_WAIT = 20;
+    private static final int RACE_CONDITION_WAIT = 20;
     @Inject
-    private              ChatManager          chatManager;
+    private ChatManager chatManager;
     @Inject
-    private              IPlayerStatusManager statusManager;
+    private IPlayerStatusManager statusManager;
     @Inject
-    private              MiniGameServer       miniGameServer;
+    private MiniGameServer miniGameServer;
 
     @EventHandler
     public void switchChatRoomOnHubSwitch(final PlayerSwitchedHubEvent event)
@@ -44,7 +44,7 @@ public class PlayerHubChatListener implements AutoListener
         if (oldHub != null)
         {
             final ChatRoom oldChatRoom = oldHub.getChatRoom();
-            player.leaveRoom(oldChatRoom);
+            player.leaveRoom(oldChatRoom, true);
         }
 
         player.joinRoom(newHub.getChatRoom());

@@ -208,7 +208,13 @@ class NmsWorldUtils
                 if ( DioriteFileUtils.contains(worldFolder, entry.getKey()) )
                 {
                     it.remove();
-                    CatchException.catchThrowable(() -> entry.getValue().c(), e -> log.error("Couldn't clenup region file cache for world {}", world.getWorld().getName(), e));
+
+                    // RegionFile#c() -> close()
+                    CatchException.catchThrowable(() -> entry.getValue().c(), e ->
+                    {
+                        final String worldName = world.getWorld().getName();
+                        log.error("Couldn't clenup region file cache for world {}", worldName, e);
+                    });
                 }
             }
         }

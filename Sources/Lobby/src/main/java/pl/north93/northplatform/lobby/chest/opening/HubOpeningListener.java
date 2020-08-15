@@ -14,13 +14,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.lobby.hub.LocalHubServer;
-import pl.north93.northplatform.lobby.chest.loot.LootResult;
-import pl.north93.northplatform.lobby.chest.opening.event.BeginChestOpeningEvent;
-import pl.north93.northplatform.lobby.chest.opening.event.CloseOpeningGuiEvent;
-import pl.north93.northplatform.lobby.chest.opening.event.NextChestEvent;
-import pl.north93.northplatform.lobby.chest.opening.event.OpenOpeningGuiEvent;
-import pl.north93.northplatform.lobby.chest.opening.event.PresentOpeningResultsEvent;
 import pl.north93.northplatform.api.bukkit.entityhider.EntityVisibility;
 import pl.north93.northplatform.api.bukkit.entityhider.IEntityHider;
 import pl.north93.northplatform.api.bukkit.gui.impl.GuiTracker;
@@ -34,21 +27,28 @@ import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.global.messages.PluralForm;
 import pl.north93.northplatform.api.global.messages.TranslatableString;
 import pl.north93.northplatform.api.global.utils.Vars;
+import pl.north93.northplatform.api.minigame.server.lobby.hub.LocalHubServer;
+import pl.north93.northplatform.lobby.chest.loot.LootResult;
+import pl.north93.northplatform.lobby.chest.opening.event.BeginChestOpeningEvent;
+import pl.north93.northplatform.lobby.chest.opening.event.CloseOpeningGuiEvent;
+import pl.north93.northplatform.lobby.chest.opening.event.NextChestEvent;
+import pl.north93.northplatform.lobby.chest.opening.event.OpenOpeningGuiEvent;
+import pl.north93.northplatform.lobby.chest.opening.event.PresentOpeningResultsEvent;
 
 public class HubOpeningListener implements AutoListener
 {
     @Inject
     private ChestOpeningController chestOpeningController;
     @Inject
-    private IEntityHider           entityHider;
+    private IEntityHider entityHider;
     @Inject
-    private IHoloGuiManager        holoGuiManager;
+    private IHoloGuiManager holoGuiManager;
     @Inject
-    private ActionBarKeeper        actionBarKeeper;
+    private ActionBarKeeper actionBarKeeper;
     @Inject
-    private GuiTracker             guiTracker;
+    private GuiTracker guiTracker;
     @Inject @Messages("ChestOpening")
-    private MessagesBox            messages;
+    private MessagesBox messages;
 
     @EventHandler
     public void onStartOpening(final OpenOpeningGuiEvent event)
@@ -56,7 +56,10 @@ public class HubOpeningListener implements AutoListener
         final Player player = event.getPlayer();
 
         // zamykamy hotbara aby nic sie nie bugowalo
-        this.guiTracker.closeHotbarMenu(player);
+        if (this.guiTracker.hasHotbarMenu(player))
+        {
+            this.guiTracker.closeHotbarMenu(player);
+        }
 
         // ukrywamy gracza przed teleportacja zeby nie mignelo
         final Set<Entity> playerSet = Collections.singleton(player);
