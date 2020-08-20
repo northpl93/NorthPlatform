@@ -5,18 +5,19 @@ import java.util.Map;
 import com.google.common.collect.MapMaker;
 
 import lombok.ToString;
+import pl.north93.northplatform.api.global.redis.subscriber.RedisSubscriber;
 import pl.north93.northplatform.api.global.redis.subscriber.SubscriptionHandler;
 
 @ToString(of = "listeners")
 class ValueSubscriptionHandler implements SubscriptionHandler
 {
     /*default*/ final static String CHANNEL_PREFIX = "caval_upd:";
-    private final ObservationManagerImpl observationManager;
+    private final RedisSubscriber redisSubscriber;
     private final Map<String, CachedValue<?>> listeners;
 
-    public ValueSubscriptionHandler(final ObservationManagerImpl observationManager)
+    public ValueSubscriptionHandler(final RedisSubscriber redisSubscriber)
     {
-        this.observationManager = observationManager;
+        this.redisSubscriber = redisSubscriber;
         this.listeners = new MapMaker().weakValues().makeMap();
     }
 
@@ -29,7 +30,7 @@ class ValueSubscriptionHandler implements SubscriptionHandler
     public void broadcastUpdate(final CachedValue<?> value, final byte[] message)
     {
         final String channel = CHANNEL_PREFIX + value.getInternalName();
-        this.observationManager.getRedisSubscriber().publish(channel, message);
+        this.redisSubscriber.publish(channel, message);
     }
 
     @Override

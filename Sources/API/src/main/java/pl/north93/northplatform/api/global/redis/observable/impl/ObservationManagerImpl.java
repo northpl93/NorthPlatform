@@ -25,7 +25,7 @@ import pl.north93.serializer.platform.NorthSerializer;
 public class ObservationManagerImpl extends Component implements IObservationManager
 {
     private final Map<String, CachedValue<?>> cachedValues;
-    private final ValueSubscriptionHandler valueSubHandler;
+    private ValueSubscriptionHandler valueSubHandler;
     private LockManagement lockManagement;
     @Inject
     private StorageConnector storageConnector;
@@ -37,7 +37,6 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     public ObservationManagerImpl()
     {
         this.cachedValues = this.instantiateCache().asMap();
-        this.valueSubHandler = new ValueSubscriptionHandler(this);
     }
 
     private Cache<String, CachedValue<?>> instantiateCache()
@@ -125,6 +124,7 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     @Override
     protected void enableComponent()
     {
+        this.valueSubHandler = new ValueSubscriptionHandler(this.redisSubscriber);
         this.lockManagement = new LockManagement(this.msgPack, this.storageConnector.getRedis());
 
         this.redisSubscriber.subscribe("unlock", this.lockManagement::unlockNotify);
@@ -154,11 +154,6 @@ public class ObservationManagerImpl extends Component implements IObservationMan
     /*default*/ NorthSerializer<byte[], byte[]> getMsgPack()
     {
         return this.msgPack;
-    }
-
-    /*default*/ RedisSubscriber getRedisSubscriber()
-    {
-        return this.redisSubscriber;
     }
 
     /*default*/ ValueSubscriptionHandler getValueSubHandler()

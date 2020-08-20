@@ -39,7 +39,7 @@ public interface Value<T>
     T getOr(Supplier<T> defaultValue);
 
     /**
-     * Stomically get and delete key.
+     * Atomically get and delete key.
      * It skips cache.
      *
      * @return value of that key, or null.

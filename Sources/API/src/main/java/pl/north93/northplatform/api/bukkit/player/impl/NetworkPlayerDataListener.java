@@ -27,6 +27,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.permissions.PermissionsInjector;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.player.event.PlayerDataLoadedEvent;
 import pl.north93.northplatform.api.bukkit.utils.AutoListener;
@@ -39,18 +40,17 @@ import pl.north93.northplatform.api.global.network.server.joinaction.JoinActions
 import pl.north93.northplatform.api.global.permissions.Group;
 import pl.north93.northplatform.api.global.redis.observable.IObservationManager;
 import pl.north93.northplatform.api.global.redis.observable.Value;
-import pl.north93.northplatform.api.bukkit.permissions.PermissionsInjector;
 
 @Slf4j
 public class NetworkPlayerDataListener implements AutoListener
 {
-    private static final String              PLAYER_DATA_NOT_LOADED = ChatColor.RED + "Player data isn't loaded";
+    private static final String PLAYER_DATA_NOT_LOADED = ChatColor.RED + "Player data isn't loaded";
     @Inject
-    private              BukkitApiCore       apiCore;
+    private BukkitApiCore apiCore;
     @Inject
-    private              IObservationManager observation;
+    private IObservationManager observation;
     @Inject
-    private              IPlayersManager     playersManager;
+    private IPlayersManager playersManager;
 
     private final Multimap<UUID, IServerJoinAction> cachedJoinActions = HashMultimap.create();
 

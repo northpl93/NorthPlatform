@@ -1,6 +1,5 @@
 package pl.north93.northplatform.api.global.network.impl.players;
 
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
