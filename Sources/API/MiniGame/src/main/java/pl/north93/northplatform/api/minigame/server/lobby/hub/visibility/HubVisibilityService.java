@@ -11,9 +11,6 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
-import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
-import pl.north93.northplatform.api.minigame.server.lobby.hub.HubWorld;
 import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.Main;
 import pl.north93.northplatform.api.bukkit.player.IBukkitPlayers;
@@ -23,6 +20,8 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.metadata.MetaKey;
 import pl.north93.northplatform.api.global.network.players.IPlayerTransaction;
+import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
+import pl.north93.northplatform.api.minigame.server.lobby.hub.HubWorld;
 
 public class HubVisibilityService
 {
@@ -33,7 +32,7 @@ public class HubVisibilityService
     @Inject
     private IBukkitPlayers players;
     @Inject
-    private MiniGameServer server;
+    private LobbyManager lobbyManager;
 
     @Bean
     private HubVisibilityService()
@@ -109,8 +108,7 @@ public class HubVisibilityService
 
     private HubWorld getHubOf(final Player player)
     {
-        final LobbyManager lobbyManager = this.server.getServerManager();
-        return lobbyManager.getLocalHub().getHubWorld(player);
+        return this.lobbyManager.getLocalHub().getHubWorld(player);
     }
 
     @Override

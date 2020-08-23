@@ -15,13 +15,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.chat.global.ChatManager;
 import pl.north93.northplatform.api.chat.global.ChatRoom;
 import pl.north93.northplatform.api.chat.global.ChatRoomPriority;
 import pl.north93.northplatform.api.chat.global.formatter.PermissionsBasedFormatter;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GamePhaseEventFactory;
 import pl.north93.northplatform.api.minigame.shared.api.GameIdentity;
@@ -35,43 +33,46 @@ import pl.north93.northplatform.api.minigame.shared.impl.arena.ArenaManager;
 @Slf4j
 public class LocalArenaManager
 {
-    private final BukkitApiCore apiCore;
-    private final MiniGameServer miniGameServer;
+    private final ArenaManager arenaManager;
+    private final GameHostManager gameHostManager;
     private final ChatManager chatManager;
     private final List<LocalArena> arenas = new ArrayList<>();
 
     @Bean
-    private LocalArenaManager(final BukkitApiCore apiCore, final MiniGameServer miniGameServer, final ChatManager chatManager)
+    public LocalArenaManager(final ArenaManager arenaManager, final GameHostManager gameHostManager, final ChatManager chatManager)
     {
-        this.apiCore = apiCore;
-        this.miniGameServer = miniGameServer;
+        this.arenaManager = arenaManager;
+        this.gameHostManager = gameHostManager;
         this.chatManager = chatManager;
     }
 
     public LocalArena createArena()
     {
-        final GameHostManager serverManager = this.miniGameServer.getServerManager();
-        final MiniGameConfig miniGameConfig = serverManager.getMiniGameConfig();
-        final ArenaManager arenaManager = this.miniGameServer.getArenaManager();
+        final MiniGameConfig miniGameConfig = this.gameHostManager.getMiniGameConfig();
 
         final UUID arenaId = UUID.randomUUID();
-        final UUID serverId = this.apiCore.getServerId();
+        final UUID serverId = this.gameHostManager.getServerId();
         final GameIdentity miniGame = miniGameConfig.getGameIdentity();
         final Boolean dynamic = miniGameConfig.isDynamic();
         final Integer maxPlayers = miniGameConfig.getSlots();
 
         final RemoteArena arenaData = new RemoteArena(arenaId, serverId, miniGame, dynamic, GamePhase.INITIALISING, maxPlayers, new HashSet<>());
-        final LocalArena localArena = new LocalArena(serverManager, arenaManager, arenaData);
+        final LocalArena localArena = new LocalArena(this.gameHostManager, this, arenaData);
         this.arenas.add(localArena);
-        arenaManager.setArena(arenaData);
+        this.arenaManager.setArena(arenaData);
 
         GamePhaseEventFactory.getInstance().callEvent(localArena); // invoke GameInitEvent
-        serverManager.publishArenaEvent(new ArenaCreatedNetEvent(arenaId, miniGame));
+        this.gameHostManager.publishArenaEvent(new ArenaCreatedNetEvent(arenaId, miniGame));
 
         final String msg = "Added new local arena! GameID:{}/{}, ArenaID:{}, ServerID:{}, GamePhase:{}";
         log.info(msg, miniGame.getGameId(), miniGame.getVariantId(), arenaId, serverId, arenaData.getGamePhase());
 
         return localArena;
+    }
+
+    public void updateArenaData(final LocalArena localArena)
+    {
+        this.arenaManager.setArena(localArena.getAsRemoteArena());
     }
 
     public List<LocalArena> getArenas()
@@ -132,6 +133,12 @@ public class LocalArenaManager
         }
     }
 
+    void removeArena(final LocalArena localArena)
+    {
+        this.arenaManager.removeArena(localArena.getId());
+        this.arenas.remove(localArena);
+    }
+
     public ChatRoom getChatRoomFor(final IArena arena, final boolean spectators)
     {
         final ChatRoom room;
@@ -157,9 +164,7 @@ public class LocalArenaManager
 
     private ChatRoom getGameRoom()
     {
-        final GameHostManager serverManager = this.miniGameServer.getServerManager();
-
-        final String roomId = "game:" + serverManager.getMiniGameConfig().getGameIdentity().getGameId();
+        final String roomId = "game:" + this.gameHostManager.getMiniGameConfig().getGameIdentity().getGameId();
         return this.chatManager.getOrCreateRoom(roomId, PermissionsBasedFormatter.INSTANCE, ChatRoomPriority.NORMAL);
     }
 

@@ -12,7 +12,12 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
+import pl.north93.northplatform.api.bukkit.player.event.PlayerDataLoadedEvent;
+import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
+import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.network.players.Identity;
+import pl.north93.northplatform.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.HubWorld;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.LocalHubServer;
@@ -20,12 +25,6 @@ import pl.north93.northplatform.api.minigame.server.lobby.hub.SelectHubServerJoi
 import pl.north93.northplatform.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
 import pl.north93.northplatform.api.minigame.shared.api.status.IPlayerStatusManager;
 import pl.north93.northplatform.api.minigame.shared.api.status.InHubStatus;
-import pl.north93.northplatform.api.bukkit.player.event.PlayerDataLoadedEvent;
-import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.players.Identity;
-import pl.north93.northplatform.api.global.network.server.joinaction.IServerJoinAction;
 
 /**
  * Ogólna obsługa wejścia gracza na serwer hubów,
@@ -34,9 +33,9 @@ import pl.north93.northplatform.api.global.network.server.joinaction.IServerJoin
 public class PlayerJoinHubServerListener implements AutoListener
 {
     @Inject
-    private MiniGameServer       gameServer;
+    private LobbyManager lobbyManager;
     @Inject
-    private IBukkitExecutor      bukkitExecutor;
+    private IBukkitExecutor bukkitExecutor;
     @Inject
     private IPlayerStatusManager statusManager;
 
@@ -48,8 +47,7 @@ public class PlayerJoinHubServerListener implements AutoListener
             return;
         }
 
-        final LobbyManager serverManager = this.gameServer.getServerManager();
-        serverManager.getLocalHub().movePlayerToDefaultHub(event.getPlayer());
+        this.lobbyManager.getLocalHub().movePlayerToDefaultHub(event.getPlayer());
     }
 
     private boolean containsLobbySwitchAction(final Collection<IServerJoinAction> actions)
@@ -75,8 +73,7 @@ public class PlayerJoinHubServerListener implements AutoListener
             return;
         }
 
-        final LobbyManager serverManager = this.gameServer.getServerManager();
-        final LocalHubServer localHub = serverManager.getLocalHub();
+        final LocalHubServer localHub = this.lobbyManager.getLocalHub();
 
         final HubWorld oldHubWorld = localHub.getHubWorld(from.getWorld());
         final HubWorld newWorldHub = localHub.getHubWorld(to.getWorld());
@@ -87,12 +84,10 @@ public class PlayerJoinHubServerListener implements AutoListener
     @EventHandler
     public void updatePlayerStatusOnHubSwitch(final PlayerSwitchedHubEvent event)
     {
-        final LobbyManager serverManager = this.gameServer.getServerManager();
-
         this.bukkitExecutor.async(() ->
         {
             final Identity identity = Identity.of(event.getPlayer());
-            final InHubStatus status = new InHubStatus(serverManager.getServerId(), event.getNewHub().getHubId());
+            final InHubStatus status = new InHubStatus(this.lobbyManager.getServerId(), event.getNewHub().getHubId());
 
             this.statusManager.updatePlayerStatus(identity, status);
         });

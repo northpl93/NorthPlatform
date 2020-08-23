@@ -1,22 +1,23 @@
 package pl.north93.northplatform.api.minigame.server.lobby.hub;
 
-import lombok.ToString;
+import java.util.Collections;
+
 import org.bukkit.Location;
+
+import lombok.ToString;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.server.joinaction.IServerJoinAction;
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
+import pl.north93.northplatform.api.minigame.server.IServerManager;
 import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
 import pl.north93.serializer.platform.annotations.NorthTransient;
-
-import java.util.Collections;
 
 @ToString(of = "hubId")
 public class SelectHubServerJoinAction implements IServerJoinAction
 {
     @NorthTransient
     @Inject
-    private MiniGameServer miniGameServer;
+    private IServerManager serverManager;
     private String hubId;
 
     public SelectHubServerJoinAction()
@@ -31,7 +32,7 @@ public class SelectHubServerJoinAction implements IServerJoinAction
     @Override
     public void playerPreSpawn(final INorthPlayer player, final Location spawn)
     {
-        final LobbyManager lobbyManager = this.miniGameServer.getServerManager();
+        final LobbyManager lobbyManager = (LobbyManager) this.serverManager;
         final HubWorld hubWorld = lobbyManager.getLocalHub().getHubWorld(this.hubId);
 
         final Location hubSpawn = hubWorld.getSpawn();
@@ -44,7 +45,6 @@ public class SelectHubServerJoinAction implements IServerJoinAction
     @Override
     public void playerJoined(final INorthPlayer player)
     {
-        final LobbyManager lobbyManager = this.miniGameServer.getServerManager();
-        lobbyManager.tpToHub(Collections.singleton(player), this.hubId);
+        this.serverManager.tpToHub(Collections.singleton(player), this.hubId);
     }
 }

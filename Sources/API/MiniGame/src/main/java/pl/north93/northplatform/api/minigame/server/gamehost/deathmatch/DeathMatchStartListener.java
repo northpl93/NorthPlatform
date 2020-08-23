@@ -13,7 +13,6 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.world.ArenaWorld;
@@ -24,19 +23,17 @@ import pl.north93.northplatform.api.minigame.server.gamehost.region.ITrackedRegi
 public class DeathMatchStartListener implements AutoListener
 {
     @Inject
-    private MiniGameServer server;
+    private GameHostManager gameHostManager;
     @Inject @Messages("MiniGameApi")
-    private MessagesBox    messages;
+    private MessagesBox messages;
     @Inject
-    private JavaPlugin     plugin;
+    private JavaPlugin plugin;
 
     @EventHandler
     public void onDeathMatchLoaded(final DeathMatchLoadedEvent event)
     {
-        final GameHostManager serverManager = this.server.getServerManager();
-
         // usuwamy wszystkie sledzone regiony z starego swiata
-        serverManager.getRegionManager().getRegions(event.getOldWorld()).forEach(ITrackedRegion::unTrack);
+        this.gameHostManager.getRegionManager().getRegions(event.getOldWorld()).forEach(ITrackedRegion::unTrack);
 
         final Location location = event.getArena().getDeathMatch().getArenaSpawn();
         for (final INorthPlayer player : event.getArena().getPlayersManager().getAllPlayers())

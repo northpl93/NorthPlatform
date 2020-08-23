@@ -14,11 +14,9 @@ import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
-import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.world.MapVote;
-import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
 import pl.north93.northplatform.api.minigame.shared.api.MapTemplate;
 
 public class MapVoteCmd extends NorthCommand
@@ -28,7 +26,7 @@ public class MapVoteCmd extends NorthCommand
     @Inject @Messages("MiniGameApi")
     private MessagesBox messages;
     @Inject
-    private MiniGameServer server;
+    private LocalArenaManager localArenaManager;
 
     public MapVoteCmd()
     {
@@ -38,16 +36,9 @@ public class MapVoteCmd extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        if (this.server.getServerManager() instanceof LobbyManager)
-        {
-            sender.sendMessage(this.messages, "cmd.general.only_gamehost");
-            return;
-        }
-
         final Player player = (Player) sender.unwrapped();
-        final GameHostManager gameHostManager = this.server.getServerManager();
 
-        final LocalArena arena = gameHostManager.getArenaManager().getArena(player);
+        final LocalArena arena = this.localArenaManager.getArena(player);
         if (arena == null)
         {
             sender.sendMessage(this.messages, "vote.unavailable");

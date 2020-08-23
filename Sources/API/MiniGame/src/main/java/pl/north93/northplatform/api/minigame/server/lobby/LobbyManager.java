@@ -9,13 +9,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.minigame.server.IServerManager;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.LocalHubServer;
 import pl.north93.northplatform.api.minigame.shared.api.hub.IHubServer;
-import pl.north93.northplatform.api.minigame.shared.api.status.IPlayerStatus;
-import pl.north93.northplatform.api.minigame.shared.api.status.InHubStatus;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 @Slf4j
 public class LobbyManager implements IServerManager
@@ -23,7 +22,12 @@ public class LobbyManager implements IServerManager
     @Inject
     private LobbyHubsManager lobbyHubsManager;
     @Inject
-    private BukkitApiCore    apiCore;
+    private BukkitApiCore apiCore;
+
+    @Bean
+    private LobbyManager()
+    {
+    }
 
     @Override
     public void start()
@@ -53,13 +57,6 @@ public class LobbyManager implements IServerManager
     public void tpToHub(final Iterable<? extends Player> players, final IHubServer hubServer, final String hubId)
     {
         this.lobbyHubsManager.tpToHub(players, hubServer, hubId);
-    }
-
-    @Override
-    public IPlayerStatus getLocation(final Player player)
-    {
-        final String hubId = this.getLocalHub().getHubWorld(player).getHubId();
-        return new InHubStatus(this.apiCore.getServerId(), hubId);
     }
 
     /**

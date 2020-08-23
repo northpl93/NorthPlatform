@@ -10,18 +10,18 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import org.diorite.commons.math.DioriteRandomUtils;
 
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
-import pl.north93.northplatform.api.minigame.shared.api.party.IParty;
-import pl.north93.northplatform.api.minigame.shared.api.party.IPartyManager;
-import pl.north93.northplatform.api.minigame.shared.api.party.PartyInvite;
-import pl.north93.northplatform.api.minigame.shared.api.party.PlayerAlreadyHasPartyException;
-import pl.north93.northplatform.api.minigame.shared.api.status.IPlayerStatus;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.global.network.players.PlayerNotFoundException;
+import pl.north93.northplatform.api.minigame.server.shared.status.IPlayerStatusProvider;
+import pl.north93.northplatform.api.minigame.shared.api.party.IParty;
+import pl.north93.northplatform.api.minigame.shared.api.party.IPartyManager;
+import pl.north93.northplatform.api.minigame.shared.api.party.PartyInvite;
+import pl.north93.northplatform.api.minigame.shared.api.party.PlayerAlreadyHasPartyException;
 import pl.north93.northplatform.api.minigame.shared.api.party.event.LeavePartyNetEvent;
+import pl.north93.northplatform.api.minigame.shared.api.status.IPlayerStatus;
 
 /**
  * Klasa pomocnicza służąca do interakcji gracza z API party.
@@ -31,9 +31,9 @@ public class PartyClient
     @Inject
     private INetworkManager networkManager;
     @Inject
-    private IPartyManager   partyManager;
+    private IPartyManager partyManager;
     @Inject
-    private MiniGameServer  miniGameServer;
+    private IPlayerStatusProvider playerStatusProvider;
 
     @Bean
     private PartyClient()
@@ -213,7 +213,7 @@ public class PartyClient
             return party;
         }
 
-        final IPlayerStatus location = this.miniGameServer.getServerManager().getLocation(player);
+        final IPlayerStatus location = this.playerStatusProvider.getLocation(player);
         try
         {
             return this.partyManager.createParty(Identity.of(player), location);

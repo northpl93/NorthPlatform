@@ -6,19 +6,18 @@ import com.google.common.base.Preconditions;
 
 import org.bukkit.Bukkit;
 
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
+import pl.north93.northplatform.api.bukkit.utils.SimpleCountdown;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.ArenaStartCancelledEvent;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.ArenaStartScheduledEvent;
 import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
-import pl.north93.northplatform.api.bukkit.utils.SimpleCountdown;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class ArenaStartScheduler
 {
     private final LocalArena arena;
     @Inject
-    private MiniGameServer  minigameServer;
+    private GameHostManager gameHostManager;
     private SimpleCountdown startCountdown;
     
     public ArenaStartScheduler(final LocalArena arena)
@@ -33,8 +32,7 @@ public class ArenaStartScheduler
     
     public int getGameStartCooldown()
     {
-        final GameHostManager serverManager = this.minigameServer.getServerManager();
-        return serverManager.getMiniGameConfig().getStartCooldown();
+        return this.gameHostManager.getMiniGameConfig().getStartCooldown();
     }
     
     public boolean isStartScheduled()

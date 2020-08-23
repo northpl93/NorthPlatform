@@ -24,10 +24,10 @@ import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
 import pl.north93.northplatform.api.bukkit.utils.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.players.Identity;
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.PlayersManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinWithoutArenaEvent;
 import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
@@ -37,9 +37,11 @@ import pl.north93.northplatform.api.minigame.shared.api.status.InGameStatus;
 public class PlayerListener implements AutoListener
 {
     @Inject
-    private MiniGameServer       server;
+    private GameHostManager gameHostManager;
     @Inject
-    private IBukkitExecutor      bukkitExecutor;
+    private LocalArenaManager localArenaManager;
+    @Inject
+    private IBukkitExecutor bukkitExecutor;
     @Inject
     private IPlayerStatusManager statusManager;
 
@@ -48,8 +50,7 @@ public class PlayerListener implements AutoListener
     {
         final INorthPlayer player = wrap(event.getPlayer());
 
-        final GameHostManager gameHostManager = this.server.getServerManager();
-        gameHostManager.getArenaManager().getArenaAssociatedWith(player.getUniqueId()).ifPresentOrElse(arena ->
+        this.localArenaManager.getArenaAssociatedWith(player.getUniqueId()).ifPresentOrElse(arena ->
         {
             final PlayersManager playersManager = arena.getPlayersManager();
             playersManager.playerConnected(player);
@@ -97,11 +98,10 @@ public class PlayerListener implements AutoListener
 
     private void setPlayerStatus(final Player player, final LocalArena arena)
     {
-        final GameHostManager gameHostManager = this.server.getServerManager();
         this.bukkitExecutor.async(() ->
         {
             final Identity identity = Identity.of(player);
-            final InGameStatus status = new InGameStatus(gameHostManager.getServerId(), arena.getId(), arena.getMiniGame());
+            final InGameStatus status = new InGameStatus(this.gameHostManager.getServerId(), arena.getId(), arena.getMiniGame());
 
             this.statusManager.updatePlayerStatus(identity, status);
         });
@@ -112,8 +112,7 @@ public class PlayerListener implements AutoListener
     {
         final INorthPlayer player = wrap(event.getPlayer());
 
-        final GameHostManager gameHostManager = this.server.getServerManager();
-        gameHostManager.getArenaManager().getArenaAssociatedWith(player.getUniqueId()).ifPresent(arena ->
+        this.localArenaManager.getArenaAssociatedWith(player.getUniqueId()).ifPresent(arena ->
         {
             final PlayersManager playersManager = arena.getPlayersManager();
             playersManager.playerDisconnected(player);

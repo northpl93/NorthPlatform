@@ -6,11 +6,6 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
-import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
-import pl.north93.northplatform.api.minigame.shared.api.PlayerJoinInfo;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
@@ -19,6 +14,9 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.global.metadata.MetaStore;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArenaManager;
+import pl.north93.northplatform.api.minigame.shared.api.PlayerJoinInfo;
 
 /**
  * Jesli chcesz uzyc tej komendy:
@@ -31,9 +29,9 @@ import pl.north93.northplatform.api.global.metadata.MetaStore;
 public class SingleServerJoin extends NorthCommand
 {
     @Inject @Messages("MiniGameApi")
-    private MessagesBox    messages;
+    private MessagesBox messages;
     @Inject
-    private MiniGameServer server;
+    private LocalArenaManager localArenaManager;
 
     public SingleServerJoin()
     {
@@ -44,16 +42,9 @@ public class SingleServerJoin extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        if (this.server.getServerManager() instanceof LobbyManager)
-        {
-            sender.sendMessage(this.messages, "cmd.general.only_gamehost");
-            return;
-        }
-
         final INorthPlayer player = INorthPlayer.wrap(sender);
-        final GameHostManager serverManager = this.server.getServerManager();
 
-        if (serverManager.getArenaManager().getArenaAssociatedWith(player.getUniqueId()).isPresent())
+        if (this.localArenaManager.getArenaAssociatedWith(player.getUniqueId()).isPresent())
         {
             sender.sendMessage("&cJuz jestes powiazany z jakas arena.");
             sender.sendMessage("&cPrzeczytaj instrukcje w klasie SingleServerJoin");
@@ -62,7 +53,7 @@ public class SingleServerJoin extends NorthCommand
 
         final List<PlayerJoinInfo> players = Collections.singletonList(new PlayerJoinInfo(player.getUniqueId(), false, false));
 
-        for (final LocalArena localArena : serverManager.getArenaManager().getArenas())
+        for (final LocalArena localArena : this.localArenaManager.getArenas())
         {
             final boolean addSuccess = localArena.getPlayersManager().tryAddPlayers(players, new MetaStore());
             if (! addSuccess)

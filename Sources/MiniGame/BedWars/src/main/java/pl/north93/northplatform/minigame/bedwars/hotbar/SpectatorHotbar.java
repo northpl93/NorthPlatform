@@ -11,7 +11,6 @@ import pl.north93.northplatform.api.bukkit.gui.event.HotbarClickEvent;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 
 public class SpectatorHotbar extends HotbarMenu
@@ -19,7 +18,7 @@ public class SpectatorHotbar extends HotbarMenu
     @Inject @Messages("BedWars")
     private static MessagesBox messages;
     @Inject
-    private MiniGameServer miniGameServer;
+    private GameHostManager gameHostManager;
 
     public SpectatorHotbar()
     {
@@ -29,10 +28,8 @@ public class SpectatorHotbar extends HotbarMenu
     @ClickHandler
     public void kickPlayerToLobby(final HotbarClickEvent event)
     {
-        final GameHostManager serverManager = this.miniGameServer.getServerManager();
-
-        final String myHubId = serverManager.getMiniGameConfig().getHubId();
-        serverManager.tpToHub(Collections.singleton(event.getWhoClicked()), myHubId);
+        final String myHubId = this.gameHostManager.getMiniGameConfig().getHubId();
+        this.gameHostManager.tpToHub(Collections.singleton(event.getWhoClicked()), myHubId);
     }
 
     @Override

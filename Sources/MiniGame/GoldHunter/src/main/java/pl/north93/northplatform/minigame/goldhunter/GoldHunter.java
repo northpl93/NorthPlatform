@@ -20,9 +20,8 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.DynamicBean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.component.annotations.bean.Named;
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
-import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.north93.northplatform.minigame.goldhunter.arena.GoldHunterArena;
 import pl.north93.northplatform.minigame.goldhunter.classes.CharacterClassManager;
 import pl.north93.northplatform.minigame.goldhunter.classes.SpecialAbilityType;
@@ -31,13 +30,11 @@ import pl.north93.northplatform.minigame.goldhunter.player.GoldHunterPlayer;
 public class GoldHunter
 {
     @Inject
-    private static MiniGameServer miniGameServer;
+    private static LocalArenaManager localArenaManager;
     
     private final BukkitApiCore apiCore;
     private final CharacterClassManager characterClassManager;
-    
-    private final GameHostManager gameHostManager;
-    
+
     private final Map<UUID, GoldHunterPlayer> players = new HashMap<>();
     
     @Bean
@@ -45,7 +42,6 @@ public class GoldHunter
     {
         this.apiCore = apiCore;
         this.characterClassManager = characterClassManager;
-        this.gameHostManager = miniGameServer.getServerManager();
     }
     
     void enable()
@@ -129,7 +125,7 @@ public class GoldHunter
     
     public GoldHunterArena getArenaForWorld(World world)
     {
-        LocalArena localArena = gameHostManager.getArenaManager().getArena(world);
+        LocalArena localArena = localArenaManager.getArena(world);
         
         if ( localArena == null )
         {

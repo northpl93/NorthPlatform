@@ -13,7 +13,6 @@ import pl.north93.northplatform.api.chat.global.ChatPlayer;
 import pl.north93.northplatform.api.chat.global.ChatRoom;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.players.Identity;
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
 import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.HubWorld;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
@@ -32,7 +31,7 @@ public class PlayerHubChatListener implements AutoListener
     @Inject
     private IPlayerStatusManager statusManager;
     @Inject
-    private MiniGameServer miniGameServer;
+    private LobbyManager lobbyManager;
 
     @EventHandler
     public void switchChatRoomOnHubSwitch(final PlayerSwitchedHubEvent event)
@@ -63,9 +62,7 @@ public class PlayerHubChatListener implements AutoListener
             return;
         }
 
-        final LobbyManager lobbyManager = this.miniGameServer.getServerManager();
-        final HubWorld hubWorld = lobbyManager.getLocalHub().getHubWorld(player);
-
+        final HubWorld hubWorld = this.lobbyManager.getLocalHub().getHubWorld(player);
         if (hubWorld == null || this.isSameHub(status, hubWorld.getHubId()))
         {
             // gracz nie byl na zadnym hubie lub dalej jest na tym samym (tylko na innym serwerze)

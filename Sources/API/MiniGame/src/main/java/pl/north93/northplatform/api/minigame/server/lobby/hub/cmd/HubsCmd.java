@@ -10,18 +10,17 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
-import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
-import pl.north93.northplatform.api.minigame.server.lobby.hub.HubWorld;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
+import pl.north93.northplatform.api.minigame.server.lobby.hub.HubWorld;
 
 public class HubsCmd extends NorthCommand
 {
     @Inject
-    private MiniGameServer miniGameServer;
+    private LobbyManager lobbyManager;
 
     public HubsCmd()
     {
@@ -32,17 +31,16 @@ public class HubsCmd extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        final LobbyManager lobby = this.miniGameServer.getServerManager();
         final Player player = (Player) sender.unwrapped();
 
         if (args.length() == 1)
         {
             final String hubName = args.asString(0);
-            lobby.tpToHub(Collections.singleton(player), hubName);
+            this.lobbyManager.tpToHub(Collections.singleton(player), hubName);
         }
         else
         {
-            final Collection<HubWorld> localWorlds = lobby.getLocalHub().getLocalWorlds();
+            final Collection<HubWorld> localWorlds = this.lobbyManager.getLocalHub().getLocalWorlds();
             final String message = localWorlds.stream().map(HubWorld::getHubId).collect(Collectors.joining(","));
             player.sendMessage(ChatColor.RED + "Lista hubów: " + message);
         }

@@ -7,31 +7,29 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.chat.global.ChatRoom;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArenaManager;
 
 public class ArenaChatManager
 {
     @Inject @Messages("MiniGameApi")
-    private       MessagesBox messages;
-    private final LocalArena  arena;
-    private final ChatRoom    chatRoom; // pokój czatu
-    private final ChatRoom    spectatorsRoom; // pokój czatu spectatorów
+    private MessagesBox messages;
+    private final LocalArena arena;
+    private final ChatRoom chatRoom; // pokój czatu
+    private final ChatRoom spectatorsRoom; // pokój czatu spectatorów
 
-    public ArenaChatManager(final GameHostManager gameHostManager, final LocalArena arena)
+    public ArenaChatManager(final LocalArenaManager localArenaManager, final LocalArena arena)
     {
         this.arena = arena;
 
-        final LocalArenaManager arenaManager = gameHostManager.getArenaManager();
-        this.chatRoom = arenaManager.getChatRoomFor(arena, false);
-        this.spectatorsRoom = arenaManager.getChatRoomFor(arena, true);
+        this.chatRoom = localArenaManager.getChatRoomFor(arena, false);
+        this.spectatorsRoom = localArenaManager.getChatRoomFor(arena, true);
     }
 
     /**

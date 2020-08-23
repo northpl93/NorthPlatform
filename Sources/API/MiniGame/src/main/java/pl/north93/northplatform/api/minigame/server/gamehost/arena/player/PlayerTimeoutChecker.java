@@ -5,11 +5,10 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
-import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArenaManager;
 
 /**
  * Task sprawdzający czy wysłane zapytania dołączenia gracza do serwera
@@ -19,20 +18,19 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
  */
 public class PlayerTimeoutChecker implements Runnable
 {
-    private final MiniGameServer server;
+    private final LocalArenaManager localArenaManager;
 
     @Bean
-    private PlayerTimeoutChecker(final MiniGameServer server, final IBukkitExecutor executor)
+    private PlayerTimeoutChecker(final LocalArenaManager localArenaManager, final IBukkitExecutor executor)
     {
-        this.server = server;
+        this.localArenaManager = localArenaManager;
         executor.syncTimer(100, this);
     }
 
     @Override
     public void run()
     {
-        final GameHostManager serverManager = this.server.getServerManager();
-        final List<LocalArena> arenas = serverManager.getArenaManager().getArenas();
+        final List<LocalArena> arenas = this.localArenaManager.getArenas();
 
         for (final LocalArena arena : arenas)
         {

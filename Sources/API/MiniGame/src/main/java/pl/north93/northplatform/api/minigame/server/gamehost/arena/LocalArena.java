@@ -41,7 +41,7 @@ public class LocalArena implements IArena
 {
     private static final int MAX_TIME_TO_DISCONNECT = 30 * 20; // czas po jakim serwer wyrzuci graczy ktorzy nie wylecieli z areny
     private final GameHostManager gameHostManager;
-    private final ArenaManager arenaManager;
+    private final LocalArenaManager localArenaManager;
     private final RemoteArena data;
     private final ArenaWorld world;
     private final PlayersManager playersManager;
@@ -55,14 +55,14 @@ public class LocalArena implements IArena
     private IArenaData arenaData;
     private MapVote mapVote;
 
-    public LocalArena(final GameHostManager gameHostManager, final ArenaManager arenaManager, final RemoteArena data)
+    public LocalArena(final GameHostManager gameHostManager, final LocalArenaManager localArenaManager, final RemoteArena data)
     {
         this.gameHostManager = gameHostManager;
-        this.arenaManager = arenaManager;
+        this.localArenaManager = localArenaManager;
         this.data = data;
         this.world = new ArenaWorld(gameHostManager, this);
         this.playersManager = new PlayersManager(gameHostManager, this);
-        this.chatManager = new ArenaChatManager(gameHostManager, this);
+        this.chatManager = new ArenaChatManager(localArenaManager, this);
         this.timer = new StaticTimer();
         this.scheduler = new ArenaScheduler(this);
         this.deathMatch = new DeathMatch(gameHostManager, this);
@@ -339,12 +339,11 @@ public class LocalArena implements IArena
     {
         log.info("Removing arena {}", this.getId());
 
-        this.arenaManager.removeArena(this.getId());
+        // removes arena from local list and from redis
+        this.localArenaManager.removeArena(this);
 
         final UUID serverId = this.gameHostManager.getServerId();
         this.gameHostManager.publishArenaEvent(new ArenaDeletedNetEvent(this.getId(), serverId, this.getMiniGame()));
-
-        this.gameHostManager.getArenaManager().getArenas().remove(this);
 
         this.world.deleteCurrentWorld();
     }
@@ -382,8 +381,7 @@ public class LocalArena implements IArena
 
     public void uploadRemoteData()
     {
-        this.arenaManager.setArena(this.data);
-        
+        this.localArenaManager.updateArenaData(this);
         this.gameHostManager.publishArenaEvent(new ArenaDataChangedNetEvent(this.getId(), this.getMiniGame(), this.getWorldDisplayName(), this.getGamePhase(), this.data.getPlayers().size()));
     }
     

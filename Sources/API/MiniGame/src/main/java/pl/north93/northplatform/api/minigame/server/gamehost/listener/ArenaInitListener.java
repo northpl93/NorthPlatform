@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.bukkit.utils.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.MapSwitchedEvent.MapSwitchReason;
@@ -26,7 +25,7 @@ import pl.north93.northplatform.api.minigame.shared.api.MapTemplate;
 public class ArenaInitListener implements AutoListener
 {
     @Inject
-    private MiniGameServer server;
+    private GameHostManager gameHostManager;
     @Inject
     private IBukkitServerManager bukkitServerManager;
 
@@ -51,7 +50,6 @@ public class ArenaInitListener implements AutoListener
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) // before normal
     public void onArenaInit(final GameInitEvent event)
     {
-        final GameHostManager hostManager = this.server.getServerManager();
         final LocalArena arena = event.getArena();
 
         log.info("Minigames API is initialising arena {}", arena.getId());
@@ -60,7 +58,7 @@ public class ArenaInitListener implements AutoListener
         arena.getTimer().reset();
 
         // usuwamy wszystkie regiony pozostale po poprzedniej grze
-        hostManager.getRegionManager().getRegions(arena.getWorld().getCurrentWorld()).forEach(ITrackedRegion::unTrack);
+        this.gameHostManager.getRegionManager().getRegions(arena.getWorld().getCurrentWorld()).forEach(ITrackedRegion::unTrack);
 
         // resetujemy stan death matchu.
         arena.getDeathMatch().resetState();
@@ -79,7 +77,7 @@ public class ArenaInitListener implements AutoListener
             // jesli lobby jest zintegrowane z mapa to glosowanie na pewno jest wylaczone
             // i musimy juz teraz zaladowac nowa losowa mape.
             // Po zakonczeniu arena bedzie przelaczona w LOBBY.
-            final MapTemplate map = DioriteRandomUtils.getRandom(hostManager.getMapTemplateManager().getAllTemplates());
+            final MapTemplate map = DioriteRandomUtils.getRandom(this.gameHostManager.getMapTemplateManager().getAllTemplates());
             arena.getWorld().setActiveMap(map, MapSwitchReason.ARENA_INITIALISE).onComplete(() -> arena.setGamePhase(GamePhase.LOBBY));
         }
     }

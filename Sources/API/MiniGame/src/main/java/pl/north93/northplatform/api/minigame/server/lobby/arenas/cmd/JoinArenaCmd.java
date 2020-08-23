@@ -7,29 +7,25 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
-import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
-import pl.north93.northplatform.api.minigame.server.lobby.arenas.IArenaClient;
-import pl.north93.northplatform.api.minigame.shared.api.PlayerJoinInfo;
-import pl.north93.northplatform.api.minigame.shared.api.arena.RemoteArena;
-import pl.north93.northplatform.api.minigame.shared.impl.arena.ArenaManager;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.minigame.server.lobby.arenas.IArenaClient;
+import pl.north93.northplatform.api.minigame.shared.api.PlayerJoinInfo;
+import pl.north93.northplatform.api.minigame.shared.api.arena.RemoteArena;
+import pl.north93.northplatform.api.minigame.shared.impl.arena.ArenaManager;
 
 public class JoinArenaCmd extends NorthCommand
 {
     @Inject @Messages("MiniGameApi")
-    private MessagesBox    messages;
+    private MessagesBox messages;
     @Inject
-    private MiniGameServer server;
+    private ArenaManager arenaManager;
     @Inject
-    private ArenaManager   arenaManager;
-    @Inject
-    private IArenaClient   arenaClient;
+    private IArenaClient arenaClient;
 
     public JoinArenaCmd()
     {
@@ -41,12 +37,6 @@ public class JoinArenaCmd extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        if (this.server.getServerManager() instanceof GameHostManager)
-        {
-            sender.sendMessage(this.messages, "cmd.general.only_lobby");
-            return;
-        }
-
         final Player player = (Player) sender.unwrapped();
         final RemoteArena arena = this.arenaManager.getArena(UUID.fromString(args.asString(0)));
 

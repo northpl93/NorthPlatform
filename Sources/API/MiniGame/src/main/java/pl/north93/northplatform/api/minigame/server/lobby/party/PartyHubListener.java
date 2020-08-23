@@ -9,15 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
-import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
-import pl.north93.northplatform.api.minigame.server.lobby.hub.SelectHubServerJoinAction;
-import pl.north93.northplatform.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
-import pl.north93.northplatform.api.minigame.server.shared.party.PartyClient;
-import pl.north93.northplatform.api.minigame.shared.api.party.IParty;
-import pl.north93.northplatform.api.minigame.shared.api.party.event.LocationChangePartyNetEvent;
-import pl.north93.northplatform.api.minigame.shared.api.status.IPlayerStatus;
-import pl.north93.northplatform.api.minigame.shared.api.status.InHubStatus;
 import pl.north93.northplatform.api.bukkit.player.IBukkitPlayers;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
@@ -27,19 +18,30 @@ import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.global.redis.event.NetEventSubscriber;
+import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
+import pl.north93.northplatform.api.minigame.server.lobby.hub.SelectHubServerJoinAction;
+import pl.north93.northplatform.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
+import pl.north93.northplatform.api.minigame.server.shared.party.PartyClient;
+import pl.north93.northplatform.api.minigame.server.shared.status.IPlayerStatusProvider;
+import pl.north93.northplatform.api.minigame.shared.api.party.IParty;
+import pl.north93.northplatform.api.minigame.shared.api.party.event.LocationChangePartyNetEvent;
+import pl.north93.northplatform.api.minigame.shared.api.status.IPlayerStatus;
+import pl.north93.northplatform.api.minigame.shared.api.status.InHubStatus;
 
 public class PartyHubListener implements AutoListener
 {
     @Inject
-    private MiniGameServer  miniGameServer;
+    private LobbyManager lobbyManager;
+    @Inject
+    private IPlayerStatusProvider playerStatusProvider;
     @Inject
     private INetworkManager networkManager;
     @Inject
-    private IBukkitPlayers  bukkitPlayers;
+    private IBukkitPlayers bukkitPlayers;
     @Inject
     private IBukkitExecutor bukkitExecutor;
     @Inject
-    private PartyClient     partyClient;
+    private PartyClient partyClient;
 
     @EventHandler
     public void reportPartyLocationChangeWhenHubSwitched(final PlayerSwitchedHubEvent event)
@@ -53,8 +55,7 @@ public class PartyHubListener implements AutoListener
             return;
         }
 
-        final LobbyManager lobbyManager = this.miniGameServer.getServerManager();
-        this.partyClient.changePartyLocation(party, lobbyManager.getLocation(player));
+        this.partyClient.changePartyLocation(party, this.playerStatusProvider.getLocation(player));
     }
 
     @NetEventSubscriber(LocationChangePartyNetEvent.class)
@@ -71,8 +72,6 @@ public class PartyHubListener implements AutoListener
         final UUID newServerId = newLocation.getServerId();
         final String newHubId = ((InHubStatus) newLocation).getHubId();
 
-        final LobbyManager lobbyManager = this.miniGameServer.getServerManager();
-
         final IParty party = event.getParty();
         for (final Identity identity : party.getPlayers())
         {
@@ -84,9 +83,9 @@ public class PartyHubListener implements AutoListener
             }
 
             // sprawdzamy czy gracz juz znajduje sie na dobrym serwerze, czy trzeba go przeniesc
-            if (newServerId.equals(lobbyManager.getServerId()))
+            if (newServerId.equals(this.lobbyManager.getServerId()))
             {
-                final IPlayerStatus playerLocation = lobbyManager.getLocation(localPlayer);
+                final IPlayerStatus playerLocation = this.playerStatusProvider.getLocation(localPlayer);
                 if (newLocation.equals(playerLocation))
                 {
                     // gracz juz znajduje sie w tej lokalizacji, nic nie robimy
@@ -94,7 +93,7 @@ public class PartyHubListener implements AutoListener
                 }
 
                 // synchronizujemy sie do glownego watku serwera i zmieniamy lokalnie huba gracza
-                this.bukkitExecutor.sync(() -> lobbyManager.tpToHub(Collections.singleton(localPlayer), newHubId));
+                this.bukkitExecutor.sync(() -> this.lobbyManager.tpToHub(Collections.singleton(localPlayer), newHubId));
             }
             else
             {

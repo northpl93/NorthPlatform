@@ -9,8 +9,6 @@ import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
-import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.SpectatorModeChangeEvent;
@@ -21,7 +19,7 @@ public class PlayerDataManager
     @Inject
     private BukkitApiCore  apiCore;
     @Inject
-    private MiniGameServer miniGameServer;
+    private LocalArenaManager localArenaManager;
 
     @Bean
     private PlayerDataManager()
@@ -35,9 +33,8 @@ public class PlayerDataManager
 
     public void updateStatus(final INorthPlayer player, final PlayerStatus newStatus)
     {
-        final LocalArenaManager arenaManager = this.getGameHost().getArenaManager();
-        final LocalArena arena = arenaManager.getArenaAssociatedWith(player.getUniqueId())
-                                             .orElseThrow(IllegalStateException::new);
+        final LocalArena arena = this.localArenaManager.getArenaAssociatedWith(player.getUniqueId())
+                                                       .orElseThrow(IllegalStateException::new);
 
         final PlayerStatus oldStatus = this.getStatus(player);
         final Set<INorthPlayer> spectators = arena.getPlayersManager().getSpectators();
@@ -53,11 +50,6 @@ public class PlayerDataManager
 
         player.setPlayerData(PlayerStatus.class, newStatus);
         this.apiCore.callEvent(new SpectatorModeChangeEvent(arena, player, oldStatus, newStatus));
-    }
-
-    private GameHostManager getGameHost()
-    {
-        return this.miniGameServer.getServerManager();
     }
 
     @Override

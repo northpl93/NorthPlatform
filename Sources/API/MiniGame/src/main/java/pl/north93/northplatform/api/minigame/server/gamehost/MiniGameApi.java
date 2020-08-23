@@ -14,21 +14,23 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArenaManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.player.PlayerDataManager;
 import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public final class MiniGameApi
 {
     private static MiniGameApi INSTANCE;
     @Inject
-    private MiniGameServer    server;
+    private LocalArenaManager localArenaManager;
     @Inject
     private PlayerDataManager playerDataManager;
 
+    @Bean
     MiniGameApi() // package-local constructor
     {
         checkSingleton(INSTANCE, "INSTANCE");
@@ -38,22 +40,22 @@ public final class MiniGameApi
     @Nullable
     public static LocalArena getArena(final Player player)
     {
-        final GameHostManager manager = INSTANCE.server.getServerManager();
-        return manager.getArenaManager().getArenaAssociatedWith(player.getUniqueId()).orElse(null);
+        final LocalArenaManager arenaManager = INSTANCE.localArenaManager;
+        return arenaManager.getArenaAssociatedWith(player.getUniqueId()).orElse(null);
     }
 
     @Nullable
     public static LocalArena getArena(final World world)
     {
-        final GameHostManager manager = INSTANCE.server.getServerManager();
-        return manager.getArenaManager().getArena(world);
+        final LocalArenaManager arenaManager = INSTANCE.localArenaManager;
+        return arenaManager.getArena(world);
     }
 
     @Nonnull
     public static List<LocalArena> getArenas()
     {
-        final GameHostManager manager = INSTANCE.server.getServerManager();
-        return manager.getArenaManager().getArenas();
+        final LocalArenaManager arenaManager = INSTANCE.localArenaManager;
+        return arenaManager.getArenas();
     }
 
     @Nullable
