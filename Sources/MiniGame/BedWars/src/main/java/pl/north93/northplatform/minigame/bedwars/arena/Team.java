@@ -15,9 +15,9 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.material.Bed;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
+import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.minigame.bedwars.cfg.BwTeamConfig;
 import pl.north93.northplatform.minigame.bedwars.event.BedDestroyedEvent;
@@ -186,8 +186,8 @@ public class Team
         final Block bedBlock = this.getBedLocation().getBlock();
         this.doBedBlockDestroy(bedBlock);
 
-        final BukkitApiCore apiCore = this.arena.getGameHostManager().getApiCore();
-        apiCore.callEvent(new BedDestroyedEvent(this.arena, null, bedBlock, this, silent));
+        final GameHostManager gameHostManager = this.arena.getGameHostManager();
+        gameHostManager.callBukkitEvent(new BedDestroyedEvent(this.arena, null, bedBlock, this, silent));
     }
 
     // usuwamy klasyczna, wolna metoda zeby znikly obydwie czesci lozka.

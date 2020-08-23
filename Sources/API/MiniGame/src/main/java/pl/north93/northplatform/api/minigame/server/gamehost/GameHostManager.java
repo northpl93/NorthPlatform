@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 
 import org.spigotmc.SneakyThrow;
 import org.spigotmc.SpigotConfig;
@@ -32,7 +33,7 @@ import pl.north93.northplatform.api.minigame.shared.api.hub.IHubServer;
 public class GameHostManager implements IServerManager
 {
     @Inject
-    private BukkitApiCore apiCore;
+    private BukkitApiCore bukkitApiCore;
     @Inject
     private IEventManager eventManager;
     @Inject
@@ -56,7 +57,7 @@ public class GameHostManager implements IServerManager
         this.loadConfig();
         this.loadMapTemplates();
 
-        this.apiCore.callEvent(new InitializeGameHostServerEvent());
+        this.bukkitApiCore.callEvent(new InitializeGameHostServerEvent());
     }
     
     @Override
@@ -64,13 +65,13 @@ public class GameHostManager implements IServerManager
     {
         Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer("")); // prevent errors (especially in testing environment)
 
-        this.apiCore.callEvent(new DestroyGameHostServerEvent());
+        this.bukkitApiCore.callEvent(new DestroyGameHostServerEvent());
     }
 
     @Override
     public UUID getServerId()
     {
-        return this.apiCore.getServerId();
+        return this.bukkitApiCore.getServerId();
     }
 
     @Override
@@ -85,9 +86,14 @@ public class GameHostManager implements IServerManager
         this.gameHostHubsManager.tpToHub(players, hubServer, hubId);
     }
 
-    public BukkitApiCore getApiCore()
+    public <T extends Event> T callBukkitEvent(final T bukkitEvent)
     {
-        return this.apiCore;
+        return this.bukkitApiCore.callEvent(bukkitEvent);
+    }
+
+    public void publishArenaEvent(final IArenaNetEvent event)
+    {
+        this.eventManager.callEvent(event);
     }
 
     /**
@@ -123,14 +129,9 @@ public class GameHostManager implements IServerManager
         return this.regionManager;
     }
 
-    public void publishArenaEvent(final IArenaNetEvent event)
-    {
-        this.eventManager.callEvent(event);
-    }
-
     private void loadConfig()
     {
-        this.miniGameConfig = JaxbUtils.unmarshal(this.apiCore.getFile("minigame.xml"), MiniGameConfig.class);
+        this.miniGameConfig = JaxbUtils.unmarshal(this.bukkitApiCore.getFile("minigame.xml"), MiniGameConfig.class);
         this.validateConfig();
     }
     

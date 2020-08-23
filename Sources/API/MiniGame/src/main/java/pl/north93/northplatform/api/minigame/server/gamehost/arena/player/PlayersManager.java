@@ -16,6 +16,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.utils.MetadataUtils;
+import pl.north93.northplatform.api.global.metadata.MetaStore;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
@@ -30,10 +33,6 @@ import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
 import pl.north93.northplatform.api.minigame.shared.api.arena.RemoteArena;
 import pl.north93.northplatform.api.minigame.shared.api.arena.reconnect.ReconnectTicket;
 import pl.north93.northplatform.api.minigame.shared.api.cfg.MiniGameConfig;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.bukkit.utils.MetadataUtils;
-import pl.north93.northplatform.api.global.metadata.MetaStore;
 
 /**
  * Każda LocalArena ma swojego PlayersManagera
@@ -248,9 +247,7 @@ public class PlayersManager
     {
         this.spectators.add(player);
 
-        final BukkitApiCore apiCore = this.gameHostManager.getApiCore();
-        apiCore.callEvent(new SpectatorJoinEvent(player, this.arena));
-
+        this.gameHostManager.callBukkitEvent(new SpectatorJoinEvent(player, this.arena));
         MiniGameApi.setPlayerStatus(player, PlayerStatus.SPECTATOR);
     }
 
@@ -260,7 +257,7 @@ public class PlayersManager
 
         final boolean isReconnected = this.reconnectHandler.handleReconnect(player);
         final PlayerJoinArenaEvent event = new PlayerJoinArenaEvent(player, this.arena, isReconnected, "player.joined_arena");
-        this.gameHostManager.getApiCore().callEvent(event);
+        this.gameHostManager.callBukkitEvent(event);
 
         if (event.getJoinMessage() != null)
         {
@@ -291,15 +288,14 @@ public class PlayersManager
     private void disconnectSpectator(final INorthPlayer player)
     {
         this.spectators.remove(player);
-        this.gameHostManager.getApiCore().callEvent(new SpectatorQuitEvent(this.arena, player));
+        this.gameHostManager.callBukkitEvent(new SpectatorQuitEvent(this.arena, player));
     }
 
     private void disconnectPlayer(final INorthPlayer player)
     {
-        final BukkitApiCore apiCore = this.gameHostManager.getApiCore();
         this.players.remove(player);
 
-        final PlayerQuitArenaEvent event = apiCore.callEvent(new PlayerQuitArenaEvent(player, this.arena, this.shouldBeAbleToReconnect(), "player.quit_arena"));
+        final PlayerQuitArenaEvent event = this.gameHostManager.callBukkitEvent(new PlayerQuitArenaEvent(player, this.arena, this.shouldBeAbleToReconnect(), "player.quit_arena"));
         if (event.canReconnect())
         {
             this.reconnectHandler.addReconnectCandidate(player);
