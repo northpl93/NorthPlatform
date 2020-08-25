@@ -4,10 +4,10 @@ import java.time.Duration;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
+import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
 import org.apache.commons.lang3.StringUtils;
@@ -15,9 +15,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
+import org.bson.UuidRepresentation;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.internal.CodecRegistryHelper;
 
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
@@ -56,14 +58,20 @@ public class StorageConnector extends Component
         this.fixMongoLogger(Logger.getLogger("org.mongodb.driver.protocol.query"));
         this.fixMongoLogger(Logger.getLogger("org.mongodb.driver.protocol.update"));
 
-        final MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
+        final MongoClientSettings.Builder builder = MongoClientSettings.builder();
+        builder.applyConnectionString(new ConnectionString(config.getMongoDbConnect()));
 
         final NorthSerializerImpl<BsonWriter, BsonReader> serializer = new NorthSerializerImpl<>(new MongoDbSerializationFormat(), new NorthPlatformClassResolver());
         builder.codecRegistry(this.configureMongoCodecRegistry(serializer));
 
-        builder.connectionsPerHost(10); // maksymalnie 10 polaczen. Default 100
-        builder.minConnectionsPerHost(1); // minimum utrzymywane jedno polaczenie. Default 0
-        this.mongoClient = new MongoClient(new MongoClientURI(config.getMongoDbConnect(), builder));
+        builder.applyToConnectionPoolSettings(poolSettings ->
+        {
+            poolSettings.minSize(1);
+            poolSettings.maxSize(10);
+        });
+
+        builder.uuidRepresentation(UuidRepresentation.JAVA_LEGACY);
+        this.mongoClient = MongoClients.create(builder.build());
 
         this.mainDatabase = this.mongoClient.getDatabase(config.getMongoMainDatabase());
     }
@@ -84,37 +92,30 @@ public class StorageConnector extends Component
 
     private CodecRegistry configureMongoCodecRegistry(final NorthSerializer<BsonWriter, BsonReader> northSerializer)
     {
-        /*return fromProviders(asList(new ValueCodecProvider(),
-                new BsonValueCodecProvider(),
-                new DBRefCodecProvider(),
-                new DBObjectCodecProvider(),
-                new DocumentCodecProvider(new DocumentToDBRefTransformer()),
-                new IterableCodecProvider(new DocumentToDBRefTransformer()),
-                new MapCodecProvider(new DocumentToDBRefTransformer()),
-                new GeoJsonCodecProvider(),
-                new GridFSFileCodecProvider(),
-                new Jsr310CodecProvider(),
-                PojoCodecProvider.builder().automatic(true).build()));*/
-
+        final CodecRegistry defaultRegistry = MongoClientSettings.getDefaultCodecRegistry();
+        final CodecRegistry codecRegistry = CodecRegistryHelper.createRegistry(defaultRegistry, UuidRepresentation.JAVA_LEGACY);
 
         return new CodecRegistry()
         {
             @Override
-            public <T> Codec<T> get(final Class<T> clazz)
+            public <T> Codec<T> get(final Class<T> clazz, final CodecRegistry registry)
             {
                 try
                 {
-                    return MongoClientSettings.getDefaultCodecRegistry().get(clazz);
+                    return codecRegistry.get(clazz);
                 }
                 catch (final CodecConfigurationException e)
                 {
                     return new MongoDbCodec<>(northSerializer, clazz);
                 }
-                //return null;
+            }
+
+            @Override
+            public <T> Codec<T> get(final Class<T> clazz)
+            {
+                return this.get(clazz, codecRegistry);
             }
         };
-
-        //return fromProviders(Collections.singletonList(new MongoDbCodecProvider(northSerializer)));
     }
 
     private void fixMongoLogger(final Logger logger)

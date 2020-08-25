@@ -43,9 +43,7 @@ dependencies {
     api 'com.carrotsearch:hppc:0.8.2'
 
     // MongoDB stuff
-    api 'org.mongodb:mongo-java-driver:3.12.7'
-    api 'org.mongodb:bson:3.12.7'
-    api 'io.netty:netty-transport-native-epoll:4.1.51.Final'
+    api 'org.mongodb:mongodb-driver-sync:4.1.0'
 
     // Redis stuff
     api 'io.lettuce:lettuce-core:5.2.2.RELEASE'
