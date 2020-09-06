@@ -10,8 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.component.annotations.bean.Named;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.daemon.DaemonDto;
+import pl.north93.northplatform.api.global.network.daemon.IDaemonsManager;
 import pl.north93.northplatform.api.global.network.event.NetworkShutdownNetEvent;
 import pl.north93.northplatform.api.global.redis.event.NetEventSubscriber;
 import pl.north93.northplatform.api.global.redis.observable.Hash;
@@ -25,12 +25,12 @@ import pl.north93.northplatform.daemon.event.ServerExitedEvent;
 public class DaemonInfoHandler
 {
     @Inject
+    private DaemonConfig config;
+    @Inject
     private StandaloneApiCore apiCore;
     @Inject
-    private INetworkManager   networkManager;
-    @Inject
-    private DaemonConfig      config;
-    private Value<DaemonDto>  daemonInfo;
+    private IDaemonsManager daemonsManager;
+    private final Value<DaemonDto> daemonInfo;
 
     @Bean
     private DaemonInfoHandler(final @Named("daemon") EventBus eventBus)
@@ -38,7 +38,7 @@ public class DaemonInfoHandler
         final String id = this.apiCore.getId();
         final DaemonDto daemon = new DaemonDto(id, this.apiCore.getHostName(), this.config.maxMemory, 0, 0, true);
 
-        final Hash<DaemonDto> daemons = this.networkManager.getDaemons().unsafe().getHash();
+        final Hash<DaemonDto> daemons = this.daemonsManager.unsafe().getHash();
         daemons.put(id, daemon);
         this.daemonInfo = daemons.getAsValue(id);
 

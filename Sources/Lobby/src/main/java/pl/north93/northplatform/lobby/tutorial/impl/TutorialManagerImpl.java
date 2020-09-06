@@ -7,33 +7,32 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
+import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.metadata.MetaKey;
+import pl.north93.northplatform.api.global.metadata.MetaStore;
+import pl.north93.northplatform.api.global.network.players.IPlayerTransaction;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
+import pl.north93.northplatform.api.global.network.players.Identity;
+import pl.north93.northplatform.api.global.uri.UriHandler;
+import pl.north93.northplatform.api.global.uri.UriInvocationContext;
 import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.HubWorld;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.LocalHubServer;
 import pl.north93.northplatform.lobby.tutorial.ITutorialManager;
 import pl.north93.northplatform.lobby.tutorial.TutorialStatus;
 import pl.north93.northplatform.lobby.tutorial.event.TutorialStatusChangedEvent;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
-import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.metadata.MetaKey;
-import pl.north93.northplatform.api.global.metadata.MetaStore;
-import pl.north93.northplatform.api.global.network.INetworkManager;
-import pl.north93.northplatform.api.global.network.players.IPlayerTransaction;
-import pl.north93.northplatform.api.global.network.players.Identity;
-import pl.north93.northplatform.api.global.uri.UriHandler;
-import pl.north93.northplatform.api.global.uri.UriInvocationContext;
 
 @Slf4j
 /*default*/ class TutorialManagerImpl implements ITutorialManager
 {
     @Inject
-    private BukkitApiCore   apiCore;
+    private BukkitApiCore apiCore;
     @Inject
-    private MiniGameServer  miniGameServer;
+    private LobbyManager lobbyManager;
     @Inject
-    private INetworkManager networkManager;
+    private IPlayersManager playersManager;
 
     @Bean
     private TutorialManagerImpl()
@@ -132,7 +131,7 @@ import pl.north93.northplatform.api.global.uri.UriInvocationContext;
     public TutorialStatus getStatus(final Identity identity, final String tutorialId)
     {
         final MetaKey tutorialStatusKey = this.getTutorialStatusKey(tutorialId);
-        return this.networkManager.getPlayers().unsafe().get(identity).map(player ->
+        return this.playersManager.unsafe().get(identity).map(player ->
         {
             final MetaStore metaStore = player.getMetaStore();
             if (metaStore.contains(tutorialStatusKey))
@@ -147,7 +146,7 @@ import pl.north93.northplatform.api.global.uri.UriInvocationContext;
     @Override
     public void updateStatus(final Identity identity, final String tutorialId, final TutorialStatus status)
     {
-        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(identity))
+        try (final IPlayerTransaction t = this.playersManager.transaction(identity))
         {
             final MetaStore metaStore = t.getPlayer().getMetaStore();
             final MetaKey tutorialStatusKey = this.getTutorialStatusKey(tutorialId);
@@ -187,8 +186,7 @@ import pl.north93.northplatform.api.global.uri.UriInvocationContext;
     // zwraca obiekt LocalHub reprezentujacy ten serwer hostujacy huby.
     private LocalHubServer getThisHubServer()
     {
-        final LobbyManager serverManager = this.miniGameServer.getServerManager();
-        return serverManager.getLocalHub();
+        return this.lobbyManager.getLocalHub();
     }
 
     @Override

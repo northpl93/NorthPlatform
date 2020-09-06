@@ -10,6 +10,7 @@ import pl.north93.northplatform.api.global.network.JoiningPolicy;
 import pl.north93.northplatform.api.global.network.NetworkMeta;
 import pl.north93.northplatform.api.global.network.event.NetworkKickAllNetEvent;
 import pl.north93.northplatform.api.global.network.event.NetworkShutdownNetEvent;
+import pl.north93.northplatform.api.global.network.proxy.IProxiesManager;
 import pl.north93.northplatform.api.global.redis.event.IEventManager;
 import pl.north93.northplatform.restful.models.NetworkJoinPolicyChanged;
 import pl.north93.northplatform.restful.models.NetworkStatus;
@@ -19,14 +20,16 @@ import spark.Response;
 public class NetworkController
 {
     @Inject
-    private IEventManager   eventManager;
+    private IEventManager eventManager;
     @Inject
     private INetworkManager networkManager;
+    @Inject
+    private IProxiesManager proxiesManager;
 
     public Object root(final Request request, final Response response)
     {
         final NetworkMeta meta = this.networkManager.getNetworkConfig().get();
-        final int onlinePlayers = this.networkManager.getProxies().onlinePlayersCount();
+        final int onlinePlayers = this.proxiesManager.onlinePlayersCount();
 
         return new NetworkStatus(meta.displayMaxPlayers, onlinePlayers, meta.joiningPolicy, meta.serverListMotd);
     }

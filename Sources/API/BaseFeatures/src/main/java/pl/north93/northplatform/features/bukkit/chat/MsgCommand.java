@@ -14,16 +14,16 @@ import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.global.metadata.MetaKey;
 import pl.north93.northplatform.api.global.metadata.MetaStore;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.redis.observable.Value;
 
 public class MsgCommand extends NorthCommand
 {
     @Inject
-    private INetworkManager networkManager;
+    private IPlayersManager playersManager;
     @Inject @Messages("BaseFeatures")
-    private MessagesBox     messages;
+    private MessagesBox messages;
 
     private static final MetaKey LAST_SENDER = MetaKey.get("lastMessageSender");
 
@@ -45,7 +45,7 @@ public class MsgCommand extends NorthCommand
         final Player player = (Player) sender.unwrapped();
 
         // todo rewrite
-        final Value<IOnlinePlayer> networkPlayer = this.networkManager.getPlayers().unsafe().getOnlineValue(args.asString(0));
+        final Value<IOnlinePlayer> networkPlayer = this.playersManager.unsafe().getOnlineValue(args.asString(0));
         if (! networkPlayer.isPreset())
         {
             sender.sendMessage(this.messages, "command.no_player");
@@ -75,7 +75,7 @@ public class MsgCommand extends NorthCommand
         sender.sendMessage(this.messages, "command.msg.from_you_message", receiver.getNick(), message);
         receiver.sendMessage(this.messages, "command.msg.to_you_message", sender.getName(), message);
 
-        this.networkManager.getPlayers().access(receiver.getNick(), iPlayer ->
+        this.playersManager.access(receiver.getNick(), iPlayer ->
         {
             final MetaStore metaStore = iPlayer.getMetaStore();
             metaStore.set(LAST_SENDER, sender.getName());

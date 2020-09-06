@@ -18,12 +18,12 @@ import pl.north93.northplatform.api.chat.global.impl.ChatManagerImpl;
 import pl.north93.northplatform.api.chat.global.impl.data.AbstractChatData;
 import pl.north93.northplatform.api.chat.global.impl.data.BroadcastMessage;
 import pl.north93.northplatform.api.chat.global.impl.data.PlayerChatMessage;
-import pl.north93.northplatform.api.global.network.INetworkManager;
-import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
-import pl.north93.northplatform.api.global.network.players.Identity;
-import pl.north93.northplatform.api.global.redis.event.NetEventSubscriber;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
+import pl.north93.northplatform.api.global.network.players.Identity;
+import pl.north93.northplatform.api.global.redis.event.NetEventSubscriber;
 
 /**
  * Klasa odpowiedzialna za rozsyłanie wiadomości do graczy połączonych z daną instancją proxy.
@@ -32,7 +32,7 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 public class MessageHandler
 {
     @Inject
-    private INetworkManager networkManager;
+    private IPlayersManager playersManager;
     @Inject
     private ChatManagerImpl chatManager;
 
@@ -90,7 +90,7 @@ public class MessageHandler
             return false;
         }
 
-        final IOnlinePlayer player = this.networkManager.getPlayers().unsafe().getOnlineValue(participant.getNick()).get();
+        final IOnlinePlayer player = this.playersManager.unsafe().getOnlineValue(participant.getNick()).get();
         if (player == null)
         {
             return true;

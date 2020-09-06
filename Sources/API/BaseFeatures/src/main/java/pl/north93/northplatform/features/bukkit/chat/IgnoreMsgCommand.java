@@ -9,15 +9,15 @@ import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.PrivateMessages;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 
 public class IgnoreMsgCommand extends NorthCommand
 {
     @Inject
-    private INetworkManager networkManager;
+    private IPlayersManager playersManager;
     @Inject @Messages("BaseFeatures")
-    private MessagesBox     messages;
+    private MessagesBox messages;
 
     public IgnoreMsgCommand()
     {
@@ -28,7 +28,7 @@ public class IgnoreMsgCommand extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        this.networkManager.getPlayers().access(sender.getName(), player ->
+        this.playersManager.access(sender.getName(), player ->
         {
             if (player.privateMessagesPolicy() == PrivateMessages.ENABLED)
             {

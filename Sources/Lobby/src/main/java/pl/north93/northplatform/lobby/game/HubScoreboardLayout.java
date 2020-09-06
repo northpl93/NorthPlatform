@@ -9,21 +9,21 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.shared.api.booster.IBoosterManager;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
-import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
-import pl.north93.northplatform.lobby.chest.ChestService;
-import pl.north93.northplatform.lobby.chest.ChestType;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardLayout;
 import pl.north93.northplatform.api.economy.IAccountAccessor;
 import pl.north93.northplatform.api.economy.ICurrency;
 import pl.north93.northplatform.api.economy.IEconomyManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.global.redis.observable.Value;
+import pl.north93.northplatform.api.minigame.shared.api.booster.IBoosterManager;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
+import pl.north93.northplatform.lobby.chest.ChestService;
+import pl.north93.northplatform.lobby.chest.ChestType;
 
 /**
  * Klasa pomocnicza do tworzenia scoreboardow na hubach.
@@ -32,13 +32,13 @@ public abstract class HubScoreboardLayout implements IScoreboardLayout
 {
     private static final NumberFormat CURRENCY_FORMATTER = new DecimalFormat("#");
     @Inject
-    protected INetworkManager networkManager;
+    protected IPlayersManager playersManager;
     @Inject
     protected IEconomyManager economyManager;
     @Inject
-    protected ChestService    chestService;
-    @Inject
     protected IBoosterManager boosterManager;
+    @Inject
+    protected ChestService chestService;
 
     /**
      * Formatuje wynik odpytywania baze o statystyke.
@@ -62,7 +62,7 @@ public abstract class HubScoreboardLayout implements IScoreboardLayout
 
     protected final String getPlayerBooster(final INorthPlayer player)
     {
-        final Value<IOnlinePlayer> value = this.networkManager.getPlayers().unsafe().getOnlineValue(player.getName());
+        final Value<IOnlinePlayer> value = this.playersManager.unsafe().getOnlineValue(player.getName());
         if (! value.isPreset())
         {
             return "?";

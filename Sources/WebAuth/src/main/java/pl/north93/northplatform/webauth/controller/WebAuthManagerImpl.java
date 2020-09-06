@@ -15,10 +15,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
 import pl.north93.northplatform.api.global.network.players.IPlayer;
 import pl.north93.northplatform.api.global.network.players.IPlayerTransaction;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.redis.observable.Cache;
 import pl.north93.northplatform.api.global.redis.observable.IObservationManager;
 import pl.north93.northplatform.api.global.redis.observable.ObjectKey;
@@ -36,8 +36,8 @@ public class WebAuthManagerImpl implements IWebAuthManager
     @Inject
     private IObservationManager observer;
     @Inject
-    private INetworkManager     networkManager;
-    private Cache<String, UUID> keys;
+    private IPlayersManager playersManager;
+    private final Cache<String, UUID> keys;
 
     public WebAuthManagerImpl(final WebAuthConfig config)
     {
@@ -61,7 +61,7 @@ public class WebAuthManagerImpl implements IWebAuthManager
         }
         keyValue.delete();
 
-        try (final IPlayerTransaction transaction = this.networkManager.getPlayers().transaction(playerId))
+        try (final IPlayerTransaction transaction = this.playersManager.transaction(playerId))
         {
             final IPlayer player = transaction.getPlayer();
             final boolean isOnline = player.isOnline();

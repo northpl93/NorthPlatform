@@ -14,8 +14,8 @@ import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
 import pl.north93.northplatform.api.bukkit.utils.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.Identity;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
 import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.global.redis.event.NetEventSubscriber;
 import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
@@ -35,7 +35,7 @@ public class PartyHubListener implements AutoListener
     @Inject
     private IPlayerStatusProvider playerStatusProvider;
     @Inject
-    private INetworkManager networkManager;
+    private IServersManager serversManager;
     @Inject
     private IBukkitPlayers bukkitPlayers;
     @Inject
@@ -98,7 +98,7 @@ public class PartyHubListener implements AutoListener
             else
             {
                 // trzeba przeniesc gracza na inny serwer z hubami, wiec to robimy
-                final Server newServer = this.networkManager.getServers().withUuid(newServerId);
+                final Server newServer = this.serversManager.withUuid(newServerId);
                 localPlayer.connectTo(newServer, new SelectHubServerJoinAction(newHubId));
             }
         }

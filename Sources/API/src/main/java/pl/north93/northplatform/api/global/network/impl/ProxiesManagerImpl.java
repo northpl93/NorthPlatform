@@ -5,6 +5,7 @@ import java.util.Set;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.network.proxy.IProxiesManager;
 import pl.north93.northplatform.api.global.network.proxy.IProxyRpc;
 import pl.north93.northplatform.api.global.network.proxy.ProxyDto;
@@ -19,7 +20,8 @@ class ProxiesManagerImpl implements IProxiesManager
     private final IRpcManager rpcManager;
     private final Hash<ProxyDto> proxies;
 
-    public ProxiesManagerImpl(final IRpcManager rpcManager, final IObservationManager observationManager)
+    @Bean
+    private ProxiesManagerImpl(final IRpcManager rpcManager, final IObservationManager observationManager)
     {
         this.rpcManager = rpcManager;
         this.proxies = observationManager.getHash(ProxyDto.class, "proxies");

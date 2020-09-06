@@ -9,24 +9,24 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
 import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.global.redis.rpc.IRpcManager;
 import pl.north93.northplatform.api.global.utils.ConfigUtils;
-import pl.north93.northplatform.datashare.api.cfg.DataSharingConfig;
-import pl.north93.northplatform.datashare.api.cfg.DataSharingGroupConfig;
 import pl.north93.northplatform.datashare.api.DataSharingGroup;
 import pl.north93.northplatform.datashare.api.IDataShareController;
 import pl.north93.northplatform.datashare.api.cfg.AnnouncerConfig;
+import pl.north93.northplatform.datashare.api.cfg.DataSharingConfig;
+import pl.north93.northplatform.datashare.api.cfg.DataSharingGroupConfig;
 
 public class PlayerDataShareController extends Component implements IDataShareController
 {
     @Inject
-    private INetworkManager             networkManager;
+    private IServersManager serversManager;
     @Inject
-    private IRpcManager                 rpcManager;
-    private DataSharingConfig           config;
-    private Map<UUID, DataSharingGroup> servers = new HashMap<>();
+    private IRpcManager rpcManager;
+    private DataSharingConfig config;
+    private final Map<UUID, DataSharingGroup> servers = new HashMap<>();
 
     @Override
     protected void enableComponent()
@@ -49,7 +49,7 @@ public class PlayerDataShareController extends Component implements IDataShareCo
             }
             for (final String serversGroup : groupConfig.getServersGroups())
             {
-                for (final Server server : this.networkManager.getServers().inGroup(serversGroup))
+                for (final Server server : this.serversManager.inGroup(serversGroup))
                 {
                     this.servers.put(server.getUuid(), group);
                 }

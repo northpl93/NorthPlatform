@@ -19,10 +19,10 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.config.ConfigUpdatedNetEvent;
 import pl.north93.northplatform.api.global.config.IConfig;
 import pl.north93.northplatform.api.global.config.NetConfig;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.daemon.config.AutoScalingConfig;
 import pl.north93.northplatform.api.global.network.daemon.config.ServerPatternConfig;
 import pl.north93.northplatform.api.global.network.daemon.config.ServersGroupConfig;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
 import pl.north93.northplatform.api.global.network.server.group.ServersGroupDto;
 import pl.north93.northplatform.api.global.redis.event.NetEventSubscriber;
 import pl.north93.northplatform.api.global.redis.observable.Hash;
@@ -33,11 +33,11 @@ import pl.north93.northplatform.controller.servers.scaler.value.IScalingValue;
 public class LocalGroupsManager
 {
     @Inject
-    private INetworkManager                 networkManager;
+    private IServersManager serversManager;
     @Inject @NetConfig(type = AutoScalingConfig.class, id = "autoscaler")
-    private IConfig<AutoScalingConfig>      config;
-    private Map<String, IScalingValue>      scalingValues = new HashMap<>();
-    private Map<String, ILocalServersGroup> localGroups = new HashMap<>();
+    private IConfig<AutoScalingConfig> config;
+    private final Map<String, IScalingValue> scalingValues = new HashMap<>();
+    private final Map<String, ILocalServersGroup> localGroups = new HashMap<>();
 
     @Bean
     private LocalGroupsManager()
@@ -102,7 +102,7 @@ public class LocalGroupsManager
 
     private void createGroupFromConfig(final ServersGroupConfig config)
     {
-        final Hash<ServersGroupDto> serversGroups = this.networkManager.getServers().unsafe().getServersGroups();
+        final Hash<ServersGroupDto> serversGroups = this.serversManager.unsafe().getServersGroups();
 
         final ILocalServersGroup localGroup = LocalServersGroupFactory.INSTANCE.createLocalGroup(config);
         this.localGroups.put(localGroup.getName(), localGroup);
@@ -118,7 +118,7 @@ public class LocalGroupsManager
         // wywolujemy zmergowanie configu
         localServersGroup.mergeConfig(config);
 
-        final Hash<ServersGroupDto> serversGroups = this.networkManager.getServers().unsafe().getServersGroups();
+        final Hash<ServersGroupDto> serversGroups = this.serversManager.unsafe().getServersGroups();
         final Value<ServersGroupDto> groupDtoValue = serversGroups.getAsValue(localServersGroup.getName());
 
         // aktualizujemy obiekt w redisie.

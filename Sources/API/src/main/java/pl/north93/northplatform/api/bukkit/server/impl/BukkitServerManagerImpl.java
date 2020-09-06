@@ -23,9 +23,9 @@ import pl.north93.northplatform.api.bukkit.server.event.ShutdownScheduledEvent;
 import pl.north93.northplatform.api.bukkit.utils.SimpleCountdown;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.impl.servers.ServerDto;
 import pl.north93.northplatform.api.global.network.server.IServerRpc;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
 import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.global.network.server.ServerState;
 import pl.north93.northplatform.api.global.redis.observable.Value;
@@ -38,9 +38,9 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
     @Inject
     private BukkitApiCore apiCore;
     @Inject
-    private INetworkManager networkManager;
-    @Inject
     private IRpcManager rpcManager;
+    @Inject
+    private IServersManager serversManager;
     // - - - - - - -
     private Value<ServerDto> serverValue;
     private SimpleCountdown countdown;
@@ -59,7 +59,7 @@ public class BukkitServerManagerImpl extends Component implements IBukkitServerM
         this.rpcManager.addRpcImplementation(IServerRpc.class, new ServerRpcImpl());
         this.countdown = new SimpleCountdown(TIME_TO_NEXT_TRY).endCallback(this::tryShutdown);
 
-        this.serverValue = this.networkManager.getServers().unsafe().getServerDto(this.apiCore.getServerId());
+        this.serverValue = this.serversManager.unsafe().getServerDto(this.apiCore.getServerId());
 
         if (! this.serverValue.isAvailable())
         {

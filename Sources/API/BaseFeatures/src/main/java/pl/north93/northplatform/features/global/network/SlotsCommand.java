@@ -9,11 +9,14 @@ import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.NetworkMeta;
+import pl.north93.northplatform.api.global.network.proxy.IProxiesManager;
 
 public class SlotsCommand extends NorthCommand
 {
     @Inject
     private INetworkManager networkManager;
+    @Inject
+    private IProxiesManager proxiesManager;
 
     public SlotsCommand()
     {
@@ -28,7 +31,7 @@ public class SlotsCommand extends NorthCommand
         if (args.isEmpty())
         {
             final NetworkMeta meta = this.networkManager.getNetworkConfig().get();
-            sender.sendMessage("&eAktualne sloty: " + meta.displayMaxPlayers + " Gracze: " + this.networkManager.getProxies().onlinePlayersCount());
+            sender.sendMessage("&eAktualne sloty: " + meta.displayMaxPlayers + " Gracze: " + this.proxiesManager.onlinePlayersCount());
         }
         else if (args.length() == 1)
         {

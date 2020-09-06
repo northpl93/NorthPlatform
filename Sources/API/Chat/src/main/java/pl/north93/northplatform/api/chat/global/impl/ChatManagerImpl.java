@@ -13,8 +13,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.chat.global.ChatFormatter;
+import pl.north93.northplatform.api.chat.global.ChatManager;
+import pl.north93.northplatform.api.chat.global.ChatRoom;
+import pl.north93.northplatform.api.chat.global.ChatRoomNotFoundException;
 import pl.north93.northplatform.api.chat.global.impl.data.AbstractChatData;
-import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.global.component.annotations.bean.Aggregator;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
 import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.network.players.Identity;
@@ -24,24 +30,17 @@ import pl.north93.northplatform.api.global.redis.observable.Hash;
 import pl.north93.northplatform.api.global.redis.observable.IObservationManager;
 import pl.north93.northplatform.api.global.redis.observable.Lock;
 import pl.north93.northplatform.api.global.redis.observable.Value;
-import pl.north93.northplatform.api.chat.global.ChatFormatter;
-import pl.north93.northplatform.api.chat.global.ChatManager;
-import pl.north93.northplatform.api.chat.global.ChatRoom;
-import pl.north93.northplatform.api.chat.global.ChatRoomNotFoundException;
-import pl.north93.northplatform.api.global.component.annotations.bean.Aggregator;
-import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 @Slf4j
 public class ChatManagerImpl implements ChatManager
 {
     @Inject
-    private       IEventManager              eventManager;
+    private IEventManager eventManager;
     @Inject
-    private       INetworkManager            networkManager;
-    private final RootChatRoom               rootChatRoom;
+    private IPlayersManager playersManager;
+    private final RootChatRoom rootChatRoom;
     private final Map<String, ChatFormatter> formatters;
-    private final Hash<ChatRoomData>         chatRooms;
+    private final Hash<ChatRoomData> chatRooms;
 
     @Bean
     private ChatManagerImpl(final IObservationManager observationManager)
@@ -70,7 +69,7 @@ public class ChatManagerImpl implements ChatManager
 
     public IPlayersManager getPlayersManager()
     {
-        return this.networkManager.getPlayers();
+        return this.playersManager;
     }
 
     @Override

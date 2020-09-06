@@ -12,7 +12,7 @@ import org.diorite.commons.math.DioriteRandomUtils;
 
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.global.network.players.PlayerNotFoundException;
 import pl.north93.northplatform.api.minigame.server.shared.status.IPlayerStatusProvider;
@@ -29,7 +29,7 @@ import pl.north93.northplatform.api.minigame.shared.api.status.IPlayerStatus;
 public class PartyClient
 {
     @Inject
-    private INetworkManager networkManager;
+    private IPlayersManager playersManager;
     @Inject
     private IPartyManager partyManager;
     @Inject
@@ -161,7 +161,7 @@ public class PartyClient
         try
         {
             final Identity uncompleted = Identity.create(null, nick);
-            target = this.networkManager.getPlayers().completeIdentity(uncompleted);
+            target = this.playersManager.completeIdentity(uncompleted);
         }
         catch (final PlayerNotFoundException ignored)
         {

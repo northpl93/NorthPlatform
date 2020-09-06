@@ -14,18 +14,18 @@ import lombok.extern.slf4j.Slf4j;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import pl.north93.northplatform.api.global.network.INetworkManager;
-import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.bungee.proxy.IProxyServerList;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
+import pl.north93.northplatform.api.global.network.server.Server;
 
 @Slf4j
 class ProxyServerListImpl implements IProxyServerList
 {
-    private final ProxyServer             proxyServer;
-    private final Map<String, ServerInfo> servers;
     @Inject
-    private       INetworkManager         networkManager;
+    private IServersManager serversManager;
+    private final ProxyServer proxyServer;
+    private final Map<String, ServerInfo> servers;
 
     public ProxyServerListImpl()
     {
@@ -38,7 +38,7 @@ class ProxyServerListImpl implements IProxyServerList
     {
         log.info("Adding all servers actually existing in network...");
         this.removeAllServers();
-        for (final Server server : this.networkManager.getServers().all())
+        for (final Server server : this.serversManager.all())
         {
             this.addServer(server);
         }

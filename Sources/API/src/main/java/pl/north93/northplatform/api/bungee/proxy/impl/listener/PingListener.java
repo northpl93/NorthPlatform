@@ -14,12 +14,15 @@ import pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.NetworkMeta;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.network.proxy.IProxiesManager;
 
 @Slf4j
 public class PingListener implements Listener
 {
     @Inject
     private INetworkManager networkManager;
+    @Inject
+    private IProxiesManager proxiesManager;
 
     @EventHandler
     public void onPing(final ProxyPingEvent event)
@@ -38,7 +41,7 @@ public class PingListener implements Listener
         final ServerPing.Players players = response.getPlayers();
         players.setSample(null);
         players.setMax(networkMeta.displayMaxPlayers);
-        players.setOnline(this.networkManager.getProxies().onlinePlayersCount());
+        players.setOnline(this.proxiesManager.onlinePlayersCount());
 
         final ServerPing.Protocol version = response.getVersion();
         version.setName(ChatUtils.translateAlternateColorCodes(networkMeta.serverListVersion));

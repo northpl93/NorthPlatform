@@ -5,6 +5,7 @@ import java.util.Set;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.network.daemon.DaemonDto;
 import pl.north93.northplatform.api.global.network.daemon.DaemonRpc;
 import pl.north93.northplatform.api.global.network.daemon.IDaemonsManager;
@@ -16,10 +17,11 @@ import pl.north93.northplatform.api.global.redis.rpc.RpcCustomTarget;
 class DaemonsManagerImpl implements IDaemonsManager
 {
     private final DaemonsManagerUnsafe unsafe = new DaemonsManagerUnsafe();
-    private final IRpcManager          rpcManager;
-    private final Hash<DaemonDto>      daemons;
+    private final IRpcManager rpcManager;
+    private final Hash<DaemonDto> daemons;
 
-    public DaemonsManagerImpl(final IRpcManager rpcManager, final IObservationManager observationManager)
+    @Bean
+    private DaemonsManagerImpl(final IRpcManager rpcManager, final IObservationManager observationManager)
     {
         this.rpcManager = rpcManager;
         this.daemons = observationManager.getHash(DaemonDto.class, "daemons");

@@ -20,8 +20,8 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.metadata.MetaKey;
 import pl.north93.northplatform.api.global.metadata.MetaStore;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.IPlayerTransaction;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.itemshop.shared.DataEntry;
 import pl.north93.northplatform.itemshop.shared.DataModel;
@@ -31,11 +31,11 @@ import spark.Request;
 @Slf4j
 public class RequestHandler
 {
-    private static final MetaKey            ONE_TIME_LIST = MetaKey.get("itemShop_oneTimeList");
-    private final Gson                      gson          = new Gson();
-    private final Map<String, IDataHandler> handlers      = new HashMap<>();
+    private static final MetaKey ONE_TIME_LIST = MetaKey.get("itemShop_oneTimeList");
+    private final Gson gson = new Gson();
+    private final Map<String, IDataHandler> handlers = new HashMap<>();
     @Inject
-    private INetworkManager                 networkManager;
+    private IPlayersManager playersManager;
 
     @Bean
     private RequestHandler()
@@ -65,7 +65,7 @@ public class RequestHandler
         final DataModel items = this.gson.fromJson(request.queryParams("items"), DataModel.class);
 
         final String nick = request.params(":nick");
-        final Identity identity = this.networkManager.getPlayers().completeIdentity(Identity.create(null, nick));
+        final Identity identity = this.playersManager.completeIdentity(Identity.create(null, nick));
 
         final List<DataEntry> entries = items.getEntries();
         for (final DataEntry entry : entries)
@@ -105,7 +105,7 @@ public class RequestHandler
 
     private boolean markAsUsed(final Identity identity, final String oneTimeId)
     {
-        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(identity))
+        try (final IPlayerTransaction t = this.playersManager.transaction(identity))
         {
             final MetaStore metaStore = t.getPlayer().getMetaStore();
 

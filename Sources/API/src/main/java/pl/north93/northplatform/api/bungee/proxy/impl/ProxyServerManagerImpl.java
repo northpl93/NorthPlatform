@@ -14,8 +14,8 @@ import pl.north93.northplatform.api.bungee.proxy.impl.listener.PingListener;
 import pl.north93.northplatform.api.bungee.proxy.impl.listener.PlayerNetworkListener;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.event.NetworkKickAllNetEvent;
+import pl.north93.northplatform.api.global.network.proxy.IProxiesManager;
 import pl.north93.northplatform.api.global.network.proxy.IProxyRpc;
 import pl.north93.northplatform.api.global.redis.event.NetEventSubscriber;
 import pl.north93.northplatform.api.global.redis.rpc.IRpcManager;
@@ -23,11 +23,11 @@ import pl.north93.northplatform.api.global.redis.rpc.IRpcManager;
 class ProxyServerManagerImpl extends Component implements IProxyServerManager
 {
     @Inject
-    private BungeeApiCore       apiCore;
+    private BungeeApiCore apiCore;
     @Inject
-    private IRpcManager         rpcManager;
+    private IRpcManager rpcManager;
     @Inject
-    private INetworkManager     networkManager;
+    private IProxiesManager proxiesManager;
     private ProxyServerListImpl proxyServerList;
 
     @Override
@@ -46,7 +46,7 @@ class ProxyServerManagerImpl extends Component implements IProxyServerManager
     protected void disableComponent()
     {
         final String proxyId = this.getApiCore().getId();
-        this.networkManager.getProxies().removeProxy(proxyId);
+        this.proxiesManager.removeProxy(proxyId);
     }
 
     @NetEventSubscriber(NetworkKickAllNetEvent.class)

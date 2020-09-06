@@ -8,11 +8,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.daemon.DaemonDto;
 import pl.north93.northplatform.api.global.network.daemon.DaemonRpc;
+import pl.north93.northplatform.api.global.network.daemon.IDaemonsManager;
 import pl.north93.northplatform.api.global.network.daemon.config.ServerPatternConfig;
 import pl.north93.northplatform.api.global.network.impl.servers.ServerDto;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
 import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.global.network.server.ServerState;
 import pl.north93.northplatform.api.global.network.server.group.ServersGroupDto;
@@ -22,12 +23,14 @@ import pl.north93.northplatform.controller.servers.groups.LocalManagedServersGro
 
 public class DeployServerOperation extends AutoScalerOperation
 {
+    @Inject
+    private IDaemonsManager daemonsManager;
+    @Inject
+    private IServersManager serversManager;
+    @Inject
+    private LocalGroupsManager localGroupsManager;
+    private Value<ServerDto> ourServer;
     private final LocalManagedServersGroup serversGroup;
-    private       Value<ServerDto>         ourServer;
-    @Inject
-    private       INetworkManager          networkManager;
-    @Inject
-    private       LocalGroupsManager       localGroupsManager;
 
     public DeployServerOperation(final LocalManagedServersGroup serversGroup)
     {
@@ -60,7 +63,7 @@ public class DeployServerOperation extends AutoScalerOperation
         // uploadujemy dane serwera do redisa i przypisujemy wartosc serwera
         this.ourServer = this.uploadServer(serverDto);
 
-        final DaemonRpc daemonRpc = this.networkManager.getDaemons().getRpc(bestDaemon);
+        final DaemonRpc daemonRpc = this.daemonsManager.getRpc(bestDaemon);
         // wysylamy do demona polecenie, daemon zadba o to zeby dodac serwer do bungeecordów
         daemonRpc.deployServer(serverId, pattern);
 
@@ -101,7 +104,7 @@ public class DeployServerOperation extends AutoScalerOperation
     // lub null jak nie znajdzie takiego
     private DaemonDto getBestDaemon(final ServerPatternConfig patternConfig)
     {
-        final Set<DaemonDto> daemons = this.networkManager.getDaemons().all();
+        final Set<DaemonDto> daemons = this.daemonsManager.all();
         return daemons.stream()
                       .filter(daemonDto -> this.isDaemonCapable(daemonDto, patternConfig))
                       .min(new DaemonComparator())
@@ -117,7 +120,7 @@ public class DeployServerOperation extends AutoScalerOperation
 
     private Value<ServerDto> uploadServer(final ServerDto serverDto)
     {
-        final Value<ServerDto> value = this.networkManager.getServers().unsafe().getServerDto(serverDto.getUuid());
+        final Value<ServerDto> value = this.serversManager.unsafe().getServerDto(serverDto.getUuid());
         value.set(serverDto);
         return value;
     }

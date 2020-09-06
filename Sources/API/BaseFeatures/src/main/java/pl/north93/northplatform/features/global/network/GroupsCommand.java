@@ -10,14 +10,13 @@ import java.time.format.DateTimeFormatter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.global.ApiCore;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
-import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.permissions.Group;
 import pl.north93.northplatform.api.global.permissions.PermissionsManager;
 import pl.north93.northplatform.api.global.utils.DateUtil;
@@ -25,13 +24,11 @@ import pl.north93.northplatform.api.global.utils.DateUtil;
 public class GroupsCommand extends NorthCommand
 {
     @Inject
-    private ApiCore            apiCore;
-    @Inject
     private PermissionsManager permissionsManager;
     @Inject
-    private INetworkManager    networkManager;
+    private IPlayersManager playersManager;
     @Inject @Messages("BaseFeatures")
-    private MessagesBox        messages;
+    private MessagesBox messages;
 
     public GroupsCommand()
     {
@@ -52,7 +49,7 @@ public class GroupsCommand extends NorthCommand
         {
             final String username = args.asString(0);
 
-            final boolean result = this.networkManager.getPlayers().access(username, online ->
+            final boolean result = this.playersManager.access(username, online ->
             {
                 sender.sendMessage("&aGrupa &e{0} &ato &e{1}", online.getNick(), online.getGroup().getName());
                 this.sendExpirationInfo(sender, online.getGroupExpireAt());
@@ -106,7 +103,7 @@ public class GroupsCommand extends NorthCommand
             sender.sendMessage("&cNie ma takiej grupy!");
             return;
         }
-        if (this.networkManager.getPlayers().access(username, player ->
+        if (this.playersManager.access(username, player ->
         {
             player.setGroup(newGroup);
             player.setGroupExpireAt(groupExpireAt);

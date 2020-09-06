@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.utils.Wrapper;
 import pl.north93.northplatform.restful.models.PlayerModel;
 import spark.Request;
@@ -16,12 +16,12 @@ import spark.Response;
 public class PlayerController
 {
     @Inject
-    private INetworkManager networkManager;
+    private IPlayersManager playersManager;
 
     public Object root(final Request request, final Response response)
     {
         final Wrapper<Object> myResponse = new Wrapper<>();
-        this.networkManager.getPlayers().access(request.params(":nick"), online ->
+        this.playersManager.access(request.params(":nick"), online ->
         {
             myResponse.set(new PlayerModel(online.getUuid(), online.getNick(), true, online.getGroup().getName(), online.getGroupExpireAt(), online.getMetaStore()));
         }, offline ->

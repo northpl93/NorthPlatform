@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.network.server.IServerRpc;
 import pl.north93.northplatform.api.global.network.server.IServersManager;
 import pl.north93.northplatform.api.global.network.server.Server;
@@ -23,14 +24,13 @@ import pl.north93.northplatform.api.global.redis.observable.IObservationManager;
 import pl.north93.northplatform.api.global.redis.observable.Value;
 import pl.north93.northplatform.api.global.redis.rpc.IRpcManager;
 import pl.north93.northplatform.api.global.redis.rpc.Targets;
-import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 
 /*default*/ class ServersManagerImpl implements IServersManager
 {
-    private final Unsafe                unsafe = new ServersManagerUnsafe();
-    private final IRpcManager           rpcManager;
-    private       Hash<ServerDto>       servers;
-    private       Hash<ServersGroupDto> serversGroups;
+    private final Unsafe unsafe = new ServersManagerUnsafe();
+    private final IRpcManager rpcManager;
+    private final Hash<ServerDto> servers;
+    private final Hash<ServersGroupDto> serversGroups;
 
     @Bean
     private ServersManagerImpl(final IRpcManager rpcManager, final IObservationManager observationManager)

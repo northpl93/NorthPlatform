@@ -1,6 +1,5 @@
 /**
  * NorthPlatform's root build script
- * Also look at Sources/build.gradle
  */
 
 buildscript {

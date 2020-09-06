@@ -7,22 +7,22 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
+import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 import pl.north93.northplatform.api.minigame.shared.api.arena.IArena;
 import pl.north93.northplatform.api.minigame.shared.api.arena.RemoteArena;
 import pl.north93.northplatform.api.minigame.shared.impl.arena.ArenaManager;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
-import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.controller.servers.groups.LocalManagedServersGroup;
 import pl.north93.northplatform.controller.servers.scaler.value.IScalingValue;
 
 public abstract class AbstractArenasValue implements IScalingValue
 {
     @Inject
-    private INetworkManager networkManager;
+    private IServersManager serversManager;
     @Inject
-    private ArenaManager    arenaManager;
+    private ArenaManager arenaManager;
 
     protected Set<RemoteArena> getArenasOnServers(final Set<UUID> servers)
     {
@@ -31,7 +31,7 @@ public abstract class AbstractArenasValue implements IScalingValue
 
     protected Set<UUID> getServerIdInGroup(final LocalManagedServersGroup managedServersGroup)
     {
-        final Set<Server> servers = this.networkManager.getServers().inGroup(managedServersGroup.getName());
+        final Set<Server> servers = this.serversManager.inGroup(managedServersGroup.getName());
         return servers.stream().map(Server::getUuid).collect(Collectors.toSet());
     }
 

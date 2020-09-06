@@ -10,17 +10,14 @@ import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.metadata.MetaKey;
-import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 
-/**
- * Created by Konrad on 2017-02-15.
- */
 public class RespondCommand extends NorthCommand
 {
     @Inject
     private IBukkitExecutor executor;
     @Inject
-    private INetworkManager networkManager;
+    private IPlayersManager playersManager;
 
     private static final MetaKey LAST_SENDER = MetaKey.get("lastMessageSender");
 
@@ -40,7 +37,7 @@ public class RespondCommand extends NorthCommand
         // we can't execute commands asynchronously due to bukkit stupidity
         this.executor.mixed(() -> // async part
         {
-            final String lastSender = this.networkManager.getPlayers().unsafe().getOnlineValue(sender.getName()).get().getMetaStore().get(LAST_SENDER);
+            final String lastSender = this.playersManager.unsafe().getOnlineValue(sender.getName()).get().getMetaStore().get(LAST_SENDER);
 
             if (StringUtils.isEmpty(lastSender))
             {

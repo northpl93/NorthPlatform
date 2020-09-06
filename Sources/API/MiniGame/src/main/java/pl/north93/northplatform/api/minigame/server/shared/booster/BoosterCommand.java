@@ -15,8 +15,6 @@ import java.util.function.ToDoubleFunction;
 
 import lombok.Getter;
 import lombok.ToString;
-import pl.north93.northplatform.api.minigame.shared.api.booster.IBooster;
-import pl.north93.northplatform.api.minigame.shared.api.booster.IBoosterManager;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
@@ -24,16 +22,18 @@ import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.IPlayer;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
+import pl.north93.northplatform.api.minigame.shared.api.booster.IBooster;
+import pl.north93.northplatform.api.minigame.shared.api.booster.IBoosterManager;
 
 @ToString(onlyExplicitlyIncluded = true)
 public class BoosterCommand extends NorthCommand
 {
     @Inject @Messages("MiniGameApi")
-    private MessagesBox     messages;
+    private MessagesBox messages;
     @Inject
-    private INetworkManager networkManager;
+    private IPlayersManager playersManager;
     @Inject
     private IBoosterManager boosterManager;
 
@@ -47,7 +47,7 @@ public class BoosterCommand extends NorthCommand
     {
         final INorthPlayer northPlayer = INorthPlayer.wrap(sender);
 
-        final IPlayer player = this.networkManager.getPlayers().unsafe().getNullable(northPlayer.getIdentity());
+        final IPlayer player = this.playersManager.unsafe().getNullable(northPlayer.getIdentity());
         final Collection<IBooster> boosters = this.boosterManager.getValidBoosters(player);
 
         final ToDoubleFunction<IBooster> multiplierFunc = booster -> booster.getMultiplier(player);

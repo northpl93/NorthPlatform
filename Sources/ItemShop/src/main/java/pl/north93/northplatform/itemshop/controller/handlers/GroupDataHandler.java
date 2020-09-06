@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.global.permissions.Group;
 import pl.north93.northplatform.api.global.permissions.PermissionsManager;
@@ -15,7 +15,7 @@ import pl.north93.northplatform.itemshop.shared.IDataHandler;
 public class GroupDataHandler implements IDataHandler
 {
     @Inject
-    private INetworkManager    networkManager;
+    private IPlayersManager playersManager;
     @Inject
     private PermissionsManager permissionsManager;
 
@@ -30,7 +30,7 @@ public class GroupDataHandler implements IDataHandler
     {
         final int seconds = Integer.parseInt(data.get("time"));
 
-        return this.networkManager.getPlayers().access(player, playerObj ->
+        return this.playersManager.access(player, playerObj ->
         {
             final Group oldGroup = playerObj.getGroup();
             final Group newGroup = this.permissionsManager.getGroupByName(data.get("group"));

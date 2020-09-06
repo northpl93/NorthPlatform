@@ -9,10 +9,6 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
-import pl.north93.northplatform.api.minigame.shared.api.party.IParty;
-import pl.north93.northplatform.api.minigame.shared.api.party.IPartyManager;
-import pl.north93.northplatform.api.minigame.shared.api.party.event.InviteToPartyNetEvent;
-import pl.north93.northplatform.api.minigame.shared.api.party.event.JoinPartyNetEvent;
 import pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.northplatform.api.bungee.BungeeApiCore;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
@@ -20,12 +16,17 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.IPlayer;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.network.players.Identity;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
 import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.global.network.server.ServerType;
 import pl.north93.northplatform.api.global.redis.event.NetEventSubscriber;
+import pl.north93.northplatform.api.minigame.shared.api.party.IParty;
+import pl.north93.northplatform.api.minigame.shared.api.party.IPartyManager;
+import pl.north93.northplatform.api.minigame.shared.api.party.event.InviteToPartyNetEvent;
+import pl.north93.northplatform.api.minigame.shared.api.party.event.JoinPartyNetEvent;
 
 /**
  * Klasa w BungeeCordowej części komponentu odpowiedzialna
@@ -34,11 +35,13 @@ import pl.north93.northplatform.api.global.redis.event.NetEventSubscriber;
 public class PartyMessagesBroadcaster implements Listener
 {
     @Inject
-    private INetworkManager networkManager;
+    private IPlayersManager playersManager;
     @Inject
-    private IPartyManager   partyManager;
+    private IServersManager serversManager;
+    @Inject
+    private IPartyManager partyManager;
     @Inject @Messages("Party")
-    private MessagesBox     partyMessages;
+    private MessagesBox partyMessages;
 
     @Bean
     private PartyMessagesBroadcaster(final BungeeApiCore apiCore)
@@ -56,7 +59,7 @@ public class PartyMessagesBroadcaster implements Listener
         }
 
         final String serverName = proxiedPlayer.getServer().getInfo().getName();
-        final Server server = this.networkManager.getServers().withProxyName(serverName);
+        final Server server = this.serversManager.withProxyName(serverName);
         if (server.getType() == ServerType.MINIGAME)
         {
             return;
@@ -114,7 +117,7 @@ public class PartyMessagesBroadcaster implements Listener
                 continue;
             }
 
-            this.networkManager.getPlayers().ifOnline(identity.getNick(), onlinePlayer ->
+            this.playersManager.ifOnline(identity.getNick(), onlinePlayer ->
             {
                 onlinePlayer.sendMessage(this.partyMessages, "join.broadcast", joiningProxiedPlayer.getDisplayName());
             });
@@ -123,7 +126,7 @@ public class PartyMessagesBroadcaster implements Listener
 
     private String identityToNick(final Identity identity)
     {
-        return this.networkManager.getPlayers().unsafe().get(identity).map(IPlayer::getDisplayName).orElse(identity.getNick());
+        return this.playersManager.unsafe().get(identity).map(IPlayer::getDisplayName).orElse(identity.getNick());
     }
 
     @Override

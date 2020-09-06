@@ -12,8 +12,9 @@ import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
 import pl.north93.northplatform.api.global.network.server.Server;
 
 public class TpHereCommand extends NorthCommand
@@ -21,7 +22,9 @@ public class TpHereCommand extends NorthCommand
     @Inject
     private IBukkitExecutor bukkitExecutor;
     @Inject
-    private INetworkManager networkManager;
+    private IPlayersManager playersManager;
+    @Inject
+    private IServersManager serversManager;
 
     public TpHereCommand()
     {
@@ -48,15 +51,15 @@ public class TpHereCommand extends NorthCommand
 
         this.bukkitExecutor.async(() ->
         {
-            final IOnlinePlayer playerSender = this.networkManager.getPlayers().unsafe().getOnlineValue(sender.getName()).get();
-            final IOnlinePlayer player = this.networkManager.getPlayers().unsafe().getOnlineValue(origin).get();
+            final IOnlinePlayer playerSender = this.playersManager.unsafe().getOnlineValue(sender.getName()).get();
+            final IOnlinePlayer player = this.playersManager.unsafe().getOnlineValue(origin).get();
             if (player == null || playerSender == null)
             {
                 sender.sendMessage("&cGracz jest offline");
                 return;
             }
 
-            final Server destinationServer = this.networkManager.getServers().withUuid(playerSender.getServerId());
+            final Server destinationServer = this.serversManager.withUuid(playerSender.getServerId());
             player.connectTo(destinationServer, new TeleportToPlayer(playerSender.getUuid(), true));
         });
     }

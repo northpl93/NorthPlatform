@@ -6,14 +6,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
 import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.controller.servers.groups.LocalManagedServersGroup;
 
 public class PlayersCountValue implements IScalingValue
 {
     @Inject
-    private INetworkManager networkManager;
+    private IServersManager serversManager;
 
     @Override
     public String getId()
@@ -24,7 +24,7 @@ public class PlayersCountValue implements IScalingValue
     @Override
     public double calculate(final LocalManagedServersGroup managedServersGroup)
     {
-        final Set<Server> servers = this.networkManager.getServers().inGroup(managedServersGroup.getName());
+        final Set<Server> servers = this.serversManager.inGroup(managedServersGroup.getName());
         return servers.stream().mapToInt(Server::getPlayersCount).sum();
     }
 

@@ -24,10 +24,11 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.component.annotations.bean.Named;
 import pl.north93.northplatform.api.global.config.IConfig;
 import pl.north93.northplatform.api.global.config.NetConfig;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.daemon.config.AutoScalingConfig;
 import pl.north93.northplatform.api.global.network.daemon.config.ServerPatternConfig;
 import pl.north93.northplatform.api.global.network.impl.servers.ServerDto;
+import pl.north93.northplatform.api.global.network.proxy.IProxiesManager;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
 import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.global.network.server.ServerState;
 import pl.north93.northplatform.api.global.redis.observable.Value;
@@ -49,7 +50,9 @@ public class LocalServersManager
     @Inject
     private PortManagement portManagement;
     @Inject
-    private INetworkManager networkManager;
+    private IServersManager serversManager;
+    @Inject
+    private IProxiesManager proxiesManager;
     @Inject @NetConfig(type = AutoScalingConfig.class, id = "autoscaler")
     private IConfig<AutoScalingConfig> config;
     private final EventBus eventBus;
@@ -127,7 +130,7 @@ public class LocalServersManager
 
         // informujemy bungeecordy o usunietym serwerze
         // to powinno byc bezpieczne bo serwer juz nie dziala wiec sila rzeczy graczy na nim nie ma
-        this.networkManager.getProxies().removeServer(server);
+        this.proxiesManager.removeServer(server);
 
         // zwracamy port uzywany przez serwer do puli
         this.portManagement.returnPort(server.getConnectPort());
@@ -153,7 +156,7 @@ public class LocalServersManager
         java.setStartHeapSize(pattern.getStartMemory());
         java.setMaxHeapSize(pattern.getMaxMemory());
 
-        final Value<ServerDto> serverDto = this.networkManager.getServers().unsafe().getServerDto(serverId);
+        final Value<ServerDto> serverDto = this.serversManager.unsafe().getServerDto(serverId);
         this.portManagement.setupNetwork(serverDto, java);
 
         // wywolujemy event tworzenia serwera i cala pozostala konfiguracje
@@ -170,7 +173,7 @@ public class LocalServersManager
 
         // wysylamy do wszystkich bungeecordow info o nowym serwerze,
         // bo juz nic nie rzuci wyjatku i juz mamy skonfigurowany networking
-        this.networkManager.getProxies().addServer(serverDto.get());
+        this.proxiesManager.addServer(serverDto.get());
 
         return serverDto.get();
     }

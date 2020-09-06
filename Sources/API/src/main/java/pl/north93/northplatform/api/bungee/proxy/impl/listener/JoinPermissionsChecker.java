@@ -16,6 +16,8 @@ import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.JoiningPolicy;
 import pl.north93.northplatform.api.global.network.NetworkMeta;
 import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
+import pl.north93.northplatform.api.global.network.proxy.IProxiesManager;
 import pl.north93.northplatform.api.global.redis.observable.Value;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.permissions.Group;
@@ -23,9 +25,13 @@ import pl.north93.northplatform.api.global.permissions.Group;
 public class JoinPermissionsChecker implements Listener
 {
     @Inject @Messages("Messages")
-    private MessagesBox     messages;
+    private MessagesBox messages;
     @Inject
     private INetworkManager networkManager;
+    @Inject
+    private IPlayersManager playersManager;
+    @Inject
+    private IProxiesManager proxiesManager;
 
     @EventHandler
     public void checkJoinConditions(final HandlePlayerProxyJoinEvent event)
@@ -57,7 +63,7 @@ public class JoinPermissionsChecker implements Listener
         }
         else
         {
-            final int onlinePlayersCount = this.networkManager.getProxies().onlinePlayersCount();
+            final int onlinePlayersCount = this.proxiesManager.onlinePlayersCount();
             if (onlinePlayersCount > networkMeta.displayMaxPlayers && ! group.hasPermission("join.bypass"))
             {
                 event.setCancelled(this.messages.getComponent("pl-PL", "join.server_full", EMPTY_OBJECT));
@@ -71,7 +77,7 @@ public class JoinPermissionsChecker implements Listener
         final IOnlinePlayer cache = event.getValue().get();
 
         final String hostAddress = event.getConnection().getAddress().getHostString();
-        this.networkManager.getPlayers().getInternalData().logPlayerJoin(cache.getUuid(), cache.getNick(), cache.isPremium(), hostAddress, cache.getProxyId());
+        this.playersManager.getInternalData().logPlayerJoin(cache.getUuid(), cache.getNick(), cache.isPremium(), hostAddress, cache.getProxyId());
     }
 
     @Override

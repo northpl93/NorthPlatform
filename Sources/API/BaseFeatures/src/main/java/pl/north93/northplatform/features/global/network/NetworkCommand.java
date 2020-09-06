@@ -7,11 +7,13 @@ import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.daemon.DaemonDto;
+import pl.north93.northplatform.api.global.network.daemon.IDaemonsManager;
 import pl.north93.northplatform.api.global.network.event.NetworkKickAllNetEvent;
 import pl.north93.northplatform.api.global.network.event.NetworkShutdownNetEvent;
+import pl.north93.northplatform.api.global.network.proxy.IProxiesManager;
 import pl.north93.northplatform.api.global.network.proxy.ProxyDto;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
 import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.global.redis.event.IEventManager;
 
@@ -20,7 +22,11 @@ public class NetworkCommand extends NorthCommand
     @Inject
     private IEventManager eventManager;
     @Inject
-    private INetworkManager networkManager;
+    private IDaemonsManager daemonsManager;
+    @Inject
+    private IProxiesManager proxiesManager;
+    @Inject
+    private IServersManager serversManager;
 
     public NetworkCommand()
     {
@@ -47,7 +53,7 @@ public class NetworkCommand extends NorthCommand
             if ("proxies".equals(args.asString(0)))
             {
                 sender.sendMessage("&cPołączone serwery proxy");
-                for (final ProxyDto proxyInstanceInfo : this.networkManager.getProxies().all())
+                for (final ProxyDto proxyInstanceInfo : this.proxiesManager.all())
                 {
                     sender.sendMessage("&e|- " + proxyInstanceInfo.getId());
                     sender.sendMessage("&e  |- Liczba graczy: " + proxyInstanceInfo.getOnlinePlayers());
@@ -57,7 +63,7 @@ public class NetworkCommand extends NorthCommand
             else if ("daemons".equals(args.asString(0)))
             {
                 sender.sendMessage("&cPołączone demony");
-                for (final DaemonDto daemon : this.networkManager.getDaemons().all())
+                for (final DaemonDto daemon : this.daemonsManager.all())
                 {
                     sender.sendMessage("&e|- " + daemon.getName());
                     sender.sendMessage("&e  |- Nazwa hosta: " + daemon.getHostName());
@@ -72,7 +78,7 @@ public class NetworkCommand extends NorthCommand
             else if ("servers".equals(args.asString(0)))
             {
                 sender.sendMessage("&cSerwery");
-                for (final Server server : this.networkManager.getServers().all())
+                for (final Server server : this.serversManager.all())
                 {
                     sender.sendMessage("&e|- " + server.getUuid());
                     sender.sendMessage("&e  |- Grupa: " + server.getServersGroup().getName() + " Rodzaj: " + server.getType());

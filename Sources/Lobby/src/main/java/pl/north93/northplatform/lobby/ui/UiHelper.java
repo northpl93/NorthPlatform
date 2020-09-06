@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 import pl.north93.northplatform.api.bukkit.gui.element.dynamic.DynamicElementData;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.global.network.proxy.IProxiesManager;
 import pl.north93.northplatform.api.global.uri.UriHandler;
 import pl.north93.northplatform.api.global.uri.UriInvocationContext;
 import pl.north93.northplatform.api.global.utils.Vars;
@@ -33,7 +33,7 @@ import pl.north93.northplatform.lobby.play.PlayGameController;
 public final class UiHelper
 {
     @Inject
-    private INetworkManager networkManager;
+    private IProxiesManager proxiesManager;
     @Inject
     private PlayGameController playController;
     @Inject
@@ -44,7 +44,7 @@ public final class UiHelper
     @UriHandler("/lobby/ui/playersCount")
     public int getPlayersCount(final UriInvocationContext context)
     {
-        return this.networkManager.getProxies().onlinePlayersCount();
+        return this.proxiesManager.onlinePlayersCount();
     }
 
     @UriHandler("/lobby/ui/inGamePlayersCount/:gameId")

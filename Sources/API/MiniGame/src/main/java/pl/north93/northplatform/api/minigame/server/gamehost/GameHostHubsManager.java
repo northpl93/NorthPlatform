@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.bukkit.player.IBukkitPlayers;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
-import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
 import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.SelectHubServerJoinAction;
 import pl.north93.northplatform.api.minigame.shared.api.hub.IHubServer;
@@ -25,14 +25,14 @@ import pl.north93.northplatform.api.minigame.shared.impl.HubsManager;
 @Slf4j
 public class GameHostHubsManager
 {
-    private final INetworkManager networkManager;
+    private final IServersManager serversManager;
     private final IBukkitPlayers bukkitPlayers;
     private final HubsManager hubsManager;
 
     @Bean
-    private GameHostHubsManager(final INetworkManager networkManager, final IBukkitPlayers bukkitPlayers, final HubsManager hubsManager)
+    private GameHostHubsManager(final IServersManager serversManager, final IBukkitPlayers bukkitPlayers, final HubsManager hubsManager)
     {
-        this.networkManager = networkManager;
+        this.serversManager = serversManager;
         this.bukkitPlayers = bukkitPlayers;
         this.hubsManager = hubsManager;
     }
@@ -64,7 +64,7 @@ public class GameHostHubsManager
      */
     public void tpToHub(final Iterable<? extends Player> players, final IHubServer hubServer, final String hubId)
     {
-        final Server server = this.networkManager.getServers().withUuid(hubServer.getServerId());
+        final Server server = this.serversManager.withUuid(hubServer.getServerId());
         for (final Player player : players)
         {
             final INorthPlayer northPlayer = this.bukkitPlayers.getPlayer(player);

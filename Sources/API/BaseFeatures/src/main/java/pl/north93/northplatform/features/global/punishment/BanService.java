@@ -21,10 +21,10 @@ import pl.north93.northplatform.api.global.config.NetConfig;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.global.metadata.MetaStore;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
 import pl.north93.northplatform.api.global.network.players.IPlayer;
 import pl.north93.northplatform.api.global.network.players.IPlayerTransaction;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.global.utils.DateUtil;
 import pl.north93.northplatform.api.global.utils.Vars;
@@ -36,9 +36,9 @@ public class BanService
     @Inject @NetConfig(type = PunishmentCfg.class, id="punishment")
     private IConfig<PunishmentCfg> config;
     @Inject @Messages("BaseFeatures")
-    private MessagesBox            messages;
+    private MessagesBox messages;
     @Inject
-    private INetworkManager        networkManager;
+    private IPlayersManager playersManager;
 
     @Bean
     private BanService()
@@ -53,7 +53,7 @@ public class BanService
      */
     public AbstractBan getBan(final Identity identity)
     {
-        final Optional<IPlayer> optional = this.networkManager.getPlayers().unsafe().get(identity);
+        final Optional<IPlayer> optional = this.playersManager.unsafe().get(identity);
         return optional.map(player -> this.getBan0(player.getMetaStore())).orElse(null);
     }
 
@@ -67,7 +67,7 @@ public class BanService
      */
     public void createBan(final Identity identity, final UUID adminId, final PredefinedBanCfg config)
     {
-        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(identity))
+        try (final IPlayerTransaction t = this.playersManager.transaction(identity))
         {
             final Duration duration = Optional.ofNullable(config.getDuration()).map(Duration::ofMillis).orElse(null);
             final PredefinedBan ban = new PredefinedBan(adminId, Instant.now(), duration, config.getId());
@@ -89,7 +89,7 @@ public class BanService
      */
     public void removeBan(final Identity identity)
     {
-        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(identity))
+        try (final IPlayerTransaction t = this.playersManager.transaction(identity))
         {
             final MetaStore metaStore = t.getPlayer().getMetaStore();
 
@@ -198,7 +198,7 @@ public class BanService
     {
         return Optional.ofNullable(abstractBan.getAdminId()).flatMap(adminId ->
         {
-            return this.networkManager.getPlayers().getNickFromUuid(adminId);
+            return this.playersManager.getNickFromUuid(adminId);
         }).orElse("SERVER");
     }
 

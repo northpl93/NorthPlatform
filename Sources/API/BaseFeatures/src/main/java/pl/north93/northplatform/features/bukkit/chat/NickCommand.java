@@ -9,10 +9,10 @@ import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
 import pl.north93.northplatform.api.global.network.players.IPlayer;
 import pl.north93.northplatform.api.global.network.players.IPlayerTransaction;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.network.players.PlayerNotFoundException;
 
 public class NickCommand extends NorthCommand
@@ -20,7 +20,7 @@ public class NickCommand extends NorthCommand
     @Inject @Messages("BaseFeatures")
     private MessagesBox messages;
     @Inject
-    private INetworkManager networkManager;
+    private IPlayersManager playersManager;
 
     public NickCommand()
     {
@@ -42,7 +42,7 @@ public class NickCommand extends NorthCommand
         }
         else
         {
-            try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(args.asString(0)))
+            try (final IPlayerTransaction t = this.playersManager.transaction(args.asString(0)))
             {
                 if (args.asString(1).equalsIgnoreCase("reset"))
                 {
@@ -65,7 +65,7 @@ public class NickCommand extends NorthCommand
 
     private void printNickInfo(final NorthCommandSender sender, final String nick)
     {
-        try (final IPlayerTransaction t = this.networkManager.getPlayers().transaction(nick))
+        try (final IPlayerTransaction t = this.playersManager.transaction(nick))
         {
             final IPlayer player = t.getPlayer();
             if (t.isOnline())

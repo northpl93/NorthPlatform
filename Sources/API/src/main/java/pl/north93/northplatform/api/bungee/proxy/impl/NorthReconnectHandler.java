@@ -18,6 +18,7 @@ import pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.northplatform.api.global.messages.UTF8Control;
 import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.NetworkMeta;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
 import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 
@@ -25,13 +26,15 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 /*default*/ class NorthReconnectHandler implements ReconnectHandler
 {
     private final INetworkManager networkManager;
+    private final IServersManager serversManager;
     private final ResourceBundle  messages;
 
     @Bean
-    private NorthReconnectHandler(final INetworkManager networkManager)
+    private NorthReconnectHandler(final INetworkManager networkManager, final IServersManager serversManager)
     {
         ProxyServer.getInstance().setReconnectHandler(this);
         this.networkManager = networkManager;
+        this.serversManager = serversManager;
         this.messages = getBundle("Messages", Locale.getDefault(), this.getClass().getClassLoader(), new UTF8Control());
     }
 
@@ -45,7 +48,7 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
             return null;
         }
 
-        final Server server = this.networkManager.getServers().getLeastLoadedServerInGroup(meta.defaultServersGroup);
+        final Server server = this.serversManager.getLeastLoadedServerInGroup(meta.defaultServersGroup);
         if (server == null)
         {
             final String message = this.messages.getString("join.no_servers");

@@ -12,8 +12,9 @@ import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
 import pl.north93.northplatform.api.global.network.server.Server;
 
 public class TpCommand extends NorthCommand
@@ -21,7 +22,9 @@ public class TpCommand extends NorthCommand
     @Inject
     private IBukkitExecutor bukkitExecutor;
     @Inject
-    private INetworkManager networkManager;
+    private IPlayersManager playersManager;
+    @Inject
+    private IServersManager serversManager;
 
     public TpCommand()
     {
@@ -65,15 +68,15 @@ public class TpCommand extends NorthCommand
 
         this.bukkitExecutor.async(() ->
         {
-            final IOnlinePlayer playerSender = this.networkManager.getPlayers().unsafe().getOnlineValue(origin).get();
-            final IOnlinePlayer player = this.networkManager.getPlayers().unsafe().getOnlineValue(destination).get();
+            final IOnlinePlayer playerSender = this.playersManager.unsafe().getOnlineValue(origin).get();
+            final IOnlinePlayer player = this.playersManager.unsafe().getOnlineValue(destination).get();
             if (player == null || playerSender == null)
             {
                 sender.sendMessage("&cGracz jest offline");
                 return;
             }
 
-            final Server destinationServer = this.networkManager.getServers().withUuid(player.getServerId());
+            final Server destinationServer = this.serversManager.withUuid(player.getServerId());
             playerSender.connectTo(destinationServer, new TeleportToPlayer(player.getUuid(), true));
         });
     }

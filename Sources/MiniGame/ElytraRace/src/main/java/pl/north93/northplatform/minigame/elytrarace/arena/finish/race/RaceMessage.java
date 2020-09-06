@@ -21,7 +21,7 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Named;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
-import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.DurationUnit;
@@ -31,7 +31,7 @@ public class RaceMessage
     @Inject @Messages("ElytraRace")
     private MessagesBox messages;
     @Inject
-    private INetworkManager network;
+    private IPlayersManager playersManager;
     @Inject @Named("Elytra Race time format")
     private SimpleDateFormat timeFormat;
     private final List<RaceFinishInfo> finishInfo;
@@ -118,7 +118,7 @@ public class RaceMessage
         if (this.record != null)
         {
             final UUID uniqueId = this.record.getHolder().getIdentity().getUuid();
-            final String recordOwner = this.network.getPlayers().getNickFromUuid(uniqueId).orElse(uniqueId.toString());
+            final String recordOwner = this.playersManager.getNickFromUuid(uniqueId).orElse(uniqueId.toString());
             final String formattedRecord = this.timeFormat.format(new Date(this.record.getValue().getValue().toMillis()));
             this.messages.sendMessage(player, "finish.race.record", MessageLayout.CENTER, recordOwner, formattedRecord);
         }

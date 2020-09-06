@@ -18,9 +18,9 @@ import pl.north93.northplatform.api.economy.cfg.CurrencyConfig;
 import pl.north93.northplatform.api.economy.cfg.EconomyConfig;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.IPlayer;
 import pl.north93.northplatform.api.global.network.players.IPlayerTransaction;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.global.network.players.PlayerNotFoundException;
 import pl.north93.northplatform.api.global.redis.observable.IObservationManager;
@@ -30,13 +30,13 @@ import pl.north93.northplatform.api.global.utils.lang.CollectionUtils;
 public class EconomyManagerImpl implements IEconomyManager
 {
     @Inject
-    private IObservationManager  observation;
+    private IObservationManager observation;
     @Inject
-    private INetworkManager      networkManager;
+    private IPlayersManager playersManager;
     @Inject
-    private ListenerHelper       listenerHelper;
+    private ListenerHelper listenerHelper;
     // - - -
-    private Value<EconomyConfig> config;
+    private final Value<EconomyConfig> config;
 
     @Bean
     private EconomyManagerImpl()
@@ -68,7 +68,7 @@ public class EconomyManagerImpl implements IEconomyManager
     @Override
     public IAccountAccessor getUnsafeAccessor(final ICurrency currency, final Identity identity)
     {
-        final Optional<IPlayer> optionalPlayer = this.networkManager.getPlayers().unsafe().get(identity);
+        final Optional<IPlayer> optionalPlayer = this.playersManager.unsafe().get(identity);
         return optionalPlayer.map(player -> new PlayerAccessor(player, currency)).orElse(null);
     }
 
@@ -77,7 +77,7 @@ public class EconomyManagerImpl implements IEconomyManager
     {
         Preconditions.checkNotNull(currency, "Currency can't be null");
         Preconditions.checkNotNull(identity, "Identity can't be null");
-        final IPlayerTransaction transaction = this.networkManager.getPlayers().transaction(identity);
+        final IPlayerTransaction transaction = this.playersManager.transaction(identity);
         return new TransactionImpl(currency, transaction, this.getRanking(currency), this.listenerHelper);
     }
 

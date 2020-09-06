@@ -5,9 +5,6 @@ import java.util.Locale;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.shared.party.ClientResponse;
-import pl.north93.northplatform.api.minigame.server.shared.party.PartyClient;
-import pl.north93.northplatform.api.minigame.shared.api.party.IParty;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
@@ -16,9 +13,12 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.IPlayer;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.network.players.Identity;
+import pl.north93.northplatform.api.minigame.server.shared.party.ClientResponse;
+import pl.north93.northplatform.api.minigame.server.shared.party.PartyClient;
+import pl.north93.northplatform.api.minigame.shared.api.party.IParty;
 
 /**
  * Komenda do obsługi party w komponencie lobby
@@ -26,11 +26,11 @@ import pl.north93.northplatform.api.global.network.players.Identity;
 public class PartyCmd extends NorthCommand
 {
     @Inject
-    private PartyClient     partyClient;
+    private PartyClient partyClient;
     @Inject
-    private INetworkManager networkManager;
+    private IPlayersManager playersManager;
     @Inject @Messages("Party")
-    private MessagesBox     messages;
+    private MessagesBox messages;
 
     public PartyCmd()
     {
@@ -207,7 +207,7 @@ public class PartyCmd extends NorthCommand
 
     private String identityToNick(final Identity identity)
     {
-        return this.networkManager.getPlayers().unsafe().get(identity).map(IPlayer::getDisplayName).orElse(identity.getNick());
+        return this.playersManager.unsafe().get(identity).map(IPlayer::getDisplayName).orElse(identity.getNick());
     }
 
     @Override

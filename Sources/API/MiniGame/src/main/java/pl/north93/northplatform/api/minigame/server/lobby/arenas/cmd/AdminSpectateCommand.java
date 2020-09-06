@@ -8,33 +8,34 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.global.commands.Arguments;
+import pl.north93.northplatform.api.global.commands.NorthCommand;
+import pl.north93.northplatform.api.global.commands.NorthCommandSender;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
+import pl.north93.northplatform.api.global.network.players.Identity;
+import pl.north93.northplatform.api.global.network.players.PlayerNotFoundException;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
+import pl.north93.northplatform.api.global.network.server.Server;
+import pl.north93.northplatform.api.global.network.server.joinaction.IServerJoinAction;
 import pl.north93.northplatform.api.minigame.server.lobby.arenas.IArenaClient;
 import pl.north93.northplatform.api.minigame.shared.api.PlayerJoinInfo;
 import pl.north93.northplatform.api.minigame.shared.api.arena.IArena;
 import pl.north93.northplatform.api.minigame.shared.api.status.IPlayerStatus;
 import pl.north93.northplatform.api.minigame.shared.api.status.IPlayerStatusManager;
 import pl.north93.northplatform.api.minigame.shared.api.status.InGameStatus;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.global.commands.Arguments;
-import pl.north93.northplatform.api.global.commands.NorthCommand;
-import pl.north93.northplatform.api.global.commands.NorthCommandSender;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
-import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
-import pl.north93.northplatform.api.global.network.players.Identity;
-import pl.north93.northplatform.api.global.network.players.PlayerNotFoundException;
-import pl.north93.northplatform.api.global.network.server.Server;
-import pl.north93.northplatform.api.global.network.server.joinaction.IServerJoinAction;
-import pl.north93.northplatform.api.global.redis.observable.Value;
 
 public class AdminSpectateCommand extends NorthCommand
 {
     @Inject
-    private INetworkManager      networkManager;
+    private IArenaClient arenaClient;
+    @Inject
+    private IPlayersManager playersManager;
+    @Inject
+    private IServersManager serversManager;
     @Inject
     private IPlayerStatusManager statusManager;
-    @Inject
-    private IArenaClient         arenaClient;
 
     public AdminSpectateCommand()
     {
@@ -86,14 +87,11 @@ public class AdminSpectateCommand extends NorthCommand
 
     private void teleportAdminToPlayer(final Player admin, final IArena arena, final String target)
     {
-        final Value<IOnlinePlayer> value = this.networkManager.getPlayers().unsafe().getOnlineValue(admin.getName());
-        if (! value.isPreset())
+        this.playersManager.ifOnline(admin.getName(), player ->
         {
-            return;
-        }
-
-        final Server server = this.networkManager.getServers().withUuid(arena.getServerId());
-        value.get().connectTo(server, new TeleportAdminToPlayer(target));
+            final Server server = this.serversManager.withUuid(arena.getServerId());
+            player.connectTo(server, new TeleportAdminToPlayer(target));
+        });
     }
 
     @Override

@@ -15,7 +15,7 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
-import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.NumberUnit;
@@ -27,7 +27,7 @@ public class ScoreMessage
     @Inject @Messages("ElytraRace")
     private MessagesBox messages;
     @Inject
-    private INetworkManager network;
+    private IPlayersManager playersManager;
     private final boolean isPartial;
     private final List<ScoreFinishInfo> top;
     private final IRecord<Long, NumberUnit> record;
@@ -114,7 +114,7 @@ public class ScoreMessage
         if (this.record != null)
         {
             final UUID uniqueId = this.record.getHolder().getIdentity().getUuid();
-            final String recordOwner = this.network.getPlayers().getNickFromUuid(uniqueId).orElse(uniqueId.toString());
+            final String recordOwner = this.playersManager.getNickFromUuid(uniqueId).orElse(uniqueId.toString());
             this.messages.sendMessage(player, "finish.score.record", MessageLayout.CENTER, recordOwner, this.record.getValue().getValue());
         }
     }

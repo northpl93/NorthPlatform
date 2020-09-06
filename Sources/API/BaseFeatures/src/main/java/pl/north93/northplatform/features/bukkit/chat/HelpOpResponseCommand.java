@@ -2,27 +2,27 @@ package pl.north93.northplatform.features.bukkit.chat;
 
 import static pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils.parseLegacyText;
 
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.redis.observable.Value;
 import pl.north93.northplatform.features.bukkit.chat.admin.AdminChatService;
 
 public class HelpOpResponseCommand extends NorthCommand
 {
 	@Inject
-    private INetworkManager networkManager;
+    private IPlayersManager playersManager;
     @Inject
     private AdminChatService adminChatService;
     @Inject
@@ -45,7 +45,7 @@ public class HelpOpResponseCommand extends NorthCommand
             return;
         }
 
-        Value<IOnlinePlayer> receiverValue = this.networkManager.getPlayers().unsafe().getOnlineValue(args.asString(0));
+        Value<IOnlinePlayer> receiverValue = this.playersManager.unsafe().getOnlineValue(args.asString(0));
         if ( !receiverValue.isPreset() )
         {
         	sender.sendMessage(this.messages, "command.hr.no_player");

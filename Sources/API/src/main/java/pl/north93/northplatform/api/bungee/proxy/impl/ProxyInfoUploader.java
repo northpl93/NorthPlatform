@@ -6,7 +6,7 @@ import lombok.ToString;
 import net.md_5.bungee.api.ProxyServer;
 import pl.north93.northplatform.api.bungee.BungeeApiCore;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
-import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.global.network.proxy.IProxiesManager;
 import pl.north93.northplatform.api.global.network.proxy.ProxyDto;
 
 @ToString(of = {"latestDto"})
@@ -14,15 +14,15 @@ import pl.north93.northplatform.api.global.network.proxy.ProxyDto;
 {
     private static final int UPDATE_PROXY_DATA_EVERY = 20;
     private final BungeeApiCore apiCore;
-    private final INetworkManager networkManager;
+    private final IProxiesManager proxiesManager;
     private final AntiDdosState antiDdosState;
     private ProxyDto latestDto;
 
     @Bean
-    private ProxyInfoUploader(final BungeeApiCore apiCore, final INetworkManager networkManager, final AntiDdosState antiDdosState)
+    private ProxyInfoUploader(final BungeeApiCore apiCore, final IProxiesManager proxiesManager, final AntiDdosState antiDdosState)
     {
         this.apiCore = apiCore;
-        this.networkManager = networkManager;
+        this.proxiesManager = proxiesManager;
         this.antiDdosState = antiDdosState;
 
         this.uploadInfo();
@@ -38,7 +38,7 @@ import pl.north93.northplatform.api.global.network.proxy.ProxyDto;
         }
 
         this.latestDto = newProxyInfo;
-        this.networkManager.getProxies().addOrUpdateProxy(this.apiCore.getId(), newProxyInfo);
+        this.proxiesManager.addOrUpdateProxy(this.apiCore.getId(), newProxyInfo);
     }
 
     private ProxyDto generateInfo()

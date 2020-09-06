@@ -3,21 +3,21 @@ package pl.north93.northplatform.controller.servers.groups;
 import java.util.UUID;
 
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.JoiningPolicy;
 import pl.north93.northplatform.api.global.network.daemon.config.ServersGroupConfig;
+import pl.north93.northplatform.api.global.network.daemon.config.UnManagedServer;
+import pl.north93.northplatform.api.global.network.daemon.config.UnManagedServersGroupConfig;
 import pl.north93.northplatform.api.global.network.impl.servers.ServerDto;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
 import pl.north93.northplatform.api.global.network.server.ServerState;
 import pl.north93.northplatform.api.global.network.server.ServerType;
 import pl.north93.northplatform.api.global.network.server.group.ServersGroupDto;
 import pl.north93.northplatform.api.global.redis.observable.Value;
-import pl.north93.northplatform.api.global.network.daemon.config.UnManagedServer;
-import pl.north93.northplatform.api.global.network.daemon.config.UnManagedServersGroupConfig;
 
 public class LocalUnManagedServersGroup extends AbstractLocalServersGroup<UnManagedServersGroupConfig>
 {
     @Inject
-    private INetworkManager networkManager;
+    private IServersManager serversManager;
 
     public LocalUnManagedServersGroup(final ServersGroupDto dto, final UnManagedServersGroupConfig config)
     {
@@ -70,6 +70,6 @@ public class LocalUnManagedServersGroup extends AbstractLocalServersGroup<UnMana
 
     private Value<ServerDto> getServerValue(final UUID serverId)
     {
-        return this.networkManager.getServers().unsafe().getServerDto(serverId);
+        return this.serversManager.unsafe().getServerDto(serverId);
     }
 }

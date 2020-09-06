@@ -16,6 +16,16 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.metadata.MetaStore;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
+import pl.north93.northplatform.api.global.network.server.Server;
+import pl.north93.northplatform.api.global.redis.event.NetEventSubscriber;
+import pl.north93.northplatform.api.global.redis.rpc.IRpcManager;
+import pl.north93.northplatform.api.global.redis.rpc.Targets;
+import pl.north93.northplatform.api.global.redis.rpc.exceptions.RpcException;
 import pl.north93.northplatform.api.minigame.server.lobby.arenas.ArenaQuery;
 import pl.north93.northplatform.api.minigame.server.lobby.arenas.IArenaClient;
 import pl.north93.northplatform.api.minigame.server.lobby.arenas.IArenaObserver;
@@ -27,28 +37,20 @@ import pl.north93.northplatform.api.minigame.shared.api.arena.netevent.ArenaCrea
 import pl.north93.northplatform.api.minigame.shared.api.arena.netevent.ArenaDataChangedNetEvent;
 import pl.north93.northplatform.api.minigame.shared.api.arena.netevent.ArenaDeletedNetEvent;
 import pl.north93.northplatform.api.minigame.shared.impl.arena.ArenaManager;
-import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.metadata.MetaStore;
-import pl.north93.northplatform.api.global.network.INetworkManager;
-import pl.north93.northplatform.api.global.network.players.IPlayersManager;
-import pl.north93.northplatform.api.global.network.server.Server;
-import pl.north93.northplatform.api.global.redis.event.NetEventSubscriber;
-import pl.north93.northplatform.api.global.redis.rpc.IRpcManager;
-import pl.north93.northplatform.api.global.redis.rpc.Targets;
-import pl.north93.northplatform.api.global.redis.rpc.exceptions.RpcException;
 
 @Slf4j
 public class ArenaClientImpl implements IArenaClient
 {
-    private Map<UUID, IArena>               arenas;
-    private Map<ArenaQuery, IArenaObserver> observers;
     @Inject
-    private ArenaManager                    arenaManager;
+    private IRpcManager rpcManager;
     @Inject
-    private IRpcManager                     rpcManager;
+    private ArenaManager arenaManager;
     @Inject
-    private INetworkManager                 networkManager;
+    private IPlayersManager playersManager;
+    @Inject
+    private IServersManager serversManager;
+    private final Map<UUID, IArena> arenas;
+    private final Map<ArenaQuery, IArenaObserver> observers;
 
     @Bean
     private ArenaClientImpl()
@@ -157,10 +159,10 @@ public class ArenaClientImpl implements IArenaClient
             return false;
         }
 
-        final Server server = this.networkManager.getServers().withUuid(arena.getServerId());
+        final Server server = this.serversManager.withUuid(arena.getServerId());
         for (final PlayerJoinInfo player : players)
         {
-            final IPlayersManager.Unsafe unsafe = this.networkManager.getPlayers().unsafe();
+            final IPlayersManager.Unsafe unsafe = this.playersManager.unsafe();
             unsafe.getOnlineValue(player.getUuid()).ifPresent(playerValue -> playerValue.get().connectTo(server));
         }
         return true;

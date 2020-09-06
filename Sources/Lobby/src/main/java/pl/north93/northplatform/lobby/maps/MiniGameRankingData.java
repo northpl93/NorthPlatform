@@ -14,7 +14,7 @@ import pl.north93.northplatform.api.bukkit.map.loader.xml.RankingMapConfig;
 import pl.north93.northplatform.api.bukkit.map.renderer.ranking.IRankingRenderer;
 import pl.north93.northplatform.api.bukkit.map.renderer.ranking.RankingEntry;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IRanking;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
@@ -27,7 +27,7 @@ public class MiniGameRankingData<L, L_UNIT extends IStatisticUnit<L>, R, R_UNIT 
     @Inject
     private static IStatisticsManager statisticsManager;
     @Inject
-    private static INetworkManager networkManager;
+    private static IPlayersManager playersManager;
 
     private final IStatistic<L, L_UNIT> leftStatistic;
     private final IStatistic<R, R_UNIT> rightStatistic;
@@ -41,7 +41,7 @@ public class MiniGameRankingData<L, L_UNIT extends IStatisticUnit<L>, R, R_UNIT 
             final IRecord<L, L_UNIT> place = leftRanking.getPlace(i);
 
             final UUID playerId = place.getHolder().getIdentity().getUuid();
-            final String nick = networkManager.getPlayers().getNickFromUuid(playerId).orElse("");
+            final String nick = playersManager.getNickFromUuid(playerId).orElse("");
 
             rankingRenderer.setLeftPlace(i, new RankingEntry(playerId, nick, place.getValue().getValue().toString()));
         }
@@ -52,7 +52,7 @@ public class MiniGameRankingData<L, L_UNIT extends IStatisticUnit<L>, R, R_UNIT 
             final IRecord<R, R_UNIT> place = rightRanking.getPlace(i);
 
             final UUID playerId = place.getHolder().getIdentity().getUuid();
-            final String nick = networkManager.getPlayers().getNickFromUuid(playerId).orElse("");
+            final String nick = playersManager.getNickFromUuid(playerId).orElse("");
 
             rankingRenderer.setRightPlace(i, new RankingEntry(playerId, nick, place.getValue().getValue().toString()));
         }

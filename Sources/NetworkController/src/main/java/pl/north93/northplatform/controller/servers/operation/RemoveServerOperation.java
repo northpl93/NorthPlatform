@@ -7,24 +7,23 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.ToString;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.impl.servers.ServerDto;
 import pl.north93.northplatform.api.global.network.server.IServerRpc;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
 import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.global.redis.observable.Value;
 import pl.north93.northplatform.api.global.redis.rpc.exceptions.RpcException;
 import pl.north93.northplatform.controller.servers.groups.LocalManagedServersGroup;
 
+@ToString(of = {"serversGroup", "ourServer"})
 public class RemoveServerOperation extends AutoScalerOperation
 {
     @Inject
-    private       INetworkManager          networkManager;
+    private IServersManager serversManager;
     private final LocalManagedServersGroup serversGroup;
-    private       Value<ServerDto>         ourServer;
+    private Value<ServerDto> ourServer;
 
     public RemoveServerOperation(final LocalManagedServersGroup serversGroup)
     {
@@ -42,9 +41,9 @@ public class RemoveServerOperation extends AutoScalerOperation
             return false;
         }
 
-        this.ourServer = this.networkManager.getServers().unsafe().getServerDto(serverToShutdown.getUuid());
+        this.ourServer = this.serversManager.unsafe().getServerDto(serverToShutdown.getUuid());
 
-        final IServerRpc serverRpc = this.networkManager.getServers().getServerRpc(serverToShutdown);
+        final IServerRpc serverRpc = this.serversManager.getServerRpc(serverToShutdown);
         serverRpc.setShutdownScheduled();
 
         return true;
@@ -74,7 +73,7 @@ public class RemoveServerOperation extends AutoScalerOperation
             return false;
         }
 
-        final IServerRpc serverRpc = this.networkManager.getServers().getServerRpc(serverDto);
+        final IServerRpc serverRpc = this.serversManager.getServerRpc(serverDto);
         try
         {
             return serverRpc.cancelShutdown();
@@ -97,16 +96,10 @@ public class RemoveServerOperation extends AutoScalerOperation
         final Predicate<Server> isShutdownScheduled = Server::isShutdownScheduled;
         final Comparator<Server> serverComparator = comparing(Server::getPlayersCount);
 
-        final Set<Server> servers = this.networkManager.getServers().inGroup(this.serversGroup.getName());
+        final Set<Server> servers = this.serversManager.inGroup(this.serversGroup.getName());
         return servers.stream()
                       .filter(isShutdownScheduled.negate()) // nie chcemy serwerów ktore juz sie wylaczaja
                       .min(serverComparator) // bierzemy ten z najmniejsza iloscia graczy
                       .orElse(null);
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("serversGroup", this.serversGroup.getName()).append("ourServer", this.ourServer).toString();
     }
 }

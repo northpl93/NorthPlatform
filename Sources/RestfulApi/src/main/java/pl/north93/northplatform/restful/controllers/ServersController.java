@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
 import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.restful.models.ServerModel;
 import spark.Request;
@@ -19,17 +19,17 @@ import spark.Response;
 public class ServersController
 {
     @Inject
-    private INetworkManager networkManager;
+    private IServersManager serversManager;
 
     public Object root(final Request request, final Response response)
     {
-        return this.networkManager.getServers().all().stream().map(this::serverToModel).collect(Collectors.toList());
+        return this.serversManager.all().stream().map(this::serverToModel).collect(Collectors.toList());
     }
 
     public Object getServer(final Request request, final Response response)
     {
         final UUID serverId = UUID.fromString(request.params(":uuid"));
-        final Server server = this.networkManager.getServers().withUuid(serverId);
+        final Server server = this.serversManager.withUuid(serverId);
         if (server == null)
         {
             halt(404);

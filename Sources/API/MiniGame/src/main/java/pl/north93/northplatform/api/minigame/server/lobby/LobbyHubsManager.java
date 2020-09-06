@@ -8,24 +8,24 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.network.server.IServersManager;
+import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.LocalHubServer;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.SelectHubServerJoinAction;
 import pl.north93.northplatform.api.minigame.shared.api.hub.IHubServer;
 import pl.north93.northplatform.api.minigame.shared.api.hub.RemoteHub;
 import pl.north93.northplatform.api.minigame.shared.impl.HubsManager;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
-import pl.north93.northplatform.api.global.network.server.Server;
 
 public class LobbyHubsManager
 {
     @Inject
-    private HubsManager     hubsManager;
+    private IServersManager serversManager;
     @Inject
-    private INetworkManager networkManager;
-    private LocalHubServer  localHub;
+    private HubsManager hubsManager;
+    private final LocalHubServer localHub;
 
     @Bean
     private LobbyHubsManager()
@@ -62,7 +62,7 @@ public class LobbyHubsManager
             return;
         }
 
-        final Server server = this.networkManager.getServers().withUuid(targetServerId);
+        final Server server = this.serversManager.withUuid(targetServerId);
         for (final Player player : players)
         {
             final INorthPlayer northPlayer = INorthPlayer.wrap(player);

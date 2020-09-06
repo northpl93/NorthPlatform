@@ -9,16 +9,16 @@ import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.IOfflinePlayer;
 import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
+import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 
 public class PlayerInfoCommand extends NorthCommand
 {
     @Inject
-    private INetworkManager networkManager;
+    private IPlayersManager playersManager;
     @Inject @Messages("BaseFeatures")
-    private MessagesBox     messages;
+    private MessagesBox messages;
 
     public PlayerInfoCommand()
     {
@@ -32,7 +32,7 @@ public class PlayerInfoCommand extends NorthCommand
     {
         if (args.length() == 1)
         {
-            boolean success = this.networkManager.getPlayers().access(
+            final boolean success = this.playersManager.access(
                     args.asString(0),
                     online -> this.printOnlinePlayer(sender, online),
                     offline -> this.printOfflinePlayer(sender, offline));

@@ -3,27 +3,23 @@ package pl.north93.northplatform.features.global.punishment.cmd;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.INetworkManager;
 import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.global.network.players.PlayerNotFoundException;
-import pl.north93.northplatform.features.global.punishment.cfg.PredefinedBanCfg;
 import pl.north93.northplatform.features.global.punishment.AbstractBan;
 import pl.north93.northplatform.features.global.punishment.BanService;
+import pl.north93.northplatform.features.global.punishment.cfg.PredefinedBanCfg;
 
 public class BanCommand extends NorthCommand
 {
     @Inject
-    private BanService      banService;
+    private BanService banService;
     @Inject
-    private INetworkManager networkManager;
+    private IPlayersManager playersManager;
 
     public BanCommand()
     {
@@ -34,8 +30,6 @@ public class BanCommand extends NorthCommand
     @Override
     public void execute(final NorthCommandSender sender, final Arguments args, final String label)
     {
-        final IPlayersManager players = this.networkManager.getPlayers();
-
         if (args.length() == 1)
         {
             final AbstractBan ban = this.banService.getBan(Identity.create(null, args.asString(0)));
@@ -45,7 +39,7 @@ public class BanCommand extends NorthCommand
             }
             else
             {
-                final String adminNick = Optional.ofNullable(ban.getAdminId()).flatMap(players::getNickFromUuid).orElse("<SERWER>");
+                final String adminNick = Optional.ofNullable(ban.getAdminId()).flatMap(this.playersManager::getNickFromUuid).orElse("<SERWER>");
                 sender.sendMessage("&cZbanowany {0} przez {1}", ban.getGivenAt(), adminNick);
             }
         }
@@ -94,12 +88,6 @@ public class BanCommand extends NorthCommand
             return null;
         }
 
-        return this.networkManager.getPlayers().getUuidFromNick(sender.getName()).orElse(null);
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("networkManager", this.networkManager).toString();
+        return this.playersManager.getUuidFromNick(sender.getName()).orElse(null);
     }
 }

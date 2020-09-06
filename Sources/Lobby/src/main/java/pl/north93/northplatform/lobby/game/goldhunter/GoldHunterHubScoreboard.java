@@ -16,7 +16,7 @@ import pl.north93.northplatform.api.global.messages.MessagesBox;
 public class GoldHunterHubScoreboard extends HubScoreboardLayout
 {
     @Inject @Messages("HubGoldHunter")
-    private MessagesBox        messages;
+    private MessagesBox messages;
     @Inject
     private IStatisticsManager statisticsManager;
 
