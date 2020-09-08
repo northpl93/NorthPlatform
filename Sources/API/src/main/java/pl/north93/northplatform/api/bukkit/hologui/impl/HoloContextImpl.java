@@ -6,20 +6,20 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 import pl.north93.northplatform.api.bukkit.hologui.IHoloContext;
 import pl.north93.northplatform.api.bukkit.hologui.IHoloGui;
 import pl.north93.northplatform.api.bukkit.hologui.IIcon;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
 class HoloContextImpl implements IHoloContext
 {
-    private final IHoloGui      holoGui;
-    private final Player        player;
+    private final IHoloGui holoGui;
+    private final INorthPlayer player;
     private final Set<IconImpl> icons = new HashSet<>();
-    private Location            centerPoint;
+    private Location centerPoint;
 
-    public HoloContextImpl(final IHoloGui holoGui, final Location location, final Player player)
+    public HoloContextImpl(final IHoloGui holoGui, final Location location, final INorthPlayer player)
     {
         this.holoGui = holoGui;
         this.centerPoint = location;
@@ -33,7 +33,7 @@ class HoloContextImpl implements IHoloContext
     }
 
     @Override
-    public Player getPlayer()
+    public INorthPlayer getPlayer()
     {
         return this.player;
     }

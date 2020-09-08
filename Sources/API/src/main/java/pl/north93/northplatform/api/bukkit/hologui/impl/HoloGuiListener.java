@@ -4,28 +4,34 @@ import static org.bukkit.event.block.Action.LEFT_CLICK_AIR;
 import static org.bukkit.event.block.Action.RIGHT_CLICK_AIR;
 
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class HoloGuiListener implements Listener
+import pl.north93.northplatform.api.bukkit.player.IBukkitPlayers;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
+
+public class HoloGuiListener implements AutoListener
 {
     private final HoloGuiManagerImpl holoGuiManager;
+    private final IBukkitPlayers bukkitPlayers;
 
-    public HoloGuiListener(final HoloGuiManagerImpl holoGuiManager)
+    public HoloGuiListener(final HoloGuiManagerImpl holoGuiManager, final IBukkitPlayers bukkitPlayers)
     {
         this.holoGuiManager = holoGuiManager;
+        this.bukkitPlayers = bukkitPlayers;
     }
 
     @EventHandler
     public void onPlayerQuit(final PlayerQuitEvent event)
     {
+        final INorthPlayer player = this.bukkitPlayers.getPlayer(event.getPlayer());
+
         // zamknie gui jesli gracz jakies posiada
-        this.holoGuiManager.closeGui(event.getPlayer());
+        this.holoGuiManager.closeGui(player);
     }
 
     @EventHandler
@@ -37,10 +43,11 @@ public class HoloGuiListener implements Listener
             return;
         }
 
-        this.handleGuiClick(event.getPlayer(), event);
+        final INorthPlayer player = this.bukkitPlayers.getPlayer(event.getPlayer());
+        this.handleGuiClick(player, event);
     }
 
-    private void handleGuiClick(final Player player, final Cancellable cancellable)
+    private void handleGuiClick(final INorthPlayer player, final Cancellable cancellable)
     {
         final HoloContextImpl playerContext = this.holoGuiManager.getPlayerContext(player);
         if (playerContext == null)

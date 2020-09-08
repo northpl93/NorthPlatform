@@ -1,23 +1,23 @@
 package pl.north93.northplatform.lobby.chest.animation;
 
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.bukkit.hologui.IIcon;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
 @Slf4j
 public final class AnimationInstance
 {
-    private final Player owner;
-    private final IIcon  icon;
-    private ChestAnimation   currentAnimation;
+    private final INorthPlayer owner;
+    private final IIcon icon;
+    private ChestAnimation currentAnimation;
     private boolean destroyed;
 
-    AnimationInstance(final Player owner, final IIcon icon)
+    AnimationInstance(final INorthPlayer owner, final IIcon icon)
     {
         this.owner = owner;
         this.icon = icon;
@@ -28,7 +28,7 @@ public final class AnimationInstance
         this.currentAnimation = chestAnimation;
     }
 
-    public Player getOwner()
+    public INorthPlayer getOwner()
     {
         return this.owner;
     }

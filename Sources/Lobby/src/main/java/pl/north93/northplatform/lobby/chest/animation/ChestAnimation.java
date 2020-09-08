@@ -1,10 +1,11 @@
 package pl.north93.northplatform.lobby.chest.animation;
 
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
 abstract class ChestAnimation
 {
@@ -15,9 +16,9 @@ abstract class ChestAnimation
         this.instance = instance;
     }
 
-    protected final Player getPlayer()
+    protected final INorthPlayer getPlayer()
     {
-        return this.instance.getOwner(); // gracz ktory widzi ta animacje
+        return this.instance.getOwner(); // player who sees this animation
     }
 
     protected final ArmorStand getArmorStand()

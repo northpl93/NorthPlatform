@@ -1,13 +1,13 @@
 package pl.north93.northplatform.lobby.chest.opening;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.HubWorld;
 
 public interface IOpeningSession
 {
-    Player getPlayer();
+    INorthPlayer getPlayer();
 
     HubWorld getHub();
 

@@ -3,11 +3,11 @@ package pl.north93.northplatform.lobby.chest.animation;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 
-import pl.north93.northplatform.lobby.chest.opening.ChestOpeningController;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.lobby.chest.opening.ChestOpeningController;
 
 public final class ChestOpenAnimation extends AbstractChestRotationAnimation
 {
@@ -16,7 +16,7 @@ public final class ChestOpenAnimation extends AbstractChestRotationAnimation
     private static final double MAX_SPEED    = 10;
 
     @Inject
-    private IBukkitExecutor        bukkitExecutor;
+    private IBukkitExecutor bukkitExecutor;
     @Inject
     private ChestOpeningController openingController;
 
@@ -58,7 +58,7 @@ public final class ChestOpenAnimation extends AbstractChestRotationAnimation
         }
         this.isEnded = true;
 
-        final Player player = this.getPlayer();
+        final INorthPlayer player = this.getPlayer();
 
         // lokacja skrzynki, tu odpalamy particle
         final Location location = this.instance.getArmorStand().getLocation();

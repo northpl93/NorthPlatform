@@ -1,14 +1,14 @@
 package pl.north93.northplatform.lobby.chest.opening.event;
 
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.player.PlayerEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.player.event.NorthPlayerEvent;
 import pl.north93.northplatform.lobby.chest.opening.IOpeningSession;
 
-public class CloseOpeningGuiEvent extends PlayerEvent
+public class CloseOpeningGuiEvent extends NorthPlayerEvent
 {
     private static final HandlerList handlers = new HandlerList();
     private final IOpeningSession session;

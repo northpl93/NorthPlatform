@@ -3,23 +3,23 @@ package pl.north93.northplatform.lobby.chest.opening;
 import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.HubWorld;
 import pl.north93.northplatform.lobby.chest.loot.LootResult;
 
 class OpeningSessionImpl implements IOpeningSession
 {
-    private final Player                  player;
-    private final HubWorld                hub;
-    private final HubOpeningConfig        openingConfig;
-    private int                           chests;
+    private final INorthPlayer player;
+    private final HubWorld hub;
+    private final HubOpeningConfig openingConfig;
+    private int chests;
     private CompletableFuture<LootResult> lastResults;
 
-    public OpeningSessionImpl(final Player player, final HubWorld hub, final HubOpeningConfig openingConfig)
+    public OpeningSessionImpl(final INorthPlayer player, final HubWorld hub, final HubOpeningConfig openingConfig)
     {
         this.player = player;
         this.hub = hub;
@@ -27,7 +27,7 @@ class OpeningSessionImpl implements IOpeningSession
     }
 
     @Override
-    public Player getPlayer()
+    public INorthPlayer getPlayer()
     {
         return this.player;
     }

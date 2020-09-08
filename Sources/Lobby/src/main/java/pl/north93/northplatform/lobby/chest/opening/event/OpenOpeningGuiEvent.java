@@ -1,11 +1,11 @@
 package pl.north93.northplatform.lobby.chest.opening.event;
 
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.player.PlayerEvent;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.player.event.NorthPlayerEvent;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.HubWorld;
 import pl.north93.northplatform.lobby.chest.opening.HubOpeningConfig;
 import pl.north93.northplatform.lobby.chest.opening.IOpeningSession;
@@ -14,7 +14,7 @@ import pl.north93.northplatform.lobby.chest.opening.IOpeningSession;
  * Event ktory wykonuje sie gdy gracz wchodzi do gui otwierania skrzynki
  * na konkretnym hubie.
  */
-public class OpenOpeningGuiEvent extends PlayerEvent
+public class OpenOpeningGuiEvent extends NorthPlayerEvent
 {
     private static final HandlerList handlers = new HandlerList();
     private final IOpeningSession session;

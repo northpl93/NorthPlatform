@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -20,6 +19,8 @@ import pl.north93.northplatform.api.bukkit.gui.impl.GuiTracker;
 import pl.north93.northplatform.api.bukkit.hologui.ActionBarKeeper;
 import pl.north93.northplatform.api.bukkit.hologui.IHoloContext;
 import pl.north93.northplatform.api.bukkit.hologui.IHoloGuiManager;
+import pl.north93.northplatform.api.bukkit.player.IBukkitPlayers;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
@@ -38,13 +39,15 @@ import pl.north93.northplatform.lobby.chest.opening.event.PresentOpeningResultsE
 public class HubOpeningListener implements AutoListener
 {
     @Inject
-    private ChestOpeningController chestOpeningController;
-    @Inject
     private IEntityHider entityHider;
+    @Inject
+    private IBukkitPlayers bukkitPlayers;
     @Inject
     private IHoloGuiManager holoGuiManager;
     @Inject
     private ActionBarKeeper actionBarKeeper;
+    @Inject
+    private ChestOpeningController chestOpeningController;
     @Inject
     private GuiTracker guiTracker;
     @Inject @Messages("ChestOpening")
@@ -53,7 +56,7 @@ public class HubOpeningListener implements AutoListener
     @EventHandler
     public void onStartOpening(final OpenOpeningGuiEvent event)
     {
-        final Player player = event.getPlayer();
+        final INorthPlayer player = event.getPlayer();
 
         // zamykamy hotbara aby nic sie nie bugowalo
         if (this.guiTracker.hasHotbarMenu(player))
@@ -76,7 +79,7 @@ public class HubOpeningListener implements AutoListener
     @EventHandler
     public void onEndOpening(final CloseOpeningGuiEvent event)
     {
-        final Player player = event.getSession().getPlayer();
+        final INorthPlayer player = event.getSession().getPlayer();
 
         // usuwamy action bar z iloscia skrzynek jesli gracz go mial
         this.actionBarKeeper.reset(player);
@@ -95,7 +98,7 @@ public class HubOpeningListener implements AutoListener
     @EventHandler(priority = EventPriority.LOW)
     public void nextChestResetPreviousState(final NextChestEvent event)
     {
-        final Player player = event.getPlayer();
+        final INorthPlayer player = this.bukkitPlayers.getPlayer(event.getPlayer());
 
         final IHoloContext playerContext = this.holoGuiManager.getPlayerContext(player);
         if (playerContext == null || ! (playerContext.getGui() instanceof OpeningHoloGui))
@@ -110,8 +113,7 @@ public class HubOpeningListener implements AutoListener
     @EventHandler
     public void onNextChestShown(final NextChestEvent event)
     {
-        final Player player = event.getPlayer();
-        final IOpeningSession session = event.getOpeningSession();
+        final INorthPlayer player = event.getPlayer();
 
         final Integer chests = this.chestOpeningController.getChests(player);
         assert chests != null; // null moze byc tylko gdy gracz nie posiada sesji
@@ -141,12 +143,13 @@ public class HubOpeningListener implements AutoListener
     @EventHandler
     public void showOpeningResults(final PresentOpeningResultsEvent event)
     {
+        final INorthPlayer player = this.bukkitPlayers.getPlayer(event.getPlayer());
         final LootResult result = event.getResult();
 
         final OpeningResultHoloGui resultsGui = new OpeningResultHoloGui(result);
         final Location guiLocation = event.getOpeningSession().getPlayerLocation();
 
-        this.holoGuiManager.openGui(event.getPlayer(), guiLocation, resultsGui);
+        this.holoGuiManager.openGui(player, guiLocation, resultsGui);
     }
 
     @EventHandler
@@ -161,7 +164,8 @@ public class HubOpeningListener implements AutoListener
             return;
         }
 
-        if (this.chestOpeningController.isCurrentlyInOpening(event.getPlayer()))
+        final INorthPlayer player = this.bukkitPlayers.getPlayer(event.getPlayer());
+        if (this.chestOpeningController.isCurrentlyInOpening(player))
         {
             // jesli gracz otwiera skrzynke to blokujemy ruch
             event.setCancelled(true);
@@ -171,8 +175,10 @@ public class HubOpeningListener implements AutoListener
     @EventHandler
     public void onQuit(final PlayerQuitEvent event)
     {
+        final INorthPlayer player = this.bukkitPlayers.getPlayer(event.getPlayer());
+
         // gdy gracz wychodzi z serwera to wymuszamy zakonczenie openingu
-        this.chestOpeningController.closeOpeningGui(event.getPlayer());
+        this.chestOpeningController.closeOpeningGui(player);
     }
 
     /*@EventHandler

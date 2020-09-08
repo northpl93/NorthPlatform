@@ -3,19 +3,20 @@ package pl.north93.northplatform.api.bukkit.hologui;
 import javax.annotation.Nullable;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
+
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
 public interface IHoloGuiManager
 {
-    void openGui(Player player, Location location, IHoloGui holoGui);
+    void openGui(INorthPlayer player, Location location, IHoloGui holoGui);
 
-    default void openGui(Player player, IHoloGui holoGui)
+    default void openGui(INorthPlayer player, IHoloGui holoGui)
     {
         // domyslna implementacja otwiera gui dokladnie tam gdzie jest gracz
         this.openGui(player, player.getLocation(), holoGui);
     }
 
-    void closeGui(Player player);
+    void closeGui(INorthPlayer player);
 
-    @Nullable IHoloContext getPlayerContext(Player player);
+    @Nullable IHoloContext getPlayerContext(INorthPlayer player);
 }

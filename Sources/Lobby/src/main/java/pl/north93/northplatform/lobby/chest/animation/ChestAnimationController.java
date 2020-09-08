@@ -14,11 +14,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.api.bukkit.hologui.IIcon;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 
 public final class ChestAnimationController
 {
-    private final ChestAnimationThread   animationThread;
+    private final ChestAnimationThread animationThread;
     private final Set<AnimationInstance> animations = new HashSet<>();
 
     @Bean
@@ -29,7 +30,7 @@ public final class ChestAnimationController
         this.animationThread.start();
     }
 
-    public void createAnimation(final Player player, final IIcon icon)
+    public void createAnimation(final INorthPlayer player, final IIcon icon)
     {
         synchronized (this.animations)
         {
@@ -83,7 +84,7 @@ public final class ChestAnimationController
     }
 
     // tworzy nowa instancje animacji na podstawie ikony
-    private AnimationInstance create(final Player player, final IIcon icon)
+    private AnimationInstance create(final INorthPlayer player, final IIcon icon)
     {
         final AnimationInstance animationInstance = new AnimationInstance(player, icon);
         animationInstance.setAnimation(new ChestSpawnAnimation(animationInstance));

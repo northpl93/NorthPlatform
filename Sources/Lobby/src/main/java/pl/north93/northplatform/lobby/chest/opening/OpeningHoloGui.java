@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.lobby.chest.BaseOpeningHoloGui;
 import pl.north93.northplatform.lobby.chest.animation.AnimationInstance;
 import pl.north93.northplatform.lobby.chest.animation.ChestAnimationController;
@@ -52,7 +53,7 @@ class OpeningHoloGui extends BaseOpeningHoloGui
     public void iconClicked(final IHoloContext context, final IIcon icon)
     {
         super.iconClicked(context, icon);
-        final Player player = context.getPlayer();
+        final INorthPlayer player = context.getPlayer();
 
         // obsluga ikon
         if (icon == this.closeIcon)
@@ -100,6 +101,7 @@ class OpeningHoloGui extends BaseOpeningHoloGui
         chestIcon.setSmall(false);
         context.addIcon(chestIcon);
 
+
         this.animationController.createAnimation(context.getPlayer(), chestIcon);
     }
 
@@ -112,7 +114,7 @@ class OpeningHoloGui extends BaseOpeningHoloGui
         }
         this.isOpening = true;
 
-        final Player player = context.getPlayer();
+        final INorthPlayer player = context.getPlayer();
         if (! this.openingController.beginChestOpening(player))
         {
             // wymusza odswiezenie widoku jak nie udalo sie rozpoczac otwierania
