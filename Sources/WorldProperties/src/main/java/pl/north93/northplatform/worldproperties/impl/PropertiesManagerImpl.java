@@ -16,7 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.bukkit.tick.ITickableManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.utils.JaxbUtils;
@@ -33,14 +33,14 @@ public class PropertiesManagerImpl implements IWorldPropertiesManager, Listener
     private final Map<String, WorldPropertiesImpl> propertiesByWorld = new HashMap<>();
     private final Map<Player, IPlayerProperties> playerProperties = new HashMap<>();
     
-    private final BukkitApiCore apiCore;
+    private final IBukkitServerManager serverManager;
     
     @Bean
-    private PropertiesManagerImpl(BukkitApiCore apiCore, ITickableManager tickableManager)
+    private PropertiesManagerImpl(IBukkitServerManager serverManager, ITickableManager tickableManager)
     {
-        this.apiCore = apiCore;
+        this.serverManager = serverManager;
         tickableManager.addTickableObjectsCollection(propertiesByWorld.values());
-        apiCore.registerEvents(this);
+        serverManager.registerEvents(this);
     }
     
     @Override
@@ -101,7 +101,7 @@ public class PropertiesManagerImpl implements IWorldPropertiesManager, Listener
         
         try
         {
-            File xmlFile = new File(apiCore.getRootDirectory(), "world-properties.xml");
+            File xmlFile = new File(serverManager.getServerDirectory(), "world-properties.xml");
             System.out.println(xmlFile.getAbsolutePath());
             System.out.println(new File(".").getAbsolutePath());
             if ( xmlFile.isFile() )

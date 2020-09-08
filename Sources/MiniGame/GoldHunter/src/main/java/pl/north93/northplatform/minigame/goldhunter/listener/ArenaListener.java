@@ -22,7 +22,7 @@ import pl.north93.northplatform.minigame.goldhunter.arena.GoldHunterArena;
 import pl.north93.northplatform.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.northplatform.api.bukkit.tick.ITickable;
 import pl.north93.northplatform.api.bukkit.tick.ITickableManager;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 
 public class ArenaListener implements AutoListener
 {

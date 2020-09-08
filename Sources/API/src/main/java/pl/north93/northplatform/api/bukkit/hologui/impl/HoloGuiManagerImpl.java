@@ -13,6 +13,7 @@ import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.Main;
 import pl.north93.northplatform.api.bukkit.hologui.IHoloGui;
 import pl.north93.northplatform.api.bukkit.hologui.IHoloGuiManager;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
@@ -20,11 +21,13 @@ public class HoloGuiManagerImpl extends Component implements IHoloGuiManager
 {
     @Inject
     private BukkitApiCore apiCore;
+    @Inject
+    private IBukkitServerManager serverManager;
 
     @Override
     protected void enableComponent()
     {
-        this.apiCore.registerEvents(new HoloGuiListener(this));
+        this.serverManager.registerEvents(new HoloGuiListener(this));
     }
 
     @Override

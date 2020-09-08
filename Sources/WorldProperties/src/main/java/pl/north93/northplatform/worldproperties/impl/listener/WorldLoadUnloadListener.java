@@ -8,10 +8,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.world.WorldUnloadEvent;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.IWorldInitializer;
 import pl.north93.northplatform.worldproperties.impl.PropertiesManagerImpl;
 import pl.north93.northplatform.worldproperties.impl.WorldPropertiesComponent;
-import pl.north93.northplatform.api.bukkit.server.IWorldInitializer;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
 
 @Slf4j
 public class WorldLoadUnloadListener implements AutoListener, IWorldInitializer

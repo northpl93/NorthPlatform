@@ -18,10 +18,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.gui.Gui;
 import pl.north93.northplatform.api.bukkit.gui.impl.GuiTracker;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.northplatform.api.global.component.annotations.bean.Aggregator;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
@@ -44,14 +44,14 @@ import pl.north93.northplatform.minigame.bedwars.shop.upgrade.IUpgrade;
 public class UpgradeManager
 {
     @Inject
-    private BukkitApiCore apiCore;
+    private BwShopConfig config;
     @Inject
-    private GuiTracker    guiTracker;
+    private GuiTracker guiTracker;
     @Inject
-    private BwShopConfig  config;
+    private IBukkitServerManager serverManager;
     @Inject @Messages("BedWarsShop")
-    private MessagesBox   shopMessages;
-    private Map<String, IUpgrade> upgrades = new HashMap<>();
+    private MessagesBox shopMessages;
+    private final Map<String, IUpgrade> upgrades = new HashMap<>();
 
     @Bean
     private UpgradeManager()
@@ -87,7 +87,7 @@ public class UpgradeManager
         final Team team = playerData.getTeam();
         final int actualLevel = team.getUpgrades().getUpgradeLevel(upgrade);
 
-        final UpgradeInstallEvent event = this.apiCore.callEvent(new UpgradeInstallEvent(arena, team, player, upgrade, actualLevel + 1, true));
+        final UpgradeInstallEvent event = this.serverManager.callEvent(new UpgradeInstallEvent(arena, team, player, upgrade, actualLevel + 1, true));
         if (event.isCancelled())
         {
             log.info("Upgrade {} installing cancelled for team {} on arena {}", upgrade.getName(), team.getName(), arena.getId());
@@ -116,7 +116,7 @@ public class UpgradeManager
         final Team team = playerData.getTeam();
         final int actualLevel = team.getUpgrades().getUpgradeLevel(upgrade);
 
-        final UpgradeInstallEvent event = this.apiCore.callEvent(new UpgradeInstallEvent(arena, team, player, upgrade, actualLevel + 1, false));
+        final UpgradeInstallEvent event = this.serverManager.callEvent(new UpgradeInstallEvent(arena, team, player, upgrade, actualLevel + 1, false));
         if (event.isCancelled())
         {
             return ChatUtils.COLOR_CHAR + "c";

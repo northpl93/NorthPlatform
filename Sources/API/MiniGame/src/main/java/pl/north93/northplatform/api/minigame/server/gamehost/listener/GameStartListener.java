@@ -20,7 +20,7 @@ import pl.north93.northplatform.api.minigame.shared.api.arena.StandardArenaMetaD
 import pl.north93.northplatform.api.minigame.shared.api.match.IMatchAccess;
 import pl.north93.northplatform.api.minigame.shared.api.match.IMatchManager;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.players.Identity;
 

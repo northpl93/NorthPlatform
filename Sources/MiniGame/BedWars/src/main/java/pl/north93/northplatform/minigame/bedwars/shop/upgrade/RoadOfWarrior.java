@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 import org.diorite.commons.math.DioriteMathUtils;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.minigame.bedwars.arena.Team;
@@ -21,10 +21,10 @@ public class RoadOfWarrior implements IUpgrade, Listener
     private final BwConfig bwConfig;
 
     // system agregacji wspiera SmartExecutora
-    private RoadOfWarrior(final BwConfig config, final BukkitApiCore apiCore)
+    private RoadOfWarrior(final BwConfig config, final IBukkitServerManager serverManager)
     {
         this.bwConfig = config;
-        apiCore.registerEvents(this);
+        serverManager.registerEvents(this);
     }
 
     @Override

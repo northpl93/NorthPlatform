@@ -5,7 +5,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.Main;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 // publiczna zeby bukkit mogl uzywac MethodHandles w evencie

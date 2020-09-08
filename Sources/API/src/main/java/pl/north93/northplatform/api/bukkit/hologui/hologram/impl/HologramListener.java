@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.api.bukkit.player.event.PlayerPlatformLocaleChangedEvent;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northspigot.event.entity.EntityTrackedPlayerEvent;
 

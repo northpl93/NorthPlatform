@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import pl.north93.northplatform.minigame.goldhunter.GoldHunter;
 import pl.north93.northplatform.minigame.goldhunter.GoldHunterLogger;
 import pl.north93.northplatform.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class PlayerDeathListener implements AutoListener

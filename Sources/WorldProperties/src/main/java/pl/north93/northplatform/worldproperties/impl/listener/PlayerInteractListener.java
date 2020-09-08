@@ -8,9 +8,9 @@ import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.worldproperties.IPlayerProperties;
 import pl.north93.northplatform.worldproperties.IWorldPropertiesManager;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
 
 public class PlayerInteractListener implements AutoListener
 {

@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.bukkit.utils.ISyncCallback;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.utils.JaxbUtils;
@@ -34,7 +34,7 @@ import pl.north93.northplatform.api.minigame.shared.api.utils.InvalidGamePhaseEx
 public class DeathMatch
 {
     @Inject
-    private BukkitApiCore apiCore;
+    private IBukkitServerManager serverManager;
     private final GameHostManager manager;
     private final LocalArena arena;
     private DeathMatchState state; // stan deathmatchu
@@ -112,7 +112,7 @@ public class DeathMatch
         checkState(this.state == DeathMatchState.NOT_STARTED, "Death match already started!");
         InvalidGamePhaseException.checkGamePhase(this.arena.getGamePhase(), GamePhase.STARTED);
 
-        final DeathMatchPrepareEvent event = this.apiCore.callEvent(new DeathMatchPrepareEvent(this.arena));
+        final DeathMatchPrepareEvent event = this.serverManager.callEvent(new DeathMatchPrepareEvent(this.arena));
         if (event.isCancelled())
         {
             return;
@@ -140,7 +140,7 @@ public class DeathMatch
             this.state = DeathMatchState.STARTED;
 
             final World newWorld = this.arena.getWorld().getCurrentWorld();
-            this.apiCore.callEvent(new DeathMatchLoadedEvent(this.arena, oldWorld, newWorld));
+            this.serverManager.callEvent(new DeathMatchLoadedEvent(this.arena, oldWorld, newWorld));
 
             this.fightStart = new FightStartCountdown(this.arena);
             // task zostanie automatycznie anulowany/usuniety gdy arena sie skonczy

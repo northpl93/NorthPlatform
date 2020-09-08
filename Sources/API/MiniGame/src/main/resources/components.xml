@@ -12,6 +12,7 @@
             <dependencies>
                 <dependency>API.Database.Redis.RPC</dependency>
                 <dependency>API.Database.Redis.Event</dependency>
+                <dependency>API.BukkitServerManager</dependency>
                 <dependency>API.Economy</dependency>
                 <dependency>API.Chat.Bukkit</dependency>
                 <dependency>Utils.World.Properties</dependency>

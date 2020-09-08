@@ -14,7 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.diorite.commons.function.consumer.Consumer;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.mojang.CachedProfile;

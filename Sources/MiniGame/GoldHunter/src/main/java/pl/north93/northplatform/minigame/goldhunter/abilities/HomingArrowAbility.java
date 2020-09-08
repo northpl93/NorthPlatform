@@ -14,7 +14,7 @@ import pl.north93.northplatform.minigame.goldhunter.effect.PoisonArrowEffect;
 import pl.north93.northplatform.minigame.goldhunter.entity.BombArrow;
 import pl.north93.northplatform.minigame.goldhunter.entity.PoisonArrow;
 import pl.north93.northplatform.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class HomingArrowAbility implements AutoListener

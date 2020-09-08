@@ -10,6 +10,7 @@
                 <package>pl.north93.northplatform.api.chat.bukkit</package>
             </packages>
             <dependencies>
+                <dependency>API.BukkitServerManager</dependency>
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>
             </dependencies>
             <platforms>

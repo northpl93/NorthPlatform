@@ -27,7 +27,6 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.gui.ClickType;
 import pl.north93.northplatform.api.bukkit.gui.Gui;
 import pl.north93.northplatform.api.bukkit.gui.GuiCanvas;
@@ -36,6 +35,7 @@ import pl.north93.northplatform.api.bukkit.gui.HotbarMenu;
 import pl.north93.northplatform.api.bukkit.gui.IGuiManager;
 import pl.north93.northplatform.api.bukkit.gui.element.GuiElement;
 import pl.north93.northplatform.api.bukkit.player.event.PlayerPlatformLocaleChangedEvent;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.bukkit.tick.ITickable;
 import pl.north93.northplatform.api.bukkit.tick.ITickableManager;
 import pl.north93.northplatform.api.bukkit.tick.Tick;
@@ -50,14 +50,14 @@ public class GuiTracker extends Component implements IGuiManager, ITickable, Lis
     private final Multimap<HotbarMenu, GuiTrackerEntry> entriesByHotbar = ArrayListMultimap.create();
     
     @Inject
-    private BukkitApiCore    apiCore;
+    private IBukkitServerManager serverManager;
     @Inject
     private ITickableManager tickableManager;
     
     @Override
     protected void enableComponent()
     {
-        apiCore.registerEvents(this);
+        serverManager.registerEvents(this);
         tickableManager.addTickableObject(this);
     }
 

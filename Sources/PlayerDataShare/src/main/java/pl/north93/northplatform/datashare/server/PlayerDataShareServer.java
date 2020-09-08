@@ -4,7 +4,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.redis.rpc.IRpcManager;
@@ -21,21 +22,23 @@ import pl.north93.northplatform.datashare.server.listeners.PlayerLeftListener;
 @Slf4j
 public class PlayerDataShareServer extends Component
 {
-    private static final int                DATA_PERSIST_TASK = 20 * 60 * 5;
+    private static final int DATA_PERSIST_TASK = 20 * 60 * 5;
     @Inject
-    private              BukkitApiCore      apiCore;
+    private IRpcManager rpcManager;
     @Inject
-    private              IRpcManager        rpcManager;
+    private RedisSubscriber redisSubscriber;
     @Inject
-    private              RedisSubscriber    redisSubscriber;
-    private              ChatSharingManager chatSharingManager;
-    private              DataSharingGroup   sharingGroup;
+    private IBukkitExecutor bukkitExecutor;
+    @Inject
+    private IBukkitServerManager serverManager;
+    private ChatSharingManager chatSharingManager;
+    private DataSharingGroup sharingGroup;
 
     @Override
     protected void enableComponent()
     {
         final IDataShareController controller = this.rpcManager.createRpcProxy(IDataShareController.class, Targets.networkController());
-        this.sharingGroup = controller.getMyGroup(this.apiCore.getServerId());
+        this.sharingGroup = controller.getMyGroup(this.serverManager.getServerId());
         if (this.sharingGroup == null)
         {
             log.warn("PlayerDataShare plugin is enabled, but sharing group is unknown.");
@@ -44,9 +47,9 @@ public class PlayerDataShareServer extends Component
 
         this.chatSharingManager = new ChatSharingManager();
         this.chatSharingManager.start(this.sharingGroup);
-        this.apiCore.registerEvents(new PlayerJoinListener(), new PlayerLeftListener(), new PlayerDataIntegrationListener());
+        this.serverManager.registerEvents(new PlayerJoinListener(), new PlayerLeftListener(), new PlayerDataIntegrationListener());
         this.redisSubscriber.subscribe("playersdata:" + this.sharingGroup.getName(), new PlayerDataListener());
-        this.apiCore.getPlatformConnector().runTaskAsynchronously(new InventoryPersistTask(), DATA_PERSIST_TASK);
+        this.bukkitExecutor.asyncTimer(DATA_PERSIST_TASK, new InventoryPersistTask());
     }
 
     @Override

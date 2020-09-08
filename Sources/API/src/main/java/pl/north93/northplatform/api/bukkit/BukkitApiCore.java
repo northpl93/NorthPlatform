@@ -9,9 +9,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 
 import org.spigotmc.SpigotConfig;
 
@@ -25,7 +23,7 @@ import pl.north93.northplatform.api.global.utils.exceptions.ConfigurationExcepti
 public class BukkitApiCore extends ApiCore
 {
     private final Main pluginMain;
-    private       UUID serverId;
+    private UUID serverId;
 
     public BukkitApiCore(final Main plugin)
     {
@@ -92,19 +90,6 @@ public class BukkitApiCore extends ApiCore
     public File getFile(final String name)
     {
         return new File(this.pluginMain.getDataFolder(), name);
-    }
-
-    /**
-     * Rejestruje podane listenery w Bukkicie.
-     * @param listeners listenery do zarejestrowania.
-     */
-    public void registerEvents(final Listener... listeners)
-    {
-        final PluginManager pluginManager = this.pluginMain.getServer().getPluginManager();
-        for (final Listener listener : listeners)
-        {
-            pluginManager.registerEvents(listener, this.pluginMain);
-        }
     }
 
     /**

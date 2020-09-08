@@ -13,7 +13,7 @@ import pl.north93.northplatform.antycheat.event.impl.TeleportTimelineEvent;
 import pl.north93.northplatform.antycheat.event.impl.VelocityAppliedTimelineEvent;
 import pl.north93.northplatform.antycheat.timeline.impl.TimelineManager;
 import pl.north93.northplatform.antycheat.utils.location.RichEntityLocation;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class AntyCheatBukkitListener implements AutoListener

@@ -14,17 +14,17 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.bukkit.utils.itemstack.ArmorMaterial;
 import pl.north93.northplatform.minigame.bedwars.event.ItemPreBuyEvent;
 
 @Slf4j
 public class ArmorEntry implements IShopSpecialEntry, Listener
 {
-    private ArmorEntry(final BukkitApiCore apiCore) // aggregator wspiera SmartExecutora, wiec wstrzykiwanie dziala
+    private ArmorEntry(final IBukkitServerManager serverManager) // aggregator wspiera SmartExecutora, wiec wstrzykiwanie dziala
     {
-        apiCore.registerEvents(this);
+        serverManager.registerEvents(this);
     }
 
     @Override

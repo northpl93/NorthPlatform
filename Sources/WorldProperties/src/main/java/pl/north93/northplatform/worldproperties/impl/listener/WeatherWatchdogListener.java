@@ -6,9 +6,9 @@ import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.worldproperties.IWorldProperties;
 import pl.north93.northplatform.worldproperties.IWorldPropertiesManager;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
 
 @Slf4j
 public class WeatherWatchdogListener implements AutoListener

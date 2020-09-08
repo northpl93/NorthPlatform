@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.visibility.HubVisibilityService;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class PlayerVisibilityListener implements AutoListener

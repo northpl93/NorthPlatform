@@ -15,8 +15,8 @@ import org.bukkit.inventory.ItemStack;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.messages.Messages;
@@ -38,16 +38,16 @@ import pl.north93.northplatform.minigame.bedwars.shop.gui.ShopTools;
 
 public final class ShopGuiManager
 {
-    private final BukkitApiCore apiCore;
-    private final ShopManager   shopManager;
-    private final MessagesBox   shopMessages;
+    private final ShopManager shopManager;
+    private final MessagesBox shopMessages;
+    private final IBukkitServerManager serverManager;
 
     @Bean
-    private ShopGuiManager(final BukkitApiCore apiCore, final ShopManager shopManager, final @Messages("BedWarsShop") MessagesBox shopMessages)
+    private ShopGuiManager(final ShopManager shopManager, final @Messages("BedWarsShop") MessagesBox shopMessages, final IBukkitServerManager serverManager)
     {
-        this.apiCore = apiCore;
         this.shopManager = shopManager;
         this.shopMessages = shopMessages;
+        this.serverManager = serverManager;
     }
 
     @UriHandler("/minigame/bedwars/shopCategory/:name/:playerId")
@@ -102,7 +102,7 @@ public final class ShopGuiManager
         final BwShopEntry shopEntry = this.shopManager.getShopEntry(name);
         final ItemStack price = shopEntry.getPrice().createItemStack();
 
-        final ItemPreBuyEvent preBuyEvent = this.apiCore.callEvent(new ItemPreBuyEvent(getArena(player), player, shopEntry, price, true));
+        final ItemPreBuyEvent preBuyEvent = this.serverManager.callEvent(new ItemPreBuyEvent(getArena(player), player, shopEntry, price, true));
         if (preBuyEvent.getBuyStatus().canBuy())
         {
             return ChatUtils.COLOR_CHAR + "a";
@@ -126,7 +126,7 @@ public final class ShopGuiManager
 
         final String description = this.shopMessages.getString(locale, "item." + name + ".lore");
 
-        final ItemPreBuyEvent preBuyEvent = this.apiCore.callEvent(new ItemPreBuyEvent(getArena(player), player, shopEntry, priceItem, true));
+        final ItemPreBuyEvent preBuyEvent = this.serverManager.callEvent(new ItemPreBuyEvent(getArena(player), player, shopEntry, priceItem, true));
         final ItemPreBuyEvent.BuyStatus buyStatus = preBuyEvent.getBuyStatus();
 
         if (buyStatus.canBuy())

@@ -9,11 +9,11 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.worldproperties.IPlayerProperties;
 import pl.north93.northplatform.worldproperties.IWorldProperties;
 import pl.north93.northplatform.worldproperties.IWorldPropertiesManager;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
 
 public class PlayerGamemodeListener implements AutoListener
 {

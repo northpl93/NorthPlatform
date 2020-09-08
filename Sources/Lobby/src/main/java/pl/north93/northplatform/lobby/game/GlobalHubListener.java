@@ -12,7 +12,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import pl.north93.northplatform.api.bukkit.player.event.PlayerPlatformLocaleChangedEvent;
 import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardManager;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.economy.impl.server.event.PlayerCurrencyChangedEvent;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;

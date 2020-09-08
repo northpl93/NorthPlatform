@@ -11,21 +11,21 @@ import org.bukkit.World;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.region.IRegionManager;
-import pl.north93.northplatform.api.minigame.server.gamehost.region.ITrackedRegion;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.bukkit.utils.region.IRegion;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.minigame.server.gamehost.region.IRegionManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.region.ITrackedRegion;
 
 public class RegionManagerImpl implements IRegionManager
 {
     @Inject
-    private BukkitApiCore apiCore;
-    private Collection<TrackedRegionImpl> regions = new ConcurrentLinkedQueue<>(); // potrzebujemy concurrent, indexy są nieważne.
+    private IBukkitServerManager serverManager;
+    private final Collection<TrackedRegionImpl> regions = new ConcurrentLinkedQueue<>(); // potrzebujemy concurrent, indexy są nieważne.
 
     public RegionManagerImpl()
     {
-        this.apiCore.registerEvents(new MoveListener(this));
+        this.serverManager.registerEvents(new MoveListener(this));
     }
 
     @Override

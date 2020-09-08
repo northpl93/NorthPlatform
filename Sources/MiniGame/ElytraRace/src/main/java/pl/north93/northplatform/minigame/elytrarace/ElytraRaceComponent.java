@@ -2,12 +2,11 @@ package pl.north93.northplatform.minigame.elytrarace;
 
 import java.text.SimpleDateFormat;
 
-import org.bukkit.Bukkit;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -30,7 +29,9 @@ public class ElytraRaceComponent extends Component
     @Inject
     private MiniGameServer server;
     @Inject
-    private BukkitApiCore  apiCore;
+    private IBukkitExecutor bukkitExecutor;
+    @Inject
+    private IBukkitServerManager serverManager;
 
     @Override
     protected void enableComponent()
@@ -39,7 +40,7 @@ public class ElytraRaceComponent extends Component
         {
             return; // TODO prevent errors in testing environment
         }
-        this.apiCore.registerEvents(
+        this.serverManager.registerEvents(
                 new ArenaStartListener(),
                 new HeadsListener(), // dawanie graczom glowek
                 new ScoreboardListener(),
@@ -51,7 +52,7 @@ public class ElytraRaceComponent extends Component
                 new FinishLineListener(),
                 new ArenaEndListener());
 
-        Bukkit.getScheduler().runTaskTimer(this.apiCore.getPluginMain(), new ParticleTask(), 1, 1);
+        this.bukkitExecutor.syncTimer(1, new ParticleTask());
 
         /*final XmlLocation location1 = new XmlLocation(1, 1, 1, 0, 0);
         final XmlLocation location2 = new XmlLocation(2, 1, 2, 5, 5);

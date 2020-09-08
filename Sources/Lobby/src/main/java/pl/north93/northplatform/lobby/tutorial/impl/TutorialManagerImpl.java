@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.metadata.MetaKey;
@@ -28,11 +28,11 @@ import pl.north93.northplatform.lobby.tutorial.event.TutorialStatusChangedEvent;
 /*default*/ class TutorialManagerImpl implements ITutorialManager
 {
     @Inject
-    private BukkitApiCore apiCore;
-    @Inject
     private LobbyManager lobbyManager;
     @Inject
     private IPlayersManager playersManager;
+    @Inject
+    private IBukkitServerManager serverManager;
 
     @Bean
     private TutorialManagerImpl()
@@ -159,7 +159,7 @@ import pl.north93.northplatform.lobby.tutorial.event.TutorialStatusChangedEvent;
             return;
         }
 
-        this.apiCore.callEvent(new TutorialStatusChangedEvent(identity, tutorialId, status));
+        this.serverManager.callEvent(new TutorialStatusChangedEvent(identity, tutorialId, status));
     }
 
     @UriHandler("/lobby/tutorial/complete/:uuid")

@@ -20,7 +20,7 @@ import pl.north93.northplatform.api.bukkit.player.event.PlayerPlatformLocaleChan
 import pl.north93.northplatform.api.bukkit.protocol.PacketEvent;
 import pl.north93.northplatform.api.bukkit.protocol.PacketHandler;
 import pl.north93.northplatform.api.bukkit.protocol.wrappers.WrapperPlayOutEntityMetadata;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northspigot.event.entity.EntityTrackedPlayerEvent;

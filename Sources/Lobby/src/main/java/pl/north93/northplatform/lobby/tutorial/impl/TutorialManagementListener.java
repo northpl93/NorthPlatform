@@ -3,6 +3,10 @@ package pl.north93.northplatform.lobby.tutorial.impl;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.HubWorld;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.event.PlayerPreSwitchHubEvent;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
@@ -11,19 +15,15 @@ import pl.north93.northplatform.lobby.tutorial.ITutorialManager;
 import pl.north93.northplatform.lobby.tutorial.TutorialStatus;
 import pl.north93.northplatform.lobby.tutorial.event.PlayerEnterTutorialEvent;
 import pl.north93.northplatform.lobby.tutorial.event.PlayerExitTutorialEvent;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.players.Identity;
 
 public class TutorialManagementListener implements AutoListener
 {
     @Inject
-    private BukkitApiCore    apiCore;
-    @Inject
-    private PartyClient      partyClient;
+    private PartyClient partyClient;
     @Inject
     private ITutorialManager tutorialManager;
+    @Inject
+    private IBukkitServerManager serverManager;
 
     @EventHandler
     public void callStartTutorialEvent(final PlayerSwitchedHubEvent event)
@@ -33,13 +33,13 @@ public class TutorialManagementListener implements AutoListener
         final HubWorld oldHub = event.getOldHub();
         if (this.tutorialManager.isTutorialHub(oldHub))
         {
-            this.apiCore.callEvent(new PlayerExitTutorialEvent(player, oldHub));
+            this.serverManager.callEvent(new PlayerExitTutorialEvent(player, oldHub));
         }
 
         final HubWorld newHub = event.getNewHub();
         if (this.tutorialManager.isTutorialHub(newHub))
         {
-            this.apiCore.callEvent(new PlayerEnterTutorialEvent(player, newHub));
+            this.serverManager.callEvent(new PlayerEnterTutorialEvent(player, newHub));
         }
     }
 

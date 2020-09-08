@@ -17,7 +17,7 @@ import pl.north93.northplatform.minigame.goldhunter.GoldHunterLogger;
 import pl.north93.northplatform.minigame.goldhunter.effect.RespawnProtection;
 import pl.north93.northplatform.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.northplatform.minigame.goldhunter.utils.ItemStackUtils;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.bukkit.utils.itemstack.MaterialUtils;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 

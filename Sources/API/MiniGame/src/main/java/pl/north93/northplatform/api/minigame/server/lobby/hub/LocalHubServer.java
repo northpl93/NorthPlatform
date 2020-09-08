@@ -13,12 +13,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.minigame.server.lobby.hub.event.PlayerPreSwitchHubEvent;
-import pl.north93.northplatform.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
-import pl.north93.northplatform.api.minigame.shared.api.cfg.HubConfig;
-import pl.north93.northplatform.api.minigame.shared.api.cfg.HubsConfig;
-import pl.north93.northplatform.api.minigame.shared.api.hub.IHubServer;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.chat.global.ChatManager;
 import pl.north93.northplatform.api.chat.global.ChatRoom;
 import pl.north93.northplatform.api.chat.global.ChatRoomPriority;
@@ -26,6 +21,11 @@ import pl.north93.northplatform.api.chat.global.formatter.PermissionsBasedFormat
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.config.IConfig;
 import pl.north93.northplatform.api.global.config.NetConfig;
+import pl.north93.northplatform.api.minigame.server.lobby.hub.event.PlayerPreSwitchHubEvent;
+import pl.north93.northplatform.api.minigame.server.lobby.hub.event.PlayerSwitchedHubEvent;
+import pl.north93.northplatform.api.minigame.shared.api.cfg.HubConfig;
+import pl.north93.northplatform.api.minigame.shared.api.cfg.HubsConfig;
+import pl.north93.northplatform.api.minigame.shared.api.hub.IHubServer;
 
 /**
  * Reprezentuje lokalny serwer hostujący huby.
@@ -34,19 +34,19 @@ import pl.north93.northplatform.api.global.config.NetConfig;
 public class LocalHubServer implements IHubServer
 {
     @Inject
-    private BukkitApiCore           apiCore;
+    private ChatManager chatManager;
     @Inject
-    private ChatManager             chatManager;
+    private HubWorldManager hubWorldManager;
     @Inject
-    private HubWorldManager         hubWorldManager;
+    private IBukkitServerManager serverManager;
     @Inject @NetConfig(type = HubsConfig.class, id = "hubs")
-    private IConfig<HubsConfig>     hubsConfig;
-    private Map<String, HubWorld>   hubWorlds = new HashMap<>();
+    private IConfig<HubsConfig> hubsConfig;
+    private final Map<String, HubWorld> hubWorlds = new HashMap<>();
 
     @Override
     public UUID getServerId()
     {
-        return this.apiCore.getServerId();
+        return this.serverManager.getServerId();
     }
 
     /**
@@ -122,14 +122,14 @@ public class LocalHubServer implements IHubServer
         // stary hub gracza, może być nullem
         final HubWorld oldHub = this.getHubWorld(player);
 
-        final PlayerPreSwitchHubEvent event = this.apiCore.callEvent(new PlayerPreSwitchHubEvent(player, oldHub, newHub));
+        final PlayerPreSwitchHubEvent event = this.serverManager.callEvent(new PlayerPreSwitchHubEvent(player, oldHub, newHub));
         if (event.isCancelled())
         {
             return;
         }
 
         newHub.teleportPlayerHere(player);
-        this.apiCore.callEvent(new PlayerSwitchedHubEvent(player, oldHub, newHub));
+        this.serverManager.callEvent(new PlayerSwitchedHubEvent(player, oldHub, newHub));
     }
 
     /**

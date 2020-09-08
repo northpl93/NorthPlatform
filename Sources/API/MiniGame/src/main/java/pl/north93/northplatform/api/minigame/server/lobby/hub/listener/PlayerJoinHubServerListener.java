@@ -14,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.api.bukkit.player.event.PlayerDataLoadedEvent;
 import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.global.network.server.joinaction.IServerJoinAction;

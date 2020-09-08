@@ -8,9 +8,9 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.worldproperties.IPlayerProperties;
 import pl.north93.northplatform.worldproperties.IWorldPropertiesManager;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
 
 public class HungerListener implements AutoListener
 {

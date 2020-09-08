@@ -5,7 +5,7 @@ import org.bukkit.event.EventHandler;
 
 import pl.north93.northplatform.api.bukkit.server.event.ShutdownCancelledEvent;
 import pl.north93.northplatform.api.bukkit.server.event.ShutdownScheduledEvent;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArenaManager;

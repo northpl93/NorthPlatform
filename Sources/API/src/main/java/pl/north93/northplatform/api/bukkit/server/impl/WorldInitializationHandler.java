@@ -14,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.bukkit.server.IWorldInitializer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Aggregator;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
@@ -25,9 +25,9 @@ public class WorldInitializationHandler implements Listener
     private final List<IWorldInitializer> initializers = new ArrayList<>();
 
     @Bean
-    private WorldInitializationHandler(final BukkitApiCore apiCore)
+    private WorldInitializationHandler(final IBukkitServerManager serverManager)
     {
-        apiCore.registerEvents(this);
+        serverManager.registerEvents(this);
     }
 
     @Aggregator(IWorldInitializer.class)

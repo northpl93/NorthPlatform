@@ -17,8 +17,8 @@ import org.bukkit.material.Bed;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
@@ -34,7 +34,7 @@ import pl.north93.northplatform.minigame.bedwars.event.BedDestroyedEvent;
 public class BuildListener implements Listener
 {
     @Inject
-    private BukkitApiCore apiCore;
+    private IBukkitServerManager serverManager;
     @Inject @Messages("BedWars")
     private MessagesBox messages;
 
@@ -179,7 +179,7 @@ public class BuildListener implements Listener
         teamAt.setBedAlive(false); // oznaczamy, ze lozko druzyny zostalo zniszczone
 
         // wywolujemy event zniszczenia lozka
-        this.apiCore.callEvent(new BedDestroyedEvent(arenaData.getArena(), playerData.getBukkitPlayer(), block, teamAt, false));
+        this.serverManager.callEvent(new BedDestroyedEvent(arenaData.getArena(), playerData.getBukkitPlayer(), block, teamAt, false));
 
         return true;
     }

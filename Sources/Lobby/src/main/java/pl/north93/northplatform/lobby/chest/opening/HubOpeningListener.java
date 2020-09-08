@@ -20,7 +20,7 @@ import pl.north93.northplatform.api.bukkit.gui.impl.GuiTracker;
 import pl.north93.northplatform.api.bukkit.hologui.ActionBarKeeper;
 import pl.north93.northplatform.api.bukkit.hologui.IHoloContext;
 import pl.north93.northplatform.api.bukkit.hologui.IHoloGuiManager;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;

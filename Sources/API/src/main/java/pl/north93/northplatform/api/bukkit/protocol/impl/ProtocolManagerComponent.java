@@ -16,16 +16,16 @@ import org.spigotmc.SpigotConfig;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.protocol.ChannelWrapper;
+import pl.north93.northplatform.api.bukkit.protocol.PacketHandler;
+import pl.north93.northplatform.api.bukkit.protocol.ProtocolManager;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.annotations.bean.Aggregator;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.component.annotations.bean.Named;
 import pl.north93.northspigot.event.ChannelInitializeEvent;
-import pl.north93.northplatform.api.bukkit.protocol.ChannelWrapper;
-import pl.north93.northplatform.api.bukkit.protocol.PacketHandler;
-import pl.north93.northplatform.api.bukkit.protocol.ProtocolManager;
 
 @Slf4j
 public class ProtocolManagerComponent extends Component implements ProtocolManager, Listener
@@ -34,14 +34,14 @@ public class ProtocolManagerComponent extends Component implements ProtocolManag
     //private final PacketEventDispatcher syncDispatcher = new PacketEventDispatcher();
     
     @Inject
-    private BukkitApiCore apiCore;
+    private IBukkitServerManager serverManager;
     
     @Override
     protected void enableComponent()
     {
         closeListenerIfAlreadyOpened();
         
-        apiCore.registerEvents(this);
+        serverManager.registerEvents(this);
     }
 
     @Override

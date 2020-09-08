@@ -5,6 +5,9 @@
             <name>AntyCheat</name>
             <mainClass>pl.north93.northplatform.antycheat.AntyCheatComponent</mainClass>
             <description>Anti Cheat module.</description>
+            <dependencies>
+                <dependency>API.BukkitServerManager</dependency>
+            </dependencies>
             <platforms>
                 <platform>BUKKIT</platform>
             </platforms>

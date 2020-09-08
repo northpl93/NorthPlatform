@@ -7,16 +7,16 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
 import pl.north93.northplatform.minigame.bedwars.event.ItemPreBuyEvent;
 
 public class AdditionalLife implements IShopSpecialEntry, Listener
 {
-    private AdditionalLife(final BukkitApiCore apiCore)
+    private AdditionalLife(final IBukkitServerManager serverManager)
     {
-        apiCore.registerEvents(this);
+        serverManager.registerEvents(this);
     }
 
     @EventHandler(priority = EventPriority.HIGH)

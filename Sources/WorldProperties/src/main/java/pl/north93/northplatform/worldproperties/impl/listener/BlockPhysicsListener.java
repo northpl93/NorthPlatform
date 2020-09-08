@@ -8,9 +8,9 @@ import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.worldproperties.IWorldProperties;
 import pl.north93.northplatform.worldproperties.IWorldPropertiesManager;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
 
 public class BlockPhysicsListener implements AutoListener
 {

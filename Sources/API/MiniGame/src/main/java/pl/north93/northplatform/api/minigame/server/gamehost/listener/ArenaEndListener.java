@@ -22,7 +22,7 @@ import pl.north93.northplatform.api.minigame.shared.api.match.StandardMatchStati
 import pl.north93.northplatform.api.minigame.shared.api.statistics.unit.DurationUnit;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 @Slf4j

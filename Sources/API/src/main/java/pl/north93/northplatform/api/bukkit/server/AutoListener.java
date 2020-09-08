@@ -1,11 +1,10 @@
-package pl.north93.northplatform.api.bukkit.utils;
+package pl.north93.northplatform.api.bukkit.server;
 
 import org.bukkit.event.Listener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.global.component.annotations.bean.Aggregator;
 
 /**
@@ -29,7 +28,7 @@ public interface AutoListener extends Listener
     }
 
     @Aggregator(AutoListener.class)
-    static void aggregate(final BukkitApiCore apiCore, final AutoListener instance)
+    static void aggregate(final IBukkitServerManager serverManager, final AutoListener instance)
     {
         final String className = instance.getClass().getName();
         final Logger log = LoggerFactory.getLogger(AutoListener.class);
@@ -41,6 +40,6 @@ public interface AutoListener extends Listener
         }
 
         log.debug("Registering {} as Bukkit listener.", className);
-        apiCore.registerEvents(instance);
+        serverManager.registerEvents(instance);
     }
 }

@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.citizensnpcs.api.npc.NPCRegistry;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageTracker;
 import pl.north93.northplatform.api.global.ApiCore;
 import pl.north93.northplatform.api.global.component.Component;
@@ -41,7 +41,7 @@ public class BedWarsComponent extends Component
     @Inject
     private MiniGameServer server;
     @Inject
-    private BukkitApiCore  bukkitApi;
+    private IBukkitServerManager serverManager;
 
     @Override
     protected void enableComponent()
@@ -50,7 +50,7 @@ public class BedWarsComponent extends Component
         {
             return; // TODO prevent errors in testing environment
         }
-        this.bukkitApi.registerEvents(
+        this.serverManager.registerEvents(
                 new ArenaStartListener(),
                 new StatTrackListener(), // zarzadza stat trakami.
                 new NpcCreator(), // zarzadza tworzeniem NPC w bazie

@@ -28,6 +28,7 @@
             </packages>
             <dependencies>
                 <dependency>API.Config.Client</dependency>
+                <dependency>API.BukkitServerManager</dependency>
                 <dependency>API.Economy</dependency>
             </dependencies>
             <platforms>

@@ -22,10 +22,10 @@ import org.bukkit.inventory.ItemStack;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.gui.Gui;
 import pl.north93.northplatform.api.bukkit.gui.IGuiManager;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.bukkit.utils.itemstack.ItemTransaction;
 import pl.north93.northplatform.api.bukkit.utils.xml.itemstack.XmlItemStack;
 import pl.north93.northplatform.api.global.component.annotations.bean.Aggregator;
@@ -50,12 +50,12 @@ import pl.north93.northplatform.minigame.bedwars.shop.specialentry.IShopSpecialE
 public class ShopManager
 {
     @Inject
-    private BukkitApiCore apiCore;
+    private BwShopConfig config;
     @Inject
-    private BwShopConfig  config;
+    private IGuiManager guiManager;
     @Inject
-    private IGuiManager   guiManager;
-    private Map<String, IShopSpecialEntry> specialEntryMap = new HashMap<>();
+    private IBukkitServerManager serverManager;
+    private final Map<String, IShopSpecialEntry> specialEntryMap = new HashMap<>();
 
     @Bean
     private ShopManager()
@@ -130,7 +130,7 @@ public class ShopManager
         final ItemStack price = entry.getPrice().createItemStack();
         final LocalArena arena = getArena(player);
 
-        final ItemPreBuyEvent preBuyEvent = this.apiCore.callEvent(new ItemPreBuyEvent(arena, player, entry, price, false));
+        final ItemPreBuyEvent preBuyEvent = this.serverManager.callEvent(new ItemPreBuyEvent(arena, player, entry, price, false));
         if (! preBuyEvent.getBuyStatus().canBuy())
         {
             return false;
@@ -143,7 +143,7 @@ public class ShopManager
             itemStream = itemStream.map(this::markAsPermanent);
         }
         final List<ItemStack> items = itemStream.collect(Collectors.toList());
-        this.apiCore.callEvent(new ItemBuyEvent(arena, player, entry, items));
+        this.serverManager.callEvent(new ItemBuyEvent(arena, player, entry, items));
 
         // obslugujemy dodanie itemów, przez specjalnego handlera lub normalnie przez ItemTransaction
         final IShopSpecialEntry specialEntry = this.specialEntryMap.get(entry.getSpecialHandler());

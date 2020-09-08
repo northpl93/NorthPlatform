@@ -14,7 +14,7 @@ import net.minecraft.server.v1_12_R1.EntityArrow;
 import pl.north93.northplatform.minigame.goldhunter.GoldHunter;
 import pl.north93.northplatform.minigame.goldhunter.player.GoldHunterPlayer;
 import pl.north93.northplatform.minigame.goldhunter.player.PotionManager;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class PlayerListener implements AutoListener

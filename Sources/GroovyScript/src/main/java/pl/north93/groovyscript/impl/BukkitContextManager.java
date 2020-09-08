@@ -17,8 +17,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.groovyscript.api.IScriptContext;
 import pl.north93.groovyscript.api.source.DirectoryScriptSource;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.bukkit.server.event.ServerStartedEvent;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class BukkitContextManager implements AutoListener

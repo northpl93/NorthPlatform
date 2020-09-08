@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.chat.global.ChatManager;
 import pl.north93.northplatform.api.chat.global.ChatPlayer;
 import pl.north93.northplatform.api.chat.global.ChatRoom;

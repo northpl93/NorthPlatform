@@ -10,9 +10,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.metadata.FixedMetadataValue;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 /**
@@ -26,14 +25,14 @@ public class DamageTracker implements Listener
 {
     private static DamageTracker tracker;
     @Inject
-    private        BukkitApiCore apiCore;
+    private IBukkitServerManager serverManager;
 
     public static DamageTracker get()
     {
         if (tracker == null)
         {
             tracker = new DamageTracker();
-            tracker.apiCore.registerEvents(tracker);
+            tracker.serverManager.registerEvents(tracker);
         }
         return tracker;
     }
@@ -58,7 +57,7 @@ public class DamageTracker implements Listener
             return (DamageContainer) player.getMetadata("damageTracker").get(0).value();
         }
         final DamageContainer container = new DamageContainer(player);
-        player.setMetadata("damageTracker", new FixedMetadataValue(this.apiCore.getPluginMain(), container));
+        player.setMetadata("damageTracker", this.serverManager.createFixedMetadataValue(container));
         return container;
     }
 }

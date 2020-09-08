@@ -4,7 +4,7 @@
     <components>
         <component>
             <name>API.BukkitServerManager</name>
-            <mainClass>pl.north93.northplatform.api.bukkit.server.impl.BukkitServerManagerImpl</mainClass>
+            <mainClass>pl.north93.northplatform.api.bukkit.server.impl.BukkitServerManagerComponent</mainClass>
             <description>Core component that manages the server instance.</description>
             <dependencies>
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>
@@ -19,6 +19,7 @@
             <mainClass>pl.north93.northplatform.api.bukkit.player.impl.BukkitPlayerManagerImpl</mainClass>
             <description>Useful utils to manage players using Bukkit APIs</description>
             <dependencies>
+                <dependency>API.BukkitServerManager</dependency>
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>
             </dependencies>
             <packages>
@@ -42,6 +43,9 @@
             <name>API.Scoreboard</name>
             <mainClass>pl.north93.northplatform.api.bukkit.scoreboard.impl.ScoreboardManagerImpl</mainClass>
             <description>Scoreboard API.</description>
+            <dependencies>
+                <dependency>API.BukkitServerManager</dependency>
+            </dependencies>
             <platforms>
                 <platform>BUKKIT</platform>
             </platforms>
@@ -51,6 +55,9 @@
             <name>API.EntityHider</name>
             <mainClass>pl.north93.northplatform.api.bukkit.entityhider.impl.EntityHiderImpl</mainClass>
             <description>Allows hide or show entities to specified players.</description>
+            <dependencies>
+                <dependency>API.BukkitServerManager</dependency>
+            </dependencies>
             <platforms>
                 <platform>BUKKIT</platform>
             </platforms>
@@ -60,6 +67,9 @@
             <name>API.Map</name>
             <mainClass>pl.north93.northplatform.api.bukkit.map.impl.MapManagerImpl</mainClass>
             <description>Custom map rendering API.</description>
+            <dependencies>
+                <dependency>API.BukkitServerManager</dependency>
+            </dependencies>
             <packages>
                 <package>pl.north93.northplatform.api.bukkit.map</package>
             </packages>
@@ -73,6 +83,7 @@
             <mainClass>pl.north93.northplatform.api.bukkit.gui.impl.GuiTracker</mainClass>
             <description>GUI api.</description>
             <dependencies>
+                <dependency>API.BukkitServerManager</dependency>
                 <dependency>API.TickableManager</dependency>
             </dependencies>
             <packages>
@@ -87,6 +98,9 @@
             <name>API.HoloGui</name>
             <mainClass>pl.north93.northplatform.api.bukkit.hologui.impl.HoloGuiManagerImpl</mainClass>
             <description>Holographic GUI.</description>
+            <dependencies>
+                <dependency>API.BukkitServerManager</dependency>
+            </dependencies>
             <packages>
                 <package>pl.north93.northplatform.api.bukkit.hologui</package>
             </packages>
@@ -114,6 +128,9 @@
             <name>API.ProtocolManager</name>
             <mainClass>pl.north93.northplatform.api.bukkit.protocol.impl.ProtocolManagerComponent</mainClass>
             <description>An API to deal with minecraft protocol.</description>
+            <dependencies>
+                <dependency>API.BukkitServerManager</dependency>
+            </dependencies>
             <platforms>
                 <platform>BUKKIT</platform>
             </platforms>

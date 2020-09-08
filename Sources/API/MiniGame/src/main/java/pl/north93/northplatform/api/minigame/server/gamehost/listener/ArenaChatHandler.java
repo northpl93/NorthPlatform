@@ -13,7 +13,7 @@ import pl.north93.northplatform.api.minigame.server.gamehost.event.player.Specta
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.SpectatorModeChangeEvent;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.SpectatorQuitEvent;
 import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.chat.global.ChatManager;
 import pl.north93.northplatform.api.chat.global.ChatPlayer;
 import pl.north93.northplatform.api.chat.global.ChatRoom;

@@ -3,6 +3,10 @@ package pl.north93.northplatform.globalshops.server.impl;
 import com.google.common.base.Preconditions;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.globalshops.server.IPlayerContainer;
 import pl.north93.northplatform.globalshops.server.IPlayerExperienceService;
 import pl.north93.northplatform.globalshops.server.domain.BuyResult;
@@ -11,16 +15,12 @@ import pl.north93.northplatform.globalshops.server.domain.Item;
 import pl.north93.northplatform.globalshops.server.event.ItemBuyEvent;
 import pl.north93.northplatform.globalshops.server.event.ItemCheckBuyEvent;
 import pl.north93.northplatform.globalshops.shared.GroupType;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 @Slf4j
 class PlayerExperienceServiceImpl implements IPlayerExperienceService
 {
     @Inject
-    private BukkitApiCore apiCore;
+    private IBukkitServerManager serverManager;
 
     @Bean
     private PlayerExperienceServiceImpl()
@@ -54,7 +54,7 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
             event.setResult(BuyResult.NO_MONEY);
         }
 
-        return this.apiCore.callEvent(event).getResult();
+        return this.serverManager.callEvent(event).getResult();
     }
 
     private boolean checkDependencies(final IPlayerContainer playerContainer, final Item item, final int level)
@@ -138,7 +138,7 @@ class PlayerExperienceServiceImpl implements IPlayerExperienceService
                 return;
             }
             
-	        final ItemBuyEvent buyEvent = this.apiCore.callEvent(new ItemBuyEvent(player, item, level));
+	        final ItemBuyEvent buyEvent = this.serverManager.callEvent(new ItemBuyEvent(player, item, level));
 	        if (buyEvent.isCancelled())
 	        {
 	            return;

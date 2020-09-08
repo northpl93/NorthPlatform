@@ -20,7 +20,7 @@ import org.bukkit.util.Vector;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.SpectatorModeChangeEvent;
 import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi;
 
 /**

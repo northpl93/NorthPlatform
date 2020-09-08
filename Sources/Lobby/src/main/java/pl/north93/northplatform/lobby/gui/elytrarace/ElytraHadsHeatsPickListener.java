@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.globalshops.server.IGlobalShops;
 import pl.north93.northplatform.globalshops.server.event.ItemMarkedActiveEvent;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 /**

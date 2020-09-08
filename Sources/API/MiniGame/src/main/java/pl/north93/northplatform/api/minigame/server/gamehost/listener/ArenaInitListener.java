@@ -10,7 +10,7 @@ import org.diorite.commons.math.DioriteRandomUtils;
 
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;

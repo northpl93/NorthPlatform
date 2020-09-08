@@ -5,6 +5,9 @@
             <name>Utils.World.Properties</name>
             <mainClass>pl.north93.northplatform.worldproperties.impl.WorldPropertiesComponent</mainClass>
             <description>An utility to config properties of worlds</description>
+            <dependencies>
+                <dependency>API.BukkitServerManager</dependency>
+            </dependencies>
             <platforms>
                 <platform>BUKKIT</platform>
             </platforms>

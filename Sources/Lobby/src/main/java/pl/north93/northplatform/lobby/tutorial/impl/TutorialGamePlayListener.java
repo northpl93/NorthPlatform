@@ -14,7 +14,7 @@ import pl.north93.northplatform.lobby.tutorial.event.PlayerEnterTutorialEvent;
 import pl.north93.northplatform.lobby.tutorial.event.PlayerExitTutorialEvent;
 import pl.north93.northplatform.lobby.tutorial.event.TutorialStatusChangedEvent;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.economy.ICurrency;
 import pl.north93.northplatform.api.economy.IEconomyManager;
 import pl.north93.northplatform.api.economy.ITransaction;

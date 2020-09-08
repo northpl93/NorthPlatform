@@ -6,7 +6,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import pl.north93.northplatform.minigame.goldhunter.GoldHunter;
 import pl.north93.northplatform.minigame.goldhunter.arena.GoldHunterArena;
 import pl.north93.northplatform.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 
 public class StructureDestroyListener implements AutoListener
 {

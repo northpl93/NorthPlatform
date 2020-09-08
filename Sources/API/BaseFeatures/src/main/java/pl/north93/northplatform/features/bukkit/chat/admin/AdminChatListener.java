@@ -4,7 +4,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.chat.global.ChatManager;
 import pl.north93.northplatform.api.chat.global.ChatPlayer;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;

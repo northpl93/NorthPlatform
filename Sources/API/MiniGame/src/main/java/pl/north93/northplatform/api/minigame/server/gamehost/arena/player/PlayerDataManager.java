@@ -5,8 +5,8 @@ import java.util.Set;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
@@ -17,9 +17,9 @@ import pl.north93.northplatform.api.minigame.shared.api.PlayerStatus;
 public class PlayerDataManager
 {
     @Inject
-    private BukkitApiCore  apiCore;
-    @Inject
     private LocalArenaManager localArenaManager;
+    @Inject
+    private IBukkitServerManager serverManager;
 
     @Bean
     private PlayerDataManager()
@@ -49,7 +49,7 @@ public class PlayerDataManager
         }
 
         player.setPlayerData(PlayerStatus.class, newStatus);
-        this.apiCore.callEvent(new SpectatorModeChangeEvent(arena, player, oldStatus, newStatus));
+        this.serverManager.callEvent(new SpectatorModeChangeEvent(arena, player, oldStatus, newStatus));
     }
 
     @Override

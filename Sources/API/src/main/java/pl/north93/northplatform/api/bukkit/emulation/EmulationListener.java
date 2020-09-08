@@ -22,9 +22,9 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.diorite.commons.reflections.FieldAccessor;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.protocol.PacketEvent;
 import pl.north93.northplatform.api.bukkit.protocol.PacketHandler;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.bukkit.server.event.ServerStartedEvent;
 import pl.north93.northplatform.api.global.commands.Arguments;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
@@ -44,9 +44,9 @@ public class EmulationListener implements Listener
     private EmulationManager manager;
 
     @Bean
-    private EmulationListener(final BukkitApiCore apiCore)
+    private EmulationListener(final IBukkitServerManager serverManager)
     {
-        apiCore.registerEvents(this);
+        serverManager.registerEvents(this);
     }
 
     @SuppressWarnings("ConstantConditions")

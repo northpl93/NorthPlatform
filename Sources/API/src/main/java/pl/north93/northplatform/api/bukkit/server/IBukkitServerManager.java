@@ -1,5 +1,12 @@
 package pl.north93.northplatform.api.bukkit.server;
 
+import java.io.File;
+import java.util.UUID;
+
+import org.bukkit.event.Event;
+import org.bukkit.event.Listener;
+import org.bukkit.metadata.FixedMetadataValue;
+
 import pl.north93.northplatform.api.bukkit.server.event.ShutdownScheduledEvent;
 import pl.north93.northplatform.api.global.network.server.Server;
 import pl.north93.northplatform.api.global.network.server.ServerState;
@@ -11,12 +18,30 @@ import pl.north93.northplatform.api.global.network.server.ServerState;
  */
 public interface IBukkitServerManager
 {
+    UUID getServerId();
+
     /**
      * Zwraca immutable instancje dokumenty reprezentujaca dany serwer.
      *
      * @return niemutowalna instancja dokumentu.
      */
     Server getServer();
+
+    /**
+     * Rejestruje podane listenery w Bukkicie.
+     * @param listeners listenery do zarejestrowania.
+     */
+    void registerEvents(Listener... listeners);
+
+    /**
+     * Wywołuje dany event a następnie zwraca jego instancję.
+     * @param event event do wywołania.
+     * @param <T> typ eventu.
+     * @return instancja podana jako argument.
+     */
+    <T extends Event> T callEvent(T event);
+
+    File getServerDirectory();
 
     /**
      * Atomowo zmienia stan przechowywany wewnatrz dokumentu serwera.
@@ -56,4 +81,6 @@ public interface IBukkitServerManager
      * @throws IllegalStateException Gdy serwer juz sie wylacza lub gdy wylaczenie nie jest zaplanowane.
      */
     void cancelShutdown();
+
+    FixedMetadataValue createFixedMetadataValue(Object value);
 }

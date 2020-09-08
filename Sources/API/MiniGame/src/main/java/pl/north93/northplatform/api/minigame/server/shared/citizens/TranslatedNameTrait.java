@@ -23,7 +23,7 @@ import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologram;
 import pl.north93.northplatform.api.bukkit.hologui.hologram.impl.HologramFactory;
 import pl.north93.northplatform.api.bukkit.hologui.hologram.message.LegacyHologramLines;
 import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.TranslatableString;
 

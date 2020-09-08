@@ -20,7 +20,7 @@ import pl.north93.northplatform.api.bukkit.protocol.HandlerPriority;
 import pl.north93.northplatform.api.bukkit.protocol.PacketEvent;
 import pl.north93.northplatform.api.bukkit.protocol.PacketHandler;
 import pl.north93.northplatform.api.bukkit.protocol.ProtocolManager;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 
 public class PlayerListPacketListener implements AutoListener
 {    

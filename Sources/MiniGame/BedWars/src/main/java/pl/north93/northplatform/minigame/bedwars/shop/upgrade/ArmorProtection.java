@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import org.diorite.commons.math.DioriteMathUtils;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.minigame.bedwars.arena.Team;
@@ -20,10 +20,10 @@ public class ArmorProtection implements IUpgrade, Listener
     private final BwConfig bwConfig;
 
     // system agregacji wspiera SmartExecutora, wiec ten konstruktor zadziala
-    private ArmorProtection(final BukkitApiCore apiCore, final BwConfig bwConfig)
+    private ArmorProtection(final IBukkitServerManager serverManager, final BwConfig bwConfig)
     {
         this.bwConfig = bwConfig;
-        apiCore.registerEvents(this);
+        serverManager.registerEvents(this);
     }
 
     @Override

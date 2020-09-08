@@ -11,7 +11,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import pl.north93.northplatform.minigame.goldhunter.GoldHunter;
 import pl.north93.northplatform.minigame.goldhunter.player.GameTeam;
 import pl.north93.northplatform.minigame.goldhunter.player.GoldHunterPlayer;
-import pl.north93.northplatform.api.bukkit.utils.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 
 public class ChatListener implements AutoListener
 {

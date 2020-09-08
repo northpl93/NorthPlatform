@@ -12,6 +12,7 @@
             <dependencies>
                 <dependency>API.Database.Redis.Observer</dependency>
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>
+                <dependency>API.BukkitServerManager</dependency>
             </dependencies>
             <platforms>
                 <platform>BUKKIT</platform>
