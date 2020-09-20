@@ -10,7 +10,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.global.network.mojang.CachedProfile;
+import pl.north93.northplatform.api.global.network.mojang.CachedMojangProfile;
+import pl.north93.northplatform.api.global.network.mojang.MojangApiException;
 import pl.north93.northplatform.api.global.network.mojang.UsernameDetails;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.network.mojang.IMojangCache;
@@ -31,19 +32,25 @@ class MojangCacheImpl implements IMojangCache
     }
 
     @Override
-    public Optional<UsernameDetails> getUsernameDetails(final String username)
+    public UsernameDetails lookupUsernameAndUpdateDb(final String username) throws MojangApiException
     {
-        return this.usernameCache.getUsernameDetails(username);
+        return this.usernameCache.lookupUsernameAndUpdateDb(username);
     }
 
     @Override
-    public void updateProfile(final CachedProfile profile)
+    public Optional<UsernameDetails> lookupUsernameInLocalDatabase(final String username)
+    {
+        return this.usernameCache.lookupUsernameInLocalDatabase(username);
+    }
+
+    @Override
+    public void updateProfile(final CachedMojangProfile profile)
     {
         this.profileCache.updateProfile(profile);
     }
 
     @Override
-    public Optional<CachedProfile> getProfile(final UUID profileId)
+    public Optional<CachedMojangProfile> getProfile(final UUID profileId)
     {
         return this.profileCache.getProfile(profileId);
     }

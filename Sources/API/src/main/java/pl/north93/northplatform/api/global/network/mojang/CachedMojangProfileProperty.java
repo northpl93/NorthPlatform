@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public final class CachedProfileProperty
+public final class CachedMojangProfileProperty
 {
     private String name;
     private String value;

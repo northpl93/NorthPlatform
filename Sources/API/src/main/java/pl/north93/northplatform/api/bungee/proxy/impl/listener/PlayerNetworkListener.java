@@ -1,7 +1,6 @@
 package pl.north93.northplatform.api.bungee.proxy.impl.listener;
 
 import java.util.Locale;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -35,6 +34,7 @@ import pl.north93.northplatform.api.global.network.event.PlayerJoinNetEvent;
 import pl.north93.northplatform.api.global.network.event.PlayerQuitNetEvent;
 import pl.north93.northplatform.api.global.network.impl.players.OnlinePlayerImpl;
 import pl.north93.northplatform.api.global.network.mojang.IMojangCache;
+import pl.north93.northplatform.api.global.network.mojang.MojangApiException;
 import pl.north93.northplatform.api.global.network.mojang.UsernameDetails;
 import pl.north93.northplatform.api.global.network.players.IOfflinePlayer;
 import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
@@ -81,16 +81,19 @@ public class PlayerNetworkListener implements Listener
                 return;
             }
 
-            final Optional<UsernameDetails> details = this.mojangCache.getUsernameDetails(nick);
-            if (details.isEmpty())
+            final UsernameDetails usernameDetails;
+            try
+            {
+                usernameDetails = this.mojangCache.lookupUsernameAndUpdateDb(nick);
+            }
+            catch (final MojangApiException e)
             {
                 event.setCancelled(true);
                 event.setCancelReason(this.apiMessages.getComponent("pl-PL", "join.premium.check_failed"));
                 return;
             }
 
-            final UsernameDetails usernameDetails = details.get();
-            if (usernameDetails.getIsPremium() && !usernameDetails.getUsername().equals(nick))
+            if (usernameDetails.isPremium() && !usernameDetails.getUsername().equals(nick))
             {
                 event.setCancelled(true);
                 event.setCancelReason(this.apiMessages.getComponent("pl-PL", "join.premium.name_size_mistake"));
@@ -104,7 +107,7 @@ public class PlayerNetworkListener implements Listener
                 return;
             }
 
-            connection.setOnlineMode(usernameDetails.getIsPremium());
+            connection.setOnlineMode(usernameDetails.isPremium());
         });
     }
 

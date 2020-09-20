@@ -16,7 +16,9 @@ public interface IMojangCache
      * @return Opcjonalnie informacje o danym nicku. W wypadku braku moze to oznaczac
      *         problem z komunikacja z serwerami Mojangu.
      */
-    Optional<UsernameDetails> getUsernameDetails(String username);
+    UsernameDetails lookupUsernameAndUpdateDb(String username) throws MojangApiException;
+
+    Optional<UsernameDetails> lookupUsernameInLocalDatabase(String username);
 
     /**
      * Pobiera informacje o profilu Mojang/Minecraft o podanym UUID.
@@ -25,12 +27,12 @@ public interface IMojangCache
      * @param profileId Identyfikator profilu.
      * @return Opcjonalnie informacje o profilu Mojang/Minecraft.
      */
-    Optional<CachedProfile> getProfile(UUID profileId);
+    Optional<CachedMojangProfile> getProfile(UUID profileId);
 
     /**
      * Aktualizuje cache profilu w bazie danych serwera.
      *
      * @param profile Nowa wersja profilu do wprowadzenia.
      */
-    void updateProfile(CachedProfile profile);
+    void updateProfile(CachedMojangProfile profile);
 }

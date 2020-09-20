@@ -244,11 +244,11 @@ import pl.north93.northplatform.api.global.storage.StorageConnector;
 
     private UUID findUuidFromNick(final String nick)
     {
-        final Optional<UsernameDetails> usernameDetails = this.mojangCache.getUsernameDetails(nick);
+        final Optional<UsernameDetails> usernameDetails = this.mojangCache.lookupUsernameInLocalDatabase(nick);
         if (usernameDetails.isPresent())
         {
             final UsernameDetails details = usernameDetails.get();
-            if (details.getIsPremium())
+            if (details.isPremium())
             {
                 return details.getUuid();
             }

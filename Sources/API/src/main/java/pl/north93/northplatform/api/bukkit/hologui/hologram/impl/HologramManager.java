@@ -14,17 +14,14 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.entityhider.IEntityHider;
 import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologramVisibility;
 import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.bukkit.entityhider.IEntityHider;
 
 /*default*/ class HologramManager
 {
-    @Inject
-    private BukkitApiCore apiCore;
     @Inject
     private IEntityHider entityHider;
     @Inject
@@ -105,11 +102,6 @@ import pl.north93.northplatform.api.bukkit.entityhider.IEntityHider;
                 hologram.forceUpdateForPlayer(player);
             }
         }
-    }
-
-    public BukkitApiCore getApiCore()
-    {
-        return this.apiCore;
     }
 
     public IEntityHider getEntityHider()

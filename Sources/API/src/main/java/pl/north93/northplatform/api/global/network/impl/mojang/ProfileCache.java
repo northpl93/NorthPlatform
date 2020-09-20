@@ -25,31 +25,31 @@ import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.global.network.mojang.CachedProfile;
-import pl.north93.northplatform.api.global.network.mojang.CachedProfileProperty;
+import pl.north93.northplatform.api.global.network.mojang.CachedMojangProfile;
+import pl.north93.northplatform.api.global.network.mojang.CachedMojangProfileProperty;
 import pl.north93.northplatform.api.global.storage.StorageConnector;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 
 @Slf4j
 /*default*/ class ProfileCache
 {
-    private final MongoCollection<CachedProfile> collection;
+    private final MongoCollection<CachedMojangProfile> collection;
 
     @Bean
     private ProfileCache(final StorageConnector connector)
     {
         final MongoCollection<Document> collection = connector.getMainDatabase().getCollection("profile_cache");
-        this.collection = collection.withDocumentClass(CachedProfile.class);
+        this.collection = collection.withDocumentClass(CachedMojangProfile.class);
     }
 
-    public void updateProfile(final CachedProfile profile)
+    public void updateProfile(final CachedMojangProfile profile)
     {
         this.collection.insertOne(profile);
     }
 
-    public Optional<CachedProfile> getProfile(final UUID profileId)
+    public Optional<CachedMojangProfile> getProfile(final UUID profileId)
     {
-        final CachedProfile cachedProfile = this.collection.find(new Document("_id", profileId)).first();
+        final CachedMojangProfile cachedProfile = this.collection.find(new Document("_id", profileId)).first();
         if (cachedProfile == null)
         {
             return this.queryMojangAndFillCache(profileId);
@@ -58,7 +58,7 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
         return Optional.of(cachedProfile);
     }
 
-    private Optional<CachedProfile> queryMojangAndFillCache(final UUID uuid)
+    private Optional<CachedMojangProfile> queryMojangAndFillCache(final UUID uuid)
     {
         final String url = this.composeProfileFetchUrl(uuid);
 
@@ -75,9 +75,9 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
             final String name = jsonObject.get("name").getAsString();
 
             final JsonArray jsonProperties = jsonObject.get("properties").getAsJsonArray();
-            final List<CachedProfileProperty> properties = this.buildPropertiesList(jsonProperties);
+            final List<CachedMojangProfileProperty> properties = this.buildPropertiesList(jsonProperties);
 
-            final CachedProfile cachedProfile = new CachedProfile(uuid, name, properties);
+            final CachedMojangProfile cachedProfile = new CachedMojangProfile(uuid, name, properties);
             this.collection.insertOne(cachedProfile);
 
             log.info("Fetched profile from Mojang {}", cachedProfile);
@@ -101,9 +101,9 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
         }
     }
 
-    private List<CachedProfileProperty> buildPropertiesList(final JsonArray jsonArray)
+    private List<CachedMojangProfileProperty> buildPropertiesList(final JsonArray jsonArray)
     {
-        final List<CachedProfileProperty> properties = new ArrayList<>(jsonArray.size());
+        final List<CachedMojangProfileProperty> properties = new ArrayList<>(jsonArray.size());
         for (final JsonElement element : jsonArray)
         {
             final JsonObject object = element.getAsJsonObject();
@@ -112,7 +112,7 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
             final String value = object.get("value").getAsString();
             final String signature = object.has("signature") ? object.get("signature").getAsString() : null;
 
-            properties.add(new CachedProfileProperty(name, value, signature));
+            properties.add(new CachedMojangProfileProperty(name, value, signature));
         }
 
         return properties;

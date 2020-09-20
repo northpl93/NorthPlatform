@@ -17,8 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.network.players.IPlayersManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.global.network.mojang.CachedProfile;
-import pl.north93.northplatform.api.global.network.mojang.CachedProfileProperty;
+import pl.north93.northplatform.api.global.network.mojang.CachedMojangProfile;
+import pl.north93.northplatform.api.global.network.mojang.CachedMojangProfileProperty;
 import pl.north93.northplatform.api.global.network.mojang.IMojangCache;
 
 @Slf4j
@@ -57,11 +57,11 @@ public class GameProfileHandler implements AutoListener
 
     private void fetchCachedProperties(final UUID profileId, final Consumer<ProfileProperty> propertyConsumer)
     {
-        final Optional<CachedProfile> cacheResult = this.mojangCache.getProfile(profileId);
+        final Optional<CachedMojangProfile> cacheResult = this.mojangCache.getProfile(profileId);
         if (cacheResult.isPresent())
         {
-            final CachedProfile cachedProfile = cacheResult.get();
-            for (final CachedProfileProperty cachedProperty : cachedProfile.getProperties())
+            final CachedMojangProfile cachedProfile = cacheResult.get();
+            for (final CachedMojangProfileProperty cachedProperty : cachedProfile.getProperties())
             {
                 propertyConsumer.accept(new ProfileProperty(cachedProperty.getName(), cachedProperty.getValue(), cachedProperty.getSignature()));
             }

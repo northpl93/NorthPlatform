@@ -3,32 +3,18 @@ package pl.north93.northplatform.api.global.network.mojang;
 import java.time.Instant;
 import java.util.UUID;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Value;
+import pl.north93.serializer.platform.annotations.NorthField;
 
 /**
- * Przedstawia zcachowane informacje o danej nazwie uzytkownika,
- * jej statusie premium, mapowaniu na uuid.
+ * Represents cached information about username.
  */
-@Getter
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
-public final class UsernameDetails
+@Value
+public class UsernameDetails
 {
-    private String  username;
-    private UUID    uuid;
-    private Boolean isPremium;
-    private Instant fetchTime;
-
-    // no-premium constructor
-    public UsernameDetails(final String username, final Instant fetchTime)
-    {
-        this.username = username;
-        this.uuid = null;
-        this.isPremium = false;
-        this.fetchTime = fetchTime;
-    }
+    @NorthField(name = "_id")
+    String username;
+    UUID uuid;
+    boolean isPremium;
+    Instant fetchTime;
 }
