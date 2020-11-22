@@ -5,15 +5,19 @@ import static spark.Spark.get;
 import static spark.Spark.stop;
 
 
+import java.io.File;
+
 import com.google.gson.Gson;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.api.global.component.Component;
+import pl.north93.northplatform.api.global.utils.ConfigUtils;
 import pl.north93.northplatform.restful.controllers.NetworkController;
 import pl.north93.northplatform.restful.controllers.PlayerController;
 import pl.north93.northplatform.restful.controllers.ServersController;
+import pl.north93.northplatform.restful.security.ApiConfig;
 import pl.north93.northplatform.restful.security.ApiSecurity;
 
 public class RestfulComponent extends Component
@@ -38,8 +42,14 @@ public class RestfulComponent extends Component
         get("servers", servers::root, this.gson::toJson);
         get("servers/:uuid", servers::getServer, this.gson::toJson);
 
-        final ApiSecurity apiSecurity = new ApiSecurity();
+        final ApiSecurity apiSecurity = new ApiSecurity(this.loadConfig());
         apiSecurity.setupSecurity();
+    }
+
+    private ApiConfig loadConfig()
+    {
+        final File configFile = this.getApiCore().getFile("rest-api.xml");
+        return ConfigUtils.loadConfig(ApiConfig.class, configFile);
     }
 
     @Override

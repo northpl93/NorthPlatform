@@ -15,15 +15,15 @@ import pl.north93.northplatform.api.global.redis.rpc.IRpcObjectDescription;
 
 class RpcObjectDescription implements IRpcObjectDescription
 {
-    private final Class<?> classInterface;
+    private final Class<?> rpcInterface;
     private final int classId;
     private final Map<Method, RpcMethodDescription> methodToDescription;
     private final IntObjectMap<RpcMethodDescription> methodDesc;
 
-    public RpcObjectDescription(final Class<?> classInterface)
+    public RpcObjectDescription(final Class<?> rpcInterface)
     {
-        this.classInterface = classInterface;
-        this.classId = this.classInterface.getName().hashCode();
+        this.rpcInterface = rpcInterface;
+        this.classId = this.rpcInterface.getName().hashCode();
         this.methodToDescription = new HashMap<>();
         this.methodDesc = new IntObjectHashMap<>();
         this.populateMethodList();
@@ -31,7 +31,7 @@ class RpcObjectDescription implements IRpcObjectDescription
 
     private void populateMethodList()
     {
-        final Method[] methods = this.classInterface.getDeclaredMethods();
+        final Method[] methods = this.rpcInterface.getDeclaredMethods();
         Arrays.sort(methods, new MethodComparator());
 
         for (int methodId = 0; methodId < methods.length; methodId++)
@@ -69,6 +69,6 @@ class RpcObjectDescription implements IRpcObjectDescription
     @Override
     public String toString()
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("classInterface", this.classInterface).append("classId", this.classId).append("methodToDescription", this.methodToDescription).append("methodDesc", this.methodDesc).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("classInterface", this.rpcInterface).append("classId", this.classId).append("methodToDescription", this.methodToDescription).append("methodDesc", this.methodDesc).toString();
     }
 }

@@ -15,7 +15,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.DynamicBean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -32,15 +32,15 @@ public class GoldHunter
     @Inject
     private static LocalArenaManager localArenaManager;
     
-    private final BukkitApiCore apiCore;
+    private final BukkitHostConnector hostConnector;
     private final CharacterClassManager characterClassManager;
 
     private final Map<UUID, GoldHunterPlayer> players = new HashMap<>();
     
     @Bean
-    private GoldHunter(BukkitApiCore apiCore, CharacterClassManager characterClassManager)
+    private GoldHunter(BukkitHostConnector hostConnector, CharacterClassManager characterClassManager)
     {
-        this.apiCore = apiCore;
+        this.hostConnector = hostConnector;
         this.characterClassManager = characterClassManager;
     }
     
@@ -90,19 +90,19 @@ public class GoldHunter
     
     public void runTask(Runnable runnable)
     {
-        Bukkit.getScheduler().runTask(apiCore.getPluginMain(), runnable);
+        Bukkit.getScheduler().runTask(hostConnector.getPluginMain(), runnable);
     }
     
     public BukkitTask runTask(int ticks, Runnable runnable)
     {
-        return Bukkit.getScheduler().runTaskLater(apiCore.getPluginMain(), runnable, ticks);
+        return Bukkit.getScheduler().runTaskLater(hostConnector.getPluginMain(), runnable, ticks);
     }
     
     private void registerAbilityHandlersListener()
     {
         for ( SpecialAbilityType abilityType : SpecialAbilityType.values() )
         {
-            Bukkit.getPluginManager().registerEvents(abilityType.getHandler(), apiCore.getPluginMain());
+            Bukkit.getPluginManager().registerEvents(abilityType.getHandler(), hostConnector.getPluginMain());
         }
     }
     

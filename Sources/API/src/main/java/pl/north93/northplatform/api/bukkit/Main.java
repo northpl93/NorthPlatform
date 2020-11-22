@@ -2,28 +2,22 @@ package pl.north93.northplatform.api.bukkit;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.global.Platform;
 
 public class Main extends JavaPlugin
 {
-    private final BukkitApiCore bukkitApiCore = new BukkitApiCore(this);
+    private final ApiCore apiCore = new ApiCore(Platform.BUKKIT, new BukkitHostConnector(this));
 
     @Override
     public void onEnable()
     {
-        this.bukkitApiCore.startCore();
+        this.apiCore.startPlatform();
     }
 
     @Override
     public void onDisable()
     {
-        this.bukkitApiCore.stopCore();
-    }
-
-    @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("bukkitApiCore", this.bukkitApiCore).toString();
+        this.apiCore.stopPlatform();
     }
 }

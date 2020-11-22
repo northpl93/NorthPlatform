@@ -7,7 +7,6 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.packet.Chat;
 import net.md_5.bungee.protocol.packet.Kick;
-import pl.north93.northplatform.api.bungee.BungeeApiCore;
 import pl.north93.northplatform.api.bungee.proxy.IConnectionManager;
 import pl.north93.northplatform.api.bungee.proxy.IProxyServerManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -18,8 +17,6 @@ import pl.north93.northplatform.api.global.network.server.joinaction.JoinActions
 class ProxyRpcImpl implements IProxyRpc
 {
     private static final ProxyServer PROXY = ProxyServer.getInstance();
-    @Inject
-    private BungeeApiCore apiCore;
     @Inject
     private IProxyServerManager proxyServerManager;
     @Inject

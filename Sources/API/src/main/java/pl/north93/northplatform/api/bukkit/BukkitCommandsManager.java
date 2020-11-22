@@ -27,12 +27,12 @@ import pl.north93.northplatform.api.global.messages.UTF8Control;
 public class BukkitCommandsManager implements ICommandsManager
 {
     private final ResourceBundle apiMessages = ResourceBundle.getBundle("Messages", new UTF8Control());
-    private final BukkitApiCore apiCore;
+    private final BukkitHostConnector connector;
     private final CommandMap commandMap;
 
-    public BukkitCommandsManager(final BukkitApiCore apiCore)
+    public BukkitCommandsManager(final BukkitHostConnector connector)
     {
-        this.apiCore = apiCore;
+        this.connector = connector;
         this.commandMap = Bukkit.getCommandMap();
     }
 
@@ -137,7 +137,7 @@ public class BukkitCommandsManager implements ICommandsManager
             }
             if (this.wrapped.isAsync())
             {
-                BukkitCommandsManager.this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
+                BukkitCommandsManager.this.connector.runTaskAsynchronously(() ->
                 {
                     this.wrapped.execute(new WrappedSender(commandSender), new Arguments(args), label);
                 });

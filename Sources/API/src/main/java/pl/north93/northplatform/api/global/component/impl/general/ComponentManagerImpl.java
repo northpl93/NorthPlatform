@@ -24,9 +24,11 @@ import org.reflections.Reflections;
 
 import javassist.ClassPool;
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
 import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.global.HostConnector;
 import pl.north93.northplatform.api.global.Platform;
+import pl.north93.northplatform.api.global.agent.InstrumentationClient;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.ComponentDescription;
 import pl.north93.northplatform.api.global.component.IComponentBundle;
@@ -52,6 +54,7 @@ public class ComponentManagerImpl implements IComponentManager
     private final RootBeanContext rootBeanCtx;
     private final ProfileManagerImpl profileManager;
     private final AggregationManager aggregationManager;
+    private final InstrumentationClient instrumentationClient;
     private ClassloaderScanningTask rootScanningTask;
     private boolean autoEnable;
 
@@ -69,6 +72,7 @@ public class ComponentManagerImpl implements IComponentManager
         this.rootBeanCtx = new RootBeanContext();
         this.profileManager = new ProfileManagerImpl(this);
         this.aggregationManager = new AggregationManager();
+        this.instrumentationClient = new InstrumentationClient();
     }
 
     public void initDefaultBeans()
@@ -76,9 +80,13 @@ public class ComponentManagerImpl implements IComponentManager
         final BeanFactory factory = BeanFactory.INSTANCE;
         factory.createStaticBeanManually(this.rootBeanCtx, this.apiCore.getClass(), "ApiCore", this.apiCore);
 
+        final HostConnector hostConnector = this.apiCore.getHostConnector();
+        factory.createStaticBeanManually(this.rootBeanCtx, hostConnector.getClass(), "HostConnector", hostConnector);
+
         if (this.apiCore.getPlatform() == Platform.BUKKIT)
         {
-            factory.createStaticBeanManually(this.rootBeanCtx, JavaPlugin.class, "JavaPlugin", ((BukkitApiCore) this.apiCore).getPluginMain());
+            final BukkitHostConnector bukkitConnector = (BukkitHostConnector) hostConnector;
+            factory.createStaticBeanManually(this.rootBeanCtx, JavaPlugin.class, "JavaPlugin", bukkitConnector.getPluginMain());
         }
     }
 
@@ -492,6 +500,11 @@ public class ComponentManagerImpl implements IComponentManager
     public ApiCore getApiCore()
     {
         return this.apiCore;
+    }
+
+    public InstrumentationClient getInstrumentationClient()
+    {
+        return this.instrumentationClient;
     }
 
     @Override

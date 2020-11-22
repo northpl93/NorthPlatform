@@ -23,7 +23,7 @@ public class NetworkControllerRpcImpl implements NetworkControllerRpc
     public void stopController()
     {
         log.info("Received stop request from network.");
-        this.apiCore.getPlatformConnector().stop();
+        this.apiCore.getHostConnector().shutdownHost();
     }
 
     @Override

@@ -15,23 +15,23 @@ import org.apache.commons.lang3.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.chat.global.ChatPlayer;
 import pl.north93.northplatform.api.chat.global.ChatRoom;
 import pl.north93.northplatform.api.chat.global.impl.ChatManagerImpl;
 import pl.north93.northplatform.api.chat.global.impl.data.PlayerChatMessage;
-import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.network.players.Identity;
 
 @Slf4j
 public class ChatEngine
 {
     @Inject
-    private BukkitApiCore   apiCore;
-    @Inject
     private ChatManagerImpl chatManager;
+    @Inject
+    private IBukkitServerManager serverManager;
 
     @Bean
     private ChatEngine()
@@ -102,7 +102,7 @@ public class ChatEngine
     private void processRemote(final ChatRoom mainRoom, final Identity sender, final BaseComponent message)
     {
         final String jsonMessage = ComponentSerializer.toString(message);
-        final UUID serverId = this.apiCore.getServerId();
+        final UUID serverId = this.serverManager.getServerId();
 
         final PlayerChatMessage chatMessage = new PlayerChatMessage(mainRoom.getId(), jsonMessage, sender, serverId);
         this.chatManager.sendMessage(chatMessage);

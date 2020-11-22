@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.global.ApiCore;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.component.annotations.bean.Named;
@@ -16,7 +17,6 @@ import pl.north93.northplatform.api.global.network.event.NetworkShutdownNetEvent
 import pl.north93.northplatform.api.global.redis.event.NetEventSubscriber;
 import pl.north93.northplatform.api.global.redis.observable.Hash;
 import pl.north93.northplatform.api.global.redis.observable.Value;
-import pl.north93.northplatform.api.standalone.StandaloneApiCore;
 import pl.north93.northplatform.daemon.cfg.DaemonConfig;
 import pl.north93.northplatform.daemon.event.ServerCreatingEvent;
 import pl.north93.northplatform.daemon.event.ServerExitedEvent;
@@ -27,7 +27,7 @@ public class DaemonInfoHandler
     @Inject
     private DaemonConfig config;
     @Inject
-    private StandaloneApiCore apiCore;
+    private ApiCore apiCore;
     @Inject
     private IDaemonsManager daemonsManager;
     private final Value<DaemonDto> daemonInfo;

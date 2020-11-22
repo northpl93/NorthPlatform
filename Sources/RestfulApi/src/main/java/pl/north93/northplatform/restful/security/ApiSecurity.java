@@ -8,16 +8,15 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.global.utils.ConfigUtils;
 
 @Slf4j
 public class ApiSecurity
 {
     private final ApiConfig apiConfig;
 
-    public ApiSecurity()
+    public ApiSecurity(final ApiConfig apiConfig)
     {
-        this.apiConfig = ConfigUtils.loadConfig(ApiConfig.class, "rest-api.xml");
+        this.apiConfig = apiConfig;
     }
 
     public void setupSecurity()

@@ -11,22 +11,22 @@ import org.bukkit.metadata.MetadataValue;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
-import pl.north93.northplatform.api.global.component.Component;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardContext;
 import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardLayout;
 import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardManager;
+import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
+import pl.north93.northplatform.api.global.component.Component;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class ScoreboardManagerImpl extends Component implements IScoreboardManager
 {
     private final Map<LayoutUpdateTask, IScoreboardLayout> layoutUpdaters;
     @Inject
-    private       BukkitApiCore                            apiCore;
+    private BukkitHostConnector hostConnector;
     @Inject
-    private       IBukkitExecutor                          bukkitExecutor;
+    private IBukkitExecutor bukkitExecutor;
 
     public ScoreboardManagerImpl()
     {
@@ -59,7 +59,7 @@ public class ScoreboardManagerImpl extends Component implements IScoreboardManag
     @Override
     public void removeScoreboard(final Player player)
     {
-        player.removeMetadata("scoreboard_context", this.apiCore.getPluginMain());
+        player.removeMetadata("scoreboard_context", this.hostConnector.getPluginMain());
         
         final ScoreboardContextImpl context = this.getContext(player);
         if (context == null)
@@ -77,7 +77,7 @@ public class ScoreboardManagerImpl extends Component implements IScoreboardManag
         {
             old.cleanup();
         }
-        player.setMetadata("scoreboard_context", new FixedMetadataValue(this.apiCore.getPluginMain(), scoreboardContext));
+        player.setMetadata("scoreboard_context", new FixedMetadataValue(this.hostConnector.getPluginMain(), scoreboardContext));
         scoreboardContext.update();
     }
 
@@ -99,7 +99,7 @@ public class ScoreboardManagerImpl extends Component implements IScoreboardManag
 
         final LayoutUpdateTask task = new LayoutUpdateTask(this, layout);
         this.layoutUpdaters.put(task, layout);
-        task.runTaskTimer(this.apiCore.getPluginMain(), updateEvery, updateEvery);
+        task.runTaskTimer(this.hostConnector.getPluginMain(), updateEvery, updateEvery);
     }
 
     /*default*/ void removeTask(final LayoutUpdateTask task)

@@ -6,14 +6,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 @Slf4j
 public class SimpleCountdown
 {
     @Inject
-    private BukkitApiCore apiCore;
+    private BukkitHostConnector hostConnector;
 
     private int ticksLeft;
     private int ticks;
@@ -59,7 +59,7 @@ public class SimpleCountdown
         Preconditions.checkState(this.task == null, "Countdown already started");
         Preconditions.checkState(this.ticksLeft > 0, "Ticks left is 0");
         
-        this.task = Bukkit.getScheduler().runTaskTimer(this.apiCore.getPluginMain(), () -> this.tick(), 1, 1);
+        this.task = Bukkit.getScheduler().runTaskTimer(this.hostConnector.getPluginMain(), () -> this.tick(), 1, 1);
         return this;
     }
     

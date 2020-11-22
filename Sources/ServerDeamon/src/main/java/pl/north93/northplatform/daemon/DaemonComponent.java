@@ -28,7 +28,7 @@ public class DaemonComponent extends Component
     {
         this.rpcManager.addRpcImplementation(DaemonRpc.class, new DaemonRpcImpl());
 
-        this.getApiCore().getPlatformConnector().runTaskAsynchronously(new ProcessWatchdog(), 20);
+        this.getApiCore().getHostConnector().runTaskAsynchronously(new ProcessWatchdog(), 20);
     }
 
     @Override

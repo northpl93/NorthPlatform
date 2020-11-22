@@ -1,35 +1,44 @@
 package pl.north93.northplatform.api.bungee;
 
-
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Handler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import lombok.extern.slf4j.Slf4j;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Event;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.PluginManager;
+import net.md_5.bungee.api.scheduler.TaskScheduler;
 import pl.north93.northplatform.api.bungee.cfg.ProxyInstanceConfig;
 import pl.north93.northplatform.api.global.ApiCore;
-import pl.north93.northplatform.api.global.Platform;
+import pl.north93.northplatform.api.global.HostConnector;
 import pl.north93.northplatform.api.global.redis.RedisKeys;
 import pl.north93.northplatform.api.global.utils.ConfigUtils;
 import pl.north93.northplatform.api.standalone.logger.NorthGelfHandler;
 
-public class BungeeApiCore extends ApiCore
+@Slf4j
+public class BungeeHostConnector implements HostConnector
 {
     private final Main bungeePlugin;
     private ProxyInstanceConfig config;
 
-    public BungeeApiCore(final Main bungeePlugin)
+    public BungeeHostConnector(final Main bungeePlugin)
     {
-        super(Platform.BUNGEE, new BungeePlatformConnector(bungeePlugin));
         this.bungeePlugin = bungeePlugin;
+    }
+
+    @Override
+    public String onPlatformInit(final ApiCore apiCore)
+    {
         this.setupLogger();
+
+        final File configFile = this.getFile("proxy_instance.xml");
+        this.config = ConfigUtils.loadConfig(ProxyInstanceConfig.class, configFile);
+
+        return RedisKeys.PROXY_INSTANCE + this.config.getUniqueName();
     }
 
     private void setupLogger()
@@ -48,9 +57,20 @@ public class BungeeApiCore extends ApiCore
     }
 
     @Override
-    public String getId()
+    public void onPlatformStart(final ApiCore apiCore)
     {
-        return RedisKeys.PROXY_INSTANCE + this.config.getUniqueName();
+        if (! ProxyServer.getInstance().getConfig().isIpForward())
+        {
+            log.error("Set ip_forward to true in bungee's config.yml");
+            ProxyServer.getInstance().stop();
+        }
+    }
+
+    @Override
+    public void onPlatformStop(final ApiCore apiCore)
+    {
+        // anulujemy wszystkie taski naszych komponentów bo w bungee moga sie wykonywac nawet po zatrzymaniu pluginu
+        ProxyServer.getInstance().getScheduler().cancel(this.bungeePlugin);
     }
 
     @Override
@@ -60,32 +80,15 @@ public class BungeeApiCore extends ApiCore
     }
 
     @Override
-    protected void init()
-    {
-        this.config = ConfigUtils.loadConfig(ProxyInstanceConfig.class, "proxy_instance.xml");
-    }
-
-    @Override
-    protected void start()
-    {
-        if (! ProxyServer.getInstance().getConfig().isIpForward())
-        {
-            this.getApiLogger().error("Set ip_forward to true in bungee's config.yml");
-            ProxyServer.getInstance().stop();
-        }
-    }
-
-    @Override
-    protected void stop()
-    {
-        // anulujemy wszystkie taski naszych komponentów bo w bungee moga sie wykonywac nawet po zatrzymaniu pluginu
-        ProxyServer.getInstance().getScheduler().cancel(this.bungeePlugin);
-    }
-
-    @Override
     public File getFile(final String name)
     {
         return new File(this.bungeePlugin.getDataFolder(), name);
+    }
+
+    @Override
+    public void shutdownHost()
+    {
+        ProxyServer.getInstance().stop();
     }
 
     /**
@@ -118,8 +121,16 @@ public class BungeeApiCore extends ApiCore
     }
 
     @Override
-    public String toString()
+    public void runTaskAsynchronously(final Runnable runnable)
     {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("bungeePlugin", this.bungeePlugin).toString();
+        final TaskScheduler scheduler = this.bungeePlugin.getProxy().getScheduler();
+        scheduler.runAsync(this.bungeePlugin, runnable);
+    }
+
+    @Override
+    public void runTaskAsynchronously(final Runnable runnable, final int ticks)
+    {
+        final TaskScheduler scheduler = this.bungeePlugin.getProxy().getScheduler();
+        scheduler.schedule(this.bungeePlugin, runnable, 0, ticks * 50, TimeUnit.MILLISECONDS);
     }
 }

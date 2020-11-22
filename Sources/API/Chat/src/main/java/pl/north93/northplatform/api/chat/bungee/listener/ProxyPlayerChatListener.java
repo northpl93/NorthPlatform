@@ -5,12 +5,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import pl.north93.northplatform.api.bungee.BungeeHostConnector;
 import pl.north93.northplatform.api.bungee.proxy.event.HandlePlayerProxyQuitEvent;
 import pl.north93.northplatform.api.chat.global.impl.ChatManagerImpl;
-import pl.north93.northplatform.api.global.network.players.Identity;
-import pl.north93.northplatform.api.bungee.BungeeApiCore;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.global.network.players.Identity;
 
 public class ProxyPlayerChatListener implements Listener
 {
@@ -18,9 +18,9 @@ public class ProxyPlayerChatListener implements Listener
     private ChatManagerImpl chatManager;
 
     @Bean
-    private ProxyPlayerChatListener(final BungeeApiCore apiCore)
+    private ProxyPlayerChatListener(final BungeeHostConnector hostConnector)
     {
-        apiCore.registerListeners(this);
+        hostConnector.registerListeners(this);
     }
 
     @EventHandler

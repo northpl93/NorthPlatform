@@ -61,7 +61,7 @@ public class StatisticsManagerImpl implements IStatisticsManager
         aggregation.add(new Document("$limit", size)); // limitujemy rozmiar przed pobraniem do klienta
 
         final CompletableFuture<IRanking<T, UNIT>> future = new CompletableFuture<>();
-        this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
+        this.apiCore.getHostConnector().runTaskAsynchronously(() ->
         {
             final AggregateIterable<Document> documents = this.collection.aggregate(aggregation);
             final Stream<Document> stream = StreamSupport.stream(documents.spliterator(), false);
@@ -83,7 +83,7 @@ public class StatisticsManagerImpl implements IStatisticsManager
         Arrays.stream(filters).forEach(filter -> filter.appendSort(statistic, sort));
 
         final CompletableFuture<IRecord<T, UNIT>> future = new CompletableFuture<>();
-        this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
+        this.apiCore.getHostConnector().runTaskAsynchronously(() ->
         {
             final Document result = this.collection.find(query).sort(sort).first();
             final IRecord<T, UNIT> resultRecord = this.documentToUnit(statistic, result);
@@ -103,7 +103,7 @@ public class StatisticsManagerImpl implements IStatisticsManager
         aggregation.add(new Document("$group", group));
 
         final CompletableFuture<UNIT> future = new CompletableFuture<>();
-        this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
+        this.apiCore.getHostConnector().runTaskAsynchronously(() ->
         {
             final Document first = this.collection.aggregate(aggregation).first();
 
@@ -149,7 +149,7 @@ public class StatisticsManagerImpl implements IStatisticsManager
         aggregation.add(new Document("$project", project)); // finalny projekt
 
         final CompletableFuture<UNIT> future = new CompletableFuture<>();
-        this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
+        this.apiCore.getHostConnector().runTaskAsynchronously(() ->
         {
             final Document first = this.collection.aggregate(aggregation).first();
 

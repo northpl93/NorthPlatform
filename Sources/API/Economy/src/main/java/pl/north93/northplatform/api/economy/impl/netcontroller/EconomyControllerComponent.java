@@ -3,6 +3,8 @@ package pl.north93.northplatform.api.economy.impl.netcontroller;
 import static spark.Spark.get;
 
 
+import java.io.File;
+
 import com.google.gson.Gson;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -12,22 +14,23 @@ import pl.north93.northplatform.api.economy.ICurrency;
 import pl.north93.northplatform.api.economy.ITransaction;
 import pl.north93.northplatform.api.economy.cfg.EconomyConfig;
 import pl.north93.northplatform.api.economy.impl.netcontroller.rest.OperationInfo;
+import pl.north93.northplatform.api.economy.impl.shared.EconomyManagerImpl;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.utils.ConfigUtils;
-import pl.north93.northplatform.api.economy.impl.shared.EconomyManagerImpl;
 
 public class EconomyControllerComponent extends Component
 {
-    private final Gson               gson = new Gson();
-    private       EconomyConfig      config;
+    private final Gson gson = new Gson();
+    private EconomyConfig config;
     @Inject
-    private       EconomyManagerImpl economyManager;
+    private EconomyManagerImpl economyManager;
 
     @Override
     protected void enableComponent()
     {
-        this.config = ConfigUtils.loadConfig(EconomyConfig.class, "economy.xml");
+        final File configFile = this.getApiCore().getFile("economy.xml");
+        this.config = ConfigUtils.loadConfig(EconomyConfig.class, configFile);
         this.economyManager.setConfig(this.config);
 
         get("player/:nick/money/:currency/add/:amount", (request, response) ->

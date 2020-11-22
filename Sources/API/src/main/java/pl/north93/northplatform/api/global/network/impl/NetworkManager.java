@@ -3,6 +3,7 @@ package pl.north93.northplatform.api.global.network.impl;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.config.IConfig;
@@ -17,6 +18,7 @@ import pl.north93.northplatform.api.global.redis.observable.IObservationManager;
 import pl.north93.northplatform.api.global.redis.rpc.IRpcManager;
 import pl.north93.northplatform.api.global.redis.rpc.Targets;
 
+@Slf4j
 class NetworkManager extends Component implements INetworkManager
 {
     @Inject @NetConfig(type = NetworkMeta.class, id = "networkMeta")
@@ -62,9 +64,10 @@ class NetworkManager extends Component implements INetworkManager
     }
 
     @NetEventSubscriber(NetworkShutdownNetEvent.class)
-    public void onNetShutdownEvent(final NetworkShutdownNetEvent event) // nasluchuje na event wylaczenia sieci
+    public void onNetShutdownEvent(final NetworkShutdownNetEvent event)
     {
-        this.getApiCore().getPlatformConnector().stop();
+        log.info("Received network stop event");
+        this.getApiCore().getHostConnector().shutdownHost();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package pl.north93.northplatform.datashare.netcontroller;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -38,7 +39,9 @@ public class PlayerDataShareController extends Component implements IDataShareCo
 
     private void loadConfig()
     {
-        this.config = ConfigUtils.loadConfig(DataSharingConfig.class, "datasharing.xml");
+        final File configFile = this.getApiCore().getFile("datasharing.xml");
+        this.config = ConfigUtils.loadConfig(DataSharingConfig.class, configFile);
+
         this.servers.clear();
         for (final DataSharingGroupConfig groupConfig : this.config.getSharingGroups())
         {
@@ -67,7 +70,7 @@ public class PlayerDataShareController extends Component implements IDataShareCo
                 continue;
             }
             final BroadcastTask task = new BroadcastTask(new DataSharingGroup(config));
-            this.getApiCore().getPlatformConnector().runTaskAsynchronously(task, announcer.getTime() * 20);
+            this.getApiCore().getHostConnector().runTaskAsynchronously(task, announcer.getTime() * 20);
         }
     }
 

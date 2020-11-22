@@ -32,7 +32,7 @@ public class PlayersDataFixer extends Component implements Runnable
     protected void enableComponent()
     {
         // wykonywanie zadania co 10 minut
-        this.getApiCore().getPlatformConnector().runTaskAsynchronously(this, 20 * 60 * 10);
+        this.getApiCore().getHostConnector().runTaskAsynchronously(this, 20 * 60 * 10);
     }
 
     @Override

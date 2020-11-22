@@ -4,7 +4,8 @@ import java.util.Objects;
 
 import lombok.ToString;
 import net.md_5.bungee.api.ProxyServer;
-import pl.north93.northplatform.api.bungee.BungeeApiCore;
+import pl.north93.northplatform.api.bungee.BungeeHostConnector;
+import pl.north93.northplatform.api.global.ApiCore;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.network.proxy.IProxiesManager;
 import pl.north93.northplatform.api.global.network.proxy.ProxyDto;
@@ -13,20 +14,22 @@ import pl.north93.northplatform.api.global.network.proxy.ProxyDto;
 /*default*/ class ProxyInfoUploader
 {
     private static final int UPDATE_PROXY_DATA_EVERY = 20;
-    private final BungeeApiCore apiCore;
+    private final BungeeHostConnector hostConnector;
     private final IProxiesManager proxiesManager;
     private final AntiDdosState antiDdosState;
+    private final ApiCore apiCore;
     private ProxyDto latestDto;
 
     @Bean
-    private ProxyInfoUploader(final BungeeApiCore apiCore, final IProxiesManager proxiesManager, final AntiDdosState antiDdosState)
+    private ProxyInfoUploader(final BungeeHostConnector hostConnector, final IProxiesManager proxiesManager, final AntiDdosState antiDdosState, final ApiCore apiCore)
     {
-        this.apiCore = apiCore;
+        this.hostConnector = hostConnector;
         this.proxiesManager = proxiesManager;
         this.antiDdosState = antiDdosState;
+        this.apiCore = apiCore;
 
         this.uploadInfo();
-        this.apiCore.getPlatformConnector().runTaskAsynchronously(this::uploadInfo, UPDATE_PROXY_DATA_EVERY);
+        this.hostConnector.runTaskAsynchronously(this::uploadInfo, UPDATE_PROXY_DATA_EVERY);
     }
 
     private void uploadInfo()
@@ -45,7 +48,7 @@ import pl.north93.northplatform.api.global.network.proxy.ProxyDto;
     {
         final ProxyDto proxyInstanceInfo = new ProxyDto();
 
-        proxyInstanceInfo.setId(this.apiCore.getProxyConfig().getUniqueName());
+        proxyInstanceInfo.setId(this.hostConnector.getProxyConfig().getUniqueName());
         proxyInstanceInfo.setHostname(this.apiCore.getHostName());
         proxyInstanceInfo.setOnlinePlayers(ProxyServer.getInstance().getOnlineCount());
         proxyInstanceInfo.setAntiDdosState(this.antiDdosState.isEnabled());

@@ -4,21 +4,23 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import net.md_5.bungee.api.plugin.Plugin;
+import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.global.Platform;
 
 public class Main extends Plugin
 {
-    private final BungeeApiCore apiCore = new BungeeApiCore(this);
+    private final ApiCore apiCore = new ApiCore(Platform.BUNGEE, new BungeeHostConnector(this));
 
     @Override
     public void onEnable()
     {
-        this.apiCore.startCore();
+        this.apiCore.startPlatform();
     }
 
     @Override
     public void onDisable()
     {
-        this.apiCore.stopCore();
+        this.apiCore.stopPlatform();
     }
 
     @Override

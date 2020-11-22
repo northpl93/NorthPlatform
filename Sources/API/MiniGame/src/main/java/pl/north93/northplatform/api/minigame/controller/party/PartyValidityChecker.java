@@ -18,7 +18,7 @@ public class PartyValidityChecker implements Runnable
     private PartyValidityChecker(final IPartyManager partyManager, final ApiCore apiCore)
     {
         this.partyManager = partyManager;
-        apiCore.getPlatformConnector().runTaskAsynchronously(this, TIME);
+        apiCore.getHostConnector().runTaskAsynchronously(this, TIME);
     }
 
     @Override

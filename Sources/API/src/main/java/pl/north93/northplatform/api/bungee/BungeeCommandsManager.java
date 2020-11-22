@@ -19,17 +19,17 @@ import pl.north93.northplatform.api.global.messages.MessageLayout;
 
 public class BungeeCommandsManager implements ICommandsManager
 {
-    private final BungeeApiCore apiCore;
+    private final BungeeHostConnector hostConnector;
 
-    public BungeeCommandsManager(final BungeeApiCore apiCore)
+    public BungeeCommandsManager(final BungeeHostConnector hostConnector)
     {
-        this.apiCore = apiCore;
+        this.hostConnector = hostConnector;
     }
 
     @Override
     public void registerCommand(final NorthCommand northCommand)
     {
-        ProxyServer.getInstance().getPluginManager().registerCommand(this.apiCore.getBungeePlugin(), new WrappedCommand(northCommand));
+        ProxyServer.getInstance().getPluginManager().registerCommand(this.hostConnector.getBungeePlugin(), new WrappedCommand(northCommand));
     }
 
     @Override
@@ -54,7 +54,7 @@ public class BungeeCommandsManager implements ICommandsManager
             final String label = this.northCommand.getName();
             if (this.northCommand.isAsync())
             {
-                BungeeCommandsManager.this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
+                BungeeCommandsManager.this.hostConnector.runTaskAsynchronously(() ->
                 {
                     this.northCommand.execute(new WrappedSender(commandSender), new Arguments(strings), label);
                 });

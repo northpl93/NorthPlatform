@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
 import pl.north93.northplatform.api.bukkit.Main;
 import pl.north93.northplatform.api.bukkit.player.IBukkitPlayers;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
@@ -28,11 +28,11 @@ public class HubVisibilityService
     private static final MetaKey VISIBILITY_META = MetaKey.get("hub_visibility");
     private final Map<String, IHubVisibilityPolicy> policies = new HashMap<>();
     @Inject
-    private BukkitApiCore  apiCore;
-    @Inject
     private IBukkitPlayers players;
     @Inject
     private LobbyManager lobbyManager;
+    @Inject
+    private BukkitHostConnector hostConnector;
 
     @Bean
     private HubVisibilityService()
@@ -64,7 +64,7 @@ public class HubVisibilityService
 
     public void refreshVisibility(final INorthPlayer player)
     {
-        final Main plugin = this.apiCore.getPluginMain();
+        final Main plugin = this.hostConnector.getPluginMain();
         this.players.getStream().forEach(other ->
         {
             if (other.equals(player))

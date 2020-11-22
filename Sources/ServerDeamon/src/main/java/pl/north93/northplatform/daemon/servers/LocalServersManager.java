@@ -101,7 +101,7 @@ public class LocalServersManager
         log.info("Deploying server {} with pattern {}", serverId, patternId);
 
         final CompletableFuture<Server> future = new CompletableFuture<>();
-        this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
+        this.apiCore.getHostConnector().runTaskAsynchronously(() ->
         {
             future.complete(this.deployServer(serverId, patternId));
             log.info("Deployment operation of {} completed.", serverId);

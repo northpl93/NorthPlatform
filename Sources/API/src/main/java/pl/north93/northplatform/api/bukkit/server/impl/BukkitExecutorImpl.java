@@ -7,42 +7,42 @@ import net.minecraft.server.v1_12_R1.MinecraftServer;
 
 import org.bukkit.Bukkit;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
 import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 
 class BukkitExecutorImpl implements IBukkitExecutor
 {
-    private final BukkitApiCore apiCore;
+    private final BukkitHostConnector hostConnector;
 
     @Bean
-    private BukkitExecutorImpl(final BukkitApiCore apiCore)
+    private BukkitExecutorImpl(final BukkitHostConnector hostConnector)
     {
-        this.apiCore = apiCore;
+        this.hostConnector = hostConnector;
     }
 
     @Override
     public void sync(final Runnable runnable)
     {
-        Bukkit.getScheduler().runTask(this.apiCore.getPluginMain(), runnable);
+        Bukkit.getScheduler().runTask(this.hostConnector.getPluginMain(), runnable);
     }
 
     @Override
     public void async(final Runnable runnable)
     {
-        Bukkit.getScheduler().runTaskAsynchronously(this.apiCore.getPluginMain(), runnable);
+        Bukkit.getScheduler().runTaskAsynchronously(this.hostConnector.getPluginMain(), runnable);
     }
 
     @Override
     public void syncLater(final int ticks, final Runnable runnable)
     {
-        Bukkit.getScheduler().runTaskLater(this.apiCore.getPluginMain(), runnable, ticks);
+        Bukkit.getScheduler().runTaskLater(this.hostConnector.getPluginMain(), runnable, ticks);
     }
 
     @Override
     public void asyncLater(final int ticks, final Runnable runnable)
     {
-        Bukkit.getScheduler().runTaskLaterAsynchronously(this.apiCore.getPluginMain(), runnable, ticks);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(this.hostConnector.getPluginMain(), runnable, ticks);
     }
 
     @Override
@@ -61,13 +61,13 @@ class BukkitExecutorImpl implements IBukkitExecutor
     @Override
     public void syncTimer(final int every, final Runnable runnable)
     {
-        Bukkit.getScheduler().runTaskTimer(this.apiCore.getPluginMain(), runnable, every, every);
+        Bukkit.getScheduler().runTaskTimer(this.hostConnector.getPluginMain(), runnable, every, every);
     }
 
     @Override
     public void asyncTimer(final int every, final Runnable runnable)
     {
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this.apiCore.getPluginMain(), runnable, every, every);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this.hostConnector.getPluginMain(), runnable, every, every);
     }
 
     @Override

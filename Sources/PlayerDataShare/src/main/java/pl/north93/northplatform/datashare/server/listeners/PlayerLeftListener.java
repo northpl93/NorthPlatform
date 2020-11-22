@@ -25,7 +25,7 @@ public class PlayerLeftListener implements Listener
     @EventHandler(priority = EventPriority.MONITOR)
     public void onLeft(final PlayerQuitEvent event)
     {
-        this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
+        this.apiCore.getHostConnector().runTaskAsynchronously(() ->
         {
             this.dataShareManager.getDataShareManager().savePlayer(this.dataShareServer.getMyGroup(), event.getPlayer(), true);
         });

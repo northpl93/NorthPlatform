@@ -66,7 +66,7 @@ class StatisticHolderImpl implements IStatisticHolder
         final Document sort = this.composeSort(statistic, filters);
 
         final CompletableFuture<IRecord<T, UNIT>> future = new CompletableFuture<>();
-        this.manager.getApiCore().getPlatformConnector().runTaskAsynchronously(() ->
+        this.manager.getApiCore().getHostConnector().runTaskAsynchronously(() ->
         {
             final Document result = collection.find(query).sort(sort).first();
             future.complete(this.manager.documentToUnit(statistic, result));
@@ -87,7 +87,7 @@ class StatisticHolderImpl implements IStatisticHolder
         value.toDocument(setContent);
 
         final CompletableFuture<IRecord<T, UNIT>> future = new CompletableFuture<>();
-        this.manager.getApiCore().getPlatformConnector().runTaskAsynchronously(() ->
+        this.manager.getApiCore().getHostConnector().runTaskAsynchronously(() ->
         {
             final FindOneAndUpdateOptions options = new FindOneAndUpdateOptions().sort(TIME_SORT).upsert(true);
             final Document previous = collection.findOneAndUpdate(find, new Document("$set", setContent), options);
@@ -118,7 +118,7 @@ class StatisticHolderImpl implements IStatisticHolder
         insertDocument.put("$inc", valueDocument);
 
         final CompletableFuture<IRecord<T, UNIT>> future = new CompletableFuture<>();
-        this.manager.getApiCore().getPlatformConnector().runTaskAsynchronously(() ->
+        this.manager.getApiCore().getHostConnector().runTaskAsynchronously(() ->
         {
             final FindOneAndUpdateOptions options = new FindOneAndUpdateOptions().sort(TIME_SORT).upsert(true);
             final Document previous = collection.findOneAndUpdate(query, insertDocument, options);

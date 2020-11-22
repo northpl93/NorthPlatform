@@ -8,7 +8,7 @@ import lombok.ToString;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import pl.north93.northplatform.api.bungee.BungeeApiCore;
+import pl.north93.northplatform.api.bungee.BungeeHostConnector;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.config.ConfigUpdatedNetEvent;
@@ -31,10 +31,10 @@ public class AntiDdosManager implements Listener
     private Instant suspendedUntil;
 
     @Bean
-    private AntiDdosManager(final BungeeApiCore apiCore)
+    private AntiDdosManager(final BungeeHostConnector hostConnector)
     {
-        apiCore.registerListeners(this);
-        apiCore.getPlatformConnector().runTaskAsynchronously(this::checkAuto, ANTI_DDOS_CYCLE_TIME);
+        hostConnector.registerListeners(this);
+        hostConnector.runTaskAsynchronously(this::checkAuto, ANTI_DDOS_CYCLE_TIME);
 
         this.connections = new AtomicInteger(0);
         this.resetSuspendState();

@@ -5,13 +5,11 @@ import java.util.List;
 
 import net.minecraft.server.v1_12_R1.MinecraftServer;
 
-import org.bukkit.Bukkit;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
@@ -20,7 +18,7 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 {
     private final List<TickHandler> handlers = new ArrayList<>();
     @Inject
-    private BukkitApiCore bukkitApiCore;
+    private IBukkitExecutor bukkitExecutor;
 
     @Bean
     private TickController()
@@ -37,7 +35,7 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
     private void setup()
     {
         MinecraftServer.getServer().a(this::fireEnd);
-        Bukkit.getScheduler().runTaskTimer(this.bukkitApiCore.getPluginMain(), this::fireBegin, 0, 1); // delay 0, every tick
+        this.bukkitExecutor.syncTimer(1, this::fireBegin);
     }
 
     private void fireBegin()

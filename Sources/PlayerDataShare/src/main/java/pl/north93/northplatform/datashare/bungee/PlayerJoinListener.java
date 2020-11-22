@@ -70,7 +70,7 @@ public class PlayerJoinListener implements Listener
             return;
         }
 
-        this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
+        this.apiCore.getHostConnector().runTaskAsynchronously(() ->
         {
             this.playerDataShareComponent.getDataShareManager().loadPlayer(group, playerId);
         });

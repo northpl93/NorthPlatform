@@ -25,7 +25,7 @@ public class ScalerWorker implements Runnable
     @Bean
     private ScalerWorker(final ApiCore apiCore)
     {
-        apiCore.getPlatformConnector().runTaskAsynchronously(this, 20);
+        apiCore.getHostConnector().runTaskAsynchronously(this, 20);
     }
 
     @Override

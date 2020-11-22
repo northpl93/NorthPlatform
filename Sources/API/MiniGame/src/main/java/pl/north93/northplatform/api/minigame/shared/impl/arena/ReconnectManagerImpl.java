@@ -44,7 +44,7 @@ public class ReconnectManagerImpl implements IReconnectManager
     @Override
     public void updateReconnectTicket(final Identity player, final ReconnectTicket newTicket)
     {
-        this.apiCore.getPlatformConnector().runTaskAsynchronously(() ->
+        this.apiCore.getHostConnector().runTaskAsynchronously(() ->
         {
             try (final IPlayerTransaction t = this.playersManager.transaction(player))
             {

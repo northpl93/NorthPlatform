@@ -10,7 +10,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
 import pl.north93.northplatform.api.bukkit.utils.chat.ChatUtils;
-import pl.north93.northplatform.api.bungee.BungeeApiCore;
+import pl.north93.northplatform.api.bungee.BungeeHostConnector;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
@@ -44,9 +44,9 @@ public class PartyMessagesBroadcaster implements Listener
     private MessagesBox partyMessages;
 
     @Bean
-    private PartyMessagesBroadcaster(final BungeeApiCore apiCore)
+    private PartyMessagesBroadcaster(final BungeeHostConnector hostConnector)
     {
-        apiCore.registerListeners(this);
+        hostConnector.registerListeners(this);
     }
 
     @NetEventSubscriber(InviteToPartyNetEvent.class)

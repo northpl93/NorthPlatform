@@ -16,18 +16,18 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.diorite.commons.reflections.DioriteReflectionUtils;
 import org.diorite.commons.reflections.MethodInvoker;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
 import pl.north93.northplatform.api.bukkit.Main;
 import pl.north93.northplatform.api.bukkit.utils.AbstractCountdown;
 import pl.north93.northplatform.api.bukkit.utils.SimpleCountdown;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 
 public class ArenaScheduler implements IArenaScheduler
 {
     private static final MethodInvoker parsePending = DioriteReflectionUtils.getMethod(CraftScheduler.class, "parsePending");
     @Inject
-    private BukkitApiCore apiCore;
+    private BukkitHostConnector hostConnector;
     private final LocalArena arena;
     private final List<BukkitTaskWrapper> wrappers;
 
@@ -46,21 +46,21 @@ public class ArenaScheduler implements IArenaScheduler
     @Override
     public void runTaskLater(final Runnable task, final long delay)
     {
-        final Main pluginMain = this.apiCore.getPluginMain();
+        final Main pluginMain = this.hostConnector.getPluginMain();
         this.wrappers.add(new WrappedBukkitTask(Bukkit.getScheduler().runTaskLater(pluginMain, task, delay)));
     }
 
     @Override
     public void runTaskTimer(final Runnable task, final long delay, final long every)
     {
-        final Main pluginMain = this.apiCore.getPluginMain();
+        final Main pluginMain = this.hostConnector.getPluginMain();
         this.wrappers.add(new WrappedBukkitTask(Bukkit.getScheduler().runTaskTimer(pluginMain, task, delay, every)));
     }
 
     @Override
     public void runAbstractCountdown(final AbstractCountdown countdown, final long every)
     {
-        final Main pluginMain = this.apiCore.getPluginMain();
+        final Main pluginMain = this.hostConnector.getPluginMain();
         this.wrappers.add(new WrappedBukkitTask(countdown.runTaskTimer(pluginMain, 0, every)));
     }
 

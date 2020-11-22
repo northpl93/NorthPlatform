@@ -11,7 +11,7 @@ import org.spigotmc.SneakyThrow;
 import org.spigotmc.SpigotConfig;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
 import pl.north93.northplatform.api.bukkit.world.IWorldManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -33,11 +33,11 @@ import pl.north93.northplatform.api.minigame.shared.api.hub.IHubServer;
 public class GameHostManager implements IServerManager
 {
     @Inject
-    private BukkitApiCore bukkitApiCore;
-    @Inject
     private IEventManager eventManager;
     @Inject
     private IWorldManager worldManager;
+    @Inject
+    private BukkitHostConnector hostConnector;
     @Inject
     private GameHostHubsManager gameHostHubsManager;
     private final RegionManagerImpl regionManager = new RegionManagerImpl();
@@ -57,7 +57,7 @@ public class GameHostManager implements IServerManager
         this.loadConfig();
         this.loadMapTemplates();
 
-        this.bukkitApiCore.callEvent(new InitializeGameHostServerEvent());
+        this.hostConnector.callEvent(new InitializeGameHostServerEvent());
     }
     
     @Override
@@ -65,13 +65,13 @@ public class GameHostManager implements IServerManager
     {
         Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer("")); // prevent errors (especially in testing environment)
 
-        this.bukkitApiCore.callEvent(new DestroyGameHostServerEvent());
+        this.hostConnector.callEvent(new DestroyGameHostServerEvent());
     }
 
     @Override
     public UUID getServerId()
     {
-        return this.bukkitApiCore.getServerId();
+        return this.hostConnector.getServerId();
     }
 
     @Override
@@ -88,7 +88,7 @@ public class GameHostManager implements IServerManager
 
     public <T extends Event> T callBukkitEvent(final T bukkitEvent)
     {
-        return this.bukkitApiCore.callEvent(bukkitEvent);
+        return this.hostConnector.callEvent(bukkitEvent);
     }
 
     public void publishArenaEvent(final IArenaNetEvent event)
@@ -131,7 +131,7 @@ public class GameHostManager implements IServerManager
 
     private void loadConfig()
     {
-        this.miniGameConfig = JaxbUtils.unmarshal(this.bukkitApiCore.getFile("minigame.xml"), MiniGameConfig.class);
+        this.miniGameConfig = JaxbUtils.unmarshal(this.hostConnector.getFile("minigame.xml"), MiniGameConfig.class);
         this.validateConfig();
     }
     

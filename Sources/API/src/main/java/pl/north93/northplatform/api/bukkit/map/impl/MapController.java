@@ -13,7 +13,7 @@ import org.bukkit.metadata.MetadataValue;
 
 import io.netty.channel.Channel;
 import lombok.ToString;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
 import pl.north93.northplatform.api.bukkit.utils.nms.EntityMetaPacketHelper;
@@ -24,7 +24,7 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 class MapController implements Listener
 {
     @Inject
-    private BukkitApiCore   apiCore;
+    private BukkitHostConnector bukkitHostConnector;
     @Inject
     private IBukkitExecutor bukkitExecutor;
 
@@ -130,6 +130,6 @@ class MapController implements Listener
 
     /*default*/ void updateMapInEntity(final ItemFrame itemFrame, final MapImpl map)
     {
-        itemFrame.setMetadata("map_mapImpl", new FixedMetadataValue(this.apiCore.getPluginMain(), map));
+        itemFrame.setMetadata("map_mapImpl", new FixedMetadataValue(this.bukkitHostConnector.getPluginMain(), map));
     }
 }

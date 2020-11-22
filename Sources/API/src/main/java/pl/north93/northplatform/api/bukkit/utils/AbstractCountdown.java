@@ -2,18 +2,16 @@ package pl.north93.northplatform.api.bukkit.utils;
 
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
-import pl.north93.northplatform.api.global.API;
-
 public abstract class AbstractCountdown extends BukkitRunnable
 {
-    private static JavaPlugin PLUGIN = ((BukkitApiCore) API.getApiCore()).getPluginMain();
+    private static JavaPlugin PLUGIN = (JavaPlugin) Bukkit.getPluginManager().getPlugin("API"); // todo
     private int time;
 
     public AbstractCountdown(final int time)

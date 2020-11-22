@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.north93.northplatform.api.bukkit.server.event.ShutdownScheduledEvent;
 import pl.north93.northplatform.api.global.network.server.Server;
@@ -26,6 +27,8 @@ public interface IBukkitServerManager
      * @return niemutowalna instancja dokumentu.
      */
     Server getServer();
+
+    JavaPlugin getPlugin();
 
     /**
      * Rejestruje podane listenery w Bukkicie.

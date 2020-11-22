@@ -130,18 +130,22 @@ public class RpcManagerImpl extends Component implements IRpcManager
     private void handleResponse(final String channel, final byte[] bytes)
     {
         final RpcResponseMessage responseMessage = this.msgPack.deserialize(RpcResponseMessage.class, bytes);
+
         final RpcResponseLock lock;
         synchronized (this.locks)
         {
-            lock = this.locks.get(responseMessage.getRequestId());
+            lock = this.locks.remove(responseMessage.getRequestId());
         }
+
         if (lock == null)
         {
+            // It could happen when timeout happened and lock has been removed by RpcInvocationHandler.
+            // In that case just ignore response.
             log.warn("Received RPC response but lock was null. Response: {}", responseMessage);
-            return; // Moze się wydarzyć, gdy nastąpi timeout i lock zostanie usunięty. W takim wypadku ignorujemy odpowiedź.
+            return;
         }
+
         lock.provideResponse(responseMessage.getResponse());
-        this.removeLock(responseMessage.getRequestId());
     }
 
     @Override

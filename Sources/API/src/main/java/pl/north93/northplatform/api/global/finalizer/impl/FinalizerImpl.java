@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import org.diorite.commons.sets.ConcurrentSet;
 
-import pl.north93.northplatform.api.global.PlatformConnector;
+import pl.north93.northplatform.api.global.HostConnector;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.finalizer.IFinalizer;
 
@@ -24,7 +24,7 @@ public class FinalizerImpl extends Component implements IFinalizer
     @Override
     protected void enableComponent()
     {
-        final PlatformConnector connector = this.getApiCore().getPlatformConnector();
+        final HostConnector connector = this.getApiCore().getHostConnector();
 
         // odpalamy zadanie co okreslony czas w itackach
         connector.runTaskAsynchronously(this::handleCleanup, QUEUE_CLEANUP_TIME);

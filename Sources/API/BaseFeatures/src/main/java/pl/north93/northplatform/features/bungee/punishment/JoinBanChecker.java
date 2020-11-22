@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import pl.north93.northplatform.api.bungee.BungeeApiCore;
+import pl.north93.northplatform.api.bungee.BungeeHostConnector;
 import pl.north93.northplatform.api.bungee.proxy.event.HandlePlayerProxyJoinEvent;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -20,9 +20,9 @@ public class JoinBanChecker implements Listener
     private BanService banService;
 
     @Bean
-    private JoinBanChecker(final BungeeApiCore apiCore)
+    private JoinBanChecker(final BungeeHostConnector hostConnector)
     {
-        apiCore.registerListeners(this);
+        hostConnector.registerListeners(this);
     }
 
     @EventHandler

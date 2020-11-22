@@ -15,7 +15,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
 import pl.north93.northplatform.api.bukkit.player.IBukkitPlayers;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.global.commands.NorthCommandSender;
@@ -32,7 +32,7 @@ import pl.north93.northplatform.api.global.redis.observable.Value;
 public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
 {
     @Inject
-    private BukkitApiCore apiCore;
+    private BukkitHostConnector hostConnector;
     @Inject
     private IPlayersManager playersManager;
     @Inject
@@ -128,12 +128,12 @@ public class BukkitPlayerManagerImpl extends Component implements IBukkitPlayers
 
     FixedMetadataValue createFixedMetadataValue(final Object value)
     {
-        return new FixedMetadataValue(this.apiCore.getPluginMain(), value);
+        return new FixedMetadataValue(this.hostConnector.getPluginMain(), value);
     }
 
     void removePlayerData(final Player player, final String name)
     {
-        player.removeMetadata(name, this.apiCore.getPluginMain());
+        player.removeMetadata(name, this.hostConnector.getPluginMain());
     }
 
     IPlayerTransaction openTransaction(final Identity identity)

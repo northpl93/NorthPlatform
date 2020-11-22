@@ -9,7 +9,7 @@ import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtField;
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.global.agent.InstrumentationClient;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.component.impl.injection.Injector;
 
@@ -17,11 +17,11 @@ import pl.north93.northplatform.api.global.component.impl.injection.Injector;
 class InjectorInstaller
 {
     private static final String INJECTOR_NAME = Injector.class.getName();
-    private final ApiCore apiCore;
+    private final InstrumentationClient instrumentationClient;
 
-    InjectorInstaller(final ApiCore apiCore)
+    InjectorInstaller(final InstrumentationClient instrumentationClient)
     {
-        this.apiCore = apiCore;
+        this.instrumentationClient = instrumentationClient;
     }
 
     void tryInstall(final CtClass ctClass)
@@ -56,7 +56,7 @@ class InjectorInstaller
             ctConstructor.insertBeforeBody(INJECTOR_NAME + ".inject(this, " + ctClass.getName() + ".class);");
         }
 
-        this.apiCore.getInstrumentationClient().redefineClass(ctClass.getName(), ctClass.toBytecode());
+        this.instrumentationClient.redefineClass(ctClass.getName(), ctClass.toBytecode());
 
         log.debug("Installed injector in {}", ctClass.getName());
     }

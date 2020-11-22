@@ -1,16 +1,29 @@
 package pl.north93.northplatform.datashare.server.listeners;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import static org.bukkit.ChatColor.translateAlternateColorCodes;
+
+import static pl.north93.northplatform.api.global.utils.lang.StringUtils.asString;
+
+
+import java.text.MessageFormat;
+import java.util.Formatter;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import org.diorite.commons.cooldown.CooldownEntry;
 import org.diorite.commons.cooldown.CooldownManager;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+
+import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
@@ -21,31 +34,23 @@ import pl.north93.northplatform.datashare.api.chat.ChatMessage;
 import pl.north93.northplatform.datashare.sharedimpl.PlayerDataShareComponent;
 import pl.north93.serializer.platform.NorthSerializer;
 
-import java.text.MessageFormat;
-import java.util.Formatter;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
-import static org.bukkit.ChatColor.translateAlternateColorCodes;
-import static pl.north93.northplatform.api.global.utils.lang.StringUtils.asString;
-
 public class ChatSharingManager implements Listener
 {
     private static final long COOLDOWN_TIME = TimeUnit.SECONDS.toMillis(15);
     @Inject
-    private BukkitApiCore            apiCore;
+    private BukkitHostConnector bukkitHostConnector;
     @Inject
-    private RedisSubscriber          redisSubscriber;
+    private RedisSubscriber redisSubscriber;
     @Inject
     private NorthSerializer<byte[], byte[]> msgPack;
     @Inject
     private PlayerDataShareComponent shareComponent;
     @Inject @Messages("PlayerDataShare")
-    private MessagesBox              messages;
-    private CooldownManager<UUID>    chatCooldown;
-    private UUID                     serverId;
-    private boolean                  isChatEnabled;
-    private DataSharingGroup         group;
+    private MessagesBox messages;
+    private CooldownManager<UUID> chatCooldown;
+    private UUID serverId;
+    private boolean isChatEnabled;
+    private DataSharingGroup group;
 
     public void start(final DataSharingGroup group)
     {
@@ -56,9 +61,9 @@ public class ChatSharingManager implements Listener
         {
             return;
         }
-        this.serverId = this.apiCore.getServerId();
+        this.serverId = this.bukkitHostConnector.getServerId();
         this.chatCooldown = CooldownManager.createManager(100);
-        Bukkit.getPluginManager().registerEvents(this, this.apiCore.getPluginMain());
+        Bukkit.getPluginManager().registerEvents(this, this.bukkitHostConnector.getPluginMain());
         this.redisSubscriber.subscribe("chat:" + group.getName(), this::onRemoteChat);
     }
 

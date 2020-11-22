@@ -23,7 +23,7 @@ import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
-import pl.north93.northplatform.api.bungee.BungeeApiCore;
+import pl.north93.northplatform.api.bungee.BungeeHostConnector;
 import pl.north93.northplatform.api.bungee.Main;
 import pl.north93.northplatform.api.bungee.proxy.event.HandlePlayerProxyJoinEvent;
 import pl.north93.northplatform.api.bungee.proxy.event.HandlePlayerProxyQuitEvent;
@@ -57,7 +57,7 @@ public class PlayerNetworkListener implements Listener
     @Inject @Messages("Messages")
     private MessagesBox apiMessages;
     @Inject
-    private BungeeApiCore bungeeApiCore;
+    private BungeeHostConnector hostConnector;
     @Inject
     private IObservationManager observer;
     @Inject
@@ -121,7 +121,7 @@ public class PlayerNetworkListener implements Listener
             try
             {
                 final IPlayersManager.IPlayersDataManager dataManager = this.playersManager.getInternalData();
-                final String proxyName = this.bungeeApiCore.getProxyConfig().getUniqueName();
+                final String proxyName = this.hostConnector.getProxyConfig().getUniqueName();
 
                 player = dataManager.loadPlayer(conn.getUniqueId(), conn.getName(), conn.isOnlineMode(), proxyName);
             }
@@ -140,7 +140,7 @@ public class PlayerNetworkListener implements Listener
             }
 
             //noinspection unchecked
-            final HandlePlayerProxyJoinEvent joinEvent = this.bungeeApiCore.callEvent(new HandlePlayerProxyJoinEvent(conn, (Value) player));
+            final HandlePlayerProxyJoinEvent joinEvent = this.hostConnector.callEvent(new HandlePlayerProxyJoinEvent(conn, (Value) player));
             if (joinEvent.isCancelled())
             {
                 player.delete(); // delete player data if event is cancelled.
@@ -183,7 +183,7 @@ public class PlayerNetworkListener implements Listener
         final Value<IOfflinePlayer> offlineValue = players.unsafe().getOfflineValue(proxyPlayer.getUniqueId());
 
         // wywołujemy event w którym spokojnie można obsłużyć wyjście gracza
-        this.bungeeApiCore.callEvent(new HandlePlayerProxyQuitEvent(proxyPlayer, onlineValue));
+        this.hostConnector.callEvent(new HandlePlayerProxyQuitEvent(proxyPlayer, onlineValue));
 
         final Lock multiLock = this.observer.getMultiLock(onlineValue.getLock(), offlineValue.getLock());
         try (final Lock lock = multiLock.lock())
@@ -228,10 +228,10 @@ public class PlayerNetworkListener implements Listener
 
     private <T> void runIntent(final AsyncEvent<T> event, final Runnable task)
     {
-        final Main plugin = this.bungeeApiCore.getBungeePlugin();
+        final Main plugin = this.hostConnector.getBungeePlugin();
 
         event.registerIntent(plugin);
-        this.bungeeApiCore.getPlatformConnector().runTaskAsynchronously(() ->
+        this.hostConnector.runTaskAsynchronously(() ->
         {
             try
             {

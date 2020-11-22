@@ -7,38 +7,34 @@ import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
-import org.slf4j.Logger;
 
 import org.diorite.commons.io.DioriteFileUtils;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.global.agent.InstrumentationClient;
 import pl.north93.northplatform.api.global.component.IComponentManager;
 import pl.north93.northplatform.api.global.component.impl.general.ComponentManagerImpl;
 
 @Slf4j
-public abstract class ApiCore
+public final class ApiCore
 {
     @Getter
     private final boolean isDebug;
-    private final InstrumentationClient instrumentationClient;
     private final IComponentManager componentManager;
     private final Platform platform;
-    private final PlatformConnector connector;
+    private final HostConnector connector;
     private final String hostname;
+    private String id;
     private ApiState apiState;
 
-    public ApiCore(final Platform platform, final PlatformConnector platformConnector)
+    public ApiCore(final Platform platform, final HostConnector platformConnector)
     {
         this.platform = platform;
         this.connector = platformConnector;
 
         this.hostname = this.obtainHostName();
         this.isDebug = System.getProperties().containsKey("debug");
-        this.instrumentationClient = new InstrumentationClient();
         this.componentManager = new ComponentManagerImpl(this);
-        API.setApiCore(this);
         this.setApiState(ApiState.CONSTRUCTED);
     }
 
@@ -47,12 +43,12 @@ public abstract class ApiCore
         return this.platform;
     }
 
-    public PlatformConnector getPlatformConnector()
+    public HostConnector getHostConnector()
     {
         return this.connector;
     }
 
-    public final void startCore()
+    public final void startPlatform()
     {
         final long startTime = System.currentTimeMillis();
 
@@ -61,7 +57,7 @@ public abstract class ApiCore
 
         try
         {
-            this.init();
+            this.id = this.connector.onPlatformInit(this);
             this.setApiState(ApiState.INITIALISED);
         }
         catch (final Exception e)
@@ -85,12 +81,12 @@ public abstract class ApiCore
 
         try
         {
-            this.start();
+            this.connector.onPlatformStart(this);
         }
         catch (final Exception e)
         {
             log.error("Failed to start NorthPlatform API", e);
-            this.getPlatformConnector().stop();
+            this.getHostConnector().shutdownHost();
             return;
         }
         this.setApiState(ApiState.ENABLED);
@@ -102,11 +98,11 @@ public abstract class ApiCore
         log.debug("If you see this message debug mode is enabled");
     }
 
-    public final void stopCore()
+    public final void stopPlatform()
     {
         try
         {
-            this.stop();
+            this.connector.onPlatformStop(this);
         }
         catch (final Exception e)
         {
@@ -115,11 +111,6 @@ public abstract class ApiCore
         this.componentManager.disableAllComponents();
         this.setApiState(ApiState.DISABLED);
         log.info("NorthPlatform API stopped.");
-    }
-
-    public InstrumentationClient getInstrumentationClient()
-    {
-        return this.instrumentationClient;
     }
 
     public IComponentManager getComponentManager()
@@ -135,6 +126,32 @@ public abstract class ApiCore
     public String getHostName()
     {
         return this.hostname;
+    }
+
+    public ApiState getApiState()
+    {
+        return this.apiState;
+    }
+
+    public String getId()
+    {
+        return this.id;
+    }
+
+    /**
+     * @return główny katalog serwera/bungeecorda.
+     */
+    public File getRootDirectory()
+    {
+        return this.connector.getRootDirectory();
+    }
+
+    /**
+     * @return file inside plugin's configuration directory
+     */
+    public File getFile(final String name)
+    {
+        return this.connector.getFile(name);
     }
 
     private String obtainHostName()
@@ -154,32 +171,4 @@ public abstract class ApiCore
         this.apiState = newState;
         log.debug("NorthPlatform API forced into {} state.", newState);
     }
-
-    public final ApiState getApiState()
-    {
-        return this.apiState;
-    }
-
-    protected final Logger getApiLogger()
-    {
-        return log;
-    }
-
-    public abstract String getId();
-
-    /**
-     * @return główny katalog serwera/bungeecorda.
-     */
-    public abstract File getRootDirectory();
-
-    /**
-     * @return file inside plugin's configuration directory
-     */
-    public abstract File getFile(final String name);
-
-    protected abstract void init() throws Exception; // before components. Good place to provide client ID.
-
-    protected abstract void start() throws Exception; // after components
-
-    protected abstract void stop() throws Exception; // before components
 }

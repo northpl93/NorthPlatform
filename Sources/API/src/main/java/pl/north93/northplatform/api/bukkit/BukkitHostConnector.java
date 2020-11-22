@@ -1,6 +1,5 @@
 package pl.north93.northplatform.api.bukkit;
 
-
 import java.io.File;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -14,55 +13,24 @@ import org.bukkit.plugin.Plugin;
 import org.spigotmc.SpigotConfig;
 
 import pl.north93.northplatform.api.global.ApiCore;
-import pl.north93.northplatform.api.global.Platform;
+import pl.north93.northplatform.api.global.HostConnector;
 import pl.north93.northplatform.api.global.component.impl.general.ComponentManagerImpl;
 import pl.north93.northplatform.api.global.component.impl.general.WeakClassPool;
 import pl.north93.northplatform.api.global.redis.RedisKeys;
 import pl.north93.northplatform.api.global.utils.exceptions.ConfigurationException;
 
-public class BukkitApiCore extends ApiCore
+public class BukkitHostConnector implements HostConnector
 {
-    private final Main pluginMain;
+    private final Main bukkitPlugin;
     private UUID serverId;
 
-    public BukkitApiCore(final Main plugin)
+    public BukkitHostConnector(final Main bukkitPlugin)
     {
-        super(Platform.BUKKIT, new BukkitPlatformConnector(plugin));
-        this.pluginMain = plugin;
-    }
-
-    public final Main getPluginMain()
-    {
-        return this.pluginMain;
-    }
-
-    public final org.bukkit.Server getBukkit()
-    {
-        return this.pluginMain.getServer();
+        this.bukkitPlugin = bukkitPlugin;
     }
 
     @Override
-    public String getId()
-    {
-        return RedisKeys.SERVER + this.serverId;
-    }
-
-    public UUID getServerId()
-    {
-        return this.serverId;
-    }
-
-    @Override
-    public File getRootDirectory()
-    {
-        // property handle national characters in path
-        String location = Bukkit.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        String path = URLEncoder.encode(location, StandardCharsets.UTF_8);
-        return new File(path).getParentFile();
-    }
-
-    @Override
-    protected void init() throws Exception
+    public String onPlatformInit(final ApiCore apiCore)
     {
         this.registerPluginsPaths();
         try
@@ -73,23 +41,44 @@ public class BukkitApiCore extends ApiCore
         {
             throw new RuntimeException("Something went wrong ;/", e);
         }
+
+        return RedisKeys.SERVER + this.serverId;
     }
 
     @Override
-    protected void start() throws Exception
+    public void onPlatformStart(final ApiCore apiCore)
     {
         SpigotConfig.bungee = true; // force enable IP forwarding
     }
 
     @Override
-    protected void stop()
+    public void onPlatformStop(final ApiCore apiCore)
     {
+    }
+
+    @Override
+    public File getRootDirectory()
+    {
+        // property handle national characters in path
+        final String location = Bukkit.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        final String path = URLEncoder.encode(location, StandardCharsets.UTF_8);
+        return new File(path).getParentFile();
     }
 
     @Override
     public File getFile(final String name)
     {
-        return new File(this.pluginMain.getDataFolder(), name);
+        return new File(this.bukkitPlugin.getDataFolder(), name);
+    }
+
+    public final Main getPluginMain()
+    {
+        return this.bukkitPlugin;
+    }
+
+    public UUID getServerId()
+    {
+        return this.serverId;
     }
 
     /**
@@ -100,8 +89,26 @@ public class BukkitApiCore extends ApiCore
      */
     public <T extends Event> T callEvent(final T event)
     {
-        this.pluginMain.getServer().getPluginManager().callEvent(event);
+        this.bukkitPlugin.getServer().getPluginManager().callEvent(event);
         return event;
+    }
+
+    @Override
+    public void shutdownHost()
+    {
+        Bukkit.shutdown();
+    }
+
+    @Override
+    public void runTaskAsynchronously(final Runnable runnable)
+    {
+        this.bukkitPlugin.getServer().getScheduler().runTaskAsynchronously(this.bukkitPlugin, runnable);
+    }
+
+    @Override
+    public void runTaskAsynchronously(final Runnable runnable, final int ticks)
+    {
+        this.bukkitPlugin.getServer().getScheduler().runTaskTimerAsynchronously(this.bukkitPlugin, runnable, 0, ticks);
     }
 
     private UUID obtainServerId() throws ConfigurationException
@@ -129,7 +136,7 @@ public class BukkitApiCore extends ApiCore
         final WeakClassPool classPool = ComponentManagerImpl.instance.getWeakClassPool(this.getClass().getClassLoader());
         for (final Plugin plugin : Bukkit.getPluginManager().getPlugins())
         {
-            if (plugin == this.pluginMain)
+            if (plugin == this.bukkitPlugin)
             {
                 continue;
             }

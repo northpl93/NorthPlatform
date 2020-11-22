@@ -7,22 +7,13 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.global.API;
 import pl.north93.northplatform.api.global.utils.exceptions.ConfigurationException;
 
 @Slf4j
 public final class ConfigUtils
 {
-    public static <T> T loadConfig(final Class<T> configClass, final String configName)
-    {
-        //final ClassLoader classLoader = ClassUtils.getCallerClass().getClassLoader();
-        final ClassLoader classLoader = configClass.getClassLoader();
-        return loadConfig(classLoader, configClass, API.getApiCore().getFile(configName));
-    }
-
     public static <T> T loadConfig(final Class<T> configClass, final File configFile)
     {
-        //final ClassLoader classLoader = ClassUtils.getCallerClass().getClassLoader();
         final ClassLoader classLoader = configClass.getClassLoader();
         return loadConfig(classLoader, configClass, configFile);
     }
@@ -39,8 +30,8 @@ public final class ConfigUtils
         final URL exampleConfig = loader.getResource("examples/" + configName);
         if (exampleConfig == null)
         {
-            System.out.println(loader);
-            System.out.println("examples/" + configName);
+            log.error(loader.toString());
+            log.error("examples/{}", configName);
             throw new ConfigurationException("Not found config and it's example definition " + configName);
         }
 

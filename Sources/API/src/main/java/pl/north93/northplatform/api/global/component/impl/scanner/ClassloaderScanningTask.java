@@ -50,7 +50,7 @@ public class ClassloaderScanningTask
         this.classLoader = classLoader;
         this.loadedFile = loadedFile;
         this.weakClassPool = manager.getWeakClassPool(classLoader);
-        this.injectorInstaller = new InjectorInstaller(manager.getApiCore());
+        this.injectorInstaller = new InjectorInstaller(manager.getInstrumentationClient());
 
         final FilterBuilder filterBuilder = new FilterBuilder();
         for (final String excludedPackage : excludedPackages)

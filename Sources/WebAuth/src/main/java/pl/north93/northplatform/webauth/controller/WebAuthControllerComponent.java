@@ -3,6 +3,8 @@ package pl.north93.northplatform.webauth.controller;
 import static pl.north93.northplatform.api.global.utils.ConfigUtils.loadConfig;
 
 
+import java.io.File;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -19,7 +21,9 @@ public class WebAuthControllerComponent extends Component
     @Override
     protected void enableComponent()
     {
-        final WebAuthConfig config = loadConfig(WebAuthConfig.class, "webauth.xml");
+        final File configFile = this.getApiCore().getFile("webauth.xml");
+        final WebAuthConfig config = loadConfig(WebAuthConfig.class, configFile);
+
         this.rpcManager.addRpcImplementation(IWebAuthManager.class, new WebAuthManagerImpl(config));
     }
 

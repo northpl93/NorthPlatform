@@ -13,9 +13,10 @@ import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
 import pl.north93.northplatform.api.bukkit.Main;
 import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.bukkit.server.event.ShutdownCancelledEvent;
@@ -34,9 +35,9 @@ class BukkitServerManagerImpl implements IBukkitServerManager
 {
     private static final int TIME_TO_NEXT_TRY = 30 * 20; // 30 seconds
     @Inject
-    private BukkitApiCore apiCore;
-    @Inject
     private IServersManager serversManager;
+    @Inject
+    private BukkitHostConnector hostConnector;
     // - - - - - - -
     private final SimpleCountdown countdown;
     private final Value<ServerDto> serverValue;
@@ -45,13 +46,13 @@ class BukkitServerManagerImpl implements IBukkitServerManager
     private BukkitServerManagerImpl()
     {
         this.countdown = new SimpleCountdown(TIME_TO_NEXT_TRY).endCallback(this::tryShutdown);
-        this.serverValue = this.serversManager.unsafe().getServerDto(this.apiCore.getServerId());
+        this.serverValue = this.serversManager.unsafe().getServerDto(this.hostConnector.getServerId());
     }
 
     @Override
     public UUID getServerId()
     {
-        return this.apiCore.getServerId();
+        return this.hostConnector.getServerId();
     }
 
     @Override
@@ -59,6 +60,12 @@ class BukkitServerManagerImpl implements IBukkitServerManager
     {
         // can return null when network isn't properly configured or initialised by controller
         return this.serverValue.get();
+    }
+
+    @Override
+    public JavaPlugin getPlugin()
+    {
+        return this.hostConnector.getPluginMain();
     }
 
     public void updateServerDto(final Consumer<ServerDto> updater)
@@ -69,7 +76,7 @@ class BukkitServerManagerImpl implements IBukkitServerManager
     @Override
     public void registerEvents(final Listener... listeners)
     {
-        final Main pluginMain = this.apiCore.getPluginMain();
+        final Main pluginMain = this.hostConnector.getPluginMain();
 
         final PluginManager pluginManager = pluginMain.getServer().getPluginManager();
         for (final Listener listener : listeners)
@@ -81,13 +88,13 @@ class BukkitServerManagerImpl implements IBukkitServerManager
     @Override
     public <T extends Event> T callEvent(final T event)
     {
-        return this.apiCore.callEvent(event);
+        return this.hostConnector.callEvent(event);
     }
 
     @Override
     public File getServerDirectory()
     {
-        return this.apiCore.getRootDirectory();
+        return this.hostConnector.getRootDirectory();
     }
 
     @Override
@@ -159,6 +166,6 @@ class BukkitServerManagerImpl implements IBukkitServerManager
     @Override
     public FixedMetadataValue createFixedMetadataValue(final Object value)
     {
-        return new FixedMetadataValue(this.apiCore.getPluginMain(), value);
+        return new FixedMetadataValue(this.hostConnector.getPluginMain(), value);
     }
 }

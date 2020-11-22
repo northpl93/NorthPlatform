@@ -20,16 +20,16 @@ import org.diorite.commons.reflections.FieldAccessor;
 import pl.north93.groovyscript.api.IGroovyManager;
 import pl.north93.groovyscript.api.IScriptContext;
 import pl.north93.groovyscript.api.IScriptResource;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
 import pl.north93.northplatform.api.bukkit.Main;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public final class ListenerProvider
 {
     @Inject
-    private static BukkitApiCore  apiCore;
-    @Inject
     private static IGroovyManager groovyManager;
+    @Inject
+    private static BukkitHostConnector hostConnector;
 
     public static <T extends Event> void listener(final Class<T> eventClazz, final Consumer<T> action)
     {
@@ -47,7 +47,7 @@ public final class ListenerProvider
     private static <T extends Event> void register(final IScriptContext context, final Class<T> eventClazz, final EventPriority priority, final Consumer<T> action)
     {
         final EventExecutor executor = (listener, event) -> action.accept((T) event);
-        final Main plugin = apiCore.getPluginMain();
+        final Main plugin = hostConnector.getPluginMain();
 
         final ListenerScriptResource resource = new ListenerScriptResource(eventClazz);
         context.addResource(resource);

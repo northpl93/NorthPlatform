@@ -3,15 +3,10 @@ package pl.north93.northplatform.auth.bungee;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.bungee.BungeeApiCore;
 import pl.north93.northplatform.api.global.component.Component;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class AuthProxyComponent extends Component
 {
-    @Inject
-    private BungeeApiCore apiCore;
-
     @Override
     protected void enableComponent()
     {

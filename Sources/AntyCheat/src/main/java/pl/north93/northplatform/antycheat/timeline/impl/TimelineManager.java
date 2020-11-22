@@ -5,30 +5,29 @@ import java.util.function.Consumer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
 import co.aikar.timings.Timing;
-import pl.north93.northplatform.antycheat.utils.AntyCheatTimings;
 import pl.north93.northplatform.antycheat.analysis.SingleAnalysisResult;
 import pl.north93.northplatform.antycheat.analysis.impl.AnalysisManager;
 import pl.north93.northplatform.antycheat.analysis.impl.ViolationsStorage;
 import pl.north93.northplatform.antycheat.timeline.Tick;
 import pl.north93.northplatform.antycheat.timeline.TimelineEvent;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.antycheat.utils.AntyCheatTimings;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 public class TimelineManager
 {
     @Inject
-    private TickManager     tickManager;
+    private TickManager tickManager;
     @Inject
-    private TickController  tickController;
+    private TickController tickController;
     @Inject
     private AnalysisManager analysisManager;
     @Inject
-    private BukkitApiCore   bukkitApiCore;
+    private IBukkitServerManager serverManager;
 
     @Bean
     private TimelineManager()
@@ -121,7 +120,7 @@ public class TimelineManager
         }
 
         final TimelineImpl timeline = new TimelineImpl(this, player, 20 * 10);
-        player.setMetadata("AntyCheat.Timeline", new FixedMetadataValue(this.bukkitApiCore.getPluginMain(), timeline));
+        player.setMetadata("AntyCheat.Timeline", this.serverManager.createFixedMetadataValue(timeline));
         return timeline;
     }
 

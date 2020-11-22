@@ -1,5 +1,6 @@
 package pl.north93.northplatform.api.global.storage;
 
+import java.io.File;
 import java.time.Duration;
 import java.util.function.Function;
 import java.util.logging.Logger;
@@ -45,7 +46,8 @@ public class StorageConnector extends Component
     @Override
     protected void enableComponent()
     {
-        final ConnectionConfig config = ConfigUtils.loadConfig(ConnectionConfig.class, "connection.xml");
+        final File configFile = this.getApiCore().getFile("connection.xml");
+        final ConnectionConfig config = ConfigUtils.loadConfig(ConnectionConfig.class, configFile);
 
         this.redisClient = RedisClient.create(this.buildRedisUri(config));
         this.redisConnection  = this.redisClient.connect(StringByteRedisCodec.INSTANCE);

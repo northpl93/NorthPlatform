@@ -11,20 +11,20 @@ import org.bukkit.event.EventHandler;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerArenaEvent;
-import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
-import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinWithoutArenaEvent;
-import pl.north93.northplatform.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
+import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
 import pl.north93.northplatform.api.bukkit.Main;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerArenaEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinWithoutArenaEvent;
+import pl.north93.northplatform.api.minigame.server.gamehost.event.player.SpectatorJoinEvent;
 
 public class VisibilityListener implements AutoListener
 {
     @Inject
-    private BukkitApiCore apiCore;
+    private BukkitHostConnector hostConnector;
 
     @EventHandler
     public void playerJoinArena(final PlayerJoinArenaEvent event)
@@ -40,7 +40,7 @@ public class VisibilityListener implements AutoListener
 
     private void updateVisibility(final PlayerArenaEvent event)
     {
-        final Main plugin = this.apiCore.getPluginMain();
+        final Main plugin = this.hostConnector.getPluginMain();
 
         final Set<INorthPlayer> arenaPlayers = event.getArena().getPlayersManager().getAllPlayers();
         for (final Player player : Bukkit.getOnlinePlayers())
@@ -68,7 +68,7 @@ public class VisibilityListener implements AutoListener
         joiningPlayer.setGameMode(GameMode.CREATIVE);
         joiningPlayer.setCollidable(false);
 
-        final Main plugin = this.apiCore.getPluginMain();
+        final Main plugin = this.hostConnector.getPluginMain();
         for (final Player player : Bukkit.getOnlinePlayers())
         {
             // nie ma potrzeby sprawdzania czy nie ukrywamy siebie dla siebie

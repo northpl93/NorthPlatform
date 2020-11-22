@@ -14,7 +14,6 @@ import org.bukkit.event.Listener;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.bukkit.BukkitApiCore;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
 import pl.north93.northplatform.api.global.messages.Messages;
@@ -31,8 +30,6 @@ import pl.north93.northplatform.minigame.bedwars.event.BedDestroyedEvent;
 
 public class BedDestroyListener implements Listener
 {
-    @Inject
-    private BukkitApiCore apiCore;
     @Inject @Messages("BedWars")
     private MessagesBox messages;
 
