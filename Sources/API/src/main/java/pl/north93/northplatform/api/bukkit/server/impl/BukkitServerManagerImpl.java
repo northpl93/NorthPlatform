@@ -62,6 +62,7 @@ class BukkitServerManagerImpl implements IBukkitServerManager
         return this.serverValue.get();
     }
 
+    @Bean
     @Override
     public JavaPlugin getPlugin()
     {

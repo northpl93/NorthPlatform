@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -24,10 +22,8 @@ import org.reflections.Reflections;
 
 import javassist.ClassPool;
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
 import pl.north93.northplatform.api.global.ApiCore;
 import pl.north93.northplatform.api.global.HostConnector;
-import pl.north93.northplatform.api.global.Platform;
 import pl.north93.northplatform.api.global.agent.InstrumentationClient;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.ComponentDescription;
@@ -82,12 +78,6 @@ public class ComponentManagerImpl implements IComponentManager
 
         final HostConnector hostConnector = this.apiCore.getHostConnector();
         factory.createStaticBeanManually(this.rootBeanCtx, hostConnector.getClass(), "HostConnector", hostConnector);
-
-        if (this.apiCore.getPlatform() == Platform.BUKKIT)
-        {
-            final BukkitHostConnector bukkitConnector = (BukkitHostConnector) hostConnector;
-            factory.createStaticBeanManually(this.rootBeanCtx, JavaPlugin.class, "JavaPlugin", bukkitConnector.getPluginMain());
-        }
     }
 
     private boolean canLoad(final ComponentDescription componentDescription)
