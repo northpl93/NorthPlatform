@@ -7,14 +7,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
-import pl.north93.northplatform.api.bukkit.Main;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.server.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerArenaEvent;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
@@ -24,7 +24,7 @@ import pl.north93.northplatform.api.minigame.server.gamehost.event.player.Specta
 public class VisibilityListener implements AutoListener
 {
     @Inject
-    private BukkitHostConnector hostConnector;
+    private IBukkitServerManager serverManager;
 
     @EventHandler
     public void playerJoinArena(final PlayerJoinArenaEvent event)
@@ -40,7 +40,7 @@ public class VisibilityListener implements AutoListener
 
     private void updateVisibility(final PlayerArenaEvent event)
     {
-        final Main plugin = this.hostConnector.getPluginMain();
+        final JavaPlugin plugin = this.serverManager.getPlugin();
 
         final Set<INorthPlayer> arenaPlayers = event.getArena().getPlayersManager().getAllPlayers();
         for (final Player player : Bukkit.getOnlinePlayers())
@@ -68,7 +68,7 @@ public class VisibilityListener implements AutoListener
         joiningPlayer.setGameMode(GameMode.CREATIVE);
         joiningPlayer.setCollidable(false);
 
-        final Main plugin = this.hostConnector.getPluginMain();
+        final JavaPlugin plugin = this.serverManager.getPlugin();
         for (final Player player : Bukkit.getOnlinePlayers())
         {
             // nie ma potrzeby sprawdzania czy nie ukrywamy siebie dla siebie

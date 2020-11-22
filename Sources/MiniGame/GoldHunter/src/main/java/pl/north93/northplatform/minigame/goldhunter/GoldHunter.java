@@ -15,7 +15,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.DynamicBean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -32,15 +32,15 @@ public class GoldHunter
     @Inject
     private static LocalArenaManager localArenaManager;
     
-    private final BukkitHostConnector hostConnector;
+    private final IBukkitServerManager serverManager;
     private final CharacterClassManager characterClassManager;
 
     private final Map<UUID, GoldHunterPlayer> players = new HashMap<>();
     
     @Bean
-    private GoldHunter(BukkitHostConnector hostConnector, CharacterClassManager characterClassManager)
+    private GoldHunter(IBukkitServerManager serverManager, CharacterClassManager characterClassManager)
     {
-        this.hostConnector = hostConnector;
+        this.serverManager = serverManager;
         this.characterClassManager = characterClassManager;
     }
     
@@ -90,19 +90,19 @@ public class GoldHunter
     
     public void runTask(Runnable runnable)
     {
-        Bukkit.getScheduler().runTask(hostConnector.getPluginMain(), runnable);
+        Bukkit.getScheduler().runTask(serverManager.getPlugin(), runnable);
     }
     
     public BukkitTask runTask(int ticks, Runnable runnable)
     {
-        return Bukkit.getScheduler().runTaskLater(hostConnector.getPluginMain(), runnable, ticks);
+        return Bukkit.getScheduler().runTaskLater(serverManager.getPlugin(), runnable, ticks);
     }
     
     private void registerAbilityHandlersListener()
     {
         for ( SpecialAbilityType abilityType : SpecialAbilityType.values() )
         {
-            Bukkit.getPluginManager().registerEvents(abilityType.getHandler(), hostConnector.getPluginMain());
+            serverManager.registerEvents(abilityType.getHandler());
         }
     }
     

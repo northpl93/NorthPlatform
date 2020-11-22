@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_12_R1.scheduler.CraftScheduler;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -16,8 +17,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.diorite.commons.reflections.DioriteReflectionUtils;
 import org.diorite.commons.reflections.MethodInvoker;
 
-import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
-import pl.north93.northplatform.api.bukkit.Main;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.bukkit.utils.AbstractCountdown;
 import pl.north93.northplatform.api.bukkit.utils.SimpleCountdown;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -27,7 +27,7 @@ public class ArenaScheduler implements IArenaScheduler
 {
     private static final MethodInvoker parsePending = DioriteReflectionUtils.getMethod(CraftScheduler.class, "parsePending");
     @Inject
-    private BukkitHostConnector hostConnector;
+    private IBukkitServerManager serverManager;
     private final LocalArena arena;
     private final List<BukkitTaskWrapper> wrappers;
 
@@ -46,22 +46,22 @@ public class ArenaScheduler implements IArenaScheduler
     @Override
     public void runTaskLater(final Runnable task, final long delay)
     {
-        final Main pluginMain = this.hostConnector.getPluginMain();
-        this.wrappers.add(new WrappedBukkitTask(Bukkit.getScheduler().runTaskLater(pluginMain, task, delay)));
+        final JavaPlugin plugin = this.serverManager.getPlugin();
+        this.wrappers.add(new WrappedBukkitTask(Bukkit.getScheduler().runTaskLater(plugin, task, delay)));
     }
 
     @Override
     public void runTaskTimer(final Runnable task, final long delay, final long every)
     {
-        final Main pluginMain = this.hostConnector.getPluginMain();
-        this.wrappers.add(new WrappedBukkitTask(Bukkit.getScheduler().runTaskTimer(pluginMain, task, delay, every)));
+        final JavaPlugin plugin = this.serverManager.getPlugin();
+        this.wrappers.add(new WrappedBukkitTask(Bukkit.getScheduler().runTaskTimer(plugin, task, delay, every)));
     }
 
     @Override
     public void runAbstractCountdown(final AbstractCountdown countdown, final long every)
     {
-        final Main pluginMain = this.hostConnector.getPluginMain();
-        this.wrappers.add(new WrappedBukkitTask(countdown.runTaskTimer(pluginMain, 0, every)));
+        final JavaPlugin plugin = this.serverManager.getPlugin();
+        this.wrappers.add(new WrappedBukkitTask(countdown.runTaskTimer(plugin, 0, every)));
     }
 
     @Override

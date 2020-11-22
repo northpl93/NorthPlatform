@@ -26,11 +26,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
 import pl.north93.northplatform.api.bukkit.permissions.PermissionsInjector;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.player.event.PlayerDataLoadedEvent;
 import pl.north93.northplatform.api.bukkit.server.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.players.IOnlinePlayer;
 import pl.north93.northplatform.api.global.network.players.IPlayersManager;
@@ -46,7 +46,7 @@ public class NetworkPlayerDataListener implements AutoListener
 {
     private static final String PLAYER_DATA_NOT_LOADED = ChatColor.RED + "Player data isn't loaded";
     @Inject
-    private BukkitHostConnector hostConnector;
+    private IBukkitServerManager serverManager;
     @Inject
     private IObservationManager observation;
     @Inject
@@ -92,7 +92,7 @@ public class NetworkPlayerDataListener implements AutoListener
 
         // injectujemy nasz szystem uprawnien
         PermissionsInjector.inject(player.getCraftPlayer());
-        final PermissionAttachment attachment = player.addAttachment(this.hostConnector.getPluginMain());
+        final PermissionAttachment attachment = player.addAttachment(this.serverManager.getPlugin());
 
         final Group group = player.getGroup();
         this.addPermissions(attachment, group);
@@ -130,7 +130,7 @@ public class NetworkPlayerDataListener implements AutoListener
 
         // wykonujemy stary event obslugujacy zaladowanie danych gracza
         final Collection<IServerJoinAction> joinActions = this.cachedJoinActions.get(player.getUniqueId());
-        this.hostConnector.callEvent(new PlayerDataLoadedEvent(player, joinActions));
+        this.serverManager.callEvent(new PlayerDataLoadedEvent(player, joinActions));
 
         // wykonujemy akcje przy standardowym evencie wejscia gracza
         for (final IServerJoinAction action : joinActions)
@@ -170,7 +170,7 @@ public class NetworkPlayerDataListener implements AutoListener
         final Value<JoinActionsContainer> actions = this.observation.get(JoinActionsContainer.class, "serveractions:" + identity.getNick());
 
         final JoinActionsContainer joinActionsContainer = actions.getAndDelete();
-        if (joinActionsContainer == null || joinActionsContainer.isInvalidServer(this.hostConnector.getServerId()))
+        if (joinActionsContainer == null || joinActionsContainer.isInvalidServer(this.serverManager.getServerId()))
         {
             // jesli nie ma zadnych akcji lub UUID serwera sie nie zgadza to zwracamy pusta liste
             return Collections.emptyList();

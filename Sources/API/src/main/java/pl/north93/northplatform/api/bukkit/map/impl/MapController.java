@@ -8,14 +8,13 @@ import org.bukkit.Material;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
 import io.netty.channel.Channel;
 import lombok.ToString;
-import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.bukkit.utils.nms.EntityMetaPacketHelper;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -24,9 +23,9 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 class MapController implements Listener
 {
     @Inject
-    private BukkitHostConnector bukkitHostConnector;
-    @Inject
     private IBukkitExecutor bukkitExecutor;
+    @Inject
+    private IBukkitServerManager serverManager;
 
     private final RendererScheduler rendererScheduler;
 
@@ -130,6 +129,6 @@ class MapController implements Listener
 
     /*default*/ void updateMapInEntity(final ItemFrame itemFrame, final MapImpl map)
     {
-        itemFrame.setMetadata("map_mapImpl", new FixedMetadataValue(this.bukkitHostConnector.getPluginMain(), map));
+        itemFrame.setMetadata("map_mapImpl", this.serverManager.createFixedMetadataValue(map));
     }
 }

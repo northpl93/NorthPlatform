@@ -22,7 +22,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.spigotmc.SneakyThrow;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.bukkit.tick.ITickable;
 import pl.north93.northplatform.api.bukkit.tick.ITickableManager;
 import pl.north93.northplatform.api.bukkit.tick.Tick;
@@ -37,14 +37,14 @@ public class TickableManagerImpl extends Component implements ITickableManager
     private final Set<TickableWeakReference> tickableObjects = new HashSet<>();
 
     @Inject
-    private BukkitHostConnector hostConnector;
+    private IBukkitServerManager serverManager;
     
     private BukkitTask tickTask;
     
     @Override
     protected void enableComponent()
     {
-        tickTask = Bukkit.getScheduler().runTaskTimer(hostConnector.getPluginMain(), () -> onTick(), 1, 1);
+        tickTask = Bukkit.getScheduler().runTaskTimer(serverManager.getPlugin(), () -> onTick(), 1, 1);
     }
 
     @Override

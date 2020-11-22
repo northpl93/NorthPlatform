@@ -7,14 +7,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
-import pl.north93.northplatform.api.bukkit.Main;
 import pl.north93.northplatform.api.bukkit.player.IBukkitPlayers;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Aggregator;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -32,7 +32,7 @@ public class HubVisibilityService
     @Inject
     private LobbyManager lobbyManager;
     @Inject
-    private BukkitHostConnector hostConnector;
+    private IBukkitServerManager serverManager;
 
     @Bean
     private HubVisibilityService()
@@ -64,7 +64,7 @@ public class HubVisibilityService
 
     public void refreshVisibility(final INorthPlayer player)
     {
-        final Main plugin = this.hostConnector.getPluginMain();
+        final JavaPlugin plugin = this.serverManager.getPlugin();
         this.players.getStream().forEach(other ->
         {
             if (other.equals(player))

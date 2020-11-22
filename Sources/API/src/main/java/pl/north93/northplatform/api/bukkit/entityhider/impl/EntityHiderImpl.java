@@ -12,16 +12,14 @@ import net.minecraft.server.v1_12_R1.World;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
-import pl.north93.northplatform.api.bukkit.Main;
 import pl.north93.northplatform.api.bukkit.entityhider.EntityVisibility;
 import pl.north93.northplatform.api.bukkit.entityhider.IEntityHider;
+import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper;
 import pl.north93.northplatform.api.global.component.Component;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -29,7 +27,7 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 public class EntityHiderImpl extends Component implements IEntityHider
 {
     @Inject
-    private BukkitHostConnector bukkitHostConnector;
+    private IBukkitServerManager serverManager;
     private final GlobalVisibility globalVisibility = new GlobalVisibility();
 
     @Override
@@ -90,10 +88,8 @@ public class EntityHiderImpl extends Component implements IEntityHider
         final List<MetadataValue> metadata = player.getMetadata("API.EntityHider/controller");
         if (metadata.isEmpty())
         {
-            final Main pluginMain = this.bukkitHostConnector.getPluginMain();
-
             final VisibilityController controller = new VisibilityController(this.globalVisibility);
-            player.setMetadata("API.EntityHider/controller", new FixedMetadataValue(pluginMain, controller));
+            player.setMetadata("API.EntityHider/controller", this.serverManager.createFixedMetadataValue(controller));
 
             return controller;
         }
