@@ -1,27 +1,20 @@
 package pl.north93.northplatform.api.bukkit.utils;
 
-import java.util.logging.Level;
-
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public abstract class AbstractCountdown extends BukkitRunnable
 {
-    private static JavaPlugin PLUGIN = (JavaPlugin) Bukkit.getPluginManager().getPlugin("API"); // todo
     private int time;
 
     public AbstractCountdown(final int time)
     {
         this.time = time;
-    }
-
-    public final void start(final int every)
-    {
-        this.runTaskTimer(PLUGIN, 0, every);
     }
 
     @Override
@@ -35,7 +28,7 @@ public abstract class AbstractCountdown extends BukkitRunnable
             }
             catch (final Exception e)
             {
-                PLUGIN.getLogger().log(Level.SEVERE, "An exception has been throw while ending countdown.", e);
+                log.error("An exception has been throw while ending countdown.", e);
             }
             this.cancel();
         }
@@ -47,7 +40,7 @@ public abstract class AbstractCountdown extends BukkitRunnable
             }
             catch (final Exception e)
             {
-                PLUGIN.getLogger().log(Level.SEVERE, "An exception has been throw in countdown loop.", e);
+                log.error("An exception has been throw in countdown loop.", e);
             }
             this.time--;
         }

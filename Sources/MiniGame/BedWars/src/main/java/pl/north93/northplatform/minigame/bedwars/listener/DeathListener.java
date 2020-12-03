@@ -126,7 +126,7 @@ public class DeathListener implements Listener
         final Team team = playerData.getTeam();
         if (team.isBedAlive())
         {
-            new RevivePlayerCountdown(player, playerData).start(20);
+            arena.getScheduler().runAbstractCountdown(new RevivePlayerCountdown(player, playerData), 20);
             return;
         }
         else
@@ -137,7 +137,7 @@ public class DeathListener implements Listener
             if (playerData.getLives() > 0 && deathMatchState == DeathMatchState.NOT_STARTED)
             {
                 playerData.removeLife();
-                new RevivePlayerCountdown(player, playerData).start(20);
+                arena.getScheduler().runAbstractCountdown(new RevivePlayerCountdown(player, playerData), 20);
                 return;
             }
         }
