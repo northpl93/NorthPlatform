@@ -53,7 +53,7 @@ public final class Injector
                     // kontynuujemy reszte pol
                     continue;
                 }
-                throw new InjectionException(instance.getClass(), e);
+                throw new InjectionException(clazz, e);
             }
         }
     }
