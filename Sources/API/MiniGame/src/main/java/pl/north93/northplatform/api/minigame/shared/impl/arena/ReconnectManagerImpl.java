@@ -1,6 +1,6 @@
 package pl.north93.northplatform.api.minigame.shared.impl.arena;
 
-import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.global.HostConnector;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.metadata.MetaStore;
@@ -14,7 +14,7 @@ import pl.north93.northplatform.api.minigame.shared.api.arena.reconnect.Reconnec
 public class ReconnectManagerImpl implements IReconnectManager
 {
     @Inject
-    private ApiCore apiCore;
+    private HostConnector hostConnector;
     @Inject
     private IPlayersManager playersManager;
 
@@ -44,7 +44,7 @@ public class ReconnectManagerImpl implements IReconnectManager
     @Override
     public void updateReconnectTicket(final Identity player, final ReconnectTicket newTicket)
     {
-        this.apiCore.getHostConnector().runTaskAsynchronously(() ->
+        this.hostConnector.runTaskAsynchronously(() ->
         {
             try (final IPlayerTransaction t = this.playersManager.transaction(player))
             {

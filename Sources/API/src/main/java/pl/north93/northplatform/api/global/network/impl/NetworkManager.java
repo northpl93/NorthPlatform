@@ -14,7 +14,6 @@ import pl.north93.northplatform.api.global.network.NetworkMeta;
 import pl.north93.northplatform.api.global.network.event.NetworkShutdownNetEvent;
 import pl.north93.northplatform.api.global.network.mojang.IMojangCache;
 import pl.north93.northplatform.api.global.redis.event.NetEventSubscriber;
-import pl.north93.northplatform.api.global.redis.observable.IObservationManager;
 import pl.north93.northplatform.api.global.redis.rpc.IRpcManager;
 import pl.north93.northplatform.api.global.redis.rpc.Targets;
 
@@ -23,8 +22,6 @@ class NetworkManager extends Component implements INetworkManager
 {
     @Inject @NetConfig(type = NetworkMeta.class, id = "networkMeta")
     private IConfig<NetworkMeta> networkConfig;
-    @Inject
-    private IObservationManager observationManager;
     @Inject
     private IRpcManager rpcManager;
     @Inject

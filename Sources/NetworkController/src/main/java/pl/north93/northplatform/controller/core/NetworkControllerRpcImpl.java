@@ -3,7 +3,7 @@ package pl.north93.northplatform.controller.core;
 import java.util.UUID;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.global.HostConnector;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.NetworkControllerRpc;
 import pl.north93.northplatform.api.global.network.server.ServerState;
@@ -12,7 +12,7 @@ import pl.north93.northplatform.api.global.network.server.ServerState;
 public class NetworkControllerRpcImpl implements NetworkControllerRpc
 {
     @Inject
-    private ApiCore apiCore;
+    private HostConnector hostConnector;
 
     @Override
     public void ping()
@@ -23,7 +23,7 @@ public class NetworkControllerRpcImpl implements NetworkControllerRpc
     public void stopController()
     {
         log.info("Received stop request from network.");
-        this.apiCore.getHostConnector().shutdownHost();
+        this.hostConnector.shutdownHost();
     }
 
     @Override

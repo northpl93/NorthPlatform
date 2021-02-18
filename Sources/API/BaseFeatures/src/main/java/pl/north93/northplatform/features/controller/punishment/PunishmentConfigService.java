@@ -15,7 +15,7 @@ import pl.north93.northplatform.controller.configserver.source.XmlConfigSource;
 public class PunishmentConfigService
 {
     @Inject
-    private ApiCore       apiCore;
+    private ApiCore apiCore;
     @Inject
     private IConfigServer configServer;
 

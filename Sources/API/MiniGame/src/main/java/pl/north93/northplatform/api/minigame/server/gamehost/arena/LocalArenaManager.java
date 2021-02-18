@@ -61,7 +61,7 @@ public class LocalArenaManager
         this.arenas.add(localArena);
         this.arenaManager.setArena(arenaData);
 
-        GamePhaseEventFactory.getInstance().callEvent(localArena); // invoke GameInitEvent
+        this.gameHostManager.callBukkitEvent(GamePhaseEventFactory.getInstance().createEvent(localArena));
         this.gameHostManager.publishArenaEvent(new ArenaCreatedNetEvent(arenaId, miniGame));
 
         final String msg = "Added new local arena! GameID:{}/{}, ArenaID:{}, ServerID:{}, GamePhase:{}";

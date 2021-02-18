@@ -7,10 +7,10 @@ import pl.north93.northplatform.api.global.ApiCore;
 
 public abstract class Component implements IBeanContext
 {
-    private ApiCore          apiCore;
+    private ApiCore apiCore;
     private IComponentBundle componentBundle;
-    private String           name;
-    private boolean          isInitialised;
+    private String name;
+    private boolean isInitialised;
 
     protected Component()
     {

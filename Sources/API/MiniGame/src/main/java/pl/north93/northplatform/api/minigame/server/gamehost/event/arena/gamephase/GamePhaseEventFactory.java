@@ -1,7 +1,5 @@
 package pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase;
 
-import org.bukkit.Bukkit;
-
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.ArenaEvent;
 
@@ -33,10 +31,5 @@ public final class GamePhaseEventFactory
             default:
                 throw new IllegalArgumentException("Arena " + arena + " is in invalid gamephase");
         }
-    }
-
-    public void callEvent(final LocalArena arena)
-    {
-        Bukkit.getPluginManager().callEvent(this.createEvent(arena));
     }
 }

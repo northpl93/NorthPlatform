@@ -123,8 +123,8 @@ public class LocalArena implements IArena
         this.data.setGamePhase(gamePhase);
 
         log.info("Switched {} to game phase {}", this.getId(), gamePhase);
-        GamePhaseEventFactory.getInstance().callEvent(this);
-        
+        this.gameHostManager.callBukkitEvent(GamePhaseEventFactory.getInstance().createEvent(this));
+
         // upload remote data after changes made by listeners
         this.uploadRemoteData();
     }

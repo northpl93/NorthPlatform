@@ -1,7 +1,7 @@
 package pl.north93.northplatform.api.minigame.controller.party;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.global.HostConnector;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.minigame.shared.api.party.IParty;
 import pl.north93.northplatform.api.minigame.shared.api.party.IPartyAccess;
@@ -15,10 +15,10 @@ public class PartyValidityChecker implements Runnable
     private final IPartyManager partyManager;
 
     @Bean
-    private PartyValidityChecker(final IPartyManager partyManager, final ApiCore apiCore)
+    private PartyValidityChecker(final IPartyManager partyManager, final HostConnector hostConnector)
     {
         this.partyManager = partyManager;
-        apiCore.getHostConnector().runTaskAsynchronously(this, TIME);
+        hostConnector.runTaskAsynchronously(this, TIME);
     }
 
     @Override

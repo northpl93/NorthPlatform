@@ -24,13 +24,13 @@ public final class ApiCore
     private final Platform platform;
     private final HostConnector connector;
     private final String hostname;
-    private String id;
     private ApiState apiState;
+    private String id;
 
-    public ApiCore(final Platform platform, final HostConnector platformConnector)
+    public ApiCore(final Platform platform, final HostConnector hostConnector)
     {
         this.platform = platform;
-        this.connector = platformConnector;
+        this.connector = hostConnector;
 
         this.hostname = this.obtainHostName();
         this.isDebug = System.getProperties().containsKey("debug");
@@ -86,7 +86,7 @@ public final class ApiCore
         catch (final Exception e)
         {
             log.error("Failed to start NorthPlatform API", e);
-            this.getHostConnector().shutdownHost();
+            this.connector.shutdownHost();
             return;
         }
         this.setApiState(ApiState.ENABLED);

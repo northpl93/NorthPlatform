@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -23,6 +24,7 @@ import pl.north93.northplatform.api.standalone.logger.NorthGelfHandler;
 public class StandaloneHostConnector implements HostConnector
 {
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+    private final AtomicBoolean stopping = new AtomicBoolean(false);
     protected EnvironmentCfg environmentCfg;
     private ApiCore apiCore;
 
@@ -68,8 +70,7 @@ public class StandaloneHostConnector implements HostConnector
     @Override
     public void onPlatformStop(final ApiCore apiCore)
     {
-        log.info("Stopping standalone platform connector");
-        this.executor.shutdown();
+        log.info("Standalone platform connector is stopping (onPlatformStop)");
     }
 
     @Override
@@ -87,7 +88,19 @@ public class StandaloneHostConnector implements HostConnector
     @Override
     public void shutdownHost()
     {
-        System.exit(0);
+        if (this.stopping.getAndSet(true))
+        {
+            return; // platform is already stopping
+        }
+
+        new Thread(this::doAsyncShutdown, "NorthPlatform shutdown thread").start();
+    }
+
+    private void doAsyncShutdown()
+    {
+        log.info("Stopping standalone platform connector (doAsyncShutdown)");
+        this.apiCore.stopPlatform();
+        this.executor.shutdown();
     }
 
     @Override

@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.global.HostConnector;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.event.NetworkShutdownNetEvent;
@@ -19,13 +19,13 @@ public class ScalerWorker implements Runnable
     @Inject
     private LocalGroupsManager localGroupsManager;
     @Inject
-    private RulesProcessor     rulesProcessor;
-    private boolean            isStopping;
+    private RulesProcessor rulesProcessor;
+    private boolean isStopping;
 
     @Bean
-    private ScalerWorker(final ApiCore apiCore)
+    private ScalerWorker(final HostConnector hostConnector)
     {
-        apiCore.getHostConnector().runTaskAsynchronously(this, 20);
+        hostConnector.runTaskAsynchronously(this, 20);
     }
 
     @Override

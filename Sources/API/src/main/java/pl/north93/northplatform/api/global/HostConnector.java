@@ -8,7 +8,7 @@ import java.io.File;
 public interface HostConnector
 {
     /**
-     * Handles early platform initialisation.
+     * Handles early (before components) platform initialisation.
      * Should return unique identifier of this NorthPlatform instance.
      *
      * @param apiCore Instance of NorthPlatform.
@@ -16,6 +16,11 @@ public interface HostConnector
      */
     String onPlatformInit(ApiCore apiCore);
 
+    /**
+     * Handles late (after components) platform initialisation.
+     *
+     * @param apiCore Instance of NorthPlatform.
+     */
     void onPlatformStart(ApiCore apiCore);
 
     /**

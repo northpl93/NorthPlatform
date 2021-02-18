@@ -55,7 +55,7 @@ class NmsWorldUtils
     }
     
     /**
-     * Creates only WorldServer instance based world name
+     * Creates only WorldServer instance based on world name
      * This method doesn't call any events and doesn't convert world.
      * 
      * @return created instance of world or null if it wasn't posibble

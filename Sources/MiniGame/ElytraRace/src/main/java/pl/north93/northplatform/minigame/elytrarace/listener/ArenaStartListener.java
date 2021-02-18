@@ -75,7 +75,7 @@ public class ArenaStartListener implements Listener
 
         final ArenaChatManager chatManager = arena.getChatManager();
         chatManager.broadcast(this.messages, "separator");
-        chatManager.broadcast(this.messages, arenaData.getGameMode() == ElytraRaceMode.SCORE_MODE ? "score.welcome" : "race.welcome", MessageLayout.CENTER);
+        chatManager.broadcast(this.messages, this.getWelcomeMessageKey(arenaData), MessageLayout.CENTER);
         chatManager.broadcast(this.messages, "separator");
 
         // odpalamy taska generujacego efekty lotu
@@ -83,6 +83,11 @@ public class ArenaStartListener implements Listener
 
         // task odpalający arenę po 15 sekundach
         arena.getScheduler().runAbstractCountdown(new StartCountdown(15, arena), 20);
+    }
+
+    private String getWelcomeMessageKey(final ElytraRaceArena arenaData)
+    {
+        return arenaData.getGameMode() == ElytraRaceMode.SCORE_MODE ? "score.welcome" : "race.welcome";
     }
 
     private ArenaConfig loadConfig(final LocalArena arena)
