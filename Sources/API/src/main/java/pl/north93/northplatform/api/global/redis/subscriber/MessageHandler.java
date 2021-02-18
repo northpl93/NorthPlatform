@@ -27,7 +27,7 @@ class MessageHandler extends RedisPubSubAdapter<String, byte[]>
         this.handlerMap.remove(channel);
     }
 
-    public void cleanup()
+    public void shutdownExecutor()
     {
         this.executorService.shutdown();
         try

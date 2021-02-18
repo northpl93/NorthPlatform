@@ -28,9 +28,9 @@ public class RedisSubscriberImpl extends Component implements RedisSubscriber
     protected void disableComponent()
     {
         this.connection.sync().punsubscribe("*");
-
-        this.handler.cleanup();
         this.connection.close();
+
+        this.handler.shutdownExecutor();
     }
 
     @Override
