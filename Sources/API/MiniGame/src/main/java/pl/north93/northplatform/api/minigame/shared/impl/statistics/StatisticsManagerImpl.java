@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -20,7 +22,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.Document;
 
-import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.global.HostConnector;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.storage.StorageConnector;
@@ -36,7 +38,7 @@ import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsMa
 public class StatisticsManagerImpl implements IStatisticsManager
 {
     @Inject
-    private ApiCore apiCore;
+    private HostConnector hostConnector;
     private final MongoCollection<Document> collection;
 
     @Bean
@@ -48,7 +50,7 @@ public class StatisticsManagerImpl implements IStatisticsManager
     @Override
     public IStatisticHolder getHolder(final HolderIdentity holder)
     {
-        return new StatisticHolderImpl(this, holder);
+        return new StatisticHolderImpl(this.collection, this, holder);
     }
 
     @Override
@@ -60,19 +62,16 @@ public class StatisticsManagerImpl implements IStatisticsManager
         aggregation.add(new Document("$sort", sort)); // mongodb gubi kolejnosc po grupowaniu, wiec trzeba jeszcze raz posortowac
         aggregation.add(new Document("$limit", size)); // limitujemy rozmiar przed pobraniem do klienta
 
-        final CompletableFuture<IRanking<T, UNIT>> future = new CompletableFuture<>();
-        this.apiCore.getHostConnector().runTaskAsynchronously(() ->
+        return this.createAndCompleteFutureAsync(() ->
         {
             final AggregateIterable<Document> documents = this.collection.aggregate(aggregation);
             final Stream<Document> stream = StreamSupport.stream(documents.spliterator(), false);
 
             final List<IRecord<T, UNIT>> result = stream.map(document -> this.documentToUnit(statistic, document))
-                                                     .collect(Collectors.toList());
+                                                        .collect(Collectors.toList());
 
-            future.complete(new RankingImpl<>(size, result));
+            return new RankingImpl<>(size, result);
         });
-
-        return future;
     }
 
     @Override
@@ -82,16 +81,11 @@ public class StatisticsManagerImpl implements IStatisticsManager
         final Document sort = new Document();
         Arrays.stream(filters).forEach(filter -> filter.appendSort(statistic, sort));
 
-        final CompletableFuture<IRecord<T, UNIT>> future = new CompletableFuture<>();
-        this.apiCore.getHostConnector().runTaskAsynchronously(() ->
+        return this.createAndCompleteFutureAsync(() ->
         {
             final Document result = this.collection.find(query).sort(sort).first();
-            final IRecord<T, UNIT> resultRecord = this.documentToUnit(statistic, result);
-
-            future.complete(resultRecord);
+            return this.documentToUnit(statistic, result);
         });
-
-        return future;
     }
 
     @Override
@@ -102,25 +96,7 @@ public class StatisticsManagerImpl implements IStatisticsManager
         final Document group = new Document("_id", null).append("value", new Document("$avg", "$value"));
         aggregation.add(new Document("$group", group));
 
-        final CompletableFuture<UNIT> future = new CompletableFuture<>();
-        this.apiCore.getHostConnector().runTaskAsynchronously(() ->
-        {
-            final Document first = this.collection.aggregate(aggregation).first();
-
-            final UNIT value;
-            if (first == null)
-            {
-                value = statistic.getDbComposer().readValue(new Document("value", 0));
-            }
-            else
-            {
-                value = statistic.getDbComposer().readValue(first);
-            }
-
-            future.complete(value);
-        });
-
-        return future;
+        return this.createAndCompleteFutureAsync(() -> this.aggregateAndReadValue(statistic, aggregation));
     }
 
     @Override
@@ -148,31 +124,21 @@ public class StatisticsManagerImpl implements IStatisticsManager
         project.put("value", new Document("$arrayElemAt", arrayElemAt));
         aggregation.add(new Document("$project", project)); // finalny projekt
 
-        final CompletableFuture<UNIT> future = new CompletableFuture<>();
-        this.apiCore.getHostConnector().runTaskAsynchronously(() ->
-        {
-            final Document first = this.collection.aggregate(aggregation).first();
-
-            final UNIT value;
-            if (first == null)
-            {
-                value = statistic.getDbComposer().readValue(new Document("value", 0));
-            }
-            else
-            {
-                value = statistic.getDbComposer().readValue(first);
-            }
-
-            future.complete(value);
-        });
-
-        return future;
+        return this.createAndCompleteFutureAsync(() -> this.aggregateAndReadValue(statistic, aggregation));
     }
 
     @Override
     public <T, UNIT extends IStatisticUnit<T>> CompletableFuture<UNIT> getMedian(final IStatistic<T, UNIT> statistic)
     {
         return this.getPercentile(statistic, 0.5);
+    }
+
+    /*default*/ <T, UNIT extends IStatisticUnit<T>> UNIT aggregateAndReadValue(final IStatistic<T, UNIT> statistic, final List<Document> aggregation)
+    {
+        final Document resultDocument = this.collection.aggregate(aggregation).first();
+        final Document nonNullResultDocument = Objects.requireNonNullElseGet(resultDocument, () -> new Document("value", 0));
+
+        return statistic.getDbComposer().readValue(nonNullResultDocument);
     }
 
     /*default*/ <T, UNIT extends IStatisticUnit<T>> IRecord<T, UNIT> documentToUnit(final IStatistic<T, UNIT> statistic, final Document document)
@@ -220,14 +186,12 @@ public class StatisticsManagerImpl implements IStatisticsManager
         return query;
     }
 
-    /*default*/ ApiCore getApiCore()
+    /*default*/ <T> CompletableFuture<T> createAndCompleteFutureAsync(final Supplier<T> supplier)
     {
-        return this.apiCore;
-    }
+        final CompletableFuture<T> future = new CompletableFuture<>();
+        this.hostConnector.runTaskAsynchronously(() -> future.complete(supplier.get()));
 
-    /*default*/ MongoCollection<Document> getCollection()
-    {
-        return this.collection;
+        return future;
     }
 
     @Override

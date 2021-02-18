@@ -25,11 +25,13 @@ import pl.north93.northplatform.api.minigame.shared.api.statistics.filter.Latest
 class StatisticHolderImpl implements IStatisticHolder
 {
     private static final Document TIME_SORT = new Document("time", -1); // newest on the top
+    private final MongoCollection<Document> collection;
     private final StatisticsManagerImpl manager;
     private final HolderIdentity holder;
 
-    public StatisticHolderImpl(final StatisticsManagerImpl manager, final HolderIdentity holder)
+    public StatisticHolderImpl(final MongoCollection<Document> collection, final StatisticsManagerImpl manager, final HolderIdentity holder)
     {
+        this.collection = collection;
         this.manager = manager;
         this.holder = holder;
     }
@@ -60,25 +62,19 @@ class StatisticHolderImpl implements IStatisticHolder
 
     private <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRecord<T, UNIT>> getRecord(final IStatistic<T, UNIT> statistic, final Collection<IStatisticFilter> filters)
     {
-        final MongoCollection<Document> collection = this.manager.getCollection();
-
         final Document query = this.composeConditions(statistic, filters);
         final Document sort = this.composeSort(statistic, filters);
 
-        final CompletableFuture<IRecord<T, UNIT>> future = new CompletableFuture<>();
-        this.manager.getApiCore().getHostConnector().runTaskAsynchronously(() ->
+        return this.manager.createAndCompleteFutureAsync(() ->
         {
-            final Document result = collection.find(query).sort(sort).first();
-            future.complete(this.manager.documentToUnit(statistic, result));
+            final Document result = this.collection.find(query).sort(sort).first();
+            return this.manager.documentToUnit(statistic, result);
         });
-
-        return future;
     }
 
     @Override
     public <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRecord<T, UNIT>> record(final IStatistic<T, UNIT> statistic, final UNIT value)
     {
-        final MongoCollection<Document> collection = this.manager.getCollection();
         final String id = statistic.getId();
 
         final Document find = this.composeConditions(statistic, new ArrayList<>(0));
@@ -86,30 +82,24 @@ class StatisticHolderImpl implements IStatisticHolder
         final Document setContent = new Document("owner", this.holder.asBson()).append("statId", id).append("time", System.currentTimeMillis());
         value.toDocument(setContent);
 
-        final CompletableFuture<IRecord<T, UNIT>> future = new CompletableFuture<>();
-        this.manager.getApiCore().getHostConnector().runTaskAsynchronously(() ->
+        return this.manager.createAndCompleteFutureAsync(() ->
         {
             final FindOneAndUpdateOptions options = new FindOneAndUpdateOptions().sort(TIME_SORT).upsert(true);
-            final Document previous = collection.findOneAndUpdate(find, new Document("$set", setContent), options);
+            final Document previous = this.collection.findOneAndUpdate(find, new Document("$set", setContent), options);
             if (previous != null)
             {
                 previous.remove("_id");
-                collection.insertOne(previous);
+                this.collection.insertOne(previous);
             }
 
-            future.complete(this.manager.documentToUnit(statistic, previous));
+            return this.manager.documentToUnit(statistic, previous);
         });
-
-        return future;
     }
 
     @Override
     public <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRecord<T, UNIT>> increment(final IStatistic<T, UNIT> statistic, final UNIT value)
     {
-        final MongoCollection<Document> collection = this.manager.getCollection();
         final Document insertDocument = new Document();
-
-        final Document query = this.composeConditions(statistic, new ArrayList<>());
 
         final Document setContent = new Document("owner", this.holder.asBson()).append("statId", statistic.getId()).append("time", System.currentTimeMillis());
         final Document valueDocument = new Document();
@@ -117,21 +107,19 @@ class StatisticHolderImpl implements IStatisticHolder
         insertDocument.put("$set", setContent);
         insertDocument.put("$inc", valueDocument);
 
-        final CompletableFuture<IRecord<T, UNIT>> future = new CompletableFuture<>();
-        this.manager.getApiCore().getHostConnector().runTaskAsynchronously(() ->
+        final Document query = this.composeConditions(statistic, new ArrayList<>());
+        return this.manager.createAndCompleteFutureAsync(() ->
         {
             final FindOneAndUpdateOptions options = new FindOneAndUpdateOptions().sort(TIME_SORT).upsert(true);
-            final Document previous = collection.findOneAndUpdate(query, insertDocument, options);
+            final Document previous = this.collection.findOneAndUpdate(query, insertDocument, options);
             if (previous != null)
             {
                 previous.remove("_id");
-                collection.insertOne(previous);
+                this.collection.insertOne(previous);
             }
 
-            future.complete(this.manager.documentToUnit(statistic, previous));
+            return this.manager.documentToUnit(statistic, previous);
         });
-
-        return future;
     }
 
     private Document composeConditions(final IStatistic<?, ?> statistic, final Collection<IStatisticFilter> filters)
