@@ -12,7 +12,7 @@ import pl.north93.northplatform.api.bukkit.utils.xml.XmlCuboid;
 import pl.north93.northplatform.api.bukkit.utils.xml.XmlLocation;
 
 
-@XmlRootElement(name = "arena")
+@XmlRootElement(name = "checkpoint")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Checkpoint
 {

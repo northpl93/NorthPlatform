@@ -119,7 +119,7 @@ public class ArenaStartListener implements Listener
             }
 
             elytraPlayers.add(elytraRacePlayer);
-            player.setPlayerData(elytraRacePlayer);
+            player.setPlayerData(ElytraRacePlayer.class, elytraRacePlayer);
 
             player.teleport(startLoc);
             player.getInventory().setChestplate(this.createElytra());
