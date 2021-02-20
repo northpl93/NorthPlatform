@@ -12,6 +12,7 @@ import pl.north93.northplatform.api.bukkit.BukkitHostConnector;
 import pl.north93.northplatform.api.bungee.BungeeCommandsManager;
 import pl.north93.northplatform.api.bungee.BungeeHostConnector;
 import pl.north93.northplatform.api.global.HostConnector;
+import pl.north93.northplatform.api.global.HostId;
 import pl.north93.northplatform.api.global.commands.ICommandsManager;
 import pl.north93.northplatform.api.global.commands.NorthCommand;
 import pl.north93.northplatform.api.global.commands.annotation.QuickCommand;
@@ -22,23 +23,26 @@ import pl.north93.northplatform.api.standalone.commands.StandaloneCommandsManage
 
 public class CommandsManagerDecorator extends Component implements ICommandsManager
 {
-    private Set<NorthCommand> northCommands = new HashSet<>();
+    private final Set<NorthCommand> northCommands = new HashSet<>();
     private ICommandsManager commandsManager;
 
     @Override
     protected void enableComponent()
     {
         final HostConnector hostConnector = this.getApiCore().getHostConnector();
-        switch (this.getApiCore().getPlatform())
+
+        final String hostId = this.getApiCore().getHostId().toString();
+        if ("bukkit".equals(hostId))
         {
-            case BUKKIT:
-                this.commandsManager = new BukkitCommandsManager((BukkitHostConnector) hostConnector);
-                break;
-            case BUNGEE:
-                this.commandsManager = new BungeeCommandsManager((BungeeHostConnector) hostConnector);
-                break;
-            case STANDALONE:
-                this.commandsManager = new StandaloneCommandsManager();
+            this.commandsManager = new BukkitCommandsManager((BukkitHostConnector) hostConnector);
+        }
+        else if ("bungee".equals(hostId))
+        {
+            this.commandsManager = new BungeeCommandsManager((BungeeHostConnector) hostConnector);
+        }
+        else
+        {
+            this.commandsManager = new StandaloneCommandsManager();
         }
 
         for (final NorthCommand northCommand : this.northCommands)

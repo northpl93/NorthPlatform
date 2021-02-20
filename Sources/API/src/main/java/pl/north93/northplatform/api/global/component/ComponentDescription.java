@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.ToString;
-import pl.north93.northplatform.api.global.Platform;
 
 @ToString
 @XmlRootElement(name = "component")
@@ -31,9 +30,9 @@ public class ComponentDescription
     @XmlElementWrapper(name = "dependencies")
     @XmlElement(name = "dependency")
     private List<String> dependencies = new ArrayList<>();
-    @XmlElementWrapper(name = "platforms")
-    @XmlElement(name = "platform")
-    private Platform[] platforms = Platform.values(); // deault all platforms
+    @XmlElementWrapper(name = "hosts")
+    @XmlElement(name = "host")
+    private String[] hosts;
 
     public String getMainClass()
     {
@@ -65,8 +64,8 @@ public class ComponentDescription
         return this.dependencies;
     }
 
-    public Platform[] getPlatforms()
+    public String[] getHosts()
     {
-        return this.platforms;
+        return this.hosts;
     }
 }

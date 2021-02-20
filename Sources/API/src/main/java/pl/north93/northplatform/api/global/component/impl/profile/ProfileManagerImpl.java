@@ -16,7 +16,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javassist.CtBehavior;
 import javassist.CtClass;
-import pl.north93.northplatform.api.global.Platform;
+import pl.north93.northplatform.api.global.HostId;
 import pl.north93.northplatform.api.global.component.DefinedProfile;
 import pl.north93.northplatform.api.global.component.IProfileManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Profile;
@@ -38,12 +38,10 @@ public class ProfileManagerImpl implements IProfileManager
 
     private void registerDefaultProfiles()
     {
-        final Platform activePlatform = this.componentManager.getApiCore().getPlatform();
-        for (final Platform platform : Platform.values())
-        {
-            final String name = platform.name().toLowerCase(Locale.ROOT);
-            this.addProfile(new FakeProfile(name, activePlatform == platform));
-        }
+        final HostId activeHost = this.componentManager.getApiCore().getHostId();
+
+        final String name = activeHost.getHostId().toLowerCase(Locale.ROOT);
+        this.addProfile(new FakeProfile(name, true));
     }
 
     @Override
@@ -75,6 +73,19 @@ public class ProfileManagerImpl implements IProfileManager
         return this.getProfile(name).isEnabled();
     }
 
+    @Override
+    public boolean isProfileActiveIgnoringUnexisting(final String profileName) throws ProfileNotFoundException
+    {
+        try
+        {
+            return this.isProfileActive(profileName);
+        }
+        catch (final ProfileNotFoundException e)
+        {
+            return false;
+        }
+    }
+
     public boolean isActive(final Class<?> clazz)
     {
         if (this.packageChecker.isPackageInactive(clazz.getClassLoader(), clazz.getPackage().getName()))
@@ -84,7 +95,7 @@ public class ProfileManagerImpl implements IProfileManager
         }
 
         final Profile annotation = clazz.getAnnotation(Profile.class);
-        return annotation == null || this.isProfileActive(annotation.value());
+        return this.isProfileActive(annotation);
     }
 
     public boolean isActive(final Member member)
@@ -97,7 +108,7 @@ public class ProfileManagerImpl implements IProfileManager
         }
 
         final Profile annotation = annotatedMember.getAnnotation(Profile.class);
-        return annotation == null || this.isProfileActive(annotation.value());
+        return this.isProfileActive(annotation);
     }
 
     public boolean isActive(final ClassLoader classLoader, final CtClass ctClass) throws ClassNotFoundException
@@ -109,7 +120,7 @@ public class ProfileManagerImpl implements IProfileManager
         }
 
         final Profile profile = (Profile) ctClass.getAnnotation(Profile.class);
-        return profile == null || this.isProfileActive(profile.value());
+        return this.isProfileActive(profile);
     }
 
     public boolean isActive(final ClassLoader classLoader, final CtBehavior ctElement) throws ClassNotFoundException
@@ -121,7 +132,18 @@ public class ProfileManagerImpl implements IProfileManager
         }
 
         final Profile profile = (Profile) ctElement.getAnnotation(Profile.class);
-        return profile == null || this.isProfileActive(profile.value());
+        return this.isProfileActive(profile);
+    }
+
+    public boolean isProfileActive(final Profile profile)
+    {
+        if (profile == null)
+        {
+            return true;
+        }
+
+        final String name = profile.value();
+        return profile.allowUnexistingProfile() ? this.isProfileActiveIgnoringUnexisting(name) : this.isProfileActive(name);
     }
 
     @Override

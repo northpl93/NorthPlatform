@@ -10,9 +10,9 @@
                 <dependency>API.Database.Redis.Observer</dependency>
                 <dependency>API.Database.Redis.RPC</dependency>
             </dependencies>
-            <platforms>
-                <platform>BUNGEE</platform>
-            </platforms>
+            <hosts>
+                <host>bungee</host>
+            </hosts>
         </component>
     </components>
 </bundle>

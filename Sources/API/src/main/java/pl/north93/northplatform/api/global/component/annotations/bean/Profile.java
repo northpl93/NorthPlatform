@@ -9,5 +9,13 @@ import java.lang.annotation.Target;
 @Target({ElementType.PACKAGE, ElementType.TYPE, ElementType.CONSTRUCTOR, ElementType.METHOD})
 public @interface Profile
 {
+    /**
+     * @return Name of the profile.
+     */
     String value();
+
+    /**
+     * @return If this option is set to true, then the unexisting profile should be treated as a disabled profile.
+     */
+    boolean allowUnexistingProfile() default true;
 }

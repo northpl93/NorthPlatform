@@ -21,15 +21,15 @@ public final class ApiCore
     @Getter
     private final boolean isDebug;
     private final IComponentManager componentManager;
-    private final Platform platform;
+    private final HostId hostId;
     private final HostConnector connector;
     private final String hostname;
     private ApiState apiState;
     private String id;
 
-    public ApiCore(final Platform platform, final HostConnector hostConnector)
+    public ApiCore(final HostId hostId, final HostConnector hostConnector)
     {
-        this.platform = platform;
+        this.hostId = hostId;
         this.connector = hostConnector;
 
         this.hostname = this.obtainHostName();
@@ -38,9 +38,9 @@ public final class ApiCore
         this.setApiState(ApiState.CONSTRUCTED);
     }
 
-    public final Platform getPlatform()
+    public HostId getHostId()
     {
-        return this.platform;
+        return this.hostId;
     }
 
     public HostConnector getHostConnector()

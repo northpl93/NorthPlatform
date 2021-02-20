@@ -21,9 +21,9 @@
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>
                 <dependency>API.Economy.Controller</dependency>
             </dependencies>
-            <platforms>
-                <platform>STANDALONE</platform>
-            </platforms>
+            <hosts>
+                <host>standalone</host>
+            </hosts>
         </component>
     </components>
 </bundle>

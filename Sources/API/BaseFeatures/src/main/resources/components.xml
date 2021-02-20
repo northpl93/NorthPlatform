@@ -21,9 +21,9 @@
                 <dependency>API.Chat.Controller</dependency>
                 <dependency>NetworkController.ConfigServer</dependency>
             </dependencies>
-            <platforms>
-                <platform>STANDALONE</platform>
-            </platforms>
+            <hosts>
+                <host>standalone</host>
+            </hosts>
         </component>
 
         <component>
@@ -33,9 +33,9 @@
             <dependencies>
                 <dependency>API.BaseFeatures</dependency>
             </dependencies>
-            <platforms>
-                <platform>BUNGEE</platform>
-            </platforms>
+            <hosts>
+                <host>bungee</host>
+            </hosts>
         </component>
 
         <component>
@@ -46,9 +46,9 @@
                 <dependency>API.BaseFeatures</dependency>
                 <dependency>API.Chat.Bukkit</dependency>
             </dependencies>
-            <platforms>
-                <platform>BUKKIT</platform>
-            </platforms>
+            <hosts>
+                <host>bukkit</host>
+            </hosts>
         </component>
     </components>
 </bundle>

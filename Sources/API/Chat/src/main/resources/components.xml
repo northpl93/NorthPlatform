@@ -13,9 +13,9 @@
                 <dependency>API.BukkitServerManager</dependency>
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>
             </dependencies>
-            <platforms>
-                <platform>BUKKIT</platform>
-            </platforms>
+            <hosts>
+                <host>bukkit</host>
+            </hosts>
         </component>
 
         <component>
@@ -29,9 +29,9 @@
             <dependencies>
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>
             </dependencies>
-            <platforms>
-                <platform>BUNGEE</platform>
-            </platforms>
+            <hosts>
+                <host>bungee</host>
+            </hosts>
         </component>
 
         <component>
@@ -42,9 +42,9 @@
                 <package>pl.north93.northplatform.api.chat.global</package>
                 <package>pl.north93.northplatform.api.chat.controller</package>
             </packages>
-            <platforms>
-                <platform>STANDALONE</platform>
-            </platforms>
+            <hosts>
+                <host>standalone</host>
+            </hosts>
         </component>
     </components>
 </bundle>

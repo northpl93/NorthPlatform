@@ -14,6 +14,7 @@ import java.util.logging.StreamHandler;
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.ApiCore;
 import pl.north93.northplatform.api.global.HostConnector;
+import pl.north93.northplatform.api.global.HostId;
 import pl.north93.northplatform.api.global.utils.ConfigUtils;
 import pl.north93.northplatform.api.standalone.cfg.EnvironmentCfg;
 import pl.north93.northplatform.api.standalone.logger.NorthConsoleHandler;
@@ -23,6 +24,7 @@ import pl.north93.northplatform.api.standalone.logger.NorthGelfHandler;
 @Slf4j
 public class StandaloneHostConnector implements HostConnector
 {
+    public static final HostId STANDALONE_HOST = new HostId("standalone");
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
     private final AtomicBoolean stopping = new AtomicBoolean(false);
     protected EnvironmentCfg environmentCfg;

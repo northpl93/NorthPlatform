@@ -18,9 +18,9 @@
             <dependencies>
                 <dependency>PlayerDataShare.SharedImpl</dependency>
             </dependencies>
-            <platforms>
-                <platform>BUNGEE</platform>
-            </platforms>
+            <hosts>
+                <host>bungee</host>
+            </hosts>
         </component>
 
         <component>
@@ -30,9 +30,9 @@
             <dependencies>
                 <dependency>PlayerDataShare.SharedImpl</dependency>
             </dependencies>
-            <platforms>
-                <platform>BUKKIT</platform>
-            </platforms>
+            <hosts>
+                <host>bukkit</host>
+            </hosts>
         </component>
 
         <component>
@@ -42,9 +42,9 @@
             <dependencies>
                 <dependency>PlayerDataShare.SharedImpl</dependency>
             </dependencies>
-            <platforms>
-                <platform>STANDALONE</platform>
-            </platforms>
+            <hosts>
+                <host>standalone</host>
+            </hosts>
         </component>
     </components>
 </bundle>

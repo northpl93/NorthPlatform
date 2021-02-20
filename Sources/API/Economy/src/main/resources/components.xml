@@ -13,10 +13,10 @@
                 <dependency>API.Database.Redis.Observer</dependency>
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>
             </dependencies>
-            <platforms>
-                <platform>BUKKIT</platform>
-                <platform>BUNGEE</platform>
-            </platforms>
+            <hosts>
+                <host>bukkit</host>
+                <host>bungee</host>
+            </hosts>
         </component>
 
         <component>
@@ -26,9 +26,9 @@
             <dependencies>
                 <dependency>API.Economy</dependency>
             </dependencies>
-            <platforms>
-                <platform>BUKKIT</platform>
-            </platforms>
+            <hosts>
+                <host>bukkit</host>
+            </hosts>
         </component>
 
         <component>
@@ -44,9 +44,9 @@
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>
                 <dependency>RestfulApi</dependency>
             </dependencies>
-            <platforms>
-                <platform>STANDALONE</platform>
-            </platforms>
+            <hosts>
+                <host>standalone</host>
+            </hosts>
         </component>
     </components>
 </bundle>

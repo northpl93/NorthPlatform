@@ -8,9 +8,9 @@
             <dependencies>
                 <dependency>API.BukkitServerManager</dependency>
             </dependencies>
-            <platforms>
-                <platform>BUKKIT</platform>
-            </platforms>
+            <hosts>
+                <host>bukkit</host>
+            </hosts>
         </component>
     </components>
 </bundle>

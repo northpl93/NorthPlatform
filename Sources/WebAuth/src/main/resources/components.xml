@@ -11,9 +11,9 @@
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>
                 <dependency>RestfulApi</dependency>
             </dependencies>
-            <platforms>
-                <platform>STANDALONE</platform>
-            </platforms>
+            <hosts>
+                <host>standalone</host>
+            </hosts>
         </component>
 
         <component>
@@ -23,9 +23,9 @@
             <dependencies>
                 <dependency>API.Database.Redis.RPC</dependency>
             </dependencies>
-            <platforms>
-                <platform>BUKKIT</platform>
-            </platforms>
+            <hosts>
+                <host>bukkit</host>
+            </hosts>
         </component>
     </components>
 </bundle>

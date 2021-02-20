@@ -16,9 +16,9 @@
                 <dependency>API.Database.Redis.RPC</dependency>
                 <dependency>API.Database.Redis.Subscriber</dependency>
             </dependencies>
-            <platforms>
-                <platform>STANDALONE</platform>
-            </platforms>
+            <hosts>
+                <host>standalone</host>
+            </hosts>
         </component>
     </components>
 </bundle>

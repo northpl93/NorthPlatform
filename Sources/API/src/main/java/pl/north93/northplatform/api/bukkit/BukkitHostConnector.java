@@ -14,6 +14,7 @@ import org.spigotmc.SpigotConfig;
 
 import pl.north93.northplatform.api.global.ApiCore;
 import pl.north93.northplatform.api.global.HostConnector;
+import pl.north93.northplatform.api.global.HostId;
 import pl.north93.northplatform.api.global.component.impl.general.ComponentManagerImpl;
 import pl.north93.northplatform.api.global.component.impl.general.WeakClassPool;
 import pl.north93.northplatform.api.global.redis.RedisKeys;
@@ -21,6 +22,7 @@ import pl.north93.northplatform.api.global.utils.exceptions.ConfigurationExcepti
 
 public class BukkitHostConnector implements HostConnector
 {
+    public static final HostId BUKKIT_HOST = new HostId("bukkit");
     private final Main bukkitPlugin;
     private UUID serverId;
 

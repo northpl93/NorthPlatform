@@ -8,9 +8,9 @@
             <dependencies>
                 <dependency>API.Database.Redis.Observer</dependency>
             </dependencies>
-            <platforms>
-                <platform>STANDALONE</platform>
-            </platforms>
+            <hosts>
+                <host>standalone</host>
+            </hosts>
         </component>
     </components>
 </bundle>

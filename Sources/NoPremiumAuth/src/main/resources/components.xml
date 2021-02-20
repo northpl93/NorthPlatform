@@ -14,9 +14,9 @@
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>
                 <dependency>API.BukkitServerManager</dependency>
             </dependencies>
-            <platforms>
-                <platform>BUKKIT</platform>
-            </platforms>
+            <hosts>
+                <host>bukkit</host>
+            </hosts>
         </component>
 
         <component>
@@ -30,9 +30,9 @@
             <dependencies>
                 <dependency>API.MinecraftNetwork.NetworkManager</dependency>
             </dependencies>
-            <platforms>
-                <platform>BUNGEE</platform>
-            </platforms>
+            <hosts>
+                <host>bungee</host>
+            </hosts>
         </component>
     </components>
 </bundle>

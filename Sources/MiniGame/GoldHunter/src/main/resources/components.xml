@@ -10,9 +10,9 @@
                 <dependency>API.TickableManager</dependency>
                 <dependency>GlobalShops.Server</dependency>
             </dependencies>
-            <platforms>
-                <platform>BUKKIT</platform>
-            </platforms>
+            <hosts>
+                <host>bukkit</host>
+            </hosts>
         </component>
     </components>
 </bundle>

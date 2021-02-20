@@ -15,9 +15,9 @@
                 <dependency>API.Economy.Controller</dependency>
                 <dependency>MiniGameApi.Controller</dependency> <!-- booster w sklepie -->
             </dependencies>
-            <platforms>
-                <platform>STANDALONE</platform>
-            </platforms>
+            <hosts>
+                <host>standalone</host>
+            </hosts>
         </component>
     </components>
 </bundle>

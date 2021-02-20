@@ -17,9 +17,9 @@
                 <dependency>API.Chat.Bukkit</dependency>
                 <dependency>Utils.World.Properties</dependency>
             </dependencies>
-            <platforms>
-                <platform>BUKKIT</platform>
-            </platforms>
+            <hosts>
+                <host>bukkit</host>
+            </hosts>
         </component>
 
         <component>
@@ -36,9 +36,9 @@
                 <dependency>NetworkController.ConfigServer</dependency>
                 <dependency>NetworkController.ServersManager</dependency>
             </dependencies>
-            <platforms>
-                <platform>STANDALONE</platform>
-            </platforms>
+            <hosts>
+                <host>standalone</host>
+            </hosts>
         </component>
 
         <component>
@@ -49,9 +49,9 @@
                 <package>pl.north93.northplatform.api.minigame.bungee</package>
                 <package>pl.north93.northplatform.api.minigame.shared</package>
             </packages>
-            <platforms>
-                <platform>BUNGEE</platform>
-            </platforms>
+            <hosts>
+                <host>bungee</host>
+            </hosts>
         </component>
     </components>
 </bundle>

@@ -15,6 +15,7 @@ import net.md_5.bungee.api.scheduler.TaskScheduler;
 import pl.north93.northplatform.api.bungee.cfg.ProxyInstanceConfig;
 import pl.north93.northplatform.api.global.ApiCore;
 import pl.north93.northplatform.api.global.HostConnector;
+import pl.north93.northplatform.api.global.HostId;
 import pl.north93.northplatform.api.global.redis.RedisKeys;
 import pl.north93.northplatform.api.global.utils.ConfigUtils;
 import pl.north93.northplatform.api.standalone.logger.NorthGelfHandler;
@@ -22,6 +23,7 @@ import pl.north93.northplatform.api.standalone.logger.NorthGelfHandler;
 @Slf4j
 public class BungeeHostConnector implements HostConnector
 {
+    public static final HostId BUNGEE_HOST = new HostId("bungee");
     private final Main bungeePlugin;
     private ProxyInstanceConfig config;
 

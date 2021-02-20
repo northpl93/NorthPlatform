@@ -82,7 +82,14 @@ public class ComponentManagerImpl implements IComponentManager
 
     private boolean canLoad(final ComponentDescription componentDescription)
     {
-        return componentDescription.isEnabled() && ArrayUtils.contains(componentDescription.getPlatforms(), this.apiCore.getPlatform());
+        final String[] hosts = componentDescription.getHosts();
+        if (ArrayUtils.isEmpty(hosts))
+        {
+            return true;
+        }
+
+        final String hostId = this.apiCore.getHostId().toString();
+        return componentDescription.isEnabled() && ArrayUtils.contains(hosts, hostId);
     }
 
     private void loadComponent(final ClassLoader classLoader, final ComponentDescription componentDescription)
