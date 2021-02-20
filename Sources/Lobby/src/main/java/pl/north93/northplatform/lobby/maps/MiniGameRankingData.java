@@ -20,6 +20,7 @@ import pl.north93.northplatform.api.minigame.shared.api.statistics.IRecord;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticUnit;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsManager;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.filter.BestRecordFilter;
 
 @AllArgsConstructor
 public class MiniGameRankingData<L, L_UNIT extends IStatisticUnit<L>, R, R_UNIT extends IStatisticUnit<R>> implements RankingMapConfig.IMapRankingData
@@ -62,7 +63,7 @@ public class MiniGameRankingData<L, L_UNIT extends IStatisticUnit<L>, R, R_UNIT 
     {
         try
         {
-            return statisticsManager.getRanking(statistic, 10).get();
+            return statisticsManager.getRanking(statistic, 10, new BestRecordFilter()).get();
         }
         catch (final InterruptedException | ExecutionException e)
         {
