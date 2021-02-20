@@ -7,7 +7,6 @@ I have started developing it in mid-2016 for my Minecraft networks (firstly skyb
 ## Developers
 * Michał Kasprzyk (NorthPL93)
 * Rafał Szewczyk (xxRafiiiisxx) - _API.GuiManager, parts of API.MiniGame, WorldProperties, GoldHunter_
-* Cestis - _Some old parts of skyblock code._
 
 ## A detailed description of modules
 ### [API (_/Sources/API/src_)](/Sources/API/src/)
