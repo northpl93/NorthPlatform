@@ -84,7 +84,7 @@ public class StatisticsManagerImpl implements IStatisticsManager
     @Override
     public <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRecord<T, UNIT>> getRecord(final IStatistic<T, UNIT> statistic, final IStatisticFilter[] filters)
     {
-        final Bson query = Filters.eq("statId", statistic.getId());
+        final Bson query = Filters.and(this.composeConditions(statistic, Arrays.asList(filters)));
         final Bson sort = this.composeSort(statistic, Arrays.asList(filters));
 
         return this.createAndCompleteFutureAsync(() ->
