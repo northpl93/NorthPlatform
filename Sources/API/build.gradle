@@ -6,7 +6,6 @@ dependencies {
     // Add libraries from lib/ directory
     implementation ':AgentUtils-1.0'
     shadow ':spigot-1.12.2'
-    shadow ':FastAsyncWorldEdit'
 
     // Bungee libs
     shadow 'net.md-5:bungeecord-api:1.13-mcpiraci'

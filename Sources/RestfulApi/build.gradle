@@ -4,7 +4,7 @@
 
 dependencies {
     shadow project(':API')
-    api ('com.sparkjava:spark-core:2.9.1') {
+    api ('com.sparkjava:spark-core:2.9.3') {
         exclude group: 'org.slf4j', module: 'slf4j-api' // we have our slf4j in API
     }
 }
