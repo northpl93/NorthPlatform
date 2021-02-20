@@ -14,13 +14,20 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.Sorts;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import pl.north93.northplatform.api.global.HostConnector;
 import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
@@ -54,13 +61,13 @@ public class StatisticsManagerImpl implements IStatisticsManager
     }
 
     @Override
-    public <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRanking<T, UNIT>> getRanking(final IStatistic<T, UNIT> statistic, final int size, final IStatisticFilter... filters)
+    public <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRanking<T, UNIT>> getRanking(final IStatistic<T, UNIT> statistic, final int size, final IStatisticFilter[] filters)
     {
-        final Document sort = statistic.getDbComposer().bestRecordQuery();
+        final Bson sort = this.composeSort(statistic, Arrays.asList(filters));
 
-        final List<Document> aggregation = this.composeStatisticsAggregation(statistic, Arrays.asList(filters));
-        aggregation.add(new Document("$sort", sort)); // mongodb gubi kolejnosc po grupowaniu, wiec trzeba jeszcze raz posortowac
-        aggregation.add(new Document("$limit", size)); // limitujemy rozmiar przed pobraniem do klienta
+        final List<Bson> aggregation = this.composeStatisticsAggregation(statistic, Arrays.asList(filters));
+        aggregation.add(Aggregates.sort(sort)); // mongodb loses order after grouping, so we'll sort again
+        aggregation.add(Aggregates.limit(size)); // limit it before moving to the client
 
         return this.createAndCompleteFutureAsync(() ->
         {
@@ -77,9 +84,8 @@ public class StatisticsManagerImpl implements IStatisticsManager
     @Override
     public <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRecord<T, UNIT>> getRecord(final IStatistic<T, UNIT> statistic, final IStatisticFilter[] filters)
     {
-        final Document query = new Document("statId", statistic.getId());
-        final Document sort = new Document();
-        Arrays.stream(filters).forEach(filter -> filter.appendSort(statistic, sort));
+        final Bson query = Filters.eq("statId", statistic.getId());
+        final Bson sort = this.composeSort(statistic, Arrays.asList(filters));
 
         return this.createAndCompleteFutureAsync(() ->
         {
@@ -91,10 +97,8 @@ public class StatisticsManagerImpl implements IStatisticsManager
     @Override
     public <T, UNIT extends IStatisticUnit<T>> CompletableFuture<UNIT> getAverage(final IStatistic<T, UNIT> statistic)
     {
-        final List<Document> aggregation = this.composeStatisticsAggregation(statistic, new ArrayList<>());
-
-        final Document group = new Document("_id", null).append("value", new Document("$avg", "$value"));
-        aggregation.add(new Document("$group", group));
+        final List<Bson> aggregation = this.composeStatisticsAggregation(statistic, new ArrayList<>());
+        aggregation.add(Aggregates.group(null, Accumulators.avg("value", "$value")));
 
         return this.createAndCompleteFutureAsync(() -> this.aggregateAndReadValue(statistic, aggregation));
     }
@@ -109,20 +113,20 @@ public class StatisticsManagerImpl implements IStatisticsManager
         //            'value': {'$arrayElemAt': ['$value', {'$floor': {'$multiply': [PERCENTILE, {'$size': '$value'}]}}]}
         //        }}
 
-        final List<Document> aggregation = this.composeStatisticsAggregation(statistic, new ArrayList<>());
+        final List<Bson> aggregation = this.composeStatisticsAggregation(statistic, new ArrayList<>());
 
-        // sortujemy
-        aggregation.add(new Document("$sort", new Document("value", 1)));
+        // sorting
+        aggregation.add(Aggregates.sort(Sorts.ascending("value")));
 
-        final Document group = new Document("_id", "$_id");
-        group.put("value", new Document("$push", "$value"));
-        aggregation.add(new Document("$group", group)); // sumujemy
+        // aggregation
+        aggregation.add(Aggregates.group("$_id", Accumulators.push("value", "$value")));
 
         final List<Serializable> multiply = Arrays.asList(percentile, new Document("$size", "$value")); // pozycja dokumentu w double
         final List<Object> arrayElemAt = Arrays.asList("$value", new Document("$floor", new Document("$multiply", multiply)));
-        final Document project = new Document("_id", null);
-        project.put("value", new Document("$arrayElemAt", arrayElemAt));
-        aggregation.add(new Document("$project", project)); // finalny projekt
+        aggregation.add(Aggregates.project(Projections.fields(
+                Projections.excludeId(),
+                Projections.computed("value", new Document("$arrayElemAt", arrayElemAt)))
+        )); // final project
 
         return this.createAndCompleteFutureAsync(() -> this.aggregateAndReadValue(statistic, aggregation));
     }
@@ -133,7 +137,7 @@ public class StatisticsManagerImpl implements IStatisticsManager
         return this.getPercentile(statistic, 0.5);
     }
 
-    /*default*/ <T, UNIT extends IStatisticUnit<T>> UNIT aggregateAndReadValue(final IStatistic<T, UNIT> statistic, final List<Document> aggregation)
+    /*default*/ <T, UNIT extends IStatisticUnit<T>> UNIT aggregateAndReadValue(final IStatistic<T, UNIT> statistic, final List<Bson> aggregation)
     {
         final Document resultDocument = this.collection.aggregate(aggregation).first();
         final Document nonNullResultDocument = Objects.requireNonNullElseGet(resultDocument, () -> new Document("value", 0));
@@ -157,33 +161,48 @@ public class StatisticsManagerImpl implements IStatisticsManager
         return new RecordImpl<>(statistic, this.getHolder(holder), recordedAt, value);
     }
 
-    private List<Document> composeStatisticsAggregation(final IStatistic<?, ?> statistic, final Collection<IStatisticFilter> filters)
+    private List<Bson> composeStatisticsAggregation(final IStatistic<?, ?> statistic, final Collection<IStatisticFilter> filters)
     {
-        final Document query = this.composeConditions(statistic, filters);
+        final Bson query = Filters.and(this.composeConditions(statistic, filters));
 
-        // sortujemy wedlug kolejnosci uznawanej przez ta statystyke
-        final Document sort = statistic.getDbComposer().bestRecordQuery();
+        // sort according to order provided by our filters
+        final Bson sort = Aggregates.sort(this.composeSort(statistic, filters));
 
-        // wybieramy najlepsze wartosci
-        final Document group = new Document("_id", "$owner");
-        group.put("value", new Document("$first", "$value"));
-        group.put("time", new Document("$first", "$time"));
+        // choose "the best" values
+        final Bson group = Aggregates.group("$owner",
+                Accumulators.first("value", "$value"),
+                Accumulators.first("time", "$time"));
 
-        // remapujemy pola
-        final Document project = new Document("owner", "$_id");
-        project.put("statId", statistic.getId());
-        project.put("value", 1);
-        project.put("time", 1);
+        // convert it into standard form used in this code
+        final Bson project = Aggregates.project(Projections.fields(
+                Projections.computed("owner", "$_id"),
+                Projections.computed("statId", statistic.getId()),
+                Projections.include("value", "time")));
 
-        return Lists.newArrayList(new Document("$match", query), new Document("$sort", sort), new Document("$group", group), new Document("$project", project));
+        return Lists.newArrayList(Aggregates.match(query), sort, group, project);
     }
 
-    /*default*/ Document composeConditions(final IStatistic<?, ?> statistic, final Collection<IStatisticFilter> filters)
+    /*default*/ Collection<Bson> composeConditions(final IStatistic<?, ?> statistic, final Collection<IStatisticFilter> filters)
     {
-        final Document query = new Document("statId", statistic.getId());
-        filters.forEach(filter -> filter.appendConditions(statistic, query));
+        final Collection<Bson> conditions = new ArrayList<>();
+        conditions.add(Filters.eq("statId", statistic.getId()));
 
-        return query;
+        for (final IStatisticFilter filter : filters)
+        {
+            final Bson filterCondition = filter.getCondition(statistic);
+            if (filterCondition != null)
+            {
+                conditions.add(filterCondition);
+            }
+        }
+
+        return conditions;
+    }
+
+    /*default*/ Bson composeSort(final IStatistic<?, ?> statistic, final Collection<IStatisticFilter> filters)
+    {
+        Preconditions.checkArgument(! filters.isEmpty(), "You must specify at least one filter");
+        return Sorts.orderBy(filters.stream().map(filter -> filter.getSort(statistic)).collect(Collectors.toList()));
     }
 
     /*default*/ <T> CompletableFuture<T> createAndCompleteFutureAsync(final Supplier<T> supplier)

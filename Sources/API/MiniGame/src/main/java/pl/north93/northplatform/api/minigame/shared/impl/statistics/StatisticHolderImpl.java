@@ -7,9 +7,11 @@ import java.util.concurrent.CompletableFuture;
 
 import com.google.common.collect.Lists;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import lombok.ToString;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.HolderIdentity;
@@ -62,8 +64,8 @@ class StatisticHolderImpl implements IStatisticHolder
 
     private <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRecord<T, UNIT>> getRecord(final IStatistic<T, UNIT> statistic, final Collection<IStatisticFilter> filters)
     {
-        final Document query = this.composeConditions(statistic, filters);
-        final Document sort = this.composeSort(statistic, filters);
+        final Bson query = this.composeConditions(statistic, filters);
+        final Bson sort = this.manager.composeSort(statistic, filters);
 
         return this.manager.createAndCompleteFutureAsync(() ->
         {
@@ -73,19 +75,16 @@ class StatisticHolderImpl implements IStatisticHolder
     }
 
     @Override
-    public <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRecord<T, UNIT>> record(final IStatistic<T, UNIT> statistic, final UNIT value)
+    public <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRecord<T, UNIT>> addRecord(final IStatistic<T, UNIT> statistic, final UNIT value)
     {
-        final String id = statistic.getId();
-
-        final Document find = this.composeConditions(statistic, new ArrayList<>(0));
-
-        final Document setContent = new Document("owner", this.holder.asBson()).append("statId", id).append("time", System.currentTimeMillis());
+        final Document setContent = this.composeSetContent(statistic);
         value.toDocument(setContent);
 
+        final Bson query = this.composeConditions(statistic, new ArrayList<>(0));
         return this.manager.createAndCompleteFutureAsync(() ->
         {
             final FindOneAndUpdateOptions options = new FindOneAndUpdateOptions().sort(TIME_SORT).upsert(true);
-            final Document previous = this.collection.findOneAndUpdate(find, new Document("$set", setContent), options);
+            final Document previous = this.collection.findOneAndUpdate(query, new Document("$set", setContent), options);
             if (previous != null)
             {
                 previous.remove("_id");
@@ -97,17 +96,18 @@ class StatisticHolderImpl implements IStatisticHolder
     }
 
     @Override
-    public <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRecord<T, UNIT>> increment(final IStatistic<T, UNIT> statistic, final UNIT value)
+    public <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRecord<T, UNIT>> incrementRecord(final IStatistic<T, UNIT> statistic, final UNIT value)
     {
-        final Document insertDocument = new Document();
+        final Document setContent = this.composeSetContent(statistic);
 
-        final Document setContent = new Document("owner", this.holder.asBson()).append("statId", statistic.getId()).append("time", System.currentTimeMillis());
         final Document valueDocument = new Document();
         value.toDocument(valueDocument);
+
+        final Document insertDocument = new Document();
         insertDocument.put("$set", setContent);
         insertDocument.put("$inc", valueDocument);
 
-        final Document query = this.composeConditions(statistic, new ArrayList<>());
+        final Bson query = this.composeConditions(statistic, new ArrayList<>());
         return this.manager.createAndCompleteFutureAsync(() ->
         {
             final FindOneAndUpdateOptions options = new FindOneAndUpdateOptions().sort(TIME_SORT).upsert(true);
@@ -122,19 +122,16 @@ class StatisticHolderImpl implements IStatisticHolder
         });
     }
 
-    private Document composeConditions(final IStatistic<?, ?> statistic, final Collection<IStatisticFilter> filters)
+    private <T, UNIT extends IStatisticUnit<T>> Document composeSetContent(final IStatistic<T, UNIT> statistic)
     {
-        final Document query = this.manager.composeConditions(statistic, filters);
-        query.append("owner", this.holder.asBson());
-
-        return query;
+        return new Document("owner", this.holder.asBson()).append("statId", statistic.getId()).append("time", System.currentTimeMillis());
     }
 
-    private Document composeSort(final IStatistic<?, ?> statistic, final Collection<IStatisticFilter> filters)
+    private Bson composeConditions(final IStatistic<?, ?> statistic, final Collection<IStatisticFilter> filters)
     {
-        final Document sort = new Document();
-        filters.forEach(filter -> filter.appendSort(statistic, sort));
+        final Collection<Bson> query = this.manager.composeConditions(statistic, filters);
+        query.add(Filters.eq("owner", this.holder.asBson()));
 
-        return sort;
+        return Filters.and(query);
     }
 }

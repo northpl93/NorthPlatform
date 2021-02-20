@@ -195,7 +195,7 @@ public class GameEndListener implements Listener
         for (final Player player : team.getBukkitPlayers())
         {
             final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(player.getUniqueId());
-            holder.increment(winsStat, numberUnit);
+            holder.incrementRecord(winsStat, numberUnit);
 
             arena.getRewards().addReward(Identity.of(player), reward);
         }

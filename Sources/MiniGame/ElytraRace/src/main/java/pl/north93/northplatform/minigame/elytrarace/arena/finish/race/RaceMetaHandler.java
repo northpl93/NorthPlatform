@@ -21,6 +21,7 @@ import pl.north93.northplatform.api.minigame.server.gamehost.reward.CurrencyRewa
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticHolder;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticsManager;
+import pl.north93.northplatform.api.minigame.shared.api.statistics.filter.BestRecordFilter;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.type.HigherNumberBetterStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.type.LongerTimeBetterStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.type.ShorterTimeBetterStatistic;
@@ -76,9 +77,9 @@ public class RaceMetaHandler implements IFinishHandler
         final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(player.getUniqueId());
 
         final boolean isFinished = IFinishHandler.checkFinished(arena);
-        this.statisticsManager.getRecord(raceStatistic).whenComplete((bestRecord, throwable) ->
+        this.statisticsManager.getRecord(raceStatistic, new BestRecordFilter()).whenComplete((bestRecord, throwable) ->
         {
-            holder.record(raceStatistic, playerTimeDuration).whenComplete((record, throwable2) ->
+            holder.addRecord(raceStatistic, playerTimeDuration).whenComplete((record, throwable2) ->
             {
                 final RaceMessage raceMessage = new RaceMessage(this.finishInfo, bestRecord, !isFinished);
                 if (isFinished)
@@ -97,7 +98,7 @@ public class RaceMetaHandler implements IFinishHandler
 
         // podbijamy statystyke calkowitego przelecianego czasu
         final LongerTimeBetterStatistic totalRaceTimeStat = new LongerTimeBetterStatistic("elytra/totalRaceTime");
-        holder.increment(totalRaceTimeStat, playerTimeDuration);
+        holder.incrementRecord(totalRaceTimeStat, playerTimeDuration);
 
         // przyznajemy nagrode
         final ElytraRaceArena arenaData = arena.getArenaData();
@@ -119,7 +120,7 @@ public class RaceMetaHandler implements IFinishHandler
         }
 
         final IStatistic<Duration, DurationUnit> raceStatistic = this.getRaceStatistic(arena);
-        this.statisticsManager.getRecord(raceStatistic).whenComplete((result, throwable) ->
+        this.statisticsManager.getRecord(raceStatistic, new BestRecordFilter()).whenComplete((result, throwable) ->
         {
             final RaceMessage raceMessage = new RaceMessage(this.finishInfo, result, false);
             for (final INorthPlayer playerInArena : arena.getPlayersManager().getPlayers())
@@ -159,7 +160,7 @@ public class RaceMetaHandler implements IFinishHandler
         final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(firstPlayer.getUuid());
 
         final HigherNumberBetterStatistic totalElytraWins = new HigherNumberBetterStatistic("elytra/totalWins");
-        holder.increment(totalElytraWins, new NumberUnit(1L));
+        holder.incrementRecord(totalElytraWins, new NumberUnit(1L));
     }
 
     @Override

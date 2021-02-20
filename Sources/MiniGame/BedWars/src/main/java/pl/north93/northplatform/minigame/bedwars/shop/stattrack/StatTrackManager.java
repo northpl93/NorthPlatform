@@ -72,7 +72,7 @@ public class StatTrackManager
         }
 
         final IStatistic<Long, NumberUnit> statisticSystem = this.getStatistic(statistic, weapon);
-        holder.increment(statisticSystem, new NumberUnit(1L)).whenComplete((result, throwable) ->
+        holder.incrementRecord(statisticSystem, new NumberUnit(1L)).whenComplete((result, throwable) ->
         {
             final long newValue = result.getValue().getValue() + 1;
             playerData.updateCache(statistic, weapon, newValue);
@@ -91,7 +91,7 @@ public class StatTrackManager
     private void bumpGlobalStatistic(final IStatisticHolder holder)
     {
         final HigherNumberBetterStatistic killsStat = new HigherNumberBetterStatistic("bedwars/kills");
-        holder.increment(killsStat, new NumberUnit(1L));
+        holder.incrementRecord(killsStat, new NumberUnit(1L));
     }
 
     @Override

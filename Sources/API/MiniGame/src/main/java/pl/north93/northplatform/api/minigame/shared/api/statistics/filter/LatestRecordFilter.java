@@ -1,6 +1,8 @@
 package pl.north93.northplatform.api.minigame.shared.api.statistics.filter;
 
-import org.bson.Document;
+import com.mongodb.client.model.Sorts;
+
+import org.bson.conversions.Bson;
 
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticFilter;
@@ -8,14 +10,14 @@ import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticFil
 public class LatestRecordFilter implements IStatisticFilter
 {
     @Override
-    public void appendConditions(final IStatistic<?, ?> statistic, final Document query)
+    public Bson getCondition(final IStatistic<?, ?> statistic)
     {
-
+        return null;
     }
 
     @Override
-    public void appendSort(final IStatistic<?, ?> statistic, final Document sort)
+    public Bson getSort(final IStatistic<?, ?> statistic)
     {
-        sort.append("time", 1);
+        return Sorts.ascending("time");
     }
 }

@@ -44,7 +44,7 @@ public interface IStatisticHolder
      * @param <UNIT> Jednostka danej statystyki.
      * @return Zwraca poprzednia wartosc.
      */
-    <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRecord<T, UNIT>> record(IStatistic<T, UNIT> statistic, UNIT value);
+    <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRecord<T, UNIT>> addRecord(IStatistic<T, UNIT> statistic, UNIT value);
 
     /**
      * Inkrementuje podaną statystykę o podaną wartość.
@@ -54,5 +54,5 @@ public interface IStatisticHolder
      * @param <UNIT> Jednostka danej statystyki.
      * @return Poprzednia wartosc statystyki.
      */
-    <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRecord<T, UNIT>> increment(IStatistic<T, UNIT> statistic, UNIT value);
+    <T, UNIT extends IStatisticUnit<T>> CompletableFuture<IRecord<T, UNIT>> incrementRecord(IStatistic<T, UNIT> statistic, UNIT value);
 }

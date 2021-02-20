@@ -113,7 +113,7 @@ public class StatsTracker implements ITickable
         logger.debug("{} StatTracker#onWin()", player);
 
         final IStatisticHolder holder = statisticsManager.getPlayerHolder(player.getPlayer().getUniqueId());
-        holder.increment(new HigherNumberBetterStatistic("goldhunter/wins"), new NumberUnit(1L));
+        holder.incrementRecord(new HigherNumberBetterStatistic("goldhunter/wins"), new NumberUnit(1L));
     }
     
     public void onChestDestroy()
@@ -122,7 +122,7 @@ public class StatsTracker implements ITickable
         
         player.addReward("chests", player.getCurrentClass().getRewardsInfo().getChestDestroyReward());
         IStatisticHolder statisticHolder = statisticsManager.getPlayerHolder(player.getPlayer().getUniqueId());
-        statisticHolder.increment(new HigherNumberBetterStatistic("goldhunter/chestsDestroyed"), new NumberUnit(1L));
+        statisticHolder.incrementRecord(new HigherNumberBetterStatistic("goldhunter/chestsDestroyed"), new NumberUnit(1L));
     }
     
     private void incrementKills()
@@ -132,7 +132,7 @@ public class StatsTracker implements ITickable
         updateScoreboardAndDisplayName();
 
         final IStatisticHolder holder = statisticsManager.getPlayerHolder(player.getPlayer().getUniqueId());
-        holder.increment(new HigherNumberBetterStatistic("goldhunter/kills"), new NumberUnit(1L));
+        holder.incrementRecord(new HigherNumberBetterStatistic("goldhunter/kills"), new NumberUnit(1L));
     }
     
     private void incrementDeaths()
@@ -148,7 +148,7 @@ public class StatsTracker implements ITickable
         updateScoreboardAndDisplayName();
 
         final IStatisticHolder holder = statisticsManager.getPlayerHolder(player.getPlayer().getUniqueId());
-        holder.increment(new HigherNumberBetterStatistic("goldhunter/assists"), new NumberUnit(1L));
+        holder.incrementRecord(new HigherNumberBetterStatistic("goldhunter/assists"), new NumberUnit(1L));
     }
     
     private void updateScoreboardAndDisplayName()

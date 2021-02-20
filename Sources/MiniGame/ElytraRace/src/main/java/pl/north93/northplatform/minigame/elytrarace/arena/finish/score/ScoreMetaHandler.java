@@ -65,7 +65,7 @@ public class ScoreMetaHandler implements IFinishHandler
         final NumberUnit points = new NumberUnit((long) scoreData.getPoints()); // ilosc punktow gracza w NumberUnit
         this.statisticsManager.getRecord(scoreStatistic, new BestRecordFilter()).whenComplete((bestRecord, throwable) ->
         {
-            statisticsHolder.record(scoreStatistic, points).whenComplete((record, throwable2) ->
+            statisticsHolder.addRecord(scoreStatistic, points).whenComplete((record, throwable2) ->
             {
                 final ScoreMessage scoreMessage = new ScoreMessage(this.getTop(), bestRecord, !isFinished);
                 if (isFinished)
@@ -84,7 +84,7 @@ public class ScoreMetaHandler implements IFinishHandler
 
         // podbijamy statystyke zliczajaca zdobyte punkty
         final HigherNumberBetterStatistic totalScorePointsStat = new HigherNumberBetterStatistic("elytra/totalScorePoints");
-        statisticsHolder.increment(totalScorePointsStat, points);
+        statisticsHolder.incrementRecord(totalScorePointsStat, points);
 
         if (isFinished)
         {
@@ -158,7 +158,7 @@ public class ScoreMetaHandler implements IFinishHandler
         final IStatisticHolder holder = this.statisticsManager.getPlayerHolder(firstPlayer.getUuid());
 
         final HigherNumberBetterStatistic totalElytraWins = new HigherNumberBetterStatistic("elytra/totalWins");
-        holder.increment(totalElytraWins, new NumberUnit(1L));
+        holder.incrementRecord(totalElytraWins, new NumberUnit(1L));
     }
 
     private HigherNumberBetterStatistic getScoreStatistic(final LocalArena arena)

@@ -92,7 +92,7 @@ public class ArenaEndListener implements AutoListener
             match.endMatch();
 
             final Duration matchDuration = Duration.between(match.getStartedAt(), match.getEndedAt());
-            match.getStatistics().record(StandardMatchStatistics.MATCH_DURATION, new DurationUnit(matchDuration));
+            match.getStatistics().addRecord(StandardMatchStatistics.MATCH_DURATION, new DurationUnit(matchDuration));
 
             log.info("Match {} on arena {} finished with duration {}", match.getMatchId(), match.getArenaId(), matchDuration);
         });

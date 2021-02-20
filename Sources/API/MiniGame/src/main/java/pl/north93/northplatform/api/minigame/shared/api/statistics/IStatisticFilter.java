@@ -1,13 +1,13 @@
 package pl.north93.northplatform.api.minigame.shared.api.statistics;
 
-import org.bson.Document;
+import org.bson.conversions.Bson;
 
 /**
  * Filtr używane są do zawężenia kryteriów poszukiwania wyników.
  */
 public interface IStatisticFilter
 {
-    void appendConditions(IStatistic<?, ?> statistic, Document query);
+    Bson getCondition(IStatistic<?, ?> statistic);
 
-    void appendSort(IStatistic<?, ?> statistic, Document sort);
+    Bson getSort(IStatistic<?, ?> statistic);
 }

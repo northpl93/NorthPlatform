@@ -1,6 +1,9 @@
 package pl.north93.northplatform.api.minigame.shared.api.statistics.type;
 
+import com.mongodb.client.model.Sorts;
+
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatistic;
 import pl.north93.northplatform.api.minigame.shared.api.statistics.IStatisticDbComposer;
@@ -39,9 +42,9 @@ class HigherNumberBetterStatisticDbComposer implements IStatisticDbComposer<Long
     static final HigherNumberBetterStatisticDbComposer INSTANCE = new HigherNumberBetterStatisticDbComposer();
 
     @Override
-    public Document bestRecordQuery()
+    public Bson bestRecordQuery()
     {
-        return new Document("value", -1);
+        return Sorts.descending("value");
     }
 
     @Override
