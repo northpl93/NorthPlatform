@@ -168,7 +168,7 @@ idea.project.settings {
 
         "MiniGame.GoldHunter" {
             archive("MiniGame.GoldHunter.jar") {
-                moduleOutput("NorthPlatform.GoldHunter.BedWars.main")
+                moduleOutput("NorthPlatform.MiniGame.GoldHunter.main")
                 directoryContent('Sources/MiniGame/GoldHunter/src/main/resources/')
             }
         }
