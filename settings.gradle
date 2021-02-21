@@ -38,8 +38,6 @@ addModule("NetworkController", "Sources/NetworkController")
 
 addModule("NoPremiumAuth", "Sources/NoPremiumAuth")
 
-addModule("Pets", "Sources/Pets")
-
 addModule("PlayerDataShare", "Sources/PlayerDataShare")
 
 addModule("RestfulApi", "Sources/RestfulApi")
