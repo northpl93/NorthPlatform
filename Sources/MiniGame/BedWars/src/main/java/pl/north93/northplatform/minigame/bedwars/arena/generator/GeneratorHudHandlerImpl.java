@@ -1,6 +1,7 @@
 package pl.north93.northplatform.minigame.bedwars.arena.generator;
 
 import static pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper.getTrackerEntry;
+import static pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper.toNmsEntity;
 
 
 import java.util.ArrayList;
@@ -10,7 +11,6 @@ import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
 import net.minecraft.server.v1_12_R1.Vector3f;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftArmorStand;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -73,7 +73,7 @@ class GeneratorHudHandlerImpl implements IGeneratorHudHandler
     @Override
     public void handleItemRotation()
     {
-        final EntityTrackerEntry tracker = getTrackerEntry(((CraftArmorStand) this.item).getHandle());
+        final EntityTrackerEntry tracker = getTrackerEntry(toNmsEntity(this.item));
         if (this.itemPose >= 360)
         {
             this.itemPose = 0;

@@ -6,6 +6,7 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 
 import net.minecraft.server.v1_12_R1.Entity;
+import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
 
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
@@ -33,21 +34,33 @@ public class EntityTrackerHelper
     }
 
     /**
-     * Konwertuje daną klasę Entity bukkitowego na Entity NMSowe.
-     * Uwzględnia to, że Player może być NorthPlayerem.
+     * Converts specified bukkit's Entity instance into Entity from nms.
+     * Takes care about handling INorthPlayer.
      *
-     * @param bukkitEntity Obiekt Bukkita reprezentujący Entity.
-     * @return Obiekt NMS reprezentujący Entity.
+     * @param bukkitEntity Bukkit's object that represents an entity.
+     * @return NMS's object that represents an entity.
      */
-    public Entity toNmsEntity(final org.bukkit.entity.Entity bukkitEntity)
+    @SuppressWarnings("unchecked")
+    public <T extends Entity> T toNmsEntity(final org.bukkit.entity.Entity bukkitEntity)
     {
-        if ( bukkitEntity instanceof Player )
+        if (bukkitEntity instanceof Player)
         {
-            return INorthPlayer.asCraftPlayer((Player) bukkitEntity).getHandle();
+            return (T) INorthPlayer.asCraftPlayer((Player) bukkitEntity).getHandle();
         }
         
         final CraftEntity craftEntity = (CraftEntity) bukkitEntity;
-        return craftEntity.getHandle();
+        return (T) craftEntity.getHandle();
+    }
+
+    /**
+     * Converts specified bukkit's Player instance into EntityPlayer from nms.
+     *
+     * @param bukkitPlayer Bukkit's object that represents a player.
+     * @return NMS's object that represents a player.
+     */
+    public EntityPlayer toNmsPlayer(final Player bukkitPlayer)
+    {
+        return INorthPlayer.asCraftPlayer(bukkitPlayer).getHandle();
     }
 
     /**

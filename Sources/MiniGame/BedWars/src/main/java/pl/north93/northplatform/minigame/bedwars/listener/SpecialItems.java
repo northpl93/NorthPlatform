@@ -1,5 +1,6 @@
 package pl.north93.northplatform.minigame.bedwars.listener;
 
+import static pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper.toNmsEntity;
 import static pl.north93.northplatform.api.global.utils.lang.JavaUtils.instanceOf;
 import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.getArena;
 import static pl.north93.northplatform.minigame.bedwars.utils.TeamArmorUtils.createColorArmor;
@@ -202,7 +203,7 @@ public class SpecialItems implements Listener
     @EventHandler
     public void disableAllySkeletonDamage(final EntityDamageByEntityEvent event)
     {
-        final BedWarsSkeleton skeleton = instanceOf(((CraftEntity) event.getEntity()).getHandle(), BedWarsSkeleton.class);
+        final BedWarsSkeleton skeleton = toNmsEntity(event.getEntity());
         if (skeleton == null)
         {
             return;

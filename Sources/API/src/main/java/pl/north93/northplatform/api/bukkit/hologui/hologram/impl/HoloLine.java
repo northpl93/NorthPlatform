@@ -3,6 +3,9 @@ package pl.north93.northplatform.api.bukkit.hologui.hologram.impl;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 
+import static pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper.toNmsPlayer;
+
+
 import java.util.Locale;
 
 import net.minecraft.server.v1_12_R1.Entity;
@@ -15,7 +18,6 @@ import com.google.common.base.Preconditions;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftArmorStand;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -89,9 +91,7 @@ final class HoloLine
     /*default*/ boolean isTrackedBy(final Player player)
     {
         final Entity entityArmorStand = EntityTrackerHelper.toNmsEntity(this.armorStand);
-
-        final CraftPlayer craftPlayer = INorthPlayer.asCraftPlayer(player);
-        final EntityPlayer entityPlayer = craftPlayer.getHandle();
+        final EntityPlayer entityPlayer = toNmsPlayer(player);
 
         final EntityTrackerEntry trackerEntry = EntityTrackerHelper.getTrackerEntry(entityArmorStand);
         return trackerEntry.trackedPlayers.contains(entityPlayer);

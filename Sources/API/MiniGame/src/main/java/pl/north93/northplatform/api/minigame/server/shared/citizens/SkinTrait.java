@@ -1,13 +1,14 @@
 package pl.north93.northplatform.api.minigame.server.shared.citizens;
 
+import static pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper.toNmsEntity;
+
+
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
 import com.destroystokyo.paper.utils.UnsafeUtils;
 import com.mojang.authlib.properties.Property;
-
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -54,11 +55,10 @@ public class SkinTrait extends Trait
 
 final class SkinHelper
 {
-    private static final FieldAccessor<Map>        CACHE           = DioriteReflectionUtils.getField(Skin.class, "CACHE");
-    private static final FieldAccessor<Map>        PENDING         = DioriteReflectionUtils.getField(Skin.class, "pending");
-    private static final FieldAccessor<String>     SKIN_NAME       = DioriteReflectionUtils.getField(Skin.class, "skinName");
+    private static final FieldAccessor<Map> PENDING = DioriteReflectionUtils.getField(Skin.class, "pending");
+    private static final FieldAccessor<String> SKIN_NAME = DioriteReflectionUtils.getField(Skin.class, "skinName");
     private static final FieldAccessor<Properties> SKIN_PROPERTIES = DioriteReflectionUtils.getField(Skin.class, "skinData");
-    private static final FieldAccessor<UUID>       SKIN_ID         = DioriteReflectionUtils.getField(Skin.class, "skinId");
+    private static final FieldAccessor<UUID> SKIN_ID = DioriteReflectionUtils.getField(Skin.class, "skinId");
 
     public static void removeFromPending(final SkinnableEntity entity)
     {
@@ -68,7 +68,7 @@ final class SkinHelper
 
     public static void applySkin(final NPC npc, final String data, final String sign, final boolean respawn)
     {
-        final SkinnableEntity skinnable = (SkinnableEntity) ((CraftEntity) npc.getEntity()).getHandle();
+        final SkinnableEntity skinnable = (SkinnableEntity) toNmsEntity(npc.getEntity());
 
         removeFromPending(skinnable);
 

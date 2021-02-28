@@ -1,5 +1,8 @@
 package pl.north93.northplatform.api.bukkit.protocol.impl;
 
+import static pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper.toNmsPlayer;
+
+
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.util.Collection;
@@ -16,7 +19,6 @@ import org.spigotmc.SpigotConfig;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.protocol.ChannelWrapper;
 import pl.north93.northplatform.api.bukkit.protocol.PacketHandler;
 import pl.north93.northplatform.api.bukkit.protocol.ProtocolManager;
@@ -69,7 +71,7 @@ public class ProtocolManagerComponent extends Component implements ProtocolManag
     @Override
     public Channel getChannel(Player player)
     {
-        return INorthPlayer.asCraftPlayer(player).getHandle().playerConnection.networkManager.channel;
+        return toNmsPlayer(player).playerConnection.networkManager.channel;
     }
 
     @Override
@@ -82,7 +84,7 @@ public class ProtocolManagerComponent extends Component implements ProtocolManag
     @Override
     public ChannelWrapper getChannelWrapper(Player player)
     {
-        PlayerConnection playerConnection = INorthPlayer.asCraftPlayer(player).getHandle().playerConnection;
+        PlayerConnection playerConnection = toNmsPlayer(player).playerConnection;
         return playerConnection != null ? getChannelWrapper(playerConnection.networkManager.channel) : null;
     }
     

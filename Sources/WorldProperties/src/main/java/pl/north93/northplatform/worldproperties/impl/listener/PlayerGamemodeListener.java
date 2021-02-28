@@ -1,5 +1,8 @@
 package pl.north93.northplatform.worldproperties.impl.listener;
 
+import static pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper.toNmsPlayer;
+
+
 import net.minecraft.server.v1_12_R1.EnumGamemode;
 
 import org.bukkit.GameMode;
@@ -9,7 +12,6 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.worldproperties.IPlayerProperties;
 import pl.north93.northplatform.worldproperties.IWorldProperties;
@@ -32,7 +34,7 @@ public class PlayerGamemodeListener implements AutoListener
         EnumGamemode nmsGamemode = gamemode != null ? EnumGamemode.valueOf(gamemode.name()) : EnumGamemode.ADVENTURE;
         
         // We have to use NMS gamemode here because Bukkit doesn't allow gamemode change when playerConnection is null.
-        INorthPlayer.asCraftPlayer(event.getPlayer()).getHandle().playerInteractManager.setGameMode(nmsGamemode);
+        toNmsPlayer(event.getPlayer()).playerInteractManager.setGameMode(nmsGamemode);
     }
     
     @EventHandler

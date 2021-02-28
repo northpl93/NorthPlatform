@@ -1,8 +1,8 @@
 package pl.north93.northplatform.api.minigame.server.gamehost.listener;
 
-import static pl.north93.northplatform.api.bukkit.player.INorthPlayer.asCraftPlayer;
 import static pl.north93.northplatform.api.bukkit.player.INorthPlayer.wrap;
 import static pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper.getTrackerEntry;
+import static pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper.toNmsPlayer;
 import static pl.north93.northplatform.api.global.utils.lang.JavaUtils.instanceOf;
 
 
@@ -20,8 +20,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
-import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
 import pl.north93.northplatform.api.bukkit.server.AutoListener;
+import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.network.players.Identity;
 import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
@@ -72,7 +72,7 @@ public class PlayerListener implements AutoListener
      */
     private void fixLobbyVisibility(final Player player, final LocalArena arena)
     {
-        final EntityPlayer joiningPlayer = asCraftPlayer(player).getHandle();
+        final EntityPlayer joiningPlayer = toNmsPlayer(player);
         final EntityTrackerEntry joiningTrackerEntry = getTrackerEntry(joiningPlayer);
         if (joiningTrackerEntry == null)
         {
@@ -81,7 +81,7 @@ public class PlayerListener implements AutoListener
 
         for (final Player arenaPlayer : arena.getPlayersManager().getPlayers())
         {
-            final EntityPlayer arenaEntityPlayer = asCraftPlayer(arenaPlayer).getHandle();
+            final EntityPlayer arenaEntityPlayer = toNmsPlayer(arenaPlayer);
             final EntityTrackerEntry arenaTrackerEntry = getTrackerEntry(arenaEntityPlayer);
             if (arenaTrackerEntry == null)
             {

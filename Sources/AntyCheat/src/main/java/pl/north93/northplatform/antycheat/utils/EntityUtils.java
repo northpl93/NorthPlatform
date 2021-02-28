@@ -2,6 +2,8 @@ package pl.north93.northplatform.antycheat.utils;
 
 import static org.apache.commons.lang3.ArrayUtils.contains;
 
+import static pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper.toNmsEntity;
+
 
 import java.util.List;
 
@@ -10,7 +12,6 @@ import net.minecraft.server.v1_12_R1.EntityShulker;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 
 import pl.north93.northplatform.antycheat.utils.block.CollidingBlocksIterator;
@@ -20,7 +21,7 @@ public final class EntityUtils
 {
     public static AABB getAABBOfEntityInLocation(final Entity entity, final IPosition position)
     {
-        final net.minecraft.server.v1_12_R1.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+        final net.minecraft.server.v1_12_R1.Entity nmsEntity = toNmsEntity(entity);
 
         final double width = nmsEntity.width / 2d;
         final double height = nmsEntity.length;
@@ -38,7 +39,7 @@ public final class EntityUtils
      */
     public static boolean standsOnEntity(final Entity entity, final AABB aabb)
     {
-        final net.minecraft.server.v1_12_R1.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+        final net.minecraft.server.v1_12_R1.Entity nmsEntity = toNmsEntity(entity);
 
         // powiekszamy AABB
         final double aabbCheckEpsilon = 0.25;

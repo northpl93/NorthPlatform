@@ -1,14 +1,16 @@
 package pl.north93.northplatform.minigame.goldhunter.abilities;
 
+import static pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper.toNmsEntity;
+
+
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
+import net.minecraft.server.v1_12_R1.Entity;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
-
-import net.minecraft.server.v1_12_R1.Entity;
 
 import pl.north93.northplatform.minigame.goldhunter.effect.BombArrowEffect;
 import pl.north93.northplatform.minigame.goldhunter.entity.BombArrow;
@@ -27,7 +29,7 @@ public class BombArrowAbility implements AbilityHandler
     @EventHandler
     public void onDamageByExplosion(EntityDamageByEntityEvent event)
     {
-        Entity entity = ((CraftEntity) event.getDamager()).getHandle();
+        Entity entity = toNmsEntity(event.getDamager());
         if ( !( entity instanceof BombArrow ) )
         {
             return;
@@ -45,7 +47,7 @@ public class BombArrowAbility implements AbilityHandler
     @EventHandler
     public void onBombArrowExplode(EntityExplodeEvent event)
     {
-        Entity entity = ((CraftEntity) event.getEntity()).getHandle();
+        Entity entity = toNmsEntity(event.getEntity());
         if ( !( entity instanceof BombArrow ) )
         {
             return;

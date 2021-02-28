@@ -1,5 +1,8 @@
 package pl.north93.northplatform.api.bukkit.hologui.impl;
 
+import static pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper.toNmsEntity;
+
+
 import java.util.Collections;
 import java.util.Set;
 
@@ -11,7 +14,6 @@ import com.google.common.base.Preconditions;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftArmorStand;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -21,13 +23,13 @@ import org.bukkit.util.Vector;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologram;
-import pl.north93.northplatform.api.bukkit.hologui.hologram.PlayerVisibility;
 import pl.north93.northplatform.api.bukkit.entityhider.EntityVisibility;
 import pl.north93.northplatform.api.bukkit.entityhider.IEntityHider;
 import pl.north93.northplatform.api.bukkit.hologui.IIcon;
 import pl.north93.northplatform.api.bukkit.hologui.IconNameLocation;
 import pl.north93.northplatform.api.bukkit.hologui.IconPosition;
+import pl.north93.northplatform.api.bukkit.hologui.hologram.IHologram;
+import pl.north93.northplatform.api.bukkit.hologui.hologram.PlayerVisibility;
 import pl.north93.northplatform.api.bukkit.hologui.hologram.impl.HologramFactory;
 import pl.north93.northplatform.api.bukkit.hologui.hologram.message.LegacyHologramLines;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -36,16 +38,16 @@ import pl.north93.northplatform.api.global.messages.TranslatableString;
 class IconImpl implements IIcon
 {
     @Inject
-    private static IEntityHider         entityHider;
-    private final  HoloContextImpl      holoContext;
-    private        IconPosition         position;
-    private        ItemStack            itemStack;
-    private        IconNameLocation     iconNameLocation;
-    private        boolean              small;
-    private        TranslatableString[] name;
+    private static IEntityHider entityHider;
+    private final HoloContextImpl holoContext;
+    private IconPosition position;
+    private ItemStack itemStack;
+    private IconNameLocation iconNameLocation;
+    private boolean small;
+    private TranslatableString[] name;
     // dane implementacyjne
-    private        ArmorStand           armorStand;
-    private        IHologram            hologram;
+    private ArmorStand armorStand;
+    private IHologram hologram;
 
     public IconImpl(final HoloContextImpl holoContext)
     {
@@ -154,8 +156,8 @@ class IconImpl implements IIcon
             location.setY(result.getY());
         }
 
-        final CraftArmorStand armorStand = (CraftArmorStand) this.armorStand;
-        armorStand.getHandle().setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        final EntityArmorStand armorStand = toNmsEntity(this.armorStand);
+        armorStand.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
     }
 
     // aktualizuje parametr small
@@ -239,8 +241,7 @@ class IconImpl implements IIcon
     {
         Preconditions.checkState(this.armorStand != null, "Icon is already destroyed or never created");
 
-        final CraftArmorStand craftEntity = (CraftArmorStand) this.armorStand;
-        craftEntity.getHandle().die();
+        toNmsEntity(this.armorStand).die();
         this.armorStand = null;
 
         if (this.hologram != null)

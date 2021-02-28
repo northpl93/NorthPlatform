@@ -1,5 +1,8 @@
 package pl.north93.northplatform.api.bukkit.protocol.wrappers;
 
+import static pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper.toNmsPlayer;
+
+
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
@@ -11,8 +14,6 @@ import org.bukkit.entity.Player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
 public abstract class AbstractWrapper<T extends Packet>
 {
@@ -31,7 +32,7 @@ public abstract class AbstractWrapper<T extends Packet>
 
     public final void sendTo(final Player player)
     {
-        final EntityPlayer entityPlayer = INorthPlayer.asCraftPlayer(player).getHandle();
+        final EntityPlayer entityPlayer = toNmsPlayer(player);
         entityPlayer.playerConnection.sendPacket(this.packet);
     }
 

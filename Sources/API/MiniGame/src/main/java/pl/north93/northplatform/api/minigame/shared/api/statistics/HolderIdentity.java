@@ -1,10 +1,11 @@
 package pl.north93.northplatform.api.minigame.shared.api.statistics;
 
-import lombok.AllArgsConstructor;
-import lombok.ToString;
+import java.util.UUID;
+
 import org.bson.Document;
 
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.ToString;
 
 /**
  * Umo
@@ -14,7 +15,7 @@ import java.util.UUID;
 public final class HolderIdentity
 {
     private final String type;
-    private final UUID   uuid;
+    private final UUID uuid;
 
     public String getType()
     {

@@ -1,11 +1,20 @@
 package pl.north93.northplatform.minigame.goldhunter.player;
 
-import com.google.common.base.Preconditions;
+import static pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper.toNmsPlayer;
+
+
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+
 import net.minecraft.server.v1_12_R1.DamageSource;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.MinecraftServer;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
+
+import com.google.common.base.Preconditions;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,15 +29,9 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+
 import org.slf4j.Logger;
-import pl.north93.northplatform.minigame.goldhunter.GoldHunterLogger;
-import pl.north93.northplatform.minigame.goldhunter.arena.ArenaBuilder;
-import pl.north93.northplatform.minigame.goldhunter.arena.GoldHunterArena;
-import pl.north93.northplatform.minigame.goldhunter.classes.CharacterClass;
-import pl.north93.northplatform.minigame.goldhunter.classes.CharacterClassManager;
-import pl.north93.northplatform.minigame.goldhunter.effect.RespawnProtection;
-import pl.north93.northplatform.minigame.goldhunter.gui.LobbyHotbar;
-import pl.north93.northplatform.minigame.goldhunter.utils.Direction;
+
 import pl.north93.northplatform.api.bukkit.entityhider.IEntityHider;
 import pl.north93.northplatform.api.bukkit.gui.IGuiManager;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
@@ -48,10 +51,14 @@ import pl.north93.northplatform.api.minigame.server.gamehost.reward.CurrencyRewa
 import pl.north93.northplatform.globalshops.server.IGlobalShops;
 import pl.north93.northplatform.globalshops.server.domain.Item;
 import pl.north93.northplatform.globalshops.server.domain.ItemsGroup;
-
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
+import pl.north93.northplatform.minigame.goldhunter.GoldHunterLogger;
+import pl.north93.northplatform.minigame.goldhunter.arena.ArenaBuilder;
+import pl.north93.northplatform.minigame.goldhunter.arena.GoldHunterArena;
+import pl.north93.northplatform.minigame.goldhunter.classes.CharacterClass;
+import pl.north93.northplatform.minigame.goldhunter.classes.CharacterClassManager;
+import pl.north93.northplatform.minigame.goldhunter.effect.RespawnProtection;
+import pl.north93.northplatform.minigame.goldhunter.gui.LobbyHotbar;
+import pl.north93.northplatform.minigame.goldhunter.utils.Direction;
 
 public class GoldHunterPlayer implements ITickable
 {
@@ -305,7 +312,7 @@ public class GoldHunterPlayer implements ITickable
     
     public EntityPlayer getMinecraftPlayer()
     {
-        return INorthPlayer.asCraftPlayer(player).getHandle();
+        return toNmsPlayer(player);
     }
     
     public void addLeatherHatToInventory()

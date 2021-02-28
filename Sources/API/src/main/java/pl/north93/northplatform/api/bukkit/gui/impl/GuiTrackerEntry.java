@@ -1,5 +1,8 @@
 package pl.north93.northplatform.api.bukkit.gui.impl;
 
+import static pl.north93.northplatform.api.bukkit.utils.nms.EntityTrackerHelper.toNmsPlayer;
+
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -21,13 +24,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import pl.north93.northplatform.api.bukkit.gui.element.GuiContent;
-import pl.north93.northplatform.api.bukkit.gui.event.GuiOpenEvent;
-import pl.north93.northplatform.api.global.messages.LegacyMessage;
 import pl.north93.northplatform.api.bukkit.gui.Gui;
 import pl.north93.northplatform.api.bukkit.gui.HotbarEntry;
 import pl.north93.northplatform.api.bukkit.gui.HotbarMenu;
-import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.gui.element.GuiContent;
+import pl.north93.northplatform.api.bukkit.gui.event.GuiOpenEvent;
+import pl.north93.northplatform.api.global.messages.LegacyMessage;
 
 public class GuiTrackerEntry
 {
@@ -53,7 +55,7 @@ public class GuiTrackerEntry
 
     private EntityPlayer getEntityPlayer()
     {
-        return INorthPlayer.asCraftPlayer(this.player).getHandle();
+        return toNmsPlayer(this.player);
     }
     
     public Gui getCurrentGui()
