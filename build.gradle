@@ -9,9 +9,10 @@ buildscript {
 }
 
 plugins {
-    id 'org.ajoberstar.grgit' version '4.0.0'
-    id "io.freefair.lombok" version "5.3.0"
-    id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'maven-publish'
+    id 'org.ajoberstar.grgit' version '4.1.0'
+    id "io.freefair.lombok" version "5.3.3.3"
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
 allprojects {
@@ -23,8 +24,6 @@ allprojects {
         mavenLocal()
 
         mavenCentral()
-
-        jcenter()
     }
 }
 
@@ -46,7 +45,7 @@ subprojects {
     }
 
     shadowJar {
-        archiveName "${project.name}.jar"
+        archiveFileName = "${project.name}.jar"
 
         // ShadowJavaPlugin#configureShadowTask - remove doFirst with manifest
         getActions().remove(0)
