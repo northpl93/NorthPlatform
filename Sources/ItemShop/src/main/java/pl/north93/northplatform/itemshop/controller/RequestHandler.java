@@ -73,14 +73,14 @@ public class RequestHandler
             final Object[] params = new Object[] {entry, identity.getNick(), identity.getUuid()};
             log.info("Processing DataEntry: {} for {}/{}", params);
 
-            this.handle(identity, entry);
+            this.handleItemShopEntry(identity, entry);
         }
 
         log.info("Completed processing ItemShop request for {}/{}", identity.getNick(), identity.getUuid());
         return "ok";
     }
 
-    private void handle(final Identity identity, final DataEntry dataEntry)
+    private void handleItemShopEntry(final Identity identity, final DataEntry dataEntry)
     {
         final IDataHandler handler = this.handlers.get(dataEntry.getType());
         if (handler == null)

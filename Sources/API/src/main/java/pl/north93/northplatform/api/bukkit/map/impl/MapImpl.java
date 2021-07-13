@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -101,7 +102,7 @@ class MapImpl implements IMap
         }
 
         final EntityTrackerEntry trackerEntry = EntityTrackerHelper.getTrackerEntry(nmsEntity);
-        return trackerEntry.trackedPlayers.stream().map(EntityPlayer::getBukkitEntity).collect(Collectors.toSet());
+        return new HashSet<>(trackerEntry.trackedPlayers).stream().map(EntityPlayer::getBukkitEntity).collect(Collectors.toSet());
     }
 
     @Nullable

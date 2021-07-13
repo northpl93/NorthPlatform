@@ -68,7 +68,7 @@ final class SkinHelper
 
     public static void applySkin(final NPC npc, final String data, final String sign, final boolean respawn)
     {
-        final SkinnableEntity skinnable = (SkinnableEntity) toNmsEntity(npc.getEntity());
+        final SkinnableEntity skinnable = toNmsEntity(npc.getEntity());
 
         removeFromPending(skinnable);
 

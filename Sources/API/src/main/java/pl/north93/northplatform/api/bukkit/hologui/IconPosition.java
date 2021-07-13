@@ -40,12 +40,12 @@ public final class IconPosition
      * Oblicza lokalizacje na podstawie podanego srodkowego punktu.
      * Instancja podana w argumencie nie jest modyfikowana.
      *
-     * @param location Lokalizacja srodka.
+     * @param centerLocation Lokalizacja srodka.
      * @return Przeliczona pozycja.
      */
-    public Location calculateTarget(final Location location)
+    public Location calculateTarget(final Location centerLocation)
     {
-        final double targetAngle = location.getYaw() + this.angle + 90;
+        final double targetAngle = centerLocation.getYaw() + this.angle + 90;
 
         double delta = Math.toRadians(targetAngle);
         boolean clockwise = true;
@@ -55,12 +55,12 @@ public final class IconPosition
             delta = - delta;
         }
 
-        final double targetPointX = location.getX() + this.distance;
-        final double targetPointZ = location.getZ();
-        final Point point = MathUtils.rotatePoint(clockwise, location.getX(), location.getZ(), delta, targetPointX, targetPointZ);
+        final double targetPointX = centerLocation.getX() + this.distance;
+        final double targetPointZ = centerLocation.getZ();
+        final Point point = MathUtils.rotatePoint(clockwise, centerLocation.getX(), centerLocation.getZ(), delta, targetPointX, targetPointZ);
 
-        final Location result = new Location(location.getWorld(), point.x, location.getY() + this.height, point.z, 0, 0F);
-        result.setDirection(location.toVector().subtract(result.toVector())); //set the origin's direction to be the direction vector between point A and B.
+        final Location result = new Location(centerLocation.getWorld(), point.x, centerLocation.getY() + this.height, point.z, 0, 0F);
+        result.setDirection(centerLocation.toVector().subtract(result.toVector())); //set the origin's direction to be the direction vector between point A and B.
 
         return result;
     }

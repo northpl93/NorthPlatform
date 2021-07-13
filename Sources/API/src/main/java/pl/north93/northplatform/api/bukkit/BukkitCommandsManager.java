@@ -1,6 +1,5 @@
 package pl.north93.northplatform.api.bukkit;
 
-
 import java.util.Locale;
 import java.util.ResourceBundle;
 

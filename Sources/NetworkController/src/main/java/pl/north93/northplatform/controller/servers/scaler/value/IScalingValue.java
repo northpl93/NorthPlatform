@@ -3,25 +3,21 @@ package pl.north93.northplatform.controller.servers.scaler.value;
 import pl.north93.northplatform.controller.servers.groups.LocalManagedServersGroup;
 
 /**
- * Reprezentuje wartosc wedlug ktorej mozna skonfigurowac skalowanie serwerow.
+ * Represents a value that can be used to configure servers scaling.
  */
 public interface IScalingValue
 {
     /**
-     * Unikalny identyfikator wartosci uzywany w konfiguracji.
-     *
-     * @return unikalny identyfikator wartosci.
+     * @return unique identifier of this value.
      */
     String getId();
 
     /**
-     * Oblicza wartosc dla danej grupy serwerow i ja zwraca.
-     * <p>
-     * Wartosc jest cachowana podczas jednego cyklu generowania decyzji.
-     * {@link pl.north93.northplatform.controller.servers.scaler.ValueFetchCache}
+     * Calculates value for specified servers group.
+     * Value is cached during one decision-making cycle.
      *
-     * @param managedServersGroup Grupa serwerow dla ktorej obliczamy wartosc.
-     * @return Obliczona wartosc.
+     * @param managedServersGroup Servers group for which we will calculate the value.
+     * @return The calculated value.
      */
     double calculate(LocalManagedServersGroup managedServersGroup);
 }

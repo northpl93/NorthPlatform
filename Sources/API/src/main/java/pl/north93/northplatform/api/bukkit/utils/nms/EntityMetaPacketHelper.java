@@ -42,9 +42,9 @@ public class EntityMetaPacketHelper
      * Here is a list of all entity's metadatas:
      * http://wiki.vg/Entities#Entity_Metadata_Format
      *
-     * @param metaId ID danej metadata (Index na wiki.vg)
-     * @param metaType Typ metadany (Type na wiki.vg)
-     * @param value Wartosc ktora ustalamy (zgodna z typem)
+     * @param metaId ID of the metadata (Index on wiki.vg)
+     * @param metaType Type of the metadata (Type on wiki.vg)
+     * @param value New value of the metadata
      */
     public void addMeta(final int metaId, final MetaType metaType, final Object value)
     {

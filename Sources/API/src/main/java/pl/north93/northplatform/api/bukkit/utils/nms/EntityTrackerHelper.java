@@ -12,13 +12,11 @@ import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.entity.Player;
 
-import lombok.experimental.UtilityClass;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
 
-@UtilityClass
 public class EntityTrackerHelper
 {
-    private final MethodHandle entity_field_tracker;
+    private static final MethodHandle entity_field_tracker;
     static
     {
         try
@@ -41,7 +39,7 @@ public class EntityTrackerHelper
      * @return NMS's object that represents an entity.
      */
     @SuppressWarnings("unchecked")
-    public <T extends Entity> T toNmsEntity(final org.bukkit.entity.Entity bukkitEntity)
+    public static <T extends Entity> T toNmsEntity(final org.bukkit.entity.Entity bukkitEntity)
     {
         if (bukkitEntity instanceof Player)
         {
@@ -54,11 +52,12 @@ public class EntityTrackerHelper
 
     /**
      * Converts specified bukkit's Player instance into EntityPlayer from nms.
+     * Takes care about handling INorthPlayer.
      *
      * @param bukkitPlayer Bukkit's object that represents a player.
      * @return NMS's object that represents a player.
      */
-    public EntityPlayer toNmsPlayer(final Player bukkitPlayer)
+    public static EntityPlayer toNmsPlayer(final Player bukkitPlayer)
     {
         return INorthPlayer.asCraftPlayer(bukkitPlayer).getHandle();
     }
@@ -71,7 +70,7 @@ public class EntityTrackerHelper
      * @param entity Entity z ktorego wyciagnac EntityTrackerEntry.
      * @return EntityTrackerEntry dla danego entity.
      */
-    public EntityTrackerEntry getTrackerEntry(final Entity entity)
+    public static EntityTrackerEntry getTrackerEntry(final Entity entity)
     {
         try
         {

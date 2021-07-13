@@ -4,12 +4,10 @@ import static pl.north93.northplatform.api.standalone.StandaloneHostConnector.ST
 
 
 import pl.north93.northplatform.api.global.ApiCore;
-import pl.north93.northplatform.api.global.Platform;
 
 /**
  * Prosta klasa umożliwiająca uruchomienie API
- * na platformie {@link Platform#STANDALONE}
- * w celach testowych.
+ * na hoście STANDALONE w celach testowych.
  * <p>
  * W trybie testowym niedostępny jest klient redefiniowania kodu
  * więc automatyczne injekcie nie działają przez {@code new}

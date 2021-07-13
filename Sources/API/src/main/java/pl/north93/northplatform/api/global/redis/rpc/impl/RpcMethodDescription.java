@@ -12,15 +12,16 @@ import pl.north93.northplatform.api.global.redis.rpc.annotation.Timeout;
 class RpcMethodDescription
 {
     private final int id;
-    private final Method method;
-    private final MethodHandle methodHandle;
     private final int timeout;
+    private final String name;
+    private final MethodHandle methodHandle;
+    private final boolean returnsVoid;
     private final boolean needsWaitForResponse;
 
     public RpcMethodDescription(final int id, final Method method)
     {
         this.id = id;
-        this.method = method;
+        this.name = method.getName();
         try
         {
             this.methodHandle = MethodHandles.lookup().unreflect(method);
@@ -29,17 +30,16 @@ class RpcMethodDescription
         {
             throw new RuntimeException("Failed to unreflect method " + method.getName(), e);
         }
+        this.returnsVoid = method.getReturnType() == void.class;
         this.needsWaitForResponse = this.checkWait(method);
         this.timeout = this.getTimeout(method);
     }
 
     private boolean checkWait(final Method method)
     {
-        final boolean isReturnVoid = method.getReturnType() == void.class;
-
         if (method.isAnnotationPresent(DoNotWaitForResponse.class))
         {
-            if (! isReturnVoid)
+            if (! this.returnsVoid)
             {
                 throw new RuntimeException("Annotation DoNotWaitForResponse present on method with non-void return type.");
             }
@@ -59,19 +59,24 @@ class RpcMethodDescription
         return 1_000; // Default value
     }
 
-    public Integer getId()
+    public Object invokeWithArguments(final Object[] args) throws Throwable
+    {
+        return this.methodHandle.invokeWithArguments(args);
+    }
+
+    public int getId()
     {
         return this.id;
     }
 
-    public Method getMethod()
+    public String getName()
     {
-        return this.method;
+        return this.name;
     }
 
-    public MethodHandle getMethodHandle()
+    public boolean isReturnsVoid()
     {
-        return this.methodHandle;
+        return this.returnsVoid;
     }
 
     public int getTimeout()
