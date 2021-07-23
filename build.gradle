@@ -4,7 +4,7 @@
 
 buildscript {
     dependencies {
-        classpath files('Libraries/gradle-idea-ext-0.8-SNAPSHOT.jar')
+        classpath files('Libraries/gradle-idea-ext-1.0.2-SNAPSHOT.jar')
     }
 }
 
@@ -24,6 +24,10 @@ allprojects {
         mavenLocal()
 
         mavenCentral()
+
+        maven {
+            url = "https://maven.enginehub.org/repo/"
+        }
     }
 }
 

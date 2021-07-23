@@ -1,11 +1,8 @@
 # NorthPlatform
 Universal solution for Minecraft networks.
 
-## Some history
-I have started developing it in mid-2016 for my Minecraft networks (firstly skyblock, then minigames), now it's open for everyone!
-
 ## Developers
-* Michał Kasprzyk (NorthPL93)
+* Michał Kasprzyk (northpl93)
 * Rafał Szewczyk (xxRafiiiisxx) - _API.GuiManager, parts of API.MiniGame, WorldProperties, GoldHunter_
 
 ## A detailed description of modules
