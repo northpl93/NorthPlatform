@@ -5,6 +5,11 @@ Universal solution for Minecraft networks.
 * Michał Kasprzyk (northpl93)
 * Rafał Szewczyk (xxRafiiiisxx) - _API.GuiManager, parts of API.MiniGame, WorldProperties, GoldHunter_
 
+## License
+This project is published for reference purposes only.
+You can't use any part of this code.
+So, no required dependencies nor compile instructions are published.
+
 ## A detailed description of modules
 ### [API (_/Sources/API/src_)](/Sources/API/src/)
 API is the heart of the whole system.
