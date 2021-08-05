@@ -25,12 +25,12 @@ public class TestGui extends Gui
         event.getWhoClicked().sendMessage("Clicked");
     }
 
-    public static class Chuj extends NorthCommand
+    public static class OpenTestGuiCmd extends NorthCommand
     {
 
-        public Chuj()
+        public OpenTestGuiCmd()
         {
-            super("chuj1");
+            super("opentestgui");
         }
 
         @Override

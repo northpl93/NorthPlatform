@@ -16,7 +16,7 @@ public class ArenaManager
 {
     @Inject
     private IObservationManager observer;
-    private Hash<RemoteArena>   arenas;
+    private Hash<RemoteArena> arenas;
 
     @Bean
     private ArenaManager()

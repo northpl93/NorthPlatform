@@ -19,12 +19,12 @@ import pl.north93.northplatform.api.bukkit.map.IBoard;
 import pl.north93.northplatform.api.bukkit.map.IMapManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
-public class DupaTest extends NorthCommand
+public class TestBoardCmd extends NorthCommand
 {
     @Inject
     private IMapManager mapManager;
 
-    public DupaTest()
+    public TestBoardCmd()
     {
         super("testboard");
         this.setPermission("dev");

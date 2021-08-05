@@ -21,7 +21,7 @@ public final class ItemRotator extends Thread
     }
 
     @Override
-    public synchronized void run() // mark everything as synchronized
+    public synchronized void run() // mark everything as synchronized to make wait() happy
     {
         while (MinecraftServer.getServer().isRunning())
         {

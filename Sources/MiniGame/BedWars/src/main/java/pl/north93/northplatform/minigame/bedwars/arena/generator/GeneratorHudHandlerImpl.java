@@ -83,10 +83,10 @@ class GeneratorHudHandlerImpl implements IGeneratorHudHandler
         final ByteBuf packet = this.createPacket(this.item.getEntityId(), this.itemPose);
         for (final EntityPlayer trackedPlayer : new ArrayList<>(tracker.trackedPlayers))
         {
-            // kopiujemy bufor poniewaz jest on zamykany. (copy)
+            // copy the buffer because writeAndFlush will release it.
             trackedPlayer.playerConnection.networkManager.channel.writeAndFlush(packet.copy());
         }
-        packet.release(); // zwracamy nasz wzorcowy bytebuf
+        packet.release(); // release our original bytebuf
     }
 
     private ByteBuf createPacket(final int entityId, final float newRotation)
