@@ -129,14 +129,6 @@ public class RequestHandler
         }
     }
 
-    //        final ArrayList<DataEntry> objects = new ArrayList<>();
-    //        final HashMap<String, String> stringStringHashMap = new HashMap<>();
-    //        stringStringHashMap.put("dupa1", "dupa1");
-    //        stringStringHashMap.put("dupa2", "dupa2");
-    //
-    //        objects.add(new DataEntry("chuj", stringStringHashMap));
-    //        System.out.println(this.gson.toJson(new DataModel(objects)));
-
     @Override
     public String toString()
     {
