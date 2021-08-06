@@ -7,13 +7,13 @@ import java.util.function.Predicate;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.bukkit.utils.SimpleCountdown;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
@@ -38,7 +38,7 @@ import pl.north93.northplatform.minigame.bedwars.arena.Team;
 import pl.north93.northplatform.minigame.bedwars.event.TeamEliminatedEvent;
 
 @Slf4j
-public class GameEndListener implements Listener
+public class GameEndListener implements AutoListener
 {
     private static final int RECONNECT_TIMEOUT = 60 * 20;
     @Inject

@@ -9,11 +9,11 @@ import com.destroystokyo.paper.Title;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
 import pl.north93.northplatform.api.global.messages.Messages;
@@ -28,7 +28,7 @@ import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
 import pl.north93.northplatform.minigame.bedwars.arena.Team;
 import pl.north93.northplatform.minigame.bedwars.event.BedDestroyedEvent;
 
-public class BedDestroyListener implements Listener
+public class BedDestroyListener implements AutoListener
 {
     @Inject @Messages("BedWars")
     private MessagesBox messages;

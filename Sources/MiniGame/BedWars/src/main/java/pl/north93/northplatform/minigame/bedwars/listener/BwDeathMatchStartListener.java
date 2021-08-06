@@ -1,18 +1,18 @@
 package pl.north93.northplatform.minigame.bedwars.listener;
 
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffectType;
 
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.deathmatch.DeathMatchLoadedEvent;
 import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
 import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
 
 @Slf4j
-public class BwDeathMatchStartListener implements Listener
+public class BwDeathMatchStartListener implements AutoListener
 {
     @EventHandler
     public void onDeathMatchStart(final DeathMatchLoadedEvent event)

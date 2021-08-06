@@ -11,6 +11,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.bukkit.server.IBukkitServerManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
@@ -21,6 +22,7 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
  *
  * @see DamageContainer
  */
+@Slf4j
 public class DamageTracker implements Listener
 {
     private static DamageTracker tracker;
@@ -33,7 +35,10 @@ public class DamageTracker implements Listener
         {
             tracker = new DamageTracker();
             tracker.serverManager.registerEvents(tracker);
+
+            log.info("Damage tracker is now ready to work");
         }
+
         return tracker;
     }
 

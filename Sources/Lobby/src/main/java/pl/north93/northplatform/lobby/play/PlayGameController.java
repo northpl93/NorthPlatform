@@ -6,7 +6,8 @@ import java.util.Collections;
 import org.bukkit.entity.Player;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
+import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
 import pl.north93.northplatform.api.minigame.server.lobby.arenas.ArenaQuery;
 import pl.north93.northplatform.api.minigame.server.lobby.arenas.IArenaClient;
@@ -19,22 +20,20 @@ import pl.north93.northplatform.api.minigame.shared.api.PlayerJoinInfo;
 import pl.north93.northplatform.api.minigame.shared.api.arena.IArena;
 import pl.north93.northplatform.api.minigame.shared.api.hub.IHubServer;
 import pl.north93.northplatform.api.minigame.shared.api.party.IParty;
-import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
-import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 
 /**
- * Kontroler obsługujący całą logikę dołączenia gracza do gry.
- * Tutaj trafiają rządania prosto od gracza (np z kliknięcia w gui).
+ * A controller class that handles minigame-related incoming requests from players.
+ * (e.g. from GUIs, commands, etc.)
  */
 @Slf4j
 public class PlayGameController
 {
     @Inject
-    private MiniGameServer miniGameServer;
+    private LobbyManager lobbyManager;
     @Inject
-    private IArenaClient   arenaClient;
+    private IArenaClient arenaClient;
     @Inject
-    private PartyClient    partyClient;
+    private PartyClient partyClient;
 
     @Bean
     private PlayGameController()
@@ -45,40 +44,35 @@ public class PlayGameController
     {
         if (this.partyClient.cantDecideAboutHimself(player))
         {
-            // gracz jest w grupie i nie jest liderem więc nie może decydować gdzie gra
+            // player is in a party and isn't a leader, so he can't decide about himself
             log.info("Player {} cant switch hub type because he isnt a party owner", player.getName());
             return;
         }
 
-        final LobbyManager lobby = this.miniGameServer.getServerManager();
-        lobby.getLocalHub().movePlayerToHub(player, hubId);
+        this.lobbyManager.getLocalHub().movePlayerToHub(player, hubId);
     }
 
     public void switchHubInstance(final Player player, final IHubServer hubServer)
     {
         if (this.partyClient.cantDecideAboutHimself(player))
         {
-            // gracz jest w grupie i nie jest liderem więc nie może decydować gdzie gra
+            // player is in a party and isn't a leader, so he can't decide about himself
             log.info("Player {} cant switch hub instance because he isnt a party owner", player.getName());
             return;
         }
 
-        final LobbyManager lobby = this.miniGameServer.getServerManager();
-        final HubWorld hubWorld = lobby.getLocalHub().getHubWorld(player);
-
-        lobby.tpToHub(Collections.singletonList(player), hubServer, hubWorld.getHubId());
+        final HubWorld hubWorld = this.lobbyManager.getLocalHub().getHubWorld(player);
+        this.lobbyManager.tpToHub(Collections.singletonList(player), hubServer, hubWorld.getHubId());
     }
 
     public Collection<? extends IHubServer> getHubs()
     {
-        final LobbyManager lobby = this.miniGameServer.getServerManager();
-        return lobby.getAllHubServers();
+        return this.lobbyManager.getAllHubServers();
     }
 
     public LocalHubServer getThisHubServer()
     {
-        final LobbyManager lobby = this.miniGameServer.getServerManager();
-        return lobby.getLocalHub();
+        return this.lobbyManager.getLocalHub();
     }
     
     public void playGame(final Player player, final IArena arena)
@@ -100,7 +94,7 @@ public class PlayGameController
     {
         if (this.partyClient.cantDecideAboutHimself(player))
         {
-            // gracz jest w grupie i nie jest liderem więc nie może decydować gdzie gra
+            // player is in a party and isn't a leader, so he can't decide about himself
             log.info("Player {} cant play game {} because he isnt a party owner", player.getName(), gameIdentity);
             return;
         }

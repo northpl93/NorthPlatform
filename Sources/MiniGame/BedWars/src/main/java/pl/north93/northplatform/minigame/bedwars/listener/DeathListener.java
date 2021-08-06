@@ -11,7 +11,6 @@ import java.time.Duration;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -21,6 +20,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageContainer;
 import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageEntry;
 import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageTracker;
@@ -41,7 +41,7 @@ import pl.north93.northplatform.minigame.bedwars.shop.stattrack.StatTrackManager
 import pl.north93.northplatform.minigame.bedwars.shop.stattrack.TrackedStatistic;
 
 @Slf4j
-public class DeathListener implements Listener
+public class DeathListener implements AutoListener
 {
     @Inject
     private StatTrackManager statTrackManager;

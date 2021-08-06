@@ -74,7 +74,9 @@ public class ComponentManagerImpl implements IComponentManager
     public void initDefaultBeans()
     {
         final BeanFactory factory = BeanFactory.INSTANCE;
+
         factory.createStaticBeanManually(this.rootBeanCtx, this.apiCore.getClass(), "ApiCore", this.apiCore);
+        factory.createStaticBeanManually(this.rootBeanCtx, ComponentManagerImpl.class, "ComponentManagerImpl", this);
 
         final HostConnector hostConnector = this.apiCore.getHostConnector();
         factory.createStaticBeanManually(this.rootBeanCtx, hostConnector.getClass(), "HostConnector", hostConnector);

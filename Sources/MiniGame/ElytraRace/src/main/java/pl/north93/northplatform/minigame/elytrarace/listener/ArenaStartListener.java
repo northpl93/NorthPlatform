@@ -8,7 +8,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -16,6 +15,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.bukkit.utils.xml.XmlLocation;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.MessageLayout;
@@ -37,7 +37,7 @@ import pl.north93.northplatform.minigame.elytrarace.shop.ElytraEffectTask;
 import pl.north93.northplatform.minigame.elytrarace.shop.ElytraEffectsManager;
 import pl.north93.northplatform.minigame.elytrarace.shop.effects.IElytraEffect;
 
-public class ArenaStartListener implements Listener
+public class ArenaStartListener implements AutoListener
 {
     @Inject @Messages("ElytraRace")
     private MessagesBox          messages;

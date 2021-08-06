@@ -1,6 +1,5 @@
 package pl.north93.northplatform.antycheat.cheat.movement.check;
 
-import static pl.north93.northplatform.antycheat.utils.DistanceUtils.entityDistanceToGround;
 import static pl.north93.northplatform.antycheat.utils.EntityUtils.isStandsOn;
 
 
@@ -10,15 +9,15 @@ import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import pl.north93.northplatform.antycheat.analysis.event.EventAnalyser;
-import pl.north93.northplatform.antycheat.analysis.event.EventAnalyserConfig;
-import pl.north93.northplatform.antycheat.event.impl.ClientMoveTimelineEvent;
-import pl.north93.northplatform.antycheat.utils.DistanceUtils;
 import pl.north93.northplatform.antycheat.analysis.FalsePositiveProbability;
 import pl.north93.northplatform.antycheat.analysis.SingleAnalysisResult;
+import pl.north93.northplatform.antycheat.analysis.event.EventAnalyser;
+import pl.north93.northplatform.antycheat.analysis.event.EventAnalyserConfig;
 import pl.north93.northplatform.antycheat.cheat.movement.MovementViolation;
+import pl.north93.northplatform.antycheat.event.impl.ClientMoveTimelineEvent;
 import pl.north93.northplatform.antycheat.timeline.PlayerData;
 import pl.north93.northplatform.antycheat.timeline.PlayerTickInfo;
+import pl.north93.northplatform.antycheat.utils.DistanceUtils;
 import pl.north93.northplatform.antycheat.utils.block.BlockFlag;
 import pl.north93.northplatform.antycheat.utils.location.RichEntityLocation;
 
@@ -64,7 +63,7 @@ public class OnGroundManipulationChecker implements EventAnalyser<ClientMoveTime
 
         if (! event.isToOnGround())
         {
-            // TODO Klient czasami sie buguje i wysyla w chuj onGround=false podczas stania...
+            // TODO client sometimes sends a lot of onGround=false while standing
             //return this.checkFlying(player, tickInfo, toLocation);
         }
         else if (! event.isFromOnGround() && event.isToOnGround())

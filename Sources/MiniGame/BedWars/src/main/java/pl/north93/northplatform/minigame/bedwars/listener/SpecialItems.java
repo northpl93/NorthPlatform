@@ -18,7 +18,6 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -34,6 +33,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.SpawnEgg;
 
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.bukkit.utils.nms.FastBlockOp;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
@@ -41,7 +41,7 @@ import pl.north93.northplatform.minigame.bedwars.arena.BedWarsPlayer;
 import pl.north93.northplatform.minigame.bedwars.npc.BedWarsSkeleton;
 import pl.north93.northplatform.minigame.bedwars.utils.TeamArmorUtils;
 
-public class SpecialItems implements Listener
+public class SpecialItems implements AutoListener
 {
     @EventHandler(ignoreCancelled = true)
     public void onTntPlace(final BlockPlaceEvent event)

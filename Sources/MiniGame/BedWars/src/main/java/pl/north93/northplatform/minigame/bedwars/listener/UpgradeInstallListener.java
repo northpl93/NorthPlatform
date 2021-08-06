@@ -8,7 +8,6 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -16,6 +15,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
@@ -23,7 +23,7 @@ import pl.north93.northplatform.minigame.bedwars.cfg.BwShopConfig;
 import pl.north93.northplatform.minigame.bedwars.event.UpgradeInstallEvent;
 import pl.north93.northplatform.minigame.bedwars.shop.upgrade.IUpgrade;
 
-public class UpgradeInstallListener implements Listener
+public class UpgradeInstallListener implements AutoListener
 {
     @Inject
     private BwShopConfig config;

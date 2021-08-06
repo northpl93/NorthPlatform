@@ -8,12 +8,12 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.bukkit.utils.nms.FastBlockOp;
 import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -33,7 +33,7 @@ import pl.north93.northplatform.minigame.elytrarace.arena.ScoreController;
 import pl.north93.northplatform.minigame.elytrarace.cfg.Score;
 import pl.north93.northplatform.minigame.elytrarace.cfg.ScoreGroup;
 
-public class ScoreListener implements Listener
+public class ScoreListener implements AutoListener
 {
     @Inject @Messages("ElytraRace")
     private MessagesBox messages;

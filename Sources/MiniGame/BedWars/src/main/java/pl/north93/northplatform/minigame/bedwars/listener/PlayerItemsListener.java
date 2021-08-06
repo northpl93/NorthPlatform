@@ -11,7 +11,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -25,6 +24,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageEntry;
 import pl.north93.northplatform.api.bukkit.utils.dmgtracker.DamageTracker;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -39,7 +39,7 @@ import pl.north93.northplatform.minigame.bedwars.shop.UpgradeManager;
 import pl.north93.northplatform.minigame.bedwars.shop.stattrack.StatTrackItems;
 import pl.north93.northplatform.minigame.bedwars.shop.upgrade.RoadOfWarrior;
 
-public class PlayerItemsListener implements Listener
+public class PlayerItemsListener implements AutoListener
 {
     @Inject @Messages("BedWars")
     private MessagesBox messages;

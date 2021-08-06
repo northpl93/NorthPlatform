@@ -4,9 +4,9 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.util.Vector;
 
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
@@ -14,7 +14,7 @@ import pl.north93.northplatform.api.minigame.server.gamehost.region.ITrackedRegi
 import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.north93.northplatform.minigame.elytrarace.cfg.Boost;
 
-public class BoostListener implements Listener
+public class BoostListener implements AutoListener
 {
     @EventHandler(priority = EventPriority.HIGH) // post ArenaStartListener
     public void startGame(final GameStartEvent event)

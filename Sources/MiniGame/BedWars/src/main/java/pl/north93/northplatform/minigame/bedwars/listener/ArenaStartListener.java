@@ -4,12 +4,12 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.bukkit.utils.nms.FastBlockOp;
 import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
@@ -27,7 +27,7 @@ import pl.north93.northplatform.minigame.bedwars.cfg.BwArenaConfig;
 import pl.north93.northplatform.minigame.bedwars.cfg.BwConfig;
 
 @Slf4j
-public class ArenaStartListener implements Listener
+public class ArenaStartListener implements AutoListener
 {
     @Inject
     private BwConfig config;

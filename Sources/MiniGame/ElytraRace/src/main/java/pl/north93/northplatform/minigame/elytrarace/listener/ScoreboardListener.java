@@ -3,13 +3,13 @@ package pl.north93.northplatform.minigame.elytrarace.listener;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardLayout;
 import pl.north93.northplatform.api.bukkit.scoreboard.IScoreboardManager;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.arena.gamephase.GameStartEvent;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
@@ -19,7 +19,7 @@ import pl.north93.northplatform.minigame.elytrarace.scoreboard.LobbyScoreboard;
 import pl.north93.northplatform.minigame.elytrarace.scoreboard.RaceScoreboard;
 import pl.north93.northplatform.minigame.elytrarace.scoreboard.ScoreScoreboard;
 
-public class ScoreboardListener implements Listener
+public class ScoreboardListener implements AutoListener
 {
     @Inject
     private IScoreboardManager scoreboardManager;

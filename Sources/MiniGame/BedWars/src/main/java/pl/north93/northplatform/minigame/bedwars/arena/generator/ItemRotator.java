@@ -5,6 +5,8 @@ import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.
 
 import net.minecraft.server.v1_12_R1.MinecraftServer;
 
+import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
@@ -13,11 +15,15 @@ import pl.north93.northplatform.minigame.bedwars.arena.BedWarsArena;
  * Klasa uzywana do obracania itemków
  * Musimy to robic czesciej niz tick, dlatego uzywamy Thread
  */
+@Slf4j
 public final class ItemRotator extends Thread
 {
-    public ItemRotator()
+    @Bean
+    private ItemRotator()
     {
         super("BedWars-ItemRotator");
+        log.info("Starting ItemRotator thread");
+        this.start();
     }
 
     @Override

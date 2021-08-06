@@ -5,15 +5,15 @@ import static pl.north93.northplatform.api.minigame.server.gamehost.MiniGameApi.
 
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
 
-public class MoveListener implements Listener
+public class MoveListener implements AutoListener
 {
     @EventHandler
     public void onMove(final PlayerMoveEvent event)

@@ -9,7 +9,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
@@ -18,6 +17,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
@@ -32,7 +32,7 @@ import pl.north93.northplatform.minigame.elytrarace.arena.ElytraScorePlayer;
 import pl.north93.northplatform.minigame.elytrarace.cfg.Checkpoint;
 import pl.north93.northplatform.minigame.elytrarace.event.PlayerCheckpointEvent;
 
-public class CheckpointListener implements Listener
+public class CheckpointListener implements AutoListener
 {
     @Inject @Messages("ElytraRace")
     private MessagesBox messages;

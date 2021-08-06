@@ -48,7 +48,7 @@ public final class ApiCore
         return this.connector;
     }
 
-    public final void startPlatform()
+    public void startPlatform()
     {
         final long startTime = System.currentTimeMillis();
 
@@ -98,7 +98,7 @@ public final class ApiCore
         log.debug("If you see this message debug mode is enabled");
     }
 
-    public final void stopPlatform()
+    public void stopPlatform()
     {
         try
         {
@@ -111,11 +111,6 @@ public final class ApiCore
         this.componentManager.disableAllComponents();
         this.setApiState(ApiState.DISABLED);
         log.info("NorthPlatform API stopped.");
-    }
-
-    public IComponentManager getComponentManager()
-    {
-        return this.componentManager;
     }
 
     /**

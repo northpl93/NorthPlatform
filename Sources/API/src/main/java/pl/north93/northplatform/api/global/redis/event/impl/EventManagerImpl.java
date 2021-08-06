@@ -1,12 +1,19 @@
 package pl.north93.northplatform.api.global.redis.event.impl;
 
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import pl.north93.northplatform.api.global.ApiCore;
+
+import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.global.component.Component;
+import pl.north93.northplatform.api.global.component.IComponentManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Aggregator;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.component.annotations.bean.Named;
@@ -16,18 +23,13 @@ import pl.north93.northplatform.api.global.redis.event.NetEventSubscriber;
 import pl.north93.northplatform.api.global.redis.subscriber.RedisSubscriber;
 import pl.north93.serializer.platform.NorthSerializer;
 
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 @Slf4j
 public class EventManagerImpl extends Component implements IEventManager
 {
     @Inject
-    private ApiCore apiCore;
-    @Inject
     private RedisSubscriber subscriber;
+    @Inject
+    private IComponentManager componentManager;
     @Inject
     private NorthSerializer<byte[], byte[]> msgPack;
     private final Set<String> subscribedClasses = new HashSet<>();
@@ -78,7 +80,7 @@ public class EventManagerImpl extends Component implements IEventManager
         final INetEvent event;
         try
         {
-            final Class<? extends INetEvent> clazz = (Class) this.apiCore.getComponentManager().findClass(className);
+            final Class<? extends INetEvent> clazz = (Class) this.componentManager.findClass(className);
             event = this.msgPack.deserialize(clazz, bytes);
         }
         catch (final RuntimeException e)

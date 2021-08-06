@@ -14,62 +14,18 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.component.annotations.bean.Named;
 import pl.north93.northplatform.api.global.utils.JaxbUtils;
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
-import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
-import pl.north93.northplatform.minigame.bedwars.arena.generator.ItemRotator;
 import pl.north93.northplatform.minigame.bedwars.cfg.BwConfig;
 import pl.north93.northplatform.minigame.bedwars.cfg.BwShopConfig;
-import pl.north93.northplatform.minigame.bedwars.listener.ArenaStartListener;
-import pl.north93.northplatform.minigame.bedwars.listener.BedDestroyListener;
-import pl.north93.northplatform.minigame.bedwars.listener.BuildListener;
-import pl.north93.northplatform.minigame.bedwars.listener.BwDeathMatchStartListener;
-import pl.north93.northplatform.minigame.bedwars.listener.BwSpectatorListener;
-import pl.north93.northplatform.minigame.bedwars.listener.DeathListener;
-import pl.north93.northplatform.minigame.bedwars.listener.GameEndListener;
-import pl.north93.northplatform.minigame.bedwars.listener.ItemBuyListener;
-import pl.north93.northplatform.minigame.bedwars.listener.PlayerEliminationListener;
-import pl.north93.northplatform.minigame.bedwars.listener.PlayerItemsListener;
-import pl.north93.northplatform.minigame.bedwars.listener.PlayerTeamListener;
-import pl.north93.northplatform.minigame.bedwars.listener.SpecialItems;
-import pl.north93.northplatform.minigame.bedwars.listener.TabListHandler;
-import pl.north93.northplatform.minigame.bedwars.listener.UpgradeInstallListener;
-import pl.north93.northplatform.minigame.bedwars.npc.NpcCreator;
-import pl.north93.northplatform.minigame.bedwars.shop.stattrack.StatTrackListener;
 
 public class BedWarsComponent extends Component
 {
-    @Inject
-    private MiniGameServer server;
     @Inject
     private IBukkitServerManager serverManager;
 
     @Override
     protected void enableComponent()
     {
-        if (this.server.getServerManager() instanceof LobbyManager)
-        {
-            return; // TODO prevent errors in testing environment
-        }
-        this.serverManager.registerEvents(
-                new ArenaStartListener(),
-                new StatTrackListener(), // zarzadza stat trakami.
-                new NpcCreator(), // zarzadza tworzeniem NPC w bazie
-                new TabListHandler(), // zarzadza tablista
-                new PlayerTeamListener(), //wejscie,start areny,wyjscie
-                new BuildListener(), // crafting,budowanie,niszczenie
-                new DeathListener(), // smierc gracza
-                new BedDestroyListener(), // zniszczenie lozka
-                new PlayerEliminationListener(), // eliminacja gracza
-                new BwSpectatorListener(), // spectator
-                new PlayerItemsListener(), // pilnuje ekwipunku, dropu po śmierci
-                new ItemBuyListener(), // zakup itemów,wysyłanie komunikatu zakupu
-                new UpgradeInstallListener(), // instalowanie apgrejdów,wysyłanie komunikatu u upgrade
-                new SpecialItems(), // obsluga itemow specjalnych
-                new BwDeathMatchStartListener(), // przygotowujemy deathmatcha
-                new GameEndListener()); // eliminacja teamu i koniec gry
-
-        new ItemRotator().start(); // uruchamiamy watek obracajacy itemkami
-        DamageTracker.get(); // uruchamiamy damage trackera.
+        DamageTracker.get(); // make sure that DamageTracker is ready.
     }
 
     @Override

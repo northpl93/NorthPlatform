@@ -9,9 +9,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.north93.northplatform.api.minigame.server.IServerManager;
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
-import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 import pl.north93.northplatform.antycheat.timeline.PlayerTickInfo;
 import pl.north93.northplatform.antycheat.timeline.Tick;
 import pl.north93.northplatform.antycheat.timeline.Timeline;
@@ -21,18 +18,20 @@ import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.messages.Messages;
 import pl.north93.northplatform.api.global.messages.MessagesBox;
+import pl.north93.northplatform.api.minigame.server.IServerManager;
+import pl.north93.northplatform.api.minigame.server.gamehost.GameHostManager;
 
 @Slf4j
 public class HighPingChecker implements Runnable
 {
     private static final int CHECK_INTERVAL = 20;
-    private static final int MAX_PING       = 375; // 3/8 sekundy, 1/2 sekundy to troche za duzo
+    private static final int MAX_PING = 375; // 3/8 of second, 1/2 of second is quite too much
+    @Inject @Messages("AntyCheatClient")
+    private MessagesBox messages;
     @Inject
     private TimelineManager timelineManager;
     @Inject
-    private MiniGameServer  miniGameServer;
-    @Inject @Messages("AntyCheatClient")
-    private MessagesBox     messages;
+    private IServerManager serverManager;
 
     @Bean
     private HighPingChecker(final IBukkitExecutor executor)
@@ -50,13 +49,13 @@ public class HighPingChecker implements Runnable
             final Tick tick = this.timelineManager.getPreviousTick(this.timelineManager.getCurrentTick(), 1);
             final PlayerTickInfo playerTickInfo = timeline.getPlayerTickInfo(tick);
 
-            // krótko po spawnie ping moze wariowac; nie wyrzucamy wtedy graczy
+            // shortly after spawn, player's ping is unreliable, don't kick him then
             if (playerTickInfo.isShortAfterSpawn())
             {
                 continue;
             }
 
-            // jesli ping jest nizszy lub równy naszemu limitowi to nie wyrzucamy gracza
+            // kick player if ping is too high
             if (this.calculateAvgPing(timeline) <= MAX_PING)
             {
                 continue;
@@ -68,16 +67,15 @@ public class HighPingChecker implements Runnable
 
     private void doKickPlayer(final Player player)
     {
-        log.info("Kicking {} due too big ping", player.getName());
+        log.info("Kicking {} due too high ping", player.getName());
 
-        final IServerManager serverManager = this.miniGameServer.getServerManager();
-        if (serverManager instanceof GameHostManager)
+        if (this.serverManager instanceof GameHostManager)
         {
             player.sendMessage(this.messages.getComponent(player.getLocale(), "ping.kick_to_hub"));
-            final GameHostManager gameHostManager = (GameHostManager) serverManager;
+            final GameHostManager gameHostManager = (GameHostManager) this.serverManager;
 
             final String hubId = gameHostManager.getMiniGameConfig().getHubId();
-            serverManager.tpToHub(Collections.singletonList(player), hubId);
+            gameHostManager.tpToHub(Collections.singletonList(player), hubId);
         }
         else
         {

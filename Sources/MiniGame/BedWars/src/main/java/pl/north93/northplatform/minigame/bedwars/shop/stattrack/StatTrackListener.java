@@ -6,7 +6,6 @@ import java.util.Locale;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -14,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import lombok.ToString;
 import pl.north93.northplatform.api.bukkit.player.INorthPlayer;
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 import pl.north93.northplatform.globalshops.server.IGlobalShops;
@@ -23,7 +23,7 @@ import pl.north93.northplatform.globalshops.server.domain.ItemsGroup;
 import pl.north93.northplatform.minigame.bedwars.event.ItemBuyEvent;
 
 @ToString
-public class StatTrackListener implements Listener
+public class StatTrackListener implements AutoListener
 {
     @Inject
     private IGlobalShops globalShops;

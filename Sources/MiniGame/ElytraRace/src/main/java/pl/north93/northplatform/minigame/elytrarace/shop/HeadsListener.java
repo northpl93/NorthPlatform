@@ -2,15 +2,15 @@ package pl.north93.northplatform.minigame.elytrarace.shop;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.minigame.server.gamehost.event.player.PlayerJoinArenaEvent;
 
-public class HeadsListener implements Listener
+public class HeadsListener implements AutoListener
 {
     @Inject
     private HeadsManagement headsManagement;

@@ -13,7 +13,7 @@ import org.reflections.Reflections;
 import lombok.extern.slf4j.Slf4j;
 import pl.north93.northplatform.api.bukkit.gui.impl.xml.XmlGuiLayout;
 import pl.north93.northplatform.api.bukkit.gui.impl.xml.XmlHotbarLayout;
-import pl.north93.northplatform.api.global.ApiCore;
+import pl.north93.northplatform.api.global.component.IComponentManager;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
 import pl.north93.northplatform.api.global.utils.JaxbUtils;
 import pl.north93.northplatform.api.global.utils.lang.CatchException;
@@ -22,7 +22,7 @@ import pl.north93.northplatform.api.global.utils.lang.CatchException;
 public class XmlLayoutRegistry
 {
     @Inject
-    private static ApiCore apiCore;
+    private static IComponentManager componentManager;
     private static final Set<ClassLoader> scannedLoaders = new HashSet<>();
     private static final Map<String, XmlGuiLayout> loadedGuiLayouts = new HashMap<>();
     private static final Map<String, XmlHotbarLayout> loadedHotbarLayouts = new HashMap<>();
@@ -53,7 +53,7 @@ public class XmlLayoutRegistry
         }
         scannedLoaders.add(cl);
 
-        final Reflections reflections = apiCore.getComponentManager().accessReflections(cl);
+        final Reflections reflections = componentManager.accessReflections(cl);
 
         final Collection<String> values = reflections.getStore().get("ResourcesScanner").values();
         

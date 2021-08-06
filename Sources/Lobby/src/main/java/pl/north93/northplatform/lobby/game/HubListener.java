@@ -8,39 +8,36 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import pl.north93.northplatform.api.bukkit.server.AutoListener;
 import pl.north93.northplatform.api.global.component.annotations.bean.Inject;
-import pl.north93.northplatform.api.minigame.server.MiniGameServer;
 import pl.north93.northplatform.api.minigame.server.lobby.LobbyManager;
 import pl.north93.northplatform.api.minigame.server.lobby.hub.HubWorld;
 import pl.north93.northplatform.auth.api.IAuthManager;
 
 /**
- * Klasa abstrakcyjna która po rozszerzeniu zostanie automatycznie
- * zarejestrowana jako listener Bukkita.
+ * An abstract class holding boilerplate for all hub listeners.
+ * It will be automatically registered as Bukkit listener.
  *
- * Kazdy ten listener obsluguje jeden hub minigry. Metoda
- * isMyHub sprawdza czy event wykonuje sie na obslugiwanym
- * przez ten listener hubie.
+ * Every listener handles one hub.
+ * isMyHub() checks do hub is supported by this listener
  */
 public abstract class HubListener implements AutoListener
 {
     @Inject
-    protected MiniGameServer miniGameServer;
+    protected LobbyManager lobbyManager;
     @Inject
-    protected IAuthManager   authManager;
+    protected IAuthManager authManager;
 
     /**
-     * Sprawdza czy ten listener obsluguje danego huba.
-     * Kazda klasa listenera powinna obslugiwac jeden hub.
+     * Checks do this listener handles this hub.
+     * Every listener class should handle only one hub.
      *
-     * @param hubWorld Instancja reprezentujaca lokalny hub.
-     * @return Czy ten listener obsluguje danego huba.
+     * @param hubWorld An instance representing a local hub.
+     * @return Does this listener support the hub from the argument.
      */
     public abstract boolean isMyHub(HubWorld hubWorld);
 
     protected final HubWorld getHubWorld(final World world)
     {
-        final LobbyManager serverManager = this.miniGameServer.getServerManager();
-        return serverManager.getLocalHub().getHubWorld(world);
+        return this.lobbyManager.getLocalHub().getHubWorld(world);
     }
 
     protected final boolean isLoggedIn(final Player player)

@@ -7,14 +7,25 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 
+import lombok.extern.slf4j.Slf4j;
+import pl.north93.northplatform.api.bukkit.server.IBukkitExecutor;
 import pl.north93.northplatform.api.bukkit.utils.region.Cuboid;
+import pl.north93.northplatform.api.global.component.annotations.bean.Bean;
 import pl.north93.northplatform.api.minigame.server.gamehost.arena.LocalArena;
 import pl.north93.northplatform.api.minigame.shared.api.GamePhase;
 import pl.north93.northplatform.minigame.elytrarace.arena.ElytraRaceArena;
 import pl.north93.northplatform.minigame.elytrarace.cfg.Boost;
 
+@Slf4j
 public class ParticleTask implements Runnable
 {
+    @Bean
+    private ParticleTask(final IBukkitExecutor bukkitExecutor)
+    {
+        log.info("Starting ParticleTask");
+        bukkitExecutor.syncTimer(1, this);
+    }
+
     @Override
     public void run()
     {
